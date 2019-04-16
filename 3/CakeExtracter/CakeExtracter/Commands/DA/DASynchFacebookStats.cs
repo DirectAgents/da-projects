@@ -199,7 +199,8 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Creative(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
         {
-            var extractor = new FacebookAdSummaryExtracter(dateRange, account, fbUtility, includeAllActions: false);
+            var fbAdMetadataProvider = new FacebookAdMetadataProvider(m => Logger.Info(account.Id, m), m => Logger.Warn(account.Id, m));
+            var extractor = new FacebookAdSummaryExtracter(dateRange, account, fbUtility, fbAdMetadataProvider, includeAllActions: true);
             var loader = new FacebookAdSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }

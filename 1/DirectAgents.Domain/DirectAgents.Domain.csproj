@@ -114,6 +114,7 @@
     <Compile Include="Concrete\RevTrackRepository.cs" />
     <Compile Include="Concrete\SecurityRepository.cs" />
     <Compile Include="Concrete\SpecialPlatformRepository.cs" />
+    <Compile Include="Entities\CPProg\Facebook\FbEntity.cs" />
     <Compile Include="MigrationsTD\201904151116227_FacebookCreativeExpansion.cs" />
     <Compile Include="MigrationsTD\201904151116227_FacebookCreativeExpansion.Designer.cs">
       <DependentUpon>201904151116227_FacebookCreativeExpansion.cs</DependentUpon>

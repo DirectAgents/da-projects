@@ -14,6 +14,10 @@ namespace FacebookAPI.Converters
         public InsigthsFacebookSummaryConverter(bool includeAllActions, string conversionActionType, 
             string clickAttribution, string viewAttribution)
         {
+            this.includeAllActions = includeAllActions;
+            this.conversionActionType = conversionActionType;
+            this.clickAttribution = clickAttribution;
+            this.viewAttribution = viewAttribution;
         }
 
         public FBSummary GetFacebookSummaryFromRow(dynamic row)
@@ -38,11 +42,6 @@ namespace FacebookAPI.Converters
                 fbSum.LinkClicks = intParseVal;
             if (int.TryParse(row.clicks, out intParseVal))
                 fbSum.AllClicks = intParseVal;
-            //if (Int32.TryParse(row.unique_clicks, out intParseVal))
-            //    fbSum.UniqueClicks = intParseVal;
-            //if (Int32.TryParse(row.total_actions, out intParseVal))
-            //    fbSum.TotalActions = intParseVal;
-
             var actionStats = row.actions;
             var actionVals = row.action_values;
             var videoStats1 = row.video_10_sec_watched_actions;

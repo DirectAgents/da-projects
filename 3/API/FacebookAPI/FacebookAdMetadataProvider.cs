@@ -21,7 +21,7 @@ namespace FacebookAPI
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
         /// <returns></returns>
-        public List<AdData> GetAdsCreativesForAccount(string accountId, DateTime start, DateTime end)
+        public List<AdData> GetAllAdsDataForAccount(string accountId, DateTime start, DateTime end)
         {
             bool moreData;
             var creativesData = new List<AdData>();

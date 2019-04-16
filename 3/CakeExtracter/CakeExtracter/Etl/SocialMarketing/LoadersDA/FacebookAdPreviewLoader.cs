@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
-using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
-using FacebookAPI;
 using FacebookAPI.Entities;
 
 namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
@@ -36,6 +33,5 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
             };
             return tdad;
         }
-
     }
 }

@@ -1,50 +1,48 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.Etl.SocialMarketing.EntitiesLoaders;
+using CakeExtracter.Etl.SocialMarketing.EntitiesStorage;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
-using DirectAgents.Domain.Entities.CPProg;
-using FacebookAPI.Entities;
+using DirectAgents.Domain.Entities.CPProg.Facebook.Ad;
 
 namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 {
-    public class FacebookAdSummaryLoader : Loader<FBSummary>
+    /// <summary>
+    /// Facebook Ad Summary loader
+    /// </summary>
+    /// <seealso cref="CakeExtracter.Etl.Loader{DirectAgents.Domain.Entities.CPProg.Facebook.Ad.FbAdSummary}" />
+    public class FacebookAdSummaryLoader : Loader<FbAdSummary>
     {
         private readonly TDadSummaryLoader tdAdSummaryLoader;
-        //private Dictionary<string, int> tdAdIdLookupByFBAdId = new Dictionary<string, int>();
+
+        private readonly FacebookAdsLoader fbAdsLoader;
+
+        private readonly FacebookAdSetsLoader fbAdSetsLoader;
+
+        private readonly FacebookCampaignsLoader fbCampaignsLoader;
+
+        private readonly FacebookCreativesLoader fbCreativesLoader;
 
         public FacebookAdSummaryLoader(int accountId)
             : base(accountId)
         {
-            //this.BatchSize = // the extracter groups the summaries by Date+AdName before yielding, so just use the default batch size
-            tdAdSummaryLoader = new TDadSummaryLoader(accountId);
+            fbCreativesLoader = new FacebookCreativesLoader();
+            fbCampaignsLoader = new FacebookCampaignsLoader();
+            fbAdSetsLoader = new FacebookAdSetsLoader(fbCampaignsLoader);
+            fbAdsLoader = new FacebookAdsLoader(fbAdSetsLoader, fbCampaignsLoader, fbCreativesLoader);
         }
 
-        protected override int Load(List<FBSummary> items)
+        protected override int Load(List<FbAdSummary> items)
         {
-            var tDadItems = items.Select(CreateTDadSummary).ToList();
-            tdAdSummaryLoader.AddUpdateDependentTDads(tDadItems);
-            tdAdSummaryLoader.AssignTDadIdToItems(tDadItems);
-            var count = tdAdSummaryLoader.UpsertDailySummaries(tDadItems);
-            return count;
+            EnsureAdEntitiesData(items);
+            return items.Count;
         }
 
-        public static TDadSummary CreateTDadSummary(FBSummary item)
+        private void EnsureAdEntitiesData(List<FbAdSummary> items)
         {
-            var sum = new TDadSummary
-            {
-                Date = item.Date,
-                TDad = new TDad
-                {
-                    Name = item.AdName,
-                    ExternalId = item.AdId
-                },
-                Impressions = item.Impressions,
-                AllClicks = item.AllClicks,
-                Clicks = item.LinkClicks,
-                PostClickConv = item.Conversions_click,
-                PostViewConv = item.Conversions_view,
-                Cost = item.Spend
-            };
-            return sum;
+            var fbAds = items.Select(item => item.Ad).ToList();
+            fbAdsLoader.AddUpdateDependentEntities(fbAds);
+            items.ForEach(item => item.AdId = item.Ad.Id);
         }
     }
 }

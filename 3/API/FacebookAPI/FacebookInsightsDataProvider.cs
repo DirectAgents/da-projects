@@ -101,7 +101,6 @@ namespace FacebookAPI
             return $"{(int)window}d_{AttributionPostfixNames[attribution]}";
         }
 
-        // TODO: make asynchronous / do calls in parallel ?
         public IEnumerable<FBSummary> GetDailyStats(string accountId, DateTime start, DateTime end)
         {
             return GetFBSummariesLoop(accountId, start, end);
@@ -119,11 +118,6 @@ namespace FacebookAPI
 
         public IEnumerable<FBSummary> GetDailyAdStats(string accountId, DateTime start, DateTime end)
         {
-
-            var adCreativeProvider = new FacebookAdMetadataProvider(null, null);
-            var adsInfo = adCreativeProvider.GetAdsCreativesForAccount(accountId, DateTime.Now, DateTime.Now);
-            var adDictionary = adsInfo.ToDictionary( a => a.Id , a => a);
-
             int daysPerCall = DaysPerCall_Override ?? DaysPerCall_Ad;
             var clientParmsList = new List<ClientAndParams>();
             while (start <= end)
@@ -132,16 +126,17 @@ namespace FacebookAPI
                 if (tempEnd > end)
                     tempEnd = end;
 
-                var clientParms = GetClientAndParms(accountId, start, tempEnd, byAd: true);
+                var clientParms = GetClientAndParms(accountId, start, tempEnd, byAd: true, byAdSet: true, byCampaign: true);
                 clientParms.GetRunId_withRetry(LogInfo, LogError); // fire off the job
                 clientParmsList.Add(clientParms);
                 start = start.AddDays(daysPerCall);
             }
             Thread.Sleep(InitialWaitMillisecs);
+            clientParmsList = clientParmsList.Take(1).ToList(); // Debugging stuff Remove!!!!! 
             foreach (var clientParms in clientParmsList)
             {
-                var fbSummaries = GetFBSummaries(clientParms).ToList();
-                fbSummaries = RemoveIds(fbSummaries).ToList();
+                var fbSummaries = GetFBSummaries(clientParms);
+                fbSummaries = RemoveIds(fbSummaries);
                 var groups = fbSummaries.GroupBy(s => new { s.Date, s.AdName }).ToList();
                 foreach (var group in groups)
                 {
@@ -153,32 +148,20 @@ namespace FacebookAPI
                         Impressions = group.Sum(g => g.Impressions),
                         LinkClicks = group.Sum(g => g.LinkClicks),
                         AllClicks = group.Sum(g => g.AllClicks),
-                        //UniqueClicks = group.Sum(g => g.UniqueClicks),
-                        //TotalActions = group.Sum(g => g.TotalActions),
                         Conversions_click = group.Sum(g => g.Conversions_click),
                         Conversions_view = group.Sum(g => g.Conversions_view),
-                        AdId = group.First().AdId
+                        AdId = group.First().AdId,
+                        AdSetId = group.First().AdSetId, //TODO : Ensure that it's correct behavior that should be implemented, Items in group can have different Adset ids
+                        AdSetName = group.First().AdSetName, //TODO : Ensure that it's correct behavior that should be implemented, Items in group can have different Adset ids
+                        CampaignId = group.First().CampaignId, //TODO : Ensure that it's correct behavior that should be implemented, Items in group can have different Adset ids
+                        CampaignName = group.First().CampaignName,//TODO : Ensure that it's correct behavior that should be implemented, Items in group can have different Adset ids
                     };
                     yield return fbSum;
                 }
             }
         }
 
-        public static IEnumerable<FBSummary> RemoveIds(IEnumerable<FBSummary> fbSummaries)
-        {
-            foreach (var fbSum in fbSummaries)
-            {
-                var prevName = fbSum.AdName;
-                fbSum.AdName = Regex.Replace(fbSum.AdName, Pattern_ParenNums, "");
-                if (prevName != fbSum.AdName)
-                {
-                    Console.Write(prevName);
-                }
-                yield return fbSum;
-            }
-        }
-
-        public IEnumerable<FBSummary> GetFBSummariesLoop(string accountId, DateTime start, DateTime end, bool byCampaign = false, bool byAdSet = false, bool byAd = false, bool getArchived = false)
+        private IEnumerable<FBSummary> GetFBSummariesLoop(string accountId, DateTime start, DateTime end, bool byCampaign = false, bool byAdSet = false, bool byAd = false, bool getArchived = false)
         {
             int daysPerCall = 365; // default
             if (DaysPerCall_Override.HasValue)
@@ -224,16 +207,6 @@ namespace FacebookAPI
             }
         }
 
-        public void TestToken()
-        {
-            var accessToken = "";
-            var client = new FacebookClient(AccessToken);
-            dynamic obj = client.Get("debug_token", new
-            {
-                input_token = accessToken
-            });
-        }
-
         private FacebookClient CreateFBClient()
         {
             var fbClient = new FacebookClient(AccessToken) { Version = "v" + ApiVersion };
@@ -243,7 +216,7 @@ namespace FacebookAPI
         private ClientAndParams GetClientAndParms(string accountId, DateTime start, DateTime end, bool byCampaign = false, bool byAdSet = false, bool byAd = false, bool getArchived = false)
         {
             var levelVal = "";
-            var fieldsVal = "spend,impressions,inline_link_clicks,clicks,actions,action_values"; // unique_clicks,total_actions
+            var fieldsVal = "spend,impressions,inline_link_clicks,clicks,actions,action_values";
             if (IncludeAllActions)
             {
                 fieldsVal += ",video_10_sec_watched_actions,video_p100_watched_actions"; // video fields
@@ -269,14 +242,10 @@ namespace FacebookAPI
                 filterList.Add(new Filter { field = "publisher_platform", @operator = "IN", value = new[] { platformFilter } });
             if (!String.IsNullOrEmpty(campaignFilterValue))
                 filterList.Add(new Filter { field = "campaign.name", @operator = campaignFilterOperator, value = campaignFilterValue });
-
             if (getArchived)
             {
                 filterList.Add(new Filter { field = $"{levelVal}.effective_status", @operator = "IN", value = new[] { "ARCHIVED" } });
             }
-
-            // See https://developers.facebook.com/docs/marketing-api/ad-rules-getting-started/
-
             var parameters = new
             {
                 filtering = filterList.ToArray(),
@@ -300,6 +269,20 @@ namespace FacebookAPI
                 parms = parameters,
                 logMessage = logMessage
             };
+        }
+
+        private static IEnumerable<FBSummary> RemoveIds(IEnumerable<FBSummary> fbSummaries)
+        {
+            foreach (var fbSum in fbSummaries)
+            {
+                var prevName = fbSum.AdName;
+                fbSum.AdName = Regex.Replace(fbSum.AdName, Pattern_ParenNums, "");
+                if (prevName != fbSum.AdName)
+                {
+                    Console.Write(prevName);
+                }
+                yield return fbSum;
+            }
         }
 
         private IEnumerable<FBSummary> GetFBSummaries(ClientAndParams clientParms)

@@ -43,38 +43,39 @@ namespace DirectAgents.Domain.MigrationsTD
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        Name = c.String(),
-                        ExternalId = c.String(),
-                        AccountId = c.Int(nullable: false),
+                        Status = c.String(),
                         CampaignId = c.Int(),
                         AdSetId = c.Int(),
                         CreativeId = c.Int(),
+                        Name = c.String(),
+                        ExternalId = c.String(),
+                        AccountId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("td.FbAdSet", t => t.AdSetId)
                 .ForeignKey("td.FbCampaign", t => t.CampaignId)
                 .ForeignKey("td.FbCreative", t => t.CreativeId)
                 .ForeignKey("td.Account", t => t.AccountId, cascadeDelete: true)
-                .Index(t => t.AccountId)
                 .Index(t => t.CampaignId)
                 .Index(t => t.AdSetId)
-                .Index(t => t.CreativeId);
+                .Index(t => t.CreativeId)
+                .Index(t => t.AccountId);
             
             CreateTable(
                 "td.FbAdSet",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
+                        CampaignId = c.Int(),
                         Name = c.String(),
                         ExternalId = c.String(),
                         AccountId = c.Int(nullable: false),
-                        CampaignId = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("td.FbCampaign", t => t.CampaignId)
                 .ForeignKey("td.Account", t => t.AccountId, cascadeDelete: true)
-                .Index(t => t.AccountId)
-                .Index(t => t.CampaignId);
+                .Index(t => t.CampaignId)
+                .Index(t => t.AccountId);
             
             CreateTable(
                 "td.FbCampaign",
@@ -85,21 +86,26 @@ namespace DirectAgents.Domain.MigrationsTD
                         ExternalId = c.String(),
                         AccountId = c.Int(nullable: false),
                     })
-                .PrimaryKey(t => t.Id);
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("td.Account", t => t.AccountId, cascadeDelete: true)
+                .Index(t => t.AccountId);
             
             CreateTable(
                 "td.FbCreative",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        Name = c.String(),
-                        ExternalId = c.String(),
                         ThumbnailUrl = c.String(),
                         ImageUrl = c.String(),
                         Title = c.String(),
                         Body = c.String(),
+                        Name = c.String(),
+                        ExternalId = c.String(),
+                        AccountId = c.Int(nullable: false),
                     })
-                .PrimaryKey(t => t.Id);
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("td.Account", t => t.AccountId, cascadeDelete: true)
+                .Index(t => t.AccountId);
             
             CreateTable(
                 "td.FbAdSetAction",
@@ -206,10 +212,12 @@ namespace DirectAgents.Domain.MigrationsTD
             DropForeignKey("td.FbAdAction", "AdId", "td.FbAd");
             DropForeignKey("td.FbAd", "AccountId", "td.Account");
             DropForeignKey("td.FbAd", "CreativeId", "td.FbCreative");
+            DropForeignKey("td.FbCreative", "AccountId", "td.Account");
             DropForeignKey("td.FbAd", "CampaignId", "td.FbCampaign");
             DropForeignKey("td.FbAd", "AdSetId", "td.FbAdSet");
             DropForeignKey("td.FbAdSet", "AccountId", "td.Account");
             DropForeignKey("td.FbAdSet", "CampaignId", "td.FbCampaign");
+            DropForeignKey("td.FbCampaign", "AccountId", "td.Account");
             DropForeignKey("td.FbAdAction", "ActionTypeId", "td.FbActionType");
             DropIndex("td.FbCampaignSummary", new[] { "CampaignId" });
             DropIndex("td.FbCampaignAction", new[] { "ActionTypeId" });
@@ -218,12 +226,14 @@ namespace DirectAgents.Domain.MigrationsTD
             DropIndex("td.FbAdSetSummary", new[] { "AdSetId" });
             DropIndex("td.FbAdSetAction", new[] { "ActionTypeId" });
             DropIndex("td.FbAdSetAction", new[] { "AdSetId" });
-            DropIndex("td.FbAdSet", new[] { "CampaignId" });
+            DropIndex("td.FbCreative", new[] { "AccountId" });
+            DropIndex("td.FbCampaign", new[] { "AccountId" });
             DropIndex("td.FbAdSet", new[] { "AccountId" });
+            DropIndex("td.FbAdSet", new[] { "CampaignId" });
+            DropIndex("td.FbAd", new[] { "AccountId" });
             DropIndex("td.FbAd", new[] { "CreativeId" });
             DropIndex("td.FbAd", new[] { "AdSetId" });
             DropIndex("td.FbAd", new[] { "CampaignId" });
-            DropIndex("td.FbAd", new[] { "AccountId" });
             DropIndex("td.FbAdAction", new[] { "ActionTypeId" });
             DropIndex("td.FbAdAction", new[] { "AdId" });
             DropIndex("td.FbActionType", "CodeIndex");

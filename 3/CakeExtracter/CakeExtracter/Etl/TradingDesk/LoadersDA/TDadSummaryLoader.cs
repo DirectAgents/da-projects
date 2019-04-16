@@ -101,7 +101,6 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
                     progress.ItemCount++;
                 }
-
                 SafeContextWrapper.TrySaveChanges(db);
             }
 

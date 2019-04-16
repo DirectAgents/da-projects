@@ -10,8 +10,6 @@ namespace FacebookAPI.Entities
         public int Impressions { get; set; }
         public int LinkClicks { get; set; }
         public int AllClicks { get; set; }
-        //public int UniqueClicks { get; set; }
-        //public int TotalActions { get; set; }
         public int Conversions_click { get; set; }
         public int Conversions_view { get; set; }
         public decimal ConVal_click { get; set; }
@@ -27,7 +25,7 @@ namespace FacebookAPI.Entities
         public bool AllZeros()
         {
             return (Spend == 0 && Impressions == 0 && LinkClicks == 0 && AllClicks == 0 && Conversions_click == 0 && Conversions_view == 0 && ConVal_click == 0 && ConVal_view == 0);
-        } // && UniqueClicks == 0 && TotalActions == 0
+        }
 
         public Dictionary<string, FBAction> Actions { get; set; }
 
@@ -38,6 +36,7 @@ namespace FacebookAPI.Entities
             if (action.Num_view.HasValue)
                 this.Conversions_view = action.Num_view.Value;
         }
+
         public void SetConValsFromAction(FBAction action)
         {
             if (action.Val_click.HasValue)

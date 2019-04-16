@@ -7,49 +7,16 @@ namespace DirectAgents.Domain.Entities.CPProg.Facebook.Ad
     /// <summary>
     /// Facebook Ad database entity.
     /// </summary>
-    public class FbAd
+    public class FbAd : FbEntity
     {
         /// <summary>
-        /// Gets or sets the identifier.
+        /// Gets or sets the status (effective status in facebook api).
         /// </summary>
         /// <value>
-        /// The identifier.
+        /// The status.
         /// </value>
-        public int Id { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets the external identifier.
-        /// </summary>
-        /// <value>
-        /// The external identifier.
-        /// </value>
-        public string ExternalId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the account identifier.
-        /// </summary>
-        /// <value>
-        /// The account identifier.
-        /// </value>
-        public int AccountId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the ext account.
-        /// </summary>
-        /// <value>
-        /// The ext account.
-        /// </value>
-        [ForeignKey("AccountId")]
-        public virtual ExtAccount ExtAccount { get; set; }
-
+        public string Status { get; set; }
+        
         /// <summary>
         /// Gets or sets the campaign identifier.
         /// </summary>
