@@ -198,6 +198,20 @@ namespace DirectAgents.Domain.MigrationsTD
                 .ForeignKey("td.FbCampaign", t => t.CampaignId, cascadeDelete: true)
                 .Index(t => t.CampaignId);
             
+            CreateTable(
+                "td.FbDailySummary",
+                c => new
+                    {
+                        Date = c.DateTime(nullable: false),
+                        AccountId = c.Int(nullable: false),
+                        Impressions = c.Int(nullable: false),
+                        Clicks = c.Int(nullable: false),
+                        AllClicks = c.Int(nullable: false),
+                        PostClickConv = c.Int(nullable: false),
+                        PostViewConv = c.Int(nullable: false),
+                        Cost = c.Decimal(nullable: false, precision: 18, scale: 6),
+                    })
+                .PrimaryKey(t => new { t.Date, t.AccountId });
         }
         
         public override void Down()
@@ -237,6 +251,7 @@ namespace DirectAgents.Domain.MigrationsTD
             DropIndex("td.FbAdAction", new[] { "ActionTypeId" });
             DropIndex("td.FbAdAction", new[] { "AdId" });
             DropIndex("td.FbActionType", "CodeIndex");
+            DropTable("td.FbDailySummary");
             DropTable("td.FbCampaignSummary");
             DropTable("td.FbCampaignAction");
             DropTable("td.FbAdSummary");

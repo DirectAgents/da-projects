@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using Facebook;
 using FacebookAPI.Api;
@@ -19,7 +17,6 @@ namespace FacebookAPI
         public const int InitialWaitMillisecs = 1500;
         public const int MaxRetries = 20; //??reduce??
         private const int SecondsToWaitIfLimitReached = 61;
-        public bool IncludeAllActions = false;
 
         private static readonly Dictionary<PlatformFilter, string> PlatformFilterNames = new Dictionary<PlatformFilter, string>
         {
@@ -103,65 +100,30 @@ namespace FacebookAPI
 
         public IEnumerable<FBSummary> GetDailyStats(string accountId, DateTime start, DateTime end)
         {
-            return GetFBSummariesLoop(accountId, start, end);
+            var converter = new DailyInsigthsFacebookSummaryConverter(conversionActionType, clickAttribution, viewAttribution);
+            return GetFBSummariesLoop(accountId, start, end, converter);
         }
 
         public IEnumerable<FBSummary> GetDailyCampaignStats(string accountId, DateTime start, DateTime end)
         {
-            return GetFBSummariesLoop(accountId, start, end, byCampaign: true);
+            var converter = new StrategyInsigthsFacebookSummaryConverter(conversionActionType, clickAttribution, viewAttribution);
+            return GetFBSummariesLoop(accountId, start, end, converter, byCampaign: true);
         }
 
         public IEnumerable<FBSummary> GetDailyAdSetStats(string accountId, DateTime start, DateTime end)
         {
-            return GetFBSummariesLoop(accountId, start, end, byCampaign: true, byAdSet: true, getArchived: true);
+            var converter = new AdSetInsigthsFacebookSummaryConverter(conversionActionType, clickAttribution, viewAttribution);
+            return GetFBSummariesLoop(accountId, start, end, converter, byCampaign: true, byAdSet: true, getArchived: true);
         }
 
         public IEnumerable<FBSummary> GetDailyAdStats(string accountId, DateTime start, DateTime end)
         {
-            int daysPerCall = DaysPerCall_Override ?? DaysPerCall_Ad;
-            var clientParmsList = new List<ClientAndParams>();
-            while (start <= end)
-            {
-                var tempEnd = start.AddDays(daysPerCall - 1);
-                if (tempEnd > end)
-                    tempEnd = end;
-
-                var clientParms = GetClientAndParms(accountId, start, tempEnd, byAd: true, byAdSet: true, byCampaign: true);
-                clientParms.GetRunId_withRetry(LogInfo, LogError); // fire off the job
-                clientParmsList.Add(clientParms);
-                start = start.AddDays(daysPerCall);
-            }
-            Thread.Sleep(InitialWaitMillisecs);
-            clientParmsList = clientParmsList.Take(1).ToList(); // Debugging stuff Remove!!!!! 
-            foreach (var clientParms in clientParmsList)
-            {
-                var fbSummaries = GetFBSummaries(clientParms);
-                fbSummaries = RemoveIds(fbSummaries);
-                var groups = fbSummaries.GroupBy(s => new { s.Date, s.AdName }).ToList();
-                foreach (var group in groups)
-                {
-                    var fbSum = new FBSummary
-                    {
-                        Date = group.Key.Date,
-                        AdName = group.Key.AdName,
-                        Spend = group.Sum(g => g.Spend),
-                        Impressions = group.Sum(g => g.Impressions),
-                        LinkClicks = group.Sum(g => g.LinkClicks),
-                        AllClicks = group.Sum(g => g.AllClicks),
-                        Conversions_click = group.Sum(g => g.Conversions_click),
-                        Conversions_view = group.Sum(g => g.Conversions_view),
-                        AdId = group.First().AdId,
-                        AdSetId = group.First().AdSetId, //TODO : Ensure that it's correct behavior that should be implemented, Items in group can have different Adset ids
-                        AdSetName = group.First().AdSetName, //TODO : Ensure that it's correct behavior that should be implemented, Items in group can have different Adset ids
-                        CampaignId = group.First().CampaignId, //TODO : Ensure that it's correct behavior that should be implemented, Items in group can have different Adset ids
-                        CampaignName = group.First().CampaignName,//TODO : Ensure that it's correct behavior that should be implemented, Items in group can have different Adset ids
-                    };
-                    yield return fbSum;
-                }
-            }
+            var converter = new AdInsigthsFacebookSummaryConverter(conversionActionType, clickAttribution, viewAttribution);
+            return GetFBSummariesLoop(accountId, start, end, converter, byCampaign: true, byAdSet: true, byAd: true, getArchived: false);
         }
 
-        private IEnumerable<FBSummary> GetFBSummariesLoop(string accountId, DateTime start, DateTime end, bool byCampaign = false, bool byAdSet = false, bool byAd = false, bool getArchived = false)
+        private IEnumerable<FBSummary> GetFBSummariesLoop(string accountId, DateTime start, DateTime end, FacebookSummaryConverter converter,
+            bool byCampaign = false, bool byAdSet = false, bool byAd = false, bool getArchived = false)
         {
             int daysPerCall = 365; // default
             if (DaysPerCall_Override.HasValue)
@@ -175,7 +137,6 @@ namespace FacebookAPI
                 if (byAd)
                     daysPerCall = DaysPerCall_Ad;
             }
-
             var clientParmsList = new List<ClientAndParams>();
             while (start <= end)
             {
@@ -196,10 +157,9 @@ namespace FacebookAPI
                 start = start.AddDays(daysPerCall);
             }
             Thread.Sleep(InitialWaitMillisecs);
-
             foreach (var clientParms in clientParmsList)
             {
-                var fbSummaries = GetFBSummaries(clientParms);
+                var fbSummaries = GetFBSummaries(clientParms, converter);
                 foreach (var fbSum in fbSummaries)
                 {
                     yield return fbSum;
@@ -217,10 +177,6 @@ namespace FacebookAPI
         {
             var levelVal = "";
             var fieldsVal = "spend,impressions,inline_link_clicks,clicks,actions,action_values";
-            if (IncludeAllActions)
-            {
-                fieldsVal += ",video_10_sec_watched_actions,video_p100_watched_actions"; // video fields
-            }
             if (byCampaign)
             {
                 levelVal = "campaign";
@@ -230,13 +186,13 @@ namespace FacebookAPI
             {
                 levelVal = "adset";
                 fieldsVal += ",adset_id,adset_name";
+                fieldsVal += ",video_10_sec_watched_actions,video_p100_watched_actions";
             }
             if (byAd)
             {
                 levelVal = "ad";
                 fieldsVal += ",ad_id,ad_name";
             }
-
             var filterList = new List<Filter>();
             if (!String.IsNullOrWhiteSpace(platformFilter))
                 filterList.Add(new Filter { field = "publisher_platform", @operator = "IN", value = new[] { platformFilter } });
@@ -271,21 +227,7 @@ namespace FacebookAPI
             };
         }
 
-        private static IEnumerable<FBSummary> RemoveIds(IEnumerable<FBSummary> fbSummaries)
-        {
-            foreach (var fbSum in fbSummaries)
-            {
-                var prevName = fbSum.AdName;
-                fbSum.AdName = Regex.Replace(fbSum.AdName, Pattern_ParenNums, "");
-                if (prevName != fbSum.AdName)
-                {
-                    Console.Write(prevName);
-                }
-                yield return fbSum;
-            }
-        }
-
-        private IEnumerable<FBSummary> GetFBSummaries(ClientAndParams clientParms)
+        private IEnumerable<FBSummary> GetFBSummaries(ClientAndParams clientParms, FacebookSummaryConverter converter)
         {
             LogInfo(clientParms.logMessage);
             bool moreData = false;
@@ -336,12 +278,11 @@ namespace FacebookAPI
 
                 if (retObj == null)
                     continue;
-                var converter = new InsigthsFacebookSummaryConverter(IncludeAllActions, conversionActionType, clickAttribution, viewAttribution);
                 if (retObj.data != null)
                 {
                     foreach (var row in retObj.data)
                     {
-                        var fbSum = converter.GetFacebookSummaryFromRow(row);
+                        var fbSum = converter.ParseSummaryRow(row);
                         yield return fbSum;
                     }
                 }

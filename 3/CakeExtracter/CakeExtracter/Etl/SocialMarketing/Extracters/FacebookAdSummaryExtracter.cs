@@ -17,7 +17,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
         private readonly FacebookAdMetadataProvider fbAdMetadataProvider;
 
         public FacebookAdSummaryExtracter(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility,
-            FacebookAdMetadataProvider fbAdMetadataProvider, bool includeAllActions = false) : base(fbUtility, dateRange, account, includeAllActions)
+            FacebookAdMetadataProvider fbAdMetadataProvider) : base(fbUtility, dateRange, account)
         {
             this.fbAdMetadataProvider = fbAdMetadataProvider;
         }
@@ -29,8 +29,10 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
             try
             {
                 var fbSums = _fbUtility.GetDailyAdStats("act_" + fbAccountId, dateRange.Value.FromDate, dateRange.Value.ToDate);
+                Logger.Info(accountId, "Started reading ad's metadata");
                 var allAdsMetadata = fbAdMetadataProvider.GetAllAdsDataForAccount("act_" + fbAccountId, dateRange.Value.FromDate, dateRange.Value.ToDate);
-                var fbAdSummaryItems = fbSums.Select(item => { return CreateTDadSummary(item, allAdsMetadata); }).ToList();
+                Logger.Info(accountId, "Finished reading ad's metadata");
+                var fbAdSummaryItems = fbSums.Select(item => { return CreateTDadSummary(item, allAdsMetadata); });
                 Add(fbAdSummaryItems);
             }
             catch (Exception ex)
@@ -62,23 +64,47 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
                         Name = item.AdSetName,
                         ExternalId = item.AdSetId
                     },
-                    Creative = GetRelatedCreativeData(item, adMetadata)
+                    Creative = GetRelatedCreativeData(item, adMetadata),
                 },
                 Impressions = item.Impressions,
                 AllClicks = item.AllClicks,
                 Clicks = item.LinkClicks,
                 PostClickConv = item.Conversions_click,
                 PostViewConv = item.Conversions_view,
-                Cost = item.Spend
+                Cost = item.Spend,
+                Actions = GetActions(item)
             };
             sum.Ad.AdSet.Campaign = sum.Ad.Campaign;
             return sum;
         }
 
+        private List<FbAdAction> GetActions(FBSummary summaryItem)
+        {
+            var actions = new List<FbAdAction>();
+            if (summaryItem.Actions != null)
+            {
+                actions = summaryItem.Actions.Values.Select(fbAction => new FbAdAction
+                {
+                    ActionType = new FbActionType
+                    {
+                        Code = fbAction.ActionType,
+                    },
+                    ClickAttrWindow = fbAction.ClickAttrWindow,
+                    ViewAttrWindow = fbAction.ViewAttrWindow,
+                    Date = summaryItem.Date,
+                    PostClick = fbAction.Num_click ?? 0,
+                    PostView = fbAction.Num_view ?? 0,
+                    PostClickVal = fbAction.Val_click ?? 0,
+                    PostViewVal = fbAction.Val_view ?? 0
+                }).ToList();
+            }
+            return actions;
+        }
+
         private FbCreative GetRelatedCreativeData(FBSummary item, List<AdData> allAdsMetadata)
         {
             var relatedAdMetadata = allAdsMetadata.FirstOrDefault(ad => ad.Id == item.AdId);
-            if (relatedAdMetadata!=null)
+            if (relatedAdMetadata != null)
             {
                 return new FbCreative
                 {

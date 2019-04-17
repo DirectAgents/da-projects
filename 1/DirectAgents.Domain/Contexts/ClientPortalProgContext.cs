@@ -16,6 +16,7 @@ using DirectAgents.Domain.Entities.CPProg.Facebook.Ad;
 using DirectAgents.Domain.Entities.CPProg.Facebook;
 using DirectAgents.Domain.Entities.CPProg.Facebook.AdSet;
 using DirectAgents.Domain.Entities.CPProg.Facebook.Campaign;
+using DirectAgents.Domain.Entities.CPProg.Facebook.Daily;
 
 namespace DirectAgents.Domain.Contexts
 {
@@ -108,6 +109,7 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<FbCampaign>().ToTable("FbCampaign", tdSchema);
             modelBuilder.Entity<FbCampaignAction>().ToTable("FbCampaignAction", tdSchema);
             modelBuilder.Entity<FbCampaignSummary>().ToTable("FbCampaignSummary", tdSchema);
+            modelBuilder.Entity<FbDailySummary>().ToTable("FbDailySummary", tdSchema);
             modelBuilder.Entity<FbActionType>().ToTable("FbActionType", tdSchema);
 
             //TD CJ
@@ -325,6 +327,7 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<FbCampaign> FbCampaigns { get; set; }
         public DbSet<FbCampaignAction> FbCampaignActions { get; set; }
         public DbSet<FbCampaignSummary> FbCampaignSummaries { get; set; }
+        public DbSet<FbDailySummary> FbDailySummaries { get; set; }
         public DbSet<FbActionType> FbActionTypes { get; set; }
 
         //TD DSP
@@ -404,10 +407,12 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<FbAdSummary>().HasKey(s => new { s.Date, s.AdId });
             modelBuilder.Entity<FbAdSetSummary>().HasKey(s => new { s.Date, s.AdSetId });
             modelBuilder.Entity<FbCampaignSummary>().HasKey(s => new { s.Date, s.CampaignId });
+            modelBuilder.Entity<FbDailySummary>().HasKey(s => new { s.Date, s.AccountId });
 
             modelBuilder.Entity<FbAdSummary>().Property(t => t.Cost).HasPrecision(18, 6);
             modelBuilder.Entity<FbAdSetSummary>().Property(t => t.Cost).HasPrecision(18, 6);
             modelBuilder.Entity<FbCampaignSummary>().Property(t => t.Cost).HasPrecision(18, 6);
+            modelBuilder.Entity<FbDailySummary>().Property(t => t.Cost).HasPrecision(18, 6);
 
             modelBuilder.Entity<FbAdAction>()
                 .HasKey(x => new { x.Date, x.AdId, x.ActionTypeId });

@@ -177,7 +177,7 @@ namespace CakeExtracter.Commands
 
         private int DoETL_Daily(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
         {
-            var extractor = new FacebookDailySummaryExtracter(dateRange, account, fbUtility, includeAllActions: false);
+            var extractor = new FacebookDailySummaryExtracter(dateRange, account, fbUtility);
             var loader = new FacebookDailySummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
             return extractor.Added;
@@ -185,14 +185,14 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
         {
-            var extractor = new FacebookCampaignSummaryExtracter(dateRange, account, fbUtility, includeAllActions: false);
+            var extractor = new FacebookCampaignSummaryExtracter(dateRange, account, fbUtility);
             var loader = new FacebookCampaignSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
 
         private void DoETL_AdSet(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
         {
-            var extractor = new FacebookAdSetSummaryExtracter(dateRange, account, fbUtility, includeAllActions: true);
+            var extractor = new FacebookAdSetSummaryExtracter(dateRange, account, fbUtility);
             var loader = new FacebookAdSetSummaryLoader(account.Id, loadActions: true);
             CommandHelper.DoEtl(extractor, loader);
         }
@@ -200,8 +200,8 @@ namespace CakeExtracter.Commands
         private void DoETL_Creative(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
         {
             var fbAdMetadataProvider = new FacebookAdMetadataProvider(m => Logger.Info(account.Id, m), m => Logger.Warn(account.Id, m));
-            var extractor = new FacebookAdSummaryExtracter(dateRange, account, fbUtility, fbAdMetadataProvider, includeAllActions: true);
-            var loader = new FacebookAdSummaryLoader(account.Id);
+            var extractor = new FacebookAdSummaryExtracter(dateRange, account, fbUtility, fbAdMetadataProvider);
+            var loader = new FacebookAdSummaryLoader(account.Id, dateRange);
             CommandHelper.DoEtl(extractor, loader);
         }
 

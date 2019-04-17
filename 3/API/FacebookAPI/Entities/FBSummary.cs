@@ -45,13 +45,4 @@ namespace FacebookAPI.Entities
                 this.ConVal_view = action.Val_view.Value;
         }
     }
-
-    public class FBAction
-    {
-        public string ActionType { get; set; }
-        public int? Num_click { get; set; }
-        public int? Num_view { get; set; }
-        public decimal? Val_click { get; set; }
-        public decimal? Val_view { get; set; }
-    }
 }

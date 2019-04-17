@@ -8,8 +8,8 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
 {
     public class FacebookCampaignSummaryExtracter : FacebookApiExtracter<FBSummary>
     {
-        public FacebookCampaignSummaryExtracter(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility, bool includeAllActions = false)
-            : base(fbUtility, dateRange, account, includeAllActions)
+        public FacebookCampaignSummaryExtracter(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
+            : base(fbUtility, dateRange, account)
         { }
 
         protected override void Extract()

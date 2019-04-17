@@ -11,10 +11,9 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
         protected readonly int accountId;   // in our db
         protected readonly string fbAccountId; // fb account: aka "ad account"
 
-        public FacebookApiExtracter(FacebookInsightsDataProvider fbUtility, DateRange? dateRange, ExtAccount account, bool includeAllActions = false)
+        public FacebookApiExtracter(FacebookInsightsDataProvider fbUtility, DateRange? dateRange, ExtAccount account)
         {
             this._fbUtility = fbUtility;
-            this._fbUtility.IncludeAllActions = includeAllActions;
             this.dateRange = dateRange;
             this.accountId = account.Id;
             this.fbAccountId = account.ExternalId;

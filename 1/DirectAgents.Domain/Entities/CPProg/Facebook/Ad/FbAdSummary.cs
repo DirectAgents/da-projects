@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DirectAgents.Domain.Entities.CPProg.Facebook.Ad
@@ -6,25 +6,14 @@ namespace DirectAgents.Domain.Entities.CPProg.Facebook.Ad
     /// <summary>
     /// Facebook Ad Summary
     /// </summary>
-    public class FbAdSummary
+    public class FbAdSummary : FbBaseSummary
     {
-        public DateTime Date { get; set; }
-
         public int AdId { get; set; }
 
         [ForeignKey("AdId")]
         public virtual FbAd Ad { get; set; }
 
-        public int Impressions { get; set; }
-
-        public int Clicks { get; set; }
-
-        public int AllClicks { get; set; }
-
-        public int PostClickConv { get; set; }
-
-        public int PostViewConv { get; set; }
-
-        public decimal Cost { get; set; }
+        [NotMapped]
+        public List<FbAdAction> Actions { get; set; }
     }
 }

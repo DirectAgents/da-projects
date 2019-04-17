@@ -73,7 +73,12 @@ namespace DirectAgents.Domain.Entities.CPProg.Facebook
         /// </value>
         public string ClickAttrWindow { get; set; }
 
-        //
+        /// <summary>
+        /// Gets or sets the view attribute window.
+        /// </summary>
+        /// <value>
+        /// The view attribute window.
+        /// </value>
         public string ViewAttrWindow { get; set; }
     }
 }

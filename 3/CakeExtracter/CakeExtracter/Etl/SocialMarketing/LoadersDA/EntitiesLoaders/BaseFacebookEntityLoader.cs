@@ -15,7 +15,7 @@ namespace CakeExtracter.Etl.SocialMarketing.EntitiesLoaders
             {
                 var itemsToBeAdded = new List<T>();
                 var itemsToBeUpdated = new List<T>();
-                var itemsToProcess = items.Where(item => !fbAdEntityIdStorage.IsEntityInStorage(item));
+                var itemsToProcess = items.Where(item => !fbAdEntityIdStorage.IsEntityInStorage(item)).ToList();
                 foreach (var item in itemsToProcess)
                 {
                     var existingItem = db.Set<T>().FirstOrDefault(ad => ad.ExternalId == item.ExternalId && ad.AccountId == item.AccountId);
@@ -25,6 +25,7 @@ namespace CakeExtracter.Etl.SocialMarketing.EntitiesLoaders
                     }
                     else
                     {
+                        item.Id = existingItem.Id;
                         if (UpdateExistingDbAdPropertiesIfNecessary(existingItem, item))
                         {
                             itemsToBeUpdated.Add(existingItem);
@@ -33,7 +34,7 @@ namespace CakeExtracter.Etl.SocialMarketing.EntitiesLoaders
                 }
                 AddMissedDbItems(itemsToBeAdded, lockObject);
                 UpdateOutdatedDbItems(itemsToBeUpdated);
-                AddItemsToEntityIdStorage(items, fbAdEntityIdStorage);
+                AddItemsToEntityIdStorage(itemsToProcess, fbAdEntityIdStorage);
             }
         }
 
@@ -44,10 +45,6 @@ namespace CakeExtracter.Etl.SocialMarketing.EntitiesLoaders
                 if (fbAdEntityIdStorage.IsEntityInStorage(item))
                 {
                     item.Id = fbAdEntityIdStorage.GetEntityIdFromStorage(item);
-                }
-                else
-                {
-                    Console.WriteLine("Test stuff");
                 }
             });
         }
@@ -69,9 +66,9 @@ namespace CakeExtracter.Etl.SocialMarketing.EntitiesLoaders
         {
         }
 
-        private void AddItemsToEntityIdStorage(List<T> campaigns, EntityIdStorage<T> fbAdEntityIdStorage)
+        private void AddItemsToEntityIdStorage(List<T> items, EntityIdStorage<T> entityIdStorage)
         {
-            campaigns.ForEach(c => { fbAdEntityIdStorage.AddEntityIdToStorage(c); });
+            items.ForEach(c => { entityIdStorage.AddEntityIdToStorage(c); });
         }
     }
 }

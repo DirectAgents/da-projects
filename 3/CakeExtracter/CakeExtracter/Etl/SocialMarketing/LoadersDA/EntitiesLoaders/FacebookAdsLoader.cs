@@ -33,8 +33,8 @@ namespace CakeExtracter.Etl.SocialMarketing.EntitiesStorage
         {
             var uniqueItems = items.GroupBy(item => item.ExternalId).Select(gr => gr.First()).ToList();
             EnsureCreativesData(uniqueItems);
-            EnsureCampaignsData(uniqueItems);
             EnsureAdSetsData(uniqueItems);
+            EnsureCampaignsData(uniqueItems);
             AddUpdateDependentItems(uniqueItems, fbAdEntityIdStorage, lockObject);
             AssignIdToItems(items, fbAdEntityIdStorage);
         }
@@ -44,6 +44,7 @@ namespace CakeExtracter.Etl.SocialMarketing.EntitiesStorage
             var relatedCampaigns = items.Select(item => item.Campaign).ToList();
             campaignsLoader.AddUpdateDependentEntities(relatedCampaigns);
             items.ForEach(item => item.CampaignId = item.Campaign.Id);
+            items.ForEach(item => item.AdSet.CampaignId = item.Campaign.Id);
         }
 
         private void EnsureAdSetsData(List<FbAd> items)
