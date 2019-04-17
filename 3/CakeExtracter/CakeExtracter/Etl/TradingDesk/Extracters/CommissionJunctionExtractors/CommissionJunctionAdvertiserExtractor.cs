@@ -117,7 +117,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.CommissionJunctionExtractors
 
         private void CleanCommissions(DateTime fromDate, DateTime toDate)
         {
-            cleaner.CleanCommissionJunctionInfo(account.Id, dateRangeType, fromDate, toDate);
+            var nextDayAfterToDate = toDate.AddDays(1); // cleaning non including toDate
+            cleaner.CleanCommissionJunctionInfo(account.Id, dateRangeType, fromDate, nextDayAfterToDate);
         }
     }
 }

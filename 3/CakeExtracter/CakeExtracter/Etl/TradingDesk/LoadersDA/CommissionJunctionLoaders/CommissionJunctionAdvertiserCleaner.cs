@@ -19,20 +19,22 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.CommissionJunctionLoaders
         /// <param name="toDate">To date.</param>
         public void CleanCommissionJunctionInfo(int accountId, DateRangeType dateRangeType, DateTime fromDate, DateTime toDate)
         {
-            Logger.Info(accountId, "The cleaning of ComissionJunction for account ({0}) has begun - {1} - {2} ({3})", accountId, fromDate, toDate, dateRangeType);
+            Logger.Info(accountId, "The cleaning of ComissionJunction for account ({0}) has begun - >= {1} - < {2} ({3})",
+                accountId, fromDate.ToShortDateString(), toDate.ToShortDateString(), dateRangeType);
             SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
             {
                 switch (dateRangeType)
                 {
                     case DateRangeType.Event:
-                        db.CjAdvertiserCommissions.Where(x => (x.EventDate >= fromDate && x.EventDate <= toDate) && x.AccountId == accountId).DeleteFromQuery();
+                        db.CjAdvertiserCommissions.Where(x => (x.EventDate >= fromDate && x.EventDate < toDate) && x.AccountId == accountId).DeleteFromQuery();
                         break;
                     case DateRangeType.Posting:
-                        db.CjAdvertiserCommissions.Where(x => (x.PostingDate >= fromDate && x.PostingDate <= toDate) && x.AccountId == accountId).DeleteFromQuery();
+                        db.CjAdvertiserCommissions.Where(x => (x.PostingDate >= fromDate && x.PostingDate < toDate) && x.AccountId == accountId).DeleteFromQuery();
                         break;
                 }
             }, "DeleteFromQuery");
-            Logger.Info(accountId, "The cleaning of ComissionJunction for account ({0}) is over - {1} - {2} ({3})", accountId, fromDate, toDate, dateRangeType);
+            Logger.Info(accountId, "The cleaning of ComissionJunction for account ({0}) is over - >= {1} - < {2} ({3})",
+                accountId, fromDate.ToShortDateString(), toDate.ToShortDateString(), dateRangeType);
         }
     }
 }
