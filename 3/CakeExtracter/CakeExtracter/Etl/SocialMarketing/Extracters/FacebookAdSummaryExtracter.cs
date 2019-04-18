@@ -32,7 +32,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
                 Logger.Info(accountId, "Started reading ad's metadata");
                 var allAdsMetadata = fbAdMetadataProvider.GetAllAdsDataForAccount("act_" + fbAccountId, dateRange.Value.FromDate, dateRange.Value.ToDate);
                 Logger.Info(accountId, "Finished reading ad's metadata");
-                var fbAdSummaryItems = fbSums.Select(item => { return CreateTDadSummary(item, allAdsMetadata); });
+                var fbAdSummaryItems = fbSums.Select(item => { return CreateFbAdSummary(item, allAdsMetadata); });
                 Add(fbAdSummaryItems);
             }
             catch (Exception ex)
@@ -42,7 +42,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
             End();
         }
 
-        private FbAdSummary CreateTDadSummary(FBSummary item, List<AdData> adMetadata)
+        private FbAdSummary CreateFbAdSummary(FBSummary item, List<AdData> adMetadata)
         {
             var sum = new FbAdSummary
             {

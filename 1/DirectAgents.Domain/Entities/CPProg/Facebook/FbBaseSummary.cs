@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DirectAgents.Domain.Entities.CPProg.Facebook
 {
@@ -24,12 +22,6 @@ namespace DirectAgents.Domain.Entities.CPProg.Facebook
         {
             return Impressions == 0 && Clicks == 0 && AllClicks == 0
                 && PostClickConv == 0 && PostViewConv == 0 && Cost == 0;
-        }
-
-        public bool IsEqualWith(FbBaseSummary summary)
-        {
-            return Impressions == summary.Impressions && Clicks == summary.Clicks && AllClicks == summary.AllClicks
-                && PostClickConv == summary.PostClickConv && PostViewConv == summary.PostViewConv && Cost == summary.Cost;
         }
     }
 }

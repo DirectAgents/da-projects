@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Linq;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.CPProg.Facebook.Daily;
 using FacebookAPI;
 using FacebookAPI.Entities;
 
 namespace CakeExtracter.Etl.SocialMarketing.Extracters
 {
-    public class FacebookDailySummaryExtracter : FacebookApiExtracter<FBSummary>
+    public class FacebookDailySummaryExtracter : FacebookApiExtracter<FbDailySummary>
     {
         public FacebookDailySummaryExtracter(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
             : base(fbUtility, dateRange, account)
@@ -19,13 +21,30 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
             try
             {
                 var fbSums = _fbUtility.GetDailyStats("act_" + fbAccountId, dateRange.Value.FromDate, dateRange.Value.ToDate);
-                Add(fbSums);
+                var fbDailySummaryItems = fbSums.Select(CreateFbDailySummary);
+                Add(fbDailySummaryItems);
             }
             catch (Exception ex)
             {
                 Logger.Error(accountId, ex);
             }
             End();
+        }
+
+        private FbDailySummary CreateFbDailySummary(FBSummary item)
+        {
+            var sum = new FbDailySummary
+            {
+                Date = item.Date,
+                AccountId = accountId,
+                Impressions = item.Impressions,
+                AllClicks = item.AllClicks,
+                Clicks = item.LinkClicks,
+                PostClickConv = item.Conversions_click,
+                PostViewConv = item.Conversions_view,
+                Cost = item.Spend
+            };
+            return sum;
         }
     }
 }

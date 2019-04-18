@@ -1,98 +1,56 @@
-﻿using CakeExtracter.Helpers;
+﻿using CakeExtracter.Common;
+using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
-using DirectAgents.Domain.Entities.CPProg;
-using FacebookAPI;
-using FacebookAPI.Entities;
+using DirectAgents.Domain.Entities.CPProg.Facebook.Daily;
 using System.Collections.Generic;
-using System.Data.Entity;
+using System.Linq;
 
 namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 {
-    public class FacebookDailySummaryLoader : Loader<FBSummary>
+    public class FacebookDailySummaryLoader : Loader<FbDailySummary>
     {
-        public FacebookDailySummaryLoader(int accountId)
+        private readonly DateRange dateRange;
+
+        private List<FbDailySummary> latestSummaries = new List<FbDailySummary>();
+
+        public FacebookDailySummaryLoader(int accountId, DateRange dateRange)
             : base(accountId)
         {
-            BatchSize = FacebookInsightsDataProvider.RowsReturnedAtATime; //FB API only returns 25 rows at a time
+            this.dateRange = dateRange;
         }
 
-        protected override int Load(List<FBSummary> items)
+        protected override int Load(List<FbDailySummary> items)
         {
-            Logger.Info(accountId, "Loading {0} Facebook DailySummaries..", items.Count);
-            var count = UpsertDailySummaries(items);
-            return count;
+            latestSummaries.AddRange(items);
+            return items.Count;
         }
 
-        private int UpsertDailySummaries(IEnumerable<FBSummary> items)
+        protected override void AfterLoadAction()
         {
-            var progress = new LoadingProgress();
-            using (var db = new ClientPortalProgContext())
+            DeleteOldSummariesFromDb();
+            LoadLatestSummariesToDb(latestSummaries);
+        }
+
+        private void LoadSummaries(List<FbDailySummary> summaries)
+        {
+            latestSummaries.AddRange(summaries);
+        }
+
+        private void DeleteOldSummariesFromDb()
+        {
+            SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
             {
-                foreach (var item in items)
-                {
-                    var source = new DailySummary
-                    {
-                        AccountId = accountId,
-                        Date = item.Date,
-                        Impressions = item.Impressions,
-                        Clicks = item.LinkClicks,
-                        AllClicks = item.AllClicks,
-                        PostClickConv = item.Conversions_click,
-                        PostViewConv = item.Conversions_view,
-                        PostClickRev = item.ConVal_click,
-                        PostViewRev = item.ConVal_view,
-                        Cost = item.Spend
-                    };
-                    var target = db.Set<DailySummary>().Find(item.Date, accountId);
-                    if (target == null)
-                    {
-                        if (!item.AllZeros())
-                        {
-                            db.DailySummaries.Add(source);
-                            progress.AddedCount++;
-                        }
-                        else
-                        {
-                            progress.AlreadyDeletedCount++;
-                        }
-                    }
-                    else // DailySummary already exists
-                    {
-                        var entry = db.Entry(target);
-                        if (entry.State == EntityState.Unchanged)
-                        {
-                            if (!item.AllZeros())
-                            {
-                                entry.State = EntityState.Detached;
-                                AutoMapper.Mapper.Map(source, target);
-                                entry.State = EntityState.Modified;
-                                progress.UpdatedCount++;
-                            }
-                            else
-                            {
-                                entry.State = EntityState.Deleted;
-                            }
-                        }
-                        else
-                        {
-                            Logger.Warn(accountId, "Encountered duplicate DailySummary for {0:d}", item.Date);
-                            progress.DuplicateCount++;
-                        }
-                    }
+                db.FbDailySummaries.Where(x => (x.Date >= dateRange.FromDate && x.Date <= dateRange.ToDate)
+                    && x.AccountId == accountId).DeleteFromQuery();
+            }, "BulkDeleteByQuery");
+        }
 
-                    progress.ItemCount++;
-                }
-
-                SafeContextWrapper.TrySaveChanges(db);
-            }
-
-            Logger.Info(accountId, "Saving {0} DailySummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted)",
-                progress.ItemCount, progress.UpdatedCount, progress.AddedCount, progress.DuplicateCount, progress.DeletedCount, progress.AlreadyDeletedCount);
-            if (progress.DuplicateCount > 0)
+        private void LoadLatestSummariesToDb(List<FbDailySummary> summaries)
+        {
+            SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
             {
-                Logger.Warn(accountId, "Encountered {0} duplicates which were skipped", progress.DuplicateCount);
-            }
-            return progress.ItemCount;
+                db.BulkInsert(summaries);
+            }, "BulkInsert");
         }
     }
 }

@@ -165,11 +165,8 @@ namespace CakeExtracter.Commands
                     DoETL_Strategy(acctDateRange, account, fbUtility);
                 if (statsType.AdSet && (numDailyItems == null || numDailyItems.Value > 0))
                     DoETL_AdSet(acctDateRange, account, fbUtility);
-
                 if (statsType.Creative && !statsType.All) // don't include when getting "all" statstypes
                     DoETL_Creative(acctDateRange, account, fbUtility);
-                //if (statsType.Site)
-                //    DoETL_Site(acctDateRange, acct, fbUtility);
             });
 
             return 0;
@@ -178,7 +175,7 @@ namespace CakeExtracter.Commands
         private int DoETL_Daily(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
         {
             var extractor = new FacebookDailySummaryExtracter(dateRange, account, fbUtility);
-            var loader = new FacebookDailySummaryLoader(account.Id);
+            var loader = new FacebookDailySummaryLoader(account.Id, dateRange);
             CommandHelper.DoEtl(extractor, loader);
             return extractor.Added;
         }
@@ -186,14 +183,14 @@ namespace CakeExtracter.Commands
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
         {
             var extractor = new FacebookCampaignSummaryExtracter(dateRange, account, fbUtility);
-            var loader = new FacebookCampaignSummaryLoader(account.Id);
+            var loader = new FacebookCampaignSummaryLoader(account.Id, dateRange);
             CommandHelper.DoEtl(extractor, loader);
         }
 
         private void DoETL_AdSet(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
         {
             var extractor = new FacebookAdSetSummaryExtracter(dateRange, account, fbUtility);
-            var loader = new FacebookAdSetSummaryLoader(account.Id, loadActions: true);
+            var loader = new FacebookAdSetSummaryLoader(account.Id, dateRange);
             CommandHelper.DoEtl(extractor, loader);
         }
 
