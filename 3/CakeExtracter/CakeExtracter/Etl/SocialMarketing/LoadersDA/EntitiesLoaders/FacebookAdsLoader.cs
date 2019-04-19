@@ -44,21 +44,39 @@ namespace CakeExtracter.Etl.SocialMarketing.EntitiesStorage
             var relatedCampaigns = items.Select(item => item.Campaign).ToList();
             campaignsLoader.AddUpdateDependentEntities(relatedCampaigns);
             items.ForEach(item => item.CampaignId = item.Campaign.Id);
-            items.ForEach(item => item.AdSet.CampaignId = item.Campaign.Id);
+            items.ForEach(item => item.AdSet.CampaignId = item.Campaign?.Id);
         }
 
         private void EnsureAdSetsData(List<FbAd> items)
         {
             var relatedAdSets = items.Select(item => item.AdSet).ToList();
             adSetsLoader.AddUpdateDependentEntities(relatedAdSets);
-            items.ForEach(item => item.AdSetId = item.AdSet.Id);
+            items.ForEach(item => item.AdSetId = item.AdSet?.Id);
         }
 
         private void EnsureCreativesData(List<FbAd> items)
         {
-            var relatedCreatives = items.Select(item => item.Creative).ToList();
+            var relatedCreatives = items.Select(item => item.Creative).Where(item=>item!=null).ToList();
             creativesLoader.AddUpdateDependentEntities(relatedCreatives);
-            items.ForEach(item => item.CreativeId = item.Creative.Id);
+            items.ForEach(item => item.CreativeId = item.Creative?.Id);
+        }
+
+        protected override bool UpdateExistingDbItemPropertiesIfNecessary(FbAd existingDbItem, FbAd latestItemFromApi)
+        {
+            if (existingDbItem.Name != latestItemFromApi.Name ||
+                existingDbItem.Status != latestItemFromApi.Status ||
+                existingDbItem.CampaignId != latestItemFromApi.CampaignId ||
+                existingDbItem.AdSetId != latestItemFromApi.AdSetId ||
+                existingDbItem.CreativeId != latestItemFromApi.CreativeId)
+            {
+                existingDbItem.Name = latestItemFromApi.Name;
+                existingDbItem.CampaignId = latestItemFromApi.CampaignId;
+                existingDbItem.AdSetId = latestItemFromApi.AdSetId;
+                existingDbItem.CreativeId = latestItemFromApi.CreativeId;
+                existingDbItem.Status = latestItemFromApi.Status;
+                return true;
+            }
+            return false;
         }
     }
 }

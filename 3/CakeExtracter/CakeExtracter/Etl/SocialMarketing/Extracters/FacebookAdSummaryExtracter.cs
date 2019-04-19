@@ -42,14 +42,16 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
             End();
         }
 
-        private FbAdSummary CreateFbAdSummary(FBSummary item, List<AdData> adMetadata)
+        private FbAdSummary CreateFbAdSummary(FBSummary item, List<AdData> allAdMetadata)
         {
+            var relatedAdMetadata = allAdMetadata.FirstOrDefault(ad => ad.Id == item.AdId);
             var sum = new FbAdSummary
             {
                 Date = item.Date,
                 Ad = new FbAd
                 {
                     Name = item.AdName,
+                    Status = relatedAdMetadata?.Status,
                     ExternalId = item.AdId,
                     AccountId = accountId,
                     Campaign = new FbCampaign
@@ -64,7 +66,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
                         Name = item.AdSetName,
                         ExternalId = item.AdSetId
                     },
-                    Creative = GetRelatedCreativeData(item, adMetadata),
+                    Creative = GetRelatedCreativeData(item, relatedAdMetadata),
                 },
                 Impressions = item.Impressions,
                 AllClicks = item.AllClicks,
@@ -101,9 +103,8 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
             return actions;
         }
 
-        private FbCreative GetRelatedCreativeData(FBSummary item, List<AdData> allAdsMetadata)
+        private FbCreative GetRelatedCreativeData(FBSummary item, AdData relatedAdMetadata)
         {
-            var relatedAdMetadata = allAdsMetadata.FirstOrDefault(ad => ad.Id == item.AdId);
             if (relatedAdMetadata != null)
             {
                 return new FbCreative

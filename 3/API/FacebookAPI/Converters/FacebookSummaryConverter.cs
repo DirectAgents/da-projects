@@ -32,7 +32,7 @@ namespace FacebookAPI.Converters
                 AdSetId = row.adset_id,
                 AdSetName = row.adset_name,
                 AdId = row.ad_id,
-                AdName = row.ad_name
+                AdName = row.ad_name,
             };
             if (decimal.TryParse(row.spend, out decParseVal))
                 fbSum.Spend = decParseVal;

@@ -26,8 +26,12 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
         private List<FbAdSummary> latestSummaries = new List<FbAdSummary>();
         private List<FbAdAction> latestActions = new List<FbAdAction>();
 
+        private static object lockObj = new object();
+
+        private const int batchSize = 1000;
+
         public FacebookAdSummaryLoader(int accountId, DateRange dateRange)
-            : base(accountId)
+            : base(accountId, batchSize)
         {
             fbActionTypeLoader = new FacebookActionTypeLoader();
             fbCreativesLoader = new FacebookCreativesLoader();
@@ -37,13 +41,17 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
             this.dateRange = dateRange;
         }
 
-        protected override int Load(List<FbAdSummary> items)
+        protected override int Load(List<FbAdSummary> summaries)
         {
-            EnsureAdEntitiesData(items);
-            latestSummaries.AddRange(items);
-            var actions = PrepareActionsData(items);
+            EnsureAdEntitiesData(summaries);
+            // sometimes from api can be pulled duplicate summaries
+            var uniqueSummaries = summaries.GroupBy(s => new { s.AdId, s.Date }).Select(gr => gr.First()).ToList();
+            var notProcessedSummaries = uniqueSummaries.
+                 Where(s => !latestSummaries.Any(ls => s.AdId == ls.AdId && s.Date == ls.Date)).ToList();
+            latestSummaries.AddRange(notProcessedSummaries);
+            var actions = PrepareActionsData(notProcessedSummaries);
             latestActions.AddRange(actions);
-            return items.Count;
+            return summaries.Count;
         }
 
         protected override void AfterLoadAction()
@@ -72,7 +80,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         private List<FbAdAction> PrepareActionsData(List<FbAdSummary> items)
         {
-            var actions = items.SelectMany(item => item.Actions).ToList(); 
+            var actions = items.SelectMany(item => item.Actions).ToList();
             var actionTypes = actions.Select(action => action.ActionType).ToList();
             fbActionTypeLoader.EnsureActionType(actionTypes);
             actions.ForEach(action => action.ActionTypeId = action.ActionType.Id);
@@ -81,36 +89,36 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         private void DeleteOldSummariesFromDb()
         {
-            SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
+            SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
                 db.FbAdSummaries.Where(x => (x.Date >= dateRange.FromDate && x.Date <= dateRange.ToDate)
                     && x.Ad.AccountId == accountId).DeleteFromQuery();
-            }, "BulkDeleteByQuery");
+            }, lockObj, "BulkDeleteByQuery");
         }
 
         private void LoadLatestSummariesToDb(List<FbAdSummary> summaries)
         {
-            SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
+            SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
                 db.BulkInsert(summaries);
-            }, "BulkInsert");
+            }, lockObj, "BulkInsert");
         }
 
         private void DeleteOldActionsFromDb()
         {
-            SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
+            SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
                 db.FbAdActions.Where(x => (x.Date >= dateRange.FromDate && x.Date <= dateRange.ToDate)
                     && x.Ad.AccountId == accountId).DeleteFromQuery();
-            }, "BulkDeleteByQuery");
+            }, lockObj, "BulkDeleteByQuery");
         }
 
         private void LoadLatestActionsToDb(List<FbAdAction> actions)
         {
-            SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
+            SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
                 db.BulkInsert(actions);
-            }, "BulkInsert");
+            }, lockObj, "BulkInsert");
         }
     }
 }

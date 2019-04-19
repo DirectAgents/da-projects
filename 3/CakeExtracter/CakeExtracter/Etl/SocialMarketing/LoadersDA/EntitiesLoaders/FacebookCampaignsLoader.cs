@@ -24,5 +24,15 @@ namespace CakeExtracter.Etl.SocialMarketing.EntitiesLoaders
             AddUpdateDependentItems(uniqueItems, fbAdEntityIdStorage, lockObject);
             AssignIdToItems(items, fbAdEntityIdStorage);
         }
+
+        protected override bool UpdateExistingDbItemPropertiesIfNecessary(FbCampaign existingDbItem, FbCampaign latestItemFromApi)
+        {
+            if (existingDbItem.Name != latestItemFromApi.Name)
+            {
+                existingDbItem.Name = latestItemFromApi.Name;
+                return true;
+            }
+            return false;
+        }
     }
 }

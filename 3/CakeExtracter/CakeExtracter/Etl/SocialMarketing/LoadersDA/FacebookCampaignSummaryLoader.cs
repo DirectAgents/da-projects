@@ -13,6 +13,8 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
         private readonly FacebookCampaignsLoader fbCampaignsLoader;
         private readonly DateRange dateRange;
 
+        private static object lockObj = new object();
+
         private List<FbCampaignSummary> latestSummaries = new List<FbCampaignSummary>();
 
         public FacebookCampaignSummaryLoader(int accountId, DateRange dateRange)
@@ -22,11 +24,15 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
             this.dateRange = dateRange;
         }
 
-        protected override int Load(List<FbCampaignSummary> items)
+        protected override int Load(List<FbCampaignSummary> summaries)
         {
-            EnsureCampaignsEntitiesData(items);
-            latestSummaries.AddRange(items);
-            return items.Count;
+            EnsureCampaignsEntitiesData(summaries);
+            // sometimes from api can be pulled duplicate summaries
+            var uniqueSummaries = summaries.GroupBy(s => new { s.CampaignId, s.Date }).Select(gr => gr.First()).ToList();
+            var notProcessedSummaries = uniqueSummaries.
+                 Where(s => !latestSummaries.Any(ls => s.CampaignId == ls.CampaignId && s.Date == ls.Date)).ToList();
+            latestSummaries.AddRange(notProcessedSummaries);
+            return summaries.Count;
         }
 
         protected override void AfterLoadAction()
@@ -52,19 +58,19 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         private void DeleteOldSummariesFromDb()
         {
-            SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
+            SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
                 db.FbCampaignSummaries.Where(x => (x.Date >= dateRange.FromDate && x.Date <= dateRange.ToDate)
                     && x.Campaign.AccountId == accountId).DeleteFromQuery();
-            }, "BulkDeleteByQuery");
+            }, lockObj, "BulkDeleteByQuery");
         }
 
         private void LoadLatestSummariesToDb(List<FbCampaignSummary> summaries)
         {
-            SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
+            SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
                 db.BulkInsert(summaries);
-            }, "BulkInsert");
+            }, lockObj, "BulkInsert");
         }
     }
 }

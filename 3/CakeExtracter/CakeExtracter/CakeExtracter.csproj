@@ -411,7 +411,6 @@
     <Compile Include="Commands\DA\DASynchKochavaStats.cs" />
     <Compile Include="Commands\DA\DASynchYAMStats.cs" />
     <Compile Include="Commands\EOMSynchCPCCommand.cs" />
-    <Compile Include="Commands\DA\DASynchFacebookAdPreviews.cs" />
     <Compile Include="Commands\DA\DASynchDBMCreatives.cs" />
     <Compile Include="Commands\DA\DASeed.cs" />
     <Compile Include="Commands\DA\DASynchAdrollAds.cs" />
@@ -512,13 +511,11 @@
     <Compile Include="Etl\SocialMarketing\LoadersDA\EntitiesLoaders\FacebookAdSetsLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\EntitiesLoaders\FacebookAdsLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\EntitiesLoaders\FacebookCampaignsLoader.cs" />
-    <Compile Include="Etl\SocialMarketing\Extracters\FacebookAdPreviewExtracter.cs" />
     <Compile Include="Etl\SocialMarketing\Extracters\FacebookAdSetSummaryExtracter.cs" />
     <Compile Include="Etl\SocialMarketing\Extracters\FacebookAdSummaryExtracter.cs" />
     <Compile Include="Etl\SocialMarketing\Extracters\FacebookCampaignSummaryExtracter.cs" />
     <Compile Include="Etl\SocialMarketing\Extracters\FacebookDailySummaryExtracter.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\EntitiesLoaders\ListFbActionType.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdPreviewLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdSetSummaryLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdSummaryLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookCampaignSummaryLoader.cs" />

@@ -11,6 +11,8 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
     {
         private readonly DateRange dateRange;
 
+        private static object lockObj = new object();
+
         private List<FbDailySummary> latestSummaries = new List<FbDailySummary>();
 
         public FacebookDailySummaryLoader(int accountId, DateRange dateRange)
@@ -38,19 +40,19 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         private void DeleteOldSummariesFromDb()
         {
-            SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
+            SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
                 db.FbDailySummaries.Where(x => (x.Date >= dateRange.FromDate && x.Date <= dateRange.ToDate)
                     && x.AccountId == accountId).DeleteFromQuery();
-            }, "BulkDeleteByQuery");
+            }, lockObj, "BulkDeleteByQuery");
         }
 
         private void LoadLatestSummariesToDb(List<FbDailySummary> summaries)
         {
-            SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
+            SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
                 db.BulkInsert(summaries);
-            }, "BulkInsert");
+            }, lockObj, "BulkInsert");
         }
     }
 }

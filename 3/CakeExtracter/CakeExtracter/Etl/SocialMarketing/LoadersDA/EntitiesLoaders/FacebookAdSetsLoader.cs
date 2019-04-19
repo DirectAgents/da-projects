@@ -34,7 +34,18 @@ namespace CakeExtracter.Etl.SocialMarketing.EntitiesLoaders
         {
             var relatedCampaigns = items.Select(item => item.Campaign).ToList();
             campaignsLoader.AddUpdateDependentEntities(relatedCampaigns);
-            items.ForEach(item => item.CampaignId = item.Campaign.Id);
+            items.ForEach(item => item.CampaignId = item.Campaign?.Id);
+        }
+
+        protected override bool UpdateExistingDbItemPropertiesIfNecessary(FbAdSet existingDbItem, FbAdSet latestItemFromApi)
+        {
+            if (existingDbItem.Name != latestItemFromApi.Name || existingDbItem.CampaignId != latestItemFromApi.CampaignId)
+            {
+                existingDbItem.Name = latestItemFromApi.Name;
+                existingDbItem.CampaignId = latestItemFromApi.CampaignId;
+                return true;
+            }
+            return false;
         }
     }
 }

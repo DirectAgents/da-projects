@@ -120,14 +120,9 @@ namespace CakeExtracter.Commands
 
             var statsType = new StatsTypeAgg(StatsType);
 
-            var accounts = GetAccounts().Take(1);
+            var accounts = GetAccounts();
             Parallel.ForEach(accounts, (account) =>
             {
-                //var adCreativeProvider = new FacebookAdMetadataProvider();
-               
-                //var adsInfo = adCreativeProvider.GetAdsCreativesForAccount(account.ExternalId, dateRange.FromDate, dateRange.ToDate);
-                //return;
-
                 var acctDateRange = new DateRange(dateRange.FromDate, dateRange.ToDate);
                 if (account.Campaign != null) // check/adjust daterange - if acct assigned to a campaign/advertiser
                 {
@@ -159,13 +154,12 @@ namespace CakeExtracter.Commands
                 // TODO? remove this since we now handle exceptions in the extracter?
                 if (Accts_DailyOnly.Contains(account.ExternalId))
                     return;
-
                 // Skip strategy & adset stats if there were no dailies
                 if (statsType.Strategy && (numDailyItems == null || numDailyItems.Value > 0))
                     DoETL_Strategy(acctDateRange, account, fbUtility);
                 if (statsType.AdSet && (numDailyItems == null || numDailyItems.Value > 0))
                     DoETL_AdSet(acctDateRange, account, fbUtility);
-                if (statsType.Creative && !statsType.All) // don't include when getting "all" statstypes
+                if (statsType.Creative && (numDailyItems == null || numDailyItems.Value > 0)) 
                     DoETL_Creative(acctDateRange, account, fbUtility);
             });
 

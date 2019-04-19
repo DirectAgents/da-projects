@@ -1,13 +1,12 @@
 ﻿using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg.Facebook;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace CakeExtracter.Etl.SocialMarketing.EntitiesLoaders
 {
-    public class BaseFacebookEntityLoader<T> where T : FbEntity
+    public abstract class BaseFacebookEntityLoader<T> where T : FbEntity
     {
         protected void AddUpdateDependentItems(List<T> items, EntityIdStorage<T> fbAdEntityIdStorage, object lockObject)
         {
@@ -26,17 +25,19 @@ namespace CakeExtracter.Etl.SocialMarketing.EntitiesLoaders
                     else
                     {
                         item.Id = existingItem.Id;
-                        if (UpdateExistingDbAdPropertiesIfNecessary(existingItem, item))
+                        if (UpdateExistingDbItemPropertiesIfNecessary(existingItem, item))
                         {
                             itemsToBeUpdated.Add(existingItem);
                         }
                     }
                 }
                 AddMissedDbItems(itemsToBeAdded, lockObject);
-                UpdateOutdatedDbItems(itemsToBeUpdated);
+                UpdateOutdatedDbItems(itemsToBeUpdated, lockObject);
                 AddItemsToEntityIdStorage(itemsToProcess, fbAdEntityIdStorage);
             }
         }
+
+        protected abstract bool UpdateExistingDbItemPropertiesIfNecessary(T existingDbItem, T latestItemFromApi);
 
         protected void AssignIdToItems(List<T> items, EntityIdStorage<T> fbAdEntityIdStorage)
         {
@@ -49,11 +50,6 @@ namespace CakeExtracter.Etl.SocialMarketing.EntitiesLoaders
             });
         }
 
-        private bool UpdateExistingDbAdPropertiesIfNecessary(T existingDbAd, T latestAdFromApi)
-        {
-            return false;
-        }
-
         private void AddMissedDbItems(List<T> itemsToBeAdded, object lockObject)
         {
             SafeContextWrapper.TryMakeTransactionWithLock<ClientPortalProgContext>(dbContext =>
@@ -62,8 +58,12 @@ namespace CakeExtracter.Etl.SocialMarketing.EntitiesLoaders
             }, lockObject, "BulkInserting");
         }
 
-        private void UpdateOutdatedDbItems(List<T> itemsToBeUpdated)
+        private void UpdateOutdatedDbItems(List<T> itemsToBeUpdated, object lockObject)
         {
+            SafeContextWrapper.TryMakeTransactionWithLock<ClientPortalProgContext>(dbContext =>
+            {
+                dbContext.BulkUpdate(itemsToBeUpdated);
+            }, lockObject, "BulkUpdating");
         }
 
         private void AddItemsToEntityIdStorage(List<T> items, EntityIdStorage<T> entityIdStorage)

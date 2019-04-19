@@ -19,6 +19,8 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
         private List<FbAdSetSummary> latestSummaries = new List<FbAdSetSummary>();
         private List<FbAdSetAction> latestActions = new List<FbAdSetAction>();
 
+        private static object lockObj = new object();
+
         public FacebookAdSetSummaryLoader(int accountId, DateRange dateRange)
             : base(accountId)
         {
@@ -28,13 +30,17 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
             this.dateRange = dateRange;
         }
 
-        protected override int Load(List<FbAdSetSummary> items)
+        protected override int Load(List<FbAdSetSummary> summaries)
         {
-            EnsureAdSetEntitiesData(items);
-            latestSummaries.AddRange(items);
-            var actions = PrepareActionsData(items);
+            EnsureAdSetEntitiesData(summaries);
+            // sometimes from api can be pulled duplicate summaries
+            var uniqueSummaries = summaries.GroupBy(s => new { s.AdSetId, s.Date }).Select(gr => gr.First()).ToList();
+            var notProcessedSummaries = uniqueSummaries.
+                Where(s => !latestSummaries.Any(ls => s.AdSetId == ls.AdSetId && s.Date == ls.Date)).ToList();
+            latestSummaries.AddRange(notProcessedSummaries);
+            var actions = PrepareActionsData(notProcessedSummaries);
             latestActions.AddRange(actions);
-            return items.Count;
+            return summaries.Count;
         }
 
         protected override void AfterLoadAction()
@@ -47,6 +53,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         private void LoadSummaries(List<FbAdSetSummary> summaries)
         {
+
             latestSummaries.AddRange(summaries);
         }
 
@@ -72,36 +79,36 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         private void DeleteOldSummariesFromDb()
         {
-            SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
+            SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
                 db.FbAdSetSummaries.Where(x => (x.Date >= dateRange.FromDate && x.Date <= dateRange.ToDate)
                     && x.AdSet.AccountId == accountId).DeleteFromQuery();
-            }, "BulkDeleteByQuery");
+            }, lockObj, "BulkDeleteByQuery");
         }
 
         private void LoadLatestSummariesToDb(List<FbAdSetSummary> summaries)
         {
-            SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
+            SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
                 db.BulkInsert(summaries);
-            }, "BulkInsert");
+            }, lockObj, "BulkInsert");
         }
 
         private void DeleteOldActionsFromDb()
         {
-            SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
+            SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
                 db.FbAdSetActions.Where(x => (x.Date >= dateRange.FromDate && x.Date <= dateRange.ToDate)
                     && x.AdSet.AccountId == accountId).DeleteFromQuery();
-            }, "BulkDeleteByQuery");
+            }, lockObj, "BulkDeleteByQuery");
         }
 
         private void LoadLatestActionsToDb(List<FbAdSetAction> actions)
         {
-            SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
+            SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
                 db.BulkInsert(actions);
-            }, "BulkInsert");
+            }, lockObj, "BulkInsert");
         }
     }
 }

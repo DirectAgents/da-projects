@@ -21,6 +21,7 @@ namespace FacebookAPI.Entities
         public string AdSetName { get; set; }
         public string AdId { get; set; }
         public string AdName { get; set; }
+        public string AdStatus { get; set; }
 
         public bool AllZeros()
         {
