@@ -11,6 +11,7 @@ using DirectAgents.Domain.Entities.CPProg.Vendor.SummaryMetrics;
 using DirectAgents.Domain.Entities.CPProg.DSP;
 using DirectAgents.Domain.Entities.CPProg.DSP.SummaryMetrics;
 using DirectAgents.Domain.Entities.CPProg.CJ;
+using DirectAgents.Domain.Entities.CPProg.DBM;
 using DirectAgents.Domain.Entities.CPProg.Kochava;
 
 namespace DirectAgents.Domain.Contexts
@@ -233,6 +234,9 @@ namespace DirectAgents.Domain.Contexts
                 .ToTable("CreativeDailySummary", dbmSchema);
             modelBuilder.Entity<CreativeDailySummary>()
                 .Property(cds => cds.Revenue).HasPrecision(18, 6);
+
+            //TD DBM
+            CreateDbmModel(modelBuilder);
         }
 
         public DbSet<Employee> Employees { get; set; }
@@ -320,6 +324,14 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<Creative> Creatives { get; set; }
         public DbSet<CreativeDailySummary> DBMCreativeDailySummaries { get; set; }
 
+        //TD DBM
+        public DbSet<DbmCampaign> DbmCampaigns { get; set; }
+        public DbSet<DbmInsertionOrder> DbmInsertionOrders { get; set; }
+        public DbSet<DbmLineItem> DbmLineItems { get; set; }
+        public DbSet<DbmLineItemSummary> DbmLineItemSummaries { get; set; }
+        public DbSet<DbmCreative> DbmCreatives { get; set; }
+        public DbSet<DbmCreativeSummary> DbmCreativeSummaries { get; set; }
+        
         private void SetupCjModelValues(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CjAdvertiserCommission>().Property(t => t.AdvCommissionAmountUsd).HasPrecision(18, 6);
@@ -336,6 +348,23 @@ namespace DirectAgents.Domain.Contexts
                 .WillCascadeOnDelete();
         }
 
+        private static void CreateDbmModel(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<DbmCampaign>().ToTable("DbmCampaign", tdSchema);
+            modelBuilder.Entity<DbmInsertionOrder>().ToTable("DbmInsertionOrder", tdSchema);
+            modelBuilder.Entity<DbmLineItem>().ToTable("DbmLineItem", tdSchema);
+            modelBuilder.Entity<DbmCreative>().ToTable("DbmCreative", tdSchema);
+            modelBuilder.Entity<DbmLineItemSummary>()
+                .HasKey(summary => new {summary.LineItemId, summary.Date})
+                .ToTable("DbmLineItemSummary", tdSchema);
+            modelBuilder.Entity<DbmCreativeSummary>()
+                .HasKey(summary => new {summary.CreativeId, summary.Date})
+                .ToTable("DbmCreativeSummary", tdSchema);
+
+            modelBuilder.Entity<DbmLineItemSummary>().Property(t => t.Cost).HasPrecision(18, 6);
+            modelBuilder.Entity<DbmCreativeSummary>().Property(t => t.Cost).HasPrecision(18, 6);
+        }
+
         private static void SetupVcdAnalyticModelValues(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.ShippedRevenue).HasPrecision(18, 6);
@@ -346,7 +375,7 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.CustomerReturns).HasPrecision(18, 6);
             modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.OrderedRevenue).HasPrecision(18, 6);
         }
-
+        
         private void SetupDailyMetricModelValues<TDailyMetricValues>(DbModelBuilder modelBuilder, string entityColumnName)
              where TDailyMetricValues : DspMetricValues
         {

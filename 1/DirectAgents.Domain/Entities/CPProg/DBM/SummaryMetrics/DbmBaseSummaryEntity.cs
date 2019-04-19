@@ -4,10 +4,6 @@ namespace DirectAgents.Domain.Entities.CPProg.DBM
 {
     public class DbmBaseSummaryEntity
     {
-        public int? EntityId { get; set; }
-
-        public DateTime Date { get; set; }
-
         public int Impressions { get; set; }
 
         public int Clicks { get; set; }

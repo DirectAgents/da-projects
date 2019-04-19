@@ -122,6 +122,10 @@
     <Compile Include="Entities\CPProg\DBM\SummaryMetrics\DbmBaseSummaryEntity.cs" />
     <Compile Include="Entities\CPProg\DBM\SummaryMetrics\DbmCreativeSummary.cs" />
     <Compile Include="Entities\CPProg\DBM\SummaryMetrics\DbmLineItemSummary.cs" />
+    <Compile Include="MigrationsTD\201904191309000_Mig_DbmCreative_Expansion.cs" />
+    <Compile Include="MigrationsTD\201904191309000_Mig_DbmCreative_Expansion.Designer.cs">
+      <DependentUpon>201904191309000_Mig_DbmCreative_Expansion.cs</DependentUpon>
+    </Compile>
     <Compile Include="SpecialPlatformProviders\Implementation\CommissionJunctionProvider.cs" />
     <Compile Include="SpecialPlatformProviders\Implementation\DspProvider.cs" />
     <Compile Include="SpecialPlatformProviders\Implementation\KochavaProvider.cs" />
@@ -1037,6 +1041,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201904021651556_Mig_JobExecution.resx">
       <DependentUpon>201904021651556_Mig_JobExecution.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201904191309000_Mig_DbmCreative_Expansion.resx">
+      <DependentUpon>201904191309000_Mig_DbmCreative_Expansion.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>
