@@ -8,12 +8,26 @@ using FacebookAPI.Entities;
 
 namespace CakeExtracter.Etl.SocialMarketing.Extracters
 {
+    /// <summary>
+    /// Facebook daily summary extractor.
+    /// </summary>
+    /// <seealso cref="CakeExtracter.Etl.SocialMarketing.Extracters.FacebookApiExtracter{DirectAgents.Domain.Entities.CPProg.Facebook.Daily.FbDailySummary}" />
     public class FacebookDailySummaryExtracter : FacebookApiExtracter<FbDailySummary>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FacebookDailySummaryExtracter"/> class.
+        /// </summary>
+        /// <param name="dateRange">The date range.</param>
+        /// <param name="account">The account.</param>
+        /// <param name="fbUtility">The fb utility.</param>
         public FacebookDailySummaryExtracter(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
             : base(fbUtility, dateRange, account)
         { }
 
+        /// <summary>
+        /// The derived class implements this method, which calls Add() for each item
+        /// extracted and then calls End() when complete.
+        /// </summary>
         protected override void Extract()
         {
             Logger.Info(accountId, "Extracting DailySummaries from Facebook API for ({0}) from {1:d} to {2:d}",

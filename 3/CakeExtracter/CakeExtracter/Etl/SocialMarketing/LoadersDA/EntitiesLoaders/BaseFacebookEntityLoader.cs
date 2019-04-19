@@ -6,8 +6,18 @@ using System.Linq;
 
 namespace CakeExtracter.Etl.SocialMarketing.EntitiesLoaders
 {
+    /// <summary>
+    /// Base facebook related entities loader.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public abstract class BaseFacebookEntityLoader<T> where T : FbEntity
     {
+        /// <summary>
+        /// Adds or updates dependent items.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        /// <param name="fbAdEntityIdStorage">The fb ad entity identifier storage.</param>
+        /// <param name="lockObject">The lock object.</param>
         protected void AddUpdateDependentItems(List<T> items, EntityIdStorage<T> fbAdEntityIdStorage, object lockObject)
         {
             using (var db = new ClientPortalProgContext())
@@ -37,8 +47,19 @@ namespace CakeExtracter.Etl.SocialMarketing.EntitiesLoaders
             }
         }
 
+        /// <summary>
+        /// Updates the existing database item properties if necessary.
+        /// </summary>
+        /// <param name="existingDbItem">The existing database item.</param>
+        /// <param name="latestItemFromApi">The latest item from API.</param>
+        /// <returns></returns>
         protected abstract bool UpdateExistingDbItemPropertiesIfNecessary(T existingDbItem, T latestItemFromApi);
 
+        /// <summary>
+        /// Assigns the identifier to items.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        /// <param name="fbAdEntityIdStorage">The fb ad entity identifier storage.</param>
         protected void AssignIdToItems(List<T> items, EntityIdStorage<T> fbAdEntityIdStorage)
         {
             items.ForEach(item =>

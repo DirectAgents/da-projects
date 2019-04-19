@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace CakeExtracter.Etl.SocialMarketing.LoadersDA.EntitiesLoaders
 {
+    /// <summary>
+    /// Facebook action types loader.
+    /// </summary>
     public class FacebookActionTypeLoader
     {
         private static EntityIdStorage<FbActionType> fbActionTypesEntityIdStorage = new EntityIdStorage<FbActionType>(x => x.Id,
@@ -13,6 +16,10 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA.EntitiesLoaders
 
         private static object actionTypesLock = new object();
 
+        /// <summary>
+        /// Ensures the type of the action entity in database.
+        /// </summary>
+        /// <param name="actionTypes">The action types.</param>
         public void EnsureActionType(List<FbActionType> actionTypes)
         {
             var uniqueItems = actionTypes.GroupBy(item => item.Code).Select(gr => gr.First()).ToList();

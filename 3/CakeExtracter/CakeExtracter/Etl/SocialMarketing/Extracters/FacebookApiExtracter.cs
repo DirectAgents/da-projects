@@ -18,7 +18,5 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
             this.accountId = account.Id;
             this.fbAccountId = account.ExternalId;
         }
-
-        
     }
 }

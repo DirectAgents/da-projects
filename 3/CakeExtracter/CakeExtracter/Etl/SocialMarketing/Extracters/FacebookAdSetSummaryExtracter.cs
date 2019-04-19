@@ -11,12 +11,26 @@ using FacebookAPI.Entities;
 
 namespace CakeExtracter.Etl.SocialMarketing.Extracters
 {
+    /// <summary>
+    /// Facebook Adset summary extractor.
+    /// </summary>
+    /// <seealso cref="CakeExtracter.Etl.SocialMarketing.Extracters.FacebookApiExtracter{DirectAgents.Domain.Entities.CPProg.Facebook.AdSet.FbAdSetSummary}" />
     public class FacebookAdSetSummaryExtracter : FacebookApiExtracter<FbAdSetSummary>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FacebookAdSetSummaryExtracter"/> class.
+        /// </summary>
+        /// <param name="dateRange">The date range.</param>
+        /// <param name="account">The account.</param>
+        /// <param name="fbUtility">The fb utility.</param>
         public FacebookAdSetSummaryExtracter(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
             : base(fbUtility, dateRange, account)
         { }
 
+        /// <summary>
+        /// The derived class implements this method, which calls Add() for each item
+        /// extracted and then calls End() when complete.
+        /// </summary>
         protected override void Extract()
         {
             Logger.Info(accountId, "Extracting AdSet Summaries from Facebook API for ({0}) from {1:d} to {2:d}",

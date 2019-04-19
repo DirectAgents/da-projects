@@ -18,6 +18,10 @@ namespace CakeExtracter.Etl.SocialMarketing.EntitiesLoaders
 
         private static object lockObject = new object();
 
+        /// <summary>
+        /// Adds  or updates dependent entities.
+        /// </summary>
+        /// <param name="items">The items.</param>
         public void AddUpdateDependentEntities(List<FbCampaign> items)
         {
             var uniqueItems = items.GroupBy(item => item.ExternalId).Select(gr => gr.First()).ToList();
@@ -25,6 +29,12 @@ namespace CakeExtracter.Etl.SocialMarketing.EntitiesLoaders
             AssignIdToItems(items, fbAdEntityIdStorage);
         }
 
+        /// <summary>
+        /// Updates the existing database item properties if necessary.
+        /// </summary>
+        /// <param name="existingDbItem">The existing database item.</param>
+        /// <param name="latestItemFromApi">The latest item from API.</param>
+        /// <returns></returns>
         protected override bool UpdateExistingDbItemPropertiesIfNecessary(FbCampaign existingDbItem, FbCampaign latestItemFromApi)
         {
             if (existingDbItem.Name != latestItemFromApi.Name)

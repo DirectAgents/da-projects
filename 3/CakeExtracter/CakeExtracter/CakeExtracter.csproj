@@ -515,7 +515,6 @@
     <Compile Include="Etl\SocialMarketing\Extracters\FacebookAdSummaryExtracter.cs" />
     <Compile Include="Etl\SocialMarketing\Extracters\FacebookCampaignSummaryExtracter.cs" />
     <Compile Include="Etl\SocialMarketing\Extracters\FacebookDailySummaryExtracter.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\EntitiesLoaders\ListFbActionType.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdSetSummaryLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdSummaryLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookCampaignSummaryLoader.cs" />

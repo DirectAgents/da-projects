@@ -1,27 +1,30 @@
 ﻿using Facebook;
 using FacebookAPI.Entities;
 using FacebookAPI.Entities.AdDataEntities;
-using FacebookAPI.Utils;
 using System;
 using System.Collections.Generic;
 
 namespace FacebookAPI
 {
+    /// <summary>
+    /// Provider for facebook ads metadata. 
+    /// </summary>
+    /// <seealso cref="FacebookAPI.BaseFacebookDataProvider" />
     public class FacebookAdMetadataProvider : BaseFacebookDataProvider
     {
+        private const int metadataFetchingPageSize = 500;
+
         public FacebookAdMetadataProvider(Action<string> logInfo, Action<string> logError)
            : base(logInfo, logError)
         {
         }
 
         /// <summary>
-        /// Gets the ads creatives data for account.
+        /// Gets all ads data for account.
         /// </summary>
-        /// <param name="accountId">The account identifier. In format "act_{ExternalId}"</param>
-        /// <param name="start">The start.</param>
-        /// <param name="end">The end.</param>
+        /// <param name="accountId">The account identifier.</param>
         /// <returns></returns>
-        public List<AdData> GetAllAdsDataForAccount(string accountId, DateTime start, DateTime end)
+        public List<AdData> GetAllAdsMetadataForAccount(string accountId)
         {
             bool moreData;
             var creativesData = new List<AdData>();
@@ -29,7 +32,7 @@ namespace FacebookAPI
             {
                 fields = "id,effective_status,name,creative{image_url,title,body,thumbnail_url,name,id},adset{name,id},campaign{name,id}",
                 after = "",
-                time_range = new { since = FacebookRequestUtils.GetDateString(start), until = FacebookRequestUtils.GetDateString(end) },
+                limit = metadataFetchingPageSize,
             };
             var fbClient = new FacebookClient(AccessToken) { Version = "v" + ApiVersion };
             var path = $"{accountId}/ads";
@@ -47,7 +50,7 @@ namespace FacebookAPI
                     {
                         parameters.fields,
                         after = (string)result.paging.cursors.after,
-                        parameters.time_range
+                        parameters.limit,
                     };
                 }
             }
