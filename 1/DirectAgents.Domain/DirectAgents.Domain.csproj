@@ -114,6 +114,14 @@
     <Compile Include="Concrete\RevTrackRepository.cs" />
     <Compile Include="Concrete\SecurityRepository.cs" />
     <Compile Include="Concrete\SpecialPlatformRepository.cs" />
+    <Compile Include="Entities\CPProg\DBM\DbmBaseEntity.cs" />
+    <Compile Include="Entities\CPProg\DBM\DbmCampaign.cs" />
+    <Compile Include="Entities\CPProg\DBM\DbmCreative.cs" />
+    <Compile Include="Entities\CPProg\DBM\DbmInsertionOrder.cs" />
+    <Compile Include="Entities\CPProg\DBM\DbmLineItem.cs" />
+    <Compile Include="Entities\CPProg\DBM\SummaryMetrics\DbmBaseSummaryEntity.cs" />
+    <Compile Include="Entities\CPProg\DBM\SummaryMetrics\DbmCreativeSummary.cs" />
+    <Compile Include="Entities\CPProg\DBM\SummaryMetrics\DbmLineItemSummary.cs" />
     <Compile Include="SpecialPlatformProviders\Implementation\CommissionJunctionProvider.cs" />
     <Compile Include="SpecialPlatformProviders\Implementation\DspProvider.cs" />
     <Compile Include="SpecialPlatformProviders\Implementation\KochavaProvider.cs" />

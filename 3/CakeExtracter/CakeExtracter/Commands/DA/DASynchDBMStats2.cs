@@ -19,6 +19,9 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class DASynchDBMStats2 : ConsoleCommand
     {
+        private const int DefaultDaysAgo = 14;
+
+
         /// <summary>
         /// Command argument: Account ID in the database for which the command will be executed (default = all)
         /// </summary>
@@ -40,13 +43,18 @@ namespace CakeExtracter.Commands
         /// </summary>
         public int? DaysAgoToStart { get; set; }
 
-        private const int DefaultDaysAgo = 14;
+
+
         private const string AvailableAccountIdsConfigurationName = "DBM_StrategiesFromLineItems";
         private const string StrategyNameColMapping = "Line Item";
         private const string StrategyIdColMapping = "Line Item ID";
 
         private DBMUtility DbmUtility { get; set; }
 
+
+
+
+        /// <inheritdoc />
         /// <summary>
         /// The constructor sets a command name and command arguments names, provides a description for them.
         /// </summary>
@@ -59,6 +67,7 @@ namespace CakeExtracter.Commands
             HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default = {DefaultDaysAgo})", c => DaysAgoToStart = c);
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// The method runs the current command and extract and save statistics from the DBM portal based on the command arguments.
         /// </summary>
@@ -69,10 +78,11 @@ namespace CakeExtracter.Commands
             Logger.LogToOneFile = true;
             SetupDbmUtility();
 
-            var dateRange = GetDateRange();
+            var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             var accounts = GetAccounts();
             Logger.Info("DBM ETL. DateRange {0}.", dateRange);
 
+            //TODO: new reports will have all accounts
             foreach (var account in accounts)
             {
                 Logger.Info(account.Id, "DBM ETL. Account {0} - {1}", account.Id, account.Name);
@@ -84,6 +94,7 @@ namespace CakeExtracter.Commands
             return 0;
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// The method resets command arguments to defaults
         /// </summary>
@@ -154,19 +165,10 @@ namespace CakeExtracter.Commands
             Platform.SavePlatformTokens(Platform.Code_DBM, DbmUtility.TokenSets);
         }
 
-        private DateRange GetDateRange()
-        {
-            var today = DateTime.Today;
-            var daysAgo = DaysAgoToStart ?? DefaultDaysAgo;
-            var startDate = StartDate ?? today.AddDays(-daysAgo);
-            var endDate = EndDate ?? today.AddDays(-1);
-            var dateRange = new DateRange(startDate, endDate);
-            return dateRange;
-        }
-
         private IEnumerable<ExtAccount> GetAccounts()
         {
             var accountsDb = GetEnabledAccountsFromDatabase();
+            //TODO: delete this logic
             var accountsConfig = GetEnabledAccountsFromConfig();
             var enabledAccounts = accountsDb.Where(x => accountsConfig.Contains(x.ExternalId) && x.ExternalId_int.HasValue).ToList();
             return enabledAccounts;
@@ -184,10 +186,11 @@ namespace CakeExtracter.Commands
             var repository = new PlatformAccountRepository();
             if (!AccountId.HasValue)
             {
+                //TODO: includeColumnMapping = true ???
                 var accounts = repository.GetAccountsWithFilledExternalIdByPlatformCode(Platform.Code_DBM, false, true);
                 return accounts;
             }
-
+            //TODO: What is column mapping?
             var account = repository.GetAccountWithColumnMapping(AccountId.Value);
             return new[] { account };
         }
