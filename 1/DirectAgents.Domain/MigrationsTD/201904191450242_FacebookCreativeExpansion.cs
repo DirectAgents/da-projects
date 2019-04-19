@@ -44,7 +44,6 @@ namespace DirectAgents.Domain.MigrationsTD
                     {
                         Id = c.Int(nullable: false, identity: true),
                         Status = c.String(),
-                        CampaignId = c.Int(),
                         AdSetId = c.Int(),
                         CreativeId = c.Int(),
                         Name = c.String(),
@@ -53,10 +52,8 @@ namespace DirectAgents.Domain.MigrationsTD
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("td.FbAdSet", t => t.AdSetId)
-                .ForeignKey("td.FbCampaign", t => t.CampaignId)
                 .ForeignKey("td.FbCreative", t => t.CreativeId)
                 .ForeignKey("td.Account", t => t.AccountId, cascadeDelete: true)
-                .Index(t => t.CampaignId)
                 .Index(t => t.AdSetId)
                 .Index(t => t.CreativeId)
                 .Index(t => t.AccountId);
@@ -212,6 +209,7 @@ namespace DirectAgents.Domain.MigrationsTD
                         Cost = c.Decimal(nullable: false, precision: 18, scale: 6),
                     })
                 .PrimaryKey(t => new { t.Date, t.AccountId });
+            
         }
         
         public override void Down()
@@ -227,7 +225,6 @@ namespace DirectAgents.Domain.MigrationsTD
             DropForeignKey("td.FbAd", "AccountId", "td.Account");
             DropForeignKey("td.FbAd", "CreativeId", "td.FbCreative");
             DropForeignKey("td.FbCreative", "AccountId", "td.Account");
-            DropForeignKey("td.FbAd", "CampaignId", "td.FbCampaign");
             DropForeignKey("td.FbAd", "AdSetId", "td.FbAdSet");
             DropForeignKey("td.FbAdSet", "AccountId", "td.Account");
             DropForeignKey("td.FbAdSet", "CampaignId", "td.FbCampaign");
@@ -247,7 +244,6 @@ namespace DirectAgents.Domain.MigrationsTD
             DropIndex("td.FbAd", new[] { "AccountId" });
             DropIndex("td.FbAd", new[] { "CreativeId" });
             DropIndex("td.FbAd", new[] { "AdSetId" });
-            DropIndex("td.FbAd", new[] { "CampaignId" });
             DropIndex("td.FbAdAction", new[] { "ActionTypeId" });
             DropIndex("td.FbAdAction", new[] { "AdId" });
             DropIndex("td.FbActionType", "CodeIndex");

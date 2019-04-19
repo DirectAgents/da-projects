@@ -408,6 +408,7 @@
     <Compile Include="Commands\DA\DaSynchCommissionJunctionStats.cs" />
     <Compile Include="Commands\DA\DASynchCriteoStats.cs" />
     <Compile Include="Commands\DA\DASynchDBMStats2.cs" />
+    <Compile Include="Commands\DA\DASynchFacebookMigration.cs" />
     <Compile Include="Commands\DA\DASynchKochavaStats.cs" />
     <Compile Include="Commands\DA\DASynchYAMStats.cs" />
     <Compile Include="Commands\EOMSynchCPCCommand.cs" />
@@ -518,6 +519,10 @@
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdSetSummaryLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdSummaryLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookCampaignSummaryLoader.cs" />
+    <Compile Include="Etl\SocialMarketing\MigrationExtracters\FacebookDailyMigrationExtractor.cs" />
+    <Compile Include="Etl\SocialMarketing\MigrationExtracters\FacebookCampaignMigrationExtractor.cs" />
+    <Compile Include="Etl\SocialMarketing\MigrationExtracters\FacebookAdMigrationExtractor.cs" />
+    <Compile Include="Etl\SocialMarketing\MigrationExtracters\FacebookAdsetMigrationExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformAdSetSummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformDailySummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformApiBaseExtractor.cs" />

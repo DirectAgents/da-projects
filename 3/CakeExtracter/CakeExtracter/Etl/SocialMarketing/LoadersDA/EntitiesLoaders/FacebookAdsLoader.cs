@@ -59,12 +59,10 @@ namespace CakeExtracter.Etl.SocialMarketing.EntitiesStorage
         {
             if (existingDbItem.Name != latestItemFromApi.Name ||
                 existingDbItem.Status != latestItemFromApi.Status ||
-                existingDbItem.CampaignId != latestItemFromApi.CampaignId ||
                 existingDbItem.AdSetId != latestItemFromApi.AdSetId ||
                 existingDbItem.CreativeId != latestItemFromApi.CreativeId)
             {
                 existingDbItem.Name = latestItemFromApi.Name;
-                existingDbItem.CampaignId = latestItemFromApi.CampaignId;
                 existingDbItem.AdSetId = latestItemFromApi.AdSetId;
                 existingDbItem.CreativeId = latestItemFromApi.CreativeId;
                 existingDbItem.Status = latestItemFromApi.Status;
@@ -75,15 +73,14 @@ namespace CakeExtracter.Etl.SocialMarketing.EntitiesStorage
 
         private void EnsureCampaignsData(List<FbAd> items)
         {
-            var relatedCampaigns = items.Select(item => item.Campaign).ToList();
+            var relatedCampaigns = items.Select(item => item.AdSet?.Campaign).Where(item => item != null).ToList();
             campaignsLoader.AddUpdateDependentEntities(relatedCampaigns);
-            items.ForEach(item => item.CampaignId = item.Campaign.Id);
-            items.ForEach(item => item.AdSet.CampaignId = item.Campaign?.Id);
+            items.ForEach(item => item.AdSet.CampaignId = item.AdSet?.Campaign?.Id);
         }
 
         private void EnsureAdSetsData(List<FbAd> items)
         {
-            var relatedAdSets = items.Select(item => item.AdSet).ToList();
+            var relatedAdSets = items.Select(item => item.AdSet).Where(item => item != null).ToList();
             adSetsLoader.AddUpdateDependentEntities(relatedAdSets);
             items.ForEach(item => item.AdSetId = item.AdSet?.Id);
         }

@@ -23,7 +23,10 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA.EntitiesLoaders
         public void EnsureActionType(List<FbActionType> actionTypes)
         {
             var uniqueItems = actionTypes.GroupBy(item => item.Code).Select(gr => gr.First()).ToList();
-            AddMissedActionTypes(uniqueItems);
+            lock (actionTypesLock)
+            {
+                AddMissedActionTypes(uniqueItems);
+            }
             AssignIdToItems(actionTypes);
         }
 

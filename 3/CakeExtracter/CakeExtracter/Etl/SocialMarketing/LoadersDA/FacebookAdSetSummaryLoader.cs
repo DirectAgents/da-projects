@@ -19,10 +19,12 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
         private List<FbAdSetSummary> latestSummaries = new List<FbAdSetSummary>();
         private List<FbAdSetAction> latestActions = new List<FbAdSetAction>();
 
+        private const int batchSize = 1000;
+
         private static object lockObj = new object();
 
         public FacebookAdSetSummaryLoader(int accountId, DateRange dateRange)
-            : base(accountId)
+            : base(accountId, batchSize)
         {
             fbActionTypeLoader = new FacebookActionTypeLoader();
             fbCampaignsLoader = new FacebookCampaignsLoader();
@@ -51,15 +53,9 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
             LoadLatestActionsToDb(latestActions);
         }
 
-        private void LoadSummaries(List<FbAdSetSummary> summaries)
-        {
-
-            latestSummaries.AddRange(summaries);
-        }
-
         private void EnsureAdSetEntitiesData(List<FbAdSetSummary> items)
         {
-            var fbAdSets = items.Select(item => item.AdSet).ToList();
+            var fbAdSets = items.Select(item => item.AdSet).Where(item => item != null).ToList();
             fbAdSetsLoader.AddUpdateDependentEntities(fbAdSets);
             items.ForEach(item =>
             {

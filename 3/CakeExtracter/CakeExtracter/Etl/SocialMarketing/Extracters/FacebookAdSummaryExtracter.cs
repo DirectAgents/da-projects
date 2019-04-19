@@ -70,17 +70,18 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
                     Status = relatedAdMetadata?.Status,
                     ExternalId = item.AdId,
                     AccountId = accountId,
-                    Campaign = new FbCampaign
-                    {
-                        AccountId = accountId,
-                        Name = item.CampaignName,
-                        ExternalId = item.CampaignId
-                    },
+                    
                     AdSet = new FbAdSet
                     {
                         AccountId = accountId,
                         Name = item.AdSetName,
-                        ExternalId = item.AdSetId
+                        ExternalId = item.AdSetId,
+                        Campaign = new FbCampaign
+                        {
+                            AccountId = accountId,
+                            Name = item.CampaignName,
+                            ExternalId = item.CampaignId
+                        },
                     },
                     Creative = GetRelatedCreativeData(item, relatedAdMetadata),
                 },
@@ -92,7 +93,6 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
                 Cost = item.Spend,
                 Actions = GetActions(item)
             };
-            sum.Ad.AdSet.Campaign = sum.Ad.Campaign;
             return sum;
         }
 

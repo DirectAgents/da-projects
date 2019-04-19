@@ -69,7 +69,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         private void EnsureAdEntitiesData(List<FbAdSummary> items)
         {
-            var fbAds = items.Select(item => item.Ad).ToList();
+            var fbAds = items.Select(item => item.Ad).Where(item => item != null).ToList();
             fbAdsLoader.AddUpdateDependentEntities(fbAds);
             items.ForEach(item =>
             {

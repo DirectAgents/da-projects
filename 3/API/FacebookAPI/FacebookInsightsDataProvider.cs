@@ -248,6 +248,10 @@ namespace FacebookAPI
                             int waitMillisecs = InitialWaitMillisecs;
                             while (retObj.async_status != "Job Completed" || retObj.async_percent_completion < 100)
                             {
+                                if (retObj.async_status == "Job Failed")
+                                {
+                                    throw new Exception("Job failed");
+                                }
                                 waitMillisecs += 500;
                                 Thread.Sleep(waitMillisecs);
                                 retObj = clientParms.fbClient.Get(runId);

@@ -48,7 +48,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         private void EnsureCampaignsEntitiesData(List<FbCampaignSummary> items)
         {
-            var fbCampaigns = items.Select(item => item.Campaign).ToList();
+            var fbCampaigns = items.Select(item => item.Campaign).Where(item => item != null).ToList();
             fbCampaignsLoader.AddUpdateDependentEntities(fbCampaigns);
             items.ForEach(item =>
             {
