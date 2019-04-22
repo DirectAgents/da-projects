@@ -4,7 +4,6 @@ using FacebookAPI.Entities.AdDataEntities;
 using Polly;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 
 namespace FacebookAPI
 {
