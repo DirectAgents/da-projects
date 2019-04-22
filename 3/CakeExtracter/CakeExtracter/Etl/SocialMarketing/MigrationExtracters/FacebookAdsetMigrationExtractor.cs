@@ -89,6 +89,8 @@ namespace CakeExtracter.Etl.SocialMarketing.MigrationExtracters
                 Clicks = item.Clicks,
                 PostClickConv = item.PostClickConv,
                 PostViewConv = item.PostViewConv,
+                PostClickRev = item.PostClickRev,
+                PostViewRev = item.PostClickRev,
                 Cost = item.Cost,
                 Actions = allActions.ContainsKey(item.AdSet.Id) ?  GetActions(allActions[item.AdSetId], item) : new List<FbAdSetAction>()
             };

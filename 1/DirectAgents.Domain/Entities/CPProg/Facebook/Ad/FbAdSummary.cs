@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DirectAgents.Domain.Entities.CPProg.Facebook.Ad
 {
     /// <summary>
-    /// Facebook Ad Summary
+    /// Facebook Ad Summary entity
     /// </summary>
     public class FbAdSummary : FbBaseSummary
     {

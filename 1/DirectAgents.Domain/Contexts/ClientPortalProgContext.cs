@@ -414,6 +414,16 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<FbCampaignSummary>().Property(t => t.Cost).HasPrecision(18, 6);
             modelBuilder.Entity<FbDailySummary>().Property(t => t.Cost).HasPrecision(18, 6);
 
+            modelBuilder.Entity<FbAdSummary>().Property(t => t.PostClickRev).HasPrecision(18, 6);
+            modelBuilder.Entity<FbAdSetSummary>().Property(t => t.PostClickRev).HasPrecision(18, 6);
+            modelBuilder.Entity<FbCampaignSummary>().Property(t => t.PostClickRev).HasPrecision(18, 6);
+            modelBuilder.Entity<FbDailySummary>().Property(t => t.PostClickRev).HasPrecision(18, 6);
+
+            modelBuilder.Entity<FbAdSummary>().Property(t => t.PostViewRev).HasPrecision(18, 6);
+            modelBuilder.Entity<FbAdSetSummary>().Property(t => t.PostViewRev).HasPrecision(18, 6);
+            modelBuilder.Entity<FbCampaignSummary>().Property(t => t.PostViewRev).HasPrecision(18, 6);
+            modelBuilder.Entity<FbDailySummary>().Property(t => t.PostViewRev).HasPrecision(18, 6);
+
             modelBuilder.Entity<FbAdAction>()
                 .HasKey(x => new { x.Date, x.AdId, x.ActionTypeId });
             modelBuilder.Entity<FbAdSetAction>()

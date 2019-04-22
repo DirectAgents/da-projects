@@ -56,6 +56,8 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
                 Clicks = item.LinkClicks,
                 PostClickConv = item.Conversions_click,
                 PostViewConv = item.Conversions_view,
+                PostClickRev = item.ConVal_click,
+                PostViewRev = item.ConVal_view,
                 Cost = item.Spend
             };
             return sum;

@@ -1,6 +1,5 @@
 namespace DirectAgents.Domain.MigrationsTD
 {
-    using System;
     using System.Data.Entity.Migrations;
     
     public partial class FacebookCreativeExpansion : DbMigration
@@ -135,6 +134,8 @@ namespace DirectAgents.Domain.MigrationsTD
                         AllClicks = c.Int(nullable: false),
                         PostClickConv = c.Int(nullable: false),
                         PostViewConv = c.Int(nullable: false),
+                        PostClickRev = c.Decimal(nullable: false, precision: 18, scale: 6),
+                        PostViewRev = c.Decimal(nullable: false, precision: 18, scale: 6),
                         Cost = c.Decimal(nullable: false, precision: 18, scale: 6),
                     })
                 .PrimaryKey(t => new { t.Date, t.AdSetId })
@@ -152,6 +153,8 @@ namespace DirectAgents.Domain.MigrationsTD
                         AllClicks = c.Int(nullable: false),
                         PostClickConv = c.Int(nullable: false),
                         PostViewConv = c.Int(nullable: false),
+                        PostClickRev = c.Decimal(nullable: false, precision: 18, scale: 6),
+                        PostViewRev = c.Decimal(nullable: false, precision: 18, scale: 6),
                         Cost = c.Decimal(nullable: false, precision: 18, scale: 6),
                     })
                 .PrimaryKey(t => new { t.Date, t.AdId })
@@ -189,6 +192,8 @@ namespace DirectAgents.Domain.MigrationsTD
                         AllClicks = c.Int(nullable: false),
                         PostClickConv = c.Int(nullable: false),
                         PostViewConv = c.Int(nullable: false),
+                        PostClickRev = c.Decimal(nullable: false, precision: 18, scale: 6),
+                        PostViewRev = c.Decimal(nullable: false, precision: 18, scale: 6),
                         Cost = c.Decimal(nullable: false, precision: 18, scale: 6),
                     })
                 .PrimaryKey(t => new { t.Date, t.CampaignId })
@@ -206,6 +211,8 @@ namespace DirectAgents.Domain.MigrationsTD
                         AllClicks = c.Int(nullable: false),
                         PostClickConv = c.Int(nullable: false),
                         PostViewConv = c.Int(nullable: false),
+                        PostClickRev = c.Decimal(nullable: false, precision: 18, scale: 6),
+                        PostViewRev = c.Decimal(nullable: false, precision: 18, scale: 6),
                         Cost = c.Decimal(nullable: false, precision: 18, scale: 6),
                     })
                 .PrimaryKey(t => new { t.Date, t.AccountId });
