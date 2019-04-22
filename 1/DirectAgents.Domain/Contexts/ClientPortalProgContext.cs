@@ -12,6 +12,8 @@ using DirectAgents.Domain.Entities.CPProg.DSP;
 using DirectAgents.Domain.Entities.CPProg.DSP.SummaryMetrics;
 using DirectAgents.Domain.Entities.CPProg.CJ;
 using DirectAgents.Domain.Entities.CPProg.Kochava;
+using DirectAgents.Domain.Entities.CPProg.YAM;
+using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
 
 namespace DirectAgents.Domain.Contexts
 {
@@ -109,6 +111,16 @@ namespace DirectAgents.Domain.Contexts
 
             //Kochava
             modelBuilder.Entity<KochavaItem>().ToTable("KochavaItem", tdSchema);
+
+            //TD YAM
+            modelBuilder.Entity<YamCampaign>().ToTable("YamCampaign", tdSchema);
+            modelBuilder.Entity<YamLine>().ToTable("YamLine", tdSchema);
+            modelBuilder.Entity<YamAd>().ToTable("YamAd", tdSchema);
+            modelBuilder.Entity<YamCreative>().ToTable("YamCreative", tdSchema);
+            modelBuilder.Entity<YamPixel>().ToTable("YamPixel", tdSchema);
+            modelBuilder.Entity<YamAdSummary>().ToTable("YamAdSummary", tdSchema);
+            modelBuilder.Entity<YamCreativeSummary>().ToTable("YamCreativeSummary", tdSchema);
+            modelBuilder.Entity<YamPixelSummary>().ToTable("YamPixelSummary", tdSchema);
 
             modelBuilder.Entity<Campaign>().Property(c => c.BaseFee).HasPrecision(14, 2);
             modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudgetInfo.MediaSpend).HasPrecision(14, 2).HasColumnName("MediaSpend");
@@ -216,6 +228,11 @@ namespace DirectAgents.Domain.Contexts
             //TD CJ
             SetupCjModelValues(modelBuilder);
 
+            //TD YAM
+            SetupYamDailyMetricModelValues<YamAdSummary>(modelBuilder, "AdId");
+            SetupYamDailyMetricModelValues<YamCreativeSummary>(modelBuilder, "CreativeId");
+            SetupYamDailyMetricModelValues<YamPixelSummary>(modelBuilder, "PixelId");
+
             // AdRoll
             modelBuilder.Entity<Advertisable>().ToTable("Advertisable", adrollSchema);
             modelBuilder.Entity<Ad>().ToTable("Ad", adrollSchema);
@@ -310,6 +327,16 @@ namespace DirectAgents.Domain.Contexts
         // Kochava
         public DbSet<KochavaItem> KochavaItems { get; set; }
 
+        //TD YAM
+        public DbSet<YamCampaign> YamCampaigns { get; set; }
+        public DbSet<YamLine> YamLines { get; set; }
+        public DbSet<YamAd> YamAds { get; set; }
+        public DbSet<YamPixel> YamPixels { get; set; }
+        public DbSet<YamCreative> YamCreatives { get; set; }
+        public DbSet<YamAdSummary> YamAdSummaries { get; set; }
+        public DbSet<YamPixelSummary> YamPixelSummaries { get; set; }
+        public DbSet<YamCreativeSummary> YamCreativeSummaries { get; set; }
+
         // AdRoll
         public DbSet<Advertisable> Advertisables { get; set; }
         public DbSet<Ad> AdRollAds { get; set; }
@@ -363,6 +390,15 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<TDailyMetricValues>().Property(t => t.Purchase).HasPrecision(18, 6);
             modelBuilder.Entity<TDailyMetricValues>().Property(t => t.PurchaseViews).HasPrecision(18, 6);
             modelBuilder.Entity<TDailyMetricValues>().Property(t => t.PurchaseClicks).HasPrecision(18, 6);
+        }
+
+        private void SetupYamDailyMetricModelValues<TDailyMetricValues>(DbModelBuilder modelBuilder, string entityColumnName)
+            where TDailyMetricValues : BaseYamSummary
+        {
+            modelBuilder.Entity<TDailyMetricValues>().HasKey(s => new { s.Date, s.EntityId });
+            modelBuilder.Entity<TDailyMetricValues>().Property(x => x.EntityId).HasColumnName(entityColumnName);
+            modelBuilder.Entity<TDailyMetricValues>().Property(t => t.ConversionValue).HasPrecision(18, 6);
+            modelBuilder.Entity<TDailyMetricValues>().Property(t => t.AdvertiserSpending).HasPrecision(18, 6);
         }
 
         private void SetupSummaryMetricModel<TSummaryMetric>(DbModelBuilder modelBuilder, string entityColumnName)
