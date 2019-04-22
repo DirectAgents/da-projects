@@ -1,8 +1,10 @@
 ﻿using Facebook;
 using FacebookAPI.Entities;
 using FacebookAPI.Entities.AdDataEntities;
+using Polly;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace FacebookAPI
 {
@@ -12,7 +14,9 @@ namespace FacebookAPI
     /// <seealso cref="FacebookAPI.BaseFacebookDataProvider" />
     public class FacebookAdMetadataProvider : BaseFacebookDataProvider
     {
-        private const int metadataFetchingPageSize = 500;
+        private const int metadataFetchingPageSize = 300;
+
+        public const int MaxRetries = 5;
 
         public FacebookAdMetadataProvider(Action<string> logInfo, Action<string> logError)
            : base(logInfo, logError)
@@ -24,8 +28,26 @@ namespace FacebookAPI
         /// </summary>
         /// <param name="accountId">The account identifier.</param>
         /// <returns></returns>
-        public List<AdData> GetAllAdsMetadataForAccount(string accountId)
+        public List<AdData> TryExtractAllAdsMetadataForAccount(string accountExternalId)
         {
+            var maxRetryAttempts = 5;
+            var secondsToWait = 5;
+            var data = Policy
+                .Handle<Exception>()
+                .Retry(maxRetryAttempts, (exception, retryCount, context) => LogInfo(String.Format("Ads metadata extraction failed. Waiting {0} seconds before trying again.", secondsToWait)))
+                .Execute(() => GetAllAdsMetadataForAccount(accountExternalId));
+            return data;
+        }
+
+
+        /// <summary>
+        /// Gets all ads data for account.
+        /// </summary>
+        /// <param name="accountId">The account identifier.</param>
+        /// <returns></returns>
+        private List<AdData> GetAllAdsMetadataForAccount(string accountExternalId)
+        {
+            var idToQuery = "act_" + accountExternalId;
             bool moreData;
             var creativesData = new List<AdData>();
             var parameters = new
@@ -35,7 +57,7 @@ namespace FacebookAPI
                 limit = metadataFetchingPageSize,
             };
             var fbClient = new FacebookClient(AccessToken) { Version = "v" + ApiVersion };
-            var path = $"{accountId}/ads";
+            var path = $"{idToQuery}/ads";
             do
             {
                 dynamic result = fbClient.Get(path, parameters);

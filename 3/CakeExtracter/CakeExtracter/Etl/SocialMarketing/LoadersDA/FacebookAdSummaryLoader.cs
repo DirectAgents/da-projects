@@ -98,6 +98,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         private void LoadLatestSummariesToDb(List<FbAdSummary> summaries)
         {
+            Logger.Info(accountId, $"Started loading ads summaries data for {dateRange.ToString()}");
             SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
                 db.BulkInsert(summaries);
@@ -106,6 +107,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         private void DeleteOldActionsFromDb()
         {
+            Logger.Info(accountId, $"Started cleaning old ads data for {dateRange.ToString()}");
             SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
                 db.FbAdActions.Where(x => (x.Date >= dateRange.FromDate && x.Date <= dateRange.ToDate)
@@ -115,6 +117,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         private void LoadLatestActionsToDb(List<FbAdAction> actions)
         {
+            Logger.Info(accountId, $"Started loading ads actions data for {dateRange.ToString()}");
             SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
                 db.BulkInsert(actions);

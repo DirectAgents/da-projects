@@ -250,7 +250,8 @@ namespace FacebookAPI
                             {
                                 if (retObj.async_status == "Job Failed")
                                 {
-                                    throw new Exception("Job failed");
+                                    clientParms.GetRunId_withRetry(LogInfo, LogError); // resets existing run  id
+                                    throw new Exception("Job failed. Execution will be requested again.");
                                 }
                                 waitMillisecs += 500;
                                 Thread.Sleep(waitMillisecs);
@@ -265,10 +266,7 @@ namespace FacebookAPI
                     catch (Exception ex)
                     {
                         LogError(ex.Message);
-                        int secondsToWait = 2;
-                        if (ex.Message.Contains("request limit") || ex.Message.Contains("rate limit"))
-                            secondsToWait = SecondsToWaitIfLimitReached;
-
+                        int secondsToWait = SecondsToWaitIfLimitReached;
                         tryNumber++;
                         if (tryNumber < MaxRetries)
                         {

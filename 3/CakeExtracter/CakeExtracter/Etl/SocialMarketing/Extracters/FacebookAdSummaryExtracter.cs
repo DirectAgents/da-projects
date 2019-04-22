@@ -18,7 +18,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
     /// <seealso cref="CakeExtracter.Etl.SocialMarketing.Extracters.FacebookApiExtracter{DirectAgents.Domain.Entities.CPProg.Facebook.Ad.FbAdSummary}" />
     public class FacebookAdSummaryExtracter : FacebookApiExtracter<FbAdSummary>
     {
-        private readonly FacebookAdMetadataProvider fbAdMetadataProvider;
+        private readonly List<AdData> allAdsMetadata;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FacebookAdSummaryExtracter"/> class.
@@ -28,9 +28,9 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
         /// <param name="fbUtility">The fb utility.</param>
         /// <param name="fbAdMetadataProvider">The fb ad metadata provider.</param>
         public FacebookAdSummaryExtracter(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility,
-            FacebookAdMetadataProvider fbAdMetadataProvider) : base(fbUtility, dateRange, account)
+            List<AdData> allAdsMetadata) : base(fbUtility, dateRange, account)
         {
-            this.fbAdMetadataProvider = fbAdMetadataProvider;
+            this.allAdsMetadata = allAdsMetadata;
         }
 
         /// <summary>
@@ -44,10 +44,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
             try
             {
                 var fbSums = _fbUtility.GetDailyAdStats("act_" + fbAccountId, dateRange.Value.FromDate, dateRange.Value.ToDate);
-                Logger.Info(accountId, "Started reading ad's metadata");
-                //It's not possible currently fetch facebook creatives data from the insights endpoint.
-                var allAdsMetadata = fbAdMetadataProvider.GetAllAdsMetadataForAccount("act_" + fbAccountId);
-                Logger.Info(accountId, "Finished reading ad's metadata");
+                
                 var fbAdSummaryItems = fbSums.Select(item => { return CreateFbAdSummary(item, allAdsMetadata); });
                 Add(fbAdSummaryItems);
             }

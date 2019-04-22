@@ -21,6 +21,8 @@ namespace CakeExtracter.Commands
     {
         private const int DefaultDaysAgo = 41;
 
+        private const int processingChunkSize = 11;
+
         private readonly Dictionary<string, PlatformFilter> networkFilters = new Dictionary<string, PlatformFilter>
         {
             {"FACEBOOK", PlatformFilter.Facebook},
@@ -159,7 +161,7 @@ namespace CakeExtracter.Commands
                     DoETL_Strategy(acctDateRange, account, fbUtility);
                 if (statsType.AdSet && (numDailyItems == null || numDailyItems.Value > 0))
                     DoETL_AdSet(acctDateRange, account, fbUtility);
-                if (statsType.Creative && (numDailyItems == null || numDailyItems.Value > 0)) 
+                if (statsType.Creative && (numDailyItems == null || numDailyItems.Value > 0))
                     DoETL_Creative(acctDateRange, account, fbUtility);
             });
 
@@ -168,32 +170,54 @@ namespace CakeExtracter.Commands
 
         private int DoETL_Daily(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
         {
-            var extractor = new FacebookDailySummaryExtracter(dateRange, account, fbUtility);
-            var loader = new FacebookDailySummaryLoader(account.Id, dateRange);
-            CommandHelper.DoEtl(extractor, loader);
-            return extractor.Added;
+            var dateRangesToProcess = dateRange.GetDaysChunks(processingChunkSize).ToList();
+            int addedCount = 0;
+            dateRangesToProcess.ForEach(rangeToProcess =>
+            {
+                var extractor = new FacebookDailySummaryExtracter(rangeToProcess, account, fbUtility);
+                var loader = new FacebookDailySummaryLoader(account.Id, rangeToProcess);
+                CommandHelper.DoEtl(extractor, loader);
+                addedCount += extractor.Added;
+            });
+            return addedCount;
         }
 
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
         {
-            var extractor = new FacebookCampaignSummaryExtracter(dateRange, account, fbUtility);
-            var loader = new FacebookCampaignSummaryLoader(account.Id, dateRange);
-            CommandHelper.DoEtl(extractor, loader);
+            var dateRangesToProcess = dateRange.GetDaysChunks(processingChunkSize).ToList();
+            dateRangesToProcess.ForEach(rangeToProcess =>
+            {
+                var extractor = new FacebookCampaignSummaryExtracter(rangeToProcess, account, fbUtility);
+                var loader = new FacebookCampaignSummaryLoader(account.Id, rangeToProcess);
+                CommandHelper.DoEtl(extractor, loader);
+            });
         }
 
         private void DoETL_AdSet(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
         {
-            var extractor = new FacebookAdSetSummaryExtracter(dateRange, account, fbUtility);
-            var loader = new FacebookAdSetSummaryLoader(account.Id, dateRange);
-            CommandHelper.DoEtl(extractor, loader);
+            var dateRangesToProcess = dateRange.GetDaysChunks(processingChunkSize).ToList();
+            dateRangesToProcess.ForEach(rangeToProcess =>
+            {
+                var extractor = new FacebookAdSetSummaryExtracter(rangeToProcess, account, fbUtility);
+                var loader = new FacebookAdSetSummaryLoader(account.Id, rangeToProcess);
+                CommandHelper.DoEtl(extractor, loader);
+            });
         }
 
         private void DoETL_Creative(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
         {
+            var dateRangesToProcess = dateRange.GetDaysChunks(processingChunkSize).ToList();
             var fbAdMetadataProvider = new FacebookAdMetadataProvider(m => Logger.Info(account.Id, m), m => Logger.Warn(account.Id, m));
-            var extractor = new FacebookAdSummaryExtracter(dateRange, account, fbUtility, fbAdMetadataProvider);
-            var loader = new FacebookAdSummaryLoader(account.Id, dateRange);
-            CommandHelper.DoEtl(extractor, loader);
+            Logger.Info(account.Id, "Started reading ad's metadata");
+            //It's not possible currently fetch facebook creatives data from the insights endpoint.
+            var allAdsMetadata = fbAdMetadataProvider.TryExtractAllAdsMetadataForAccount(account.ExternalId);
+            Logger.Info(account.Id, "Finished reading ad's metadata");
+            dateRangesToProcess.ForEach(rangeToProcess =>
+            {
+                var extractor = new FacebookAdSummaryExtracter(rangeToProcess, account, fbUtility, allAdsMetadata);
+                var loader = new FacebookAdSummaryLoader(account.Id, rangeToProcess);
+                CommandHelper.DoEtl(extractor, loader);
+            });
         }
 
         private IEnumerable<ExtAccount> GetAccounts()

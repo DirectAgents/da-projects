@@ -31,7 +31,7 @@ namespace FacebookAPI.Api
         public string GetRunId_withRetry(Action<string> logInfo, Action<string> logError)
         {
             int tryNumber = 0;
-            string runId = null;
+            runId = null;
             do
             {
                 try

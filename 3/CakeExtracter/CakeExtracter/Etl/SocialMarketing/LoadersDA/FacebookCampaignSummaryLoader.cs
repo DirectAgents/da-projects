@@ -58,6 +58,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         private void DeleteOldSummariesFromDb()
         {
+            Logger.Info(accountId, $"Started cleaning old campaigns data for {dateRange.ToString()}");
             SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
                 db.FbCampaignSummaries.Where(x => (x.Date >= dateRange.FromDate && x.Date <= dateRange.ToDate)
@@ -67,6 +68,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         private void LoadLatestSummariesToDb(List<FbCampaignSummary> summaries)
         {
+            Logger.Info(accountId, $"Started loading campaigns summaries data for {dateRange.ToString()}");
             SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
                 db.BulkInsert(summaries);

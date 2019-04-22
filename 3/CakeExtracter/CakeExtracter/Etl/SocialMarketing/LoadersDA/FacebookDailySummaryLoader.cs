@@ -40,6 +40,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         private void DeleteOldSummariesFromDb()
         {
+            Logger.Info(accountId, $"Started cleaning old daily data for {dateRange.ToString()}");
             SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
                 db.FbDailySummaries.Where(x => (x.Date >= dateRange.FromDate && x.Date <= dateRange.ToDate)
@@ -49,6 +50,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         private void LoadLatestSummariesToDb(List<FbDailySummary> summaries)
         {
+            Logger.Info(accountId, $"Started loading daily summaries data for {dateRange.ToString()}");
             SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
                 db.BulkInsert(summaries);
