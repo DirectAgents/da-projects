@@ -89,9 +89,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\Creative.cs" />
     <Compile Include="DBMUtility.cs" />
-    <Compile Include="Entities\EntityCommonData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

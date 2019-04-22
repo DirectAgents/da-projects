@@ -8,7 +8,6 @@ using CsvHelper;
 using Google;
 using System.Configuration;
 using Newtonsoft.Json;
-using DBM.Entities;
 using DirectAgents.Domain.Contexts;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters
