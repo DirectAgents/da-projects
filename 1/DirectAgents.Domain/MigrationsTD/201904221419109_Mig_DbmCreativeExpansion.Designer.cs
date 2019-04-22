@@ -7,13 +7,13 @@ namespace DirectAgents.Domain.MigrationsTD
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class Mig_DbmCreative_Expansion : IMigrationMetadata
+    public sealed partial class Mig_DbmCreativeExpansion : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Mig_DbmCreative_Expansion));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Mig_DbmCreativeExpansion));
         
         string IMigrationMetadata.Id
         {
-            get { return "201904191309000_Mig_DbmCreative_Expansion"; }
+            get { return "201904221419109_Mig_DbmCreativeExpansion"; }
         }
         
         string IMigrationMetadata.Source

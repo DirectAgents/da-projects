@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DirectAgents.Domain.Entities.CPProg.DBM
+namespace DirectAgents.Domain.Entities.CPProg.DBM.Entities
 {
     public class DbmCreative : DbmBaseEntity
     {

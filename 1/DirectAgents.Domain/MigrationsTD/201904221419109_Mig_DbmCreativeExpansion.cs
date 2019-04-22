@@ -1,13 +1,27 @@
 namespace DirectAgents.Domain.MigrationsTD
 {
+    using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Mig_DbmCreative_Expansion : DbMigration
+    public partial class Mig_DbmCreativeExpansion : DbMigration
     {
         public override void Up()
         {
             CreateTable(
                 "td.DbmCampaign",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        AdvertiserId = c.Int(),
+                        ExternalId = c.String(),
+                        Name = c.String(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("td.DbmAdvertiser", t => t.AdvertiserId)
+                .Index(t => t.AdvertiserId);
+            
+            CreateTable(
+                "td.DbmAdvertiser",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
@@ -76,10 +90,12 @@ namespace DirectAgents.Domain.MigrationsTD
                         PostClickConv = c.Int(nullable: false),
                         PostViewConv = c.Int(nullable: false),
                         Cost = c.Decimal(nullable: false, precision: 18, scale: 6),
+                        CMPostClickRevenue = c.Decimal(nullable: false, precision: 18, scale: 6),
+                        CMPostViewRevenue = c.Decimal(nullable: false, precision: 18, scale: 6),
                     })
                 .PrimaryKey(t => new { t.CreativeId, t.Date })
                 .ForeignKey("td.DbmCreative", t => t.CreativeId, cascadeDelete: true)
-                .Index(t => new { t.CreativeId, t.Date }, unique: true, name: "IX_CreativeIdAndDate");
+                .Index(t => t.CreativeId);
             
             CreateTable(
                 "td.DbmLineItemSummary",
@@ -93,10 +109,12 @@ namespace DirectAgents.Domain.MigrationsTD
                         PostClickConv = c.Int(nullable: false),
                         PostViewConv = c.Int(nullable: false),
                         Cost = c.Decimal(nullable: false, precision: 18, scale: 6),
+                        CMPostClickRevenue = c.Decimal(nullable: false, precision: 18, scale: 6),
+                        CMPostViewRevenue = c.Decimal(nullable: false, precision: 18, scale: 6),
                     })
                 .PrimaryKey(t => new { t.LineItemId, t.Date })
                 .ForeignKey("td.DbmLineItem", t => t.LineItemId, cascadeDelete: true)
-                .Index(t => new { t.LineItemId, t.Date }, unique: true, name: "IX_LineItemIdAndDate");
+                .Index(t => t.LineItemId);
             
         }
         
@@ -107,18 +125,21 @@ namespace DirectAgents.Domain.MigrationsTD
             DropForeignKey("td.DbmCreative", "LineItemId", "td.DbmLineItem");
             DropForeignKey("td.DbmLineItem", "InsertionOrderId", "td.DbmInsertionOrder");
             DropForeignKey("td.DbmInsertionOrder", "CampaignId", "td.DbmCampaign");
-            DropForeignKey("td.DbmCampaign", "AccountId", "td.Account");
-            DropIndex("td.DbmLineItemSummary", "IX_LineItemIdAndDate");
-            DropIndex("td.DbmCreativeSummary", "IX_CreativeIdAndDate");
+            DropForeignKey("td.DbmCampaign", "AdvertiserId", "td.DbmAdvertiser");
+            DropForeignKey("td.DbmAdvertiser", "AccountId", "td.Account");
+            DropIndex("td.DbmLineItemSummary", new[] { "LineItemId" });
+            DropIndex("td.DbmCreativeSummary", new[] { "CreativeId" });
             DropIndex("td.DbmInsertionOrder", new[] { "CampaignId" });
             DropIndex("td.DbmLineItem", new[] { "InsertionOrderId" });
             DropIndex("td.DbmCreative", new[] { "LineItemId" });
-            DropIndex("td.DbmCampaign", new[] { "AccountId" });
+            DropIndex("td.DbmAdvertiser", new[] { "AccountId" });
+            DropIndex("td.DbmCampaign", new[] { "AdvertiserId" });
             DropTable("td.DbmLineItemSummary");
             DropTable("td.DbmCreativeSummary");
             DropTable("td.DbmInsertionOrder");
             DropTable("td.DbmLineItem");
             DropTable("td.DbmCreative");
+            DropTable("td.DbmAdvertiser");
             DropTable("td.DbmCampaign");
         }
     }

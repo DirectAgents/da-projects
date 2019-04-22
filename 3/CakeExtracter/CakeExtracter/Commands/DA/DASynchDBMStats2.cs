@@ -5,6 +5,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using CakeExtracter.Common;
+using CakeExtracter.Etl.DBM.Extractors;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.Extracters.SummaryCsvExtracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
@@ -82,6 +83,11 @@ namespace CakeExtracter.Commands
             var accounts = GetAccounts();
             Logger.Info("DBM ETL. DateRange {0}.", dateRange);
 
+            DoETL_Creatives(dateRange);
+
+
+
+
             //TODO: new reports will have all accounts
             foreach (var account in accounts)
             {
@@ -142,6 +148,13 @@ namespace CakeExtracter.Commands
 
             Logger.Info("Creating daily stats from strategy stats.");
             DoETL_DailyFromStrategyInDatabase(account.Id, dateRange);
+        }
+
+        private static void DoETL_Creatives(DateRange dateRange)
+        {
+            var extractor = new DbmCreativeExtractor(dateRange);
+            var extractorThread = extractor.Start();
+            extractorThread.Join();
         }
 
         // --- setup ---

@@ -11,7 +11,8 @@ using DirectAgents.Domain.Entities.CPProg.Vendor.SummaryMetrics;
 using DirectAgents.Domain.Entities.CPProg.DSP;
 using DirectAgents.Domain.Entities.CPProg.DSP.SummaryMetrics;
 using DirectAgents.Domain.Entities.CPProg.CJ;
-using DirectAgents.Domain.Entities.CPProg.DBM;
+using DirectAgents.Domain.Entities.CPProg.DBM.Entities;
+using DirectAgents.Domain.Entities.CPProg.DBM.SummaryMetrics;
 using DirectAgents.Domain.Entities.CPProg.Kochava;
 
 namespace DirectAgents.Domain.Contexts
@@ -350,6 +351,7 @@ namespace DirectAgents.Domain.Contexts
 
         private static void CreateDbmModel(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<DbmAdvertiser>().ToTable("DbmAdvertiser", tdSchema);
             modelBuilder.Entity<DbmCampaign>().ToTable("DbmCampaign", tdSchema);
             modelBuilder.Entity<DbmInsertionOrder>().ToTable("DbmInsertionOrder", tdSchema);
             modelBuilder.Entity<DbmLineItem>().ToTable("DbmLineItem", tdSchema);
@@ -362,7 +364,11 @@ namespace DirectAgents.Domain.Contexts
                 .ToTable("DbmCreativeSummary", tdSchema);
 
             modelBuilder.Entity<DbmLineItemSummary>().Property(t => t.Cost).HasPrecision(18, 6);
+            modelBuilder.Entity<DbmLineItemSummary>().Property(t => t.CMPostClickRevenue).HasPrecision(18, 6);
+            modelBuilder.Entity<DbmLineItemSummary>().Property(t => t.CMPostViewRevenue).HasPrecision(18, 6);
             modelBuilder.Entity<DbmCreativeSummary>().Property(t => t.Cost).HasPrecision(18, 6);
+            modelBuilder.Entity<DbmCreativeSummary>().Property(t => t.CMPostClickRevenue).HasPrecision(18, 6);
+            modelBuilder.Entity<DbmCreativeSummary>().Property(t => t.CMPostViewRevenue).HasPrecision(18, 6);
         }
 
         private static void SetupVcdAnalyticModelValues(DbModelBuilder modelBuilder)

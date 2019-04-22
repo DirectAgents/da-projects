@@ -1,4 +1,4 @@
-﻿namespace DirectAgents.Domain.Entities.CPProg.DBM
+﻿namespace DirectAgents.Domain.Entities.CPProg.DBM.Entities
 {
     /// <summary>
     /// Db related entity

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DirectAgents.Domain.Entities.CPProg.DBM
+namespace DirectAgents.Domain.Entities.CPProg.DBM.Entities
 {
-    public class DbmCampaign : DbmBaseEntity
+    public class DbmAdvertiser : DbmBaseEntity
     {
         /// <summary>
         /// Gets or sets the account identifier. Foreign key to Accounts db table.

@@ -1,10 +1,18 @@
 ﻿using System.IO;
 using System.Net;
+using DBM;
 
-namespace CakeExtracter.Etl.TradingDesk.Extracters.DbmExtractors
+namespace CakeExtracter.Etl.DBM.Extractors
 {
-    public abstract class DbmApiExtracter<T> : Extracter<T>
+    public abstract class DbmApiExtractor<T> : Extracter<T>
     {
+        protected readonly DBMUtility DbmUtility;
+
+        public DbmApiExtractor(DBMUtility dbmUtility)
+        {
+            DbmUtility = dbmUtility;
+        }
+
         public static StreamReader CreateStreamReaderFromUrl(string url)
         {
             var request = (HttpWebRequest) WebRequest.Create(url);
