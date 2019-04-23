@@ -1,5 +1,4 @@
-﻿using Facebook;
-using FacebookAPI.Entities;
+﻿using FacebookAPI.Entities;
 using FacebookAPI.Entities.AdDataEntities;
 using Polly;
 using System;
@@ -38,7 +37,6 @@ namespace FacebookAPI
             return data;
         }
 
-
         /// <summary>
         /// Gets all ads data for account.
         /// </summary>
@@ -46,7 +44,6 @@ namespace FacebookAPI
         /// <returns></returns>
         private List<AdData> GetAllAdsMetadataForAccount(string accountExternalId)
         {
-            var idToQuery = "act_" + accountExternalId;
             bool moreData;
             var creativesData = new List<AdData>();
             var parameters = new
@@ -55,11 +52,10 @@ namespace FacebookAPI
                 after = "",
                 limit = metadataFetchingPageSize,
             };
-            var fbClient = new FacebookClient(AccessToken) { Version = "v" + ApiVersion };
-            var path = $"{idToQuery}/ads";
+            var fbClient = CreateFBClient();
             do
             {
-                dynamic result = fbClient.Get(path, parameters);
+                dynamic result = fbClient.Get($"act_{accountExternalId}/ads", parameters);
                 if (result.data != null)
                 {
                     creativesData.AddRange(GetPageAdData(result.data));

@@ -13,7 +13,7 @@ namespace CakeExtracter.Etl.SocialMarketing.MigrationExtracters
 {
     public class FacebookAdSetMigrationExtractor : Extracter<FbAdSetSummary>
     {
-        protected readonly DateRange? dateRange;
+        protected readonly DateRange dateRange;
         protected readonly int accountId;   // in our db
         protected readonly string fbAccountId; // fb account: aka "ad account"
 
@@ -37,7 +37,7 @@ namespace CakeExtracter.Etl.SocialMarketing.MigrationExtracters
         protected override void Extract()
         {
             Logger.Info(accountId, "Extracting AdSet Summaries from Facebook Database.",
-                        this.fbAccountId, this.dateRange.Value.FromDate, this.dateRange.Value.ToDate);
+                        this.fbAccountId, this.dateRange.FromDate, this.dateRange.ToDate);
             try
             {
                 using (var db = new ClientPortalProgContext())
@@ -57,13 +57,15 @@ namespace CakeExtracter.Etl.SocialMarketing.MigrationExtracters
 
         private List<AdSetSummary> GetExistingAdsetSummaries(int accountId, ClientPortalProgContext db)
         {
-            var adsetSummaries = db.AdSetSummaries.Where(sum => sum.AdSet.AccountId == accountId).ToList();
+            var adsetSummaries = db.AdSetSummaries.Where(sum => sum.AdSet.AccountId == accountId
+                && sum.Date >= dateRange.FromDate && sum.Date <= dateRange.ToDate).ToList();
             return adsetSummaries;
         }
 
         private Dictionary<int, List<AdSetAction>> GetExistingAdsetActions(int accountId, ClientPortalProgContext db)
         {
-            var adsetActions = db.AdSetActions.Where(sum => sum.AdSet.AccountId == accountId).GroupBy(act=>act.AdSet.Id).ToDictionary(gr=>gr.Key, gr=>gr.ToList());
+            var adsetActions = db.AdSetActions.Where(sum => sum.AdSet.AccountId == accountId 
+                && sum.Date >= dateRange.FromDate && sum.Date <= dateRange.ToDate).GroupBy(act => act.AdSet.Id).ToDictionary(gr => gr.Key, gr => gr.ToList());
             return adsetActions;
         }
 
@@ -92,7 +94,7 @@ namespace CakeExtracter.Etl.SocialMarketing.MigrationExtracters
                 PostClickRev = item.PostClickRev,
                 PostViewRev = item.PostClickRev,
                 Cost = item.Cost,
-                Actions = allActions.ContainsKey(item.AdSet.Id) ?  GetActions(allActions[item.AdSetId], item) : new List<FbAdSetAction>()
+                Actions = allActions.ContainsKey(item.AdSet.Id) ? GetActions(allActions[item.AdSetId], item) : new List<FbAdSetAction>()
             };
             return sum;
         }

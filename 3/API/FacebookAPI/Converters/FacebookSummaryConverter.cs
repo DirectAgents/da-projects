@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace FacebookAPI.Converters
 {
+    /// <summary>
+    /// Facebook summary row parser
+    /// </summary>
     internal abstract class FacebookSummaryConverter
     {
         string conversionActionType;

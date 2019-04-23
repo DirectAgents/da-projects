@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using Facebook;
 using FacebookAPI.Api;
 using FacebookAPI.Converters;
 using FacebookAPI.Entities;
@@ -10,6 +9,10 @@ using FacebookAPI.Utils;
 
 namespace FacebookAPI
 {
+    /// <summary>
+    /// Facebook Insights data provider.
+    /// </summary>
+    /// <seealso cref="FacebookAPI.BaseFacebookDataProvider" />
     public class FacebookInsightsDataProvider : BaseFacebookDataProvider
     {
         public const int RowsReturnedAtATime = 100;
@@ -27,7 +30,6 @@ namespace FacebookAPI
             {PlatformFilter.All, null}
         };
 
-        //TODO: type MobileAppPurchase - app_custom_event.fb_mobile_purchase (for FUNimation)
         private static readonly Dictionary<ConversionActionType, string> ActionTypeNames = new Dictionary<ConversionActionType, string>
         {
             {ConversionActionType.MobileAppInstall, "mobile_app_install"},
@@ -165,12 +167,6 @@ namespace FacebookAPI
                     yield return fbSum;
                 }
             }
-        }
-
-        private FacebookClient CreateFBClient()
-        {
-            var fbClient = new FacebookClient(AccessToken) { Version = "v" + ApiVersion };
-            return fbClient;
         }
 
         private ClientAndParams GetClientAndParms(string accountId, DateTime start, DateTime end, bool byCampaign = false, bool byAdSet = false, bool byAd = false, bool getArchived = false)

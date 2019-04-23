@@ -27,6 +27,7 @@ namespace CakeExtracter.Commands
         public int? DaysPerCall { get; set; }
         public int? ClickWindow { get; set; }
         public int? ViewWindow { get; set; }
+        private const int processingChunkSize = 100;
 
         public override void ResetProperties()
         {
@@ -50,15 +51,16 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            var dateRange = new DateRange(DateTime.Now.AddYears(-15), DateTime.Now);
+            var dateRange = new DateRange(DateTime.Now.AddYears(-4), DateTime.Now);
             var accounts = GetAccounts();
             accounts.ForEach((account) =>
             {
-                //Logger.Info($"Processing account {account.Id} - {account.Name}");
-                //DoETL_Daily(dateRange, account);
-                //DoETL_Strategy(dateRange, account);
-                //DoETL_AdSet(dateRange, account);
+                Logger.Info($"Processing account {account.Id} - {account.Name}");
+                DoETL_Daily(dateRange, account);
+                DoETL_Strategy(dateRange, account);
+                DoETL_AdSet(dateRange, account);
                 DoETL_Creative(dateRange, account);
+                Logger.Info($"Finished account {account.Id} - {account.Name}");
             });
             return 0;
         }
@@ -80,9 +82,13 @@ namespace CakeExtracter.Commands
 
         private void DoETL_AdSet(DateRange dateRange, ExtAccount account)
         {
-            var extractor = new FacebookAdSetMigrationExtractor(dateRange, account);
-            var loader = new FacebookAdSetSummaryLoader(account.Id, dateRange);
-            CommandHelper.DoEtl(extractor, loader);
+            var dateRangesToProcess = dateRange.GetDaysChunks(processingChunkSize).ToList();
+            dateRangesToProcess.ForEach(rangeToProcess =>
+            {
+                var extractor = new FacebookAdSetMigrationExtractor(rangeToProcess, account);
+                var loader = new FacebookAdSetSummaryLoader(account.Id, rangeToProcess);
+                CommandHelper.DoEtl(extractor, loader);
+            });
         }
 
         private void DoETL_Creative(DateRange dateRange, ExtAccount account)

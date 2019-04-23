@@ -75,7 +75,7 @@ namespace CakeExtracter.Etl.SocialMarketing.EntitiesStorage
         {
             var relatedCampaigns = items.Select(item => item.AdSet?.Campaign).Where(item => item != null).ToList();
             campaignsLoader.AddUpdateDependentEntities(relatedCampaigns);
-            items.ForEach(item => item.AdSet.CampaignId = item.AdSet?.Campaign?.Id);
+            items.Where(item=>item.AdSet !=null).ToList().ForEach(item => item.AdSet.CampaignId = item.AdSet?.Campaign?.Id);
         }
 
         private void EnsureAdSetsData(List<FbAd> items)
