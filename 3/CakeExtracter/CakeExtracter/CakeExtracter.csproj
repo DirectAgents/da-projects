@@ -749,6 +749,7 @@
     <Compile Include="Etl\CakeMarketing\Loaders\DailySummariesLoader.cs" />
     <Compile Include="Etl\LoaderTask.cs" />
     <Compile Include="Etl\YAM\Extractors\ConValExtractors\YamDailyConValExtractor.cs" />
+    <Compile Include="Etl\YAM\Helper\YamStatsType.cs" />
     <Compile Include="Helpers\CommandHelper.cs" />
     <Compile Include="Helpers\ConfigurationHelper.cs" />
     <Compile Include="Helpers\EntityIdStorage.cs" />

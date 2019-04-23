@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
-using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using CakeExtracter.Etl.YAM.Extractors.ApiExtractors;
 using CakeExtracter.Etl.YAM.Extractors.ConValExtractors;
+using CakeExtracter.Etl.YAM.Helper;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
@@ -21,6 +20,16 @@ namespace CakeExtracter.Commands
     public class DASynchYAMStats : ConsoleCommand
     {
         private const int DefaultDaysAgo = 41;
+
+        private List<string> extIdsUsePixelParams;
+        private List<Action> etlList;
+
+        public int? AccountId { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public int? DaysAgoToStart { get; set; }
+        public string StatsType { get; set; }
+        public bool DisabledOnly { get; set; }
 
         public static int RunStatic(int? accountId = null, DateTime? startDate = null, DateTime? endDate = null, string statsType = null)
         {
@@ -35,26 +44,6 @@ namespace CakeExtracter.Commands
             return cmd.Run();
         }
 
-        public int? AccountId { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
-        public int? DaysAgoToStart { get; set; }
-        public string StatsType { get; set; }
-        public bool DisabledOnly { get; set; }
-
-        private string[] extIds_UsePixelParm;
-        private List<Action> etlList;
-
-        public override void ResetProperties()
-        {
-            AccountId = null;
-            StartDate = null;
-            EndDate = null;
-            DaysAgoToStart = null;
-            StatsType = null;
-            DisabledOnly = false;
-        }
-
         public DASynchYAMStats()
         {
             IsCommand("daSynchYAMStats", "synch YAM Stats");
@@ -66,6 +55,16 @@ namespace CakeExtracter.Commands
             HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
         }
 
+        public override void ResetProperties()
+        {
+            AccountId = null;
+            StartDate = null;
+            EndDate = null;
+            DaysAgoToStart = null;
+            StatsType = null;
+            DisabledOnly = false;
+        }
+
         //TODO: if synching all accounts, can we make one API call to get everything?
 
         public override int Execute(string[] remainingArguments)
@@ -73,32 +72,54 @@ namespace CakeExtracter.Commands
             var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info("YAM ETL. DateRange {0}.", dateRange);
 
-            var statsType = new StatsTypeAgg(StatsType);
-            var ppIds = ConfigurationManager.AppSettings["YAMids_UsePixelParm"];
-            extIds_UsePixelParm = ppIds != null ? ppIds.Split(',') : new string[] { };
-
+            var statsType = new YamStatsType(StatsType);
+            extIdsUsePixelParams = ConfigurationHelper.ExtractEnumerableFromConfig("YAMids_UsePixelParm");
             var accounts = GetAccounts();
-            YAMUtility.TokenSets = GetTokens();
+            DoEtlsParallel(dateRange, statsType, accounts);
+            return 0;
+        }
 
+        private void DoEtlsParallel(DateRange dateRange, YamStatsType statsType, IEnumerable<ExtAccount> accounts)
+        {
+            YAMUtility.TokenSets = GetTokens();
             etlList = new List<Action>();
             foreach (var account in accounts)
             {
-                Logger.Info(account.Id, "Commencing ETL for YAM account ({0}) {1}", account.Id, account.Name);
-                var yamUtility = new YAMUtility(m => Logger.Info(account.Id, m), m => Logger.Error(account.Id, new Exception(m)));
-                yamUtility.SetWhichAlt(account.ExternalId);
-
-                AddEnabledEtl(statsType.Daily, account, () => DoETL_Daily(dateRange, account, yamUtility));
-                AddEnabledEtl(statsType.Strategy, account, () => DoETL_Strategy(dateRange, account, yamUtility));
-                AddEnabledEtl(statsType.AdSet, account, () => DoETL_AdSet(dateRange, account, yamUtility));
-                AddEnabledEtl(statsType.Keyword, account, () => DoETL_Keyword(dateRange, account, yamUtility));
-                AddEnabledEtl(statsType.SearchTerm, account, () => DoETL_SearchTerm(dateRange, account, yamUtility));
-                //don't include when getting "all" statstypes
-                AddEnabledEtl(statsType.Creative && !statsType.All, account, () => DoETL_Creative(dateRange, account, yamUtility));
+                DoEtls(dateRange, statsType, account);
             }
-            Parallel.Invoke(etlList.ToArray());
 
+            Parallel.Invoke(etlList.ToArray());
             SaveTokens();
-            return 0;
+        }
+
+        private string[] GetTokens()
+        {
+            // Get tokens, if any, from the database
+            return Platform.GetPlatformTokens(Platform.Code_YAM);
+        }
+
+        private void SaveTokens()
+        {
+            Platform.SavePlatformTokens(Platform.Code_YAM, YAMUtility.TokenSets);
+        }
+
+        private void DoEtls(DateRange dateRange, YamStatsType statsType, ExtAccount account)
+        {
+            Logger.Info(account.Id, "Commencing ETL for YAM account ({0}) {1}", account.Id, account.Name);
+            var yamUtility = CreateUtility(account);
+            AddEnabledEtl(statsType.Daily, account, () => DoETL_Daily(dateRange, account, yamUtility));
+            AddEnabledEtl(statsType.Campaign, account, () => DoETL_AdSet(dateRange, account, yamUtility));
+            AddEnabledEtl(statsType.Line, account, () => DoETL_Strategy(dateRange, account, yamUtility));
+            AddEnabledEtl(statsType.Creative, account, () => DoETL_Keyword(dateRange, account, yamUtility));
+            AddEnabledEtl(statsType.Ad, account, () => DoETL_Creative(dateRange, account, yamUtility));
+            AddEnabledEtl(statsType.Pixel, account, () => DoETL_SearchTerm(dateRange, account, yamUtility));
+        }
+
+        private YAMUtility CreateUtility(ExtAccount account)
+        {
+            var yamUtility = new YAMUtility(m => Logger.Info(account.Id, m), m => Logger.Error(account.Id, new Exception(m)));
+            yamUtility.SetWhichAlt(account.ExternalId);
+            return yamUtility;
         }
 
         private void AddEnabledEtl(bool etlEnabled, ExtAccount account, Action etlAction)
@@ -121,24 +142,13 @@ namespace CakeExtracter.Commands
             });
         }
 
-        private string[] GetTokens()
-        {
-            // Get tokens, if any, from the database
-            return Platform.GetPlatformTokens(Platform.Code_YAM);
-        }
-
-        private void SaveTokens()
-        {
-            Platform.SavePlatformTokens(Platform.Code_YAM, YAMUtility.TokenSets);
-        }
-
         private void DoETL_Daily(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
         {
             var extractor = new YamDailySummaryExtractor(yamUtility, dateRange, account);
             var loader = new TDDailySummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
 
-            if (!extIds_UsePixelParm.Contains(account.ExternalId))
+            if (!extIdsUsePixelParams.Contains(account.ExternalId))
             {
                 return;
             } 
@@ -155,7 +165,7 @@ namespace CakeExtracter.Commands
             var loader = new TDStrategySummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
 
-            if (!extIds_UsePixelParm.Contains(account.ExternalId))
+            if (!extIdsUsePixelParams.Contains(account.ExternalId))
             {
                 return;
             } 
