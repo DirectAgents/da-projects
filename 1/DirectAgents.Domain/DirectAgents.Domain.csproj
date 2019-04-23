@@ -115,17 +115,20 @@
     <Compile Include="Concrete\SecurityRepository.cs" />
     <Compile Include="Concrete\SpecialPlatformRepository.cs" />
     <Compile Include="Entities\CPProg\YAM\Summaries\BaseYamSummary.cs" />
+    <Compile Include="Entities\CPProg\YAM\Summaries\YamCampaignSummary.cs" />
     <Compile Include="Entities\CPProg\YAM\Summaries\YamCreativeSummary.cs" />
     <Compile Include="Entities\CPProg\YAM\Summaries\YamAdSummary.cs" />
+    <Compile Include="Entities\CPProg\YAM\Summaries\YamDailySummary.cs" />
+    <Compile Include="Entities\CPProg\YAM\Summaries\YamLineSummary.cs" />
     <Compile Include="Entities\CPProg\YAM\Summaries\YamPixelSummary.cs" />
     <Compile Include="Entities\CPProg\YAM\YamAd.cs" />
     <Compile Include="Entities\CPProg\YAM\YamCampaign.cs" />
     <Compile Include="Entities\CPProg\YAM\YamLine.cs" />
     <Compile Include="Entities\CPProg\YAM\YamPixel.cs" />
     <Compile Include="Entities\CPProg\YAM\YamCreative.cs" />
-    <Compile Include="MigrationsTD\201904221711201_Mig_YamTables.cs" />
-    <Compile Include="MigrationsTD\201904221711201_Mig_YamTables.Designer.cs">
-      <DependentUpon>201904221711201_Mig_YamTables.cs</DependentUpon>
+    <Compile Include="MigrationsTD\201904231351102_Mig_YamTables.cs" />
+    <Compile Include="MigrationsTD\201904231351102_Mig_YamTables.Designer.cs">
+      <DependentUpon>201904231351102_Mig_YamTables.cs</DependentUpon>
     </Compile>
     <Compile Include="SpecialPlatformProviders\Implementation\CommissionJunctionProvider.cs" />
     <Compile Include="SpecialPlatformProviders\Implementation\DspProvider.cs" />
@@ -1043,8 +1046,8 @@
     <EmbeddedResource Include="MigrationsTD\201904021651556_Mig_JobExecution.resx">
       <DependentUpon>201904021651556_Mig_JobExecution.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MigrationsTD\201904221711201_Mig_YamTables.resx">
-      <DependentUpon>201904221711201_Mig_YamTables.cs</DependentUpon>
+    <EmbeddedResource Include="MigrationsTD\201904231351102_Mig_YamTables.resx">
+      <DependentUpon>201904231351102_Mig_YamTables.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

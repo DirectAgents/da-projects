@@ -118,6 +118,9 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<YamAd>().ToTable("YamAd", tdSchema);
             modelBuilder.Entity<YamCreative>().ToTable("YamCreative", tdSchema);
             modelBuilder.Entity<YamPixel>().ToTable("YamPixel", tdSchema);
+            modelBuilder.Entity<YamDailySummary>().ToTable("YamDailySummary", tdSchema);
+            modelBuilder.Entity<YamCampaignSummary>().ToTable("YamCampaignSummary", tdSchema);
+            modelBuilder.Entity<YamLineSummary>().ToTable("YamLineSummary", tdSchema);
             modelBuilder.Entity<YamAdSummary>().ToTable("YamAdSummary", tdSchema);
             modelBuilder.Entity<YamCreativeSummary>().ToTable("YamCreativeSummary", tdSchema);
             modelBuilder.Entity<YamPixelSummary>().ToTable("YamPixelSummary", tdSchema);
@@ -229,9 +232,20 @@ namespace DirectAgents.Domain.Contexts
             SetupCjModelValues(modelBuilder);
 
             //TD YAM
+            SetupYamDailyMetricModelValues<YamDailySummary>(modelBuilder, "AccountId");
+            SetupYamDailyMetricModelValues<YamCampaignSummary>(modelBuilder, "CampaignId");
+            SetupYamDailyMetricModelValues<YamLineSummary>(modelBuilder, "LineId");
             SetupYamDailyMetricModelValues<YamAdSummary>(modelBuilder, "AdId");
             SetupYamDailyMetricModelValues<YamCreativeSummary>(modelBuilder, "CreativeId");
             SetupYamDailyMetricModelValues<YamPixelSummary>(modelBuilder, "PixelId");
+            modelBuilder.Entity<YamLine>()
+                .HasMany(g => g.Ads)
+                .WithRequired(s => s.Line)
+                .WillCascadeOnDelete(false);
+            modelBuilder.Entity<YamCreative>()
+                .HasMany(g => g.Ads)
+                .WithRequired(s => s.Creative)
+                .WillCascadeOnDelete(false);
 
             // AdRoll
             modelBuilder.Entity<Advertisable>().ToTable("Advertisable", adrollSchema);
@@ -333,6 +347,9 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<YamAd> YamAds { get; set; }
         public DbSet<YamPixel> YamPixels { get; set; }
         public DbSet<YamCreative> YamCreatives { get; set; }
+        public DbSet<YamDailySummary> YamDailySummaries { get; set; }
+        public DbSet<YamCampaignSummary> YamCampaignSummaries { get; set; }
+        public DbSet<YamLineSummary> YamLineSummaries { get; set; }
         public DbSet<YamAdSummary> YamAdSummaries { get; set; }
         public DbSet<YamPixelSummary> YamPixelSummaries { get; set; }
         public DbSet<YamCreativeSummary> YamCreativeSummaries { get; set; }
