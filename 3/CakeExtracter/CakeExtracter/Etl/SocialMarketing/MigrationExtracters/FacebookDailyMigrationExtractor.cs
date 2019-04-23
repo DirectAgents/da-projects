@@ -70,7 +70,7 @@ namespace CakeExtracter.Etl.SocialMarketing.MigrationExtracters
                 PostClickConv = item.PostClickConv,
                 PostViewConv = item.PostViewConv,
                 PostClickRev = item.PostClickRev,
-                PostViewRev = item.PostClickRev,
+                PostViewRev = item.PostViewRev,
                 Cost = item.Cost
             };
             return sum;
