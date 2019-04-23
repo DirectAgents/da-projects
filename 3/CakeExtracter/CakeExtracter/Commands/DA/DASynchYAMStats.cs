@@ -8,6 +8,8 @@ using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
+using CakeExtracter.Etl.YAM.Extractors.ApiExtractors;
+using CakeExtracter.Etl.YAM.Extractors.ConValExtractors;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
@@ -101,7 +103,11 @@ namespace CakeExtracter.Commands
 
         private void AddEnabledEtl(bool etlEnabled, ExtAccount account, Action etlAction)
         {
-            if (!etlEnabled) return;
+            if (!etlEnabled)
+            {
+                return;
+            }
+
             etlList.Add(() =>
             {
                 try
@@ -128,7 +134,7 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Daily(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
         {
-            var extractor = new YAMDailySummaryExtracter(yamUtility, dateRange, account);
+            var extractor = new YamDailySummaryExtractor(yamUtility, dateRange, account);
             var loader = new TDDailySummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
 
@@ -138,14 +144,14 @@ namespace CakeExtracter.Commands
             } 
             
             // Get ConVals using the pixel parameter...
-            var e = new YAMDailyConValExtracter(yamUtility, dateRange, account);
+            var e = new YamDailyConValExtractor(yamUtility, dateRange, account);
             var l = new TDDailyConValLoader(account.Id);
             CommandHelper.DoEtl(e, l);
         }
 
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
         {
-            var extractor = new YAMStrategySummaryExtracter(yamUtility, dateRange, account);
+            var extractor = new YamLineSummaryExtractor(yamUtility, dateRange, account);
             var loader = new TDStrategySummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
 
@@ -156,35 +162,35 @@ namespace CakeExtracter.Commands
             
             // Get ConVals using the pixel parameter...
             var stratNames = GetExistingStrategyNames(dateRange, account.Id);
-            var e = new YAMStrategyConValExtracter(yamUtility, dateRange, account, existingStrategyNames: stratNames);
+            var e = new YamStrategyConValExtractor(yamUtility, dateRange, account, existingStrategyNames: stratNames);
             var l = new TDStrategyConValLoader(account.Id);
             CommandHelper.DoEtl(e, l);
         }
 
         private void DoETL_AdSet(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
         {
-            var extractor = new YAMAdSetSummaryExtracter(yamUtility, dateRange, account);
+            var extractor = new YamCampaignSummaryExtractor(yamUtility, dateRange, account);
             var loader = new TDAdSetSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
 
         private void DoETL_Creative(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
         {
-            var extractor = new YAMTDadSummaryExtracter(yamUtility, dateRange, account);
+            var extractor = new YamAdSummaryExtractor(yamUtility, dateRange, account);
             var loader = new TDadSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
 
         private void DoETL_Keyword(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
         {
-            var extractor = new YAMKeywordSummaryExtracter(yamUtility, dateRange, account);
+            var extractor = new YamCreativeSummaryExtractor(yamUtility, dateRange, account);
             var loader = new KeywordSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
 
         private void DoETL_SearchTerm(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
         {
-            var extractor = new YAMSearchTermSummaryExtracter(yamUtility, dateRange, account);
+            var extractor = new YamBeaconSummaryExtractor(yamUtility, dateRange, account);
             var loader = new SearchTermSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
