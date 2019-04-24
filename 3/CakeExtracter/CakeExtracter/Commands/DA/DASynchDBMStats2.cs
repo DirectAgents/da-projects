@@ -5,14 +5,14 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using CakeExtracter.Common;
+using CakeExtracter.Etl.DBM.Composer;
+using CakeExtracter.Etl.DBM.Downloader;
 using CakeExtracter.Etl.DBM.Extractors;
 using CakeExtracter.Etl.DBM.Extractors.Parsers;
 using CakeExtracter.Etl.DBM.Extractors.Parsers.ParsingConverters;
 using CakeExtracter.Etl.DBM.Models;
-using CakeExtracter.Etl.TradingDesk.Extracters;
-using CakeExtracter.Etl.TradingDesk.Extracters.SummaryCsvExtracters;
-using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using CakeExtracter.Helpers;
+using CsvHelper.Configuration;
 using DBM;
 using DBM.Parsers.Models;
 using DirectAgents.Domain.Concrete;
@@ -48,17 +48,11 @@ namespace CakeExtracter.Commands
         /// </summary>
         public int? DaysAgoToStart { get; set; }
 
-
-
-        private const string AvailableAccountIdsConfigurationName = "DBM_StrategiesFromLineItems";
-        private const string StrategyNameColMapping = "Line Item";
-        private const string StrategyIdColMapping = "Line Item ID";
-
+        public IEnumerable<int> CreativeReportIds { get; set; }
+        public IEnumerable<int> LineItemReportIds { get; set; }
+        
         private DBMUtility DbmUtility { get; set; }
-
-
-
-
+        
         /// <inheritdoc />
         /// <summary>
         /// The constructor sets a command name and command arguments names, provides a description for them.
@@ -80,26 +74,15 @@ namespace CakeExtracter.Commands
         /// <returns>Execution code</returns>
         public override int Execute(string[] remainingArguments)
         {
-            //Logger.LogToOneFile = true;
+            SetConfigurationVariables();
             SetupDbmUtility();
 
             var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
-            var accounts = GetAccounts();
             Logger.Info("DBM ETL. DateRange {0}.", dateRange);
 
-            DoETLs_Creative(dateRange, accounts);
-
-
-
-
-            //TODO: new reports will have all accounts
-            //foreach (var account in accounts)
-            //{
-            //    Logger.Info(account.Id, "DBM ETL. Account {0} - {1}", account.Id, account.Name);
-            //    DoEtLs(account, dateRange);
-            //    Logger.Info(account.Id, "Finished DBM ETL for account ({0}) {1}", account.Id, account.Name);
-            //}
-
+            var accounts = GetAccounts();
+            DoETLs(dateRange, accounts);
+            
             SaveTokens();
             return 0;
         }
@@ -116,76 +99,65 @@ namespace CakeExtracter.Commands
             DaysAgoToStart = null;
         }
 
-        private static PlatColMapping GetInitializedAccountColMapping(ExtAccount account)
+        private void SetConfigurationVariables()
         {
-            var colMapping = account.Platform.PlatColMapping;
-            colMapping.StrategyName = StrategyNameColMapping;
-            colMapping.StrategyEid = StrategyIdColMapping;
-            return colMapping;
+            LineItemReportIds = GetValuesFromConfig("DBM_LineItemReportIds", ConfigurationHelper.ExtractNumbersFromConfigValue);
+            CreativeReportIds = GetValuesFromConfig("DBM_CreativeReportIds", ConfigurationHelper.ExtractNumbersFromConfigValue);
         }
 
-        private static void DoETL_DailyFromStrategyInDatabase(int accountId, DateRange dateRange)
+        private static IEnumerable<T> GetValuesFromConfig<T>(string parameterName, Func<string, IEnumerable<T>> extractFromConfigFunc)
         {
-            var extractor = new DatabaseStrategyToDailySummaryExtractor(dateRange, accountId);
-            var loader = new TDDailySummaryLoader(accountId);
-            CommandHelper.DoEtl(extractor, loader);
+            var configValue = ConfigurationManager.AppSettings[parameterName];
+            var values = extractFromConfigFunc(configValue);
+            return values;
         }
 
-        private static void DoETL_Strategy(int accountId, ColumnMapping colMapping, StreamReader streamReader, DateRange dateRange)
+        private void DoETLs(DateRange dateRange, IEnumerable<ExtAccount> accounts)
         {
-            var extractor = new DbmStrategyCsvExtractor(dateRange, colMapping, streamReader);
-            var loader = new TDStrategySummaryLoader(accountId);
-            CommandHelper.DoEtl(extractor, loader);
+            foreach (var creativeReportId in CreativeReportIds)
+            {
+                DoEtl_Creative(dateRange, accounts, creativeReportId);
+            }
         }
 
-        private void DoEtLs(ExtAccount account, DateRange dateRange)
+        private void DoEtl_Creative(DateRange dateRange, IEnumerable<ExtAccount> accounts, int creativeReportId)
         {
-            var reportUrl = DbmUtility.GetURLForReport(account.ExternalId_int.Value);
+            var reportUrl = DbmUtility.GetURLForReport(creativeReportId);
             if (string.IsNullOrWhiteSpace(reportUrl))
             {
                 return;
             }
 
-            var colMapping = GetInitializedAccountColMapping(account);
-            var streamReader = TDDailySummaryExtracter.CreateStreamReaderFromUrl(reportUrl);
-            DoETL_Strategy(account.Id, colMapping, streamReader, dateRange);
+            var reportContent = DbmReportDownloader.GetStreamReaderFromUrl(reportUrl);
+            var creativeReportRows = GetCreativeRowsFromReportContent(dateRange, reportContent);
+            
+            var composer = new DbmReportDataComposer(accounts.ToList());
+            var creativeSummariesGroupedByAccount = composer.Compose(creativeReportRows);
 
-            Logger.Info("Creating daily stats from strategy stats.");
-            DoETL_DailyFromStrategyInDatabase(account.Id, dateRange);
+            creativeSummariesGroupedByAccount.ForEach(creativeReportData =>
+            {
+                DoEtl_Creative(dateRange, creativeReportData);
+            });
         }
 
-        private static void DoETLs_Creative(DateRange dateRange, IEnumerable<ExtAccount> accounts)
+        private IEnumerable<DbmCreativeReportRow> GetCreativeRowsFromReportContent(DateRange dateRange, StreamReader reportContent)
+        {
+            var rowMap = new DbmCreativeReportEntityRowMap();
+            var creativeReportRows = GetReportRows<DbmCreativeReportRow>(dateRange, reportContent, rowMap);
+            return creativeReportRows;
+        }
+
+        private static IEnumerable<TDbmReportRow> GetReportRows<TDbmReportRow>(DateRange dateRange, StreamReader stream, CsvClassMap rowMap)
+         where TDbmReportRow : DbmBaseReportRow
         {
             const string path = "Reports\\TEST_NEW_Creative_20190424_052740_604983784_2523313339.csv";
-
-            var rowMap = new DbmCreativeReportEntityRowMap();
-            var parser = new DbmReportCsvParser<DbmCreativeReportRow>(dateRange, rowMap, path);
+            //var parser = new DbmReportCsvParser<TDbmReportRow>(dateRange, rowMap, streamReader: stream);
+            var parser = new DbmReportCsvParser<TDbmReportRow>(dateRange, rowMap, csvFilePath: path);
             var creativeReportRows = parser.EnumerateRows();
-
-            var creativeSummariesGroupedByAccount = creativeReportRows
-                .GroupBy(re => re.AdvertiserId, (key, gr) =>
-                {
-                    var relatedAccount = accounts.FirstOrDefault(ac => ac.ExternalId == key);
-                    return relatedAccount != null
-                        ? new DbmAccountReportData
-                        {
-                            Account = relatedAccount,
-                            Data = gr
-                        }
-                        : null;
-                })
-                .Where(data => true);
-            
-            creativeSummariesGroupedByAccount
-                .Where(creativeReportData => creativeReportData?.Data != null)
-                .ToList()
-                .ForEach(creativeReportData =>
-                {
-                    DoETL_Creative(dateRange, creativeReportData);
-                });
+            return creativeReportRows;
         }
 
-        private static void DoETL_Creative(DateRange dateRange, DbmAccountReportData creativeReportData)
+        private static void DoEtl_Creative(DateRange dateRange, DbmAccountReportData creativeReportData)
         {
             var account = creativeReportData.Account;
             Logger.Info(account.Id, "DBM ETL. Account ({0}) {1}", account.Id, account.Name);
@@ -197,6 +169,18 @@ namespace CakeExtracter.Commands
             Logger.Info(account.Id, "Finished DBM ETL for account ({0}) {1}", account.Id, account.Name);
         }
 
+        private IEnumerable<ExtAccount> GetAccounts()
+        {
+            var repository = new PlatformAccountRepository();
+            if (!AccountId.HasValue)
+            {
+                var accounts = repository.GetAccountsWithFilledExternalIdByPlatformCode(Platform.Code_DBM, false);
+                return accounts;
+            }
+
+            var account = repository.GetAccount(AccountId.Value);
+            return new[] {account};
+        }
         // --- setup ---
 
         private void SetupDbmUtility()
@@ -216,36 +200,6 @@ namespace CakeExtracter.Commands
         private void SaveTokens()
         {
             Platform.SavePlatformTokens(Platform.Code_DBM, DbmUtility.TokenSets);
-        }
-
-        private IEnumerable<ExtAccount> GetAccounts()
-        {
-            var accountsDb = GetEnabledAccountsFromDatabase();
-            //TODO: delete this logic
-            var accountsConfig = GetEnabledAccountsFromConfig();
-            var enabledAccounts = accountsDb.Where(x => accountsConfig.Contains(x.ExternalId) && x.ExternalId_int.HasValue).ToList();
-            return enabledAccounts;
-        }
-
-        private IEnumerable<string> GetEnabledAccountsFromConfig()
-        {
-            var stringStrategiesFromLineItems = ConfigurationManager.AppSettings[AvailableAccountIdsConfigurationName] ?? string.Empty;
-            var repsStrategiesFromLineItems = stringStrategiesFromLineItems.Split(',');
-            return repsStrategiesFromLineItems;
-        }
-
-        private IEnumerable<ExtAccount> GetEnabledAccountsFromDatabase()
-        {
-            var repository = new PlatformAccountRepository();
-            if (!AccountId.HasValue)
-            {
-                //TODO: includeColumnMapping = true ???
-                var accounts = repository.GetAccountsWithFilledExternalIdByPlatformCode(Platform.Code_DBM, false, true);
-                return accounts;
-            }
-            //TODO: What is column mapping?
-            var account = repository.GetAccountWithColumnMapping(AccountId.Value);
-            return new[] { account };
         }
     }
 }

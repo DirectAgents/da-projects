@@ -5,13 +5,12 @@ using DirectAgents.Domain.Entities.CPProg.DBM.SummaryMetrics;
 
 namespace CakeExtracter.Etl.DBM.Extractors
 {
-    internal class DbmCreativeExtractor: DbmApiExtractor<DbmCreativeSummary>
+    internal class DbmCreativeExtractor: Extracter<DbmCreativeSummary>
     {
         private readonly DbmReportDataConverter converter;
         private readonly DbmAccountReportData reportData;
 
         public DbmCreativeExtractor(DbmAccountReportData reportData) 
-           // : base(dbmUtility, dateRange)
         {
             converter = new DbmReportDataConverter();
             this.reportData = reportData;

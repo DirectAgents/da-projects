@@ -467,11 +467,12 @@
     </Compile>
     <Compile Include="Etl\CakeMarketing\Extracters\SubIdSummariesExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\CPCLoader.cs" />
-    <Compile Include="Etl\DBM\Extractors\Composer\DbmReportDataComposer.cs" />
-    <Compile Include="Etl\DBM\Extractors\Parser\DbmReportCsvParser.cs" />
-    <Compile Include="Etl\DBM\Extractors\Parser\Models\DbmBaseReportRow.cs" />
-    <Compile Include="Etl\DBM\Extractors\Parser\Models\DbmCreativeReportRow.cs" />
-    <Compile Include="Etl\DBM\Extractors\Parser\ParsingConverters\DbmCreativeReportEntityRowMap.cs" />
+    <Compile Include="Etl\DBM\Composer\DbmReportDataComposer.cs" />
+    <Compile Include="Etl\DBM\Extractors\Parsers\ParsingConverters\DbmReportDataConverter.cs" />
+    <Compile Include="Etl\DBM\Extractors\Parsers\DbmReportCsvParser.cs" />
+    <Compile Include="Etl\DBM\Extractors\Parsers\Models\DbmBaseReportRow.cs" />
+    <Compile Include="Etl\DBM\Extractors\Parsers\Models\DbmCreativeReportRow.cs" />
+    <Compile Include="Etl\DBM\Extractors\Parsers\ParsingConverters\DbmCreativeReportEntityRowMap.cs" />
     <Compile Include="Etl\DBM\Loaders\EntitiesLoaders\DbmAdvertiserLoader.cs" />
     <Compile Include="Etl\DBM\Loaders\EntitiesLoaders\DbmBaseEntityLoader.cs" />
     <Compile Include="Etl\DBM\Loaders\EntitiesLoaders\DbmCampaignLoader.cs" />
@@ -548,7 +549,7 @@
     <Compile Include="Etl\TradingDesk\Extracters\DataBaseSourceExtractors\DatabaseKeywordsToDailySummaryExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DataBaseSourceExtractors\DatabaseStrategyToDailySummaryExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DbmCreativeCloudStorageExtracter.cs" />
-    <Compile Include="Etl\DBM\Extractors\DbmApiExtractor.cs" />
+    <Compile Include="Etl\DBM\Downloader\DbmReportDownloader.cs" />
     <Compile Include="Etl\DBM\Extractors\DbmCreativeExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\DbmStrategyCsvExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\KeywordSummaryExtracter.cs" />
