@@ -2,7 +2,7 @@
 
 namespace FacebookAPI.Entities
 {
-    public class AdData
+    public class AdCreativeData
     {
         public string Id { get; set; }
 

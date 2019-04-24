@@ -18,7 +18,15 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
     /// <seealso cref="CakeExtracter.Etl.SocialMarketing.Extracters.FacebookApiExtracter{DirectAgents.Domain.Entities.CPProg.Facebook.Ad.FbAdSummary}" />
     public class FacebookAdSummaryExtracter : FacebookApiExtracter<FbAdSummary>
     {
-        private readonly List<AdData> allAdsMetadata;
+        private readonly List<AdCreativeData> allAdsMetadata;
+
+        private readonly List<string> adActionsTypesForLoading = new List<string>
+        {
+            "offsite_conversion.fb_pixel_purchase",
+            "comment",
+            "post",
+            "post_reaction"
+        };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FacebookAdSummaryExtracter"/> class.
@@ -28,7 +36,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
         /// <param name="fbUtility">The fb utility.</param>
         /// <param name="fbAdMetadataProvider">The fb ad metadata provider.</param>
         public FacebookAdSummaryExtracter(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility,
-            List<AdData> allAdsMetadata) : base(fbUtility, dateRange, account)
+            List<AdCreativeData> allAdsMetadata) : base(fbUtility, dateRange, account)
         {
             this.allAdsMetadata = allAdsMetadata;
         }
@@ -55,7 +63,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
             End();
         }
 
-        private FbAdSummary CreateFbAdSummary(FBSummary item, List<AdData> allAdMetadata)
+        private FbAdSummary CreateFbAdSummary(FBSummary item, List<AdCreativeData> allAdMetadata)
         {
             var relatedAdMetadata = allAdMetadata.FirstOrDefault(ad => ad.Id == item.AdId);
             var sum = new FbAdSummary
@@ -100,7 +108,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
             var actions = new List<FbAdAction>();
             if (summaryItem.Actions != null)
             {
-                actions = summaryItem.Actions.Values.Select(fbAction => new FbAdAction
+                actions = summaryItem.Actions.Values.Where(act=>adActionsTypesForLoading.Contains(act.ActionType)).Select(fbAction => new FbAdAction
                 {
                     ActionType = new FbActionType
                     {
@@ -118,7 +126,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
             return actions;
         }
 
-        private FbCreative GetRelatedCreativeData(FBSummary item, AdData relatedAdMetadata)
+        private FbCreative GetRelatedCreativeData(FBSummary item, AdCreativeData relatedAdMetadata)
         {
             if (relatedAdMetadata != null)
             {

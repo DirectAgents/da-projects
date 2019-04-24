@@ -26,7 +26,7 @@ namespace FacebookAPI
         /// </summary>
         /// <param name="accountId">The account identifier.</param>
         /// <returns></returns>
-        public List<AdData> TryExtractAllAdsMetadataForAccount(string accountExternalId)
+        public List<AdCreativeData> TryExtractAllAdsMetadataForAccount(string accountExternalId)
         {
             var maxRetryAttempts = 5;
             var secondsToWait = 5;
@@ -42,10 +42,10 @@ namespace FacebookAPI
         /// </summary>
         /// <param name="accountId">The account identifier.</param>
         /// <returns></returns>
-        private List<AdData> GetAllAdsMetadataForAccount(string accountExternalId)
+        private List<AdCreativeData> GetAllAdsMetadataForAccount(string accountExternalId)
         {
             bool moreData;
-            var creativesData = new List<AdData>();
+            var creativesData = new List<AdCreativeData>();
             var parameters = new
             {
                 fields = "id,effective_status,name,creative{image_url,title,body,thumbnail_url,name,id},adset{name,id},campaign{name,id}",
@@ -75,9 +75,9 @@ namespace FacebookAPI
             return creativesData;
         }
 
-        private List<AdData> GetPageAdData(dynamic pageData)
+        private List<AdCreativeData> GetPageAdData(dynamic pageData)
         {
-            var res = new List<AdData>();
+            var res = new List<AdCreativeData>();
             foreach (var row in pageData)
             {
                 var rowAdData = InitAdDataFromResponseRow(row);
@@ -86,22 +86,12 @@ namespace FacebookAPI
             return res;
         }
 
-        private AdData InitAdDataFromResponseRow(dynamic row)
+        private AdCreativeData InitAdDataFromResponseRow(dynamic row)
         {
-            var adData = new AdData
+            var adData = new AdCreativeData
             {
                 Id = row.id,
                 Name = row.name,
-                AdSet = new AdSet
-                {
-                    Id = row.adset.id,
-                    Name = row.adset.name
-                },
-                Campaign = new Campaign
-                {
-                    Id = row.campaign.id,
-                    Name = row.campaign.name
-                },
                 Status = row.effective_status,
                 Creative = new Creative
                 {

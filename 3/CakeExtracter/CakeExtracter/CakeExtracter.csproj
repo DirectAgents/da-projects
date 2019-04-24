@@ -506,6 +506,7 @@
     <Compile Include="Etl\SearchMarketing\Loaders\AppleApiLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\BingConvSummaryLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\SearchDailySummaryLoaders.cs" />
+    <Compile Include="Etl\SocialMarketing\Extracters\FacebookAdMetadataExtracter.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\EntitiesLoaders\BaseFacebookEntityLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\EntitiesLoaders\FacebookActionTypeLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\EntitiesLoaders\FacebookCreativesLoader.cs" />

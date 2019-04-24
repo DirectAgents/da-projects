@@ -121,8 +121,10 @@ namespace CakeExtracter.Commands
             Logger.Info("Facebook ETL. DateRange {0}.", dateRange);
 
             var statsType = new StatsTypeAgg(StatsType);
-
             var accounts = GetAccounts();
+
+            var fbAdMetadataProvider = new FacebookAdMetadataProvider(null, null);
+            var metadataExtractor = new FacebookAdMetadataExtracter(fbAdMetadataProvider);
             Parallel.ForEach(accounts, (account) =>
             {
                 var acctDateRange = new DateRange(dateRange.FromDate, dateRange.ToDate);
@@ -162,7 +164,8 @@ namespace CakeExtracter.Commands
                 if (statsType.AdSet && (numDailyItems == null || numDailyItems.Value > 0))
                     DoETL_AdSet(acctDateRange, account, fbUtility);
                 if (statsType.Creative && (numDailyItems == null || numDailyItems.Value > 0))
-                    DoETL_Creative(acctDateRange, account, fbUtility);
+                    DoETL_Creative(acctDateRange, account, fbUtility, metadataExtractor);
+                Logger.Info(account.Id, "Finished Facebook ETL. Account {0} - {1}. DateRange {2}.", account.Id, account.Name, acctDateRange);
             });
 
             return 0;
@@ -204,13 +207,13 @@ namespace CakeExtracter.Commands
             });
         }
 
-        private void DoETL_Creative(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
+        private void DoETL_Creative(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility, FacebookAdMetadataExtracter metadataExtractor)
         {
             var dateRangesToProcess = dateRange.GetDaysChunks(processingChunkSize).ToList();
-            var fbAdMetadataProvider = new FacebookAdMetadataProvider(m => Logger.Info(account.Id, m), m => Logger.Warn(account.Id, m));
+           
             Logger.Info(account.Id, "Started reading ad's metadata");
             //It's not possible currently fetch facebook creatives data from the insights endpoint.
-            var allAdsMetadata = fbAdMetadataProvider.TryExtractAllAdsMetadataForAccount(account.ExternalId);
+            var allAdsMetadata = metadataExtractor.GetAdCreativesData(account.ExternalId);
             Logger.Info(account.Id, "Finished reading ad's metadata");
             dateRangesToProcess.ForEach(rangeToProcess =>
             {
