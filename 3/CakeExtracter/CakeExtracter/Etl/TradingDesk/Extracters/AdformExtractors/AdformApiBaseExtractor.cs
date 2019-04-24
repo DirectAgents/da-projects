@@ -55,26 +55,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             AfUtility = adformUtility;
             DateRange = dateRange;
             ClientId = int.Parse(account.ExternalId);
-
-            // Starting 2/1/18, Adform pulls in "client cost" rather than "DA cost" so we have to convert back to "client cost"
-            var specialConversionStart = new DateTime(2018, 2, 1);
-            if (account.Campaign == null)
+            if (account.Campaign != null)
             {
-                return;
-            }
-            var firstOfMonth = new DateTime(dateRange.FromDate.Year, dateRange.FromDate.Month, 1);
-            while (firstOfMonth <= dateRange.ToDate)
-            {
-                if (firstOfMonth >= specialConversionStart)
-                {
-                    var pbi = account.Campaign.PlatformBudgetInfoFor(firstOfMonth, account.PlatformId, useParentValsIfNone: true);
-                    if (pbi.CostGoesThruDA())
-                    {
-                        MonthlyCostMultipliers[firstOfMonth] = pbi.MediaSpendToRevMultiplier * pbi.RevToCostMultiplier;
-                    }
-                    // If cost doesn't go through DA, that means "DACost" is 0. In that case don't set a multiplier so the cost won't get adjusted.
-                }
-                firstOfMonth = firstOfMonth.AddMonths(1);
+                ConvertCost(account, dateRange);
             }
         }
 
@@ -171,6 +154,33 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             var metricType = new MetricType(metricName, daysInterval);
             var metric = new SummaryMetric(date, metricType, metricValue);
             return metric;
+        }
+
+        private void ConvertCost(ExtAccount account, DateRange dateRange)
+        {
+            var clientCostConversionStart = new DateTime(2018, 2, 1); // Starting 2/1/18, Adform pulls in "client cost" rather than "DA cost" so we have to convert back to "client cost"
+            var daCostConversionStart = new DateTime(2019, 1, 1); // Starting 1/1/19, Adform pulls in "da cost"
+
+            var firstOfMonth = new DateTime(dateRange.FromDate.Year, dateRange.FromDate.Month, 1);
+            while (firstOfMonth <= dateRange.ToDate)
+            {
+                if (firstOfMonth >= clientCostConversionStart && firstOfMonth < daCostConversionStart)
+                {
+                    ConvertDaCostToClientCost(account, firstOfMonth);
+                }
+
+                firstOfMonth = firstOfMonth.AddMonths(1);
+            }
+        }
+
+        private void ConvertDaCostToClientCost(ExtAccount account, DateTime firstOfMonth)
+        {
+            var pbi = account.Campaign.PlatformBudgetInfoFor(firstOfMonth, account.PlatformId, useParentValsIfNone: true);
+            if (pbi.CostGoesThruDA())
+            {
+                MonthlyCostMultipliers[firstOfMonth] = pbi.MediaSpendToRevMultiplier * pbi.RevToCostMultiplier;
+            }
+            // If cost doesn't go through DA, that means "DACost" is 0. In that case don't set a multiplier so the cost won't get adjusted.
         }
     }
 }
