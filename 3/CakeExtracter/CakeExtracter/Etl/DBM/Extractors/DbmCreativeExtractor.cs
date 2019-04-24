@@ -1,32 +1,55 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using CakeExtracter.Common;
+using CakeExtracter.Etl.DBM.Extractors.Composer;
 using CakeExtracter.Etl.DBM.Extractors.Parser;
 using CakeExtracter.Etl.DBM.Extractors.Parser.ParsingConverters;
+using CakeExtracter.Etl.DBM.Models;
+using DBM;
 using DBM.Parser.Models;
+using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.CPProg.DBM.Entities;
 using DirectAgents.Domain.Entities.CPProg.DBM.SummaryMetrics;
 
 namespace CakeExtracter.Etl.DBM.Extractors
 {
-    internal class DbmCreativeExtractor: Extracter<DbmCreativeSummary>
+    internal class DbmCreativeExtractor: DbmApiExtractor<DbmCreativeSummary>
     {
-        private readonly DbmReportCsvParser<DbmCreativeReportRow> _reportsParser;
+        private readonly DbmReportDataComposer composer;
+        private readonly DbmAccountReportData reportData;
 
-        public DbmCreativeExtractor(DateRange dateRange)
+        public DbmCreativeExtractor(DbmAccountReportData reportData) 
+           // : base(dbmUtility, dateRange)
         {
-            var path = "Reports\\TEST_NEW_Creative.csv";
-
-            var rowMap = new DbmCreativeReportEntityRowMap();
-            _reportsParser = new DbmReportCsvParser<DbmCreativeReportRow>(dateRange, rowMap, path);
+            composer = new DbmReportDataComposer();
+            this.reportData = reportData;
         }
-        
+
         protected override void Extract()
         {
-            var reportRows = _reportsParser.EnumerateRows();
+            try
+            {
+                var creativeSummaries = composer.ComposeCreativeReportData(reportData);
+                //var reportCreativeRows = parser.EnumerateRows();
+                //var reportCreativeRowsGroupedByAccounts = composer.ComposeReportData(reportCreativeRows, accounts);
 
-
-            var items = new List<DbmCreativeSummary>();
-            Add(items);
+                //var creativeSummaries = new List<DbmCreativeSummary>();
+                //foreach (var group in reportCreativeRowsGroupedByAccounts)
+                //{
+                //    var summaries = CreateCreativeSummary(group);
+                //    creativeSummaries.AddRange(summaries);
+                //}
+               
+                Add(creativeSummaries);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+            }
             End();
         }
+
+        
     }
 }

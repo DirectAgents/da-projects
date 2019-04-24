@@ -2,7 +2,7 @@
 
 namespace DirectAgents.Domain.Entities.CPProg.DBM.Entities
 {
-    public class DbmCampaign : DbmBaseEntity
+    public class DbmCampaign : DbmEntity
     {
         public int? AdvertiserId { get; set; }
 

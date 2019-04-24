@@ -11,6 +11,7 @@ using DirectAgents.Domain.Entities.CPProg.Vendor.SummaryMetrics;
 using DirectAgents.Domain.Entities.CPProg.DSP;
 using DirectAgents.Domain.Entities.CPProg.DSP.SummaryMetrics;
 using DirectAgents.Domain.Entities.CPProg.CJ;
+using DirectAgents.Domain.Entities.CPProg.DBM;
 using DirectAgents.Domain.Entities.CPProg.DBM.Entities;
 using DirectAgents.Domain.Entities.CPProg.DBM.SummaryMetrics;
 using DirectAgents.Domain.Entities.CPProg.Kochava;
@@ -237,7 +238,16 @@ namespace DirectAgents.Domain.Contexts
                 .Property(cds => cds.Revenue).HasPrecision(18, 6);
 
             //TD DBM
-            CreateDbmModel(modelBuilder);
+            SetupDbmEntityModelValues<DbmAdvertiser>(modelBuilder, "DbmAdvertiser", tdSchema);
+            SetupDbmEntityModelValues<DbmCampaign>(modelBuilder, "DbmCampaign", tdSchema);
+            SetupDbmEntityModelValues<DbmInsertionOrder>(modelBuilder, "DbmInsertionOrder", tdSchema);
+            SetupDbmEntityModelValues<DbmLineItem>(modelBuilder, "DbmLineItem", tdSchema);
+            SetupDbmEntityModelValues<DbmCreative>(modelBuilder, "DbmCreative", tdSchema);
+            SetupDbmEntityModelValues<DbmLineItemSummary>(modelBuilder, "DbmLineItemSummary", tdSchema);
+            SetupDbmEntityModelValues<DbmCreativeSummary>(modelBuilder, "DbmCreativeSummary", tdSchema);
+
+            SetupDbmSummaryMetricModelValues<DbmLineItemSummary>(modelBuilder, "LineItemId");
+            SetupDbmSummaryMetricModelValues<DbmCreativeSummary>(modelBuilder, "CreativeId");
         }
 
         public DbSet<Employee> Employees { get; set; }
@@ -348,27 +358,25 @@ namespace DirectAgents.Domain.Contexts
                 .WithRequired(s => s.Commission)
                 .WillCascadeOnDelete();
         }
-
-        private static void CreateDbmModel(DbModelBuilder modelBuilder)
+        
+        private static void SetupDbmEntityModelValues<TEntity>(DbModelBuilder modelBuilder, string entityTableName, string schema)
+            where TEntity : DbmBaseEntity
         {
-            modelBuilder.Entity<DbmAdvertiser>().ToTable("DbmAdvertiser", tdSchema);
-            modelBuilder.Entity<DbmCampaign>().ToTable("DbmCampaign", tdSchema);
-            modelBuilder.Entity<DbmInsertionOrder>().ToTable("DbmInsertionOrder", tdSchema);
-            modelBuilder.Entity<DbmLineItem>().ToTable("DbmLineItem", tdSchema);
-            modelBuilder.Entity<DbmCreative>().ToTable("DbmCreative", tdSchema);
-            modelBuilder.Entity<DbmLineItemSummary>()
-                .HasKey(summary => new {summary.LineItemId, summary.Date})
-                .ToTable("DbmLineItemSummary", tdSchema);
-            modelBuilder.Entity<DbmCreativeSummary>()
-                .HasKey(summary => new {summary.CreativeId, summary.Date})
-                .ToTable("DbmCreativeSummary", tdSchema);
+            modelBuilder.Entity<TEntity>().ToTable(entityTableName, schema);
+        }
 
-            modelBuilder.Entity<DbmLineItemSummary>().Property(t => t.Cost).HasPrecision(18, 6);
-            modelBuilder.Entity<DbmLineItemSummary>().Property(t => t.CMPostClickRevenue).HasPrecision(18, 6);
-            modelBuilder.Entity<DbmLineItemSummary>().Property(t => t.CMPostViewRevenue).HasPrecision(18, 6);
-            modelBuilder.Entity<DbmCreativeSummary>().Property(t => t.Cost).HasPrecision(18, 6);
-            modelBuilder.Entity<DbmCreativeSummary>().Property(t => t.CMPostClickRevenue).HasPrecision(18, 6);
-            modelBuilder.Entity<DbmCreativeSummary>().Property(t => t.CMPostViewRevenue).HasPrecision(18, 6);
+        private static void SetupDbmSummaryMetricModelValues<TSummaryMetrics>(DbModelBuilder modelBuilder, string entityColumnName)
+            where TSummaryMetrics : DbmBaseSummaryEntity
+        {
+            modelBuilder.Entity<TSummaryMetrics>().HasKey(summary => new {summary.EntityId, summary.Date});
+            modelBuilder.Entity<TSummaryMetrics>().Property(x => x.EntityId).HasColumnName(entityColumnName);
+            modelBuilder.Entity<TSummaryMetrics>().Property(m => m.Cost).HasPrecision(18, 6);
+            modelBuilder.Entity<TSummaryMetrics>().Property(m => m.Impressions).HasPrecision(18, 6);
+            modelBuilder.Entity<TSummaryMetrics>().Property(m => m.Clicks).HasPrecision(18, 6);
+            modelBuilder.Entity<TSummaryMetrics>().Property(m => m.PostClickConv).HasPrecision(18, 6);
+            modelBuilder.Entity<TSummaryMetrics>().Property(m => m.PostViewConv).HasPrecision(18, 6);
+            modelBuilder.Entity<TSummaryMetrics>().Property(m => m.CMPostClickRevenue).HasPrecision(18, 6);
+            modelBuilder.Entity<TSummaryMetrics>().Property(m => m.CMPostViewRevenue).HasPrecision(18, 6);
         }
 
         private static void SetupVcdAnalyticModelValues(DbModelBuilder modelBuilder)

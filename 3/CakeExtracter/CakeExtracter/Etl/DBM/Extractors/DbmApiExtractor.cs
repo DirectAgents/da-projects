@@ -1,17 +1,20 @@
 ﻿using System.IO;
 using System.Net;
+using CakeExtracter.Common;
 using DBM;
 
 namespace CakeExtracter.Etl.DBM.Extractors
 {
     public abstract class DbmApiExtractor<T> : Extracter<T>
     {
-        protected readonly DBMUtility DbmUtility;
+        //protected readonly DBMUtility _dbmUtility;
+        //protected readonly DateRange? _dateRange;
 
-        public DbmApiExtractor(DBMUtility dbmUtility)
-        {
-            DbmUtility = dbmUtility;
-        }
+        //public DbmApiExtractor(DBMUtility dbmUtility, DateRange? dateRange)
+        //{
+        //    _dbmUtility = dbmUtility;
+        //    _dateRange = dateRange;
+        //}
 
         public static StreamReader CreateStreamReaderFromUrl(string url)
         {

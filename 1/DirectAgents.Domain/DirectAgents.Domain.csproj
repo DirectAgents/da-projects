@@ -114,8 +114,9 @@
     <Compile Include="Concrete\RevTrackRepository.cs" />
     <Compile Include="Concrete\SecurityRepository.cs" />
     <Compile Include="Concrete\SpecialPlatformRepository.cs" />
+    <Compile Include="Entities\CPProg\DBM\DbmBaseEntity.cs" />
     <Compile Include="Entities\CPProg\DBM\Entities\DbmAdvertiser.cs" />
-    <Compile Include="Entities\CPProg\DBM\Entities\DbmBaseEntity.cs" />
+    <Compile Include="Entities\CPProg\DBM\Entities\DbmEntity.cs" />
     <Compile Include="Entities\CPProg\DBM\Entities\DbmCampaign.cs" />
     <Compile Include="Entities\CPProg\DBM\Entities\DbmCreative.cs" />
     <Compile Include="Entities\CPProg\DBM\Entities\DbmInsertionOrder.cs" />
@@ -123,9 +124,9 @@
     <Compile Include="Entities\CPProg\DBM\SummaryMetrics\DbmBaseSummaryEntity.cs" />
     <Compile Include="Entities\CPProg\DBM\SummaryMetrics\DbmCreativeSummary.cs" />
     <Compile Include="Entities\CPProg\DBM\SummaryMetrics\DbmLineItemSummary.cs" />
-    <Compile Include="MigrationsTD\201904221419109_Mig_DbmCreativeExpansion.cs" />
-    <Compile Include="MigrationsTD\201904221419109_Mig_DbmCreativeExpansion.Designer.cs">
-      <DependentUpon>201904221419109_Mig_DbmCreativeExpansion.cs</DependentUpon>
+    <Compile Include="MigrationsTD\201904240744022_Mig_DbmCreativeExpansion.cs" />
+    <Compile Include="MigrationsTD\201904240744022_Mig_DbmCreativeExpansion.Designer.cs">
+      <DependentUpon>201904240744022_Mig_DbmCreativeExpansion.cs</DependentUpon>
     </Compile>
     <Compile Include="SpecialPlatformProviders\Implementation\CommissionJunctionProvider.cs" />
     <Compile Include="SpecialPlatformProviders\Implementation\DspProvider.cs" />
@@ -1043,8 +1044,8 @@
     <EmbeddedResource Include="MigrationsTD\201904021651556_Mig_JobExecution.resx">
       <DependentUpon>201904021651556_Mig_JobExecution.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MigrationsTD\201904221419109_Mig_DbmCreativeExpansion.resx">
-      <DependentUpon>201904221419109_Mig_DbmCreativeExpansion.cs</DependentUpon>
+    <EmbeddedResource Include="MigrationsTD\201904240744022_Mig_DbmCreativeExpansion.resx">
+      <DependentUpon>201904240744022_Mig_DbmCreativeExpansion.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

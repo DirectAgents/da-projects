@@ -3,7 +3,7 @@
     /// <summary>
     /// Db related entity
     /// </summary>
-    public class DbmBaseEntity
+    public class DbmEntity : DbmBaseEntity
     {
         /// <summary>
         /// Gets or sets the item unique db identifier.

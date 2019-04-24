@@ -5,9 +5,7 @@ namespace DirectAgents.Domain.Entities.CPProg.DBM.SummaryMetrics
 {
     public class DbmLineItemSummary : DbmBaseSummaryEntity
     {
-        public int? LineItemId { get; set; }
-
-        [ForeignKey("LineItemId")]
+        [ForeignKey("EntityId")]
         public virtual DbmLineItem LineItem { get; set; }
     }
 }

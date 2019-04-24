@@ -6,11 +6,16 @@ using System.IO;
 using System.Linq;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.DBM.Extractors;
+using CakeExtracter.Etl.DBM.Extractors.Composer;
+using CakeExtracter.Etl.DBM.Extractors.Parser;
+using CakeExtracter.Etl.DBM.Extractors.Parser.ParsingConverters;
+using CakeExtracter.Etl.DBM.Models;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.Extracters.SummaryCsvExtracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using CakeExtracter.Helpers;
 using DBM;
+using DBM.Parser.Models;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
 
@@ -83,18 +88,18 @@ namespace CakeExtracter.Commands
             var accounts = GetAccounts();
             Logger.Info("DBM ETL. DateRange {0}.", dateRange);
 
-            DoETL_Creatives(dateRange);
+            DoETL_Creatives(dateRange, accounts);
 
 
 
 
             //TODO: new reports will have all accounts
-            foreach (var account in accounts)
-            {
-                Logger.Info(account.Id, "DBM ETL. Account {0} - {1}", account.Id, account.Name);
-                DoEtLs(account, dateRange);
-                Logger.Info(account.Id, "Finished DBM ETL for account ({0}) {1}", account.Id, account.Name);
-            }
+            //foreach (var account in accounts)
+            //{
+            //    Logger.Info(account.Id, "DBM ETL. Account {0} - {1}", account.Id, account.Name);
+            //    DoEtLs(account, dateRange);
+            //    Logger.Info(account.Id, "Finished DBM ETL for account ({0}) {1}", account.Id, account.Name);
+            //}
 
             SaveTokens();
             return 0;
@@ -150,11 +155,37 @@ namespace CakeExtracter.Commands
             DoETL_DailyFromStrategyInDatabase(account.Id, dateRange);
         }
 
-        private static void DoETL_Creatives(DateRange dateRange)
+        private void DoETL_Creatives(DateRange dateRange, IEnumerable<ExtAccount> accounts)
         {
-            var extractor = new DbmCreativeExtractor(dateRange);
-            var extractorThread = extractor.Start();
-            extractorThread.Join();
+            const string path = "Reports\\TEST_NEW_Creative_20190424_052740_604983784_2523313339.csv";
+
+            var rowMap = new DbmCreativeReportEntityRowMap();
+            var parser = new DbmReportCsvParser<DbmCreativeReportRow>(dateRange, rowMap, path);
+            var creativeReportRows = parser.EnumerateRows();
+
+            var creativeSummariesGroupedByAccount = creativeReportRows
+                .GroupBy(re => re.AdvertiserId, (key, gr) =>
+                {
+                    var relatedAccount = accounts.FirstOrDefault(ac => ac.ExternalId == key);
+                    return relatedAccount != null
+                        ? new DbmAccountReportData
+                        {
+                            Account = relatedAccount,
+                            Data = gr
+                        }
+                        : null;
+                })
+                .Where(data => true);
+            
+            creativeSummariesGroupedByAccount
+                .Where(creativeReportData => creativeReportData?.Data != null)
+                .ToList()
+                .ForEach(creativeReportData =>
+                {
+                    var extractor = new DbmCreativeExtractor(creativeReportData);
+                    var loader = new Etl.DBM.Loaders.SummariesLoaders.DbmCreativeSummaryLoader(creativeReportData.Account.Id, dateRange);
+                    CommandHelper.DoEtl(extractor, loader);
+                });
         }
 
         // --- setup ---

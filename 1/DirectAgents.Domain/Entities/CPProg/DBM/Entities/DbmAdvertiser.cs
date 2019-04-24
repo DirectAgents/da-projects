@@ -2,7 +2,7 @@
 
 namespace DirectAgents.Domain.Entities.CPProg.DBM.Entities
 {
-    public class DbmAdvertiser : DbmBaseEntity
+    public class DbmAdvertiser : DbmEntity
     {
         /// <summary>
         /// Gets or sets the account identifier. Foreign key to Accounts db table.
@@ -14,5 +14,7 @@ namespace DirectAgents.Domain.Entities.CPProg.DBM.Entities
         /// </summary>
         [ForeignKey("AccountId")]
         public virtual ExtAccount Account { get; set; }
+
+        public string Currency { get; set; }
     }
 }

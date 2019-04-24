@@ -467,10 +467,19 @@
     </Compile>
     <Compile Include="Etl\CakeMarketing\Extracters\SubIdSummariesExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\CPCLoader.cs" />
+    <Compile Include="Etl\DBM\Extractors\Composer\DbmReportDataComposer.cs" />
     <Compile Include="Etl\DBM\Extractors\Parser\DbmReportCsvParser.cs" />
     <Compile Include="Etl\DBM\Extractors\Parser\Models\DbmBaseReportRow.cs" />
     <Compile Include="Etl\DBM\Extractors\Parser\Models\DbmCreativeReportRow.cs" />
     <Compile Include="Etl\DBM\Extractors\Parser\ParsingConverters\DbmCreativeReportEntityRowMap.cs" />
+    <Compile Include="Etl\DBM\Loaders\EntitiesLoaders\DbmAdvertiserLoader.cs" />
+    <Compile Include="Etl\DBM\Loaders\EntitiesLoaders\DbmBaseEntityLoader.cs" />
+    <Compile Include="Etl\DBM\Loaders\EntitiesLoaders\DbmCampaignLoader.cs" />
+    <Compile Include="Etl\DBM\Loaders\EntitiesLoaders\DbmCreativeLoader.cs" />
+    <Compile Include="Etl\DBM\Loaders\EntitiesLoaders\DbmInsertionOrderLoader.cs" />
+    <Compile Include="Etl\DBM\Loaders\EntitiesLoaders\DbmLineItemLoader.cs" />
+    <Compile Include="Etl\DBM\Loaders\SummariesLoaders\DbmCreativeSummaryLoader.cs" />
+    <Compile Include="Etl\DBM\Loaders\SummariesLoaders\DbmLineItemSummaryLoader.cs" />
     <Compile Include="Etl\DBM\Models\DbmAccountReportData.cs" />
     <Compile Include="Etl\DBM\Models\DbmDailyReportData.cs" />
     <Compile Include="Etl\DSP\Configuration\AmazonDspConfigurationProvider.cs" />
@@ -906,8 +915,6 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Etl\DBM\Loaders\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

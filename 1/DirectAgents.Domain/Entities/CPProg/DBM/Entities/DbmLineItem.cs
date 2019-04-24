@@ -2,7 +2,7 @@
 
 namespace DirectAgents.Domain.Entities.CPProg.DBM.Entities
 {
-    public class DbmLineItem : DbmBaseEntity
+    public class DbmLineItem : DbmEntity
     {
         public int? InsertionOrderId { get; set; }
 

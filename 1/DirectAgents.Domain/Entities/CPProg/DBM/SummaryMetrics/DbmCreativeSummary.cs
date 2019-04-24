@@ -5,9 +5,7 @@ namespace DirectAgents.Domain.Entities.CPProg.DBM.SummaryMetrics
 {
     public class DbmCreativeSummary : DbmBaseSummaryEntity
     {
-        public int? CreativeId { get; set; }
-
-        [ForeignKey("CreativeId")]
+        [ForeignKey("EntityId")]
         public virtual DbmCreative Creative { get; set; }
     }
 }

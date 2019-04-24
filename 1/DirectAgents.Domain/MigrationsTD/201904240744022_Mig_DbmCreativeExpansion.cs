@@ -1,10 +1,12 @@
 namespace DirectAgents.Domain.MigrationsTD
 {
-    using System;
     using System.Data.Entity.Migrations;
     
     public partial class Mig_DbmCreativeExpansion : DbMigration
     {
+        private const string LineItemIndexName = "IX_LineItemIdAndDate";
+        private const string CreativeIndexName = "IX_CreativeIdAndDate";
+
         public override void Up()
         {
             CreateTable(
@@ -26,6 +28,7 @@ namespace DirectAgents.Domain.MigrationsTD
                     {
                         Id = c.Int(nullable: false, identity: true),
                         AccountId = c.Int(),
+                        Currency = c.String(),
                         ExternalId = c.String(),
                         Name = c.String(),
                     })
@@ -39,8 +42,8 @@ namespace DirectAgents.Domain.MigrationsTD
                     {
                         Id = c.Int(nullable: false, identity: true),
                         LineItemId = c.Int(),
-                        Height = c.Int(nullable: false),
-                        Width = c.Int(nullable: false),
+                        Height = c.String(),
+                        Width = c.String(),
                         Size = c.String(),
                         Type = c.String(),
                         ExternalId = c.String(),
@@ -84,18 +87,16 @@ namespace DirectAgents.Domain.MigrationsTD
                     {
                         CreativeId = c.Int(nullable: false),
                         Date = c.DateTime(nullable: false),
-                        Impressions = c.Int(nullable: false),
-                        Clicks = c.Int(nullable: false),
-                        AllClicks = c.Int(nullable: false),
-                        PostClickConv = c.Int(nullable: false),
-                        PostViewConv = c.Int(nullable: false),
                         Cost = c.Decimal(nullable: false, precision: 18, scale: 6),
+                        Impressions = c.Decimal(nullable: false, precision: 18, scale: 6),
+                        Clicks = c.Decimal(nullable: false, precision: 18, scale: 6),
+                        PostClickConv = c.Decimal(nullable: false, precision: 18, scale: 6),
+                        PostViewConv = c.Decimal(nullable: false, precision: 18, scale: 6),
                         CMPostClickRevenue = c.Decimal(nullable: false, precision: 18, scale: 6),
                         CMPostViewRevenue = c.Decimal(nullable: false, precision: 18, scale: 6),
                     })
                 .PrimaryKey(t => new { t.CreativeId, t.Date })
-                .ForeignKey("td.DbmCreative", t => t.CreativeId, cascadeDelete: true)
-                .Index(t => t.CreativeId);
+                .ForeignKey("td.DbmCreative", t => t.CreativeId, cascadeDelete: true);
             
             CreateTable(
                 "td.DbmLineItemSummary",
@@ -103,23 +104,25 @@ namespace DirectAgents.Domain.MigrationsTD
                     {
                         LineItemId = c.Int(nullable: false),
                         Date = c.DateTime(nullable: false),
-                        Impressions = c.Int(nullable: false),
-                        Clicks = c.Int(nullable: false),
-                        AllClicks = c.Int(nullable: false),
-                        PostClickConv = c.Int(nullable: false),
-                        PostViewConv = c.Int(nullable: false),
                         Cost = c.Decimal(nullable: false, precision: 18, scale: 6),
+                        Impressions = c.Decimal(nullable: false, precision: 18, scale: 6),
+                        Clicks = c.Decimal(nullable: false, precision: 18, scale: 6),
+                        PostClickConv = c.Decimal(nullable: false, precision: 18, scale: 6),
+                        PostViewConv = c.Decimal(nullable: false, precision: 18, scale: 6),
                         CMPostClickRevenue = c.Decimal(nullable: false, precision: 18, scale: 6),
                         CMPostViewRevenue = c.Decimal(nullable: false, precision: 18, scale: 6),
                     })
                 .PrimaryKey(t => new { t.LineItemId, t.Date })
-                .ForeignKey("td.DbmLineItem", t => t.LineItemId, cascadeDelete: true)
-                .Index(t => t.LineItemId);
-            
+                .ForeignKey("td.DbmLineItem", t => t.LineItemId, cascadeDelete: true);
+
+            Sql($@"CREATE NONCLUSTERED INDEX [{LineItemIndexName}] ON [td].[DbmLineItemSummary] ([LineItemId]) INCLUDE ([Date])");
+            Sql($@"CREATE NONCLUSTERED INDEX [{CreativeIndexName}] ON [td].[DbmCreativeSummary] ([CreativeId]) INCLUDE ([Date])");
         }
         
         public override void Down()
         {
+            DropIndex("td.DbmCreativeSummary", CreativeIndexName);
+            DropIndex("td.DbmLineItemSummary", LineItemIndexName);
             DropForeignKey("td.DbmLineItemSummary", "LineItemId", "td.DbmLineItem");
             DropForeignKey("td.DbmCreativeSummary", "CreativeId", "td.DbmCreative");
             DropForeignKey("td.DbmCreative", "LineItemId", "td.DbmLineItem");
