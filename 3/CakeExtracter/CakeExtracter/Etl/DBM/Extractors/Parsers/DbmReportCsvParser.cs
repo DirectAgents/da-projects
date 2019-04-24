@@ -5,9 +5,9 @@ using System.Linq;
 using CakeExtracter.Common;
 using CsvHelper;
 using CsvHelper.Configuration;
-using DBM.Parser.Models;
+using DBM.Parsers.Models;
 
-namespace CakeExtracter.Etl.DBM.Extractors.Parser
+namespace CakeExtracter.Etl.DBM.Extractors.Parsers
 {
     /// <summary> DBM reports parser </summary>
     internal class DbmReportCsvParser<T> where T : DbmBaseReportRow

@@ -1,4 +1,4 @@
-﻿namespace DBM.Parser.Models
+﻿namespace DBM.Parsers.Models
 {
     public class DbmCreativeReportRow : DbmBaseReportRow
     {

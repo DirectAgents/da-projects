@@ -1,28 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using CakeExtracter.Common;
-using CakeExtracter.Etl.DBM.Extractors.Composer;
-using CakeExtracter.Etl.DBM.Extractors.Parser;
-using CakeExtracter.Etl.DBM.Extractors.Parser.ParsingConverters;
+using CakeExtracter.Etl.DBM.Extractors.Parsers.ParsingConverters;
 using CakeExtracter.Etl.DBM.Models;
-using DBM;
-using DBM.Parser.Models;
-using DirectAgents.Domain.Entities.CPProg;
-using DirectAgents.Domain.Entities.CPProg.DBM.Entities;
 using DirectAgents.Domain.Entities.CPProg.DBM.SummaryMetrics;
 
 namespace CakeExtracter.Etl.DBM.Extractors
 {
     internal class DbmCreativeExtractor: DbmApiExtractor<DbmCreativeSummary>
     {
-        private readonly DbmReportDataComposer composer;
+        private readonly DbmReportDataConverter converter;
         private readonly DbmAccountReportData reportData;
 
         public DbmCreativeExtractor(DbmAccountReportData reportData) 
            // : base(dbmUtility, dateRange)
         {
-            composer = new DbmReportDataComposer();
+            converter = new DbmReportDataConverter();
             this.reportData = reportData;
         }
 
@@ -30,17 +21,7 @@ namespace CakeExtracter.Etl.DBM.Extractors
         {
             try
             {
-                var creativeSummaries = composer.ComposeCreativeReportData(reportData);
-                //var reportCreativeRows = parser.EnumerateRows();
-                //var reportCreativeRowsGroupedByAccounts = composer.ComposeReportData(reportCreativeRows, accounts);
-
-                //var creativeSummaries = new List<DbmCreativeSummary>();
-                //foreach (var group in reportCreativeRowsGroupedByAccounts)
-                //{
-                //    var summaries = CreateCreativeSummary(group);
-                //    creativeSummaries.AddRange(summaries);
-                //}
-               
+                var creativeSummaries = converter.ConvertCreativeReportDataToSummaries(reportData);
                 Add(creativeSummaries);
             }
             catch (Exception e)
@@ -49,7 +30,5 @@ namespace CakeExtracter.Etl.DBM.Extractors
             }
             End();
         }
-
-        
     }
 }

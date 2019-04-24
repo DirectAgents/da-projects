@@ -1,8 +1,8 @@
 ﻿using CakeExtracter.Etl.DSP.Extractors.Parser.ParsingConverters;
 using CsvHelper.Configuration;
-using DBM.Parser.Models;
+using DBM.Parsers.Models;
 
-namespace CakeExtracter.Etl.DBM.Extractors.Parser.ParsingConverters
+namespace CakeExtracter.Etl.DBM.Extractors.Parsers.ParsingConverters
 {
     /// <summary>DBM report csv convert rules.</summary>
     internal sealed class DbmCreativeReportEntityRowMap : CsvClassMap<DbmCreativeReportRow>
