@@ -7,8 +7,6 @@ namespace CakeExtracter.Etl.DBM.Loaders.EntitiesLoaders
 {
     public class DbmLineItemLoader : DbmBaseEntityLoader<DbmLineItem>
     {
-        private readonly DbmAdvertiserLoader advertiserLoader;
-        private readonly DbmCampaignLoader campaignLoader;
         private readonly DbmInsertionOrderLoader insertionOrderLoader;
 
         /// <summary>
@@ -19,11 +17,8 @@ namespace CakeExtracter.Etl.DBM.Loaders.EntitiesLoaders
 
         private static readonly object lockObject = new object();
 
-        public DbmLineItemLoader(DbmAdvertiserLoader advertiserLoader, DbmCampaignLoader campaignLoader,
-            DbmInsertionOrderLoader insertionOrderLoader)
+        public DbmLineItemLoader(DbmInsertionOrderLoader insertionOrderLoader)
         {
-            this.advertiserLoader = advertiserLoader;
-            this.campaignLoader = campaignLoader;
             this.insertionOrderLoader = insertionOrderLoader;
         }
 
@@ -35,8 +30,6 @@ namespace CakeExtracter.Etl.DBM.Loaders.EntitiesLoaders
         {
             var uniqueItems = items.GroupBy(item => item.ExternalId).Select(gr => gr.First()).ToList();
             EnsureInsertionOrdersData(uniqueItems);
-            //EnsureCampaignsData(uniqueItems);
-            //EnsureAdvertisersData(uniqueItems);
             AddUpdateDependentItems(uniqueItems, lineItemIdStorage, lockObject);
             AssignIdToItems(items, lineItemIdStorage);
         }
@@ -68,20 +61,6 @@ namespace CakeExtracter.Etl.DBM.Loaders.EntitiesLoaders
             var relatedInsOrders = items.Select(item => item.InsertionOrder).Where(item => item != null).ToList();
             insertionOrderLoader.AddUpdateDependentEntities(relatedInsOrders);
             items.ForEach(item => item.InsertionOrderId = item.InsertionOrder?.Id);
-        }
-
-        private void EnsureCampaignsData(List<DbmLineItem> items)
-        {
-            var relatedCampaigns = items.Select(item => item.InsertionOrder.Campaign).Where(item => item != null).ToList();
-            campaignLoader.AddUpdateDependentEntities(relatedCampaigns);
-            items.ForEach(item => item.InsertionOrder.CampaignId = item.InsertionOrder.Campaign?.Id);
-        }
-
-        private void EnsureAdvertisersData(List<DbmLineItem> items)
-        {
-            var relatedAdvertisers = items.Select(item => item.InsertionOrder.Campaign?.Advertiser).Where(item => item != null).ToList();
-            advertiserLoader.AddUpdateDependentEntities(relatedAdvertisers);
-            items.ForEach(item => item.InsertionOrder.Campaign.AdvertiserId = item.InsertionOrder.Campaign.Advertiser?.Id);
         }
     }
 }

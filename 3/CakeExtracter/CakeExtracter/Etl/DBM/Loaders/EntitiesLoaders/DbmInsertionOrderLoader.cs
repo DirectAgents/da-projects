@@ -7,7 +7,6 @@ namespace CakeExtracter.Etl.DBM.Loaders.EntitiesLoaders
 {
     public class DbmInsertionOrderLoader : DbmBaseEntityLoader<DbmInsertionOrder>
     {
-        private readonly DbmAdvertiserLoader advertiserLoader;
         private readonly DbmCampaignLoader campaignLoader;
 
         /// <summary>
@@ -18,9 +17,8 @@ namespace CakeExtracter.Etl.DBM.Loaders.EntitiesLoaders
 
         private static readonly object lockObject = new object();
 
-        public DbmInsertionOrderLoader(DbmAdvertiserLoader advertiserLoader, DbmCampaignLoader campaignLoader)
+        public DbmInsertionOrderLoader(DbmCampaignLoader campaignLoader)
         {
-            this.advertiserLoader = advertiserLoader;
             this.campaignLoader = campaignLoader;
         }
 
@@ -32,7 +30,6 @@ namespace CakeExtracter.Etl.DBM.Loaders.EntitiesLoaders
         {
             var uniqueItems = items.GroupBy(item => item.ExternalId).Select(gr => gr.First()).ToList();
             EnsureCampaignsData(uniqueItems);
-            //EnsureAdvertisersData(uniqueItems);
             AddUpdateDependentItems(uniqueItems, insertionOrderIdStorage, lockObject);
             AssignIdToItems(items, insertionOrderIdStorage);
         }
@@ -60,13 +57,6 @@ namespace CakeExtracter.Etl.DBM.Loaders.EntitiesLoaders
             var relatedCampaigns = items.Select(item => item.Campaign).Where(item => item != null).ToList();
             campaignLoader.AddUpdateDependentEntities(relatedCampaigns);
             items.ForEach(item => item.CampaignId = item.Campaign?.Id);
-        }
-
-        private void EnsureAdvertisersData(List<DbmInsertionOrder> items)
-        {
-            var relatedAdvertisers = items.Select(item => item.Campaign?.Advertiser).Where(item => item != null).ToList();
-            advertiserLoader.AddUpdateDependentEntities(relatedAdvertisers);
-            items.ForEach(item => item.Campaign.AdvertiserId = item.Campaign.Advertiser?.Id);
         }
     }
 }

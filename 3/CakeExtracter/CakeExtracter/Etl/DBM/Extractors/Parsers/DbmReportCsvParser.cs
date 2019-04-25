@@ -14,35 +14,35 @@ namespace CakeExtracter.Etl.DBM.Extractors.Parsers
     {
         private const string FirstColumnHeaderName = "Date";
 
-        private readonly DateRange _dateRange;
-        private readonly StreamReader _streamReader;
-        private readonly string _csvFilePath;
-        private readonly CsvClassMap _csvClassMap;
+        private readonly DateRange dateRange;
+        private readonly StreamReader streamReader;
+        private readonly string csvFilePath;
+        private readonly CsvClassMap csvClassMap;
 
         public DbmReportCsvParser(DateRange dateRange, CsvClassMap csvClassMap,
             string csvFilePath = null, StreamReader streamReader = null)
         {
-            _dateRange = dateRange;
-            _csvClassMap = csvClassMap;
-            _csvFilePath = csvFilePath;
-            _streamReader = streamReader;
+            this.dateRange = dateRange;
+            this.csvClassMap = csvClassMap;
+            this.csvFilePath = csvFilePath;
+            this.streamReader = streamReader;
         }
 
         public IEnumerable<T> EnumerateRows()
         {
-            Logger.Info($"Extracting rows from {_csvFilePath ?? "StreamReader"}");
+            Logger.Info($"Extracting rows from {csvFilePath ?? "StreamReader"}");
 
-            if (_streamReader != null)
+            if (streamReader != null)
             {
-                return EnumerateRowsInner(_streamReader);
+                return EnumerateRowsInner(streamReader);
             }
 
-            if (!File.Exists(_csvFilePath))
+            if (!File.Exists(csvFilePath))
             {
                 return new List<T>();
             }
 
-            using (var reader = File.OpenText(_csvFilePath))
+            using (var reader = File.OpenText(csvFilePath))
             {
                 return EnumerateRowsInner(reader);
             }
@@ -51,7 +51,7 @@ namespace CakeExtracter.Etl.DBM.Extractors.Parsers
         protected virtual void SetupCsvReader(CsvReader csvReader)
         {
             SetupCsvReaderConfig(csvReader);
-            csvReader.Configuration.RegisterClassMap(_csvClassMap);
+            csvReader.Configuration.RegisterClassMap(csvClassMap);
         }
 
         protected void SetupCsvReaderConfig(CsvReader csvReader)
@@ -79,9 +79,11 @@ namespace CakeExtracter.Etl.DBM.Extractors.Parsers
             return isSkipRecord || isFirstColumnIsNotDateTime;
         }
 
-        protected virtual IEnumerable<T> GroupAndEnumerate(List<T> csvRows)
+        protected virtual IEnumerable<T> GroupAndEnumerate(List<T> allCsvRows)
         {
-            return csvRows.Where(x => _dateRange.IsInRange(x.Date)).ToList();
+            Logger.Info($"All rows count [{allCsvRows.Count}]. Rows do not relate date range {dateRange.ToString()} will be removed...");
+            var relatedCsvRows = allCsvRows.Where(x => dateRange.IsInRange(x.Date)).ToList();
+            return relatedCsvRows;
         }
 
         private IEnumerable<T> EnumerateRowsInner(TextReader reader)

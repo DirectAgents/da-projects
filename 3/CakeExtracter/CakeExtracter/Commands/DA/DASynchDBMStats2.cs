@@ -197,7 +197,7 @@ namespace CakeExtracter.Commands
             {
                 throw new Exception("Could not retrieve the report location URL.");
             }
-            Logger.Info($"The report location URL: [{reportUrl}].");
+            Logger.Info($"The report location URL: {reportUrl}.");
             return reportUrl;
         }
 
@@ -217,9 +217,7 @@ namespace CakeExtracter.Commands
             where TDbmReportRow : DbmBaseReportRow
         {
             Logger.Info("Parsing a report...");
-            const string path = "Reports\\TEST_NEW_LineItem_20190425_071102_604983549_2524191508.csv";
-            //var parser = new DbmReportCsvParser<TDbmReportRow>(dateRange, rowMap, streamReader: stream);
-            var parser = new DbmReportCsvParser<TDbmReportRow>(dateRange, rowMap, csvFilePath: path);
+            var parser = new DbmReportCsvParser<TDbmReportRow>(dateRange, rowMap, streamReader: stream);
             var reportRows = parser.EnumerateRows().ToList();
             Logger.Info($"The report parsed successfully (row count: {reportRows.Count})");
             return reportRows;

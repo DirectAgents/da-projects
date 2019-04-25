@@ -51,21 +51,23 @@ namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
 
         private void DeleteOldSummariesFromDb()
         {
-            Logger.Info(accountId, $"Started cleaning old creative summaries for {dateRange.ToString()}");
+            Logger.Info(accountId, $"Started cleaning of creative summaries has begun - {dateRange.ToString()}");
             SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
                 db.DbmCreativeSummaries.Where(x => (x.Date >= dateRange.FromDate && x.Date <= dateRange.ToDate)
                 && x.Creative.Advertiser.AccountId == accountId).DeleteFromQuery();
             }, lockObject, "BulkDeleteByQuery");
+            Logger.Info(accountId, $"The cleaning of creative summaries is over - {dateRange.ToString()})");
         }
 
         private void LoadLatestSummariesToDb(IReadOnlyCollection<DbmCreativeSummary> summaries)
         {
-            Logger.Info(accountId, $"Started loading creative summaries for {dateRange.ToString()}");
+            Logger.Info(accountId, $"Started loading of creative summaries has begun - {dateRange.ToString()}");
             SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
                 db.BulkInsert(summaries);
             }, lockObject, "BulkInsert");
+            Logger.Info(accountId, $"The loading of creative summaries is over - {dateRange.ToString()})");
         }
     }
 }

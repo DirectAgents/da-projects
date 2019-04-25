@@ -23,8 +23,8 @@ namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
         {
             var advertiserLoader = new DbmAdvertiserLoader();
             var campaignLoader = new DbmCampaignLoader(advertiserLoader);
-            var insertionOrderLoader = new DbmInsertionOrderLoader(advertiserLoader, campaignLoader);
-            lineItemLoader = new DbmLineItemLoader(advertiserLoader, campaignLoader, insertionOrderLoader);
+            var insertionOrderLoader = new DbmInsertionOrderLoader(campaignLoader);
+            lineItemLoader = new DbmLineItemLoader(insertionOrderLoader);
             this.dateRange = dateRange;
         }
 
@@ -53,21 +53,23 @@ namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
 
         private void DeleteOldSummariesFromDb()
         {
-            Logger.Info(accountId, $"Started cleaning old line item summaries for {dateRange.ToString()}");
+            Logger.Info(accountId, $"Started cleaning of line item summaries has begun - {dateRange.ToString()}");
             SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
                 db.DbmLineItemSummaries.Where(x => (x.Date >= dateRange.FromDate && x.Date <= dateRange.ToDate)
                 && x.LineItem.InsertionOrder.Campaign.Advertiser.AccountId == accountId).DeleteFromQuery();
             }, lockObject, "BulkDeleteByQuery");
+            Logger.Info(accountId, $"The cleaning of line item summaries is over - {dateRange.ToString()})");
         }
 
         private void LoadLatestSummariesToDb(IReadOnlyCollection<DbmLineItemSummary> summaries)
         {
-            Logger.Info(accountId, $"Started loading line item summaries for {dateRange.ToString()}");
+            Logger.Info(accountId, $"Started loading of line item summaries has begun - {dateRange.ToString()}");
             SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
                 db.BulkInsert(summaries);
             }, lockObject, "BulkInsert");
+            Logger.Info(accountId, $"The loading of line item summaries is over - {dateRange.ToString()})");
         }
     }
 }
