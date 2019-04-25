@@ -53,7 +53,7 @@
     <Compile Include="Converters\FacebookSummaryConverter.cs" />
     <Compile Include="Converters\StrategyInsigthsFacebookSummaryConverter.cs" />
     <Compile Include="Entities\FBAction.cs" />
-    <Compile Include="Api\ClientAndParams.cs" />
+    <Compile Include="Api\FacebookJobRequest.cs" />
     <Compile Include="Api\Filter.cs" />
     <Compile Include="BaseFacebookDataProvider.cs" />
     <Compile Include="Entities\AdDataEntities\AdCreativeData.cs" />

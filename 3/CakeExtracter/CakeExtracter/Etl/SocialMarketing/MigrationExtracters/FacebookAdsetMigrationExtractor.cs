@@ -11,6 +11,7 @@ using System.Linq;
 
 namespace CakeExtracter.Etl.SocialMarketing.MigrationExtracters
 {
+    //!!! Migration only extractor. Remove when Facebook V2 migration completed and verified.
     public class FacebookAdSetMigrationExtractor : Extracter<FbAdSetSummary>
     {
         protected readonly DateRange dateRange;
@@ -22,7 +23,6 @@ namespace CakeExtracter.Etl.SocialMarketing.MigrationExtracters
         /// </summary>
         /// <param name="dateRange">The date range.</param>
         /// <param name="account">The account.</param>
-        /// <param name="fbUtility">The fb utility.</param>
         public FacebookAdSetMigrationExtractor(DateRange dateRange, ExtAccount account)
         {
             this.dateRange = dateRange;

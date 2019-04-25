@@ -139,19 +139,19 @@ namespace FacebookAPI
                 if (byAd)
                     daysPerCall = DaysPerCall_Ad;
             }
-            var clientParmsList = new List<ClientAndParams>();
+            var clientParmsList = new List<FacebookJobRequest>();
             while (start <= end)
             {
                 var tempEnd = start.AddDays(daysPerCall - 1);
                 if (tempEnd > end)
                     tempEnd = end;
 
-                var clientParms = GetClientAndParms(accountId, start, tempEnd, byCampaign: byCampaign, byAdSet: byAdSet, byAd: byAd);
+                var clientParms = PrepareSummaryExtractingRequest(accountId, start, tempEnd, byCampaign: byCampaign, byAdSet: byAdSet, byAd: byAd);
                 clientParms.GetRunId_withRetry(LogInfo, LogError);
                 clientParmsList.Add(clientParms);
                 if (getArchived)
                 {
-                    var clientParmsArchived = GetClientAndParms(accountId, start, tempEnd, byCampaign: byCampaign, byAdSet: byAdSet, byAd: byAd, getArchived: true);
+                    var clientParmsArchived = PrepareSummaryExtractingRequest(accountId, start, tempEnd, byCampaign: byCampaign, byAdSet: byAdSet, byAd: byAd, getArchived: true);
                     clientParmsArchived.GetRunId_withRetry(LogInfo, LogError);
                     clientParmsList.Add(clientParmsArchived);
                 }
@@ -161,7 +161,7 @@ namespace FacebookAPI
             Thread.Sleep(InitialWaitMillisecs);
             foreach (var clientParms in clientParmsList)
             {
-                var fbSummaries = GetFBSummaries(clientParms, converter);
+                var fbSummaries = ProcessJobRequest(clientParms, converter);
                 foreach (var fbSum in fbSummaries)
                 {
                     yield return fbSum;
@@ -169,7 +169,18 @@ namespace FacebookAPI
             }
         }
 
-        private ClientAndParams GetClientAndParms(string accountId, DateTime start, DateTime end, bool byCampaign = false, bool byAdSet = false, bool byAd = false, bool getArchived = false)
+        /// <summary>
+        /// Prepares the facebook job request.
+        /// </summary>
+        /// <param name="accountId">The account identifier.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <param name="byCampaign">if set to <c>true</c> [by campaign].</param>
+        /// <param name="byAdSet">if set to <c>true</c> [by ad set].</param>
+        /// <param name="byAd">if set to <c>true</c> [by ad].</param>
+        /// <param name="getArchived">if set to <c>true</c> [get archived].</param>
+        /// <returns></returns>
+        private FacebookJobRequest PrepareSummaryExtractingRequest(string accountId, DateTime start, DateTime end, bool byCampaign = false, bool byAdSet = false, bool byAd = false, bool getArchived = false)
         {
             var levelVal = "";
             var fieldsVal = "spend,impressions,inline_link_clicks,clicks,actions,action_values";
@@ -214,7 +225,7 @@ namespace FacebookAPI
             by += byAd ? " by Ad" : "";
             string logMessage = string.Format("GetFBSummaries {0:d} - {1:d} ({2}{3})", start, end, accountId, by);
 
-            return new ClientAndParams
+            return new FacebookJobRequest
             {
                 fbClient = CreateFBClient(),
                 path = accountId + "/insights",
@@ -223,7 +234,17 @@ namespace FacebookAPI
             };
         }
 
-        private IEnumerable<FBSummary> GetFBSummaries(ClientAndParams clientParms, FacebookSummaryConverter converter)
+        /// <summary>
+        /// Processes the job request.
+        /// </summary>
+        /// <param name="clientParms">The client parms.</param>
+        /// <param name="converter">The converter.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">
+        /// Job failed. Execution will be requested again.
+        /// or
+        /// </exception>
+        private IEnumerable<FBSummary> ProcessJobRequest(FacebookJobRequest clientParms, FacebookSummaryConverter converter)
         {
             LogInfo(clientParms.logMessage);
             bool moreData = false;

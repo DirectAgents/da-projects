@@ -7,7 +7,7 @@ namespace FacebookAPI.Api
     /// <summary>
     /// Facebook API Client Job Requests Utility
     /// </summary>
-    internal class ClientAndParams
+    internal class FacebookJobRequest
     {
         public FacebookClient fbClient;
         public string path;
