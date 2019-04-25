@@ -8,10 +8,6 @@ namespace FacebookAPI.Converters
     /// <seealso cref="FacebookAPI.Converters.FacebookSummaryConverter" />
     internal class AdSetInsigthsFacebookSummaryConverter : FacebookSummaryConverter
     {
-        string conversionActionType;
-        string clickAttribution;
-        string viewAttribution;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="AdSetInsigthsFacebookSummaryConverter"/> class.
         /// </summary>
@@ -33,7 +29,7 @@ namespace FacebookAPI.Converters
         /// <returns></returns>
         public override FBSummary ParseSummaryRow(dynamic row)
         {
-            var summary = GetFacebokSummaryMetricsFromRow(row);
+            var summary = GetFacebookSummaryMetricsFromRow(row);
             ProcessAllActions(row, summary);
             return summary;
         }

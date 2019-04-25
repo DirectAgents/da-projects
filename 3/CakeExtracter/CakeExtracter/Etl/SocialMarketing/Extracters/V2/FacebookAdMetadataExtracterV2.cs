@@ -13,9 +13,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters.V2
     public class FacebookAdMetadataExtractorV2
     {
         private static ConcurrentDictionary<string, object> extIdLocksDictionary = new ConcurrentDictionary<string, object>();
-
         private static ConcurrentDictionary<string, List<AdCreativeData>> creativesDataDictionary = new ConcurrentDictionary<string, List<AdCreativeData>>();
-
         private readonly FacebookAdMetadataProvider adMetadataProvider;
 
         /// <summary>
@@ -35,7 +33,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters.V2
         public List<AdCreativeData> GetAdCreativesData(string  accountExtId)
         {
             // For each facebook account there's 4(per each platform) accounts with the same external id. To not fetch the same ads data for each account
-            //there is a creativesDataDictionary and multithreading concurrency stuff for filling dictionary and arbitrating ETL processing. 
+            //there is a creativesDataDictionary and multi threading concurrency stuff for filling dictionary and arbitrating ETL processing. 
             lock (extIdLocksDictionary.GetOrAdd(accountExtId, (val) => new object()))
             {
                 if (creativesDataDictionary.ContainsKey(accountExtId))

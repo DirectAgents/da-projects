@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Etl.SocialMarketing.Extracters.V2;
 using CakeExtracter.Etl.SocialMarketing.LoadersDAV2;
 using CakeExtracter.Helpers;
@@ -131,6 +132,7 @@ namespace CakeExtracter.Commands
             var metadataExtractor = new FacebookAdMetadataExtractorV2(fbAdMetadataProvider);
             Parallel.ForEach(accounts, (account) =>
             {
+                CommandExecutionContext.Current.SetJobExecutionStateInHistory("Started", account.Id);
                 var acctDateRange = new DateRange(dateRange.FromDate, dateRange.ToDate);
                 if (account.Campaign != null) // check/adjust daterange - if acct assigned to a campaign/advertiser
                 {
@@ -143,7 +145,12 @@ namespace CakeExtracter.Commands
                 }
                 Logger.Info(account.Id, "Facebook ETL. Account {0} - {1}. DateRange {2}.", account.Id, account.Name, acctDateRange);
                 if (acctDateRange.ToDate < acctDateRange.FromDate)
+                {
+                    Logger.Info(account.Id, "Finished Facebook ETL. Account {0} - {1}. DateRange {2}.", account.Id, account.Name, acctDateRange);
+                    CommandExecutionContext.Current.SetJobExecutionStateInHistory("Finished", account.Id);
                     return;
+                }
+                  
                 var fbUtility = CreateUtility(account);
                 int? numDailyItems = null;
                 if (statsType.Daily)
@@ -153,7 +160,12 @@ namespace CakeExtracter.Commands
                     ? ConfigurationHelper.ExtractEnumerableFromConfig("FB_DailyStatsOnly").ToArray()
                     : new string[] { };
                 if (Accts_DailyOnly.Contains(account.ExternalId))
+                {
+                    Logger.Info(account.Id, "Finished Facebook ETL. Account {0} - {1}. DateRange {2}.", account.Id, account.Name, acctDateRange);
+                    CommandExecutionContext.Current.SetJobExecutionStateInHistory("Finished", account.Id);
                     return;
+                }
+                 
                 // Skip strategy & adset stats if there were no dailies
                 if (statsType.Strategy && (numDailyItems == null || numDailyItems.Value > 0))
                     DoETL_Strategy(acctDateRange, account, fbUtility);
@@ -162,12 +174,14 @@ namespace CakeExtracter.Commands
                 if (statsType.Creative && (numDailyItems == null || numDailyItems.Value > 0))
                     DoETL_Creative(acctDateRange, account, fbUtility, metadataExtractor);
                 Logger.Info(account.Id, "Finished Facebook ETL. Account {0} - {1}. DateRange {2}.", account.Id, account.Name, acctDateRange);
+                CommandExecutionContext.Current.SetJobExecutionStateInHistory("Finished", account.Id);
             });
             return 0;
         }
 
         private int DoETL_Daily(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
         {
+            CommandExecutionContext.Current.SetJobExecutionStateInHistory("Daily level.", account.Id);
             var dateRangesToProcess = dateRange.GetDaysChunks(processingChunkSize).ToList();
             int addedCount = 0;
             dateRangesToProcess.ForEach(rangeToProcess =>
@@ -182,6 +196,7 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
         {
+            CommandExecutionContext.Current.SetJobExecutionStateInHistory("Strategy level.", account.Id);
             var dateRangesToProcess = dateRange.GetDaysChunks(processingChunkSize).ToList();
             dateRangesToProcess.ForEach(rangeToProcess =>
             {
@@ -193,6 +208,7 @@ namespace CakeExtracter.Commands
 
         private void DoETL_AdSet(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
         {
+            CommandExecutionContext.Current.SetJobExecutionStateInHistory("Adset level.", account.Id);
             var dateRangesToProcess = dateRange.GetDaysChunks(processingChunkSize).ToList();
             dateRangesToProcess.ForEach(rangeToProcess =>
             {
@@ -204,6 +220,7 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Creative(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility, FacebookAdMetadataExtractorV2 metadataExtractor)
         {
+            CommandExecutionContext.Current.SetJobExecutionStateInHistory("Ad level.", account.Id);
             var dateRangesToProcess = dateRange.GetDaysChunks(processingChunkSize).ToList();
            
             Logger.Info(account.Id, "Started reading ad's metadata");

@@ -9,9 +9,9 @@ namespace FacebookAPI.Converters
     /// </summary>
     internal abstract class FacebookSummaryConverter
     {
-        string conversionActionType;
-        string clickAttribution;
-        string viewAttribution;
+        protected string conversionActionType;
+        protected string clickAttribution;
+        protected string viewAttribution;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FacebookSummaryConverter"/> class.
@@ -35,11 +35,11 @@ namespace FacebookAPI.Converters
         public abstract FBSummary ParseSummaryRow(dynamic row);
 
         /// <summary>
-        /// Gets the facebok summary metrics from row.
+        /// Gets the facebook summary metrics from row.
         /// </summary>
         /// <param name="row">The row.</param>
         /// <returns></returns>
-        protected FBSummary GetFacebokSummaryMetricsFromRow(dynamic row)
+        protected FBSummary GetFacebookSummaryMetricsFromRow(dynamic row)
         {
             decimal decParseVal;
             int intParseVal;

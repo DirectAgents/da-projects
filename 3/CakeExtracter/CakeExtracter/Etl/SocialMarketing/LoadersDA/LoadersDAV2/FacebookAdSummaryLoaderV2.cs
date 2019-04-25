@@ -54,16 +54,19 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDAV2
         /// <returns></returns>
         protected override int Load(List<FbAdSummary> summaries)
         {
-            EnsureAdEntitiesData(summaries);
-            // sometimes from api can be pulled duplicate summaries
-            var uniqueSummaries = summaries.GroupBy(s => new { s.AdId, s.Date }).Select(gr => gr.First()).ToList();
-            var notProcessedSummaries = uniqueSummaries.
-                 Where(s => !latestSummaries.Any(ls => s.AdId == ls.AdId && s.Date == ls.Date)).ToList();
-            latestSummaries.AddRange(notProcessedSummaries);
-            var actions = PrepareActionsData(notProcessedSummaries);
-            latestActions.AddRange(actions);
-            return summaries.Count;
-             catch (Exception ex)
+            try
+            {
+                EnsureAdEntitiesData(summaries);
+                // sometimes from api can be pulled duplicate summaries
+                var uniqueSummaries = summaries.GroupBy(s => new { s.AdId, s.Date }).Select(gr => gr.First()).ToList();
+                var notProcessedSummaries = uniqueSummaries.
+                     Where(s => !latestSummaries.Any(ls => s.AdId == ls.AdId && s.Date == ls.Date)).ToList();
+                latestSummaries.AddRange(notProcessedSummaries);
+                var actions = PrepareActionsData(notProcessedSummaries);
+                latestActions.AddRange(actions);
+                return summaries.Count;
+            }
+            catch (Exception ex)
             {
                 Logger.Error(accountId, ex);
                 return 0;

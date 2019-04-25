@@ -428,6 +428,12 @@ namespace FacebookAPI
                             int waitMillisecs = InitialWaitMillisecs;
                             while (retObj.async_status != "Job Completed" || retObj.async_percent_completion < 100)
                             {
+                                if (retObj.async_status == "Job Failed")
+                                {
+                                    clientParms.ResetRunId();
+                                    GetRunId_withRetry(clientParms); // resets existing run  id
+                                    throw new Exception("Job failed. Execution will be requested again.");
+                                }
                                 waitMillisecs += 500;
                                 Thread.Sleep(waitMillisecs);
                                 retObj = clientParms.fbClient.Get(runId);
@@ -735,6 +741,11 @@ namespace FacebookAPI
                     Thread.Sleep(waitMillisecs);
                 }
                 return runId;
+            }
+
+            public void ResetRunId()
+            {
+                runId = null;
             }
         }
 
