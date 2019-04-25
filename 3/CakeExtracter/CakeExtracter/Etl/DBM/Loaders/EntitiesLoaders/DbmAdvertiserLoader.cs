@@ -22,7 +22,7 @@ namespace CakeExtracter.Etl.DBM.Loaders.EntitiesLoaders
         public void AddUpdateDependentEntities(List<DbmAdvertiser> items)
         {
             var uniqueItems = items.GroupBy(item => item.ExternalId).Select(gr => gr.First()).ToList();
-            EnsureAccountsData(uniqueItems);
+            items.ForEach(item => item.AccountId = item.Account?.Id);
             AddUpdateDependentItems(uniqueItems, advertiserEntityIdStorage, lockObject);
             AssignIdToItems(items, advertiserEntityIdStorage);
         }
@@ -43,11 +43,6 @@ namespace CakeExtracter.Etl.DBM.Loaders.EntitiesLoaders
             existingDbItem.Name = latestItemFromApi.Name;
             existingDbItem.AccountId = latestItemFromApi.AccountId;
             return true;
-        }
-
-        private void EnsureAccountsData(List<DbmAdvertiser> items)
-        {
-            items.ForEach(item => item.AccountId = item.Account?.Id);
         }
     }
 }

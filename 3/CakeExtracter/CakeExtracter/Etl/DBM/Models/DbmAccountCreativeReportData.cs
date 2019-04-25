@@ -4,11 +4,10 @@ using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.DBM.Models
 {
-    public class DbmAccountReportData
+    public class DbmAccountCreativeReportData
     {
         public ExtAccount Account { get; set; }
 
-        //public List<DbmDailyReportData> DailyDataCollection { get; set; }
-        public IEnumerable<DbmCreativeReportRow> Data { get; set; }
+        public IEnumerable<DbmCreativeReportRow> CreativeReportRows { get; set; }
     }
 }

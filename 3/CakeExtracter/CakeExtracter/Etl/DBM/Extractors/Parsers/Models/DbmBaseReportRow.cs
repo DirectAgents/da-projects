@@ -2,7 +2,11 @@
 
 namespace DBM.Parsers.Models
 {
-    public class DbmBaseReportRow
+    public abstract class DbmReportRow
+    {
+    }
+
+    public class DbmBaseReportRow : DbmReportRow
     {
         public DateTime Date { get; set; }
 
@@ -19,10 +23,6 @@ namespace DBM.Parsers.Models
         public string InsertionOrderId { get; set; }
 
         public string InsertionOrderName { get; set; }
-
-        public string LineItemId { get; set; }
-
-        public string LineItemName { get; set; }
 
         public decimal Revenue { get; set; }
 

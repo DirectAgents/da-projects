@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.Etl.DBM.Extractors.Parsers.Models;
 using CakeExtracter.Etl.DBM.Models;
-using DBM.Parsers.Models;
 using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.DBM.Composer
@@ -15,24 +15,24 @@ namespace CakeExtracter.Etl.DBM.Composer
             this.accounts = accounts;
         }
 
-        public List<DbmAccountReportData> Compose(IEnumerable<DbmCreativeReportRow> creativeReportRows)
+        public List<DbmAccountLineItemReportData> ComposeLineItemReportData(IEnumerable<DbmLineItemReportRow> reportRows)
         {
-            var creativeSummariesGroupedByAccount = creativeReportRows
+            var summariesGroupedByAccount = reportRows
                 .GroupBy(re => re.AdvertiserId, (key, gr) =>
                 {
                     var relatedAccount = accounts.FirstOrDefault(ac => ac.ExternalId == key);
                     return relatedAccount != null
-                        ? new DbmAccountReportData
+                        ? new DbmAccountLineItemReportData
                         {
                             Account = relatedAccount,
-                            Data = gr
+                            LineItemReportRows = gr
                         }
                         : null;
                 })
                 .Where(data => true)
-                .Where(creativeReportData => creativeReportData?.Data != null)
+                .Where(reportData => reportData?.LineItemReportRows != null)
                 .ToList();
-            return creativeSummariesGroupedByAccount;
+            return summariesGroupedByAccount;
         }
     }
 }

@@ -5,12 +5,12 @@ using DirectAgents.Domain.Entities.CPProg.DBM.SummaryMetrics;
 
 namespace CakeExtracter.Etl.DBM.Extractors
 {
-    internal class DbmCreativeExtractor: Extracter<DbmCreativeSummary>
+    internal class DbmLineItemExtractor : Extracter<DbmLineItemSummary>
     {
         private readonly DbmReportDataConverter converter;
         private readonly DbmAccountLineItemReportData reportData;
 
-        public DbmCreativeExtractor(DbmAccountLineItemReportData reportData) 
+        public DbmLineItemExtractor(DbmAccountLineItemReportData reportData)
         {
             converter = new DbmReportDataConverter();
             this.reportData = reportData;
@@ -20,8 +20,8 @@ namespace CakeExtracter.Etl.DBM.Extractors
         {
             try
             {
-                var creativeSummaries = converter.ConvertCreativeReportDataToSummaries(reportData);
-                Add(creativeSummaries);
+                var lineItemSummaries = converter.ConvertLineItemReportDataToSummaries(reportData);
+                Add(lineItemSummaries);
             }
             catch (Exception e)
             {
