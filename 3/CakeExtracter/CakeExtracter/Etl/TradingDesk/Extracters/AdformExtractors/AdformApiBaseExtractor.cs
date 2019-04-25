@@ -57,7 +57,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             ClientId = int.Parse(account.ExternalId);
             if (account.Campaign != null)
             {
-                ConvertCost(account, dateRange);
+                SetMonthlyCostMultipliers(account, dateRange);
             }
         }
 
@@ -156,24 +156,22 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             return metric;
         }
 
-        private void ConvertCost(ExtAccount account, DateRange dateRange)
+        private void SetMonthlyCostMultipliers(ExtAccount account, DateRange dateRange)
         {
             var clientCostConversionStart = new DateTime(2018, 2, 1); // Starting 2/1/18, Adform pulls in "client cost" rather than "DA cost" so we have to convert back to "client cost"
-            var daCostConversionStart = new DateTime(2019, 1, 1); // Starting 1/1/19, Adform pulls in "da cost"
+            var clientCostConversionStop = new DateTime(2019, 1, 1); // Starting 1/1/2019, we treat "da cost" == "client cost" so stop doing the conversion
 
-            var firstOfMonth = new DateTime(dateRange.FromDate.Year, dateRange.FromDate.Month, 1);
-            while (firstOfMonth <= dateRange.ToDate)
+            for (var firstOfMonth = new DateTime(dateRange.FromDate.Year, dateRange.FromDate.Month, 1);
+                firstOfMonth <= dateRange.ToDate; firstOfMonth = firstOfMonth.AddMonths(1))
             {
-                if (firstOfMonth >= clientCostConversionStart && firstOfMonth < daCostConversionStart)
+                if (firstOfMonth >= clientCostConversionStart && firstOfMonth < clientCostConversionStop)
                 {
-                    ConvertDaCostToClientCost(account, firstOfMonth);
+                    SetMonthlyCostMultiply(account, firstOfMonth);
                 }
-
-                firstOfMonth = firstOfMonth.AddMonths(1);
             }
         }
 
-        private void ConvertDaCostToClientCost(ExtAccount account, DateTime firstOfMonth)
+        private void SetMonthlyCostMultiply(ExtAccount account, DateTime firstOfMonth)
         {
             var pbi = account.Campaign.PlatformBudgetInfoFor(firstOfMonth, account.PlatformId, useParentValsIfNone: true);
             if (pbi.CostGoesThruDA())
