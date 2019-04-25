@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using DirectAgents.Domain.Entities.CPProg;
@@ -6,6 +7,7 @@ using FacebookAPI.Entities;
 
 namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 {
+    [Obsolete]
     public class FacebookAdSummaryLoader : Loader<FBSummary>
     {
         private readonly TDadSummaryLoader tdAdSummaryLoader;

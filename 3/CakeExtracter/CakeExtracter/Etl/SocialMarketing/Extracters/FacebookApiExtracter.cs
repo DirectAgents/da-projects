@@ -7,6 +7,7 @@ using FacebookAPI.Entities;
 
 namespace CakeExtracter.Etl.SocialMarketing.Extracters
 {
+    [Obsolete]
     public abstract class FacebookApiExtracter<T> : Extracter<T>
     {
         protected readonly FacebookUtility _fbUtility;
@@ -24,6 +25,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
         }
     }
 
+    [Obsolete]
     public class FacebookDailySummaryExtracter : FacebookApiExtracter<FBSummary>
     {
         public FacebookDailySummaryExtracter(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility, bool includeAllActions = false)
@@ -47,6 +49,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
         }
     }
 
+    [Obsolete]
     public class FacebookCampaignSummaryExtracter : FacebookApiExtracter<FBSummary>
     {
         public FacebookCampaignSummaryExtracter(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility, bool includeAllActions = false)
@@ -70,6 +73,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
         }
     }
 
+    [Obsolete]
     public class FacebookAdSetSummaryExtracter : FacebookApiExtracter<FBSummary>
     {
         public FacebookAdSetSummaryExtracter(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility, bool includeAllActions = false)
@@ -93,6 +97,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
         }
     }
 
+    [Obsolete]
     public class FacebookAdSummaryExtracter : FacebookApiExtracter<FBSummary>
     {
         public FacebookAdSummaryExtracter(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility, bool includeAllActions = false)
@@ -116,6 +121,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
         }
     }
 
+    [Obsolete]
     public class FacebookAdPreviewExtracter : FacebookApiExtracter<FBAdPreview>
     {
         protected IEnumerable<string> fbAdIds;

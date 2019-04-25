@@ -10,6 +10,7 @@ using FacebookAPI.Enums;
 
 namespace FacebookAPI
 {
+    [Obsolete]
     public class FacebookUtility
     {
         public const int RowsReturnedAtATime = 100;
