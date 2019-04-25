@@ -294,7 +294,6 @@ namespace FacebookAPI
                 } while (tryNumber > 0 && tryNumber < MaxRetries);
                 if (tryNumber >= MaxRetries)
                     throw new Exception(String.Format("Tried {0} times. Aborting GetFBSummaries.", tryNumber));
-
                 if (retObj == null)
                     continue;
                 if (retObj.data != null)
