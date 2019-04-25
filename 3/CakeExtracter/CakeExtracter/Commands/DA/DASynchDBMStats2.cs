@@ -179,6 +179,10 @@ namespace CakeExtracter.Commands
 
             var reportContent = GetReportContent(lineItemReportId);
             var lineItemReportRows = GetLineItemRows(dateRange, reportContent);
+            if (KeepReports)
+            {
+                SaveReport(lineItemReportId, reportContent);
+            }
             var lineItemSummariesGroups = GetLineItemSummariesGroupedByAccount(accounts, lineItemReportRows);
 
             lineItemSummariesGroups.ForEach(lineItemReportData =>
@@ -192,10 +196,6 @@ namespace CakeExtracter.Commands
         {
             var reportUrl = GetReportUrl(reportId);
             var reportContent = GetReportContentFromUrl(reportUrl);
-            if (KeepReports)
-            {
-                SaveReport(reportId, reportContent);
-            }
             return reportContent;
         }
 
@@ -306,7 +306,7 @@ namespace CakeExtracter.Commands
 
         private static void SaveReport(int reportId, TextReader reportContent)
         {
-            var reportFileName = string.Format(SavedReportFileName, reportId, DateTime.Now.ToString("MM-dd-yyyy_HH-mm-ss"));
+            var reportFileName = string.Format(SavedReportFileName, reportId, DateTime.Now.ToString("yyyyMMdd_HHmmss"));
             try
             {
                 FileManager.SaveToFileInExecutionFolder(SavedReportsDirectoryName, reportFileName, reportContent.ReadToEnd());
