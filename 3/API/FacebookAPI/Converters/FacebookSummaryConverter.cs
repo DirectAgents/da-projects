@@ -13,6 +13,12 @@ namespace FacebookAPI.Converters
         string clickAttribution;
         string viewAttribution;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FacebookSummaryConverter"/> class.
+        /// </summary>
+        /// <param name="conversionActionType">Type of the conversion action.</param>
+        /// <param name="clickAttribution">The click attribution.</param>
+        /// <param name="viewAttribution">The view attribution.</param>
         public FacebookSummaryConverter(string conversionActionType,
             string clickAttribution, string viewAttribution)
         {
@@ -21,8 +27,18 @@ namespace FacebookAPI.Converters
             this.viewAttribution = viewAttribution;
         }
 
+        /// <summary>
+        /// Parses the summary row.
+        /// </summary>
+        /// <param name="row">The row.</param>
+        /// <returns></returns>
         public abstract FBSummary ParseSummaryRow(dynamic row);
 
+        /// <summary>
+        /// Gets the facebok summary metrics from row.
+        /// </summary>
+        /// <param name="row">The row.</param>
+        /// <returns></returns>
         protected FBSummary GetFacebokSummaryMetricsFromRow(dynamic row)
         {
             decimal decParseVal;
@@ -48,6 +64,11 @@ namespace FacebookAPI.Converters
             return fbSum;
         }
 
+        /// <summary>
+        /// Processes all actions.
+        /// </summary>
+        /// <param name="row">The row.</param>
+        /// <param name="fbSum">The fb sum.</param>
         protected void ProcessAllActions(dynamic row, FBSummary fbSum)
         {
             var actionStats = row.actions;
@@ -122,6 +143,11 @@ namespace FacebookAPI.Converters
             }
         }
 
+        /// <summary>
+        /// Processes the conversion values actions.
+        /// </summary>
+        /// <param name="row">The row.</param>
+        /// <param name="fbSum">The fb sum.</param>
         protected void ProcessConversionValuesActions(dynamic row, FBSummary fbSum)
         {
             var actionStats = row.actions;
@@ -160,6 +186,11 @@ namespace FacebookAPI.Converters
             }
         }
 
+        /// <summary>
+        /// Sets the number click view.
+        /// </summary>
+        /// <param name="action">The action.</param>
+        /// <param name="stat">The stat.</param>
         protected void SetNum_ClickView(FBAction action, dynamic stat)
         {
             if (((IDictionary<String, object>)stat).ContainsKey(clickAttribution))
@@ -168,6 +199,11 @@ namespace FacebookAPI.Converters
                 action.Num_view = int.Parse(stat[viewAttribution]);
         }
 
+        /// <summary>
+        /// Sets the value click view.
+        /// </summary>
+        /// <param name="action">The action.</param>
+        /// <param name="stat">The stat.</param>
         protected void SetVal_ClickView(FBAction action, dynamic stat)
         {
             if (((IDictionary<String, object>)stat).ContainsKey(clickAttribution))

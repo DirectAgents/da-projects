@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace FacebookAPI.Entities
 {
+    /// <summary>
+    /// Facebook summary row entity.
+    /// </summary>
     public class FBSummary
     {
         public DateTime Date { get; set; }

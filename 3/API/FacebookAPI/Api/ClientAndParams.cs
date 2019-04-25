@@ -4,7 +4,10 @@ using System.Threading;
 
 namespace FacebookAPI.Api
 {
-    public class ClientAndParams
+    /// <summary>
+    /// Facebook API Client Job Requests Utility
+    /// </summary>
+    internal class ClientAndParams
     {
         public FacebookClient fbClient;
         public string path;
@@ -16,18 +19,29 @@ namespace FacebookAPI.Api
 
         private string runId;
 
+        /// <summary>
+        /// Gets the job request identifier.
+        /// </summary>
+        /// <param name="waitMillisecs">The wait millisecs.</param>
+        /// <returns></returns>
         public string GetRunId(int waitMillisecs = 0)
         {
             if (string.IsNullOrWhiteSpace(runId))
             {
                 dynamic retObj = fbClient.Post(path, parms); // initial async call
-
                 runId = retObj.report_run_id;
                 Thread.Sleep(waitMillisecs);
             }
             return runId;
         }
 
+        /// <summary>
+        /// Gets the job request identifier with retry.
+        /// </summary>
+        /// <param name="logInfo">The log information.</param>
+        /// <param name="logError">The log error.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception"></exception>
         public string GetRunId_withRetry(Action<string> logInfo, Action<string> logError)
         {
             int tryNumber = 0;

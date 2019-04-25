@@ -57,9 +57,7 @@
     <Compile Include="Api\Filter.cs" />
     <Compile Include="BaseFacebookDataProvider.cs" />
     <Compile Include="Entities\AdDataEntities\AdCreativeData.cs" />
-    <Compile Include="Entities\AdDataEntities\AdSet.cs" />
     <Compile Include="Entities\AdDataEntities\Creative.cs" />
-    <Compile Include="Entities\AdDataEntities\Campaign.cs" />
     <Compile Include="Entities\FBAdPreview.cs" />
     <Compile Include="Entities\FBSummary.cs" />
     <Compile Include="Enums\Attribution.cs" />
