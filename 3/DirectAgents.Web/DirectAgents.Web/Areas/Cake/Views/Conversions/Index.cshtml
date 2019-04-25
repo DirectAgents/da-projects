@@ -36,6 +36,7 @@
         <th>SubId3</th>
         <th>SubId4</th>
         <th>SubId5</th>
+        <th>TransactionId</th>
     </tr>
 @foreach (var conv in Model)
 {
@@ -91,6 +92,9 @@
         </td>
         <td>
             @Html.DisplayFor(x => conv.SubId5)
+        </td>
+        <td>
+            @Html.DisplayFor(x => conv.TransactionId)
         </td>
     </tr>
 }
