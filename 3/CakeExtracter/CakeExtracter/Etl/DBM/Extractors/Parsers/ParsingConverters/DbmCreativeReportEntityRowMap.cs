@@ -13,12 +13,6 @@ namespace CakeExtracter.Etl.DBM.Extractors.Parsers.ParsingConverters
             Map(m => m.AdvertiserId).Name("Advertiser ID");
             Map(m => m.AdvertiserName).Name("Advertiser");
             Map(m => m.AdvertiserCurrency).Name("Advertiser Currency");
-            Map(m => m.CampaignId).Name("Campaign ID");
-            Map(m => m.CampaignName).Name("Campaign");
-            Map(m => m.InsertionOrderId).Name("Insertion Order ID");
-            Map(m => m.InsertionOrderName).Name("Insertion Order");
-            //Map(m => m.LineItemId).Name("Line Item ID");
-            //Map(m => m.LineItemName).Name("Line Item");
             Map(m => m.CreativeId).Name("Creative ID");
             Map(m => m.CreativeName).Name("Creative");
             Map(m => m.CreativeHeight).Name("Creative Height");

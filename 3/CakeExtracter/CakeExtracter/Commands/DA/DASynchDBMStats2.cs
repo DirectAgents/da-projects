@@ -15,10 +15,10 @@ using CakeExtracter.Etl.DBM.Models;
 using CakeExtracter.Helpers;
 using CsvHelper.Configuration;
 using DBM;
+using DBM.Helpers;
 using DBM.Parsers.Models;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
-using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 
 namespace CakeExtracter.Commands
 {
@@ -50,6 +50,10 @@ namespace CakeExtracter.Commands
         /// </summary>
         public int? DaysAgoToStart { get; set; }
 
+        public bool KeepReports { get; set; }
+        public static string SavedReportFileName = "dbm_{0}_{1}.csv";
+        public static string SavedReportsDirectoryName = "SavedReports";
+
         public List<int> CreativeReportIds { get; set; }
         public List<int> LineItemReportIds { get; set; }
         
@@ -66,6 +70,7 @@ namespace CakeExtracter.Commands
             HasOption("s|startDate=", "Start Date (default is 'daysAgo')", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
             HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default = {DefaultDaysAgo})", c => DaysAgoToStart = c);
+            HasOption<bool>("k|keepReports=", "Store received DBM reports in a separate folder (default = false)", c => KeepReports = c);
         }
 
         /// <inheritdoc />
@@ -97,6 +102,7 @@ namespace CakeExtracter.Commands
             StartDate = null;
             EndDate = null;
             DaysAgoToStart = null;
+            KeepReports = false;
         }
 
         private void SetConfigurationVariables()
@@ -130,7 +136,7 @@ namespace CakeExtracter.Commands
                 }
                 catch (Exception e)
                 {
-                    Logger.Warn($"Could not process a report [report ID: {creativeReportId}]: {e}");
+                    Logger.Warn($"Could not process a report [report ID: {creativeReportId}]: {e.Message}");
                 }
             });
             Logger.Info("Finished processing Creative reports");
@@ -162,7 +168,7 @@ namespace CakeExtracter.Commands
 
             creativeSummariesGroups.ForEach(creativeReportData =>
             {
-                DoEtl_Creative(dateRange, creativeReportData);
+                DoEtl_CreativeForAccount(dateRange, creativeReportData);
             });
             Logger.Info($"Finished processing creative report [report ID: {creativeReportId}]");
         }
@@ -177,7 +183,7 @@ namespace CakeExtracter.Commands
 
             lineItemSummariesGroups.ForEach(lineItemReportData =>
             {
-                DoEtl_LineItem(dateRange, lineItemReportData);
+                DoEtl_LineItemForAccount(dateRange, lineItemReportData);
             });
             Logger.Info($"Finished processing line item report [report ID: {lineItemReportId}]");
         }
@@ -186,6 +192,10 @@ namespace CakeExtracter.Commands
         {
             var reportUrl = GetReportUrl(reportId);
             var reportContent = GetReportContentFromUrl(reportUrl);
+            if (KeepReports)
+            {
+                SaveReport(reportId, reportContent);
+            }
             return reportContent;
         }
 
@@ -223,8 +233,7 @@ namespace CakeExtracter.Commands
             return reportRows;
         }
 
-        private static IEnumerable<DbmCreativeReportRow> GetCreativeRows(DateRange dateRange,
-            StreamReader reportContent)
+        private static IEnumerable<DbmCreativeReportRow> GetCreativeRows(DateRange dateRange, StreamReader reportContent)
         {
             var rowMap = new DbmCreativeReportEntityRowMap();
             var creativeReportRows = GetReportRows<DbmCreativeReportRow>(dateRange, reportContent, rowMap);
@@ -258,7 +267,7 @@ namespace CakeExtracter.Commands
             return creativeSummariesGroupedByAccount;
         }
 
-        private static void DoEtl_LineItem(DateRange dateRange, DbmAccountLineItemReportData lineItemReportData)
+        private static void DoEtl_LineItemForAccount(DateRange dateRange, DbmAccountLineItemReportData lineItemReportData)
         {
             var account = lineItemReportData.Account;
             Logger.Info(account.Id, "DBM ETL Line Item. Account ({0}) {1}", account.Id, account.Name);
@@ -270,7 +279,7 @@ namespace CakeExtracter.Commands
             Logger.Info(account.Id, "Finished DBM ETL Line Item for account ({0}) {1}", account.Id, account.Name);
         }
 
-        private static void DoEtl_Creative(DateRange dateRange, DbmAccountCreativeReportData creativeReportData)
+        private static void DoEtl_CreativeForAccount(DateRange dateRange, DbmAccountCreativeReportData creativeReportData)
         {
             var account = creativeReportData.Account;
             Logger.Info(account.Id, "DBM ETL Creative. Account ({0}) {1}", account.Id, account.Name);
@@ -294,6 +303,21 @@ namespace CakeExtracter.Commands
             var account = repository.GetAccount(AccountId.Value);
             return new[] {account};
         }
+
+        private static void SaveReport(int reportId, TextReader reportContent)
+        {
+            var reportFileName = string.Format(SavedReportFileName, reportId, DateTime.Now.ToString("MM-dd-yyyy_HH-mm-ss"));
+            try
+            {
+                FileManager.SaveToFileInExecutionFolder(SavedReportsDirectoryName, reportFileName, reportContent.ReadToEnd());
+                Logger.Info($"Report content was saved to {reportFileName} file.");
+            }
+            catch (Exception e)
+            {
+                Logger.Error(new Exception($"Saving report failed ({reportFileName})", e));
+            }
+        }
+
         // --- setup ---
 
         private void SetupDbmUtility()
