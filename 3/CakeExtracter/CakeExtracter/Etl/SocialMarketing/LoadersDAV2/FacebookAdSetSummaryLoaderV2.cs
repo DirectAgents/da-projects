@@ -7,9 +7,13 @@ using CakeExtracter.Etl.SocialMarketing.EntitiesLoaders;
 using CakeExtracter.Etl.SocialMarketing.LoadersDA.EntitiesLoaders;
 using DirectAgents.Domain.Entities.CPProg.Facebook.AdSet;
 
-namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
+namespace CakeExtracter.Etl.SocialMarketing.LoadersDAV2
 {
-    public class FacebookAdSetSummaryLoader : Loader<FbAdSetSummary>
+    /// <summary>
+    /// Facebook ADset Summary loader
+    /// </summary>
+    /// <seealso cref="CakeExtracter.Etl.Loader{DirectAgents.Domain.Entities.CPProg.Facebook.AdSet.FbAdSetSummary}" />
+    public class FacebookAdSetSummaryLoaderV2 : Loader<FbAdSetSummary>
     {
         private readonly FacebookAdSetsLoader fbAdSetsLoader;
         private readonly FacebookCampaignsLoader fbCampaignsLoader;
@@ -23,7 +27,12 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         private static object lockObj = new object();
 
-        public FacebookAdSetSummaryLoader(int accountId, DateRange dateRange)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FacebookAdSetSummaryLoaderV2"/> class.
+        /// </summary>
+        /// <param name="accountId">The account identifier.</param>
+        /// <param name="dateRange">The date range.</param>
+        public FacebookAdSetSummaryLoaderV2(int accountId, DateRange dateRange)
             : base(accountId, batchSize)
         {
             fbActionTypeLoader = new FacebookActionTypeLoader();
@@ -32,6 +41,11 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
             this.dateRange = dateRange;
         }
 
+        /// <summary>
+        /// Loads the specified summaries.
+        /// </summary>
+        /// <param name="summaries">The summaries.</param>
+        /// <returns></returns>
         protected override int Load(List<FbAdSetSummary> summaries)
         {
             EnsureAdSetEntitiesData(summaries);
@@ -45,6 +59,9 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
             return summaries.Count;
         }
 
+        /// <summary>
+        /// Afters the load action.
+        /// </summary>
         protected override void AfterLoadAction()
         {
             DeleteOldSummariesFromDb();

@@ -4,6 +4,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.SocialMarketing.LoadersDA;
+using CakeExtracter.Etl.SocialMarketing.LoadersDAV2;
 using CakeExtracter.Etl.SocialMarketing.MigrationExtracters;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
@@ -68,7 +69,7 @@ namespace CakeExtracter.Commands
         private int DoETL_Daily(DateRange dateRange, ExtAccount account)
         {
             var extractor = new FacebookDailyMigrationExtractor(dateRange, account);
-            var loader = new FacebookDailySummaryLoader(account.Id, dateRange);
+            var loader = new FacebookDailySummaryLoaderV2(account.Id, dateRange);
             CommandHelper.DoEtl(extractor, loader);
             return extractor.Added;
         }
@@ -76,7 +77,7 @@ namespace CakeExtracter.Commands
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account)
         {
             var extractor = new FacebookCampaignMigrationExtractor(dateRange, account);
-            var loader = new FacebookCampaignSummaryLoader(account.Id, dateRange);
+            var loader = new FacebookCampaignSummaryLoaderV2(account.Id, dateRange);
             CommandHelper.DoEtl(extractor, loader);
         }
 
@@ -86,7 +87,7 @@ namespace CakeExtracter.Commands
             dateRangesToProcess.ForEach(rangeToProcess =>
             {
                 var extractor = new FacebookAdSetMigrationExtractor(rangeToProcess, account);
-                var loader = new FacebookAdSetSummaryLoader(account.Id, rangeToProcess);
+                var loader = new FacebookAdSetSummaryLoaderV2(account.Id, rangeToProcess);
                 CommandHelper.DoEtl(extractor, loader);
             });
         }
@@ -94,7 +95,7 @@ namespace CakeExtracter.Commands
         private void DoETL_Creative(DateRange dateRange, ExtAccount account)
         {
             var extractor = new FacebookAdMigrationExtractor(dateRange, account);
-            var loader = new FacebookAdSummaryLoader(account.Id, dateRange);
+            var loader = new FacebookAdSummaryLoaderV2(account.Id, dateRange);
             CommandHelper.DoEtl(extractor, loader);
         }
 

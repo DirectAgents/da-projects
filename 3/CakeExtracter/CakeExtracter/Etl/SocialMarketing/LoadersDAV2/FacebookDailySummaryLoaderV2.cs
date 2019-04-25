@@ -5,9 +5,13 @@ using DirectAgents.Domain.Entities.CPProg.Facebook.Daily;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
+namespace CakeExtracter.Etl.SocialMarketing.LoadersDAV2
 {
-    public class FacebookDailySummaryLoader : Loader<FbDailySummary>
+    /// <summary>
+    /// Facebook Daily summary loader
+    /// </summary>
+    /// <seealso cref="CakeExtracter.Etl.Loader{DirectAgents.Domain.Entities.CPProg.Facebook.Daily.FbDailySummary}" />
+    public class FacebookDailySummaryLoaderV2 : Loader<FbDailySummary>
     {
         private readonly DateRange dateRange;
 
@@ -15,18 +19,31 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         private List<FbDailySummary> latestSummaries = new List<FbDailySummary>();
 
-        public FacebookDailySummaryLoader(int accountId, DateRange dateRange)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FacebookDailySummaryLoaderV2"/> class.
+        /// </summary>
+        /// <param name="accountId">The account identifier.</param>
+        /// <param name="dateRange">The date range.</param>
+        public FacebookDailySummaryLoaderV2(int accountId, DateRange dateRange)
             : base(accountId)
         {
             this.dateRange = dateRange;
         }
 
+        /// <summary>
+        /// Loads the specified items.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        /// <returns></returns>
         protected override int Load(List<FbDailySummary> items)
         {
             latestSummaries.AddRange(items);
             return items.Count;
         }
 
+        /// <summary>
+        /// Afters the load action.
+        /// </summary>
         protected override void AfterLoadAction()
         {
             DeleteOldSummariesFromDb();

@@ -2,16 +2,16 @@
 using DirectAgents.Domain.Entities.CPProg;
 using FacebookAPI;
 
-namespace CakeExtracter.Etl.SocialMarketing.Extracters
+namespace CakeExtracter.Etl.SocialMarketing.Extracters.V2
 {
-    public abstract class FacebookApiExtracter<T> : Extracter<T>
+    public abstract class FacebookApiExtracterV2<T> : Extracter<T>
     {
         protected readonly FacebookInsightsDataProvider _fbUtility;
         protected readonly DateRange? dateRange;
         protected readonly int accountId;   // in our db
         protected readonly string fbAccountId; // fb account: aka "ad account"
 
-        public FacebookApiExtracter(FacebookInsightsDataProvider fbUtility, DateRange? dateRange, ExtAccount account)
+        public FacebookApiExtracterV2(FacebookInsightsDataProvider fbUtility, DateRange? dateRange, ExtAccount account)
         {
             this._fbUtility = fbUtility;
             this.dateRange = dateRange;

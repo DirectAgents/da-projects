@@ -506,20 +506,20 @@
     <Compile Include="Etl\SearchMarketing\Loaders\AppleApiLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\BingConvSummaryLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\SearchDailySummaryLoaders.cs" />
-    <Compile Include="Etl\SocialMarketing\Extracters\FacebookAdMetadataExtracter.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\EntitiesLoaders\BaseFacebookEntityLoader.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\EntitiesLoaders\FacebookActionTypeLoader.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\EntitiesLoaders\FacebookCreativesLoader.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\EntitiesLoaders\FacebookAdSetsLoader.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\EntitiesLoaders\FacebookAdsLoader.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\EntitiesLoaders\FacebookCampaignsLoader.cs" />
-    <Compile Include="Etl\SocialMarketing\Extracters\FacebookAdSetSummaryExtracter.cs" />
-    <Compile Include="Etl\SocialMarketing\Extracters\FacebookAdSummaryExtracter.cs" />
-    <Compile Include="Etl\SocialMarketing\Extracters\FacebookCampaignSummaryExtracter.cs" />
-    <Compile Include="Etl\SocialMarketing\Extracters\FacebookDailySummaryExtracter.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdSetSummaryLoader.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdSummaryLoader.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookCampaignSummaryLoader.cs" />
+    <Compile Include="Etl\SocialMarketing\Extracters\V2\FacebookAdMetadataExtracterV2.cs" />
+    <Compile Include="Etl\SocialMarketing\LoadersDAV2\EntitiesLoaders\BaseFacebookEntityLoader.cs" />
+    <Compile Include="Etl\SocialMarketing\LoadersDAV2\EntitiesLoaders\FacebookActionTypeLoader.cs" />
+    <Compile Include="Etl\SocialMarketing\LoadersDAV2\EntitiesLoaders\FacebookCreativesLoader.cs" />
+    <Compile Include="Etl\SocialMarketing\LoadersDAV2\EntitiesLoaders\FacebookAdSetsLoader.cs" />
+    <Compile Include="Etl\SocialMarketing\LoadersDAV2\EntitiesLoaders\FacebookAdsLoader.cs" />
+    <Compile Include="Etl\SocialMarketing\LoadersDAV2\EntitiesLoaders\FacebookCampaignsLoader.cs" />
+    <Compile Include="Etl\SocialMarketing\Extracters\V2\FacebookAdSetSummaryExtracterV2.cs" />
+    <Compile Include="Etl\SocialMarketing\Extracters\V2\FacebookAdSummaryExtracterV2.cs" />
+    <Compile Include="Etl\SocialMarketing\Extracters\V2\FacebookCampaignSummaryExtracterV2.cs" />
+    <Compile Include="Etl\SocialMarketing\Extracters\V2\FacebookDailySummaryExtracterV2.cs" />
+    <Compile Include="Etl\SocialMarketing\LoadersDAV2\FacebookAdSetSummaryLoaderV2.cs" />
+    <Compile Include="Etl\SocialMarketing\LoadersDAV2\FacebookAdSummaryLoaderV2.cs" />
+    <Compile Include="Etl\SocialMarketing\LoadersDAV2\FacebookCampaignSummaryLoaderV2.cs" />
     <Compile Include="Etl\SocialMarketing\MigrationExtracters\FacebookDailyMigrationExtractor.cs" />
     <Compile Include="Etl\SocialMarketing\MigrationExtracters\FacebookCampaignMigrationExtractor.cs" />
     <Compile Include="Etl\SocialMarketing\MigrationExtracters\FacebookAdMigrationExtractor.cs" />
@@ -576,7 +576,7 @@
     <Compile Include="Commands\DA\DASynchAdrollStats.cs" />
     <Compile Include="Commands\DA\DASynchAdvertisers.cs" />
     <Compile Include="Commands\DA\DASynchDBMStats.cs" />
-    <Compile Include="Commands\DA\DASynchFacebookStats.cs" />
+    <Compile Include="Commands\DA\DASynchFacebookStatsV2.cs" />
     <Compile Include="Commands\DA\DASynchOfferBudgetStats2.cs" />
     <Compile Include="Commands\DA\DASynchOfferBudgetStats.cs" />
     <Compile Include="Commands\DA\DASynchOfferDailySummaries.cs" />
@@ -692,8 +692,8 @@
     <Compile Include="Etl\SearchMarketing\Loaders\CallDailySummaryLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\CriteoDailySummaryLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\CriteoDailySummaryLoader2.cs" />
-    <Compile Include="Etl\SocialMarketing\Extracters\FacebookApiExtracter.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookDailySummaryLoader.cs" />
+    <Compile Include="Etl\SocialMarketing\Extracters\V2\FacebookApiExtracterV2.cs" />
+    <Compile Include="Etl\SocialMarketing\LoadersDAV2\FacebookDailySummaryLoaderV2.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollApiExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollConvCsvExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollCsvExtracter.cs" />
@@ -914,6 +914,8 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Etl\SocialMarketing\LoadersDA\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

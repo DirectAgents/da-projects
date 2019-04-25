@@ -10,13 +10,13 @@ using DirectAgents.Domain.Entities.CPProg.Facebook.Campaign;
 using FacebookAPI;
 using FacebookAPI.Entities;
 
-namespace CakeExtracter.Etl.SocialMarketing.Extracters
+namespace CakeExtracter.Etl.SocialMarketing.Extracters.V2
 {
     /// <summary>
     /// Facebook ads summary extractor.
     /// </summary>
     /// <seealso cref="CakeExtracter.Etl.SocialMarketing.Extracters.FacebookApiExtracter{DirectAgents.Domain.Entities.CPProg.Facebook.Ad.FbAdSummary}" />
-    public class FacebookAdSummaryExtracter : FacebookApiExtracter<FbAdSummary>
+    public class FacebookAdSummaryExtracterV2 : FacebookApiExtracterV2<FbAdSummary>
     {
         private readonly List<AdCreativeData> allAdsMetadata;
 
@@ -35,7 +35,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
         /// <param name="account">The account.</param>
         /// <param name="fbUtility">The fb utility.</param>
         /// <param name="fbAdMetadataProvider">The fb ad metadata provider.</param>
-        public FacebookAdSummaryExtracter(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility,
+        public FacebookAdSummaryExtracterV2(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility,
             List<AdCreativeData> allAdsMetadata) : base(fbUtility, dateRange, account)
         {
             this.allAdsMetadata = allAdsMetadata;

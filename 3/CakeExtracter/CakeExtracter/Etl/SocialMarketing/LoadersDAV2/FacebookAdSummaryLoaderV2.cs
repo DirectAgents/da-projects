@@ -8,13 +8,13 @@ using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg.Facebook.Ad;
 
-namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
+namespace CakeExtracter.Etl.SocialMarketing.LoadersDAV2
 {
     /// <summary>
     /// Facebook Ad Summary loader
     /// </summary>
     /// <seealso cref="CakeExtracter.Etl.Loader{DirectAgents.Domain.Entities.CPProg.Facebook.Ad.FbAdSummary}" />
-    public class FacebookAdSummaryLoader : Loader<FbAdSummary>
+    public class FacebookAdSummaryLoaderV2 : Loader<FbAdSummary>
     {
         private readonly FacebookAdsLoader fbAdsLoader;
         private readonly FacebookAdSetsLoader fbAdSetsLoader;
@@ -30,7 +30,12 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         private const int batchSize = 1000;
 
-        public FacebookAdSummaryLoader(int accountId, DateRange dateRange)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FacebookAdSummaryLoaderV2"/> class.
+        /// </summary>
+        /// <param name="accountId">The account identifier.</param>
+        /// <param name="dateRange">The date range.</param>
+        public FacebookAdSummaryLoaderV2(int accountId, DateRange dateRange)
             : base(accountId, batchSize)
         {
             fbActionTypeLoader = new FacebookActionTypeLoader();
@@ -41,6 +46,11 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
             this.dateRange = dateRange;
         }
 
+        /// <summary>
+        /// Loads the specified summaries.
+        /// </summary>
+        /// <param name="summaries">The summaries.</param>
+        /// <returns></returns>
         protected override int Load(List<FbAdSummary> summaries)
         {
             EnsureAdEntitiesData(summaries);
@@ -54,6 +64,9 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
             return summaries.Count;
         }
 
+        /// <summary>
+        /// Afters the load action.
+        /// </summary>
         protected override void AfterLoadAction()
         {
             DeleteOldSummariesFromDb();

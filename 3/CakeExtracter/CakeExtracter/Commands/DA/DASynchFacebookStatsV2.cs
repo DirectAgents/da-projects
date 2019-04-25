@@ -6,8 +6,8 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
-using CakeExtracter.Etl.SocialMarketing.Extracters;
-using CakeExtracter.Etl.SocialMarketing.LoadersDA;
+using CakeExtracter.Etl.SocialMarketing.Extracters.V2;
+using CakeExtracter.Etl.SocialMarketing.LoadersDAV2;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
@@ -16,8 +16,12 @@ using FacebookAPI.Enums;
 
 namespace CakeExtracter.Commands
 {
+    /// <summary>
+    /// Facebook stats updating command(Included creatives expansion)
+    /// </summary>
+    /// <seealso cref="CakeExtracter.Common.ConsoleCommand" />
     [Export(typeof(ConsoleCommand))]
-    public class DASynchFacebookStats : ConsoleCommand
+    public class DASynchFacebookStatsV2 : ConsoleCommand
     {
         private const int DefaultDaysAgo = 41;
 
@@ -61,7 +65,7 @@ namespace CakeExtracter.Commands
         public static int RunStatic(int? campaignId = null, int? accountId = null, DateTime? startDate = null, DateTime? endDate = null, string statsType = null)
         {
             AutoMapperBootstrapper.CheckRunSetup();
-            var cmd = new DASynchFacebookStats
+            var cmd = new DASynchFacebookStatsV2
             {
                 CampaignId = campaignId,
                 AccountId = accountId,
@@ -99,9 +103,9 @@ namespace CakeExtracter.Commands
             ViewWindow = null;
         }
 
-        public DASynchFacebookStats()
+        public DASynchFacebookStatsV2()
         {
-            IsCommand("daSynchFacebookStats", "synch Facebook stats");
+            IsCommand("daSynchFacebookStatsV2", "synch Facebook stats");
             HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
             HasOption<int>("c|campaignId=", "Campaign Id (optional)", c => CampaignId = c);
             HasOption("s|startDate=", "Start Date (default is 'daysAgo')", c => StartDate = DateTime.Parse(c));
@@ -124,17 +128,15 @@ namespace CakeExtracter.Commands
             var accounts = GetAccounts();
 
             var fbAdMetadataProvider = new FacebookAdMetadataProvider(null, null);
-            var metadataExtractor = new FacebookAdMetadataExtracter(fbAdMetadataProvider);
+            var metadataExtractor = new FacebookAdMetadataExtractorV2(fbAdMetadataProvider);
             Parallel.ForEach(accounts, (account) =>
             {
                 var acctDateRange = new DateRange(dateRange.FromDate, dateRange.ToDate);
                 if (account.Campaign != null) // check/adjust daterange - if acct assigned to a campaign/advertiser
                 {
-                    //if FromDate came from the default value, check Advertiser's start date
                     if (!StartDate.HasValue && account.Campaign.Advertiser.StartDate.HasValue
                         && acctDateRange.FromDate < account.Campaign.Advertiser.StartDate.Value)
                         acctDateRange.FromDate = account.Campaign.Advertiser.StartDate.Value;
-                    //likewise for ToDate / Advertiser's end date
                     if (!EndDate.HasValue && account.Campaign.Advertiser.EndDate.HasValue
                         && acctDateRange.ToDate > account.Campaign.Advertiser.EndDate.Value)
                         acctDateRange.ToDate = account.Campaign.Advertiser.EndDate.Value;
@@ -142,9 +144,7 @@ namespace CakeExtracter.Commands
                 Logger.Info(account.Id, "Facebook ETL. Account {0} - {1}. DateRange {2}.", account.Id, account.Name, acctDateRange);
                 if (acctDateRange.ToDate < acctDateRange.FromDate)
                     return;
-
                 var fbUtility = CreateUtility(account);
-
                 int? numDailyItems = null;
                 if (statsType.Daily)
                     numDailyItems = DoETL_Daily(acctDateRange, account, fbUtility);
@@ -152,10 +152,6 @@ namespace CakeExtracter.Commands
                 var Accts_DailyOnly = !AccountId.HasValue || statsType.All
                     ? ConfigurationHelper.ExtractEnumerableFromConfig("FB_DailyStatsOnly").ToArray()
                     : new string[] { };
-
-                // Used when synching all accounts AND/OR all stats types...
-                // So if an account is marked as "daily only", you can only load other stats by specifying the accountId and statsType
-                // TODO? remove this since we now handle exceptions in the extracter?
                 if (Accts_DailyOnly.Contains(account.ExternalId))
                     return;
                 // Skip strategy & adset stats if there were no dailies
@@ -167,7 +163,6 @@ namespace CakeExtracter.Commands
                     DoETL_Creative(acctDateRange, account, fbUtility, metadataExtractor);
                 Logger.Info(account.Id, "Finished Facebook ETL. Account {0} - {1}. DateRange {2}.", account.Id, account.Name, acctDateRange);
             });
-
             return 0;
         }
 
@@ -177,8 +172,8 @@ namespace CakeExtracter.Commands
             int addedCount = 0;
             dateRangesToProcess.ForEach(rangeToProcess =>
             {
-                var extractor = new FacebookDailySummaryExtracter(rangeToProcess, account, fbUtility);
-                var loader = new FacebookDailySummaryLoader(account.Id, rangeToProcess);
+                var extractor = new FacebookDailySummaryExtracterV2(rangeToProcess, account, fbUtility);
+                var loader = new FacebookDailySummaryLoaderV2(account.Id, rangeToProcess);
                 CommandHelper.DoEtl(extractor, loader);
                 addedCount += extractor.Added;
             });
@@ -190,8 +185,8 @@ namespace CakeExtracter.Commands
             var dateRangesToProcess = dateRange.GetDaysChunks(processingChunkSize).ToList();
             dateRangesToProcess.ForEach(rangeToProcess =>
             {
-                var extractor = new FacebookCampaignSummaryExtracter(rangeToProcess, account, fbUtility);
-                var loader = new FacebookCampaignSummaryLoader(account.Id, rangeToProcess);
+                var extractor = new FacebookCampaignSummaryExtracterV2(rangeToProcess, account, fbUtility);
+                var loader = new FacebookCampaignSummaryLoaderV2(account.Id, rangeToProcess);
                 CommandHelper.DoEtl(extractor, loader);
             });
         }
@@ -201,13 +196,13 @@ namespace CakeExtracter.Commands
             var dateRangesToProcess = dateRange.GetDaysChunks(processingChunkSize).ToList();
             dateRangesToProcess.ForEach(rangeToProcess =>
             {
-                var extractor = new FacebookAdSetSummaryExtracter(rangeToProcess, account, fbUtility);
-                var loader = new FacebookAdSetSummaryLoader(account.Id, rangeToProcess);
+                var extractor = new FacebookAdSetSummaryExtracterV2(rangeToProcess, account, fbUtility);
+                var loader = new FacebookAdSetSummaryLoaderV2(account.Id, rangeToProcess);
                 CommandHelper.DoEtl(extractor, loader);
             });
         }
 
-        private void DoETL_Creative(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility, FacebookAdMetadataExtracter metadataExtractor)
+        private void DoETL_Creative(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility, FacebookAdMetadataExtractorV2 metadataExtractor)
         {
             var dateRangesToProcess = dateRange.GetDaysChunks(processingChunkSize).ToList();
            
@@ -217,8 +212,8 @@ namespace CakeExtracter.Commands
             Logger.Info(account.Id, "Finished reading ad's metadata");
             dateRangesToProcess.ForEach(rangeToProcess =>
             {
-                var extractor = new FacebookAdSummaryExtracter(rangeToProcess, account, fbUtility, allAdsMetadata);
-                var loader = new FacebookAdSummaryLoader(account.Id, rangeToProcess);
+                var extractor = new FacebookAdSummaryExtracterV2(rangeToProcess, account, fbUtility, allAdsMetadata);
+                var loader = new FacebookAdSummaryLoaderV2(account.Id, rangeToProcess);
                 CommandHelper.DoEtl(extractor, loader);
             });
         }
@@ -302,7 +297,7 @@ namespace CakeExtracter.Commands
 
         private void SetUtilityClickAttributionWindows(FacebookInsightsDataProvider fbUtility, string accountId)
         {
-            var window = GetWindow(accountId, Attribution.Click, ClickWindow);
+            var window = GetAttributionWindow(accountId, Attribution.Click, ClickWindow);
             if (window != 0)
             {
                 fbUtility.SetClickAttributionWindow(window);
@@ -311,14 +306,14 @@ namespace CakeExtracter.Commands
 
         private void SetUtilityViewAttributionWindows(FacebookInsightsDataProvider fbUtility, string accountId)
         {
-            var window = GetWindow(accountId, Attribution.View, ViewWindow);
+            var window = GetAttributionWindow(accountId, Attribution.View, ViewWindow);
             if (window != 0)
             {
                 fbUtility.SetViewAttributionWindow(window);
             }
         }
 
-        private AttributionWindow GetWindow(string accountId, Attribution attribution, int? sourceWindow)
+        private AttributionWindow GetAttributionWindow(string accountId, Attribution attribution, int? sourceWindow)
         {
             AttributionWindow window = 0;
             try
