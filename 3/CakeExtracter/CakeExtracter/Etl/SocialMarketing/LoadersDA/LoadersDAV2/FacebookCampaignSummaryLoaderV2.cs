@@ -3,6 +3,7 @@ using CakeExtracter.Etl.SocialMarketing.EntitiesLoaders;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg.Facebook.Campaign;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -40,13 +41,22 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDAV2
         /// <returns></returns>
         protected override int Load(List<FbCampaignSummary> summaries)
         {
-            EnsureCampaignsEntitiesData(summaries);
-            // sometimes from api can be pulled duplicate summaries
-            var uniqueSummaries = summaries.GroupBy(s => new { s.CampaignId, s.Date }).Select(gr => gr.First()).ToList();
-            var notProcessedSummaries = uniqueSummaries.
-                 Where(s => !latestSummaries.Any(ls => s.CampaignId == ls.CampaignId && s.Date == ls.Date)).ToList();
-            latestSummaries.AddRange(notProcessedSummaries);
-            return summaries.Count;
+
+            try
+            {
+                EnsureCampaignsEntitiesData(summaries);
+                // sometimes from api can be pulled duplicate summaries
+                var uniqueSummaries = summaries.GroupBy(s => new { s.CampaignId, s.Date }).Select(gr => gr.First()).ToList();
+                var notProcessedSummaries = uniqueSummaries.
+                     Where(s => !latestSummaries.Any(ls => s.CampaignId == ls.CampaignId && s.Date == ls.Date)).ToList();
+                latestSummaries.AddRange(notProcessedSummaries);
+                return summaries.Count;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(accountId, ex);
+                return 0;
+            }
         }
 
         /// <summary>
@@ -54,8 +64,15 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDAV2
         /// </summary>
         protected override void AfterLoadAction()
         {
-            DeleteOldSummariesFromDb();
-            LoadLatestSummariesToDb(latestSummaries);
+            try
+            {
+                DeleteOldSummariesFromDb();
+                LoadLatestSummariesToDb(latestSummaries);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(accountId, ex);
+            }
         }
 
         private void LoadSummaries(List<FbCampaignSummary> summaries)

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.SocialMarketing.EntitiesLoaders;
@@ -62,6 +63,11 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDAV2
             var actions = PrepareActionsData(notProcessedSummaries);
             latestActions.AddRange(actions);
             return summaries.Count;
+             catch (Exception ex)
+            {
+                Logger.Error(accountId, ex);
+                return 0;
+            }
         }
 
         /// <summary>
@@ -69,10 +75,17 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDAV2
         /// </summary>
         protected override void AfterLoadAction()
         {
-            DeleteOldSummariesFromDb();
-            LoadLatestSummariesToDb(latestSummaries);
-            DeleteOldActionsFromDb();
-            LoadLatestActionsToDb(latestActions);
+            try
+            {
+                DeleteOldSummariesFromDb();
+                LoadLatestSummariesToDb(latestSummaries);
+                DeleteOldActionsFromDb();
+                LoadLatestActionsToDb(latestActions);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(accountId, ex);
+            }
         }
 
         private void LoadSummaries(List<FbAdSummary> summaries)

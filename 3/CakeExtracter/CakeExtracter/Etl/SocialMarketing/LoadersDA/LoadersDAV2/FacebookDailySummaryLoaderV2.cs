@@ -2,6 +2,7 @@
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg.Facebook.Daily;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -37,8 +38,16 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDAV2
         /// <returns></returns>
         protected override int Load(List<FbDailySummary> items)
         {
-            latestSummaries.AddRange(items);
-            return items.Count;
+            try
+            {
+                latestSummaries.AddRange(items);
+                return items.Count;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(accountId, ex);
+                return 0;
+            }
         }
 
         /// <summary>
@@ -46,8 +55,15 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDAV2
         /// </summary>
         protected override void AfterLoadAction()
         {
-            DeleteOldSummariesFromDb();
-            LoadLatestSummariesToDb(latestSummaries);
+            try
+            {
+                DeleteOldSummariesFromDb();
+                LoadLatestSummariesToDb(latestSummaries);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(accountId, ex);
+            }
         }
 
         private void LoadSummaries(List<FbDailySummary> summaries)

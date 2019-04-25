@@ -6,6 +6,7 @@ using CakeExtracter.Common;
 using CakeExtracter.Etl.SocialMarketing.EntitiesLoaders;
 using CakeExtracter.Etl.SocialMarketing.LoadersDA.EntitiesLoaders;
 using DirectAgents.Domain.Entities.CPProg.Facebook.AdSet;
+using System;
 
 namespace CakeExtracter.Etl.SocialMarketing.LoadersDAV2
 {
@@ -48,15 +49,23 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDAV2
         /// <returns></returns>
         protected override int Load(List<FbAdSetSummary> summaries)
         {
-            EnsureAdSetEntitiesData(summaries);
-            // sometimes from api can be pulled duplicate summaries
-            var uniqueSummaries = summaries.GroupBy(s => new { s.AdSetId, s.Date }).Select(gr => gr.First()).ToList();
-            var notProcessedSummaries = uniqueSummaries.
-                Where(s => !latestSummaries.Any(ls => s.AdSetId == ls.AdSetId && s.Date == ls.Date)).ToList();
-            latestSummaries.AddRange(notProcessedSummaries);
-            var actions = PrepareActionsData(notProcessedSummaries);
-            latestActions.AddRange(actions);
-            return summaries.Count;
+            try
+            {
+                EnsureAdSetEntitiesData(summaries);
+                // sometimes from api can be pulled duplicate summaries
+                var uniqueSummaries = summaries.GroupBy(s => new { s.AdSetId, s.Date }).Select(gr => gr.First()).ToList();
+                var notProcessedSummaries = uniqueSummaries.
+                    Where(s => !latestSummaries.Any(ls => s.AdSetId == ls.AdSetId && s.Date == ls.Date)).ToList();
+                latestSummaries.AddRange(notProcessedSummaries);
+                var actions = PrepareActionsData(notProcessedSummaries);
+                latestActions.AddRange(actions);
+                return summaries.Count;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(accountId, ex);
+                return 0;
+            }
         }
 
         /// <summary>
@@ -64,10 +73,17 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDAV2
         /// </summary>
         protected override void AfterLoadAction()
         {
-            DeleteOldSummariesFromDb();
-            LoadLatestSummariesToDb(latestSummaries);
-            DeleteOldActionsFromDb();
-            LoadLatestActionsToDb(latestActions);
+            try
+            {
+                DeleteOldSummariesFromDb();
+                LoadLatestSummariesToDb(latestSummaries);
+                DeleteOldActionsFromDb();
+                LoadLatestActionsToDb(latestActions);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(accountId, ex);
+            }
         }
 
         private void EnsureAdSetEntitiesData(List<FbAdSetSummary> items)
