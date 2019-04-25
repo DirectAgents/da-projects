@@ -42,56 +42,45 @@ namespace CakeExtracter.Etl.DBM.Extractors.Parsers.ParsingConverters
                         Name = row.InsertionOrderName
                     },
                     ExternalId = row.LineItemId,
-                    Name = row.LineItemName
+                    Name = row.LineItemName,
+                    Status = row.LineItemStatus,
+                    Type = row.LineItemType
                 }
             });
             return lineItemSummaries;
         }
 
-        //public IEnumerable<DbmCreativeSummary> ConvertCreativeReportDataToSummaries(DbmAccountCreativeReportData reportData)
-        //{
-        //    return reportData.CreativeReportRows.Select(row => new DbmCreativeSummary
-        //    {
-        //        Creative = new DbmCreative
-        //        {
-        //            LineItem = new DbmLineItem
-        //            {
-        //                InsertionOrder = new DbmInsertionOrder
-        //                {
-        //                    Campaign = new DbmCampaign
-        //                    {
-        //                        Advertiser = new DbmAdvertiser
-        //                        {
-        //                            Account = reportData.Account,
-        //                            ExternalId = row.AdvertiserId,
-        //                            Name = row.AdvertiserName,
-        //                            Currency = row.AdvertiserCurrency
-        //                        },
-        //                        ExternalId = row.CampaignId,
-        //                        Name = row.CampaignName
-        //                    },
-        //                    ExternalId = row.InsertionOrderId,
-        //                    Name = row.InsertionOrderName
-        //                },
-        //                ExternalId = row.LineItemId,
-        //                Name = row.LineItemName
-        //            },
-        //            ExternalId = row.CreativeId,
-        //            Name = row.CreativeName,
-        //            Height = row.CreativeHeight,
-        //            Width = row.CreativeWidth,
-        //            Size = row.CreativeSize,
-        //            Type = row.CreativeType
-        //        },
-        //        Date = row.Date,
-        //        Cost = row.Revenue,
-        //        Impressions = row.Impressions,
-        //        Clicks = row.Clicks,
-        //        PostClickConv = row.PostClickConv,
-        //        PostViewConv = row.PostViewConv,
-        //        CMPostClickRevenue = row.CMPostClickRevenue,
-        //        CMPostViewRevenue = row.CMPostViewRevenue
-        //    });
-        //}
+        public IEnumerable<DbmCreativeSummary> ConvertCreativeReportDataToSummaries(
+            DbmAccountCreativeReportData reportData)
+        {
+            var creativeSummaries = reportData.CreativeReportRows.Select(row => new DbmCreativeSummary
+            {
+                Creative = new DbmCreative
+                {
+                    Advertiser = new DbmAdvertiser
+                    {
+                        Account = reportData.Account,
+                        ExternalId = row.AdvertiserId,
+                        Name = row.AdvertiserName,
+                        Currency = row.AdvertiserCurrency
+                    },
+                    ExternalId = row.CreativeId,
+                    Name = row.CreativeName,
+                    Height = row.CreativeHeight,
+                    Width = row.CreativeWidth,
+                    Size = row.CreativeSize,
+                    Type = row.CreativeType
+                },
+                Date = row.Date,
+                Cost = row.Revenue,
+                Impressions = row.Impressions,
+                Clicks = row.Clicks,
+                PostClickConv = row.PostClickConv,
+                PostViewConv = row.PostViewConv,
+                CMPostClickRevenue = row.CMPostClickRevenue,
+                CMPostViewRevenue = row.CMPostViewRevenue
+            });
+            return creativeSummaries;
+        }
     }
 }

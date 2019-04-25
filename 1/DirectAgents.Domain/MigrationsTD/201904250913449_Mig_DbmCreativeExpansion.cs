@@ -41,7 +41,7 @@ namespace DirectAgents.Domain.MigrationsTD
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        LineItemId = c.Int(),
+                        AdvertiserId = c.Int(),
                         Height = c.String(),
                         Width = c.String(),
                         Size = c.String(),
@@ -50,36 +50,8 @@ namespace DirectAgents.Domain.MigrationsTD
                         Name = c.String(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("td.DbmLineItem", t => t.LineItemId)
-                .Index(t => t.LineItemId);
-            
-            CreateTable(
-                "td.DbmLineItem",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        InsertionOrderId = c.Int(),
-                        Type = c.String(),
-                        Status = c.String(),
-                        ExternalId = c.String(),
-                        Name = c.String(),
-                    })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("td.DbmInsertionOrder", t => t.InsertionOrderId)
-                .Index(t => t.InsertionOrderId);
-            
-            CreateTable(
-                "td.DbmInsertionOrder",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        CampaignId = c.Int(),
-                        ExternalId = c.String(),
-                        Name = c.String(),
-                    })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("td.DbmCampaign", t => t.CampaignId)
-                .Index(t => t.CampaignId);
+                .ForeignKey("td.DbmAdvertiser", t => t.AdvertiserId)
+                .Index(t => t.AdvertiserId);
             
             CreateTable(
                 "td.DbmCreativeSummary",
@@ -97,6 +69,34 @@ namespace DirectAgents.Domain.MigrationsTD
                     })
                 .PrimaryKey(t => new { t.CreativeId, t.Date })
                 .ForeignKey("td.DbmCreative", t => t.CreativeId, cascadeDelete: true);
+            
+            CreateTable(
+                "td.DbmInsertionOrder",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        CampaignId = c.Int(),
+                        ExternalId = c.String(),
+                        Name = c.String(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("td.DbmCampaign", t => t.CampaignId)
+                .Index(t => t.CampaignId);
+            
+            CreateTable(
+                "td.DbmLineItem",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        InsertionOrderId = c.Int(),
+                        Type = c.String(),
+                        Status = c.String(),
+                        ExternalId = c.String(),
+                        Name = c.String(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("td.DbmInsertionOrder", t => t.InsertionOrderId)
+                .Index(t => t.InsertionOrderId);
             
             CreateTable(
                 "td.DbmLineItemSummary",
@@ -117,30 +117,29 @@ namespace DirectAgents.Domain.MigrationsTD
 
             Sql($@"CREATE NONCLUSTERED INDEX [{LineItemIndexName}] ON [td].[DbmLineItemSummary] ([LineItemId]) INCLUDE ([Date])");
             Sql($@"CREATE NONCLUSTERED INDEX [{CreativeIndexName}] ON [td].[DbmCreativeSummary] ([CreativeId]) INCLUDE ([Date])");
+
         }
         
         public override void Down()
         {
-            DropIndex("td.DbmCreativeSummary", CreativeIndexName);
-            DropIndex("td.DbmLineItemSummary", LineItemIndexName);
             DropForeignKey("td.DbmLineItemSummary", "LineItemId", "td.DbmLineItem");
-            DropForeignKey("td.DbmCreativeSummary", "CreativeId", "td.DbmCreative");
-            DropForeignKey("td.DbmCreative", "LineItemId", "td.DbmLineItem");
             DropForeignKey("td.DbmLineItem", "InsertionOrderId", "td.DbmInsertionOrder");
             DropForeignKey("td.DbmInsertionOrder", "CampaignId", "td.DbmCampaign");
+            DropForeignKey("td.DbmCreativeSummary", "CreativeId", "td.DbmCreative");
+            DropForeignKey("td.DbmCreative", "AdvertiserId", "td.DbmAdvertiser");
             DropForeignKey("td.DbmCampaign", "AdvertiserId", "td.DbmAdvertiser");
             DropForeignKey("td.DbmAdvertiser", "AccountId", "td.Account");
-            DropIndex("td.DbmLineItemSummary", new[] { "LineItemId" });
-            DropIndex("td.DbmCreativeSummary", new[] { "CreativeId" });
-            DropIndex("td.DbmInsertionOrder", new[] { "CampaignId" });
+            DropIndex("td.DbmLineItemSummary", LineItemIndexName);
             DropIndex("td.DbmLineItem", new[] { "InsertionOrderId" });
-            DropIndex("td.DbmCreative", new[] { "LineItemId" });
+            DropIndex("td.DbmInsertionOrder", new[] { "CampaignId" });
+            DropIndex("td.DbmCreativeSummary", CreativeIndexName);
+            DropIndex("td.DbmCreative", new[] { "AdvertiserId" });
             DropIndex("td.DbmAdvertiser", new[] { "AccountId" });
             DropIndex("td.DbmCampaign", new[] { "AdvertiserId" });
             DropTable("td.DbmLineItemSummary");
-            DropTable("td.DbmCreativeSummary");
-            DropTable("td.DbmInsertionOrder");
             DropTable("td.DbmLineItem");
+            DropTable("td.DbmInsertionOrder");
+            DropTable("td.DbmCreativeSummary");
             DropTable("td.DbmCreative");
             DropTable("td.DbmAdvertiser");
             DropTable("td.DbmCampaign");

@@ -22,10 +22,7 @@ namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
             : base(accountId, batchSize)
         {
             var advertiserLoader = new DbmAdvertiserLoader();
-            var campaignLoader = new DbmCampaignLoader(advertiserLoader);
-            var insertionOrderLoader = new DbmInsertionOrderLoader(advertiserLoader, campaignLoader);
-            var lineItemLoader = new DbmLineItemLoader(advertiserLoader, campaignLoader, insertionOrderLoader);
-            creativeLoader = new DbmCreativeLoader(advertiserLoader, campaignLoader, insertionOrderLoader, lineItemLoader);
+            creativeLoader = new DbmCreativeLoader(advertiserLoader);
             this.dateRange = dateRange;
         }
 
@@ -58,7 +55,7 @@ namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
             SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
                 db.DbmCreativeSummaries.Where(x => (x.Date >= dateRange.FromDate && x.Date <= dateRange.ToDate)
-                && x.Creative.LineItem.InsertionOrder.Campaign.Advertiser.AccountId == accountId).DeleteFromQuery();
+                && x.Creative.Advertiser.AccountId == accountId).DeleteFromQuery();
             }, lockObject, "BulkDeleteByQuery");
         }
 

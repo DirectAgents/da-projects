@@ -158,10 +158,7 @@ namespace DBM
         {
             var request = QueriesResource.Getquery(queryId);
             var query = request.Execute();
-            if (query != null)
-                return query.Metadata.GoogleCloudStoragePathForLatestReport;
-            else
-                return null;
+            return query?.Metadata.GoogleCloudStoragePathForLatestReport;
         }
 
         public void Test()

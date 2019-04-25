@@ -4,10 +4,10 @@ namespace DirectAgents.Domain.Entities.CPProg.DBM.Entities
 {
     public class DbmCreative : DbmEntity
     {
-        public int? LineItemId { get; set; }
+        public int? AdvertiserId { get; set; }
 
-        [ForeignKey("LineItemId")]
-        public virtual DbmLineItem LineItem { get; set; }
+        [ForeignKey("AdvertiserId")]
+        public virtual DbmAdvertiser Advertiser { get; set; }
 
         public string Height { get; set; }
 

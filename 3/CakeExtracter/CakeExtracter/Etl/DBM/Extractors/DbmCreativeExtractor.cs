@@ -8,9 +8,9 @@ namespace CakeExtracter.Etl.DBM.Extractors
     internal class DbmCreativeExtractor: Extracter<DbmCreativeSummary>
     {
         private readonly DbmReportDataConverter converter;
-        private readonly DbmAccountLineItemReportData reportData;
+        private readonly DbmAccountCreativeReportData reportData;
 
-        public DbmCreativeExtractor(DbmAccountLineItemReportData reportData) 
+        public DbmCreativeExtractor(DbmAccountCreativeReportData reportData) 
         {
             converter = new DbmReportDataConverter();
             this.reportData = reportData;

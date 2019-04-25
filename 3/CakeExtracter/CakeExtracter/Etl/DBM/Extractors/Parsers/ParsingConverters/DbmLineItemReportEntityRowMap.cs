@@ -29,6 +29,4 @@ namespace CakeExtracter.Etl.DBM.Extractors.Parsers.ParsingConverters
             Map(m => m.CMPostViewRevenue).Name("CM Post-Click Revenue").TypeConverter<DecimalReportConverter>();
         }
     }
-    {
-    }
 }

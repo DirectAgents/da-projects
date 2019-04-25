@@ -468,6 +468,9 @@
     <Compile Include="Etl\CakeMarketing\Extracters\SubIdSummariesExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\CPCLoader.cs" />
     <Compile Include="Etl\DBM\Composer\DbmReportDataComposer.cs" />
+    <Compile Include="Etl\DBM\Extractors\DbmLineItemExtractor.cs" />
+    <Compile Include="Etl\DBM\Extractors\Parsers\Models\DbmLineItemReportRow.cs" />
+    <Compile Include="Etl\DBM\Extractors\Parsers\ParsingConverters\DbmLineItemReportEntityRowMap.cs" />
     <Compile Include="Etl\DBM\Extractors\Parsers\ParsingConverters\DbmReportDataConverter.cs" />
     <Compile Include="Etl\DBM\Extractors\Parsers\DbmReportCsvParser.cs" />
     <Compile Include="Etl\DBM\Extractors\Parsers\Models\DbmBaseReportRow.cs" />
@@ -481,8 +484,8 @@
     <Compile Include="Etl\DBM\Loaders\EntitiesLoaders\DbmLineItemLoader.cs" />
     <Compile Include="Etl\DBM\Loaders\SummariesLoaders\DbmCreativeSummaryLoader.cs" />
     <Compile Include="Etl\DBM\Loaders\SummariesLoaders\DbmLineItemSummaryLoader.cs" />
-    <Compile Include="Etl\DBM\Models\DbmAccountReportData.cs" />
-    <Compile Include="Etl\DBM\Models\DbmDailyReportData.cs" />
+    <Compile Include="Etl\DBM\Models\DbmAccountLineItemReportData.cs" />
+    <Compile Include="Etl\DBM\Models\DbmAccountCreativeReportData.cs" />
     <Compile Include="Etl\DSP\Configuration\AmazonDspConfigurationProvider.cs" />
     <Compile Include="Etl\CommandsExecutionAccountsProvider.cs" />
     <Compile Include="Etl\DSP\Extractors\AmazonDspExtractor.cs" />

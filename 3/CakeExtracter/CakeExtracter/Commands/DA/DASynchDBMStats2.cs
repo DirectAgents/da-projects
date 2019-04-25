@@ -18,6 +18,7 @@ using DBM;
 using DBM.Parsers.Models;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
+using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 
 namespace CakeExtracter.Commands
 {
@@ -49,8 +50,8 @@ namespace CakeExtracter.Commands
         /// </summary>
         public int? DaysAgoToStart { get; set; }
 
-        public IEnumerable<int> CreativeReportIds { get; set; }
-        public IEnumerable<int> LineItemReportIds { get; set; }
+        public List<int> CreativeReportIds { get; set; }
+        public List<int> LineItemReportIds { get; set; }
         
         private DBMUtility DbmUtility { get; set; }
         
@@ -77,11 +78,9 @@ namespace CakeExtracter.Commands
         {
             SetConfigurationVariables();
             SetupDbmUtility();
-
             var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
-            Logger.Info("DBM ETL. DateRange {0}.", dateRange);
-
             var accounts = GetAccounts();
+
             DoETLs(dateRange, accounts);
             
             SaveTokens();
@@ -106,112 +105,183 @@ namespace CakeExtracter.Commands
             CreativeReportIds = GetValuesFromConfig("DBM_CreativeReportIds", ConfigurationHelper.ExtractNumbersFromConfigValue);
         }
 
-        private static IEnumerable<T> GetValuesFromConfig<T>(string parameterName, Func<string, IEnumerable<T>> extractFromConfigFunc)
+        private static List<T> GetValuesFromConfig<T>(string parameterName, Func<string, IEnumerable<T>> extractFromConfigFunc)
         {
             var configValue = ConfigurationManager.AppSettings[parameterName];
-            var values = extractFromConfigFunc(configValue);
-            return values;
+            var values = string.IsNullOrEmpty(configValue) ? new List<T>() : extractFromConfigFunc(configValue);
+            return values.ToList();
         }
 
         private void DoETLs(DateRange dateRange, IEnumerable<ExtAccount> accounts)
         {
-            foreach (var creativeReportId in CreativeReportIds)
-            {
-                DoEtl_Creative(dateRange, accounts, creativeReportId);
-            }
+            Logger.Info("DBM ETL. DateRange {0}.", dateRange);
+            DoETLs_Creative(dateRange, accounts);
+            DoETLs_LineItem(dateRange, accounts);
+        }
 
-            foreach (var lineItemReportId in LineItemReportIds)
+        private void DoETLs_Creative(DateRange dateRange, IEnumerable<ExtAccount> accounts)
+        {
+            Logger.Info($"Start processing Creative reports (report count: {CreativeReportIds.Count})...");
+            CreativeReportIds.ForEach(creativeReportId =>
             {
-                DoEtl_LineItem(dateRange, accounts, lineItemReportId);
-            }
+                try
+                {
+                    DoEtl_Creative(dateRange, accounts, creativeReportId);
+                }
+                catch (Exception e)
+                {
+                    Logger.Warn($"Could not process a report [report ID: {creativeReportId}]: {e}");
+                }
+            });
+            Logger.Info("Finished processing Creative reports");
+        }
+
+        private void DoETLs_LineItem(DateRange dateRange, IEnumerable<ExtAccount> accounts)
+        {
+            Logger.Info($"Start processing Line item reports (report count: {LineItemReportIds.Count})...");
+            LineItemReportIds.ForEach(lineItemReportId =>
+            {
+                try
+                {
+                    DoEtl_LineItem(dateRange, accounts, lineItemReportId);
+                }
+                catch (Exception e)
+                {
+                    Logger.Warn($"Could not process a report [report ID: {lineItemReportId}]: {e}");
+                }
+            });
+            Logger.Info("Finished processing Line item reports");
         }
 
         private void DoEtl_Creative(DateRange dateRange, IEnumerable<ExtAccount> accounts, int creativeReportId)
         {
-            var reportUrl = DbmUtility.GetURLForReport(creativeReportId);
-            if (string.IsNullOrWhiteSpace(reportUrl))
-            {
-                return;
-            }
+            Logger.Info($"Start processing creative report [report ID: {creativeReportId}]...");
+            var reportContent = GetReportContent(creativeReportId);
+            var creativeReportRows = GetCreativeRows(dateRange, reportContent);
+            var creativeSummariesGroups = GetCreativeSummariesGroupedByAccount(accounts, creativeReportRows);
 
-            var reportContent = DbmReportDownloader.GetStreamReaderFromUrl(reportUrl);
-            var creativeReportRows = GetCreativeRowsFromReportContent(dateRange, reportContent);
-            
-            var composer = new DbmReportDataComposer(accounts.ToList());
-            var creativeSummariesGroupedByAccount = composer.Compose(creativeReportRows);
-
-            creativeSummariesGroupedByAccount.ForEach(creativeReportData =>
+            creativeSummariesGroups.ForEach(creativeReportData =>
             {
                 DoEtl_Creative(dateRange, creativeReportData);
             });
+            Logger.Info($"Finished processing creative report [report ID: {creativeReportId}]");
         }
 
         private void DoEtl_LineItem(DateRange dateRange, IEnumerable<ExtAccount> accounts, int lineItemReportId)
         {
-            var reportUrl = DbmUtility.GetURLForReport(lineItemReportId);
-            if (string.IsNullOrWhiteSpace(reportUrl))
-            {
-                return;
-            }
+            Logger.Info($"Start processing line item report [report ID: {lineItemReportId}]...");
 
-            var reportContent = DbmReportDownloader.GetStreamReaderFromUrl(reportUrl);
-            var lineItemReportRows = GetLineItemRowsFromReportContent(dateRange, reportContent);
+            var reportContent = GetReportContent(lineItemReportId);
+            var lineItemReportRows = GetLineItemRows(dateRange, reportContent);
+            var lineItemSummariesGroups = GetLineItemSummariesGroupedByAccount(accounts, lineItemReportRows);
 
-            var composer = new DbmReportDataComposer(accounts.ToList());
-            var lineItemSummariesGroupedByAccount = composer.ComposeLineItemReportData(lineItemReportRows);
-
-            lineItemSummariesGroupedByAccount.ForEach(lineItemReportData =>
+            lineItemSummariesGroups.ForEach(lineItemReportData =>
             {
                 DoEtl_LineItem(dateRange, lineItemReportData);
             });
+            Logger.Info($"Finished processing line item report [report ID: {lineItemReportId}]");
         }
 
-        private IEnumerable<DbmLineItemReportRow> GetLineItemRowsFromReportContent(DateRange dateRange, StreamReader reportContent)
+        private StreamReader GetReportContent(int reportId)
         {
-            var rowMap = new DbmLineItemReportEntityRowMap();
-            var lineItemReportRows = GetReportRows<DbmLineItemReportRow>(dateRange, reportContent, rowMap);
-            return lineItemReportRows;
+            var reportUrl = GetReportUrl(reportId);
+            var reportContent = GetReportContentFromUrl(reportUrl);
+            return reportContent;
         }
 
-        private IEnumerable<DbmCreativeReportRow> GetCreativeRowsFromReportContent(DateRange dateRange, StreamReader reportContent)
+        private string GetReportUrl(int reportId)
+        {
+            Logger.Info($"Retrieve a report location URL from the query ID [{reportId}]...");
+            var reportUrl = DbmUtility.GetURLForReport(reportId);
+            if (string.IsNullOrWhiteSpace(reportUrl))
+            {
+                throw new Exception("Could not retrieve the report location URL.");
+            }
+            Logger.Info($"The report location URL: [{reportUrl}].");
+            return reportUrl;
+        }
+
+        private static StreamReader GetReportContentFromUrl(string reportUrl)
+        {
+            Logger.Info("Downloading a report...");
+            var reportContent = DbmReportDownloader.GetStreamReaderFromUrl(reportUrl);
+            if (reportContent == StreamReader.Null)
+            {
+                throw new Exception($"Failed downloading a report [report URL: {reportUrl}]");
+            }
+            Logger.Info("The report downloaded successfully");
+            return reportContent;
+        }
+
+        private static List<TDbmReportRow> GetReportRows<TDbmReportRow>(DateRange dateRange, StreamReader stream, CsvClassMap rowMap)
+            where TDbmReportRow : DbmBaseReportRow
+        {
+            Logger.Info("Parsing a report...");
+            const string path = "Reports\\TEST_NEW_LineItem_20190425_071102_604983549_2524191508.csv";
+            //var parser = new DbmReportCsvParser<TDbmReportRow>(dateRange, rowMap, streamReader: stream);
+            var parser = new DbmReportCsvParser<TDbmReportRow>(dateRange, rowMap, csvFilePath: path);
+            var reportRows = parser.EnumerateRows().ToList();
+            Logger.Info($"The report parsed successfully (row count: {reportRows.Count})");
+            return reportRows;
+        }
+
+        private static IEnumerable<DbmCreativeReportRow> GetCreativeRows(DateRange dateRange,
+            StreamReader reportContent)
         {
             var rowMap = new DbmCreativeReportEntityRowMap();
             var creativeReportRows = GetReportRows<DbmCreativeReportRow>(dateRange, reportContent, rowMap);
             return creativeReportRows;
         }
 
-        private static IEnumerable<TDbmReportRow> GetReportRows<TDbmReportRow>(DateRange dateRange, StreamReader stream, CsvClassMap rowMap)
-         where TDbmReportRow : DbmBaseReportRow
+        private static IEnumerable<DbmLineItemReportRow> GetLineItemRows(DateRange dateRange, StreamReader reportContent)
         {
-            const string path = "Reports\\TEST_NEW_LineItem_20190425_071102_604983549_2524191508.csv";
-            //var parser = new DbmReportCsvParser<TDbmReportRow>(dateRange, rowMap, streamReader: stream);
-            var parser = new DbmReportCsvParser<TDbmReportRow>(dateRange, rowMap, csvFilePath: path);
-            var reportRows = parser.EnumerateRows();
-            return reportRows;
+            var rowMap = new DbmLineItemReportEntityRowMap();
+            var lineItemReportRows = GetReportRows<DbmLineItemReportRow>(dateRange, reportContent, rowMap);
+            return lineItemReportRows;
+        }
+
+        private static List<DbmAccountLineItemReportData> GetLineItemSummariesGroupedByAccount(
+            IEnumerable<ExtAccount> accounts, IEnumerable<DbmLineItemReportRow> lineItemReportRows)
+        {
+            Logger.Info("Composing report data...");
+            var composer = new DbmReportDataComposer(accounts.ToList());
+            var lineItemSummariesGroupedByAccount = composer.ComposeLineItemReportData(lineItemReportRows);
+            Logger.Info($"Report data composed. Retrieved groups by account (group count: {lineItemSummariesGroupedByAccount.Count})");
+            return lineItemSummariesGroupedByAccount;
+        }
+
+        private static List<DbmAccountCreativeReportData> GetCreativeSummariesGroupedByAccount(
+            IEnumerable<ExtAccount> accounts, IEnumerable<DbmCreativeReportRow> creativeReportRows)
+        {
+            Logger.Info("Composing report data...");
+            var composer = new DbmReportDataComposer(accounts.ToList());
+            var creativeSummariesGroupedByAccount = composer.ComposeCreativeReportData(creativeReportRows);
+            Logger.Info($"Report data composed. Retrieved groups by account (group count: {creativeSummariesGroupedByAccount.Count})");
+            return creativeSummariesGroupedByAccount;
         }
 
         private static void DoEtl_LineItem(DateRange dateRange, DbmAccountLineItemReportData lineItemReportData)
         {
             var account = lineItemReportData.Account;
-            Logger.Info(account.Id, "DBM ETL LINE ITEM. Account ({0}) {1}", account.Id, account.Name);
+            Logger.Info(account.Id, "DBM ETL Line Item. Account ({0}) {1}", account.Id, account.Name);
 
-            var extractor = new DbmCreativeExtractor(lineItemReportData);
+            var extractor = new DbmLineItemExtractor(lineItemReportData);
             var loader = new Etl.DBM.Loaders.SummariesLoaders.DbmLineItemSummaryLoader(account.Id, dateRange);
             CommandHelper.DoEtl(extractor, loader);
 
-            Logger.Info(account.Id, "Finished DBM ETL LINE ITEM for account ({0}) {1}", account.Id, account.Name);
+            Logger.Info(account.Id, "Finished DBM ETL Line Item for account ({0}) {1}", account.Id, account.Name);
         }
 
-        private static void DoEtl_Creative(DateRange dateRange, DbmAccountLineItemReportData creativeReportData)
+        private static void DoEtl_Creative(DateRange dateRange, DbmAccountCreativeReportData creativeReportData)
         {
             var account = creativeReportData.Account;
-            Logger.Info(account.Id, "DBM ETL CREATIVE. Account ({0}) {1}", account.Id, account.Name);
+            Logger.Info(account.Id, "DBM ETL Creative. Account ({0}) {1}", account.Id, account.Name);
 
             var extractor = new DbmCreativeExtractor(creativeReportData);
             var loader = new Etl.DBM.Loaders.SummariesLoaders.DbmCreativeSummaryLoader(account.Id, dateRange);
             CommandHelper.DoEtl(extractor, loader);
 
-            Logger.Info(account.Id, "Finished DBM ETL CREATIVE for account ({0}) {1}", account.Id, account.Name);
+            Logger.Info(account.Id, "Finished DBM ETL Creative for account ({0}) {1}", account.Id, account.Name);
         }
 
         private IEnumerable<ExtAccount> GetAccounts()

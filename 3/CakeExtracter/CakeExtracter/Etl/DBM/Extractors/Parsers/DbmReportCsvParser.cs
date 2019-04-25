@@ -30,7 +30,7 @@ namespace CakeExtracter.Etl.DBM.Extractors.Parsers
 
         public IEnumerable<T> EnumerateRows()
         {
-            Logger.Info($"Extracting Creatives from {_csvFilePath ?? "StreamReader"}");
+            Logger.Info($"Extracting rows from {_csvFilePath ?? "StreamReader"}");
 
             if (_streamReader != null)
             {
