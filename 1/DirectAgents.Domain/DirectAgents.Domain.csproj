@@ -114,6 +114,10 @@
     <Compile Include="Concrete\RevTrackRepository.cs" />
     <Compile Include="Concrete\SecurityRepository.cs" />
     <Compile Include="Concrete\SpecialPlatformRepository.cs" />
+    <Compile Include="Migrations\201904252123496_Mig_EventConv_TransactionId.cs" />
+    <Compile Include="Migrations\201904252123496_Mig_EventConv_TransactionId.Designer.cs">
+      <DependentUpon>201904252123496_Mig_EventConv_TransactionId.cs</DependentUpon>
+    </Compile>
     <Compile Include="SpecialPlatformProviders\Implementation\CommissionJunctionProvider.cs" />
     <Compile Include="SpecialPlatformProviders\Implementation\DspProvider.cs" />
     <Compile Include="SpecialPlatformProviders\Implementation\KochavaProvider.cs" />
@@ -1095,6 +1099,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810232032208_Mig_AffSubSummary.resx">
       <DependentUpon>201810232032208_Mig_AffSubSummary.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904252123496_Mig_EventConv_TransactionId.resx">
+      <DependentUpon>201904252123496_Mig_EventConv_TransactionId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
