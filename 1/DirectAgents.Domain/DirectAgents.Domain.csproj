@@ -118,6 +118,10 @@
     <Compile Include="Entities\CPProg\Facebook\FbBaseSummary.cs" />
     <Compile Include="Entities\CPProg\Facebook\FbEntity.cs" />
     <Compile Include="MigrationsTD\201904221606279_FacebookCreativeExpansion.cs" />
+    <Compile Include="Migrations\201904252123496_Mig_EventConv_TransactionId.cs" />
+    <Compile Include="Migrations\201904252123496_Mig_EventConv_TransactionId.Designer.cs">
+      <DependentUpon>201904252123496_Mig_EventConv_TransactionId.cs</DependentUpon>
+    </Compile>
     <Compile Include="MigrationsTD\201904221606279_FacebookCreativeExpansion.Designer.cs">
       <DependentUpon>201904221606279_FacebookCreativeExpansion.cs</DependentUpon>
     </Compile>
@@ -1117,6 +1121,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810232032208_Mig_AffSubSummary.resx">
       <DependentUpon>201810232032208_Mig_AffSubSummary.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904252123496_Mig_EventConv_TransactionId.resx">
+      <DependentUpon>201904252123496_Mig_EventConv_TransactionId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
