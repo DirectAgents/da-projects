@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Etl.SocialMarketing.Extracters;
 using CakeExtracter.Etl.SocialMarketing.LoadersDA;
 using CakeExtracter.Helpers;
@@ -16,6 +17,8 @@ using FacebookAPI.Enums;
 
 namespace CakeExtracter.Commands
 {
+    // Previous version of Facebook command. Saved while all facebook accounts will be not migrated to new version.
+    [Obsolete]
     [Export(typeof(ConsoleCommand))]
     public class DASynchFacebookStats : ConsoleCommand
     {
@@ -123,6 +126,7 @@ namespace CakeExtracter.Commands
             var accounts = GetAccounts();
             Parallel.ForEach(accounts, (account) =>
             {
+                CommandExecutionContext.Current.SetJobExecutionStateInHistory("Started", account.Id);
                 var acctDateRange = new DateRange(dateRange.FromDate, dateRange.ToDate);
                 if (account.Campaign != null) // check/adjust daterange - if acct assigned to a campaign/advertiser
                 {
@@ -163,8 +167,8 @@ namespace CakeExtracter.Commands
 
                 if (statsType.Creative && !statsType.All) // don't include when getting "all" statstypes
                     DoETL_Creative(acctDateRange, account, fbUtility);
-                //if (statsType.Site)
-                //    DoETL_Site(acctDateRange, acct, fbUtility);
+                Logger.Info(account.Id, "Finished Facebook ETL. Account {0} - {1}. DateRange {2}.", account.Id, account.Name, acctDateRange);
+                CommandExecutionContext.Current.SetJobExecutionStateInHistory("Finished", account.Id);
             });
 
             return 0;

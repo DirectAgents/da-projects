@@ -11,6 +11,7 @@ using CakeExtracter.Common;
 
 namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 {
+    [Obsolete]
     public class FacebookAdSetSummaryLoader : Loader<FBSummary>
     {
         public static EntityIdStorage<ActionType> DefaultActionTypeStorage = StorageCollection.ActionTypeStorage;

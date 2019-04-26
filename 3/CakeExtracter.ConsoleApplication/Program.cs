@@ -24,7 +24,6 @@ namespace CakeExtracter
         {
             composer = new Composer<Program>(this);
             composer.Compose();
-
             bootstrappers.ToList().ForEach(c => c.Run());
             Logger.Instance = new EnterpriseLibraryLogger(args[0]);
         }
