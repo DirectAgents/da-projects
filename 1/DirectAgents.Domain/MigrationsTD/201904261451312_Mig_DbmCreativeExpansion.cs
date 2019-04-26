@@ -17,20 +17,23 @@ namespace DirectAgents.Domain.MigrationsTD
                         AdvertiserId = c.Int(),
                         ExternalId = c.String(),
                         Name = c.String(),
+                        AccountId = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
+                .ForeignKey("td.Account", t => t.AccountId)
                 .ForeignKey("td.DbmAdvertiser", t => t.AdvertiserId)
-                .Index(t => t.AdvertiserId);
+                .Index(t => t.AdvertiserId)
+                .Index(t => t.AccountId);
             
             CreateTable(
                 "td.DbmAdvertiser",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        AccountId = c.Int(),
                         Currency = c.String(),
                         ExternalId = c.String(),
                         Name = c.String(),
+                        AccountId = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("td.Account", t => t.AccountId)
@@ -48,10 +51,13 @@ namespace DirectAgents.Domain.MigrationsTD
                         Type = c.String(),
                         ExternalId = c.String(),
                         Name = c.String(),
+                        AccountId = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
+                .ForeignKey("td.Account", t => t.AccountId)
                 .ForeignKey("td.DbmAdvertiser", t => t.AdvertiserId)
-                .Index(t => t.AdvertiserId);
+                .Index(t => t.AdvertiserId)
+                .Index(t => t.AccountId);
             
             CreateTable(
                 "td.DbmCreativeSummary",
@@ -78,10 +84,13 @@ namespace DirectAgents.Domain.MigrationsTD
                         CampaignId = c.Int(),
                         ExternalId = c.String(),
                         Name = c.String(),
+                        AccountId = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
+                .ForeignKey("td.Account", t => t.AccountId)
                 .ForeignKey("td.DbmCampaign", t => t.CampaignId)
-                .Index(t => t.CampaignId);
+                .Index(t => t.CampaignId)
+                .Index(t => t.AccountId);
             
             CreateTable(
                 "td.DbmLineItem",
@@ -93,10 +102,13 @@ namespace DirectAgents.Domain.MigrationsTD
                         Status = c.String(),
                         ExternalId = c.String(),
                         Name = c.String(),
+                        AccountId = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
+                .ForeignKey("td.Account", t => t.AccountId)
                 .ForeignKey("td.DbmInsertionOrder", t => t.InsertionOrderId)
-                .Index(t => t.InsertionOrderId);
+                .Index(t => t.InsertionOrderId)
+                .Index(t => t.AccountId);
             
             CreateTable(
                 "td.DbmLineItemSummary",
@@ -119,23 +131,32 @@ namespace DirectAgents.Domain.MigrationsTD
             Sql($@"CREATE NONCLUSTERED INDEX [{CreativeIndexName}] ON [td].[DbmCreativeSummary] ([CreativeId]) INCLUDE ([Date])");
 
         }
-        
+
         public override void Down()
         {
             DropForeignKey("td.DbmLineItemSummary", "LineItemId", "td.DbmLineItem");
             DropForeignKey("td.DbmLineItem", "InsertionOrderId", "td.DbmInsertionOrder");
+            DropForeignKey("td.DbmLineItem", "AccountId", "td.Account");
             DropForeignKey("td.DbmInsertionOrder", "CampaignId", "td.DbmCampaign");
+            DropForeignKey("td.DbmInsertionOrder", "AccountId", "td.Account");
             DropForeignKey("td.DbmCreativeSummary", "CreativeId", "td.DbmCreative");
             DropForeignKey("td.DbmCreative", "AdvertiserId", "td.DbmAdvertiser");
+            DropForeignKey("td.DbmCreative", "AccountId", "td.Account");
             DropForeignKey("td.DbmCampaign", "AdvertiserId", "td.DbmAdvertiser");
             DropForeignKey("td.DbmAdvertiser", "AccountId", "td.Account");
+            DropForeignKey("td.DbmCampaign", "AccountId", "td.Account");
             DropIndex("td.DbmLineItemSummary", LineItemIndexName);
+            DropIndex("td.DbmLineItem", new[] { "AccountId" });
             DropIndex("td.DbmLineItem", new[] { "InsertionOrderId" });
+            DropIndex("td.DbmInsertionOrder", new[] { "AccountId" });
             DropIndex("td.DbmInsertionOrder", new[] { "CampaignId" });
             DropIndex("td.DbmCreativeSummary", CreativeIndexName);
+            DropIndex("td.DbmCreative", new[] { "AccountId" });
             DropIndex("td.DbmCreative", new[] { "AdvertiserId" });
             DropIndex("td.DbmAdvertiser", new[] { "AccountId" });
+            DropIndex("td.DbmCampaign", new[] { "AccountId" });
             DropIndex("td.DbmCampaign", new[] { "AdvertiserId" });
+            DropTable("td.VcdAnalytic");
             DropTable("td.DbmLineItemSummary");
             DropTable("td.DbmLineItem");
             DropTable("td.DbmInsertionOrder");

@@ -67,6 +67,15 @@ namespace CakeExtracter.Etl.DBM.Loaders.EntitiesLoaders
             });
         }
 
+        /// <summary>
+        /// Assigns the account identifier to items.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        protected void AssignAccountIdToItems(List<T> items)
+        {
+            items.ForEach(item => item.AccountId = item.Account?.Id);
+        }
+
         private void AddMissedDbItems(IReadOnlyCollection<T> itemsToBeAdded, object lockObject)
         {
             SafeContextWrapper.TryMakeTransactionWithLock<ClientPortalProgContext>(dbContext =>

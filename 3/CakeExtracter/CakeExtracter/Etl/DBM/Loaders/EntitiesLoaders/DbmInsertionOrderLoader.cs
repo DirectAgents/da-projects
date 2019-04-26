@@ -28,6 +28,7 @@ namespace CakeExtracter.Etl.DBM.Loaders.EntitiesLoaders
         /// <param name="items">The items.</param>
         public void AddUpdateDependentEntities(List<DbmInsertionOrder> items)
         {
+            AssignAccountIdToItems(items);
             var uniqueItems = items.GroupBy(item => item.ExternalId).Select(gr => gr.First()).ToList();
             EnsureCampaignsData(uniqueItems);
             AddUpdateDependentItems(uniqueItems, insertionOrderIdStorage, lockObject);
