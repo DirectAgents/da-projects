@@ -51,7 +51,7 @@ namespace CakeExtracter.Commands
         public int? DaysAgoToStart { get; set; }
 
         public bool KeepReports { get; set; }
-        public static string SavedReportFileName = "dbm_{0}_{1}.csv";
+        public static string SavedReportFileName = "dbm_{0}.csv";
         public static string SavedReportsDirectoryName = "SavedReports";
 
         public List<int> CreativeReportIds { get; set; }
@@ -179,10 +179,6 @@ namespace CakeExtracter.Commands
 
             var reportContent = GetReportContent(lineItemReportId);
             var lineItemReportRows = GetLineItemRows(dateRange, reportContent);
-            if (KeepReports)
-            {
-                SaveReport(lineItemReportId, reportContent);
-            }
             var lineItemSummariesGroups = GetLineItemSummariesGroupedByAccount(accounts, lineItemReportRows);
 
             lineItemSummariesGroups.ForEach(lineItemReportData =>
@@ -211,13 +207,18 @@ namespace CakeExtracter.Commands
             return reportUrl;
         }
 
-        private static StreamReader GetReportContentFromUrl(string reportUrl)
+        private StreamReader GetReportContentFromUrl(string reportUrl)
         {
             Logger.Info("Downloading a report...");
             var reportContent = DbmReportDownloader.GetStreamReaderFromUrl(reportUrl);
             if (reportContent == StreamReader.Null)
             {
                 throw new Exception($"Failed downloading a report [report URL: {reportUrl}]");
+            }
+            if (KeepReports)
+            {
+                var reportContentToSave = DbmReportDownloader.GetStreamReaderFromUrl(reportUrl);
+                SaveReport(reportContentToSave);
             }
             Logger.Info("The report downloaded successfully");
             return reportContent;
@@ -304,12 +305,12 @@ namespace CakeExtracter.Commands
             return new[] {account};
         }
 
-        private static void SaveReport(int reportId, TextReader reportContent)
+        private static void SaveReport(StreamReader reportContent)
         {
-            var reportFileName = string.Format(SavedReportFileName, reportId, DateTime.Now.ToString("yyyyMMdd_HHmmss"));
+            var reportFileName = string.Format(SavedReportFileName, DateTime.Now.ToString("yyyyMMdd_HHmmss"));
             try
             {
-                FileManager.SaveToFileInExecutionFolder(SavedReportsDirectoryName, reportFileName, reportContent.ReadToEnd());
+                FileManager.SaveToFileInExecutionFolder(SavedReportsDirectoryName, reportFileName, reportContent);
                 Logger.Info($"Report content was saved to {reportFileName} file.");
             }
             catch (Exception e)
