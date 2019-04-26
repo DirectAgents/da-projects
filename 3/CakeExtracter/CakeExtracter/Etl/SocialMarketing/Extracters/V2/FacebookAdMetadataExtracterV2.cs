@@ -1,5 +1,7 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using DirectAgents.Domain.Entities.CPProg;
 using FacebookAPI;
 using FacebookAPI.Entities;
 
@@ -30,22 +32,30 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters.V2
         /// </summary>
         /// <param name="accountExtId">The account ext identifier.</param>
         /// <returns></returns>
-        public List<AdCreativeData> GetAdCreativesData(string  accountExtId)
+        public List<AdCreativeData> GetAdCreativesData(ExtAccount account)
         {
             // For each facebook account there's 4(per each platform) accounts with the same external id. To not fetch the same ads data for each account
             //there is a creativesDataDictionary and multi threading concurrency stuff for filling dictionary and arbitrating ETL processing. 
-            lock (extIdLocksDictionary.GetOrAdd(accountExtId, (val) => new object()))
+            lock (extIdLocksDictionary.GetOrAdd(account.ExternalId, (val) => new object()))
             {
-                if (creativesDataDictionary.ContainsKey(accountExtId))
+                try
                 {
-                    return creativesDataDictionary[accountExtId];
+                    if (creativesDataDictionary.ContainsKey(account.ExternalId))
+                    {
+                        return creativesDataDictionary[account.ExternalId];
+                    }
+                    else
+                    {
+                        Logger.Info(account.Id, "Fetching ads metadata.");
+                        var adData = adMetadataProvider.TryExtractAllAdsMetadataForAccount(account.ExternalId);
+                        creativesDataDictionary[account.ExternalId] = adData;
+                        return adData;
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    Logger.Info("Fetching metadata.");
-                    var adData = adMetadataProvider.TryExtractAllAdsMetadataForAccount(accountExtId);
-                    creativesDataDictionary[accountExtId] = adData;
-                    return adData;
+                    Logger.Error(account.Id, ex);
+                    return new List<AdCreativeData>();
                 }
             }
         }
