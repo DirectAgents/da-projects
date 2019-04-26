@@ -225,7 +225,7 @@ namespace CakeExtracter.Commands
            
             Logger.Info(account.Id, "Started reading ad's metadata");
             //It's not possible currently fetch facebook creatives data from the insights endpoint.
-            var allAdsMetadata = metadataExtractor.GetAdCreativesData(account.ExternalId);
+            var allAdsMetadata = metadataExtractor.GetAdCreativesData(account);
             Logger.Info(account.Id, "Finished reading ad's metadata");
             dateRangesToProcess.ForEach(rangeToProcess =>
             {
