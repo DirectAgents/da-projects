@@ -12,7 +12,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters.V2
     /// Facebook campaigns summary extractor.
     /// </summary>
     /// <seealso cref="CakeExtracter.Etl.SocialMarketing.Extracters.FacebookApiExtracter{DirectAgents.Domain.Entities.CPProg.Facebook.Campaign.FbCampaignSummary}" />
-    public class FacebookCampaignSummaryExtracterV2 : FacebookApiExtracterV2<FbCampaignSummary>
+    public class FacebookCampaignSummaryExtractorV2 : FacebookApiExtractorV2<FbCampaignSummary>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FacebookCampaignSummaryExtracter"/> class.
@@ -20,7 +20,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters.V2
         /// <param name="dateRange">The date range.</param>
         /// <param name="account">The account.</param>
         /// <param name="fbUtility">The fb utility.</param>
-        public FacebookCampaignSummaryExtracterV2(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
+        public FacebookCampaignSummaryExtractorV2(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
             : base(fbUtility, dateRange, account)
         { }
 

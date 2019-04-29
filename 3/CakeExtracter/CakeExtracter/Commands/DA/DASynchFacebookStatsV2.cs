@@ -186,7 +186,7 @@ namespace CakeExtracter.Commands
             int addedCount = 0;
             dateRangesToProcess.ForEach(rangeToProcess =>
             {
-                var extractor = new FacebookDailySummaryExtracterV2(rangeToProcess, account, fbUtility);
+                var extractor = new FacebookDailySummaryExtractorV2(rangeToProcess, account, fbUtility);
                 var loader = new FacebookDailySummaryLoaderV2(account.Id, rangeToProcess);
                 CommandHelper.DoEtl(extractor, loader);
                 addedCount += extractor.Added;
@@ -200,7 +200,7 @@ namespace CakeExtracter.Commands
             var dateRangesToProcess = dateRange.GetDaysChunks(processingChunkSize).ToList();
             dateRangesToProcess.ForEach(rangeToProcess =>
             {
-                var extractor = new FacebookCampaignSummaryExtracterV2(rangeToProcess, account, fbUtility);
+                var extractor = new FacebookCampaignSummaryExtractorV2(rangeToProcess, account, fbUtility);
                 var loader = new FacebookCampaignSummaryLoaderV2(account.Id, rangeToProcess);
                 CommandHelper.DoEtl(extractor, loader);
             });
@@ -212,7 +212,7 @@ namespace CakeExtracter.Commands
             var dateRangesToProcess = dateRange.GetDaysChunks(processingChunkSize).ToList();
             dateRangesToProcess.ForEach(rangeToProcess =>
             {
-                var extractor = new FacebookAdSetSummaryExtracterV2(rangeToProcess, account, fbUtility);
+                var extractor = new FacebookAdSetSummaryExtractorV2(rangeToProcess, account, fbUtility);
                 var loader = new FacebookAdSetSummaryLoaderV2(account.Id, rangeToProcess);
                 CommandHelper.DoEtl(extractor, loader);
             });
@@ -229,7 +229,7 @@ namespace CakeExtracter.Commands
             Logger.Info(account.Id, "Finished reading ad's metadata");
             dateRangesToProcess.ForEach(rangeToProcess =>
             {
-                var extractor = new FacebookAdSummaryExtracterV2(rangeToProcess, account, fbUtility, allAdsMetadata);
+                var extractor = new FacebookAdSummaryExtractorV2(rangeToProcess, account, fbUtility, allAdsMetadata);
                 var loader = new FacebookAdSummaryLoaderV2(account.Id, rangeToProcess);
                 CommandHelper.DoEtl(extractor, loader);
             });
