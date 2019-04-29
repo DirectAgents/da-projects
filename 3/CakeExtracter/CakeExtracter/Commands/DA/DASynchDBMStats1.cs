@@ -14,13 +14,13 @@ using DirectAgents.Domain.Entities.CPProg;
 namespace CakeExtracter.Commands
 {
     [Export(typeof(ConsoleCommand))]
-    public class DASynchDBMStats : ConsoleCommand
+    public class DASynchDBMStats1 : ConsoleCommand
     {
         //Note: if make a RunStatic, be sure to add 'DBM_AllSiteBucket', etc to the web.config
         public static int RunStatic(int? insertionOrderID = null, DateTime? startDate = null, DateTime? endDate = null, string statsType = null, string advertiserId = "")
         {
             AutoMapperBootstrapper.CheckRunSetup();
-            var cmd = new DASynchDBMStats
+            var cmd = new DASynchDBMStats1
             {
                 InsertionOrderID = insertionOrderID,
                 StartDate = startDate ?? DateTime.Today,
@@ -52,9 +52,9 @@ namespace CakeExtracter.Commands
             AdvertiserID = null;
         }
 
-        public DASynchDBMStats()
+        public DASynchDBMStats1()
         {
-            IsCommand("daSynchDBMStats", "synch DBM Daily Stats - by lineitem/creative/site...");
+            IsCommand("DASynchDBMStats1", "synch DBM Daily Stats - by lineitem/creative/site...");
             HasOption<DateTime>("s|startDate=", "Start Date - for conversions only (default is today & ignore end date)", c => StartDate = c);
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
             HasOption("h|Historical=", "Get historical stats (ignore endDate)", c => Historical = bool.Parse(c));
