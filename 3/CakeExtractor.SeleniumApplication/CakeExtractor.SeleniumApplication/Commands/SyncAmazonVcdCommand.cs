@@ -12,6 +12,7 @@ using System;
 using CakeExtractor.SeleniumApplication.PageActions.AmazonVcd;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using System.ComponentModel.Composition;
+using CakeExtracter.Common.JobExecutionManagement;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
@@ -96,13 +97,14 @@ namespace CakeExtractor.SeleniumApplication.Commands
         {
             try
             {
+                CommandExecutionContext.Current.SetJobExecutionStateInHistory($"Sync analytic table data.", accountId);
                 Logger.Info(accountId, "Sync analytic table data.");
                 var vcdTablesSyncher = new VcdAnalyticTablesSyncher();
                 vcdTablesSyncher.SyncData(accountId);
             }
             catch (Exception ex)
             {
-                Logger.Error(accountId, new Exception("Error occured while sync vcd data to analytic table", ex));
+                Logger.Error(accountId, new Exception("Error occurred while sync VCD data to analytic table", ex));
             }
         }
 

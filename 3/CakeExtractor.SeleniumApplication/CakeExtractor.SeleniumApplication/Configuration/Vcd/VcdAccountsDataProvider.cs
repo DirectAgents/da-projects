@@ -1,7 +1,6 @@
 ﻿using CakeExtracter;
 using CakeExtractor.SeleniumApplication.Configuration.Models;
 using CakeExtractor.SeleniumApplication.PageActions.AmazonVcd;
-using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.UserInfoExtracting;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
@@ -12,7 +11,7 @@ using System.Linq;
 namespace CakeExtractor.SeleniumApplication.Configuration.Vcd
 {
     /// <summary>
-    /// Provider of accounts information for vcd job.
+    /// Provider of accounts information for VCD job.
     /// </summary>
     internal class VcdAccountsDataProvider
     {
@@ -64,7 +63,7 @@ namespace CakeExtractor.SeleniumApplication.Configuration.Vcd
             }
             catch (Exception ex)
             {
-                Logger.Error(new Exception("Error occured while fetching accounts information." ,ex));
+                Logger.Error(new Exception("Error occurred while fetching accounts information." ,ex));
                 throw ex;
             }
         }
