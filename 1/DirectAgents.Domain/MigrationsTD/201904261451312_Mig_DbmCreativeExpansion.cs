@@ -156,7 +156,6 @@ namespace DirectAgents.Domain.MigrationsTD
             DropIndex("td.DbmAdvertiser", new[] { "AccountId" });
             DropIndex("td.DbmCampaign", new[] { "AccountId" });
             DropIndex("td.DbmCampaign", new[] { "AdvertiserId" });
-            DropTable("td.VcdAnalytic");
             DropTable("td.DbmLineItemSummary");
             DropTable("td.DbmLineItem");
             DropTable("td.DbmInsertionOrder");
