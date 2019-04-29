@@ -15,7 +15,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extractors.V2
     public class FacebookDailySummaryExtractorV2 : FacebookApiExtractorV2<FbDailySummary>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="FacebookDailySummaryExtracter"/> class.
+        /// Initializes a new instance of the <see cref="FacebookDailySummaryExtractor"/> class.
         /// </summary>
         /// <param name="dateRange">The date range.</param>
         /// <param name="account">The account.</param>

@@ -21,7 +21,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extractors.V2
         private readonly List<AdCreativeData> allAdsMetadata;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FacebookAdSummaryExtracter"/> class.
+        /// Initializes a new instance of the <see cref="FacebookAdSummaryExtractor"/> class.
         /// </summary>
         /// <param name="dateRange">The date range.</param>
         /// <param name="account">The account.</param>
