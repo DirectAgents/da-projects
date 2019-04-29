@@ -5,7 +5,7 @@ using DirectAgents.Domain.Entities.CPProg;
 using FacebookAPI;
 using FacebookAPI.Entities;
 
-namespace CakeExtracter.Etl.SocialMarketing.Extracters.V2
+namespace CakeExtracter.Etl.SocialMarketing.Extractors.V2
 {
     /// <summary>
     /// Facebook ad metadata extractor.

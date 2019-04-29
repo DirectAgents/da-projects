@@ -6,21 +6,21 @@ using DirectAgents.Domain.Entities.CPProg.Facebook.Daily;
 using FacebookAPI;
 using FacebookAPI.Entities;
 
-namespace CakeExtracter.Etl.SocialMarketing.Extracters.V2
+namespace CakeExtracter.Etl.SocialMarketing.Extractors.V2
 {
     /// <summary>
     /// Facebook daily summary extractor.
     /// </summary>
-    /// <seealso cref="CakeExtracter.Etl.SocialMarketing.Extracters.FacebookApiExtracter{DirectAgents.Domain.Entities.CPProg.Facebook.Daily.FbDailySummary}" />
-    public class FacebookDailySummaryExtracterV2 : FacebookApiExtracterV2<FbDailySummary>
+    /// <seealso cref="CakeExtracter.Etl.SocialMarketing.Extractors.FacebookApiExtractorV2{DirectAgents.Domain.Entities.CPProg.Facebook.Daily.FbDailySummary}" />
+    public class FacebookDailySummaryExtractorV2 : FacebookApiExtractorV2<FbDailySummary>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="FacebookDailySummaryExtracter"/> class.
+        /// Initializes a new instance of the <see cref="FacebookDailySummaryExtractorV2"/> class.
         /// </summary>
         /// <param name="dateRange">The date range.</param>
         /// <param name="account">The account.</param>
         /// <param name="fbUtility">The fb utility.</param>
-        public FacebookDailySummaryExtracterV2(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
+        public FacebookDailySummaryExtractorV2(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
             : base(fbUtility, dateRange, account)
         { }
 
