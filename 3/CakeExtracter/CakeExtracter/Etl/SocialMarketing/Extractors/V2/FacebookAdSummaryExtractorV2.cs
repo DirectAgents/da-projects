@@ -10,32 +10,24 @@ using DirectAgents.Domain.Entities.CPProg.Facebook.Campaign;
 using FacebookAPI;
 using FacebookAPI.Entities;
 
-namespace CakeExtracter.Etl.SocialMarketing.Extracters.V2
+namespace CakeExtracter.Etl.SocialMarketing.Extractors.V2
 {
     /// <summary>
     /// Facebook ads summary extractor.
     /// </summary>
-    /// <seealso cref="CakeExtracter.Etl.SocialMarketing.Extracters.FacebookApiExtracter{DirectAgents.Domain.Entities.CPProg.Facebook.Ad.FbAdSummary}" />
-    public class FacebookAdSummaryExtracterV2 : FacebookApiExtracterV2<FbAdSummary>
+    /// <seealso cref="CakeExtracter.Etl.SocialMarketing.Extracters.FacebookApiExtractor{DirectAgents.Domain.Entities.CPProg.Facebook.Ad.FbAdSummary}" />
+    public class FacebookAdSummaryExtractorV2 : FacebookApiExtractorV2<FbAdSummary>
     {
         private readonly List<AdCreativeData> allAdsMetadata;
 
-        private readonly List<string> adActionsTypesForLoading = new List<string>
-        {
-            "offsite_conversion.fb_pixel_purchase",
-            "comment",
-            "post",
-            "post_reaction"
-        };
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="FacebookAdSummaryExtracter"/> class.
+        /// Initializes a new instance of the <see cref="FacebookAdSummaryExtractorV2"/> class.
         /// </summary>
         /// <param name="dateRange">The date range.</param>
         /// <param name="account">The account.</param>
         /// <param name="fbUtility">The fb utility.</param>
-        /// <param name="fbAdMetadataProvider">The fb ad metadata provider.</param>
-        public FacebookAdSummaryExtracterV2(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility,
+        /// <param name="allAdsMetadata">All ads metadata.</param>
+        public FacebookAdSummaryExtractorV2(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility,
             List<AdCreativeData> allAdsMetadata) : base(fbUtility, dateRange, account)
         {
             this.allAdsMetadata = allAdsMetadata;
@@ -108,7 +100,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters.V2
             var actions = new List<FbAdAction>();
             if (summaryItem.Actions != null)
             {
-                actions = summaryItem.Actions.Values.Where(act=>adActionsTypesForLoading.Contains(act.ActionType)).Select(fbAction => new FbAdAction
+                actions = summaryItem.Actions.Values.Select(fbAction => new FbAdAction
                 {
                     ActionType = new FbActionType
                     {
