@@ -18,7 +18,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extractors.V2
     public class FacebookAdSetSummaryExtractorV2 : FacebookApiExtractorV2<FbAdSetSummary>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="FacebookAdSetSummaryExtracter"/> class.
+        /// Initializes a new instance of the <see cref="FacebookAdSetSummaryExtractor"/> class.
         /// </summary>
         /// <param name="dateRange">The date range.</param>
         /// <param name="account">The account.</param>
