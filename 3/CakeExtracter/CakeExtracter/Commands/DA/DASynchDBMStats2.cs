@@ -5,18 +5,11 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using CakeExtracter.Common;
-using CakeExtracter.Etl.DBM.Composer;
-using CakeExtracter.Etl.DBM.Downloader;
-using CakeExtracter.Etl.DBM.Extractors;
-using CakeExtracter.Etl.DBM.Extractors.Parsers;
-using CakeExtracter.Etl.DBM.Extractors.Parsers.Models;
-using CakeExtracter.Etl.DBM.Extractors.Parsers.ParsingConverters;
-using CakeExtracter.Etl.DBM.Models;
+using CakeExtracter.Etl.TradingDesk.Extracters;
+using CakeExtracter.Etl.TradingDesk.Extracters.SummaryCsvExtracters;
+using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using CakeExtracter.Helpers;
-using CsvHelper.Configuration;
 using DBM;
-using DBM.Helpers;
-using DBM.Parsers.Models;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
 
@@ -26,8 +19,6 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class DASynchDBMStats2 : ConsoleCommand
     {
-        private const int DefaultDaysAgo = 14;
-        
         /// <summary>
         /// Command argument: Account ID in the database for which the command will be executed (default = all)
         /// </summary>
@@ -49,25 +40,13 @@ namespace CakeExtracter.Commands
         /// </summary>
         public int? DaysAgoToStart { get; set; }
 
-        /// <summary>
-        /// Command argument: Store all reports from DBM portal in a separate folder
-        /// </summary>
-        public bool KeepReports { get; set; }
-        public static string SavedReportFileName = "dbm_{0}.csv";
-        public static string SavedReportsDirectoryName = "SavedReports";
+        private const int DefaultDaysAgo = 14;
+        private const string AvailableAccountIdsConfigurationName = "DBM_StrategiesFromLineItems";
+        private const string StrategyNameColMapping = "Line Item";
+        private const string StrategyIdColMapping = "Line Item ID";
 
-        /// <summary>
-        /// List of creative report identifiers specified on the configuration file
-        /// </summary>
-        public List<int> CreativeReportIds { get; set; }
-        /// <summary>
-        /// List of line item report identifiers specified on the configuration file
-        /// </summary>
-        public List<int> LineItemReportIds { get; set; }
-        
         private DBMUtility DbmUtility { get; set; }
-        
-        /// <inheritdoc />
+
         /// <summary>
         /// The constructor sets a command name and command arguments names, provides a description for them.
         /// </summary>
@@ -78,10 +57,8 @@ namespace CakeExtracter.Commands
             HasOption("s|startDate=", "Start Date (default is 'daysAgo')", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
             HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default = {DefaultDaysAgo})", c => DaysAgoToStart = c);
-            HasOption<bool>("k|keepReports=", "Store received DBM reports in a separate folder (default = false)", c => KeepReports = c);
         }
 
-        /// <inheritdoc />
         /// <summary>
         /// The method runs the current command and extract and save statistics from the DBM portal based on the command arguments.
         /// </summary>
@@ -89,18 +66,24 @@ namespace CakeExtracter.Commands
         /// <returns>Execution code</returns>
         public override int Execute(string[] remainingArguments)
         {
-            SetConfigurationVariables();
+            Logger.LogToOneFile = true;
             SetupDbmUtility();
-            var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
-            var accounts = GetAccounts();
 
-            DoETLs(dateRange, accounts);
-            
+            var dateRange = GetDateRange();
+            var accounts = GetAccounts();
+            Logger.Info("DBM ETL. DateRange {0}.", dateRange);
+
+            foreach (var account in accounts)
+            {
+                Logger.Info(account.Id, "DBM ETL. Account {0} - {1}", account.Id, account.Name);
+                DoEtLs(account, dateRange);
+                Logger.Info(account.Id, "Finished DBM ETL for account ({0}) {1}", account.Id, account.Name);
+            }
+
             SaveTokens();
             return 0;
         }
 
-        /// <inheritdoc />
         /// <summary>
         /// The method resets command arguments to defaults
         /// </summary>
@@ -110,221 +93,44 @@ namespace CakeExtracter.Commands
             StartDate = null;
             EndDate = null;
             DaysAgoToStart = null;
-            KeepReports = false;
         }
 
-        private void SetConfigurationVariables()
+        private static PlatColMapping GetInitializedAccountColMapping(ExtAccount account)
         {
-            LineItemReportIds = GetValuesFromConfig("DBM_LineItemReportIds", ConfigurationHelper.ExtractNumbersFromConfigValue);
-            CreativeReportIds = GetValuesFromConfig("DBM_CreativeReportIds", ConfigurationHelper.ExtractNumbersFromConfigValue);
+            var colMapping = account.Platform.PlatColMapping;
+            colMapping.StrategyName = StrategyNameColMapping;
+            colMapping.StrategyEid = StrategyIdColMapping;
+            return colMapping;
         }
 
-        private static List<T> GetValuesFromConfig<T>(string parameterName, Func<string, IEnumerable<T>> extractFromConfigFunc)
+        private static void DoETL_DailyFromStrategyInDatabase(int accountId, DateRange dateRange)
         {
-            var configValue = ConfigurationManager.AppSettings[parameterName];
-            var values = string.IsNullOrEmpty(configValue) ? new List<T>() : extractFromConfigFunc(configValue);
-            return values.ToList();
+            var extractor = new DatabaseStrategyToDailySummaryExtractor(dateRange, accountId);
+            var loader = new TDDailySummaryLoader(accountId);
+            CommandHelper.DoEtl(extractor, loader);
         }
 
-        private void DoETLs(DateRange dateRange, IEnumerable<ExtAccount> accounts)
+        private static void DoETL_Strategy(int accountId, ColumnMapping colMapping, StreamReader streamReader, DateRange dateRange)
         {
-            Logger.Info("DBM ETL. DateRange {0}.", dateRange);
-            DoETLs_Creative(dateRange, accounts);
-            DoETLs_LineItem(dateRange, accounts);
+            var extractor = new DbmStrategyCsvExtractor(dateRange, colMapping, streamReader);
+            var loader = new TDStrategySummaryLoader(accountId);
+            CommandHelper.DoEtl(extractor, loader);
         }
 
-        private void DoETLs_Creative(DateRange dateRange, IEnumerable<ExtAccount> accounts)
+        private void DoEtLs(ExtAccount account, DateRange dateRange)
         {
-            Logger.Info($"Start processing Creative reports (report count: {CreativeReportIds.Count})...");
-            CreativeReportIds.ForEach(creativeReportId =>
-            {
-                try
-                {
-                    DoEtl_Creative(dateRange, accounts, creativeReportId);
-                }
-                catch (Exception e)
-                {
-                    Logger.Warn($"Could not process a report [report ID: {creativeReportId}]: {e.Message}");
-                }
-            });
-            Logger.Info("Finished processing Creative reports");
-        }
-
-        private void DoETLs_LineItem(DateRange dateRange, IEnumerable<ExtAccount> accounts)
-        {
-            Logger.Info($"Start processing Line item reports (report count: {LineItemReportIds.Count})...");
-            LineItemReportIds.ForEach(lineItemReportId =>
-            {
-                try
-                {
-                    DoEtl_LineItem(dateRange, accounts, lineItemReportId);
-                }
-                catch (Exception e)
-                {
-                    Logger.Warn($"Could not process a report [report ID: {lineItemReportId}]: {e}");
-                }
-            });
-            Logger.Info("Finished processing Line item reports");
-        }
-
-        private void DoEtl_Creative(DateRange dateRange, IEnumerable<ExtAccount> accounts, int creativeReportId)
-        {
-            Logger.Info($"Start processing creative report [report ID: {creativeReportId}]...");
-            var reportContent = GetReportContent(creativeReportId);
-            var creativeReportRows = GetCreativeRows(dateRange, reportContent);
-            var creativeSummariesGroups = GetCreativeSummariesGroupedByAccount(accounts, creativeReportRows);
-
-            creativeSummariesGroups.ForEach(creativeReportData =>
-            {
-                DoEtl_CreativeForAccount(dateRange, creativeReportData);
-            });
-            Logger.Info($"Finished processing creative report [report ID: {creativeReportId}]");
-        }
-
-        private void DoEtl_LineItem(DateRange dateRange, IEnumerable<ExtAccount> accounts, int lineItemReportId)
-        {
-            Logger.Info($"Start processing line item report [report ID: {lineItemReportId}]...");
-
-            var reportContent = GetReportContent(lineItemReportId);
-            var lineItemReportRows = GetLineItemRows(dateRange, reportContent);
-            var lineItemSummariesGroups = GetLineItemSummariesGroupedByAccount(accounts, lineItemReportRows);
-
-            lineItemSummariesGroups.ForEach(lineItemReportData =>
-            {
-                DoEtl_LineItemForAccount(dateRange, lineItemReportData);
-            });
-            Logger.Info($"Finished processing line item report [report ID: {lineItemReportId}]");
-        }
-
-        private StreamReader GetReportContent(int reportId)
-        {
-            var reportUrl = GetReportUrl(reportId);
-            var reportContent = GetReportContentFromUrl(reportUrl);
-            return reportContent;
-        }
-
-        private string GetReportUrl(int reportId)
-        {
-            Logger.Info($"Retrieve a report location URL from the query ID [{reportId}]...");
-            var reportUrl = DbmUtility.GetURLForReport(reportId);
+            var reportUrl = DbmUtility.GetURLForReport(account.ExternalId_int.Value);
             if (string.IsNullOrWhiteSpace(reportUrl))
             {
-                throw new Exception("Could not retrieve the report location URL.");
-            }
-            Logger.Info($"The report location URL: {reportUrl}.");
-            return reportUrl;
-        }
-
-        private StreamReader GetReportContentFromUrl(string reportUrl)
-        {
-            Logger.Info("Downloading a report...");
-            var reportContent = DbmReportDownloader.GetStreamReaderFromUrl(reportUrl);
-            if (reportContent == StreamReader.Null)
-            {
-                throw new Exception($"Failed downloading a report [report URL: {reportUrl}]");
-            }
-            if (KeepReports)
-            {
-                var reportContentToSave = DbmReportDownloader.GetStreamReaderFromUrl(reportUrl);
-                SaveReport(reportContentToSave);
-            }
-            Logger.Info("The report downloaded successfully");
-            return reportContent;
-        }
-
-        private static List<TDbmReportRow> GetReportRows<TDbmReportRow>(DateRange dateRange, StreamReader stream, CsvClassMap rowMap)
-            where TDbmReportRow : DbmBaseReportRow
-        {
-            Logger.Info("Parsing a report...");
-            var parser = new DbmReportCsvParser<TDbmReportRow>(dateRange, rowMap, streamReader: stream);
-            var reportRows = parser.EnumerateRows().ToList();
-            Logger.Info($"The report parsed successfully (row count: {reportRows.Count})");
-            return reportRows;
-        }
-
-        private static IEnumerable<DbmCreativeReportRow> GetCreativeRows(DateRange dateRange, StreamReader reportContent)
-        {
-            var rowMap = new DbmCreativeReportEntityRowMap();
-            var creativeReportRows = GetReportRows<DbmCreativeReportRow>(dateRange, reportContent, rowMap);
-            return creativeReportRows;
-        }
-
-        private static IEnumerable<DbmLineItemReportRow> GetLineItemRows(DateRange dateRange, StreamReader reportContent)
-        {
-            var rowMap = new DbmLineItemReportEntityRowMap();
-            var lineItemReportRows = GetReportRows<DbmLineItemReportRow>(dateRange, reportContent, rowMap);
-            return lineItemReportRows;
-        }
-
-        private static List<DbmAccountLineItemReportData> GetLineItemSummariesGroupedByAccount(
-            IEnumerable<ExtAccount> accounts, IEnumerable<DbmLineItemReportRow> lineItemReportRows)
-        {
-            Logger.Info("Composing report data...");
-            var composer = new DbmReportDataComposer(accounts.ToList());
-            var lineItemSummariesGroupedByAccount = composer.ComposeLineItemReportData(lineItemReportRows);
-            Logger.Info($"Report data composed. Retrieved groups by account (group count: {lineItemSummariesGroupedByAccount.Count})");
-            return lineItemSummariesGroupedByAccount;
-        }
-
-        private static List<DbmAccountCreativeReportData> GetCreativeSummariesGroupedByAccount(
-            IEnumerable<ExtAccount> accounts, IEnumerable<DbmCreativeReportRow> creativeReportRows)
-        {
-            Logger.Info("Composing report data...");
-            var composer = new DbmReportDataComposer(accounts.ToList());
-            var creativeSummariesGroupedByAccount = composer.ComposeCreativeReportData(creativeReportRows);
-            Logger.Info($"Report data composed. Retrieved groups by account (group count: {creativeSummariesGroupedByAccount.Count})");
-            return creativeSummariesGroupedByAccount;
-        }
-
-        private static void DoEtl_LineItemForAccount(DateRange dateRange, DbmAccountLineItemReportData lineItemReportData)
-        {
-            var account = lineItemReportData.Account;
-            Logger.Info(account.Id, "DBM ETL Line Item. Account ({0}) {1}", account.Id, account.Name);
-
-            var extractor = new DbmLineItemExtractor(lineItemReportData);
-            var loader = new Etl.DBM.Loaders.SummariesLoaders.DbmLineItemSummaryLoader(account.Id, dateRange);
-            CommandHelper.DoEtl(extractor, loader);
-
-            Logger.Info(account.Id, "Finished DBM ETL Line Item for account ({0}) {1}", account.Id, account.Name);
-        }
-
-        private static void DoEtl_CreativeForAccount(DateRange dateRange, DbmAccountCreativeReportData creativeReportData)
-        {
-            var account = creativeReportData.Account;
-            Logger.Info(account.Id, "DBM ETL Creative. Account ({0}) {1}", account.Id, account.Name);
-
-            var extractor = new DbmCreativeExtractor(creativeReportData);
-            var loader = new Etl.DBM.Loaders.SummariesLoaders.DbmCreativeSummaryLoader(account.Id, dateRange);
-            CommandHelper.DoEtl(extractor, loader);
-
-            Logger.Info(account.Id, "Finished DBM ETL Creative for account ({0}) {1}", account.Id, account.Name);
-        }
-
-        private IEnumerable<ExtAccount> GetAccounts()
-        {
-            var repository = new PlatformAccountRepository();
-            if (!AccountId.HasValue)
-            {
-                var accounts = repository.GetAccountsWithFilledExternalIdByPlatformCode(Platform.Code_DBM, false);
-                return accounts;
+                return;
             }
 
-            var account = repository.GetAccount(AccountId.Value);
-            return new[] {account};
-        }
+            var colMapping = GetInitializedAccountColMapping(account);
+            var streamReader = TDDailySummaryExtracter.CreateStreamReaderFromUrl(reportUrl);
+            DoETL_Strategy(account.Id, colMapping, streamReader, dateRange);
 
-        private static void SaveReport(StreamReader reportContent)
-        {
-            var reportFileName = string.Format(SavedReportFileName, DateTime.Now.ToString("yyyyMMdd_HHmmss"));
-            try
-            {
-                FileManager.SaveToFileInExecutionFolder(SavedReportsDirectoryName, reportFileName, reportContent);
-                Logger.Info($"Report content was saved to {reportFileName} file.");
-            }
-            catch (Exception e)
-            {
-                Logger.Error(new Exception($"Saving report failed ({reportFileName})", e));
-            }
+            Logger.Info("Creating daily stats from strategy stats.");
+            DoETL_DailyFromStrategyInDatabase(account.Id, dateRange);
         }
 
         // --- setup ---
@@ -346,6 +152,44 @@ namespace CakeExtracter.Commands
         private void SaveTokens()
         {
             Platform.SavePlatformTokens(Platform.Code_DBM, DbmUtility.TokenSets);
+        }
+
+        private DateRange GetDateRange()
+        {
+            var today = DateTime.Today;
+            var daysAgo = DaysAgoToStart ?? DefaultDaysAgo;
+            var startDate = StartDate ?? today.AddDays(-daysAgo);
+            var endDate = EndDate ?? today.AddDays(-1);
+            var dateRange = new DateRange(startDate, endDate);
+            return dateRange;
+        }
+
+        private IEnumerable<ExtAccount> GetAccounts()
+        {
+            var accountsDb = GetEnabledAccountsFromDatabase();
+            var accountsConfig = GetEnabledAccountsFromConfig();
+            var enabledAccounts = accountsDb.Where(x => accountsConfig.Contains(x.ExternalId) && x.ExternalId_int.HasValue).ToList();
+            return enabledAccounts;
+        }
+
+        private IEnumerable<string> GetEnabledAccountsFromConfig()
+        {
+            var stringStrategiesFromLineItems = ConfigurationManager.AppSettings[AvailableAccountIdsConfigurationName] ?? string.Empty;
+            var repsStrategiesFromLineItems = stringStrategiesFromLineItems.Split(',');
+            return repsStrategiesFromLineItems;
+        }
+
+        private IEnumerable<ExtAccount> GetEnabledAccountsFromDatabase()
+        {
+            var repository = new PlatformAccountRepository();
+            if (!AccountId.HasValue)
+            {
+                var accounts = repository.GetAccountsWithFilledExternalIdByPlatformCode(Platform.Code_DBM, false, true);
+                return accounts;
+            }
+
+            var account = repository.GetAccountWithColumnMapping(AccountId.Value);
+            return new[] { account };
         }
     }
 }
