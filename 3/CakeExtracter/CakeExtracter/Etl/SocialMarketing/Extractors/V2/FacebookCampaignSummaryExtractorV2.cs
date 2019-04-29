@@ -11,7 +11,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extractors.V2
     /// <summary>
     /// Facebook campaigns summary extractor.
     /// </summary>
-    /// <seealso cref="CakeExtracter.Etl.SocialMarketing.Extracters.FacebookApiExtractor{DirectAgents.Domain.Entities.CPProg.Facebook.Campaign.FbCampaignSummary}" />
+    /// <seealso cref="CakeExtracter.Etl.SocialMarketing.Extractors.V2.FacebookApiExtractorV2{DirectAgents.Domain.Entities.CPProg.Facebook.Campaign.FbCampaignSummary}" />
     public class FacebookCampaignSummaryExtractorV2 : FacebookApiExtractorV2<FbCampaignSummary>
     {
         /// <summary>

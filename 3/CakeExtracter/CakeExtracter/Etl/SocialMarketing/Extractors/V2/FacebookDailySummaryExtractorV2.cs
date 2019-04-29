@@ -11,11 +11,11 @@ namespace CakeExtracter.Etl.SocialMarketing.Extractors.V2
     /// <summary>
     /// Facebook daily summary extractor.
     /// </summary>
-    /// <seealso cref="CakeExtracter.Etl.SocialMarketing.Extracters.FacebookApiExtractor{DirectAgents.Domain.Entities.CPProg.Facebook.Daily.FbDailySummary}" />
+    /// <seealso cref="CakeExtracter.Etl.SocialMarketing.Extractors.FacebookApiExtractorV2{DirectAgents.Domain.Entities.CPProg.Facebook.Daily.FbDailySummary}" />
     public class FacebookDailySummaryExtractorV2 : FacebookApiExtractorV2<FbDailySummary>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="FacebookDailySummaryExtractor"/> class.
+        /// Initializes a new instance of the <see cref="FacebookDailySummaryExtractorV2"/> class.
         /// </summary>
         /// <param name="dateRange">The date range.</param>
         /// <param name="account">The account.</param>
