@@ -346,13 +346,5 @@ namespace ClientPortal.Data.Services
             }
             return statsRollup;
         }
-
-        // ---
-
-        public IQueryable<UserListRun> UserListRuns(int insertionOrderID)
-        {
-            var userListRuns = context.UserListRuns.Where(ulr => ulr.InsertionOrderID == insertionOrderID);
-            return userListRuns;
-        }
     }
 }

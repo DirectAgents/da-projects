@@ -62,11 +62,6 @@ namespace ClientPortal.Data.Entities.TD
             modelBuilder.Entity<DBMConversion>()
                 .Property(c => c.RequestTime).HasColumnType("datetime2");
 
-            modelBuilder.Entity<UserListRun>().ToTable("UserListRun", dbmSchema);
-            modelBuilder.Entity<UserListStat>()
-                .HasKey(uls => new { uls.UserListRunID, uls.UserListID })
-                .ToTable("UserListStat", dbmSchema);
-
             //Trading Desk - general
             modelBuilder.Entity<TradingDeskAccount>()
                 .Property(m => m.FixedMetricValue).HasPrecision(18, 6);
@@ -88,9 +83,7 @@ namespace ClientPortal.Data.Entities.TD
         public DbSet<DMA> DMAs { get; set; }
         // (Countries...)
         public DbSet<DBMConversion> Conversions { get; set; }
-        public DbSet<UserListRun> UserListRuns { get; set; }
-        public DbSet<UserListStat> UserListStats { get; set; }
-
+        
         //General
         public DbSet<TradingDeskAccount> TradingDeskAccounts { get; set; }
     }

@@ -307,7 +307,6 @@
     <Compile Include="Entities\TD\DBM\DailyLocationStat.cs" />
     <Compile Include="Entities\TD\DBM\DBMDailySummary.cs" />
     <Compile Include="Entities\TD\DBM\InsertionOrder.cs" />
-    <Compile Include="Entities\TD\DBM\UserListStat.cs" />
     <Compile Include="Entities\TD\TradingDeskAccount.cs" />
     <Compile Include="Migrations\201406271827066_InitialCreate.cs" />
     <Compile Include="Migrations\201406271827066_InitialCreate.Designer.cs">

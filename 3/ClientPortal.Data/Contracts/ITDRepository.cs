@@ -36,7 +36,5 @@ namespace ClientPortal.Data.Contracts
         IEnumerable<RangeStat> GetMonthStats(TradingDeskAccount tdAccount, int numMonths, DateTime end);
 
         StatsRollup AdRollStatsRollup(int profileId);
-
-        IQueryable<UserListRun> UserListRuns(int insertionOrderID);
     }
 }

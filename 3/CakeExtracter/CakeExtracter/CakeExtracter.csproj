@@ -636,9 +636,6 @@
     <Compile Include="Commands\TD\TDSynchDailyStatsDbm.cs" />
     <Compile Include="Commands\TD\TDSynchDailySummariesDbmCsv.cs" />
     <Compile Include="Commands\TD\TDSynchDataTransferFilesDbm.cs" />
-    <Compile Include="Commands\TD\TDSynchUserListStats.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Commands\Test\TestAdRollCommand.cs" />
     <Compile Include="Commands\Test\TestBingCommand.cs" />
     <Compile Include="Commands\Test\TestChartCommand.cs" />
@@ -729,7 +726,6 @@
     <Compile Include="Etl\TradingDesk\Extracters\DbmConversionExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DbmCsvExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DbmDailyStatsExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\DbmUserListStatExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\TDDailySummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollAdDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollCampaignSummaryLoader.cs" />
@@ -775,7 +771,6 @@
     <Compile Include="Etl\TradingDesk\Loaders\DbmCreativeDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\Loaders\DbmDailyStatsLoader.cs" />
     <Compile Include="Etl\TradingDesk\Loaders\DbmDailySummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\Loaders\DbmUserListStatLoader.cs" />
     <Compile Include="Etl\Transformer.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\AdWordsXmlReportExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\AdWordsLoader.cs" />
