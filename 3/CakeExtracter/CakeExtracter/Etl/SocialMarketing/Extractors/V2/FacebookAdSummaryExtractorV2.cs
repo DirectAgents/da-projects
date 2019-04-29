@@ -10,12 +10,12 @@ using DirectAgents.Domain.Entities.CPProg.Facebook.Campaign;
 using FacebookAPI;
 using FacebookAPI.Entities;
 
-namespace CakeExtracter.Etl.SocialMarketing.Extracters.V2
+namespace CakeExtracter.Etl.SocialMarketing.Extractors.V2
 {
     /// <summary>
     /// Facebook ads summary extractor.
     /// </summary>
-    /// <seealso cref="CakeExtracter.Etl.SocialMarketing.Extracters.FacebookApiExtracter{DirectAgents.Domain.Entities.CPProg.Facebook.Ad.FbAdSummary}" />
+    /// <seealso cref="CakeExtracter.Etl.SocialMarketing.Extracters.FacebookApiExtractor{DirectAgents.Domain.Entities.CPProg.Facebook.Ad.FbAdSummary}" />
     public class FacebookAdSummaryExtractorV2 : FacebookApiExtractorV2<FbAdSummary>
     {
         private readonly List<AdCreativeData> allAdsMetadata;

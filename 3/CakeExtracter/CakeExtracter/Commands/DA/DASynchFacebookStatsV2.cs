@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement;
-using CakeExtracter.Etl.SocialMarketing.Extracters.V2;
+using CakeExtracter.Etl.SocialMarketing.Extractors.V2;
 using CakeExtracter.Etl.SocialMarketing.LoadersDAV2;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;

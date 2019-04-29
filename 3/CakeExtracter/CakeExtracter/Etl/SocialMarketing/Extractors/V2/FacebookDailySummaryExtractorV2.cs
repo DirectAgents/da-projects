@@ -6,12 +6,12 @@ using DirectAgents.Domain.Entities.CPProg.Facebook.Daily;
 using FacebookAPI;
 using FacebookAPI.Entities;
 
-namespace CakeExtracter.Etl.SocialMarketing.Extracters.V2
+namespace CakeExtracter.Etl.SocialMarketing.Extractors.V2
 {
     /// <summary>
     /// Facebook daily summary extractor.
     /// </summary>
-    /// <seealso cref="CakeExtracter.Etl.SocialMarketing.Extracters.FacebookApiExtracter{DirectAgents.Domain.Entities.CPProg.Facebook.Daily.FbDailySummary}" />
+    /// <seealso cref="CakeExtracter.Etl.SocialMarketing.Extracters.FacebookApiExtractor{DirectAgents.Domain.Entities.CPProg.Facebook.Daily.FbDailySummary}" />
     public class FacebookDailySummaryExtractorV2 : FacebookApiExtractorV2<FbDailySummary>
     {
         /// <summary>

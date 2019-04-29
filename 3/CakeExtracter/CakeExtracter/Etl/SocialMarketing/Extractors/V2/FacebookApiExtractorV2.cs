@@ -2,7 +2,7 @@
 using DirectAgents.Domain.Entities.CPProg;
 using FacebookAPI;
 
-namespace CakeExtracter.Etl.SocialMarketing.Extracters.V2
+namespace CakeExtracter.Etl.SocialMarketing.Extractors.V2
 {
     /// <summary>
     /// BaseFacebook Api extractor
