@@ -8,6 +8,9 @@ using DirectAgents.Domain.Entities.CPProg.DBM.SummaryMetrics;
 
 namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
 {
+    /// <summary>
+    /// Loader for DBM summaries of line item
+    /// </summary>
     public class DbmLineItemSummaryLoader : Loader<DbmLineItemSummary>
     {
         private readonly DbmLineItemLoader lineItemLoader;

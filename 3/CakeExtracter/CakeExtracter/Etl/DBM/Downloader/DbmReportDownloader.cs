@@ -3,8 +3,16 @@ using System.Net;
 
 namespace CakeExtracter.Etl.DBM.Downloader
 {
+    /// <summary>
+    /// Downloader of DBM report contents
+    /// </summary>
     public static class DbmReportDownloader
     {
+        /// <summary>
+        /// The method downloads a report content from URL
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
         public static StreamReader GetStreamReaderFromUrl(string url)
         {
             var request = (HttpWebRequest) WebRequest.Create(url);

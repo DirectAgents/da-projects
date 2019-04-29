@@ -7,6 +7,9 @@ using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.DBM.Composer
 {
+    /// <summary>
+    /// Composer of data for DBM reports
+    /// </summary>
     public class DbmReportDataComposer
     {
         private readonly List<ExtAccount> accounts;
@@ -16,6 +19,11 @@ namespace CakeExtracter.Etl.DBM.Composer
             this.accounts = accounts;
         }
 
+        /// <summary>
+        /// The method groups a list of line item report rows by required accounts.
+        /// </summary>
+        /// <param name="reportRows">List of line item report rows</param>
+        /// <returns>List of line item report data grouped by accounts</returns>
         public List<DbmAccountLineItemReportData> ComposeLineItemReportData(IEnumerable<DbmLineItemReportRow> reportRows)
         {
             var summariesGroupedByAccount = reportRows
@@ -36,6 +44,11 @@ namespace CakeExtracter.Etl.DBM.Composer
             return summariesGroupedByAccount;
         }
 
+        /// <summary>
+        /// The method groups a list of creative report rows by required accounts.
+        /// </summary>
+        /// <param name="reportRows">List of creative report rows</param>
+        /// <returns>List of creative report data grouped by accounts</returns>
         public List<DbmAccountCreativeReportData> ComposeCreativeReportData(IEnumerable<DbmCreativeReportRow> reportRows)
         {
             var summariesGroupedByAccount = reportRows

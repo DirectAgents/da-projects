@@ -5,6 +5,9 @@ using DirectAgents.Domain.Entities.CPProg.DBM.SummaryMetrics;
 
 namespace CakeExtracter.Etl.DBM.Extractors
 {
+    /// <summary>
+    /// Extractor of DBM line item summaries
+    /// </summary>
     internal class DbmLineItemExtractor : Extracter<DbmLineItemSummary>
     {
         private readonly DbmReportDataConverter converter;

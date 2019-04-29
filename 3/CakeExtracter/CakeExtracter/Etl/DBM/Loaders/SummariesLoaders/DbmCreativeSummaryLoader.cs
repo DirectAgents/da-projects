@@ -8,6 +8,9 @@ using DirectAgents.Domain.Entities.CPProg.DBM.SummaryMetrics;
 
 namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
 {
+    /// <summary>
+    /// Loader for DBM summaries of creative
+    /// </summary>
     public class DbmCreativeSummaryLoader : Loader<DbmCreativeSummary>
     {
         private readonly DbmCreativeLoader creativeLoader;

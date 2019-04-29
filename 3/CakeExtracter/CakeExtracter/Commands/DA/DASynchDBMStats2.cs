@@ -27,8 +27,7 @@ namespace CakeExtracter.Commands
     public class DASynchDBMStats2 : ConsoleCommand
     {
         private const int DefaultDaysAgo = 14;
-
-
+        
         /// <summary>
         /// Command argument: Account ID in the database for which the command will be executed (default = all)
         /// </summary>
@@ -50,11 +49,20 @@ namespace CakeExtracter.Commands
         /// </summary>
         public int? DaysAgoToStart { get; set; }
 
+        /// <summary>
+        /// Command argument: Store all reports from DBM portal in a separate folder
+        /// </summary>
         public bool KeepReports { get; set; }
         public static string SavedReportFileName = "dbm_{0}.csv";
         public static string SavedReportsDirectoryName = "SavedReports";
 
+        /// <summary>
+        /// List of creative report identifiers specified on the configuration file
+        /// </summary>
         public List<int> CreativeReportIds { get; set; }
+        /// <summary>
+        /// List of line item report identifiers specified on the configuration file
+        /// </summary>
         public List<int> LineItemReportIds { get; set; }
         
         private DBMUtility DbmUtility { get; set; }
