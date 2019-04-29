@@ -1,11 +1,14 @@
 ﻿using CakeExtracter;
 using CakeExtracter.Common;
+using CakeExtracter.Common.Constants;
+using Polly;
+using System;
 using System.Configuration;
 
 namespace CakeExtractor.SeleniumApplication.Synchers
 {
     /// <summary>
-    /// Syncher of normal and analytical tables for vcd data.
+    /// Helper for synchronization of normal and analytical tables for VCD data.
     /// </summary>
     public class VcdAnalyticTablesSyncher
     {
@@ -27,11 +30,18 @@ namespace CakeExtractor.SeleniumApplication.Synchers
         /// <param name="accountId">The account identifier.</param>
         public void SyncData(int accountId)
         {
-            Logger.Info(accountId, "Started sync vcd analytic table with normal tables");
-            const string syncScriptPathConfigName = "VcdSyncScriptPath";
-            var scriptPath = ConfigurationManager.AppSettings[syncScriptPathConfigName];
-            sqlScriptExecutor.ExecuteScriptWithParams(scriptPath, new string[] { accountId.ToString() });
-            Logger.Info(accountId, "Finished sync vcd analytic table with normal tables");
+            Logger.Info(accountId, "Started sync VCD analytic table with normal tables");
+            Policy
+                .Handle<Exception>()
+                .Retry(AnlyticTablesSyncConstants.maxRetryAttempts, (exception, retryCount, context) =>
+                    Logger.Warn(accountId, String.Format("Sync analytic table failed. Waiting {0} seconds before trying again.", AnlyticTablesSyncConstants.secondsToWait)))
+                .Execute(() =>
+                {
+                    const string syncScriptPathConfigName = "VcdSyncScriptPath";
+                    var scriptPath = ConfigurationManager.AppSettings[syncScriptPathConfigName];
+                    sqlScriptExecutor.ExecuteScriptWithParams(scriptPath, new string[] { accountId.ToString() });
+                });
+            Logger.Info(accountId, "Finished sync VCD analytic table with normal tables.");
         }
     }
 }

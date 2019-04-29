@@ -74,7 +74,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
             }
             catch (Exception e)
             {
-                var exception = new Exception($"Error occured while extracting data for {AccountInfo.Account.Name} ({AccountInfo.Account.Id}) account on {date} date.", e);
+                var exception = new Exception($"Error occurred while extracting data for {AccountInfo.Account.Name} ({AccountInfo.Account.Id}) account on {date} date.", e);
                 Logger.Error(AccountInfo.Account.Id, exception);
             }
         }
