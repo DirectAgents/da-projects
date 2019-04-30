@@ -410,11 +410,9 @@
     <Compile Include="Commands\DA\DASynchDBMStats.cs" />
     <Compile Include="Commands\DA\DASynchDBMStats2.cs" />
     <Compile Include="Commands\DA\DASynchFacebookMigration.cs" />
-    <Compile Include="Commands\DA\DASynchFacebookStats.cs" />
     <Compile Include="Commands\DA\DASynchKochavaStats.cs" />
     <Compile Include="Commands\DA\DASynchYAMStats.cs" />
     <Compile Include="Commands\EOMSynchCPCCommand.cs" />
-    <Compile Include="Commands\DA\DASynchFacebookAdPreviews.cs" />
     <Compile Include="Commands\DA\DASeed.cs" />
     <Compile Include="Commands\DA\DASynchAdrollAds.cs" />
     <Compile Include="Commands\DA\DASynchDBMStatsOld.cs" />
@@ -605,9 +603,8 @@
     <Compile Include="Commands\DA\DASynchAdrollStats.cs" />
     <Compile Include="Commands\DA\DASynchAdvertisers.cs" />
     <Compile Include="Commands\DA\DASynchDBMStats1.cs" />
-    <Compile Include="Commands\DA\DASynchFacebookStats.cs" />
-    <Compile Include="Commands\DA\DASynchDBMStats.cs" />
     <Compile Include="Commands\DA\DASynchFacebookStatsV2.cs" />
+	<Compile Include="Commands\DA\DASynchFacebookStats.cs" />
     <Compile Include="Commands\DA\DASynchOfferBudgetStats2.cs" />
     <Compile Include="Commands\DA\DASynchOfferBudgetStats.cs" />
     <Compile Include="Commands\DA\DASynchOfferDailySummaries.cs" />
