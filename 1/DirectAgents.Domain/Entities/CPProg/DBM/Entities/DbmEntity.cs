@@ -5,7 +5,7 @@ namespace DirectAgents.Domain.Entities.CPProg.DBM.Entities
     /// <summary>
     /// Db related entity
     /// </summary>
-    public class DbmEntity : DbmBaseEntity
+    public class DbmEntity
     {
         /// <summary>
         /// Gets or sets the item unique db identifier.

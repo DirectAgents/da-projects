@@ -238,13 +238,13 @@ namespace DirectAgents.Domain.Contexts
                 .Property(cds => cds.Revenue).HasPrecision(18, 6);
 
             //TD DBM
-            SetupDbmEntityModelValues<DbmAdvertiser>(modelBuilder, "DbmAdvertiser", tdSchema);
-            SetupDbmEntityModelValues<DbmCampaign>(modelBuilder, "DbmCampaign", tdSchema);
-            SetupDbmEntityModelValues<DbmInsertionOrder>(modelBuilder, "DbmInsertionOrder", tdSchema);
-            SetupDbmEntityModelValues<DbmLineItem>(modelBuilder, "DbmLineItem", tdSchema);
-            SetupDbmEntityModelValues<DbmCreative>(modelBuilder, "DbmCreative", tdSchema);
-            SetupDbmEntityModelValues<DbmLineItemSummary>(modelBuilder, "DbmLineItemSummary", tdSchema);
-            SetupDbmEntityModelValues<DbmCreativeSummary>(modelBuilder, "DbmCreativeSummary", tdSchema);
+            modelBuilder.Entity<DbmAdvertiser>().ToTable("DbmAdvertiser", tdSchema);
+            modelBuilder.Entity<DbmCampaign>().ToTable("DbmCampaign", tdSchema);
+            modelBuilder.Entity<DbmInsertionOrder>().ToTable("DbmInsertionOrder", tdSchema);
+            modelBuilder.Entity<DbmLineItem>().ToTable("DbmLineItem", tdSchema);
+            modelBuilder.Entity<DbmCreative>().ToTable("DbmCreative", tdSchema);
+            modelBuilder.Entity<DbmLineItemSummary>().ToTable("DbmLineItemSummary", tdSchema);
+            modelBuilder.Entity<DbmCreativeSummary>().ToTable("DbmCreativeSummary", tdSchema);
 
             SetupDbmSummaryMetricModelValues<DbmLineItemSummary>(modelBuilder, "LineItemId");
             SetupDbmSummaryMetricModelValues<DbmCreativeSummary>(modelBuilder, "CreativeId");
@@ -359,12 +359,6 @@ namespace DirectAgents.Domain.Contexts
                 .WillCascadeOnDelete();
         }
         
-        private static void SetupDbmEntityModelValues<TEntity>(DbModelBuilder modelBuilder, string entityTableName, string schema)
-            where TEntity : DbmBaseEntity
-        {
-            modelBuilder.Entity<TEntity>().ToTable(entityTableName, schema);
-        }
-
         private static void SetupDbmSummaryMetricModelValues<TSummaryMetrics>(DbModelBuilder modelBuilder, string entityColumnName)
             where TSummaryMetrics : DbmBaseSummaryEntity
         {

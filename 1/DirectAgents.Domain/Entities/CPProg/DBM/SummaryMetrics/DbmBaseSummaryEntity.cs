@@ -2,7 +2,7 @@
 
 namespace DirectAgents.Domain.Entities.CPProg.DBM.SummaryMetrics
 {
-    public class DbmBaseSummaryEntity : DbmBaseEntity
+    public class DbmBaseSummaryEntity
     {
         public DateTime Date { get; set; }
 

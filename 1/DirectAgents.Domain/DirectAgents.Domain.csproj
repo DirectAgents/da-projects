@@ -114,7 +114,6 @@
     <Compile Include="Concrete\RevTrackRepository.cs" />
     <Compile Include="Concrete\SecurityRepository.cs" />
     <Compile Include="Concrete\SpecialPlatformRepository.cs" />
-    <Compile Include="Entities\CPProg\DBM\DbmBaseEntity.cs" />
     <Compile Include="Entities\CPProg\DBM\Entities\DbmAdvertiser.cs" />
     <Compile Include="Entities\CPProg\DBM\Entities\DbmEntity.cs" />
     <Compile Include="Entities\CPProg\DBM\Entities\DbmCampaign.cs" />
