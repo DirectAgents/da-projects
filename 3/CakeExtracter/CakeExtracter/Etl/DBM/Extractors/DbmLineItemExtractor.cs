@@ -31,16 +31,16 @@ namespace CakeExtracter.Etl.DBM.Extractors
             converter = new DbmReportDataConverter();
         }
         
-        public IEnumerable<DbmLineItemSummary> Extract()
+        public List<DbmLineItemSummary> Extract()
         {
             try
             {
-                Logger.Info($"Start processing line item report [report ID: {reportId}]...");
+                Logger.Info($"Start extracting line item report [report ID: {reportId}]...");
 
                 var summariesGroups = PrepareLineItemReportData();
                 var summaries = GetLineItemSummaries(summariesGroups);
 
-                Logger.Info($"Finished processing line item report [report ID: {reportId}]");
+                Logger.Info($"Finished extracting line item report [report ID: {reportId}] (items extracted [{summaries.Count}])");
                 return summaries;
             }
             catch (Exception e)
@@ -57,7 +57,7 @@ namespace CakeExtracter.Etl.DBM.Extractors
             return summariesGroups;
         }
 
-        private IEnumerable<DbmLineItemSummary> GetLineItemSummaries(IEnumerable<DbmAccountLineItemReportData> summariesGroups)
+        private List<DbmLineItemSummary> GetLineItemSummaries(IEnumerable<DbmAccountLineItemReportData> summariesGroups)
         {
             var allLineItemSummaries = new List<DbmLineItemSummary>();
             foreach (var lineItemReportData in summariesGroups)
@@ -70,12 +70,7 @@ namespace CakeExtracter.Etl.DBM.Extractors
 
         private IEnumerable<DbmLineItemSummary> GetAccountSummariesFromReportData(DbmAccountLineItemReportData reportData)
         {
-            var account = reportData.Account;
-            Logger.Info(account.Id, "DBM ETL Line Item. Account ({0}) {1}", account.Id, account.Name);
-
             var summariesForAccount = converter.ConvertLineItemReportDataToSummaries(reportData);
-
-            Logger.Info(account.Id, "Finished DBM ETL Line Item for account ({0}) {1}", account.Id, account.Name);
             return summariesForAccount;
         }
 

@@ -27,10 +27,11 @@ namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
             this.dateRange = dateRange;
         }
 
-        public void Load(IEnumerable<DbmCreativeSummary> summaries)
+        public void Load(List<DbmCreativeSummary> summaries)
         {
             Logger.Info("Started loading creative summaries...");
 
+            EnsureCreativeEntitiesData(summaries);
             var summaryGroups = GetSummariesGroupedByAccount(summaries);
             foreach (var summaryGroup in summaryGroups)
             {
@@ -48,9 +49,12 @@ namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
         private void LoadSummariesForAccount(IGrouping<int?, DbmCreativeSummary> summaryForAccount)
         {
             var accountId = Convert.ToInt32(summaryForAccount.Key);
-            EnsureCreativeEntitiesData(summaryForAccount);
+            Logger.Info(accountId, "DBM ETL Creative. Account ID = {0}", accountId);
+            
             DeleteOldSummariesFromDb(accountId);
             LoadSummariesToDb(summaryForAccount);
+
+            Logger.Info(accountId, "Finished DBM ETL Creative for account (ID = {0})", accountId);
         }
 
         private void EnsureCreativeEntitiesData(IEnumerable<DbmCreativeSummary> summaries)

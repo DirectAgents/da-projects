@@ -29,10 +29,11 @@ namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
             this.dateRange = dateRange;
         }
 
-        public void Load(IEnumerable<DbmLineItemSummary> summaries)
+        public void Load(List<DbmLineItemSummary> summaries)
         {
             Logger.Info("Started loading line item summaries...");
 
+            EnsureLineItemEntitiesData(summaries);
             var summaryGroups = GetSummariesGroupedByAccount(summaries);
             foreach (var summaryGroup in summaryGroups)
             {
@@ -50,9 +51,12 @@ namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
         private void LoadSummariesForAccount(IGrouping<int?, DbmLineItemSummary> summaryForAccount)
         {
             var accountId = Convert.ToInt32(summaryForAccount.Key);
-            EnsureLineItemEntitiesData(summaryForAccount);
+            Logger.Info(accountId, "DBM ETL Line Item. Account (ID = {0})", accountId);
+            
             DeleteOldSummariesFromDb(accountId);
             LoadSummariesToDb(summaryForAccount);
+
+            Logger.Info(accountId, "Finished DBM ETL Line Item for account (ID = {0})", accountId);
         }
 
         private void EnsureLineItemEntitiesData(IEnumerable<DbmLineItemSummary> summaries)

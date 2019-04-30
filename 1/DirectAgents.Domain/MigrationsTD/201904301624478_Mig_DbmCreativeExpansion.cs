@@ -30,7 +30,7 @@ namespace DirectAgents.Domain.MigrationsTD
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        Currency = c.String(),
+                        CurrencyCode = c.String(),
                         ExternalId = c.String(),
                         Name = c.String(),
                         AccountId = c.Int(),
@@ -45,8 +45,8 @@ namespace DirectAgents.Domain.MigrationsTD
                     {
                         Id = c.Int(nullable: false, identity: true),
                         AdvertiserId = c.Int(),
-                        Height = c.String(),
-                        Width = c.String(),
+                        Height = c.Int(),
+                        Width = c.Int(),
                         Size = c.String(),
                         Type = c.String(),
                         ExternalId = c.String(),
@@ -65,11 +65,11 @@ namespace DirectAgents.Domain.MigrationsTD
                     {
                         CreativeId = c.Int(nullable: false),
                         Date = c.DateTime(nullable: false),
-                        Cost = c.Decimal(nullable: false, precision: 18, scale: 6),
-                        Impressions = c.Decimal(nullable: false, precision: 18, scale: 6),
-                        Clicks = c.Decimal(nullable: false, precision: 18, scale: 6),
-                        PostClickConv = c.Decimal(nullable: false, precision: 18, scale: 6),
-                        PostViewConv = c.Decimal(nullable: false, precision: 18, scale: 6),
+                        Revenue = c.Decimal(nullable: false, precision: 18, scale: 6),
+                        Impressions = c.Int(nullable: false),
+                        Clicks = c.Int(nullable: false),
+                        PostClickConversions = c.Int(nullable: false),
+                        PostViewConversions = c.Int(nullable: false),
                         CMPostClickRevenue = c.Decimal(nullable: false, precision: 18, scale: 6),
                         CMPostViewRevenue = c.Decimal(nullable: false, precision: 18, scale: 6),
                     })
@@ -116,11 +116,11 @@ namespace DirectAgents.Domain.MigrationsTD
                     {
                         LineItemId = c.Int(nullable: false),
                         Date = c.DateTime(nullable: false),
-                        Cost = c.Decimal(nullable: false, precision: 18, scale: 6),
-                        Impressions = c.Decimal(nullable: false, precision: 18, scale: 6),
-                        Clicks = c.Decimal(nullable: false, precision: 18, scale: 6),
-                        PostClickConv = c.Decimal(nullable: false, precision: 18, scale: 6),
-                        PostViewConv = c.Decimal(nullable: false, precision: 18, scale: 6),
+                        Revenue = c.Decimal(nullable: false, precision: 18, scale: 6),
+                        Impressions = c.Int(nullable: false),
+                        Clicks = c.Int(nullable: false),
+                        PostClickConversions = c.Int(nullable: false),
+                        PostViewConversions = c.Int(nullable: false),
                         CMPostClickRevenue = c.Decimal(nullable: false, precision: 18, scale: 6),
                         CMPostViewRevenue = c.Decimal(nullable: false, precision: 18, scale: 6),
                     })

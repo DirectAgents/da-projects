@@ -11,7 +11,6 @@ using DirectAgents.Domain.Entities.CPProg.Vendor.SummaryMetrics;
 using DirectAgents.Domain.Entities.CPProg.DSP;
 using DirectAgents.Domain.Entities.CPProg.DSP.SummaryMetrics;
 using DirectAgents.Domain.Entities.CPProg.CJ;
-using DirectAgents.Domain.Entities.CPProg.DBM;
 using DirectAgents.Domain.Entities.CPProg.DBM.Entities;
 using DirectAgents.Domain.Entities.CPProg.DBM.SummaryMetrics;
 using DirectAgents.Domain.Entities.CPProg.Kochava;
@@ -364,11 +363,11 @@ namespace DirectAgents.Domain.Contexts
         {
             modelBuilder.Entity<TSummaryMetrics>().HasKey(summary => new {summary.EntityId, summary.Date});
             modelBuilder.Entity<TSummaryMetrics>().Property(x => x.EntityId).HasColumnName(entityColumnName);
-            modelBuilder.Entity<TSummaryMetrics>().Property(m => m.Cost).HasPrecision(18, 6);
-            modelBuilder.Entity<TSummaryMetrics>().Property(m => m.Impressions).HasPrecision(18, 6);
-            modelBuilder.Entity<TSummaryMetrics>().Property(m => m.Clicks).HasPrecision(18, 6);
-            modelBuilder.Entity<TSummaryMetrics>().Property(m => m.PostClickConv).HasPrecision(18, 6);
-            modelBuilder.Entity<TSummaryMetrics>().Property(m => m.PostViewConv).HasPrecision(18, 6);
+            modelBuilder.Entity<TSummaryMetrics>().Property(m => m.Revenue).HasPrecision(18, 6);
+            modelBuilder.Entity<TSummaryMetrics>().Property(m => m.Impressions);
+            modelBuilder.Entity<TSummaryMetrics>().Property(m => m.Clicks);
+            modelBuilder.Entity<TSummaryMetrics>().Property(m => m.PostClickConversions);
+            modelBuilder.Entity<TSummaryMetrics>().Property(m => m.PostViewConversions);
             modelBuilder.Entity<TSummaryMetrics>().Property(m => m.CMPostClickRevenue).HasPrecision(18, 6);
             modelBuilder.Entity<TSummaryMetrics>().Property(m => m.CMPostViewRevenue).HasPrecision(18, 6);
         }

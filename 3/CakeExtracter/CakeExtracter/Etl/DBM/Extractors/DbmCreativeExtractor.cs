@@ -31,16 +31,16 @@ namespace CakeExtracter.Etl.DBM.Extractors
             converter = new DbmReportDataConverter();
         }
 
-        public IEnumerable<DbmCreativeSummary> Extract()
+        public List<DbmCreativeSummary> Extract()
         {
             try
             {
-                Logger.Info($"Start processing creative report [report ID: {reportId}]...");
+                Logger.Info($"Start extracting creative report [report ID: {reportId}]...");
 
                 var summariesGroups = PrepareCreativeReportData();
                 var summaries = GetCreativeSummaries(summariesGroups);
 
-                Logger.Info($"Finished processing creative report [report ID: {reportId}]");
+                Logger.Info($"Finished extracting creative report [report ID: {reportId}] (items extracted [{summaries.Count}])");
                 return summaries;
             }
             catch (Exception e)
@@ -57,7 +57,7 @@ namespace CakeExtracter.Etl.DBM.Extractors
             return summariesGroups;
         }
 
-        private IEnumerable<DbmCreativeSummary> GetCreativeSummaries(IEnumerable<DbmAccountCreativeReportData> summariesGroups)
+        private List<DbmCreativeSummary> GetCreativeSummaries(IEnumerable<DbmAccountCreativeReportData> summariesGroups)
         {
             var allCreativeSummaries = new List<DbmCreativeSummary>();
             foreach (var creativeReportData in summariesGroups)
@@ -70,13 +70,7 @@ namespace CakeExtracter.Etl.DBM.Extractors
 
         private IEnumerable<DbmCreativeSummary> GetAccountSummariesFromReportData(DbmAccountCreativeReportData reportData)
         {
-            var account = reportData.Account;
-            Logger.Info(account.Id, "DBM ETL Creative. Account ({0}) {1}", account.Id, account.Name);
-
             var summariesForAccount = converter.ConvertCreativeReportDataToSummaries(reportData);
-            
-            Logger.Info(account.Id, "Finished DBM ETL Creative for account ({0}) {1}", account.Id,
-                account.Name);
             return summariesForAccount;
         }
         

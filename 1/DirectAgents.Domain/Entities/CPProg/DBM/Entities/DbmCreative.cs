@@ -9,9 +9,9 @@ namespace DirectAgents.Domain.Entities.CPProg.DBM.Entities
         [ForeignKey("AdvertiserId")]
         public virtual DbmAdvertiser Advertiser { get; set; }
 
-        public string Height { get; set; }
+        public int? Height { get; set; }
 
-        public string Width { get; set; }
+        public int? Width { get; set; }
 
         public string Size { get; set; }
 

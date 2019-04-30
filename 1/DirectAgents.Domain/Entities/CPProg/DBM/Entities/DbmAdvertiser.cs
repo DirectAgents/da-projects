@@ -2,6 +2,6 @@
 {
     public class DbmAdvertiser : DbmEntity
     {
-        public string Currency { get; set; }
+        public string CurrencyCode { get; set; }
     }
 }

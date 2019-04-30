@@ -8,15 +8,15 @@ namespace DirectAgents.Domain.Entities.CPProg.DBM.SummaryMetrics
 
         public int? EntityId { get; set; }
 
-        public decimal Cost { get; set; }
+        public decimal Revenue { get; set; }
 
-        public decimal Impressions { get; set; }
+        public int Impressions { get; set; }
 
-        public decimal Clicks { get; set; }
+        public int Clicks { get; set; }
 
-        public decimal PostClickConv { get; set; }
+        public int PostClickConversions { get; set; }
 
-        public decimal PostViewConv { get; set; }
+        public int PostViewConversions { get; set; }
 
         public decimal CMPostClickRevenue { get; set; }
 
