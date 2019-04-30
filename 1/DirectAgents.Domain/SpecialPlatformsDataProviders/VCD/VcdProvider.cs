@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DirectAgents.Domain.Contexts;
-using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.SpecialPlatformProviders.Contracts;
+using DirectAgents.Domain.SpecialPlatformsDataProviders.Models;
 
 namespace DirectAgents.Domain.SpecialPlatformProviders.Implementation
 {
@@ -13,19 +13,19 @@ namespace DirectAgents.Domain.SpecialPlatformProviders.Implementation
         {
         }
 
-        public override IEnumerable<SpecialPlatformSummary> GetDatesRangeByAccounts(ClientPortalProgContext context)
+        public override IEnumerable<SpecialPlatformLatestsSummary> GetDatesRangeByAccounts(ClientPortalProgContext context)
         {
             var vcdSummaries = GetSummariesGroupedByAccountId(context).ToList();
             AssignExtAccountForSummaries(vcdSummaries, context);
             return vcdSummaries;
         }
 
-        private static IEnumerable<SpecialPlatformSummary> GetSummariesGroupedByAccountId(
+        private IEnumerable<SpecialPlatformLatestsSummary> GetSummariesGroupedByAccountId(
             ClientPortalProgContext context)
         {
             return context.VcdAnalytic
                 .GroupBy(x => x.AccountId)
-                .Select(x => new SpecialPlatformSummary
+                .Select(x => new SpecialPlatformLatestsSummary
                 {
                     AccountId = x.Key,
                     EarliestDate = x.Min(z => z.Date),
