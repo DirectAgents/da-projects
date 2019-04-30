@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.DBM.Loaders.EntitiesLoaders;
@@ -11,38 +12,43 @@ namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
     /// <summary>
     /// Loader for DBM summaries of creative
     /// </summary>
-    public class DbmCreativeSummaryLoader : Loader<DbmCreativeSummary>
+    public class DbmCreativeSummaryLoader
     {
         private readonly DbmCreativeLoader creativeLoader;
         private readonly DateRange dateRange;
 
         private static readonly object lockObject = new object();
-        private const int batchSize = 1000;
-
-        private readonly List<DbmCreativeSummary> latestSummaries = new List<DbmCreativeSummary>();
-
-        public DbmCreativeSummaryLoader(int accountId, DateRange dateRange) 
-            : base(accountId, batchSize)
+        
+        public DbmCreativeSummaryLoader(DateRange dateRange) 
         {
             var advertiserLoader = new DbmAdvertiserLoader();
             creativeLoader = new DbmCreativeLoader(advertiserLoader);
             this.dateRange = dateRange;
         }
 
-        protected override int Load(List<DbmCreativeSummary> summaries)
+        public void Load(IEnumerable<DbmCreativeSummary> summaries)
         {
-            EnsureCreativeEntitiesData(summaries);
-            var uniqueSummaries = summaries.GroupBy(s => new { s.EntityId, s.Date }).Select(gr => gr.First()).ToList();
-            var notProcessedSummaries = uniqueSummaries
-                .Where(s => !latestSummaries.Any(ls => s.EntityId == ls.EntityId && s.Date == ls.Date)).ToList();
-            latestSummaries.AddRange(notProcessedSummaries);
-            return summaries.Count;
+            Logger.Info("Started loading creative summaries...");
+
+            var summaryGroups = GetSummariesGroupedByAccount(summaries);
+            foreach (var summaryGroup in summaryGroups)
+            {
+                LoadSummariesForAccount(summaryGroup);
+            }
+            Logger.Info("Finished loading creative summaries.");
         }
 
-        protected override void AfterLoad()
+        private IEnumerable<IGrouping<int?, DbmCreativeSummary>> GetSummariesGroupedByAccount(IEnumerable<DbmCreativeSummary> summaries)
         {
-            DeleteOldSummariesFromDb();
-            LoadLatestSummariesToDb(latestSummaries);
+            return summaries.GroupBy(summary => summary.Creative.AccountId);
+        }
+
+        private void LoadSummariesForAccount(IGrouping<int?, DbmCreativeSummary> summaryForAccount)
+        {
+            var accountId = Convert.ToInt32(summaryForAccount.Key);
+            EnsureCreativeEntitiesData(summaryForAccount.ToList());
+            DeleteOldSummariesFromDb(accountId);
+            LoadSummariesToDb(summaryForAccount);
         }
 
         private void EnsureCreativeEntitiesData(List<DbmCreativeSummary> summaries)
@@ -52,7 +58,7 @@ namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
             summaries.ForEach(summary => { summary.EntityId = summary.Creative.Id; });
         }
 
-        private void DeleteOldSummariesFromDb()
+        private void DeleteOldSummariesFromDb(int accountId)
         {
             Logger.Info(accountId, $"Started cleaning of creative summaries has begun - {dateRange.ToString()}");
             SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
@@ -63,12 +69,13 @@ namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
             Logger.Info(accountId, $"The cleaning of creative summaries is over - {dateRange.ToString()})");
         }
 
-        private void LoadLatestSummariesToDb(IReadOnlyCollection<DbmCreativeSummary> summaries)
+        private void LoadSummariesToDb(IGrouping<int?, DbmCreativeSummary> summaryForAccount)
         {
+            var accountId = Convert.ToInt32(summaryForAccount.Key);
             Logger.Info(accountId, $"Started loading of creative summaries has begun - {dateRange.ToString()}");
             SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
-                db.BulkInsert(summaries);
+                db.BulkInsert(summaryForAccount);
             }, lockObject, "BulkInsert");
             Logger.Info(accountId, $"The loading of creative summaries is over - {dateRange.ToString()})");
         }
