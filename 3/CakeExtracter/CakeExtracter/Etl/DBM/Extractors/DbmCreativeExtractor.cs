@@ -1,36 +1,98 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using CakeExtracter.Common;
+using CakeExtracter.Etl.DBM.Composer;
 using CakeExtracter.Etl.DBM.Extractors.Parsers.ParsingConverters;
 using CakeExtracter.Etl.DBM.Models;
+using DBM;
+using DBM.Parsers.Models;
 using DirectAgents.Domain.Entities.CPProg.DBM.SummaryMetrics;
+using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.DBM.Extractors
 {
     /// <summary>
     /// Extractor of DBM creative summaries
     /// </summary>
-    internal class DbmCreativeExtractor: Extracter<DbmCreativeSummary>
+    internal class DbmCreativeExtractor : DbmExtractor
     {
+        private readonly IEnumerable<ExtAccount> accounts;
+        private readonly int reportId;
+        private readonly DbmReportDataComposer composer;
         private readonly DbmReportDataConverter converter;
-        private readonly DbmAccountCreativeReportData reportData;
 
-        public DbmCreativeExtractor(DbmAccountCreativeReportData reportData) 
+        public DbmCreativeExtractor(DBMUtility dbmUtility, DateRange dateRange, IEnumerable<ExtAccount> accounts,
+            int creativeReportId, bool keepReports) : base(dbmUtility, dateRange, keepReports)
         {
+            this.accounts = accounts;
+            this.reportId = creativeReportId;
+            composer = new DbmReportDataComposer(this.accounts);
             converter = new DbmReportDataConverter();
-            this.reportData = reportData;
         }
 
-        protected override void Extract()
+        public IEnumerable<DbmCreativeSummary> Extract()
         {
             try
             {
-                var creativeSummaries = converter.ConvertCreativeReportDataToSummaries(reportData);
-                Add(creativeSummaries);
+                Logger.Info($"Start processing creative report [report ID: {reportId}]...");
+
+                var summariesGroups = PrepareCreativeReportData();
+                var summaries = GetCreativeSummaries(summariesGroups);
+
+                Logger.Info($"Finished processing creative report [report ID: {reportId}]");
+                return summaries;
             }
             catch (Exception e)
             {
-                Logger.Error(e);
+                throw new Exception("Failed extracting creative summaries.", e);
             }
-            End();
+        }
+
+        private IEnumerable<DbmAccountCreativeReportData> PrepareCreativeReportData()
+        {
+            var reportContent = GetReportContent(reportId);
+            var reportRows = GetCreativeRows(reportContent);
+            var summariesGroups = GetCreativeSummariesGroupedByAccount(reportRows);
+            return summariesGroups;
+        }
+
+        private IEnumerable<DbmCreativeSummary> GetCreativeSummaries(IEnumerable<DbmAccountCreativeReportData> summariesGroups)
+        {
+            var allCreativeSummaries = new List<DbmCreativeSummary>();
+            foreach (var creativeReportData in summariesGroups)
+            {
+                var summariesForAccount = GetAccountSummariesFromReportData(creativeReportData);
+                allCreativeSummaries.AddRange(summariesForAccount);
+            }
+            return allCreativeSummaries;
+        }
+
+        private IEnumerable<DbmCreativeSummary> GetAccountSummariesFromReportData(DbmAccountCreativeReportData reportData)
+        {
+            var account = reportData.Account;
+            Logger.Info(account.Id, "DBM ETL Creative. Account ({0}) {1}", account.Id, account.Name);
+
+            var summariesForAccount = converter.ConvertCreativeReportDataToSummaries(reportData);
+            
+            Logger.Info(account.Id, "Finished DBM ETL Creative for account ({0}) {1}", account.Id,
+                account.Name);
+            return summariesForAccount;
+        }
+        
+        private IEnumerable<DbmCreativeReportRow> GetCreativeRows(StreamReader reportContent)
+        {
+            var rowMap = new DbmCreativeReportEntityRowMap();
+            var creativeReportRows = GetReportRows<DbmCreativeReportRow>(reportContent, rowMap);
+            return creativeReportRows;
+        }
+
+        private IEnumerable<DbmAccountCreativeReportData> GetCreativeSummariesGroupedByAccount(IEnumerable<DbmCreativeReportRow> reportRows)
+        {
+            Logger.Info("Composing report data...");
+            var summariesGroupedByAccount = composer.ComposeCreativeReportData(reportRows);
+            Logger.Info($"Report data composed. Retrieved groups by account (group count: {summariesGroupedByAccount.Count})");
+            return summariesGroupedByAccount;
         }
     }
 }

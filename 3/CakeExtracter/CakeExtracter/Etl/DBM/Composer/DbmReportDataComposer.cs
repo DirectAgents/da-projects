@@ -12,9 +12,9 @@ namespace CakeExtracter.Etl.DBM.Composer
     /// </summary>
     public class DbmReportDataComposer
     {
-        private readonly List<ExtAccount> accounts;
+        private readonly IEnumerable<ExtAccount> accounts;
 
-        public DbmReportDataComposer(List<ExtAccount> accounts)
+        public DbmReportDataComposer(IEnumerable<ExtAccount> accounts)
         {
             this.accounts = accounts;
         }
