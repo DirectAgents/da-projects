@@ -3,11 +3,13 @@ using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using FacebookAPI;
 using FacebookAPI.Entities;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 
 namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 {
+    [Obsolete]
     public class FacebookDailySummaryLoader : Loader<FBSummary>
     {
         public FacebookDailySummaryLoader(int accountId)

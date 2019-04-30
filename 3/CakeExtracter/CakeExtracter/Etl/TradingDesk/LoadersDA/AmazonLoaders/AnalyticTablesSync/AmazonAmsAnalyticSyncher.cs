@@ -1,10 +1,13 @@
 ﻿using CakeExtracter.Common;
+using CakeExtracter.Common.Constants;
+using Polly;
+using System;
 using System.Configuration;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders.AnalyticTablesSync
 {
     /// <summary>
-    /// Syncher from amazon ams normal tables to analytic tables.
+    /// Helper for synchronization data from amazon ams normal tables to analytic tables.
     /// </summary>
     public class AmazonAmsAnalyticSyncher
     {
@@ -27,9 +30,16 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders.AnalyticTablesSy
         public void SyncAsinLevelForAccount(int accountId)
         {
             Logger.Info(accountId, "Started syncing asin analytic table with normal tables");
-            const string syncScriptPathConfigName = "AmazonAmsAsinSyncScriptPath";
-            var scriptPath = ConfigurationManager.AppSettings[syncScriptPathConfigName];
-            sqlScriptExecutor.ExecuteScriptWithParams(scriptPath, new string[] { accountId.ToString() });
+            Policy
+                .Handle<Exception>()
+                .Retry(AnlyticTablesSyncConstants.maxRetryAttempts, (exception, retryCount, context) =>
+                    Logger.Warn(accountId, String.Format("Sync analytic table failed. Waiting {0} seconds before trying again.", AnlyticTablesSyncConstants.secondsToWait)))
+                .Execute(() =>
+                {
+                    const string syncScriptPathConfigName = "AmazonAmsAsinSyncScriptPath";
+                    var scriptPath = ConfigurationManager.AppSettings[syncScriptPathConfigName];
+                    sqlScriptExecutor.ExecuteScriptWithParams(scriptPath, new string[] { accountId.ToString() });
+                });
             Logger.Info(accountId, "Finished syncing asin analytic table with normal tables");
         }
     }

@@ -237,7 +237,7 @@ namespace CakeExtracter.Commands
         {
             try
             {
-                CommandExecutionContext.Current?.SetJobExecutionStateInHistory("Synch analytic table." ,accountId);
+                CommandExecutionContext.Current?.SetJobExecutionStateInHistory("Sync analytic table." ,accountId);
                 AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
                 {
                     var amazonAmsSyncher = new AmazonAmsAnalyticSyncher();
@@ -246,7 +246,7 @@ namespace CakeExtracter.Commands
             }
             catch (Exception ex)
             {
-                Logger.Error(new Exception("Error occured while synching asin analytic table", ex));
+                Logger.Error(new Exception("Error occurred while Asin analytic table sync.", ex));
             }
         }
     }

@@ -46,5 +46,7 @@ namespace DirectAgents.Domain.Entities.Cake
         public virtual Currency PaidCurr { get; set; }
         public int ReceivedCurrId { get; set; }
         public virtual Currency ReceivedCurr { get; set; }
+
+        public string TransactionId { get; set; }
     }
 }

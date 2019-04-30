@@ -84,6 +84,7 @@ namespace CakeExtracter.CakeMarketingApi.Entities
             ec.Received = this.Received.Amount;
             ec.PaidCurrId = this.Paid.CurrencyId;
             ec.ReceivedCurrId = this.Received.CurrencyId;
+            ec.TransactionId = this.TransactionId;
         }
     }
 }
