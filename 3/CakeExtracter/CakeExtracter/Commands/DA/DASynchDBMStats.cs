@@ -164,7 +164,8 @@ namespace CakeExtracter.Commands.DA
                 var extractor = new DbmLineItemExtractor(DbmUtility, dateRange, accounts, lineItemReportId, KeepReports);
                 var summaries = extractor.Extract();
 
-
+                var loader = new DbmLineItemSummaryLoader(dateRange);
+                loader.Load(summaries);
             }
             catch (Exception e)
             {

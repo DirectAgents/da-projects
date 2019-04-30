@@ -1,28 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.DBM.Loaders.EntitiesLoaders;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg.DBM.SummaryMetrics;
+using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 
 namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
 {
     /// <summary>
     /// Loader for DBM summaries of line item
     /// </summary>
-    public class DbmLineItemSummaryLoader : Loader<DbmLineItemSummary>
+    public class DbmLineItemSummaryLoader
     {
         private readonly DbmLineItemLoader lineItemLoader;
         private readonly DateRange dateRange;
 
         private static readonly object lockObject = new object();
-        private const int batchSize = 1000;
-
-        private readonly List<DbmLineItemSummary> latestSummaries = new List<DbmLineItemSummary>();
-
-        public DbmLineItemSummaryLoader(int accountId, DateRange dateRange) 
-            : base(accountId, batchSize)
+        
+        public DbmLineItemSummaryLoader(DateRange dateRange) 
         {
             var advertiserLoader = new DbmAdvertiserLoader();
             var campaignLoader = new DbmCampaignLoader(advertiserLoader);
@@ -31,46 +29,57 @@ namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
             this.dateRange = dateRange;
         }
 
-        protected override int Load(List<DbmLineItemSummary> summaries)
+        public void Load(IEnumerable<DbmLineItemSummary> summaries)
         {
-            EnsureLineItemEntitiesData(summaries);
-            var uniqueSummaries = summaries.GroupBy(s => new {s.EntityId, s.Date}).Select(gr => gr.First()).ToList();
-            var notProcessedSummaries = uniqueSummaries
-                .Where(s => !latestSummaries.Any(ls => s.EntityId == ls.EntityId && s.Date == ls.Date)).ToList();
-            latestSummaries.AddRange(notProcessedSummaries);
-            return summaries.Count;
+            Logger.Info("Started loading line item summaries...");
+
+            var summaryGroups = GetSummariesGroupedByAccount(summaries);
+            foreach (var summaryGroup in summaryGroups)
+            {
+                LoadSummariesForAccount(summaryGroup);
+            }
+            Logger.Info("Finished loading line item summaries.");
         }
 
-        protected override void AfterLoad()
+        private static IEnumerable<IGrouping<int?, DbmLineItemSummary>> GetSummariesGroupedByAccount(
+            IEnumerable<DbmLineItemSummary> summaries)
         {
-            DeleteOldSummariesFromDb();
-            LoadLatestSummariesToDb(latestSummaries);
+            return summaries.GroupBy(summary => summary.LineItem.AccountId);
         }
 
-        private void EnsureLineItemEntitiesData(List<DbmLineItemSummary> summaries)
+        private void LoadSummariesForAccount(IGrouping<int?, DbmLineItemSummary> summaryForAccount)
+        {
+            var accountId = Convert.ToInt32(summaryForAccount.Key);
+            EnsureLineItemEntitiesData(summaryForAccount);
+            DeleteOldSummariesFromDb(accountId);
+            LoadSummariesToDb(summaryForAccount);
+        }
+
+        private void EnsureLineItemEntitiesData(IEnumerable<DbmLineItemSummary> summaries)
         {
             var lineItems = summaries.Select(summary => summary.LineItem).Where(summary => summary != null).ToList();
             lineItemLoader.AddUpdateDependentEntities(lineItems);
             summaries.ForEach(summary => { summary.EntityId = summary.LineItem.Id; });
         }
 
-        private void DeleteOldSummariesFromDb()
+        private void DeleteOldSummariesFromDb(int accountId)
         {
             Logger.Info(accountId, $"Started cleaning of line item summaries has begun - {dateRange.ToString()}");
             SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
                 db.DbmLineItemSummaries.Where(x => (x.Date >= dateRange.FromDate && x.Date <= dateRange.ToDate)
-                && x.LineItem.InsertionOrder.Campaign.Advertiser.AccountId == accountId).DeleteFromQuery();
+                && x.LineItem.AccountId == accountId).DeleteFromQuery();
             }, lockObject, "BulkDeleteByQuery");
             Logger.Info(accountId, $"The cleaning of line item summaries is over - {dateRange.ToString()})");
         }
 
-        private void LoadLatestSummariesToDb(IReadOnlyCollection<DbmLineItemSummary> summaries)
+        private void LoadSummariesToDb(IGrouping<int?, DbmLineItemSummary> summaryForAccount)
         {
+            var accountId = Convert.ToInt32(summaryForAccount.Key);
             Logger.Info(accountId, $"Started loading of line item summaries has begun - {dateRange.ToString()}");
             SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
-                db.BulkInsert(summaries);
+                db.BulkInsert(summaryForAccount);
             }, lockObject, "BulkInsert");
             Logger.Info(accountId, $"The loading of line item summaries is over - {dateRange.ToString()})");
         }

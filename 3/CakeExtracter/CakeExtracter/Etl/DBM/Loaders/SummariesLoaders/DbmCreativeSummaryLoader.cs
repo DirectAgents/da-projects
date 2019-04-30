@@ -6,6 +6,7 @@ using CakeExtracter.Etl.DBM.Loaders.EntitiesLoaders;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg.DBM.SummaryMetrics;
+using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 
 namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
 {
@@ -38,7 +39,8 @@ namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
             Logger.Info("Finished loading creative summaries.");
         }
 
-        private IEnumerable<IGrouping<int?, DbmCreativeSummary>> GetSummariesGroupedByAccount(IEnumerable<DbmCreativeSummary> summaries)
+        private static IEnumerable<IGrouping<int?, DbmCreativeSummary>> GetSummariesGroupedByAccount(
+            IEnumerable<DbmCreativeSummary> summaries)
         {
             return summaries.GroupBy(summary => summary.Creative.AccountId);
         }
@@ -46,12 +48,12 @@ namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
         private void LoadSummariesForAccount(IGrouping<int?, DbmCreativeSummary> summaryForAccount)
         {
             var accountId = Convert.ToInt32(summaryForAccount.Key);
-            EnsureCreativeEntitiesData(summaryForAccount.ToList());
+            EnsureCreativeEntitiesData(summaryForAccount);
             DeleteOldSummariesFromDb(accountId);
             LoadSummariesToDb(summaryForAccount);
         }
 
-        private void EnsureCreativeEntitiesData(List<DbmCreativeSummary> summaries)
+        private void EnsureCreativeEntitiesData(IEnumerable<DbmCreativeSummary> summaries)
         {
             var creatives = summaries.Select(summary => summary.Creative).Where(summary => summary != null).ToList();
             creativeLoader.AddUpdateDependentEntities(creatives);
@@ -64,7 +66,7 @@ namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
             SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
             {
                 db.DbmCreativeSummaries.Where(x => (x.Date >= dateRange.FromDate && x.Date <= dateRange.ToDate)
-                && x.Creative.Advertiser.AccountId == accountId).DeleteFromQuery();
+                && x.Creative.AccountId == accountId).DeleteFromQuery();
             }, lockObject, "BulkDeleteByQuery");
             Logger.Info(accountId, $"The cleaning of creative summaries is over - {dateRange.ToString()})");
         }
