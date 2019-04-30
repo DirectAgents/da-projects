@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CakeExtracter.Common;
+using CakeExtracter.Etl.DBM.Extractors.Parsers.Models;
 using CsvHelper;
 using CsvHelper.Configuration;
-using DBM.Parsers.Models;
 
 namespace CakeExtracter.Etl.DBM.Extractors.Parsers
 {

@@ -1,6 +1,6 @@
-﻿using CakeExtracter.Etl.DSP.Extractors.Parser.ParsingConverters;
+﻿using CakeExtracter.Etl.DBM.Extractors.Parsers.Models;
+using CakeExtracter.Etl.DSP.Extractors.Parser.ParsingConverters;
 using CsvHelper.Configuration;
-using DBM.Parsers.Models;
 
 namespace CakeExtracter.Etl.DBM.Extractors.Parsers.ParsingConverters
 {

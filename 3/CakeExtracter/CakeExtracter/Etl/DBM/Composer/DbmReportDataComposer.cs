@@ -2,7 +2,6 @@
 using System.Linq;
 using CakeExtracter.Etl.DBM.Extractors.Parsers.Models;
 using CakeExtracter.Etl.DBM.Models;
-using DBM.Parsers.Models;
 using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.DBM.Composer

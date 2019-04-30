@@ -5,10 +5,10 @@ using System.Linq;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.DBM.Downloader;
 using CakeExtracter.Etl.DBM.Extractors.Parsers;
+using CakeExtracter.Etl.DBM.Extractors.Parsers.Models;
 using CsvHelper.Configuration;
 using DBM;
 using DBM.Helpers;
-using DBM.Parsers.Models;
 
 namespace CakeExtracter.Etl.DBM.Extractors
 {

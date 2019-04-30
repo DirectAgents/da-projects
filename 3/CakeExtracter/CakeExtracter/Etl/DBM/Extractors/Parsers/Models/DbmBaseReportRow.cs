@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DBM.Parsers.Models
+namespace CakeExtracter.Etl.DBM.Extractors.Parsers.Models
 {
     public class DbmBaseReportRow
     {

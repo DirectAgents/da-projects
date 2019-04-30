@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.DBM.Composer;
+using CakeExtracter.Etl.DBM.Extractors.Parsers.Models;
 using CakeExtracter.Etl.DBM.Extractors.Parsers.ParsingConverters;
 using CakeExtracter.Etl.DBM.Models;
 using DBM;
-using DBM.Parsers.Models;
 using DirectAgents.Domain.Entities.CPProg.DBM.SummaryMetrics;
 using DirectAgents.Domain.Entities.CPProg;
 

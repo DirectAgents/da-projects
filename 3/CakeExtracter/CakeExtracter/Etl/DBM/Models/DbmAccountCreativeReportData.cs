@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using DBM.Parsers.Models;
+using CakeExtracter.Etl.DBM.Extractors.Parsers.Models;
 using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.DBM.Models
