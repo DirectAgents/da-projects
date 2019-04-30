@@ -469,6 +469,7 @@
     <Compile Include="Etl\CakeMarketing\Extracters\SubIdSummariesExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\CPCLoader.cs" />
     <Compile Include="Etl\DBM\Composer\DbmReportDataComposer.cs" />
+    <Compile Include="Etl\DBM\Extractors\DbmExtractor.cs" />
     <Compile Include="Etl\DBM\Extractors\DbmLineItemExtractor.cs" />
     <Compile Include="Etl\DBM\Extractors\Parsers\Models\DbmLineItemReportRow.cs" />
     <Compile Include="Etl\DBM\Extractors\Parsers\ParsingConverters\DbmLineItemReportEntityRowMap.cs" />

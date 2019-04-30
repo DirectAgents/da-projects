@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Configuration;
-using System.IO;
 using System.Linq;
 using CakeExtracter.Common;
-using CakeExtracter.Etl.DBM.Composer;
 using CakeExtracter.Etl.DBM.Extractors;
-using CakeExtracter.Etl.DBM.Extractors.Parsers.Models;
-using CakeExtracter.Etl.DBM.Extractors.Parsers.ParsingConverters;
-using CakeExtracter.Etl.DBM.Models;
+using CakeExtracter.Etl.DBM.Loaders.SummariesLoaders;
 using CakeExtracter.Helpers;
 using DBM;
 using DirectAgents.Domain.Concrete;
@@ -141,7 +137,9 @@ namespace CakeExtracter.Commands.DA
             {
                 var extractor = new DbmCreativeExtractor(DbmUtility, dateRange, accounts, creativeReportId, KeepReports);
                 var summaries = extractor.Extract();
-                // loader
+
+                var loader = new DbmCreativeSummaryLoader(dateRange);
+                loader.Load(summaries);
             }
             catch (Exception e)
             {
@@ -154,62 +152,26 @@ namespace CakeExtracter.Commands.DA
             Logger.Info($"Start processing Line item reports (report count: {LineItemReportIds.Count})...");
             LineItemReportIds.ForEach(lineItemReportId =>
             {
-                try
-                {
-                    DoEtl_LineItem(dateRange, accounts, lineItemReportId);
-                }
-                catch (Exception e)
-                {
-                    Logger.Warn($"Could not process a report [report ID: {lineItemReportId}]: {e}");
-                }
+                DoETL_LineItem(dateRange, accounts, lineItemReportId);
             });
             Logger.Info("Finished processing Line item reports");
         }
-        
-        private void DoEtl_LineItem(DateRange dateRange, IEnumerable<ExtAccount> accounts, int lineItemReportId)
+
+        private void DoETL_LineItem(DateRange dateRange, IEnumerable<ExtAccount> accounts, int lineItemReportId)
         {
-            Logger.Info($"Start processing line item report [report ID: {lineItemReportId}]...");
-
-            var reportContent = GetReportContent(lineItemReportId);
-            var lineItemReportRows = GetLineItemRows(dateRange, reportContent);
-            var lineItemSummariesGroups = GetLineItemSummariesGroupedByAccount(accounts, lineItemReportRows);
-
-            lineItemSummariesGroups.ForEach(lineItemReportData =>
+            try
             {
-                DoEtl_LineItemForAccount(dateRange, lineItemReportData);
-            });
-            Logger.Info($"Finished processing line item report [report ID: {lineItemReportId}]");
+                var extractor = new DbmLineItemExtractor(DbmUtility, dateRange, accounts, lineItemReportId, KeepReports);
+                var summaries = extractor.Extract();
+
+
+            }
+            catch (Exception e)
+            {
+                Logger.Warn($"Could not process a report [report ID: {lineItemReportId}]: {e.Message}");
+            }
         }
         
-        private static IEnumerable<DbmLineItemReportRow> GetLineItemRows(DateRange dateRange, StreamReader reportContent)
-        {
-            var rowMap = new DbmLineItemReportEntityRowMap();
-            var lineItemReportRows = GetReportRows<DbmLineItemReportRow>(dateRange, reportContent, rowMap);
-            return lineItemReportRows;
-        }
-
-        private static List<DbmAccountLineItemReportData> GetLineItemSummariesGroupedByAccount(
-            IEnumerable<ExtAccount> accounts, IEnumerable<DbmLineItemReportRow> lineItemReportRows)
-        {
-            Logger.Info("Composing report data...");
-            var composer = new DbmReportDataComposer(accounts.ToList());
-            var lineItemSummariesGroupedByAccount = composer.ComposeLineItemReportData(lineItemReportRows);
-            Logger.Info($"Report data composed. Retrieved groups by account (group count: {lineItemSummariesGroupedByAccount.Count})");
-            return lineItemSummariesGroupedByAccount;
-        }
-
-        private static void DoEtl_LineItemForAccount(DateRange dateRange, DbmAccountLineItemReportData lineItemReportData)
-        {
-            var account = lineItemReportData.Account;
-            Logger.Info(account.Id, "DBM ETL Line Item. Account ({0}) {1}", account.Id, account.Name);
-
-            var extractor = new DbmLineItemExtractor(lineItemReportData);
-            var loader = new Etl.DBM.Loaders.SummariesLoaders.DbmLineItemSummaryLoader(account.Id, dateRange);
-            CommandHelper.DoEtl(extractor, loader);
-
-            Logger.Info(account.Id, "Finished DBM ETL Line Item for account ({0}) {1}", account.Id, account.Name);
-        }
-
         private IEnumerable<ExtAccount> GetAccounts()
         {
             var repository = new PlatformAccountRepository();
