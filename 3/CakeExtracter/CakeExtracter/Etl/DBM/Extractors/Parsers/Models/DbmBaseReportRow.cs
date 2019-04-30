@@ -2,11 +2,7 @@
 
 namespace DBM.Parsers.Models
 {
-    public abstract class DbmReportRow
-    {
-    }
-
-    public class DbmBaseReportRow : DbmReportRow
+    public class DbmBaseReportRow
     {
         public DateTime Date { get; set; }
 
