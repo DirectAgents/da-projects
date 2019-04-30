@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace CakeExtracter.Common.ArchiveExtractors.Contract
+namespace CakeExtracter.Common.Extractors.ArchiveExctractors.Contract
 {
     /// <summary>
     /// Archive extractor interface

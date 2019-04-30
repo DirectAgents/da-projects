@@ -1,6 +1,5 @@
 ﻿using Amazon;
 using CakeExtracter.Common;
-using CakeExtracter.Common.ArchiveExtractors;
 using CakeExtracter.Etl;
 using CakeExtracter.Etl.Kochava.Configuration;
 using CakeExtracter.Etl.Kochava.Extractors;
@@ -10,6 +9,7 @@ using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
 using System;
 using System.ComponentModel.Composition;
+using CakeExtracter.Common.Extractors.ArchiveExctractors;
 
 namespace CakeExtracter.Commands.DA
 {

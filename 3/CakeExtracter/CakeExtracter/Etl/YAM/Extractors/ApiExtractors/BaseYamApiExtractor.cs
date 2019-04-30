@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using AutoMapper;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.YAM.Extractors.CsvExtractors;
-using CakeExtracter.Etl.YAM.Extractors.CsvExtractors.RowMaps;
 using CakeExtracter.Etl.YAM.Extractors.CsvExtractors.RowModels;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Entities.CPProg;
@@ -86,7 +85,7 @@ namespace CakeExtracter.Etl.YAM.Extractors.ApiExtractors
         {
             using (var streamReader = RequestHelper.CreateStreamReaderFromUrl(reportUrl))
             {
-                var csvExtractor = new YamCsvExtractor<YamRow, YamRowMap>(accountId, summariesName, streamReader);
+                var csvExtractor = new YamCsvExtractor(accountId, summariesName, streamReader);
                 return csvExtractor.EnumerateRows();
             }
         }

@@ -1,15 +1,15 @@
-﻿using CakeExtracter.Common.ArchiveExtractors.Contract;
-using System.IO;
+﻿using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
+using CakeExtracter.Common.Extractors.ArchiveExctractors.Contract;
 
-namespace CakeExtracter.Common.ArchiveExtractors
+namespace CakeExtracter.Common.Extractors.ArchiveExctractors
 {
     /// <summary>
     /// Archive extractor for Zip stream
     /// </summary>
-    /// <seealso cref="Amazon.ArchiveExctractors.IArchiveExtractor" />
+    /// <seealso cref="IArchiveExtractor" />
     public class ZipArchiveExtractor : IArchiveExtractor
     {
         /// <summary>

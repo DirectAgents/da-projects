@@ -1,13 +1,13 @@
-﻿using CakeExtracter.Common.ArchiveExtractors.Contract;
-using System.IO;
+﻿using System.IO;
 using System.IO.Compression;
+using CakeExtracter.Common.Extractors.ArchiveExctractors.Contract;
 
-namespace CakeExtracter.Common.ArchiveExtractors
+namespace CakeExtracter.Common.Extractors.ArchiveExctractors
 {
     /// <summary>
     /// Archive extractor for Gzip stream
     /// </summary>
-    /// <seealso cref="Amazon.ArchiveExctractors.IArchiveExtractor" />
+    /// <seealso cref="IArchiveExtractor" />
     public class GzipArchiveExtractor : IArchiveExtractor
     {
         /// <summary>
@@ -17,9 +17,9 @@ namespace CakeExtracter.Common.ArchiveExtractors
         /// <returns></returns>
         public string TryUnzipStream(Stream stream)
         {
-            using (GZipStream gzip = new GZipStream(stream, CompressionMode.Decompress))
+            using (var gzip = new GZipStream(stream, CompressionMode.Decompress))
             {
-                using (StreamReader reader = new StreamReader(gzip))
+                using (var reader = new StreamReader(gzip))
                 {
                     return reader.ReadToEnd();
                 }

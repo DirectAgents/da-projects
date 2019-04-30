@@ -10,9 +10,9 @@ namespace CakeExtracter.Etl.YAM.Extractors.CsvExtractors.RowModels
 
         public int Clicks { get; set; }
 
-        public decimal ClickThroughConversion { get; set; }
+        public int ClickThroughConversion { get; set; }
 
-        public decimal ViewThroughConversion { get; set; }
+        public int ViewThroughConversion { get; set; }
 
         public decimal ConversionValue { get; set; }
 

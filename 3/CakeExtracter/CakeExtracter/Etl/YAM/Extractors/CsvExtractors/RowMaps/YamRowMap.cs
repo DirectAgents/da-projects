@@ -13,7 +13,7 @@ namespace CakeExtracter.Etl.YAM.Extractors.CsvExtractors.RowMaps
             Map(x => x.ClickThroughConversion).Name("Click Through Conversion");
             Map(x => x.ViewThroughConversion).Name("View Through Conversion");
             Map(x => x.ConversionValue).Name("ROAS Action Value");
-            Map(x => x.AdvertiserSpending).Name("Cost");
+            Map(x => x.AdvertiserSpending).Name("Advertiser Spending");
 
             Map(x => x.CampaignName).Name("Order");
             Map(x => x.CampaignId).Name("Order ID");
