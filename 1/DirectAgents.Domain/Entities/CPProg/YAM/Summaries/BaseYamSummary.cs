@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace DirectAgents.Domain.Entities.CPProg.YAM.Summaries
 {
@@ -21,6 +23,20 @@ namespace DirectAgents.Domain.Entities.CPProg.YAM.Summaries
 
         public decimal ConversionValue { get; set; }
 
-        public decimal AdvertiserSpending	 { get; set; }
+        public decimal AdvertiserSpending { get; set; }
+
+        public decimal ClickConversionValueByPixelQuery { get; set; }
+
+        public decimal ViewConversionValueByPixelQuery { get; set; }
+
+        public virtual void SetStats(IEnumerable<BaseYamSummary> stats)
+        {
+            Impressions = stats.Sum(x => x.Impressions);
+            Clicks = stats.Sum(x => x.Clicks);
+            ClickThroughConversion = stats.Sum(x => x.ClickThroughConversion);
+            ViewThroughConversion = stats.Sum(x => x.ViewThroughConversion);
+            ConversionValue = stats.Sum(x => x.ConversionValue);
+            AdvertiserSpending = stats.Sum(x => x.AdvertiserSpending);
+        }
     }
 }

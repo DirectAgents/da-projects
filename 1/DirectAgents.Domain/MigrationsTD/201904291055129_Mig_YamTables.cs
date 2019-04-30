@@ -7,6 +7,7 @@ namespace DirectAgents.Domain.MigrationsTD
     {
         public override void Up()
         {
+            
             CreateTable(
                 "td.YamAd",
                 c => new
@@ -74,6 +75,8 @@ namespace DirectAgents.Domain.MigrationsTD
                         ViewThroughConversion = c.Int(nullable: false),
                         ConversionValue = c.Decimal(nullable: false, precision: 18, scale: 6),
                         AdvertiserSpending = c.Decimal(nullable: false, precision: 18, scale: 6),
+                        ClickConversionValueByPixelQuery = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        ViewConversionValueByPixelQuery = c.Decimal(nullable: false, precision: 18, scale: 2),
                     })
                 .PrimaryKey(t => new { t.Date, t.AdId })
                 .ForeignKey("td.YamAd", t => t.AdId, cascadeDelete: true)
@@ -91,6 +94,8 @@ namespace DirectAgents.Domain.MigrationsTD
                         ViewThroughConversion = c.Int(nullable: false),
                         ConversionValue = c.Decimal(nullable: false, precision: 18, scale: 6),
                         AdvertiserSpending = c.Decimal(nullable: false, precision: 18, scale: 6),
+                        ClickConversionValueByPixelQuery = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        ViewConversionValueByPixelQuery = c.Decimal(nullable: false, precision: 18, scale: 2),
                     })
                 .PrimaryKey(t => new { t.Date, t.CampaignId })
                 .ForeignKey("td.YamCampaign", t => t.CampaignId, cascadeDelete: true)
@@ -108,6 +113,8 @@ namespace DirectAgents.Domain.MigrationsTD
                         ViewThroughConversion = c.Int(nullable: false),
                         ConversionValue = c.Decimal(nullable: false, precision: 18, scale: 6),
                         AdvertiserSpending = c.Decimal(nullable: false, precision: 18, scale: 6),
+                        ClickConversionValueByPixelQuery = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        ViewConversionValueByPixelQuery = c.Decimal(nullable: false, precision: 18, scale: 2),
                     })
                 .PrimaryKey(t => new { t.Date, t.CreativeId })
                 .ForeignKey("td.YamCreative", t => t.CreativeId, cascadeDelete: true)
@@ -125,6 +132,8 @@ namespace DirectAgents.Domain.MigrationsTD
                         ViewThroughConversion = c.Int(nullable: false),
                         ConversionValue = c.Decimal(nullable: false, precision: 18, scale: 6),
                         AdvertiserSpending = c.Decimal(nullable: false, precision: 18, scale: 6),
+                        ClickConversionValueByPixelQuery = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        ViewConversionValueByPixelQuery = c.Decimal(nullable: false, precision: 18, scale: 2),
                     })
                 .PrimaryKey(t => new { t.Date, t.AccountId })
                 .ForeignKey("td.Account", t => t.AccountId, cascadeDelete: true)
@@ -142,6 +151,8 @@ namespace DirectAgents.Domain.MigrationsTD
                         ViewThroughConversion = c.Int(nullable: false),
                         ConversionValue = c.Decimal(nullable: false, precision: 18, scale: 6),
                         AdvertiserSpending = c.Decimal(nullable: false, precision: 18, scale: 6),
+                        ClickConversionValueByPixelQuery = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        ViewConversionValueByPixelQuery = c.Decimal(nullable: false, precision: 18, scale: 2),
                     })
                 .PrimaryKey(t => new { t.Date, t.LineId })
                 .ForeignKey("td.YamLine", t => t.LineId, cascadeDelete: true)
@@ -172,6 +183,8 @@ namespace DirectAgents.Domain.MigrationsTD
                         ViewThroughConversion = c.Int(nullable: false),
                         ConversionValue = c.Decimal(nullable: false, precision: 18, scale: 6),
                         AdvertiserSpending = c.Decimal(nullable: false, precision: 18, scale: 6),
+                        ClickConversionValueByPixelQuery = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        ViewConversionValueByPixelQuery = c.Decimal(nullable: false, precision: 18, scale: 2),
                     })
                 .PrimaryKey(t => new { t.Date, t.PixelId })
                 .ForeignKey("td.YamPixel", t => t.PixelId, cascadeDelete: true)
