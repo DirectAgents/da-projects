@@ -50,7 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Const.cs" />
-    <Compile Include="HelperClasses.cs" />
+    <Compile Include="Models\HelperClasses.cs" />
+    <Compile Include="Models\ReportSettings.cs" />
     <Compile Include="YAMUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

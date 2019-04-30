@@ -1,29 +1,32 @@
-﻿using CakeExtracter.Common;
-using CakeExtracter.Etl.TradingDesk.Extracters.SummaryCsvExtracters;
+﻿using System;
+using CakeExtracter.Common;
+using CakeExtracter.Etl.YAM.Extractors.CsvExtractors.RowModels;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
 using Yahoo;
+using Yahoo.Models;
 
 namespace CakeExtracter.Etl.YAM.Extractors.ApiExtractors
 {
-    public class YamAdSummaryExtractor : BaseYamApiExtractor<TDadSummary>
+    internal class YamAdSummaryExtractor : BaseYamApiExtractor<YamAdSummary>
     {
-        public YamAdSummaryExtractor(YAMUtility yamUtility, DateRange dateRange, ExtAccount account)
-            : base(yamUtility, dateRange, account)
+        protected override string SummariesDisplayName => "YamAdSummaries";
+
+        protected override Func<YamRow, object> GroupedRowsWithUniqueEntitiesFunction =>
+            x => new { x.Date, x.CampaignName, x.CampaignId, x.LineName, x.LineId, x.CreativeName, x.CreativeId, x.AdName, x.AdId };
+
+        public YamAdSummaryExtractor(YAMUtility yamUtility, DateRange dateRange, ExtAccount account, bool byPixelParameter)
+            : base(yamUtility, dateRange, account, byPixelParameter)
         { }
 
-        protected override void Extract()
+        protected override ReportSettings GetReportSettings()
         {
-            var reportUrl = _yamUtility.TryGenerateReport(dateRange.FromDate, dateRange.ToDate, this.yamAdvertiserId,
-                byCampaign: true, byLine: true, byAd: true);
-
-            if (!string.IsNullOrWhiteSpace(reportUrl))
-            {
-                var streamReader = TDDailySummaryExtracter.CreateStreamReaderFromUrl(reportUrl);
-                var tdExtractor = new TDadSummaryExtracter(columnMapping, streamReader);
-                ExtractData(tdExtractor);
-            }
-
-            End();
+            var reportSettings = base.GetReportSettings();
+            reportSettings.ByCampaign = true;
+            reportSettings.ByLine = true;
+            reportSettings.ByCreative = true;
+            reportSettings.ByAd = true;
+            return reportSettings;
         }
     }
 }

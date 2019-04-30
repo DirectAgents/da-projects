@@ -1,76 +1,133 @@
 ﻿using System;
-using System.Configuration;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using AutoMapper;
 using CakeExtracter.Common;
-using CakeExtracter.Etl.TradingDesk.Extracters.SummaryCsvExtracters;
-using CsvHelper;
+using CakeExtracter.Etl.YAM.Extractors.CsvExtractors;
+using CakeExtracter.Etl.YAM.Extractors.CsvExtractors.RowMaps;
+using CakeExtracter.Etl.YAM.Extractors.CsvExtractors.RowModels;
+using CakeExtracter.Helpers;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
 using Yahoo;
+using Yahoo.Models;
 
 namespace CakeExtracter.Etl.YAM.Extractors.ApiExtractors
 {
-    public abstract class BaseYamApiExtractor<T> : Extracter<T>
+    internal abstract class BaseYamApiExtractor<T> : Extracter<T>
+        where T: BaseYamSummary, new()
     {
-        protected readonly YAMUtility _yamUtility;
-        protected readonly DateRange dateRange;
-        protected readonly ColumnMapping columnMapping;
-        protected readonly int yamAdvertiserId;
+        protected const string ConversionValuePixelQueryPattern = @"gv=(\d*\.?\d*)";
 
-        private const string ErrorMessageIfReportIsEmpty = "No header record was found.";
+        protected readonly YAMUtility YamUtility;
+        protected readonly DateRange DateRange;
+        protected readonly int YamAdvertiserId;
 
-        public BaseYamApiExtractor(YAMUtility yamUtility, DateRange dateRange, ExtAccount account)
+        private readonly bool byPixelParameter;
+        private readonly int accountId;
+
+        protected abstract string SummariesDisplayName { get; }
+
+        protected abstract Func<YamRow, object> GroupedRowsWithUniqueEntitiesFunction { get; }
+
+        protected BaseYamApiExtractor(YAMUtility yamUtility, DateRange dateRange, ExtAccount account, bool byPixelParameter)
         {
-            this._yamUtility = yamUtility;
-            this.dateRange = dateRange;
-            this.yamAdvertiserId = int.Parse(account.ExternalId);
-            this.columnMapping = account.Platform.PlatColMapping;
-            if (columnMapping != null)
-            { //These override the colMappings b/c the API has different col headers than the UI-generated reports
-                SetupColumnMapping();
-            }
+            YamUtility = yamUtility;
+            DateRange = dateRange;
+            YamAdvertiserId = int.Parse(account.ExternalId);
+            this.byPixelParameter = byPixelParameter;
+            accountId = account.Id;
         }
 
-        protected void ExtractData(SummaryCsvExtracter<T> extractor)
+        protected virtual ReportSettings GetReportSettings()
         {
-            try
+            return new ReportSettings
             {
-                var items = extractor.EnumerateRows();
-                Add(items);
-            }
-            catch (Exception exception)
+                FromDate = DateRange.FromDate,
+                ToDate = DateRange.ToDate,
+                AccountId = YamAdvertiserId
+            };
+        }
+
+        protected override void Extract()
+        {
+            var items = ExtractItems();
+            var summaries = TransformItems(items);
+            Add(summaries);
+            End();
+        }
+
+        private IEnumerable<YamRow> ExtractItems()
+        {
+            var reportSettings = GetReportSettings();
+            if (byPixelParameter)
             {
-                if (exception is CsvHelperException && exception.Message == ErrorMessageIfReportIsEmpty)
-                {
-                    Logger.Warn($"There are no statistics in the report: {exception.Message}");
-                }
-                else
-                {
-                    Logger.Error(exception);
-                }
+                reportSettings.ByPixelParameter = true;
             }
 
+            var items = ExtractData(reportSettings, SummariesDisplayName);
+            return items;
         }
 
-        private void SetupColumnMapping()
+        private IEnumerable<YamRow> ExtractData(ReportSettings reportSettings, string summariesName)
         {
-            columnMapping.PostClickConv = GetMappingPropertyName(columnMapping.PostClickConv, "YAMMap_PostClickConv");
-            columnMapping.PostViewConv = GetMappingPropertyName(columnMapping.PostViewConv, "YAMMap_PostViewConv");
-            columnMapping.PostClickRev = GetMappingPropertyName(columnMapping.PostClickRev, "YAMMap_PostClickRev");
-            columnMapping.PostViewRev = GetMappingPropertyName(columnMapping.PostViewRev, "YAMMap_PostViewRev");
-            columnMapping.StrategyName = GetMappingPropertyName(columnMapping.StrategyName, "YAMMap_StrategyName");
-            columnMapping.StrategyEid = GetMappingPropertyName(columnMapping.StrategyEid, "YAMMap_StrategyEid");
-            columnMapping.TDadName = GetMappingPropertyName(columnMapping.TDadName, "YAMMap_CreativeName");
-            columnMapping.TDadEid = GetMappingPropertyName(columnMapping.TDadEid, "YAMMap_CreativeEid");
-            columnMapping.AdSetName = GetMappingPropertyName(columnMapping.AdSetName, "YAMMap_AdSetName");
-            columnMapping.AdSetEid = GetMappingPropertyName(columnMapping.AdSetEid, "YAMMap_AdSetEid");
-            columnMapping.KeywordName = GetMappingPropertyName(columnMapping.KeywordName, "YAMMap_KeywordName");
-            columnMapping.KeywordEid = GetMappingPropertyName(columnMapping.KeywordEid, "YAMMap_KeywordEid");
-            columnMapping.SearchTermName = GetMappingPropertyName(columnMapping.SearchTermName, "YAMMap_SearchTermName");
+            var reportUrl = YamUtility.TryGenerateReport(reportSettings);
+            if (!string.IsNullOrWhiteSpace(reportUrl))
+            {
+                return ExtractRawDataFromCsv(reportUrl, summariesName);
+            }
+
+            Logger.Error(accountId, new Exception($"The report URL is empty."));
+            return new List<YamRow>();
         }
 
-        private string GetMappingPropertyName(string sourcePropertyName, string configPropertyName)
+        private IEnumerable<YamRow> ExtractRawDataFromCsv(string reportUrl, string summariesName)
         {
-            var mapVal = ConfigurationManager.AppSettings[configPropertyName];
-            return mapVal ?? sourcePropertyName;
+            using (var streamReader = RequestHelper.CreateStreamReaderFromUrl(reportUrl))
+            {
+                var csvExtractor = new YamCsvExtractor<YamRow, YamRowMap>(accountId, summariesName, streamReader);
+                return csvExtractor.EnumerateRows();
+            }
+        }
+
+        private IEnumerable<T> TransformItems(IEnumerable<YamRow> items)
+        {
+            var sums = items.GroupBy(GroupedRowsWithUniqueEntitiesFunction).Select(CreateSummary);
+            return sums.ToList();
+        }
+
+        private T CreateSummary(IEnumerable<YamRow> items)
+        {
+            var sums = items.Select(Mapper.Map<T>).ToList();
+            var sum = sums.FirstOrDefault();
+            sum.SetStats(sums);
+            SetStatsByPixelQuery(sum, items);
+            return sum;
+        }
+
+        private void SetStatsByPixelQuery(T sum, IEnumerable<YamRow> items)
+        {
+            sum.ClickConversionValueByPixelQuery = items.Where(x => x.ClickThroughConversion > 0)
+                .Sum(x => GetConversionValueFromPixelQuery(x.PixelParameter));
+            sum.ViewConversionValueByPixelQuery = items.Where(x => x.ViewThroughConversion > 0)
+                .Sum(x => GetConversionValueFromPixelQuery(x.PixelParameter));
+        }
+
+        private decimal GetConversionValueFromPixelQuery(string pixelParameter)
+        {
+            if (pixelParameter == null)
+            {
+                return 0;
+            }
+
+            var match = Regex.Match(pixelParameter, ConversionValuePixelQueryPattern);
+            if (!match.Success)
+            {
+                return 0;
+            }
+
+            return decimal.TryParse(match.Groups[1].Value, out var conVal) ? conVal : 0;
         }
     }
 }

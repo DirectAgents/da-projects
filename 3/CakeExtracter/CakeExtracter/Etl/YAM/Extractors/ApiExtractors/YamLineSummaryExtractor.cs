@@ -1,29 +1,30 @@
-﻿using CakeExtracter.Common;
-using CakeExtracter.Etl.TradingDesk.Extracters.SummaryCsvExtracters;
+﻿using System;
+using CakeExtracter.Common;
+using CakeExtracter.Etl.YAM.Extractors.CsvExtractors.RowModels;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
 using Yahoo;
+using Yahoo.Models;
 
 namespace CakeExtracter.Etl.YAM.Extractors.ApiExtractors
 {
-    public class YamLineSummaryExtractor : BaseYamApiExtractor<StrategySummary>
+    internal class YamLineSummaryExtractor : BaseYamApiExtractor<YamLineSummary>
     {
-        public YamLineSummaryExtractor(YAMUtility yamUtility, DateRange dateRange, ExtAccount account)
-            : base(yamUtility, dateRange, account)
+        protected override string SummariesDisplayName => "YamLineSummaries";
+
+        protected override Func<YamRow, object> GroupedRowsWithUniqueEntitiesFunction =>
+            x => new { x.Date, x.CampaignName, x.CampaignId, x.LineName, x.LineId };
+
+        public YamLineSummaryExtractor(YAMUtility yamUtility, DateRange dateRange, ExtAccount account, bool byPixelParameter)
+            : base(yamUtility, dateRange, account, byPixelParameter)
         { }
 
-        protected override void Extract()
+        protected override ReportSettings GetReportSettings()
         {
-            var reportUrl = _yamUtility.TryGenerateReport(dateRange.FromDate, dateRange.ToDate, this.yamAdvertiserId,
-                byLine: true);
-
-            if (!string.IsNullOrWhiteSpace(reportUrl))
-            {
-                var streamReader = TDDailySummaryExtracter.CreateStreamReaderFromUrl(reportUrl);
-                var tdExtractor = new TDStrategySummaryExtracter(columnMapping, streamReader);
-                ExtractData(tdExtractor);
-            }
-
-            End();
+            var reportSettings = base.GetReportSettings();
+            reportSettings.ByCampaign = true;
+            reportSettings.ByLine = true;
+            return reportSettings;
         }
     }
 }

@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Linq;
 using System.Threading.Tasks;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
-using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using CakeExtracter.Etl.YAM.Extractors.ApiExtractors;
-using CakeExtracter.Etl.YAM.Extractors.ConValExtractors;
-using CakeExtracter.Etl.YAM.Helper;
+using CakeExtracter.Etl.YAM.Helpers;
+using CakeExtracter.Etl.YAM.Loaders;
 using CakeExtracter.Helpers;
-using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
 using Yahoo;
 
@@ -79,6 +77,18 @@ namespace CakeExtracter.Commands
             return 0;
         }
 
+        private IEnumerable<ExtAccount> GetAccounts()
+        {
+            var repository = new PlatformAccountRepository();
+            if (!AccountId.HasValue)
+            {
+                var accounts = repository.GetAccountsWithFilledExternalIdByPlatformCode(Platform.Code_YAM, DisabledOnly);
+                return accounts;
+            }
+            var account = repository.GetAccount(AccountId.Value);
+            return new[] { account };
+        }
+
         private void DoEtlsParallel(DateRange dateRange, YamStatsType statsType, IEnumerable<ExtAccount> accounts)
         {
             YAMUtility.TokenSets = GetTokens();
@@ -107,12 +117,13 @@ namespace CakeExtracter.Commands
         {
             Logger.Info(account.Id, "Commencing ETL for YAM account ({0}) {1}", account.Id, account.Name);
             var yamUtility = CreateUtility(account);
-            AddEnabledEtl(statsType.Daily, account, () => DoETL_Daily(dateRange, account, yamUtility));
-            AddEnabledEtl(statsType.Campaign, account, () => DoETL_AdSet(dateRange, account, yamUtility));
-            AddEnabledEtl(statsType.Line, account, () => DoETL_Strategy(dateRange, account, yamUtility));
-            AddEnabledEtl(statsType.Creative, account, () => DoETL_Keyword(dateRange, account, yamUtility));
-            AddEnabledEtl(statsType.Ad, account, () => DoETL_Creative(dateRange, account, yamUtility));
-            AddEnabledEtl(statsType.Pixel, account, () => DoETL_SearchTerm(dateRange, account, yamUtility));
+            var usePixelParameters = extIdsUsePixelParams.Contains(account.ExternalId);
+            AddEnabledEtl(statsType.Daily, account, () => DoETL_Daily(dateRange, account, yamUtility, usePixelParameters));
+            AddEnabledEtl(statsType.Campaign, account, () => DoETL_Campaign(dateRange, account, yamUtility, usePixelParameters));
+            AddEnabledEtl(statsType.Line, account, () => DoETL_Line(dateRange, account, yamUtility, usePixelParameters));
+            AddEnabledEtl(statsType.Creative, account, () => DoETL_Creative(dateRange, account, yamUtility, usePixelParameters));
+            AddEnabledEtl(statsType.Ad, account, () => DoETL_Ad(dateRange, account, yamUtility, usePixelParameters));
+            AddEnabledEtl(statsType.Pixel, account, () => DoETL_Pixel(dateRange, account, yamUtility, usePixelParameters));
         }
 
         private YAMUtility CreateUtility(ExtAccount account)
@@ -142,98 +153,46 @@ namespace CakeExtracter.Commands
             });
         }
 
-        private void DoETL_Daily(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
+        private void DoETL_Daily(DateRange dateRange, ExtAccount account, YAMUtility yamUtility, bool usePixelParameters)
         {
-            var extractor = new YamDailySummaryExtractor(yamUtility, dateRange, account);
-            var loader = new TDDailySummaryLoader(account.Id);
-            CommandHelper.DoEtl(extractor, loader);
-
-            if (!extIdsUsePixelParams.Contains(account.ExternalId))
-            {
-                return;
-            } 
-            
-            // Get ConVals using the pixel parameter...
-            var e = new YamDailyConValExtractor(yamUtility, dateRange, account);
-            var l = new TDDailyConValLoader(account.Id);
-            CommandHelper.DoEtl(e, l);
-        }
-
-        private void DoETL_Strategy(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
-        {
-            var extractor = new YamLineSummaryExtractor(yamUtility, dateRange, account);
-            var loader = new TDStrategySummaryLoader(account.Id);
-            CommandHelper.DoEtl(extractor, loader);
-
-            if (!extIdsUsePixelParams.Contains(account.ExternalId))
-            {
-                return;
-            } 
-            
-            // Get ConVals using the pixel parameter...
-            var stratNames = GetExistingStrategyNames(dateRange, account.Id);
-            var e = new YamStrategyConValExtractor(yamUtility, dateRange, account, existingStrategyNames: stratNames);
-            var l = new TDStrategyConValLoader(account.Id);
-            CommandHelper.DoEtl(e, l);
-        }
-
-        private void DoETL_AdSet(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
-        {
-            var extractor = new YamCampaignSummaryExtractor(yamUtility, dateRange, account);
-            var loader = new TDAdSetSummaryLoader(account.Id);
+            var extractor = new YamDailySummaryExtractor(yamUtility, dateRange, account, true);
+            var loader = new YamDailySummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
 
-        private void DoETL_Creative(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
+        private void DoETL_Campaign(DateRange dateRange, ExtAccount account, YAMUtility yamUtility, bool usePixelParameters)
         {
-            var extractor = new YamAdSummaryExtractor(yamUtility, dateRange, account);
-            var loader = new TDadSummaryLoader(account.Id);
+            var extractor = new YamCampaignSummaryExtractor(yamUtility, dateRange, account, true);
+            var loader = new YamCampaignSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
 
-        private void DoETL_Keyword(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
+        private void DoETL_Line(DateRange dateRange, ExtAccount account, YAMUtility yamUtility, bool usePixelParameters)
         {
-            var extractor = new YamCreativeSummaryExtractor(yamUtility, dateRange, account);
-            var loader = new KeywordSummaryLoader(account.Id);
+            var extractor = new YamLineSummaryExtractor(yamUtility, dateRange, account, true);
+            var loader = new YamLineSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
 
-        private void DoETL_SearchTerm(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
+        private void DoETL_Creative(DateRange dateRange, ExtAccount account, YAMUtility yamUtility, bool usePixelParameters)
         {
-            var extractor = new YamBeaconSummaryExtractor(yamUtility, dateRange, account);
-            var loader = new SearchTermSummaryLoader(account.Id);
+            var extractor = new YamCreativeSummaryExtractor(yamUtility, dateRange, account, true);
+            var loader = new YamCreativeSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
 
-        //Get the names of strategies that have stats for the specified dateRange and account (and whose stats' ConVals are not zero)
-        private string[] GetExistingStrategyNames(DateRange dateRange, int accountId)
+        private void DoETL_Ad(DateRange dateRange, ExtAccount account, YAMUtility yamUtility, bool usePixelParameters)
         {
-            using (var db = new ClientPortalProgContext())
-            {
-                var stratSums = db.StrategySummaries.Where(s => s.Strategy.AccountId == accountId && s.Date >= dateRange.FromDate && s.Date <= dateRange.ToDate
-                                                           && (s.PostClickRev != 0 || s.PostViewRev != 0));
-                var strategies = stratSums.Select(s => s.Strategy).Distinct();
-                var stratNames = strategies.Select(s => s.Name).Distinct().ToArray();
-                return stratNames;
-            }
+            var extractor = new YamAdSummaryExtractor(yamUtility, dateRange, account, true);
+            var loader = new YamAdSummaryLoader(account.Id);
+            CommandHelper.DoEtl(extractor, loader);
         }
 
-        private IEnumerable<ExtAccount> GetAccounts()
+        private void DoETL_Pixel(DateRange dateRange, ExtAccount account, YAMUtility yamUtility, bool usePixelParameters)
         {
-            using (var db = new ClientPortalProgContext())
-            {
-                var accounts = db.ExtAccounts.Include("Platform.PlatColMapping").Where(a => a.Platform.Code == Platform.Code_YAM);
-                if (AccountId.HasValue)
-                    accounts = accounts.Where(a => a.Id == AccountId.Value);
-                else if (!DisabledOnly)
-                    accounts = accounts.Where(a => !a.Disabled);
-
-                if (DisabledOnly)
-                    accounts = accounts.Where(a => a.Disabled);
-
-                return accounts.ToList().Where(a => !string.IsNullOrWhiteSpace(a.ExternalId));
-            }
+            var extractor = new YamPixelSummaryExtractor(yamUtility, dateRange, account, true);
+            var loader = new YamPixelSummaryLoader(account.Id);
+            CommandHelper.DoEtl(extractor, loader);
         }
-
     }
 }

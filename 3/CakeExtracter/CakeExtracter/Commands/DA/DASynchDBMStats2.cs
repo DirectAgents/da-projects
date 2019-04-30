@@ -126,7 +126,7 @@ namespace CakeExtracter.Commands
             }
 
             var colMapping = GetInitializedAccountColMapping(account);
-            var streamReader = TDDailySummaryExtracter.CreateStreamReaderFromUrl(reportUrl);
+            var streamReader = RequestHelper.CreateStreamReaderFromUrl(reportUrl);
             DoETL_Strategy(account.Id, colMapping, streamReader, dateRange);
 
             Logger.Info("Creating daily stats from strategy stats.");

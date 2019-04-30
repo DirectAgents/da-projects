@@ -1,26 +1,23 @@
-﻿using CakeExtracter.Common;
-using CakeExtracter.Etl.TradingDesk.Extracters.SummaryCsvExtracters;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using CakeExtracter.Common;
+using CakeExtracter.Etl.YAM.Extractors.CsvExtractors.RowModels;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
 using Yahoo;
 
 namespace CakeExtracter.Etl.YAM.Extractors.ApiExtractors
 {
-    public class YamDailySummaryExtractor : BaseYamApiExtractor<DailySummary>
+    internal class YamDailySummaryExtractor : BaseYamApiExtractor<YamDailySummary>
     {
-        public YamDailySummaryExtractor(YAMUtility yamUtility, DateRange dateRange, ExtAccount account)
-            : base(yamUtility, dateRange, account)
-        { }
+        protected override string SummariesDisplayName => "YamDailySummaries";
 
-        protected override void Extract()
-        {
-            var reportUrl = _yamUtility.TryGenerateReport(dateRange.FromDate, dateRange.ToDate, this.yamAdvertiserId);
-            if (!string.IsNullOrWhiteSpace(reportUrl))
-            {
-                var streamReader = TDDailySummaryExtracter.CreateStreamReaderFromUrl(reportUrl);
-                var tdExtractor = new TDDailySummaryExtracter(columnMapping, streamReader);
-                ExtractData(tdExtractor);
-            }
-            End();
-        }
+        protected override Func<YamRow, object> GroupedRowsWithUniqueEntitiesFunction => 
+            x => x.Date;
+
+        public YamDailySummaryExtractor(YAMUtility yamUtility, DateRange dateRange, ExtAccount account, bool byPixelParameter)
+            : base(yamUtility, dateRange, account, byPixelParameter)
+        { }
     }
 }

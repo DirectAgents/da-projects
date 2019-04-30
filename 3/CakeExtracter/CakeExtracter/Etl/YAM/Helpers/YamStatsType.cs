@@ -1,4 +1,4 @@
-﻿namespace CakeExtracter.Etl.YAM.Helper
+﻿namespace CakeExtracter.Etl.YAM.Helpers
 {
     internal class YamStatsType
     {

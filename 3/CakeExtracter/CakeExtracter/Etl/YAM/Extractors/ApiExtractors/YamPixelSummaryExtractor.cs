@@ -8,21 +8,21 @@ using Yahoo.Models;
 
 namespace CakeExtracter.Etl.YAM.Extractors.ApiExtractors
 {
-    internal class YamCreativeSummaryExtractor : BaseYamApiExtractor<YamCreativeSummary>
+    internal class YamPixelSummaryExtractor : BaseYamApiExtractor<YamPixelSummary>
     {
-        protected override string SummariesDisplayName => "YamCreativeSummaries";
+        protected override string SummariesDisplayName => "YamPixelSummaries";
 
         protected override Func<YamRow, object> GroupedRowsWithUniqueEntitiesFunction =>
-            x => new { x.Date, x.CreativeName, x.CreativeId };
+            x => new { x.Date, x.PixelName, x.PixelId };
 
-        public YamCreativeSummaryExtractor(YAMUtility yamUtility, DateRange dateRange, ExtAccount account, bool byPixelParameter)
+        public YamPixelSummaryExtractor(YAMUtility yamUtility, DateRange dateRange, ExtAccount account, bool byPixelParameter)
             : base(yamUtility, dateRange, account, byPixelParameter)
         { }
 
         protected override ReportSettings GetReportSettings()
         {
             var reportSettings = base.GetReportSettings();
-            reportSettings.ByCreative = true;
+            reportSettings.ByPixel = true;
             return reportSettings;
         }
     }

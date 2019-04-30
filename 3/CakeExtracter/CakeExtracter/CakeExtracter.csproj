@@ -543,7 +543,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\TDadSummaryExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\YamConValCsvExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\TDConvExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\TDSiteSummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\TDStrategySummaryExtracter.cs" />
@@ -553,9 +552,7 @@
     <Compile Include="Etl\YAM\Extractors\ApiExtractors\YamCreativeSummaryExtractor.cs" />
     <Compile Include="Etl\YAM\Extractors\ApiExtractors\YamLineSummaryExtractor.cs" />
     <Compile Include="Etl\YAM\Extractors\ApiExtractors\YamAdSummaryExtractor.cs" />
-    <Compile Include="Etl\YAM\Extractors\ConValExtractors\BaseYamConValExtractor.cs" />
-    <Compile Include="Etl\YAM\Extractors\ConValExtractors\YamStrategyConValExtractor.cs" />
-    <Compile Include="Etl\YAM\Extractors\ApiExtractors\YamBeaconSummaryExtractor.cs" />
+    <Compile Include="Etl\YAM\Extractors\ApiExtractors\YamPixelSummaryExtractor.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\Adders\DailySummaryAdder.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\Adders\SummaryMetricAdder.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdformLoaders\AdformCampaignSummaryLoader.cs" />
@@ -730,9 +727,7 @@
     <Compile Include="Etl\TradingDesk\LoadersDA\TDConvLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\TDDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\TDSiteSummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\TDStrategyConValLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\TDStrategySummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\TDDailyConValLoader.cs" />
     <Compile Include="Etl\TradingDesk\Loaders\AdrollAdDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\Loaders\AdrollAdDailySummaryLoader2.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollDailySummaryLoader.cs" />
@@ -748,13 +743,22 @@
     <Compile Include="Etl\Loader.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\DailySummariesLoader.cs" />
     <Compile Include="Etl\LoaderTask.cs" />
-    <Compile Include="Etl\YAM\Extractors\ConValExtractors\YamDailyConValExtractor.cs" />
-    <Compile Include="Etl\YAM\Helper\YamStatsType.cs" />
+    <Compile Include="Etl\YAM\Extractors\CsvExtractors\RowModels\YamRow.cs" />
+    <Compile Include="Etl\YAM\Extractors\CsvExtractors\YamCsvExtractor.cs" />
+    <Compile Include="Etl\YAM\Extractors\CsvExtractors\RowMaps\YamRowMap.cs" />
+    <Compile Include="Etl\YAM\Helpers\YamStatsType.cs" />
+    <Compile Include="Etl\YAM\Loaders\YamAdSummaryLoader.cs" />
+    <Compile Include="Etl\YAM\Loaders\YamCampaignSummaryLoader.cs" />
+    <Compile Include="Etl\YAM\Loaders\YamCreativeSummaryLoader.cs" />
+    <Compile Include="Etl\YAM\Loaders\YamDailySummaryLoader.cs" />
+    <Compile Include="Etl\YAM\Loaders\YamLineSummaryLoader.cs" />
+    <Compile Include="Etl\YAM\Loaders\YamPixelSummaryLoader.cs" />
     <Compile Include="Helpers\CommandHelper.cs" />
     <Compile Include="Helpers\ConfigurationHelper.cs" />
     <Compile Include="Helpers\EntityIdStorage.cs" />
     <Compile Include="Extensions\ExceptionExtension.cs" />
     <Compile Include="Helpers\LoadingProgress.cs" />
+    <Compile Include="Helpers\RequestHelper.cs" />
     <Compile Include="Helpers\SafeContextWrapper.cs" />
     <Compile Include="ICakeMarketing.cs" />
     <Compile Include="ICakeMarketingCache.cs" />

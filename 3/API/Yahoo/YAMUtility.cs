@@ -9,6 +9,7 @@ using Polly;
 using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Deserializers;
+using Yahoo.Models;
 
 namespace Yahoo
 {
@@ -285,23 +286,11 @@ namespace Yahoo
         /// The common method that generates a statistics report (for different dimensions).
         /// Returns the report URL that can be used to download the generated report.
         /// </summary>
-        /// <param name="fromDate">Start date</param>
-        /// <param name="toDate">End date</param>
-        /// <param name="accountId">Account Id (may be null)</param>
-        /// <param name="byAdvertiser">Flag for Advertiser dimension (may be null)</param>
-        /// <param name="byCampaign">Flag for Campaign dimension (may be null)</param>
-        /// <param name="byLine">Flag for Line dimension (may be null)</param>
-        /// <param name="byAd">Flag for Ad dimension (may be null)</param>
-        /// <param name="byCreative">Flag for Creative dimension (may be null)</param>
-        /// <param name="byPixel">Flag for Pixel dimension (may be null)</param>
-        /// <param name="byPixelParameter">Flag for Pixel Parameter dimension (may be null)</param>
+        /// <param name="reportSettings">Report settings to customize the requested report.</param>
         /// <returns>URL of report location (may be null)</returns>
-        public string TryGenerateReport(DateTime fromDate, DateTime toDate, int? accountId = null,
-            bool byAdvertiser = false, bool byCampaign = false, bool byLine = false, bool byAd = false,
-            bool byCreative = false, bool byPixel = false, bool byPixelParameter = false)
+        public string TryGenerateReport(ReportSettings reportSettings)
         {
-            var payload = CreateReportRequestPayload(fromDate, toDate, accountId, byAdvertiser, byCampaign, byLine,
-                byAd, byCreative, byPixel, byPixelParameter);
+            var payload = CreateReportRequestPayload(reportSettings);
             var reportUrl = TryGenerateReport(payload);
             return reportUrl;
         }
@@ -338,9 +327,7 @@ namespace Yahoo
             return reportUrl;
         }
 
-        private ReportPayload CreateReportRequestPayload(DateTime startDate, DateTime endDate, int? accountId = null,
-            bool byAdvertiser = false, bool byCampaign = false, bool byLine = false, bool byAd = false,
-            bool byCreative = false, bool byPixel = false, bool byPixelParameter = false)
+        private ReportPayload CreateReportRequestPayload(ReportSettings reportSettings)
         {
             //This produced an InvalidTimeZoneException so we're just going with the system timezone, relying on it to be Eastern(daylight savings adjusted)
             //var offset = TimeZoneInfo.FindSystemTimeZoneById(@"Eastern Standard Time\Dynamic DST").BaseUtcOffset;
@@ -348,12 +335,13 @@ namespace Yahoo
             //var end = new DateTimeOffset(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59, offset);
 
             var accountList = new List<int>();
-            if (accountId.HasValue)
-                accountList.Add(accountId.Value);
+            if (reportSettings.AccountId.HasValue)
+            {
+                accountList.Add(reportSettings.AccountId.Value);
+            }
 
-            var dimensionList = GetDimensions(byAdvertiser, byCampaign, byLine, byAd, byCreative, byPixel,
-                byPixelParameter);
-            var metricList = GetMetrics(byPixelParameter);
+            var dimensionList = GetDimensions(reportSettings);
+            var metricList = GetMetrics(reportSettings);
 
             var reportOption = new ReportOption
             {
@@ -365,28 +353,28 @@ namespace Yahoo
             };
 
             const string dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'sszzz";
-            var adjustedEndDate = endDate.AddDays(1).AddSeconds(-1);
+            var adjustedEndDate = reportSettings.ToDate.AddDays(1).AddSeconds(-1);
             var payload = new ReportPayload
             {
                 reportOption = reportOption,
                 intervalTypeId = IntervalTypeId.DAY,
                 dateTypeId = DateTypeId.CUSTOM_RANGE,
-                startDate = startDate.ToString(dateFormat),
+                startDate = reportSettings.FromDate.ToString(dateFormat),
                 endDate = adjustedEndDate.ToString(dateFormat)
             };
             return payload;
         }
 
-        private List<int> GetDimensions(bool byAdvertiser, bool byCampaign, bool byLine, bool byAd, bool byCreative, bool byPixel, bool byPixelParameter)
+        private List<int> GetDimensions(ReportSettings reportSettings)
         {
             var dimensionList = new List<int>();
-            AddDimension(dimensionList, byAdvertiser, Dimension.ADVERTISER);
-            AddDimension(dimensionList, byCampaign, Dimension.CAMPAIGN);
-            AddDimension(dimensionList, byLine, Dimension.LINE);
-            AddDimension(dimensionList, byAd, Dimension.AD);
-            AddDimension(dimensionList, byCreative, Dimension.CREATIVE);
-            AddDimension(dimensionList, byPixel, Dimension.PIXEL);
-            AddDimension(dimensionList, byPixelParameter, Dimension.PIXEL_PARAMETER);
+            AddDimension(dimensionList, reportSettings.ByAdvertiser, Dimension.ADVERTISER);
+            AddDimension(dimensionList, reportSettings.ByCampaign, Dimension.CAMPAIGN);
+            AddDimension(dimensionList, reportSettings.ByLine, Dimension.LINE);
+            AddDimension(dimensionList, reportSettings.ByAd, Dimension.AD);
+            AddDimension(dimensionList, reportSettings.ByCreative, Dimension.CREATIVE);
+            AddDimension(dimensionList, reportSettings.ByPixel, Dimension.PIXEL);
+            AddDimension(dimensionList, reportSettings.ByPixelParameter, Dimension.PIXEL_PARAMETER);
             return dimensionList;
         }
 
@@ -398,19 +386,13 @@ namespace Yahoo
             }
         }
 
-        private List<int> GetMetrics(bool byPixelParameter)
+        private List<int> GetMetrics(ReportSettings reportSettings)
         {
-            var metricList = !byPixelParameter
-                ? new[]
-                {
-                    Metric.IMPRESSIONS, Metric.CLICKS, Metric.ADVERTISER_SPENDING, Metric.CLICK_THROUGH_CONVERSIONS,
-                    Metric.VIEW_THROUGH_CONVERSIONS, Metric.ROAS_ACTION_VALUE
-                }
-                : new[]
-                {
-                    // used to obtain the *real* conversion values from the pixel parameter
-                    Metric.CLICK_THROUGH_CONVERSIONS, Metric.VIEW_THROUGH_CONVERSIONS
-                };
+            var metricList = new[]
+            {
+                Metric.IMPRESSIONS, Metric.CLICKS, Metric.ADVERTISER_SPENDING, Metric.CLICK_THROUGH_CONVERSIONS,
+                Metric.VIEW_THROUGH_CONVERSIONS, Metric.ROAS_ACTION_VALUE
+            };
             return metricList.ToList();
         }
 
