@@ -114,6 +114,7 @@
     <Compile Include="Concrete\RevTrackRepository.cs" />
     <Compile Include="Concrete\SecurityRepository.cs" />
     <Compile Include="Concrete\SpecialPlatformRepository.cs" />
+    <Compile Include="Entities\CPProg\YAM\BaseYamEntity.cs" />
     <Compile Include="Entities\CPProg\YAM\Summaries\BaseYamSummary.cs" />
     <Compile Include="Entities\CPProg\YAM\Summaries\YamCampaignSummary.cs" />
     <Compile Include="Entities\CPProg\YAM\Summaries\YamCreativeSummary.cs" />
