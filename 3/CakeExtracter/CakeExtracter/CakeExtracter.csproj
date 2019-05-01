@@ -749,6 +749,8 @@
     <Compile Include="Etl\YAM\Extractors\CsvExtractors\YamCsvExtractor.cs" />
     <Compile Include="Etl\YAM\Extractors\CsvExtractors\RowMaps\YamRowMap.cs" />
     <Compile Include="Etl\YAM\Helpers\YamStatsType.cs" />
+    <Compile Include="Etl\YAM\Loaders\BaseYamSummaryLoader.cs" />
+    <Compile Include="Etl\YAM\Loaders\MergeHelper.cs" />
     <Compile Include="Etl\YAM\Loaders\YamAdSummaryLoader.cs" />
     <Compile Include="Etl\YAM\Loaders\YamCampaignSummaryLoader.cs" />
     <Compile Include="Etl\YAM\Loaders\YamCreativeSummaryLoader.cs" />

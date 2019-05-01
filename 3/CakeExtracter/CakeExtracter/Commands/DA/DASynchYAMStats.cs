@@ -119,11 +119,11 @@ namespace CakeExtracter.Commands
             var yamUtility = CreateUtility(account);
             var usePixelParameters = extIdsUsePixelParams.Contains(account.ExternalId);
             AddEnabledEtl(statsType.Daily, account, () => DoETL_Daily(dateRange, account, yamUtility, usePixelParameters));
-            AddEnabledEtl(statsType.Pixel, account, () => DoETL_Pixel(dateRange, account, yamUtility, usePixelParameters));
             AddEnabledEtl(statsType.Campaign, account, () => DoETL_Campaign(dateRange, account, yamUtility, usePixelParameters));
             AddEnabledEtl(statsType.Line, account, () => DoETL_Line(dateRange, account, yamUtility, usePixelParameters));
             AddEnabledEtl(statsType.Creative, account, () => DoETL_Creative(dateRange, account, yamUtility, usePixelParameters));
             AddEnabledEtl(statsType.Ad, account, () => DoETL_Ad(dateRange, account, yamUtility, usePixelParameters));
+            AddEnabledEtl(statsType.Pixel, account, () => DoETL_Pixel(dateRange, account, yamUtility, usePixelParameters));
         }
 
         private YAMUtility CreateUtility(ExtAccount account)
