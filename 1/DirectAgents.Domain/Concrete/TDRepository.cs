@@ -8,7 +8,7 @@ using DirectAgents.Domain.Entities.DBM;
 
 namespace DirectAgents.Domain.Concrete
 {
-    public partial class TDRepository : ITDRepository, IDisposable
+    public class TDRepository : ITDRepository
     {
         private ClientPortalProgContext context;
 
@@ -88,15 +88,7 @@ namespace DirectAgents.Domain.Concrete
         {
             return context.InsertionOrders;
         }
-
-        //public IQueryable<Creative> DBM_Creatives(int? ioID)
-        //{
-        //    var creatives = context.Creatives.AsQueryable();
-        //    if (ioID.HasValue)
-        //        creatives = creatives.Where(c => c.InsertionOrderID == ioID);
-        //    return creatives;
-        //}
-
+        
         public IQueryable<CreativeDailySummary> DBM_CreativeDailySummaries(DateTime? startDate, DateTime? endDate, int? ioID = null, int? creativeID = null)
         {
             var cds = context.DBMCreativeDailySummaries.AsQueryable();
@@ -126,24 +118,7 @@ namespace DirectAgents.Domain.Concrete
             });
             return stats;
         }
-
-        public TDRawStat GetDBMStat(Creative creative, DateTime? startDate, DateTime? endDate)
-        {
-            var stat = new TDRawStat
-            {
-                Name = creative.Name
-            };
-            var cds = DBM_CreativeDailySummaries(startDate, endDate, creativeID: creative.ID);
-            if (cds.Any())
-            {
-                stat.Impressions = cds.Sum(c => c.Impressions);
-                stat.Clicks = cds.Sum(c => c.Clicks);
-                stat.PostClickConv = cds.Sum(c => c.PostClickConv);
-                stat.PostViewConv = cds.Sum(c => c.PostViewConv);
-                stat.Cost = cds.Sum(c => c.Revenue);
-            }
-            return stat;
-        }
+        
         #endregion
 
         // ---
