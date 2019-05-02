@@ -261,7 +261,6 @@
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
     <Compile Include="Contracts\IClientPortalRepository.cs" />
-    <Compile Include="Contracts\ITDRepository.cs" />
     <Compile Include="DTOs\AffiliateSummary.cs" />
     <Compile Include="DTOs\CalenderWeek.cs" />
     <Compile Include="DTOs\DateRangeSummary.cs" />
@@ -301,12 +300,6 @@
     <Compile Include="Entities\TD\AdRoll\AdRollProfile.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Entities\TD\DBM\Conversion.cs" />
-    <Compile Include="Entities\TD\DBM\Creative.cs" />
-    <Compile Include="Entities\TD\DBM\CreativeDailySummary.cs" />
-    <Compile Include="Entities\TD\DBM\DailyLocationStat.cs" />
-    <Compile Include="Entities\TD\DBM\DBMDailySummary.cs" />
-    <Compile Include="Entities\TD\DBM\InsertionOrder.cs" />
     <Compile Include="Entities\TD\TradingDeskAccount.cs" />
     <Compile Include="Migrations\201406271827066_InitialCreate.cs" />
     <Compile Include="Migrations\201406271827066_InitialCreate.Designer.cs">
@@ -394,8 +387,6 @@
     <Compile Include="Services\ClientPortalRepository.cs" />
     <Compile Include="Services\SearchRepository.cs" />
     <Compile Include="Services\StatsRepository.cs" />
-    <Compile Include="Services\TDRepository.cs" />
-    <Compile Include="Services\TDStatsRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
