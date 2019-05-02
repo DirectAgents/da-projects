@@ -25,9 +25,9 @@ namespace DirectAgents.Domain.Entities.CPProg.YAM.Summaries
 
         public decimal AdvertiserSpending { get; set; }
 
-        public decimal ClickConversionValueByPixelQuery { get; set; }
+        public decimal? ClickConversionValueByPixelQuery { get; set; }
 
-        public decimal ViewConversionValueByPixelQuery { get; set; }
+        public decimal? ViewConversionValueByPixelQuery { get; set; }
 
         public virtual void SetStats(IEnumerable<BaseYamSummary> stats)
         {
