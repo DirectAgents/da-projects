@@ -600,9 +600,8 @@
     <Compile Include="Commands\DA\DASynchAdrollConvCsv.cs" />
     <Compile Include="Commands\DA\DASynchAdrollStats.cs" />
     <Compile Include="Commands\DA\DASynchAdvertisers.cs" />
-    <Compile Include="Commands\DA\DASynchDBMStats1.cs" />
     <Compile Include="Commands\DA\DASynchFacebookStatsV2.cs" />
-	<Compile Include="Commands\DA\DASynchFacebookStats.cs" />
+    <Compile Include="Commands\DA\DASynchFacebookStats.cs" />
     <Compile Include="Commands\DA\DASynchOfferBudgetStats2.cs" />
     <Compile Include="Commands\DA\DASynchOfferBudgetStats.cs" />
     <Compile Include="Commands\DA\DASynchOfferDailySummaries.cs" />
