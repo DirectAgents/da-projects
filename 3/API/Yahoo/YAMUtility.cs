@@ -388,11 +388,17 @@ namespace Yahoo
 
         private List<int> GetMetrics(ReportSettings reportSettings)
         {
-            var metricList = new[]
-            {
-                Metric.IMPRESSIONS, Metric.CLICKS, Metric.ADVERTISER_SPENDING, Metric.CLICK_THROUGH_CONVERSIONS,
-                Metric.VIEW_THROUGH_CONVERSIONS, Metric.ROAS_ACTION_VALUE
-            };
+            var metricList = reportSettings.ByPixelParameter && reportSettings.IsOutdated
+                ? new[]
+                {
+                    // used to obtain the *real* conversion values from the pixel parameter
+                    Metric.CLICK_THROUGH_CONVERSIONS, Metric.VIEW_THROUGH_CONVERSIONS
+                }
+                : new[]
+                {
+                    Metric.IMPRESSIONS, Metric.CLICKS, Metric.ADVERTISER_SPENDING, Metric.CLICK_THROUGH_CONVERSIONS,
+                    Metric.VIEW_THROUGH_CONVERSIONS, Metric.ROAS_ACTION_VALUE
+                };
             return metricList.ToList();
         }
 

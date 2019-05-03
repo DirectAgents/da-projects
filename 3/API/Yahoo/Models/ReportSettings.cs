@@ -56,5 +56,7 @@ namespace Yahoo.Models
         /// Flag for Pixel Parameter dimension (may be null)
         /// </summary>
         public bool ByPixelParameter { get; set; }
+
+        public bool IsOutdated { get; set; }
     }
 }
