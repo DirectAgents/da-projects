@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using FacebookAPI.Api;
+using FacebookAPI.Constants;
 using FacebookAPI.Converters;
 using FacebookAPI.Entities;
 using FacebookAPI.Enums;
@@ -121,7 +122,7 @@ namespace FacebookAPI
         public IEnumerable<FBSummary> GetDailyAdStats(string accountId, DateTime start, DateTime end)
         {
             var converter = new AdInsigthsFacebookSummaryConverter(conversionActionType, clickAttribution, viewAttribution);
-            return GetFBSummariesLoop(accountId, start, end, converter, byCampaign: true, byAdSet: true, byAd: true, getArchived: false);
+            return GetFBSummariesLoop(accountId, start, end, converter, byCampaign: true, byAdSet: true, byAd: true, getArchived: true);
         }
 
         private IEnumerable<FBSummary> GetFBSummariesLoop(string accountId, DateTime start, DateTime end, FacebookSummaryConverter converter,
@@ -207,7 +208,7 @@ namespace FacebookAPI
                 filterList.Add(new Filter { field = "campaign.name", @operator = campaignFilterOperator, value = campaignFilterValue });
             if (getArchived)
             {
-                filterList.Add(new Filter { field = $"{levelVal}.effective_status", @operator = "IN", value = new[] { "ARCHIVED" } });
+                filterList.Add(new Filter { field = $"{levelVal}.effective_status", @operator = "IN", value = new[] { EffectiveStatuses.Archived } });
             }
             var parameters = new
             {

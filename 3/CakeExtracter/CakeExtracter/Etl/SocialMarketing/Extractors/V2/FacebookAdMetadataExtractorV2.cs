@@ -10,7 +10,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extractors.V2
     /// <summary>
     /// Facebook ad metadata extractor.
     /// Ad creative data can't be extracted together with ads insights stats. 
-    /// Separate call to facebook graph api needed to extract cerative's stats.
+    /// Separate call to facebook graph api needed to extract creative's stats.
     /// </summary>
     public class FacebookAdMetadataExtractorV2
     {
@@ -47,7 +47,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extractors.V2
                     else
                     {
                         Logger.Info(account.Id, "Fetching ads metadata.");
-                        var adData = adMetadataProvider.TryExtractAllAdsMetadataForAccount(account.ExternalId);
+                        var adData = adMetadataProvider.ExtractAllAdsMetadataForAccount(account.ExternalId);
                         creativesDataDictionary[account.ExternalId] = adData;
                         return adData;
                     }

@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants\EffectiveStatuses.cs" />
     <Compile Include="Converters\AdInsigthsFacebookSummaryConverter.cs" />
     <Compile Include="Converters\AdSetInsigthsFacebookSummaryConverter.cs" />
     <Compile Include="Converters\DailyInsigthsFacebookSummaryConverter.cs" />
