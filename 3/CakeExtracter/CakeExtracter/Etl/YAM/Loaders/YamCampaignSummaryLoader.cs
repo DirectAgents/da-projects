@@ -25,23 +25,29 @@ namespace CakeExtracter.Etl.YAM.Loaders
             baseLoader = new BaseYamSummaryLoader(accountId);
         }
 
+        public bool MergeItemsWithExisted(List<YamCampaignSummary> items)
+        {
+            var entities = items.Select(x => x.Campaign).ToList();
+            var result = MergeDependentCampaigns(entities);
+            if (result)
+            {
+                result = baseLoader.MergeSummariesWithExisted(items, CampaignSummariesMergeHelper,
+                    x => x.EntityId = x.Campaign.Id);
+            }
+
+            return result;
+        }
+
+        public bool MergeDependentCampaigns(List<YamCampaign> items)
+        {
+            return baseLoader.MergeDependentEntitiesWithExisted(items, CampaignMergeHelper, campaign => campaign.AccountId = accountId);
+        }
+
         protected override int Load(List<YamCampaignSummary> items)
         {
             Logger.Info(accountId, "Loading {0} YamCampaignSummaries..", items.Count);
-            MergeItemsWithExisted(items);
-            return items.Count;
-        }
-
-        public void MergeDependentCampaigns(List<YamCampaign> items)
-        {
-            baseLoader.MergeDependentEntitiesWithExisted(items, CampaignMergeHelper, campaign => campaign.AccountId = accountId);
-        }
-
-        private void MergeItemsWithExisted(List<YamCampaignSummary> items)
-        {
-            var entities = items.Select(x => x.Campaign).ToList();
-            MergeDependentCampaigns(entities);
-            baseLoader.MergeSummariesWithExisted(items, CampaignSummariesMergeHelper, x => x.EntityId = x.Campaign.Id);
+            var result = MergeItemsWithExisted(items);
+            return result ? items.Count : 0;
         }
     }
 }

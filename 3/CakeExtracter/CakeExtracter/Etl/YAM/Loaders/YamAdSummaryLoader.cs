@@ -29,31 +29,46 @@ namespace CakeExtracter.Etl.YAM.Loaders
             creativeLoader = new YamCreativeSummaryLoader(accountId);
         }
 
-        protected override int Load(List<YamAdSummary> items)
+        public bool MergeItemsWithExisted(List<YamAdSummary> items)
         {
-            Logger.Info(accountId, "Loading {0} YamAdSummaries..", items.Count);
-            MergeItemsWithExisted(items);
-            return items.Count;
+            var entities = items.Select(x => x.Ad).ToList();
+            var result = MergeDependentAds(entities);
+            if (result)
+            {
+                result = baseLoader.MergeSummariesWithExisted(items, AdSummariesMergeHelper, x => x.EntityId = x.Ad.Id);
+            }
+
+            return result;
         }
 
-        public void MergeDependentAds(List<YamAd> items)
+        public bool MergeDependentAds(List<YamAd> items)
         {
             var lines = items.Select(x => x.Line).ToList();
-            lineLoader.MergeDependentLines(lines);
+            var result = lineLoader.MergeDependentLines(lines);
+            if (!result)
+            {
+                return false;
+            }
+
             var creatives = items.Select(x => x.Creative).ToList();
-            creativeLoader.MergeDependentCreatives(creatives);
-            baseLoader.MergeDependentEntitiesWithExisted(items, AdMergeHelper, ad =>
+            result = creativeLoader.MergeDependentCreatives(creatives);
+            if (!result)
+            {
+                return false;
+            }
+
+            return baseLoader.MergeDependentEntitiesWithExisted(items, AdMergeHelper, ad =>
             {
                 ad.LineId = ad.Line.Id;
                 ad.CreativeId = ad.Creative.Id;
             });
         }
 
-        private void MergeItemsWithExisted(List<YamAdSummary> items)
+        protected override int Load(List<YamAdSummary> items)
         {
-            var entities = items.Select(x => x.Ad).ToList();
-            MergeDependentAds(entities);
-            baseLoader.MergeSummariesWithExisted(items, AdSummariesMergeHelper, x => x.EntityId = x.Ad.Id);
+            Logger.Info(accountId, "Loading {0} YamAdSummaries..", items.Count);
+            var result = MergeItemsWithExisted(items);
+            return result ? items.Count : 0;
         }
     }
 }

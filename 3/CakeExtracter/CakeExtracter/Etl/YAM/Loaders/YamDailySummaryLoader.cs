@@ -3,7 +3,7 @@ using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
 
 namespace CakeExtracter.Etl.YAM.Loaders
 {
-    internal class YamDailySummaryLoader : Loader<YamDailySummary>
+    public class YamDailySummaryLoader : Loader<YamDailySummary>
     {
         private static readonly MergeHelper DailySummaryMergeHelper = new MergeHelper
         {
@@ -18,11 +18,16 @@ namespace CakeExtracter.Etl.YAM.Loaders
             baseLoader = new BaseYamSummaryLoader(accountId);
         }
 
+        public bool MergeItemsWithExisted(List<YamDailySummary> items)
+        {
+            return baseLoader.MergeSummariesWithExisted(items, DailySummaryMergeHelper, x => x.EntityId = accountId);
+        }
+
         protected override int Load(List<YamDailySummary> items)
         {
             Logger.Info(accountId, "Loading {0} YamDailySummaries..", items.Count);
-            baseLoader.MergeSummariesWithExisted(items, DailySummaryMergeHelper, x => x.EntityId = accountId);
-            return items.Count;
+            var result = MergeItemsWithExisted(items);
+            return result ? items.Count: 0;
         }
     }
 }

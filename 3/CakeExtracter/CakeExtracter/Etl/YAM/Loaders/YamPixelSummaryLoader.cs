@@ -5,7 +5,6 @@ using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
 
 namespace CakeExtracter.Etl.YAM.Loaders
 {
-
     internal class YamPixelSummaryLoader : Loader<YamPixelSummary>
     {
         private static readonly MergeHelper PixelMergeHelper = new MergeHelper
@@ -26,23 +25,30 @@ namespace CakeExtracter.Etl.YAM.Loaders
             baseLoader = new BaseYamSummaryLoader(accountId);
         }
 
+        public bool MergeItemsWithExisted(List<YamPixelSummary> items)
+        {
+            var entities = items.Select(x => x.Pixel).ToList();
+            var result = MergeDependentPixels(entities);
+            if (result)
+            {
+                result = baseLoader.MergeSummariesWithExisted(items, PixelSummariesMergeHelper, x => x.EntityId = x.Pixel.Id);
+            }
+
+            return result;
+        }
+
+        public bool MergeDependentPixels(List<YamPixel> items)
+        {
+            return baseLoader.MergeDependentEntitiesWithExisted(items, PixelMergeHelper,
+                pixel => pixel.AccountId = accountId,
+                options => { options.ColumnPrimaryKeyExpression = x => new {x.AccountId, x.ExternalId}; });
+        }
+
         protected override int Load(List<YamPixelSummary> items)
         {
             Logger.Info(accountId, "Loading {0} YamPixelSummaries..", items.Count);
-            MergeItemsWithExisted(items);
-            return items.Count;
-        }
-
-        public void MergeDependentPixels(List<YamPixel> items)
-        {
-            baseLoader.MergeDependentEntitiesWithExisted(items, PixelMergeHelper, pixel => pixel.AccountId = accountId);
-        }
-
-        private void MergeItemsWithExisted(List<YamPixelSummary> items)
-        {
-            var entities = items.Select(x => x.Pixel).ToList();
-            MergeDependentPixels(entities);
-            baseLoader.MergeSummariesWithExisted(items, PixelSummariesMergeHelper, x => x.EntityId = x.Pixel.Id);
+            var result = MergeItemsWithExisted(items);
+            return result ? items.Count : 0;
         }
     }
 }

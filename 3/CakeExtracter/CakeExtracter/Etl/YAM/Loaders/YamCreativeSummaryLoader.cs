@@ -25,23 +25,29 @@ namespace CakeExtracter.Etl.YAM.Loaders
             baseLoader = new BaseYamSummaryLoader(accountId);
         }
 
+        public bool MergeItemsWithExisted(List<YamCreativeSummary> items)
+        {
+            var entities = items.Select(x => x.Creative).ToList();
+            var result = MergeDependentCreatives(entities);
+            if (result)
+            {
+                result = baseLoader.MergeSummariesWithExisted(items, CreativeSummariesMergeHelper,
+                    x => x.EntityId = x.Creative.Id);
+            }
+
+            return result;
+        }
+
+        public bool MergeDependentCreatives(List<YamCreative> items)
+        {
+            return baseLoader.MergeDependentEntitiesWithExisted(items, CreativeMergeHelper, creative => creative.AccountId = accountId);
+        }
+
         protected override int Load(List<YamCreativeSummary> items)
         {
             Logger.Info(accountId, "Loading {0} YamCreativeSummaries..", items.Count);
-            MergeItemsWithExisted(items);
-            return items.Count;
-        }
-
-        public void MergeDependentCreatives(List<YamCreative> items)
-        {
-            baseLoader.MergeDependentEntitiesWithExisted(items, CreativeMergeHelper, creative => creative.AccountId = accountId);
-        }
-
-        private void MergeItemsWithExisted(List<YamCreativeSummary> items)
-        {
-            var entities = items.Select(x => x.Creative).ToList();
-            MergeDependentCreatives(entities);
-            baseLoader.MergeSummariesWithExisted(items, CreativeSummariesMergeHelper, x => x.EntityId = x.Creative.Id);
+            var result = MergeItemsWithExisted(items);
+            return result ? items.Count : 0;
         }
     }
 }

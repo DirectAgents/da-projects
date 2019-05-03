@@ -27,25 +27,36 @@ namespace CakeExtracter.Etl.YAM.Loaders
             campaignLoader = new YamCampaignSummaryLoader(accountId);
         }
 
+        public bool MergeItemsWithExisted(List<YamLineSummary> items)
+        {
+            var entities = items.Select(x => x.Line).ToList();
+            var result = MergeDependentLines(entities);
+            if (result)
+            {
+                result = baseLoader.MergeSummariesWithExisted(items, LineSummariesMergeHelper, x => x.EntityId = x.Line.Id);
+            }
+
+            return result;
+        }
+
+        public bool MergeDependentLines(List<YamLine> items)
+        {
+            var campaigns = items.Select(x => x.Campaign).ToList();
+            var result = campaignLoader.MergeDependentCampaigns(campaigns);
+            if (result)
+            {
+                result = baseLoader.MergeDependentEntitiesWithExisted(items, LineMergeHelper,
+                    line => line.CampaignId = line.Campaign.Id);
+            }
+
+            return result;
+        }
+
         protected override int Load(List<YamLineSummary> items)
         {
             Logger.Info(accountId, "Loading {0} YamLineSummaries..", items.Count);
-            MergeItemsWithExisted(items);
-            return items.Count;
-        }
-
-        public void MergeDependentLines(List<YamLine> items)
-        {
-            var campaigns = items.Select(x => x.Campaign).ToList();
-            campaignLoader.MergeDependentCampaigns(campaigns);
-            baseLoader.MergeDependentEntitiesWithExisted(items, LineMergeHelper, line => line.CampaignId = line.Campaign.Id);
-        }
-
-        private void MergeItemsWithExisted(List<YamLineSummary> items)
-        {
-            var entities = items.Select(x => x.Line).ToList();
-            MergeDependentLines(entities);
-            baseLoader.MergeSummariesWithExisted(items, LineSummariesMergeHelper, x => x.EntityId = x.Line.Id);
+            var result = MergeItemsWithExisted(items);
+            return result ? items.Count : 0;
         }
     }
 }
