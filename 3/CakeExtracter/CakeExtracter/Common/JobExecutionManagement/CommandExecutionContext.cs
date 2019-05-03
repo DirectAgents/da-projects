@@ -118,6 +118,14 @@ namespace CakeExtracter.Common.JobExecutionManagement
         {
             if (currentJobRequestExecution != null)
             {
+                jobExecutionItemService.SetStateMessage(currentJobRequestExecution, stateMessage, accountId);
+            }
+        }
+
+        public void AppendJobExecutionStateInHistory(string stateMessage, int? accountId = null)
+        {
+            if (currentJobRequestExecution != null)
+            {
                 jobExecutionItemService.AddStateMessage(currentJobRequestExecution, stateMessage, accountId);
             }
         }

@@ -48,6 +48,8 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
         /// <param name="executionHistoryItem">The execution history item.</param>
         /// <param name="message">The message.</param>
         /// <param name="accountId">The account identifier.</param>
+        void SetStateMessage(JobRequestExecution executionHistoryItem, string message, int? accountId = null);
+
         void AddStateMessage(JobRequestExecution executionHistoryItem, string message, int? accountId = null);
     }
 }

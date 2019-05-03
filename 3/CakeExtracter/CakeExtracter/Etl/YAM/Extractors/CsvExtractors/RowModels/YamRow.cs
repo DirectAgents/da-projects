@@ -38,6 +38,6 @@ namespace CakeExtracter.Etl.YAM.Extractors.CsvExtractors.RowModels
 
         public string PixelName { get; set; }
 
-        public int PixelId { get; set; }
+        public string PixelId { get; set; }
     }
 }

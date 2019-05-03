@@ -200,7 +200,7 @@ namespace CakeExtracter.Bootstrappers
                 .ConstructUsing(s => new YamPixel
                 {
                     Name = s.PixelName,
-                    ExternalId = s.PixelId
+                    ExternalId = int.TryParse(s.PixelId, out var id) ? id : 0
                 });
 
             //YAM Summaries

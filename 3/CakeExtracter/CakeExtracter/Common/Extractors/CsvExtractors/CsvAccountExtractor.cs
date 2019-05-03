@@ -47,6 +47,34 @@ namespace CakeExtracter.Common.Extractors.CsvExtractors
             End();
         }
 
+        protected virtual void SetupCsvReaderConfig(ICsvReader csvReader)
+        {
+            csvReader.Configuration.SkipEmptyRecords = true;
+            csvReader.Configuration.ShouldSkipRecord = ShouldSkipRecord;
+            csvReader.Configuration.WillThrowOnMissingField = false;
+            csvReader.Configuration.IgnoreReadingExceptions = true;
+            csvReader.Configuration.ReadingExceptionCallback = ProcessReadingException;
+            csvReader.Configuration.IsHeaderCaseSensitive = false;
+            csvReader.Configuration.RegisterClassMap<TRowMap>();
+        }
+
+        protected virtual bool ShouldSkipRecord(string[] fields)
+        {
+            return false;
+        }
+
+        protected virtual void ProcessReadingException(Exception exception, ICsvReader row)
+        {
+            LogReadingException(exception, row);
+        }
+
+        private void LogReadingException(Exception exception, ICsvReader row)
+        {
+            var rowFields = row.FieldHeaders.Select((x, i) => $"{x} = {row.CurrentRecord[i]}").ToList();
+            var message = $"The wrong record: {string.Join(", ", rowFields)}";
+            Logger.Error(accountId, new Exception(message, exception));
+        }
+
         private List<T> EnumerateRowsInner(TextReader reader)
         {
             using (var csvReader = new CsvReader(reader))
@@ -55,16 +83,6 @@ namespace CakeExtracter.Common.Extractors.CsvExtractors
                 var csvRows = csvReader.GetRecords<T>().ToList();
                 return csvRows;
             }
-        }
-
-        private void SetupCsvReaderConfig(CsvReader csvReader)
-        {
-            csvReader.Configuration.SkipEmptyRecords = true;
-            csvReader.Configuration.WillThrowOnMissingField = false;
-            csvReader.Configuration.IgnoreReadingExceptions = true;
-            csvReader.Configuration.ReadingExceptionCallback = (ex, row) => { Logger.Error(ex); };
-            csvReader.Configuration.IsHeaderCaseSensitive = false;
-            csvReader.Configuration.RegisterClassMap<TRowMap>();
         }
     }
 }

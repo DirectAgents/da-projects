@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using AutoMapper;
 using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Etl.YAM.Extractors.CsvExtractors;
 using CakeExtracter.Etl.YAM.Extractors.CsvExtractors.RowModels;
 using CakeExtracter.Helpers;
@@ -39,6 +40,21 @@ namespace CakeExtracter.Etl.YAM.Extractors.ApiExtractors
             accountId = account.Id;
         }
 
+        public IEnumerable<T> GetItemsFromApi()
+        {
+            try
+            {
+                var items = ExtractItems();
+                var summaries = TransformItems(items);
+                return summaries;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(accountId, e);
+                return new List<T>();
+            }
+        }
+
         protected virtual ReportSettings GetReportSettings()
         {
             return new ReportSettings
@@ -51,10 +67,24 @@ namespace CakeExtracter.Etl.YAM.Extractors.ApiExtractors
 
         protected override void Extract()
         {
-            var items = ExtractItems();
-            var summaries = TransformItems(items);
+            LogStartOfItemsExtracting();
+            var summaries = GetItemsFromApi();
             Add(summaries);
             End();
+            LogEndOfItemsExtracting();
+        }
+
+        private void LogStartOfItemsExtracting()
+        {
+            CommandExecutionContext.Current?.AppendJobExecutionStateInHistory($"{SummariesDisplayName} - Extraction", accountId);
+            var startExtractionMessage = $"Extracting {SummariesDisplayName} from YAM API for ({accountId} - {YamAdvertiserId}) " +
+                                         $"from {DateRange.FromDate:d} to {DateRange.ToDate:d}";
+            Logger.Info(accountId, startExtractionMessage);
+        }
+
+        private void LogEndOfItemsExtracting()
+        {
+            CommandExecutionContext.Current?.AppendJobExecutionStateInHistory($"{SummariesDisplayName} - Extraction finished", accountId);
         }
 
         private IEnumerable<YamRow> ExtractItems()
@@ -101,7 +131,11 @@ namespace CakeExtracter.Etl.YAM.Extractors.ApiExtractors
             var sums = items.Select(Mapper.Map<T>).ToList();
             var sum = sums.FirstOrDefault();
             sum.SetStats(sums);
-            SetStatsByPixelQuery(sum, items);
+            if (byPixelParameter)
+            {
+                SetStatsByPixelQuery(sum, items);
+            }
+
             return sum;
         }
 

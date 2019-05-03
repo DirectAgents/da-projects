@@ -4,6 +4,7 @@ using System.ComponentModel.Composition;
 using System.Threading.Tasks;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Etl.YAM.Extractors.ApiExtractors;
 using CakeExtracter.Etl.YAM.Helpers;
 using CakeExtracter.Etl.YAM.Loaders;
@@ -155,44 +156,50 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Daily(DateRange dateRange, ExtAccount account, YAMUtility yamUtility, bool usePixelParameters)
         {
-            var extractor = new YamDailySummaryExtractor(yamUtility, dateRange, account, true);
+            var extractor = new YamDailySummaryExtractor(yamUtility, dateRange, account, usePixelParameters);
             var loader = new YamDailySummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
+            CommandExecutionContext.Current?.AppendJobExecutionStateInHistory("YamDailySummaries - Finished", account.Id);
         }
 
         private void DoETL_Campaign(DateRange dateRange, ExtAccount account, YAMUtility yamUtility, bool usePixelParameters)
         {
-            var extractor = new YamCampaignSummaryExtractor(yamUtility, dateRange, account, true);
+            var extractor = new YamCampaignSummaryExtractor(yamUtility, dateRange, account, usePixelParameters);
             var loader = new YamCampaignSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
+            CommandExecutionContext.Current?.AppendJobExecutionStateInHistory("YamCampaignSummaries - Finished", account.Id);
         }
 
         private void DoETL_Line(DateRange dateRange, ExtAccount account, YAMUtility yamUtility, bool usePixelParameters)
         {
-            var extractor = new YamLineSummaryExtractor(yamUtility, dateRange, account, true);
+            var extractor = new YamLineSummaryExtractor(yamUtility, dateRange, account, usePixelParameters);
             var loader = new YamLineSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
+            CommandExecutionContext.Current?.AppendJobExecutionStateInHistory("YamLineSummaries - Finished", account.Id);
         }
 
         private void DoETL_Creative(DateRange dateRange, ExtAccount account, YAMUtility yamUtility, bool usePixelParameters)
         {
-            var extractor = new YamCreativeSummaryExtractor(yamUtility, dateRange, account, true);
+            var extractor = new YamCreativeSummaryExtractor(yamUtility, dateRange, account, usePixelParameters);
             var loader = new YamCreativeSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
+            CommandExecutionContext.Current?.AppendJobExecutionStateInHistory("YamCreativeSummaries - Finished", account.Id);
         }
 
         private void DoETL_Ad(DateRange dateRange, ExtAccount account, YAMUtility yamUtility, bool usePixelParameters)
         {
-            var extractor = new YamAdSummaryExtractor(yamUtility, dateRange, account, true);
+            var extractor = new YamAdSummaryExtractor(yamUtility, dateRange, account, usePixelParameters);
             var loader = new YamAdSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
+            CommandExecutionContext.Current?.AppendJobExecutionStateInHistory("YamAdSummaries - Finished", account.Id);
         }
 
         private void DoETL_Pixel(DateRange dateRange, ExtAccount account, YAMUtility yamUtility, bool usePixelParameters)
         {
-            var extractor = new YamPixelSummaryExtractor(yamUtility, dateRange, account, true);
+            var extractor = new YamPixelSummaryExtractor(yamUtility, dateRange, account, usePixelParameters);
             var loader = new YamPixelSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
+            CommandExecutionContext.Current?.AppendJobExecutionStateInHistory("YamPixelSummaries - Finished", account.Id);
         }
     }
 }

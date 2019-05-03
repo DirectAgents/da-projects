@@ -104,13 +104,25 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
         /// <param name="executionHistoryItem">The execution history item.</param>
         /// <param name="message">The message.</param>
         /// <param name="accountId">The account identifier.</param>
-        public void AddStateMessage(JobRequestExecution executionHistoryItem, string message, int? accountId = null)
+        public void SetStateMessage(JobRequestExecution executionHistoryItem, string message, int? accountId = null)
         {
             lock (executionItemHistoryLockObject)
             {
                 executionHistoryItem.CurrentState = accountId.HasValue
                     ? ExecutionLoggingUtils.SetSingleAccountMessageInLogData(executionHistoryItem.CurrentState, message, accountId.Value)
                     : ExecutionLoggingUtils.SetSingleCommonMessageInLogData(executionHistoryItem.CurrentState, message);
+                jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
+            }
+        }
+
+        public void AddStateMessage(JobRequestExecution executionHistoryItem, string message, int? accountId = null)
+        {
+            var messageWithTimeStamp = $"{DateTime.UtcNow.ToLongTimeString()}: {message}";
+            lock (executionItemHistoryLockObject)
+            {
+                executionHistoryItem.CurrentState = accountId.HasValue
+                    ? ExecutionLoggingUtils.AddAccountMessageToLogData(executionHistoryItem.CurrentState, messageWithTimeStamp, accountId.Value)
+                    : ExecutionLoggingUtils.AddCommonMessageToLogData(executionHistoryItem.CurrentState, messageWithTimeStamp);
                 jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
             }
         }

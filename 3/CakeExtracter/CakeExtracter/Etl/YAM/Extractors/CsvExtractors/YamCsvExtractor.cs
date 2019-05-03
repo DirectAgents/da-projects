@@ -21,5 +21,11 @@ namespace CakeExtracter.Etl.YAM.Extractors.CsvExtractors
                 }
             };
         }
+
+        protected override bool ShouldSkipRecord(string[] fields)
+        {
+            //if the first column is “Totals” the current record is a record with information and should be skipped.
+            return fields[0] == "Totals";
+        }
     }
 }
