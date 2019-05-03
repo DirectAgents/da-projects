@@ -92,7 +92,6 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
             {
                 return;
             }
-
             UpdateRequest(request, JobRequestStatus.Aborted);
             LogErrorAboutRequest("The request is aborted", request);
         }

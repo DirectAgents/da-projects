@@ -10,6 +10,7 @@ using FacebookAPI.Enums;
 
 namespace FacebookAPI
 {
+    [Obsolete]
     public class FacebookUtility
     {
         public const int RowsReturnedAtATime = 100;
@@ -92,7 +93,7 @@ namespace FacebookAPI
 
         private static string GetAttributionName(Attribution attribution, AttributionWindow window)
         {
-            return $"{(int) window}d_{AttributionPostfixNames[attribution]}";
+            return $"{(int)window}d_{AttributionPostfixNames[attribution]}";
         }
 
         //public string AppId { get; set; }
@@ -144,7 +145,7 @@ namespace FacebookAPI
 
         private FacebookClient CreateFBClient()
         {
-            var fbClient = new FacebookClient(AccessToken) {Version = "v" + ApiVersion};
+            var fbClient = new FacebookClient(AccessToken) { Version = "v" + ApiVersion };
             return fbClient;
         }
 
@@ -339,7 +340,7 @@ namespace FacebookAPI
 
             if (getArchived)
             {
-                filterList.Add(new Filter{ field = $"{levelVal}.effective_status", @operator = "IN", value = new[] { "ARCHIVED" } });
+                filterList.Add(new Filter { field = $"{levelVal}.effective_status", @operator = "IN", value = new[] { "ARCHIVED" } });
             }
 
             // See https://developers.facebook.com/docs/marketing-api/ad-rules-getting-started/
@@ -427,6 +428,12 @@ namespace FacebookAPI
                             int waitMillisecs = InitialWaitMillisecs;
                             while (retObj.async_status != "Job Completed" || retObj.async_percent_completion < 100)
                             {
+                                if (retObj.async_status == "Job Failed")
+                                {
+                                    clientParms.ResetRunId();
+                                    GetRunId_withRetry(clientParms); // resets existing run  id
+                                    throw new Exception("Job failed. Execution will be requested again.");
+                                }
                                 waitMillisecs += 500;
                                 Thread.Sleep(waitMillisecs);
                                 retObj = clientParms.fbClient.Get(runId);
@@ -613,7 +620,7 @@ namespace FacebookAPI
                 }
             }
         }
-        
+
         // Reference: https://developers.facebook.com/docs/marketing-api/generatepreview/v2.6
         public IEnumerable<FBAdPreview> GetAdPreviewsAPI(string adId)
         {
@@ -681,7 +688,8 @@ namespace FacebookAPI
         {
             var accessToken = "";
             var client = new FacebookClient(AccessToken);
-            dynamic obj = client.Get("debug_token", new {
+            dynamic obj = client.Get("debug_token", new
+            {
                 input_token = accessToken
             });
         }
@@ -701,7 +709,8 @@ namespace FacebookAPI
             var path = acctId + "/insights";
             //var fullpath = "v" + ApiVersion + "/" + path;
             var fbClient = CreateFBClient();
-            dynamic obj = fbClient.Get(path, new {
+            dynamic obj = fbClient.Get(path, new
+            {
                 metadata = 1,
                 fields = "impressions,unique_clicks,total_actions,spend",
                 time_range = new { since = "2015-10-1", until = "2015-10-3" },
@@ -732,6 +741,11 @@ namespace FacebookAPI
                     Thread.Sleep(waitMillisecs);
                 }
                 return runId;
+            }
+
+            public void ResetRunId()
+            {
+                runId = null;
             }
         }
 
