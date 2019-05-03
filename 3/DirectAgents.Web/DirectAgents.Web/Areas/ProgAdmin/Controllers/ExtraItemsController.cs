@@ -62,6 +62,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             else
                 return Content("Error creating Extra Item");
         }
+
         public ActionResult Delete(int id)
         {
             cpProgRepo.DeleteExtraItem(id);
@@ -77,6 +78,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             SetupForEdit();
             return View(item);
         }
+
         [HttpPost]
         public ActionResult Edit(ExtraItem item)
         {
