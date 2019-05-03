@@ -14,7 +14,9 @@ namespace FacebookAPI
     {
         private const int metadataFetchingPageSize = 300;
 
-        public const int MaxRetries = 5;
+        private const int maxRetries = 5;
+
+        private const int secondsToWaitBetweenReties = 5;
 
         public FacebookAdMetadataProvider(Action<string> logInfo, Action<string> logError)
            : base(logInfo, logError)
@@ -22,18 +24,33 @@ namespace FacebookAPI
         }
 
         /// <summary>
-        /// Gets all ads data for account.
+        /// Extracts all ads metadata for account.
         /// </summary>
-        /// <param name="accountId">The account identifier.</param>
+        /// <param name="accountExternalId">The account external identifier.</param>
         /// <returns></returns>
-        public List<AdCreativeData> TryExtractAllAdsMetadataForAccount(string accountExternalId)
+        public List<AdCreativeData> ExtractAllAdsMetadataForAccount(string accountExternalId)
         {
-            var maxRetryAttempts = 5;
-            var secondsToWait = 5;
+            var allAdsMetadata = new List<AdCreativeData>();
+            try
+            {
+                // by default Facebook Api doesn't return archived ad's info. Need separate request to fetch archived data.
+                allAdsMetadata.AddRange(TryExtractAdsMetadataForAccount(accountExternalId, false));
+                allAdsMetadata.AddRange(TryExtractAdsMetadataForAccount(accountExternalId, true)); 
+            }
+            catch (Exception ex)
+            {
+                LogError("Failed Fetch Ads Metadata values");
+            }
+            return allAdsMetadata;
+        }
+
+        private List<AdCreativeData> TryExtractAdsMetadataForAccount(string accountExternalId, bool isArchived)
+        {
             var data = Policy
                 .Handle<Exception>()
-                .Retry(maxRetryAttempts, (exception, retryCount, context) => LogInfo(String.Format("Ads metadata extraction failed. Waiting {0} seconds before trying again.", secondsToWait)))
-                .Execute(() => GetAllAdsMetadataForAccount(accountExternalId));
+                .Retry(maxRetries, (exception, retryCount, context) =>
+                    LogInfo(String.Format("Ads metadata extraction failed. Waiting {0} seconds before trying again.", secondsToWaitBetweenReties)))
+                .Execute(() => GetAllAdsMetadataForAccount(accountExternalId, isArchived));
             return data;
         }
 
@@ -42,17 +59,12 @@ namespace FacebookAPI
         /// </summary>
         /// <param name="accountId">The account identifier.</param>
         /// <returns></returns>
-        private List<AdCreativeData> GetAllAdsMetadataForAccount(string accountExternalId)
+        private List<AdCreativeData> GetAllAdsMetadataForAccount(string accountExternalId, bool isArchived)
         {
             bool moreData;
             var creativesData = new List<AdCreativeData>();
-            var parameters = new
-            {
-                fields = "id,effective_status,name,creative{image_url,title,body,thumbnail_url,name,id},adset{name,id},campaign{name,id}",
-                after = "",
-                limit = metadataFetchingPageSize,
-            };
             var fbClient = CreateFBClient();
+            dynamic parameters = InitRequestParameters(String.Empty, isArchived);
             do
             {
                 dynamic result = fbClient.Get($"act_{accountExternalId}/ads", parameters);
@@ -63,16 +75,24 @@ namespace FacebookAPI
                 moreData = (result.paging != null && result.paging.next != null);
                 if (moreData)
                 {
-                    parameters = new
-                    {
-                        parameters.fields,
-                        after = (string)result.paging.cursors.after,
-                        parameters.limit,
-                    };
+                    parameters = InitRequestParameters((string)result.paging.cursors.after, isArchived);
                 }
             }
             while (moreData);
             return creativesData;
+        }
+
+        private dynamic InitRequestParameters(string afterValue, bool isArchived)
+        {
+            const string fieldsToFetchValue = "id,effective_status,name,creative{image_url,title,body,thumbnail_url,name,id},adset{name,id},campaign{name,id}";
+            dynamic parameters = new
+            {
+                fields = fieldsToFetchValue,
+                after = afterValue,
+                effective_status = isArchived ? new string[] { "ARCHIVED" } : null,
+                limit = metadataFetchingPageSize,
+            };
+            return parameters;
         }
 
         private List<AdCreativeData> GetPageAdData(dynamic pageData)

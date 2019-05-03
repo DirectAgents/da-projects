@@ -121,7 +121,7 @@ namespace FacebookAPI
         public IEnumerable<FBSummary> GetDailyAdStats(string accountId, DateTime start, DateTime end)
         {
             var converter = new AdInsigthsFacebookSummaryConverter(conversionActionType, clickAttribution, viewAttribution);
-            return GetFBSummariesLoop(accountId, start, end, converter, byCampaign: true, byAdSet: true, byAd: true, getArchived: false);
+            return GetFBSummariesLoop(accountId, start, end, converter, byCampaign: true, byAdSet: true, byAd: true, getArchived: true);
         }
 
         private IEnumerable<FBSummary> GetFBSummariesLoop(string accountId, DateTime start, DateTime end, FacebookSummaryConverter converter,
