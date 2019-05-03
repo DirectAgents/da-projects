@@ -41,12 +41,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.CommissionJunctionExtractors
         {
             this.utility = utility;
             this.dateRangeType = dateRangeType;
-            this.dateRange = dateRange;
             this.account = account;
             this.cleaner = cleaner;
-            datesForCleaning = dateRange.Dates.ToList();
             mapper = new CommissionJunctionAdvertiserMapper();
             ProcessFailedExtraction += exception => Logger.Error(account.Id, exception);
+            var sinceBeforeDateRange = GetSinceBeforeDateRange(dateRange);
+            this.dateRange = sinceBeforeDateRange;
+            datesForCleaning = sinceBeforeDateRange.Dates.ToList();
         }
 
         /// <summary>
@@ -54,8 +55,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.CommissionJunctionExtractors
         /// </summary>
         protected override void Extract()
         {
-            Logger.Info(account.Id, "Extracting Commissions from Commission Junction API for ({0}) from {1:d} to {2:d} (date range type - {3})",
-                account.ExternalId, dateRange.FromDate, dateRange.ToDate, dateRangeType);
+            Logger.Info(account.Id, "Extracting Commissions from Commission Junction API for ({0}) since {1:d} before {2:d} (date range type - {3})",
+                account.ExternalId, dateRange.FromDate.ToShortDateString(), dateRange.ToDate.ToShortDateString(), dateRangeType);
             Extract(dateRange.FromDate, dateRange.ToDate);
             End();
         }
@@ -78,7 +79,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.CommissionJunctionExtractors
         private IEnumerable<CjAdvertiserCommission> GetCommissions(DateTime fromDate, DateTime toDate)
         {
             utility.ProcessSkippedCommissions += ProcessSkippedCommissions;
-            var commissions = utility.GetAdvertiserCommissions(dateRangeType, fromDate, toDate.AddDays(1), account.ExternalId);
+            var commissions = utility.GetAdvertiserCommissions(dateRangeType, fromDate, toDate, account.ExternalId);
             utility.ProcessSkippedCommissions -= ProcessSkippedCommissions;
             var items = mapper.MapCommissionJunctionInfoToDbEntities(commissions, account.Id);
             return items;
@@ -101,13 +102,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.CommissionJunctionExtractors
             var toDateIndex = fromDateIndex;
             for (var i = fromDateIndex + 1; i < datesForCleaning.Count; i++)
             {
-                if (datesForCleaning[toDateIndex].AddDays(1) == datesForCleaning[i])
+                var nextDateForCleaningAfterToDate = datesForCleaning[toDateIndex].AddDays(1);
+                if (nextDateForCleaningAfterToDate == datesForCleaning[i])
                 {
                     toDateIndex = i;
                 }
                 else
                 {
-                    CleanCommissions(datesForCleaning[fromDateIndex], datesForCleaning[toDateIndex]);
+                    CleanCommissions(datesForCleaning[fromDateIndex], nextDateForCleaningAfterToDate);
                     fromDateIndex = toDateIndex = i;
                 }
             }
@@ -118,6 +120,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.CommissionJunctionExtractors
         private void CleanCommissions(DateTime fromDate, DateTime toDate)
         {
             cleaner.CleanCommissionJunctionInfo(account.Id, dateRangeType, fromDate, toDate);
+        }
+
+        private static DateRange GetSinceBeforeDateRange(DateRange fromToDateRange)
+        {
+            var sinceBeforeDateRange = new DateRange(fromToDateRange.FromDate, fromToDateRange.ToDate.AddDays(1));
+            return sinceBeforeDateRange;
         }
     }
 }
