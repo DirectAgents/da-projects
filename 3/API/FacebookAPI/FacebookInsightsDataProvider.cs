@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using FacebookAPI.Api;
+using FacebookAPI.Constants;
 using FacebookAPI.Converters;
 using FacebookAPI.Entities;
 using FacebookAPI.Enums;
@@ -207,7 +208,7 @@ namespace FacebookAPI
                 filterList.Add(new Filter { field = "campaign.name", @operator = campaignFilterOperator, value = campaignFilterValue });
             if (getArchived)
             {
-                filterList.Add(new Filter { field = $"{levelVal}.effective_status", @operator = "IN", value = new[] { "ARCHIVED" } });
+                filterList.Add(new Filter { field = $"{levelVal}.effective_status", @operator = "IN", value = new[] { EffectiveStatuses.Archived } });
             }
             var parameters = new
             {

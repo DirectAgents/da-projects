@@ -1,4 +1,5 @@
-﻿using FacebookAPI.Entities;
+﻿using FacebookAPI.Constants;
+using FacebookAPI.Entities;
 using FacebookAPI.Entities.AdDataEntities;
 using Polly;
 using System;
@@ -49,7 +50,7 @@ namespace FacebookAPI
             var data = Policy
                 .Handle<Exception>()
                 .Retry(maxRetries, (exception, retryCount, context) =>
-                    LogInfo(String.Format("Ads metadata extraction failed. Waiting {0} seconds before trying again.", secondsToWaitBetweenReties)))
+                    LogInfo($"Ads metadata extraction failed. Waiting {secondsToWaitBetweenReties} seconds before trying again."))
                 .Execute(() => GetAllAdsMetadataForAccount(accountExternalId, isArchived));
             return data;
         }
@@ -89,7 +90,7 @@ namespace FacebookAPI
             {
                 fields = fieldsToFetchValue,
                 after = afterValue,
-                effective_status = isArchived ? new string[] { "ARCHIVED" } : null,
+                effective_status = isArchived ? new string[] { EffectiveStatuses.Archived } : null,
                 limit = metadataFetchingPageSize,
             };
             return parameters;
