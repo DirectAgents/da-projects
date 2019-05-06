@@ -81,13 +81,14 @@ namespace CakeExtracter.Commands.DA
             extIds_UsePixelParm = ppIds != null ? ppIds.Split(',') : new string[] { };
 
             var accounts = GetAccounts();
-            YAMUtility.TokenSets = GetTokens();
+            YamUtility.TokenSets = GetTokens();
 
             etlList = new List<Action>();
             foreach (var account in accounts)
             {
                 Logger.Info(account.Id, "Commencing ETL for YAM account ({0}) {1}", account.Id, account.Name);
-                var yamUtility = new YAMUtility(m => Logger.Info(account.Id, m), m => Logger.Error(account.Id, new Exception(m)));
+                var yamUtility = new YamUtility(m => Logger.Info(account.Id, m), m => Logger.Warn(m),
+                    exc => Logger.Error(account.Id, exc));
                 yamUtility.SetWhichAlt(account.ExternalId);
 
                 AddEnabledEtl(statsType.Daily, account, () => DoETL_Daily(dateRange, account, yamUtility));
@@ -128,10 +129,10 @@ namespace CakeExtracter.Commands.DA
 
         private void SaveTokens()
         {
-            Platform.SavePlatformTokens(Platform.Code_YAM, YAMUtility.TokenSets);
+            Platform.SavePlatformTokens(Platform.Code_YAM, YamUtility.TokenSets);
         }
 
-        private void DoETL_Daily(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
+        private void DoETL_Daily(DateRange dateRange, ExtAccount account, YamUtility yamUtility)
         {
             var extractor = new YAMDailySummaryExtracter(yamUtility, dateRange, account);
             var loader = new TDDailySummaryLoader(account.Id);
@@ -148,7 +149,7 @@ namespace CakeExtracter.Commands.DA
             CommandHelper.DoEtl(e, l);
         }
 
-        private void DoETL_Strategy(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
+        private void DoETL_Strategy(DateRange dateRange, ExtAccount account, YamUtility yamUtility)
         {
             var extractor = new YAMStrategySummaryExtracter(yamUtility, dateRange, account);
             var loader = new TDStrategySummaryLoader(account.Id);
@@ -166,28 +167,28 @@ namespace CakeExtracter.Commands.DA
             CommandHelper.DoEtl(e, l);
         }
 
-        private void DoETL_AdSet(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
+        private void DoETL_AdSet(DateRange dateRange, ExtAccount account, YamUtility yamUtility)
         {
             var extractor = new YAMAdSetSummaryExtracter(yamUtility, dateRange, account);
             var loader = new TDAdSetSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
 
-        private void DoETL_Creative(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
+        private void DoETL_Creative(DateRange dateRange, ExtAccount account, YamUtility yamUtility)
         {
             var extractor = new YAMTDadSummaryExtracter(yamUtility, dateRange, account);
             var loader = new TDadSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
 
-        private void DoETL_Keyword(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
+        private void DoETL_Keyword(DateRange dateRange, ExtAccount account, YamUtility yamUtility)
         {
             var extractor = new YAMKeywordSummaryExtracter(yamUtility, dateRange, account);
             var loader = new KeywordSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
 
-        private void DoETL_SearchTerm(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
+        private void DoETL_SearchTerm(DateRange dateRange, ExtAccount account, YamUtility yamUtility)
         {
             var extractor = new YAMSearchTermSummaryExtracter(yamUtility, dateRange, account);
             var loader = new SearchTermSummaryLoader(account.Id);

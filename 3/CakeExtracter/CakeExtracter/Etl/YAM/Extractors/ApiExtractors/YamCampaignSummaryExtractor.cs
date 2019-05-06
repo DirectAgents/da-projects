@@ -15,7 +15,7 @@ namespace CakeExtracter.Etl.YAM.Extractors.ApiExtractors
         protected override Func<YamRow, object> GroupedRowsWithUniqueEntitiesFunction =>
             x => new {x.Date, x.CampaignName, x.CampaignId};
 
-        public YamCampaignSummaryExtractor(YAMUtility yamUtility, DateRange dateRange, ExtAccount account, bool byPixelParameter)
+        public YamCampaignSummaryExtractor(YamUtility yamUtility, DateRange dateRange, ExtAccount account, bool byPixelParameter)
             : base(yamUtility, dateRange, account, byPixelParameter)
         {
         }

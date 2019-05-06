@@ -33,8 +33,15 @@ namespace CakeExtracter.Common.Extractors.CsvExtractors
             }
             catch (Exception exception)
             {
-                ReadingExceptionCallback?.Invoke(exception);
-                Logger.Error(accountId, exception);
+                if (ReadingExceptionCallback != null)
+                {
+                    ReadingExceptionCallback.Invoke(exception);
+                }
+                else
+                {
+                    Logger.Error(accountId, exception);
+                }
+
                 return new List<T>();
             }
         }

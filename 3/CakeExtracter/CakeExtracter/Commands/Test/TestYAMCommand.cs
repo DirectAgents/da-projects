@@ -28,7 +28,7 @@ namespace CakeExtracter.Commands.Test
 
         public void Test2()
         {
-            var yamUtility = new YAMUtility();
+            var yamUtility = new YamUtility();
             //yamUtility.CreateTestReport();
             //string id = "85661025-129d-4331-9379-392e4a27a6a2";
             //yamUtility.GetReportStatus(id);

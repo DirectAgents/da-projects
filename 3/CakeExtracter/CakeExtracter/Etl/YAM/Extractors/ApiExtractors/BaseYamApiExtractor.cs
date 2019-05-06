@@ -20,7 +20,7 @@ namespace CakeExtracter.Etl.YAM.Extractors.ApiExtractors
     {
         protected const string ConversionValuePixelQueryPattern = @"gv=(\d*\.?\d*)";
 
-        protected readonly YAMUtility YamUtility;
+        protected readonly YamUtility YamUtility;
         protected readonly DateRange DateRange;
         protected readonly int YamAdvertiserId;
 
@@ -31,7 +31,7 @@ namespace CakeExtracter.Etl.YAM.Extractors.ApiExtractors
 
         protected abstract Func<YamRow, object> GroupedRowsWithUniqueEntitiesFunction { get; }
 
-        protected BaseYamApiExtractor(YAMUtility yamUtility, DateRange dateRange, ExtAccount account, bool byPixelParameter)
+        protected BaseYamApiExtractor(YamUtility yamUtility, DateRange dateRange, ExtAccount account, bool byPixelParameter)
         {
             YamUtility = yamUtility;
             DateRange = dateRange;
@@ -107,7 +107,7 @@ namespace CakeExtracter.Etl.YAM.Extractors.ApiExtractors
                 return ExtractRawDataFromCsv(reportUrl, summariesName);
             }
 
-            Logger.Error(accountId, new Exception($"The report URL is empty."));
+            Logger.Warn(accountId, $"The report URL is empty.");
             return new List<YamRow>();
         }
 

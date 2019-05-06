@@ -13,7 +13,7 @@ namespace CakeExtracter.Etl.YAM.Outdated
     [Obsolete]
     public abstract class YAMApiExtracter<T> : Extracter<T>
     {
-        protected readonly YAMUtility _yamUtility;
+        protected readonly YamUtility _yamUtility;
         protected readonly DateRange dateRange;
         protected readonly ColumnMapping columnMapping;
         protected readonly int yamAdvertiserId;
@@ -21,7 +21,7 @@ namespace CakeExtracter.Etl.YAM.Outdated
         private const string ErrorMessageIfReportIsEmpty = "No header record was found.";
 
         [Obsolete]
-        public YAMApiExtracter(YAMUtility yamUtility, DateRange dateRange, ExtAccount account)
+        public YAMApiExtracter(YamUtility yamUtility, DateRange dateRange, ExtAccount account)
         {
             this._yamUtility = yamUtility;
             this.dateRange = dateRange;
@@ -82,7 +82,7 @@ namespace CakeExtracter.Etl.YAM.Outdated
     public class YAMDailySummaryExtracter : YAMApiExtracter<DailySummary>
     {
         [Obsolete]
-        public YAMDailySummaryExtracter(YAMUtility yamUtility, DateRange dateRange, ExtAccount account)
+        public YAMDailySummaryExtracter(YamUtility yamUtility, DateRange dateRange, ExtAccount account)
             : base(yamUtility, dateRange, account)
         { }
 
@@ -110,7 +110,7 @@ namespace CakeExtracter.Etl.YAM.Outdated
     public class YAMStrategySummaryExtracter : YAMApiExtracter<StrategySummary>
     {
         [Obsolete]
-        public YAMStrategySummaryExtracter(YAMUtility yamUtility, DateRange dateRange, ExtAccount account)
+        public YAMStrategySummaryExtracter(YamUtility yamUtility, DateRange dateRange, ExtAccount account)
             : base(yamUtility, dateRange, account)
         { }
 
@@ -141,7 +141,7 @@ namespace CakeExtracter.Etl.YAM.Outdated
     public class YAMAdSetSummaryExtracter : YAMApiExtracter<AdSetSummary>
     {
         [Obsolete]
-        public YAMAdSetSummaryExtracter(YAMUtility yamUtility, DateRange dateRange, ExtAccount account)
+        public YAMAdSetSummaryExtracter(YamUtility yamUtility, DateRange dateRange, ExtAccount account)
             : base(yamUtility, dateRange, account)
         { }
 
@@ -173,7 +173,7 @@ namespace CakeExtracter.Etl.YAM.Outdated
     public class YAMTDadSummaryExtracter : YAMApiExtracter<TDadSummary>
     {
         [Obsolete]
-        public YAMTDadSummaryExtracter(YAMUtility yamUtility, DateRange dateRange, ExtAccount account)
+        public YAMTDadSummaryExtracter(YamUtility yamUtility, DateRange dateRange, ExtAccount account)
             : base(yamUtility, dateRange, account)
         { }
 
@@ -205,7 +205,7 @@ namespace CakeExtracter.Etl.YAM.Outdated
     public class YAMKeywordSummaryExtracter : YAMApiExtracter<KeywordSummary>
     {
         [Obsolete]
-        public YAMKeywordSummaryExtracter(YAMUtility yamUtility, DateRange dateRange, ExtAccount account)
+        public YAMKeywordSummaryExtracter(YamUtility yamUtility, DateRange dateRange, ExtAccount account)
             : base(yamUtility, dateRange, account)
         { }
 
@@ -238,7 +238,7 @@ namespace CakeExtracter.Etl.YAM.Outdated
     public class YAMSearchTermSummaryExtracter : YAMApiExtracter<SearchTermSummary>
     {
         [Obsolete]
-        public YAMSearchTermSummaryExtracter(YAMUtility yamUtility, DateRange dateRange, ExtAccount account)
+        public YAMSearchTermSummaryExtracter(YamUtility yamUtility, DateRange dateRange, ExtAccount account)
             : base(yamUtility, dateRange, account)
         { }
 

@@ -49,8 +49,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Const.cs" />
-    <Compile Include="Models\HelperClasses.cs" />
+    <Compile Include="Constants\Enums\IntervalTypeId.cs" />
+    <Compile Include="Constants\Enums\Currency.cs" />
+    <Compile Include="Constants\Enums\DateTypeId.cs" />
+    <Compile Include="Constants\Enums\Dimension.cs" />
+    <Compile Include="Constants\Enums\Metric.cs" />
+    <Compile Include="Constants\ReportStatus.cs" />
+    <Compile Include="Constants\Timezone.cs" />
+    <Compile Include="Helpers\ReportParametersHelper.cs" />
+    <Compile Include="Helpers\YamLogger.cs" />
+    <Compile Include="Models\CreateReportResponse.cs" />
+    <Compile Include="Models\GetReportResponse.cs" />
+    <Compile Include="Models\GetTokenResponse.cs" />
+    <Compile Include="Models\ReportPayload.cs" />
+    <Compile Include="Models\ReportOption.cs" />
     <Compile Include="Models\ReportSettings.cs" />
     <Compile Include="YAMUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

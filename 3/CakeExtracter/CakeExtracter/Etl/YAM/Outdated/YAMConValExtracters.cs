@@ -17,13 +17,13 @@ namespace CakeExtracter.Etl.YAM.Outdated
         [Obsolete]
         public const string ConValPattern = @"gv=(\d*\.?\d*)";
 
-        protected readonly YAMUtility _yamUtility;
+        protected readonly YamUtility _yamUtility;
         protected readonly DateRange dateRange;
         protected readonly int yamAdvertiserId;
         protected readonly int accountId;
 
         [Obsolete]
-        public YAMConValExtracter(YAMUtility yamUtility, DateRange dateRange, ExtAccount account)
+        public YAMConValExtracter(YamUtility yamUtility, DateRange dateRange, ExtAccount account)
         {
             this._yamUtility = yamUtility;
             this.dateRange = dateRange;
@@ -60,7 +60,7 @@ namespace CakeExtracter.Etl.YAM.Outdated
     public class YAMDailyConValExtracter : YAMConValExtracter<DailySummary>
     {
         [Obsolete]
-        public YAMDailyConValExtracter(YAMUtility yamUtility, DateRange dateRange, ExtAccount account)
+        public YAMDailyConValExtracter(YamUtility yamUtility, DateRange dateRange, ExtAccount account)
             : base(yamUtility, dateRange, account)
         { }
 
@@ -119,7 +119,7 @@ namespace CakeExtracter.Etl.YAM.Outdated
         protected readonly string[] existingStrategyNames;
 
         [Obsolete]
-        public YAMStrategyConValExtracter(YAMUtility yamUtility, DateRange dateRange, ExtAccount account, string[] existingStrategyNames = null)
+        public YAMStrategyConValExtracter(YamUtility yamUtility, DateRange dateRange, ExtAccount account, string[] existingStrategyNames = null)
             : base(yamUtility, dateRange, account)
         {
             this.existingStrategyNames = existingStrategyNames ?? new string[] { };
