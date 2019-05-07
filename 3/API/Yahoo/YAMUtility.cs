@@ -10,6 +10,7 @@ using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Deserializers;
 using Yahoo.Constants;
+using Yahoo.Exceptions;
 using Yahoo.Helpers;
 using Yahoo.Models;
 
@@ -43,7 +44,9 @@ namespace Yahoo
         private readonly string[] clientSecret = new string[NumAlts];
         private readonly string[] applicationAccessCode = new string[NumAlts];
         private readonly string[] altAccountIDs = new string[NumAlts];
-        private readonly YamLogger logger =  new YamLogger(null, null, null);
+        private readonly YamLogger logger;
+
+        public event Action<FailedReportGenerationException> ProcessFailedReportGeneration;
 
         public static string[] TokenSets // each string in the array is a combination of Access + Refresh Token
         {
@@ -69,6 +72,11 @@ namespace Yahoo
 
         public YamUtility()
         {
+            if (logger == null)
+            {
+                logger = new YamLogger(null, null, null);
+            }
+
             Setup();
         }
 
@@ -100,9 +108,19 @@ namespace Yahoo
         /// <returns>URL of report location (may be null)</returns>
         public string TryGenerateReport(ReportSettings reportSettings)
         {
-            var payload = ReportParametersHelper.CreateReportRequestPayload(reportSettings);
-            var reportUrl = TryGenerateReport(payload);
-            return reportUrl;
+            try
+            {
+                var payload = ReportParametersHelper.CreateReportRequestPayload(reportSettings);
+                var reportUrl = TryGenerateReport(payload);
+                return reportUrl;
+            }
+            catch (Exception exception)
+            {
+                var exc = new FailedReportGenerationException(reportSettings, exception);
+                logger.LogError(exc);
+                ProcessFailedReportGeneration?.Invoke(exc);
+                return null;
+            }
         }
 
         #region Private constructor methods
@@ -238,21 +256,12 @@ namespace Yahoo
 
         private string TryGenerateReport(ReportPayload payload)
         {
-            try
-            {
-                var reportUrl = Policy
-                    .Handle<Exception>()
-                    .Retry(NumTriesRequestReport, (exception, retryCount, context) =>
-                        logger.LogWarning(
-                            $"Could not get a report URL: {exception.Message}. Try regenerate a report (number of retrying - {retryCount})"))
-                    .Execute(() => GenerateReport(payload));
-                return reportUrl;
-            }
-            catch (Exception e)
-            {
-                logger.LogError($"Could not generate a report: {e.Message}");
-                return null;
-            }
+            var reportUrl = Policy
+                .Handle<Exception>()
+                .Retry(NumTriesRequestReport, (exception, retryCount, context) => logger.LogWarning(
+                    $"Could not get a report URL: {exception.Message}. Try regenerate a report (number of retrying - {retryCount})"))
+                .Execute(() => GenerateReport(payload));
+            return reportUrl;
         }
 
         /// <summary>

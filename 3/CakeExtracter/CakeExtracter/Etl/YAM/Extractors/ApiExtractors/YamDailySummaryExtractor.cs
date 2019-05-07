@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.YAM.Extractors.CsvExtractors.RowModels;
 using DirectAgents.Domain.Entities.CPProg;
@@ -11,7 +9,7 @@ namespace CakeExtracter.Etl.YAM.Extractors.ApiExtractors
 {
     internal class YamDailySummaryExtractor : BaseYamApiExtractor<YamDailySummary>
     {
-        protected override string SummariesDisplayName => "YamDailySummaries";
+        public override string SummariesDisplayName => "YamDailySummaries";
 
         protected override Func<YamRow, object> GroupedRowsWithUniqueEntitiesFunction => 
             x => x.Date;

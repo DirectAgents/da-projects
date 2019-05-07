@@ -65,7 +65,6 @@ namespace Yahoo.Helpers
         private static int[] GetDimensions(ReportSettings reportSettings)
         {
             var dimensionList = new List<int>();
-            AddDimension(dimensionList, reportSettings.ByAdvertiser, Dimension.Advertiser);
             AddDimension(dimensionList, reportSettings.ByCampaign, Dimension.Campaign);
             AddDimension(dimensionList, reportSettings.ByLine, Dimension.Line);
             AddDimension(dimensionList, reportSettings.ByAd, Dimension.Ad);

@@ -23,11 +23,6 @@ namespace Yahoo.Models
         public int? AccountId { get; set; }
 
         /// <summary>
-        /// Flag for Advertiser dimension (may be null)
-        /// </summary>
-        public bool ByAdvertiser { get; set; }
-
-        /// <summary>
         /// Flag for Campaign dimension (may be null)
         /// </summary>
         public bool ByCampaign { get; set; }

@@ -6,6 +6,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using CakeExtracter.Commands;
+using CakeExtracter.Commands.DA;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities.CPProg;
@@ -363,7 +364,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
                     DASynchFacebookStats.RunStatic(accountId: extAcct.Id, startDate: start, endDate: end, statsType: statsType);
                     break;
                 case Platform.Code_YAM:
-                    DASynchYAMStats.RunStatic(accountId: extAcct.Id, startDate: start, endDate: end, statsType: statsType);
+                    DaSynchYamStats.RunStatic(accountId: extAcct.Id, startDate: start, endDate: end, statsType: statsType);
                     break;
             }
         }

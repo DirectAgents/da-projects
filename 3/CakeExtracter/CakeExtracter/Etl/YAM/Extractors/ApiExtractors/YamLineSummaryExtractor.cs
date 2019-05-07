@@ -10,7 +10,7 @@ namespace CakeExtracter.Etl.YAM.Extractors.ApiExtractors
 {
     internal class YamLineSummaryExtractor : BaseYamApiExtractor<YamLineSummary>
     {
-        protected override string SummariesDisplayName => "YamLineSummaries";
+        public override string SummariesDisplayName => "YamLineSummaries";
 
         protected override Func<YamRow, object> GroupedRowsWithUniqueEntitiesFunction =>
             x => new { x.Date, x.CampaignName, x.CampaignId, x.LineName, x.LineId };

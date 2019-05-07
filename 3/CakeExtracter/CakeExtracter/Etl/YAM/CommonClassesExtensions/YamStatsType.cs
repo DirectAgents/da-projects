@@ -1,14 +1,14 @@
-﻿namespace CakeExtracter.Etl.YAM.Helpers
+﻿namespace CakeExtracter.Etl.YAM.CommonClassesExtensions
 {
     internal class YamStatsType
     {
-        private const string AllArg = "ALL";
-        private const string DailyArg = "DAILY";
-        private const string CampaignArg = "CAMP";
-        private const string LineArg = "LINE";
-        private const string AdArg = "AD";
-        private const string CreativeArg = "CREAT";
-        private const string PixelArg = "PIXEL";
+        public const string AllArg = "ALL";
+        public const string DailyArg = "DAILY";
+        public const string CampaignArg = "CAMP";
+        public const string LineArg = "LINE";
+        public const string AdArg = "AD";
+        public const string CreativeArg = "CREAT";
+        public const string PixelArg = "PIXEL";
 
         public bool Daily { get; set; }
         public bool Campaign { get; set; }
@@ -18,6 +18,9 @@
         public bool Pixel { get; set; }
 
         public bool All => Daily && Campaign && Line && Ad && Creative && Pixel;
+
+        public YamStatsType()
+        { }
 
         public YamStatsType(string statsTypeString)
         {
@@ -40,6 +43,23 @@
         public void SetAllTrue()
         {
             Daily = Campaign = Line = Ad = Creative = Pixel = true;
+        }
+
+        public string GetStatsTypeString()
+        {
+            return Pixel
+                ? PixelArg
+                : Ad
+                    ? AdArg
+                    : Line
+                        ? LineArg
+                        : Campaign
+                            ? CampaignArg
+                            : Creative
+                                ? CreativeArg
+                                : Daily
+                                    ? DailyArg
+                                    : AllArg;
         }
     }
 }

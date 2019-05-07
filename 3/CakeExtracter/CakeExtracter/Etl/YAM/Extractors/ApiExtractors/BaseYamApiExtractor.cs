@@ -11,6 +11,7 @@ using CakeExtracter.Helpers;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
 using Yahoo;
+using Yahoo.Exceptions;
 using Yahoo.Models;
 
 namespace CakeExtracter.Etl.YAM.Extractors.ApiExtractors
@@ -27,7 +28,9 @@ namespace CakeExtracter.Etl.YAM.Extractors.ApiExtractors
         private readonly bool byPixelParameter;
         private readonly int accountId;
 
-        protected abstract string SummariesDisplayName { get; }
+        public event Action<FailedReportGenerationException> ProcessFailedExtraction;
+
+        public abstract string SummariesDisplayName { get; }
 
         protected abstract Func<YamRow, object> GroupedRowsWithUniqueEntitiesFunction { get; }
 
@@ -38,6 +41,7 @@ namespace CakeExtracter.Etl.YAM.Extractors.ApiExtractors
             YamAdvertiserId = int.Parse(account.ExternalId);
             this.byPixelParameter = byPixelParameter;
             accountId = account.Id;
+            ProcessFailedExtraction += exception => Logger.Error(account.Id, exception);
         }
 
         public IEnumerable<T> GetItemsFromApi()
@@ -48,9 +52,11 @@ namespace CakeExtracter.Etl.YAM.Extractors.ApiExtractors
                 var summaries = TransformItems(items);
                 return summaries;
             }
-            catch (Exception e)
+            catch (Exception exc)
             {
-                Logger.Error(accountId, e);
+                var sourceReportSettings = GetReportSettings();
+                var exception = new FailedReportGenerationException(sourceReportSettings, exc);
+                ProcessFailedExtraction?.Invoke(exception);
                 return new List<T>();
             }
         }

@@ -25,7 +25,7 @@ namespace CakeExtracter.Commands.DA
         public static int RunStatic(int? accountId = null, DateTime? startDate = null, DateTime? endDate = null, string statsType = null)
         {
             AutoMapperBootstrapper.CheckRunSetup();
-            var cmd = new DASynchYAMStats
+            var cmd = new DaSynchYamStats
             {
                 AccountId = accountId,
                 StartDate = startDate,

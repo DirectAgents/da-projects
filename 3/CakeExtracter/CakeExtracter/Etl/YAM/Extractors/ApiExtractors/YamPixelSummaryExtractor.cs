@@ -10,7 +10,7 @@ namespace CakeExtracter.Etl.YAM.Extractors.ApiExtractors
 {
     internal class YamPixelSummaryExtractor : BaseYamApiExtractor<YamPixelSummary>
     {
-        protected override string SummariesDisplayName => "YamPixelSummaries";
+        public override string SummariesDisplayName => "YamPixelSummaries";
 
         protected override Func<YamRow, object> GroupedRowsWithUniqueEntitiesFunction =>
             x => new { x.Date, x.PixelName, x.PixelId };

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Exceptions;
 
 namespace CakeExtracter.Etl
 {
@@ -14,7 +15,7 @@ namespace CakeExtracter.Etl
         public int LoadedCount;
         public int ExtractedCount;
 
-        public event Action<Exception> ProcessEtlFailedWithoutInformation;
+        public event Action<FailedEtlException> ProcessEtlFailedWithoutInformation;
 
         private Extracter<T> extractor;
 
@@ -30,10 +31,17 @@ namespace CakeExtracter.Etl
         {
             this.accountId = accountId;
             BatchSize = batchSize;
-            ProcessEtlFailedWithoutInformation += e =>
+            ProcessEtlFailedWithoutInformation += exc =>
             {
-                var exc = new Exception($"Exception in loader: {e}", e);
-                Logger.Error(exc);
+                var exception = new Exception($"Exception in loader: {exc}", exc);
+                if (exc.AccountId.HasValue)
+                {
+                    Logger.Error(exc.AccountId.Value, exception);
+                }
+                else
+                {
+                    Logger.Error(exception);
+                }
             };
         }
 
@@ -74,7 +82,8 @@ namespace CakeExtracter.Etl
             }
             catch (Exception e)
             {
-                ProcessEtlFailedWithoutInformation?.Invoke(e);
+                var exception = new FailedEtlException(null, null, accountId, e);
+                ProcessEtlFailedWithoutInformation?.Invoke(exception);
             }
         }
 
