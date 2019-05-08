@@ -145,7 +145,7 @@ namespace CakeExtracter.Helpers
             TryToMakeActionManyTimes(true, () => numChanges = dbContext.SaveChanges());
             return numChanges;
         }
-        
+
         public static void TryToMakeTransactionManyTimes<T>(bool needToWait, object contextLocker, Action<T> transactionAction)
             where T : DbContext, new()
         {
@@ -200,7 +200,7 @@ namespace CakeExtracter.Helpers
                     break;
             }
         }
-        
+
         private static void ProcessDbUpdateException(DbUpdateException exception)
         {
             var notSavedEntriesInfo = exception.Entries.Select(GetEntryInfo);
