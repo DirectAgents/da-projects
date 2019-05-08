@@ -1,12 +1,4 @@
-﻿using Amazon.Entities;
-using Amazon.Enums;
-using Amazon.Helpers;
-using Newtonsoft.Json;
-using Polly;
-using RestSharp;
-using RestSharp.Authenticators;
-using RestSharp.Deserializers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
@@ -14,11 +6,19 @@ using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
 using Amazon.Constants;
+using Amazon.Entities;
 using Amazon.Entities.HelperEntities;
 using Amazon.Entities.HelperEntities.DownloadInfoResponses;
 using Amazon.Entities.HelperEntities.PreparedDataResponses;
 using Amazon.Entities.Summaries;
+using Amazon.Enums;
 using Amazon.Exceptions;
+using Amazon.Helpers;
+using Newtonsoft.Json;
+using Polly;
+using RestSharp;
+using RestSharp.Authenticators;
+using RestSharp.Deserializers;
 
 namespace Amazon
 {

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="Itransition.Net.RuleSet" Description="Code analysis rules for any project" ToolsVersion="15.0">
+  <Include Path="allrules.ruleset" Action="Default" />
+  <!--
+    Rule comments are optional and multiple comments are allowed.
+    Rule comments are supposed to be right above the rule.
+  -->
+  <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+    <!-- CA1004: Generic methods should provide type parameter -->
+    <Rule Id="CA1004" Action="Warning" />
+    <!-- CA1006: Do not nest generic types in member signatures -->
+    <Rule Id="CA1006" Action="Warning" />
+    <!-- CA1011: Consider passing base types as parameters -->
+    <Rule Id="CA1011" Action="Warning" />
+    <!-- CA1014: Mark assemblies with CLSCompliantAttribute -->
+    <Rule Id="CA1014" Action="None" />
+    <!-- CA1020: Avoid namespaces with few types -->
+    <Rule Id="CA1020" Action="None" />
+    <!-- CA1021: Avoid out parameters -->
+    <Rule Id="CA1021" Action="Warning" />
+    <!-- CA1024: Use properties where appropriate -->
+    <Rule Id="CA1024" Action="Warning" />
+    <!-- CA1026: Default parameters should not be used -->
+    <Rule Id="CA1026" Action="Warning" />
+    <!-- CA1031: Do not catch general exception types -->
+    <Rule Id="CA1031" Action="Warning" />
+    <!-- CA1032: Implement standard exception constructors -->
+    <Rule Id="CA1032" Action="Warning" />
+    <!-- CA1034: Nested types should not be visible -->
+    <Rule Id="CA1034" Action="Warning" />
+    <!-- CA1040: Avoid empty interfaces -->
+    <Rule Id="CA1040" Action="Warning" />
+    <!-- CA1051: Do not declare visible instance fields -->
+    <Rule Id="CA1051" Action="Warning" />
+    <!-- CA1062: Validate arguments of public methods -->
+    <Rule Id="CA1062" Action="None" />
+    <!-- CA1302: Do not hardcode locale specific strings -->
+    <Rule Id="CA1302" Action="Warning" />
+    <!-- CA1303: Do not pass literals as localized parameters -->
+    <Rule Id="CA1303" Action="Warning" />
+    <!-- CA1304: Specify CultureInfo -->
+    <Rule Id="CA1304" Action="None" />
+    <!-- CA1305: Specify IFormatProvider -->
+    <Rule Id="CA1305" Action="None" />
+    <!-- CA1309: Use ordinal StringComparison -->
+    <Rule Id="CA1309" Action="None" />
+    <!-- CA1502: Avoid excessive complexity -->
+    <Rule Id="CA1502" Action="Warning" />
+    <!-- CA1504: Review misleading field names -->
+    <Rule Id="CA1504" Action="Warning" />
+    <!-- CA1505: Avoid unmaintainable code -->
+    <Rule Id="CA1505" Action="Warning" />
+    <!-- CA1506: Avoid excessive class coupling -->
+    <Rule Id="CA1506" Action="Warning" />
+    <!-- CA1702: Compound words should be cased correctly -->
+    <Rule Id="CA1702" Action="Warning" />
+    <!-- CA1708: Identifiers should differ by more than case -->
+    <Rule Id="CA1708" Action="Warning" />
+    <!-- CA1709: Identifiers should be cased correctly -->
+    <Rule Id="CA1709" Action="Warning" />
+    <!-- CA1716: Identifiers should not match keywords -->
+    <Rule Id="CA1716" Action="None" />
+    <!-- CA1724: Type names should not match namespaces -->
+    <Rule Id="CA1724" Action="None" />
+    <!-- CA1800: Do not cast unnecessarily -->
+    <Rule Id="CA1800" Action="Warning" />
+    <!-- CA1801: Review unused parameters -->
+    <Rule Id="CA1801" Action="Warning" />
+    <!-- CA1809: Avoid excessive locals -->
+    <Rule Id="CA1809" Action="Warning" />
+    <!-- CA1810: Initialize reference type static fields inline -->
+    <Rule Id="CA1810" Action="Warning" />
+    <!-- CA1811: Avoid uncalled private code -->
+    <Rule Id="CA1811" Action="Warning" />
+    <!-- CA1815: Override equals and operator equals on value types -->
+    <Rule Id="CA1815" Action="Warning" />
+    <!-- CA1816: Call GC.SuppressFinalize correctly -->
+    <Rule Id="CA1816" Action="Warning" />
+    <!-- CA1819: Properties should not return arrays -->
+    <Rule Id="CA1819" Action="None" />
+    <!-- CA1822: Mark members as static -->
+    <Rule Id="CA1822" Action="Warning" />
+    <!-- CA1824: Mark assemblies with NeutralResourcesLanguageAttribute -->
+    <Rule Id="CA1824" Action="None" />
+    <!-- CA2000: Dispose objects before losing scope -->
+    <Rule Id="CA2000" Action="Warning" />
+    <!-- CA2002: Do not lock on objects with weak identity -->
+    <Rule Id="CA2002" Action="Warning" />
+    <!-- CA2104: Do not declare read only mutable reference types -->
+    <Rule Id="CA2104" Action="Warning" />
+    <!-- CA2204: Literals should be spelled correctly -->
+    <Rule Id="CA2204" Action="Warning" />
+    <!-- CA2210: Assemblies should have valid strong names -->
+    <Rule Id="CA2210" Action="None" />
+    <!-- CA2215: Dispose methods should call base class dispose -->
+    <Rule Id="CA2215" Action="Warning" />
+    <!-- CA2227: Collection properties should be read only -->
+    <Rule Id="CA2227" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.ApiDesignGuidelines.Analyzers" RuleNamespace="Microsoft.ApiDesignGuidelines.Analyzers">
+    <!-- CA2007: Do not directly await a Task without calling ConfigureAwait -->
+    <Rule Id="CA2007" Action="Warning" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp" RuleNamespace="Microsoft.CodeAnalysis.CSharp">
+    <!-- AD0001: CSharpRemoveUnusedParametersAndValues -->
+    <Rule Id="AD0001" Action="Warning" />
+    <!-- Missing XML comment for publicly visible type or member -->
+    <Rule Id="CS1591" Action="Warning" />
+  </Rules>
+  <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <!-- SA1101: PrefixLocalCallsWithThis -->
+    <Rule Id="SA1101" Action="None" />
+    <!-- SA1121: UseBuiltInTypeAlias -->
+    <Rule Id="SA1121" Action="Warning" />
+    <!-- SA1122: UseStringEmptyForEmptyStrings -->
+    <Rule Id="SA1122" Action="None" />
+    <!-- SA1124: DoNotUseRegions -->
+    <Rule Id="SA1124" Action="Warning" />
+<!-- SA1200: UsingDirectivesMustBePlacedCorrectly -->
+    <Rule Id="SA1200" Action="None" />
+	<!-- SA1201: ElementsMustAppearInTheCorrectOrder -->
+    <Rule Id="SA1201" Action="None" />
+    <!-- SA1202: ElementsMustBeOrderedByAccess -->
+    <Rule Id="SA1202" Action="None" />
+    <!-- SA1204: StaticElementsMustAppearBeforeInstanceElements -->
+    <Rule Id="SA1204" Action="None" />
+    <!-- SA1210: UsingDirectivesMustBeOrderedAlphabeticallyByNamespace -->
+    <Rule Id="SA1210" Action="None" />
+    <!-- SA1308: VariableNamesMustNotBePrefixed -->
+    <Rule Id="SA1308" Action="Warning" />
+    <!-- SA1309: FieldNamesMustNotBeginWithUnderscore -->
+    <Rule Id="SA1309" Action="Warning" />
+    <!-- SA1407: ArithmeticExpressionsMustDeclarePrecedence -->
+    <Rule Id="SA1407" Action="None" />
+    <!-- SA1600: ElementsMustBeDocumented -->
+    <Rule Id="SA1600" Action="Warning" />
+    <!-- SA1602: EnumerationItemsMustBeDocumented -->
+    <Rule Id="SA1602" Action="None" />
+    <!-- SA1610: PropertyDocumentationMustHaveValueText -->
+    <Rule Id="SA1610" Action="Warning" />
+    <!-- SA1616: ElementReturnValueDocumentationMustHaveText -->
+    <Rule Id="SA1616" Action="Warning" />
+    <!-- SA1623: PropertySummaryDocumentationMustMatchAccessors -->
+    <Rule Id="SA1623" Action="Warning" />
+    <!-- SA1633: FileMustHaveHeader -->
+    <Rule Id="SA1633" Action="None" />
+    <!-- SA1636: FileHeaderCopyrightTextMustMatch -->
+    <Rule Id="SA1636" Action="None" />
+    <!-- SA1649: FileHeaderFileNameDocumentationMustMatchTypeName -->
+    <Rule Id="SA1649" Action="Warning" />
+    <!-- SA1652: EnableXmlDocumentationOutput -->
+    <Rule Id="SA1652" Action="None" />
+    <!-- SX1309: FieldNamesMustBeginWithUnderscore -->
+    <Rule Id="SX1309" Action="None" />
+    <!-- SX1309S: StaticFieldNamesMustBeginWithUnderscore -->
+    <Rule Id="SX1309S" Action="None" />
+  </Rules>
+</RuleSet>
