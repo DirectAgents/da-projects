@@ -32,13 +32,6 @@
         @Html.ActionLink(yesterday.ToShortDateString(), "SyncStats", new { id = Model.Id, start = yesterday.ToShortDateString() }, new { onclick = onclickJS })
     }
 }
-else if (Model.Code == Platform.Code_DBM)
-{
-    if (super)
-    {
-        @Html.ActionLink("Sync Stats For All Accounts", "SyncStats", new { id = Model.Id }, new { onclick = onclickJS })
-    }
-}
 </div>
 <br />
 

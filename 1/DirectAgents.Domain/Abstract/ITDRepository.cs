@@ -24,11 +24,8 @@ namespace DirectAgents.Domain.Abstract
 
         InsertionOrder InsertionOrder(int ioID);
         IQueryable<InsertionOrder> InsertionOrders();
-        //IQueryable<Creative> DBM_Creatives(int? ioID);
-        IQueryable<CreativeDailySummary> DBM_CreativeDailySummaries(DateTime? startDate, DateTime? endDate, int? ioID = null, int? creativeID = null);
         IQueryable<TDRawStat> GetDBMStatsByCreative(int ioID, DateTime? startDate, DateTime? endDate);
-        TDRawStat GetDBMStat(Creative creative, DateTime? startDate, DateTime? endDate);
-
+        
         #endregion
     }
 }

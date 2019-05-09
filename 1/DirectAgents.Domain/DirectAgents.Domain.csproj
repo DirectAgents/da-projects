@@ -14,6 +14,9 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>$(SolutionDir)\build\stylecop\StyleCopRuleSet.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -116,16 +119,29 @@
     <Compile Include="Concrete\RevTrackRepository.cs" />
     <Compile Include="Concrete\SecurityRepository.cs" />
     <Compile Include="Concrete\SpecialPlatformRepository.cs" />
+    <Compile Include="Entities\CPProg\DBM\Entities\DbmAdvertiser.cs" />
+    <Compile Include="Entities\CPProg\DBM\Entities\DbmEntity.cs" />
+    <Compile Include="Entities\CPProg\DBM\Entities\DbmCampaign.cs" />
+    <Compile Include="Entities\CPProg\DBM\Entities\DbmCreative.cs" />
+    <Compile Include="Entities\CPProg\DBM\Entities\DbmInsertionOrder.cs" />
+    <Compile Include="Entities\CPProg\DBM\Entities\DbmLineItem.cs" />
+    <Compile Include="Entities\CPProg\DBM\SummaryMetrics\DbmBaseSummaryEntity.cs" />
+    <Compile Include="Entities\CPProg\DBM\SummaryMetrics\DbmCreativeSummary.cs" />
+    <Compile Include="Entities\CPProg\DBM\SummaryMetrics\DbmLineItemSummary.cs" />
     <Compile Include="Entities\CPProg\Facebook\Daily\FbDailySummary.cs" />
     <Compile Include="Entities\CPProg\Facebook\FbBaseSummary.cs" />
     <Compile Include="Entities\CPProg\Facebook\FbEntity.cs" />
-    <Compile Include="MigrationsTD\201904221606279_FacebookCreativeExpansion.cs" />
+    <Compile Include="MigrationsTD\201904301624478_Mig_DbmCreativeExpansion.cs" />
+    <Compile Include="MigrationsTD\201904301624478_Mig_DbmCreativeExpansion.Designer.cs">
+      <DependentUpon>201904301624478_Mig_DbmCreativeExpansion.cs</DependentUpon>
+	</Compile>
+	<Compile Include="MigrationsTD\201904221606279_FacebookCreativeExpansion.cs" />
+	<Compile Include="MigrationsTD\201904221606279_FacebookCreativeExpansion.Designer.cs">
+      <DependentUpon>201904221606279_FacebookCreativeExpansion.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\201904252123496_Mig_EventConv_TransactionId.cs" />
     <Compile Include="Migrations\201904252123496_Mig_EventConv_TransactionId.Designer.cs">
       <DependentUpon>201904252123496_Mig_EventConv_TransactionId.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MigrationsTD\201904221606279_FacebookCreativeExpansion.Designer.cs">
-      <DependentUpon>201904221606279_FacebookCreativeExpansion.cs</DependentUpon>
     </Compile>
     <Compile Include="SpecialPlatformsDataProviders\CommissiobJunction\CommissionJunctionProvider.cs" />
     <Compile Include="SpecialPlatformsDataProviders\DSP\DspProvider.cs" />
@@ -1057,6 +1073,9 @@
     <EmbeddedResource Include="MigrationsTD\201904021651556_Mig_JobExecution.resx">
       <DependentUpon>201904021651556_Mig_JobExecution.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201904301624478_Mig_DbmCreativeExpansion.resx">
+      <DependentUpon>201904301624478_Mig_DbmCreativeExpansion.cs</DependentUpon>
+	</EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201904221606279_FacebookCreativeExpansion.resx">
       <DependentUpon>201904221606279_FacebookCreativeExpansion.cs</DependentUpon>
     </EmbeddedResource>
@@ -1130,7 +1149,10 @@
       <DependentUpon>201904252123496_Mig_EventConv_TransactionId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Analyzer Include="..\..\3\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\..\3\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

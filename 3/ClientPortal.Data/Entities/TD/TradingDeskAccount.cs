@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Entities.TD.AdRoll;
-using ClientPortal.Data.Entities.TD.DBM;
 
 namespace ClientPortal.Data.Entities.TD
 {
@@ -19,12 +18,7 @@ namespace ClientPortal.Data.Entities.TD
         public decimal? ManagementFeePct { get; set; }
 
         public virtual ICollection<AdRollProfile> AdRollProfiles { get; set; }
-        public virtual ICollection<InsertionOrder> InsertionOrders { get; set; }
-
-        public bool HasDBM()
-        {
-            return InsertionOrders != null && InsertionOrders.Count > 0;
-        }
+        
         public bool HasAdRoll()
         {
             return AdRollProfiles != null && AdRollProfiles.Count > 0;
@@ -56,12 +50,6 @@ namespace ClientPortal.Data.Entities.TD
             get
             {
                 var displayNames = new List<string>();
-                if (InsertionOrders != null)
-                    foreach (var io in InsertionOrders)
-                    {
-                        if (!String.IsNullOrWhiteSpace(io.InsertionOrderName) && !displayNames.Contains(io.InsertionOrderName))
-                            displayNames.Add(io.InsertionOrderName);
-                    }
                 if (AdRollProfiles != null)
                     foreach (var arp in AdRollProfiles)
                     {
@@ -133,16 +121,7 @@ namespace ClientPortal.Data.Entities.TD
             }
             return profileId;
         }
-        public int? InsertionOrderID()
-        {
-            int? ioID = null;
-            if (InsertionOrders.Count > 0)
-            {
-                ioID = InsertionOrders.First().InsertionOrderID;
-            }
-            return ioID;
-        }
-
+        
         public IEnumerable<int> AdvertiserIds()
         {
             if (UserProfiles == null)
