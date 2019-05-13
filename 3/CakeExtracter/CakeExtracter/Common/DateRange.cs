@@ -11,6 +11,15 @@ namespace CakeExtracter.Common
 
         public DateTime ToDate { get; set; }
 
+        public IEnumerable<DateTime> Dates
+        {
+            get
+            {
+                for (var i = FromDate; i <= ToDate; i = step(i))
+                    yield return i;
+            }
+        }
+
         public DateRange(DateTime fromDate, DateTime toDate, bool datePartOnly = true)
             : this()
         {
@@ -41,45 +50,19 @@ namespace CakeExtracter.Common
             return new DateRange(fromDate, toDate);
         }
 
-        //public DateRange(DateTime fromDate, DateTime toDate, Func<DateTime, DateTime> step)
-        //    : this(fromDate, toDate)
-        //{
-        //    this.step = step;
-        //}
-
-        //public DateRange(int fromYear, int fromMonth, int fromDay, int toYear, int toMonth, int toDay)
-        //{
-        //    FromDate = new DateTime(fromYear, fromMonth, fromDay).Date;
-        //    ToDate = new DateTime(toYear, toMonth, toDay).Date;
-        //}
-
-        //public DateRange(DateTime fromDate, int numDays)
-        //{
-        //    FromDate = fromDate.Date;
-        //    ToDate = fromDate.AddDays(numDays).Date;
-        //}
-
-        //public DateRange(int fromYear, int fromMonth, int fromDay, Func<DateTime, DateTime> toDate)
-        //{
-        //    FromDate = new DateTime(fromYear, fromMonth, fromDay).Date;
-        //    ToDate = toDate(FromDate).Date;
-        //}
-
-        //public IEnumerable<DateRange> DateRanges
-        //{
-        //    get
-        //    {
-        //        for (var i = FromDate; i <= ToDate; i = step(i))
-        //            yield return new DateRange(i, 1);
-        //    }
-        //}
-
-        public IEnumerable<DateTime> Dates
+        public IEnumerable<DateRange> GetDaysChunks(int chunkSizeInDays)
         {
-            get
+            var tempStart = FromDate;
+            var tempEnd = FromDate;
+            while (tempStart <= ToDate)
             {
-                for (var i = FromDate; i <= ToDate; i = step(i))
-                    yield return i;
+                tempEnd = tempStart.AddDays(chunkSizeInDays);
+                if (tempEnd > ToDate)
+                {
+                    tempEnd = ToDate;
+                }
+                yield return new DateRange(tempStart, tempEnd);
+                tempStart = tempEnd.AddDays(1);
             }
         }
     }

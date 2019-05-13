@@ -39,7 +39,6 @@ namespace DirectAgents.Domain.MigrationsTD
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("adm.JobRequest", t => t.JobRequestId, cascadeDelete: true)
                 .Index(t => t.JobRequestId);
-            
         }
         
         public override void Down()

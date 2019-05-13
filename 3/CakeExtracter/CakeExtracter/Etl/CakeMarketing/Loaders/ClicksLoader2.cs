@@ -66,7 +66,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
             return clicks.Count;
         }
 
-        protected override void AfterLoad()
+        protected override void AfterLoadAction()
         {
             Logger.Info("writing clicks file..");
             File.WriteAllText("c:\\scratch\\clicks.txt", this.sb.ToString());

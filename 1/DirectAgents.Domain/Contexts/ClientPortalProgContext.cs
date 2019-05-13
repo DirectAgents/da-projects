@@ -12,6 +12,11 @@ using DirectAgents.Domain.Entities.CPProg.DSP;
 using DirectAgents.Domain.Entities.CPProg.DSP.SummaryMetrics;
 using DirectAgents.Domain.Entities.CPProg.CJ;
 using DirectAgents.Domain.Entities.CPProg.Kochava;
+using DirectAgents.Domain.Entities.CPProg.Facebook.Ad;
+using DirectAgents.Domain.Entities.CPProg.Facebook;
+using DirectAgents.Domain.Entities.CPProg.Facebook.AdSet;
+using DirectAgents.Domain.Entities.CPProg.Facebook.Campaign;
+using DirectAgents.Domain.Entities.CPProg.Facebook.Daily;
 using DirectAgents.Domain.Entities.CPProg.YAM;
 using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
 
@@ -95,6 +100,20 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<VendorParentProductSummaryMetric>().ToTable("VParentProductSummaryMetric", tdSchema);
             modelBuilder.Entity<VcdAnalyticItem>().ToTable("VcdAnalytic", tdSchema);
 
+            //TD Facebook
+            modelBuilder.Entity<FbAd>().ToTable("FbAd", tdSchema);
+            modelBuilder.Entity<FbAdAction>().ToTable("FbAdAction", tdSchema);
+            modelBuilder.Entity<FbAdSummary>().ToTable("FbAdSummary", tdSchema);
+            modelBuilder.Entity<FbCreative>().ToTable("FbCreative", tdSchema);
+            modelBuilder.Entity<FbAdSet>().ToTable("FbAdSet", tdSchema);
+            modelBuilder.Entity<FbAdSetAction>().ToTable("FbAdSetAction", tdSchema);
+            modelBuilder.Entity<FbAdSetSummary>().ToTable("FbAdSetSummary", tdSchema);
+            modelBuilder.Entity<FbCampaign>().ToTable("FbCampaign", tdSchema);
+            modelBuilder.Entity<FbCampaignAction>().ToTable("FbCampaignAction", tdSchema);
+            modelBuilder.Entity<FbCampaignSummary>().ToTable("FbCampaignSummary", tdSchema);
+            modelBuilder.Entity<FbDailySummary>().ToTable("FbDailySummary", tdSchema);
+            modelBuilder.Entity<FbActionType>().ToTable("FbActionType", tdSchema);
+
             //TD CJ
             modelBuilder.Entity<CjAdvertiserCommission>().ToTable("CjAdvertiserCommission", tdSchema);
             modelBuilder.Entity<CjAdvertiserCommissionItem>().ToTable("CjAdvertiserCommissionItem", tdSchema);
@@ -109,7 +128,7 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<DspLineDailyMetricValues>().ToTable("DspLineDailyMetricValues", tdSchema);
             modelBuilder.Entity<DspCreativeDailyMetricValues>().ToTable("DspCreativeDailyMetricValues", tdSchema);
 
-            //Kochava
+            //TD Kochava
             modelBuilder.Entity<KochavaItem>().ToTable("KochavaItem", tdSchema);
 
             // YAM
@@ -213,6 +232,9 @@ namespace DirectAgents.Domain.Contexts
                 .WithRequired()
                 .HasForeignKey(x => new { x.Date, x.EntityId })
                 .WillCascadeOnDelete(false);
+
+            //TD Facebook
+            SetupFacebookModel(modelBuilder);
 
             //TD Vendor
             SetupSummaryMetricModel<VendorProductSummaryMetric>(modelBuilder, "ProductId");
@@ -324,6 +346,21 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<VendorParentProductSummaryMetric> VendorParentProductSummaryMetrics { get; set; }
         public DbSet<VcdAnalyticItem> VcdAnalytic { get; set; }
 
+
+        //TD Facebook
+        public DbSet<FbAd> FbAds { get; set; }
+        public DbSet<FbAdAction> FbAdActions { get; set; }
+        public DbSet<FbAdSummary> FbAdSummaries { get; set; }
+        public DbSet<FbCreative> FbCreatives { get; set; }
+        public DbSet<FbAdSet> FbAdSets { get; set; }
+        public DbSet<FbAdSetAction> FbAdSetActions { get; set; }
+        public DbSet<FbAdSetSummary> FbAdSetSummaries { get; set; }
+        public DbSet<FbCampaign> FbCampaigns { get; set; }
+        public DbSet<FbCampaignAction> FbCampaignActions { get; set; }
+        public DbSet<FbCampaignSummary> FbCampaignSummaries { get; set; }
+        public DbSet<FbDailySummary> FbDailySummaries { get; set; }
+        public DbSet<FbActionType> FbActionTypes { get; set; }
+
         //TD DSP
         public DbSet<DspAdvertiser> DspAdvertisers { get; set; }
         public DbSet<DspOrder> DspOrders { get; set; }
@@ -338,7 +375,7 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<CjAdvertiserCommission> CjAdvertiserCommissions { get; set; }
         public DbSet<CjAdvertiserCommissionItem> CjAdvertiserCommissionItems { get; set; }
 
-        // Kochava
+        //TD Kochava
         public DbSet<KochavaItem> KochavaItems { get; set; }
 
         // YAM
@@ -407,6 +444,43 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<TDailyMetricValues>().Property(t => t.Purchase).HasPrecision(18, 6);
             modelBuilder.Entity<TDailyMetricValues>().Property(t => t.PurchaseViews).HasPrecision(18, 6);
             modelBuilder.Entity<TDailyMetricValues>().Property(t => t.PurchaseClicks).HasPrecision(18, 6);
+        }
+
+        private void SetupFacebookModel(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<FbAdSummary>().HasKey(s => new { s.Date, s.AdId });
+            modelBuilder.Entity<FbAdSetSummary>().HasKey(s => new { s.Date, s.AdSetId });
+            modelBuilder.Entity<FbCampaignSummary>().HasKey(s => new { s.Date, s.CampaignId });
+            modelBuilder.Entity<FbDailySummary>().HasKey(s => new { s.Date, s.AccountId });
+
+            modelBuilder.Entity<FbAdSummary>().Property(t => t.Cost).HasPrecision(18, 6);
+            modelBuilder.Entity<FbAdSetSummary>().Property(t => t.Cost).HasPrecision(18, 6);
+            modelBuilder.Entity<FbCampaignSummary>().Property(t => t.Cost).HasPrecision(18, 6);
+            modelBuilder.Entity<FbDailySummary>().Property(t => t.Cost).HasPrecision(18, 6);
+
+            modelBuilder.Entity<FbAdSummary>().Property(t => t.PostClickRev).HasPrecision(18, 6);
+            modelBuilder.Entity<FbAdSetSummary>().Property(t => t.PostClickRev).HasPrecision(18, 6);
+            modelBuilder.Entity<FbCampaignSummary>().Property(t => t.PostClickRev).HasPrecision(18, 6);
+            modelBuilder.Entity<FbDailySummary>().Property(t => t.PostClickRev).HasPrecision(18, 6);
+
+            modelBuilder.Entity<FbAdSummary>().Property(t => t.PostViewRev).HasPrecision(18, 6);
+            modelBuilder.Entity<FbAdSetSummary>().Property(t => t.PostViewRev).HasPrecision(18, 6);
+            modelBuilder.Entity<FbCampaignSummary>().Property(t => t.PostViewRev).HasPrecision(18, 6);
+            modelBuilder.Entity<FbDailySummary>().Property(t => t.PostViewRev).HasPrecision(18, 6);
+
+            modelBuilder.Entity<FbAdAction>()
+                .HasKey(x => new { x.Date, x.AdId, x.ActionTypeId });
+            modelBuilder.Entity<FbAdSetAction>()
+                .HasKey(x => new { x.Date, x.AdSetId, x.ActionTypeId });
+            modelBuilder.Entity<FbCampaignAction>()
+                 .HasKey(x => new { x.Date, x.CampaignId, x.ActionTypeId });
+
+            modelBuilder.Entity<FbAdAction>().Property(t => t.PostClickVal).HasPrecision(18, 6);
+            modelBuilder.Entity<FbAdSetAction>().Property(t => t.PostClickVal).HasPrecision(18, 6);
+            modelBuilder.Entity<FbCampaignAction>().Property(t => t.PostClickVal).HasPrecision(18, 6);
+            modelBuilder.Entity<FbAdAction>().Property(t => t.PostViewVal).HasPrecision(18, 6);
+            modelBuilder.Entity<FbAdSetAction>().Property(t => t.PostViewVal).HasPrecision(18, 6);
+            modelBuilder.Entity<FbCampaignAction>().Property(t => t.PostViewVal).HasPrecision(18, 6);
         }
 
         private void SetupYamDailyMetricModelValues<TDailyMetricValues>(DbModelBuilder modelBuilder, string entityColumnName)

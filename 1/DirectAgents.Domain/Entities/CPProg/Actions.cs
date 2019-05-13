@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -21,6 +20,7 @@ namespace DirectAgents.Domain.Entities.CPProg
         public int PostClick { get; set; }
         public int PostView { get; set; }
     }
+
     public class ActionStatsWithVals : ActionStats
     {
         public decimal PostClickVal { get; set; }

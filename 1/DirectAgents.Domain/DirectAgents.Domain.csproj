@@ -131,6 +131,17 @@
     <Compile Include="MigrationsTD\201905021107413_Mig_YamTables.Designer.cs">
       <DependentUpon>201905021107413_Mig_YamTables.cs</DependentUpon>
     </Compile>
+    <Compile Include="Entities\CPProg\Facebook\Daily\FbDailySummary.cs" />
+    <Compile Include="Entities\CPProg\Facebook\FbBaseSummary.cs" />
+    <Compile Include="Entities\CPProg\Facebook\FbEntity.cs" />
+    <Compile Include="MigrationsTD\201904221606279_FacebookCreativeExpansion.cs" />
+    <Compile Include="Migrations\201904252123496_Mig_EventConv_TransactionId.cs" />
+    <Compile Include="Migrations\201904252123496_Mig_EventConv_TransactionId.Designer.cs">
+      <DependentUpon>201904252123496_Mig_EventConv_TransactionId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\201904221606279_FacebookCreativeExpansion.Designer.cs">
+      <DependentUpon>201904221606279_FacebookCreativeExpansion.cs</DependentUpon>
+    </Compile>
     <Compile Include="SpecialPlatformProviders\Implementation\CommissionJunctionProvider.cs" />
     <Compile Include="SpecialPlatformProviders\Implementation\DspProvider.cs" />
     <Compile Include="SpecialPlatformProviders\Implementation\KochavaProvider.cs" />
@@ -212,6 +223,18 @@
     <Compile Include="Entities\CPProg\DSP\SummaryMetrics\DspOrderMetricValues.cs" />
     <Compile Include="Entities\CPProg\DSP\SummaryMetrics\DspCreativeDailyMetricValues.cs" />
     <Compile Include="Entities\CPProg\Base\BaseDailyMetricValues.cs" />
+    <Compile Include="Entities\CPProg\Facebook\AdSet\FbAdSet.cs" />
+    <Compile Include="Entities\CPProg\Facebook\AdSet\FbAdSetAction.cs" />
+    <Compile Include="Entities\CPProg\Facebook\AdSet\FbAdSetSummary.cs" />
+    <Compile Include="Entities\CPProg\Facebook\Ad\FbAd.cs" />
+    <Compile Include="Entities\CPProg\Facebook\Ad\FbAdAction.cs" />
+    <Compile Include="Entities\CPProg\Facebook\Ad\FbAdSummary.cs" />
+    <Compile Include="Entities\CPProg\Facebook\Ad\FbCreative.cs" />
+    <Compile Include="Entities\CPProg\Facebook\Campaign\FbCampaign.cs" />
+    <Compile Include="Entities\CPProg\Facebook\Campaign\FbCampaignAction.cs" />
+    <Compile Include="Entities\CPProg\Facebook\Campaign\FbCampaignSummary.cs" />
+    <Compile Include="Entities\CPProg\Facebook\FbAction.cs" />
+    <Compile Include="Entities\CPProg\Facebook\FbActionType.cs" />
     <Compile Include="Entities\CPProg\Kochava\KochavaItem.cs" />
     <Compile Include="Entities\CPProg\Summaries\AdSetSummary.cs" />
     <Compile Include="Entities\CPProg\SummaryMetrics\AdSetSummaryMetric.cs" />
@@ -1047,6 +1070,9 @@
     <EmbeddedResource Include="MigrationsTD\201904021651556_Mig_JobExecution.resx">
       <DependentUpon>201904021651556_Mig_JobExecution.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201904221606279_FacebookCreativeExpansion.resx">
+      <DependentUpon>201904221606279_FacebookCreativeExpansion.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201905021107413_Mig_YamTables.resx">
       <DependentUpon>201905021107413_Mig_YamTables.cs</DependentUpon>
     </EmbeddedResource>
@@ -1115,6 +1141,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810232032208_Mig_AffSubSummary.resx">
       <DependentUpon>201810232032208_Mig_AffSubSummary.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904252123496_Mig_EventConv_TransactionId.resx">
+      <DependentUpon>201904252123496_Mig_EventConv_TransactionId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

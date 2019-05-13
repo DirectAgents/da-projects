@@ -59,7 +59,7 @@ namespace CakeExtracter.Etl
             {
                 LoadedCount = 0;
                 ExtractedCount = 0;
-
+                PreLoadAction();
                 foreach (var list in extractor.EnumerateAll().InBatches(BatchSize))
                 {
                     var loadCount = Load(list);
@@ -77,8 +77,7 @@ namespace CakeExtracter.Etl
                     Logger.Error(accountId, ex);
                     throw ex;
                 }
-
-                AfterLoad();
+                AfterLoadAction();
             }
             catch (Exception e)
             {
@@ -89,7 +88,11 @@ namespace CakeExtracter.Etl
 
         protected abstract int Load(List<T> items);
 
-        protected virtual void AfterLoad()
+        protected virtual void AfterLoadAction()
+        {
+        }
+
+        protected virtual void PreLoadAction()
         {
         }
     }
