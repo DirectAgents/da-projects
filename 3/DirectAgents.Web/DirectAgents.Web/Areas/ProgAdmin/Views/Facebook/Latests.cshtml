@@ -1,7 +1,6 @@
 ﻿@model DirectAgents.Web.Areas.ProgAdmin.Models.FacebookLatestsInfoVm
 @{
     ViewBag.Title = "Facebook Latests Stats";
-
     var yesterday = DateTime.Today.AddDays(-1);
 }
 
@@ -49,7 +48,7 @@
         @if (accountSummary.DailyLatestsInfo != null)
         {
             <td style="text-align: right">@accountSummary.DailyLatestsInfo.EarliestDate.ToShortDateString()</td>
-            <td style="text-align: right">@accountSummary.DailyLatestsInfo.LatestDate.ToShortDateString()</td>
+            <td style="@(accountSummary.DailyLatestsInfo.LatestDate >=  yesterday ? "background-color: lightgreen" : ""); text-align: right">@accountSummary.DailyLatestsInfo.LatestDate.ToShortDateString()</td>
         }
         else
         {
@@ -60,7 +59,7 @@
         @if (accountSummary.CampaignLatestsInfo != null)
         {
             <td style="text-align: right">@accountSummary.CampaignLatestsInfo.EarliestDate.ToShortDateString()</td>
-            <td style="text-align: right">@accountSummary.CampaignLatestsInfo.LatestDate.ToShortDateString()</td>
+            <td style="@(accountSummary.CampaignLatestsInfo.LatestDate >=  yesterday ? "background-color: lightgreen" : ""); text-align: right">@accountSummary.CampaignLatestsInfo.LatestDate.ToShortDateString()</td>
         }
         else
         {
@@ -71,7 +70,7 @@
         @if (accountSummary.AdsetsLatestsInfo != null)
         {
             <td style="text-align: right">@accountSummary.AdsetsLatestsInfo.EarliestDate.ToShortDateString()</td>
-            <td style="text-align: right">@accountSummary.AdsetsLatestsInfo.LatestDate.ToShortDateString()</td>
+            <td style="@(accountSummary.AdsetsLatestsInfo.LatestDate >=  yesterday ? "background-color: lightgreen" : ""); text-align: right">@accountSummary.AdsetsLatestsInfo.LatestDate.ToShortDateString()</td>
         }
         else
         {
@@ -82,7 +81,7 @@
         @if (accountSummary.AdsetsActionsLatestsInfo != null)
         {
             <td style="text-align: right">@accountSummary.AdsetsActionsLatestsInfo.EarliestDate.ToShortDateString()</td>
-            <td style="text-align: right">@accountSummary.AdsetsActionsLatestsInfo.LatestDate.ToShortDateString()</td>
+            <td style="@(accountSummary.AdsetsActionsLatestsInfo.LatestDate >=  yesterday ? "background-color: lightgreen" : ""); text-align: right">@accountSummary.AdsetsActionsLatestsInfo.LatestDate.ToShortDateString()</td>
         }
         else
         {
@@ -93,7 +92,7 @@
         @if (accountSummary.AdsLatestsInfo != null)
         {
             <td style="text-align: right">@accountSummary.AdsLatestsInfo.EarliestDate.ToShortDateString()</td>
-            <td style="text-align: right">@accountSummary.AdsLatestsInfo.LatestDate.ToShortDateString()</td>
+            <td style="@(accountSummary.AdsLatestsInfo.LatestDate >=  yesterday ? "background-color: lightgreen" : ""); text-align: right">@accountSummary.AdsLatestsInfo.LatestDate.ToShortDateString()</td>
         }
         else
         {
@@ -104,7 +103,7 @@
         @if (accountSummary.AdsActionsLatestsInfo != null)
         {
             <td style="text-align: right">@accountSummary.AdsActionsLatestsInfo.EarliestDate.ToShortDateString()</td>
-            <td style="text-align: right">@accountSummary.AdsActionsLatestsInfo.LatestDate.ToShortDateString()</td>
+            <td style="@(accountSummary.AdsActionsLatestsInfo.LatestDate >=  yesterday ? "background-color: lightgreen" : ""); text-align: right">@accountSummary.AdsActionsLatestsInfo.LatestDate.ToShortDateString()</td>
         }
         else
         {
