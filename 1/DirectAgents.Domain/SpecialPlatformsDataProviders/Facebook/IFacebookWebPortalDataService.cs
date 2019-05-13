@@ -1,6 +1,6 @@
-﻿using DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook.Models;
 
 namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook
 {
@@ -12,13 +12,15 @@ namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook
         /// <summary>
         /// Gets the accounts latests information.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Latests dates for accounts</returns>
         IEnumerable<FacebookLatestsInfo> GetAccountsLatestsInfo();
 
         /// <summary>
         /// Gets the accounts totals information on Campaigns Level.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="fromDate">From date.</param>
+        /// <param name="toDate">To date.</param>
+        /// <returns>Latests Campaigns Totals for accounts.</returns>
         IEnumerable<FacebookTotalsInfo> GetCampaignTotalsInfo(DateTime fromDate, DateTime toDate);
 
         /// <summary>
@@ -26,7 +28,7 @@ namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook
         /// </summary>
         /// <param name="fromDate">From date.</param>
         /// <param name="toDate">To date.</param>
-        /// <returns></returns>
+        /// <returns>Latests Daily Totals for accounts.</returns>
         IEnumerable<FacebookTotalsInfo> GetDailyTotalsInfo(DateTime fromDate, DateTime toDate);
 
         /// <summary>
@@ -34,7 +36,7 @@ namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook
         /// </summary>
         /// <param name="fromDate">From date.</param>
         /// <param name="toDate">To date.</param>
-        /// <returns></returns>
+        /// <returns>Latests Adsets Totals for accounts.</returns>
         IEnumerable<FacebookTotalsInfo> GetAdsetsTotalsInfo(DateTime fromDate, DateTime toDate);
 
         /// <summary>
@@ -42,7 +44,7 @@ namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook
         /// </summary>
         /// <param name="fromDate">From date.</param>
         /// <param name="toDate">To date.</param>
-        /// <returns></returns>
+        /// <returns>Latests Ads Totals for accounts.</returns>
         IEnumerable<FacebookTotalsInfo> GetAdsTotalsInfo(DateTime fromDate, DateTime toDate);
     }
 }

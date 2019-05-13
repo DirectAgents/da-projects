@@ -1,26 +1,26 @@
-﻿using DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook;
-using DirectAgents.Web.Areas.ProgAdmin.Models;
-using System;
+﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook;
+using DirectAgents.Web.Areas.ProgAdmin.Models;
 
 namespace DirectAgents.Web.Areas.ProgAdmin.Controllers.Facebook
 {
     /// <summary>
-    /// Facebook Stats Controller
+    /// Facebook Stats Controller.
     /// </summary>
     /// <seealso cref="System.Web.Mvc.Controller" />
     public class FacebookController : Controller
     {
-        private readonly IFacebookWebPortalDataService facebookWebPortalDataService;
+        private readonly IFacebookWebPortalDataService dataService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FacebookController"/> class.
         /// </summary>
-        /// <param name="facebookWebPortalDataService">The facebook web portal data service.</param>
-        public FacebookController(IFacebookWebPortalDataService facebookWebPortalDataService)
+        /// <param name="dataService">The facebook web portal data service.</param>
+        public FacebookController(IFacebookWebPortalDataService dataService)
         {
-            this.facebookWebPortalDataService = facebookWebPortalDataService;
+            this.dataService = dataService;
         }
 
         /// <summary>
@@ -29,13 +29,13 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers.Facebook
         /// <param name="acctId">The acct identifier.</param>
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
-        /// <returns></returns>
+        /// <returns>Latests Action Result</returns>
         public ActionResult Latests()
         {
-            var latests = facebookWebPortalDataService.GetAccountsLatestsInfo();
+            var latests = dataService.GetAccountsLatestsInfo();
             var model = new FacebookLatestsInfoVm
             {
-                LatestsInfo = latests.ToList()
+                LatestsInfo = latests.ToList(),
             };
             return View(model);
         }
@@ -45,18 +45,21 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers.Facebook
         /// </summary>
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
-        /// <returns></returns>
+        /// <returns>Daily Totals action Results</returns>
         public ActionResult DailyTotals(DateTime? start, DateTime? end)
         {
-            var defaultFromDate = DateTime.Now.AddDays(-10);
-            var defaultToDate = DateTime.Now;
-            var totals = facebookWebPortalDataService.GetDailyTotalsInfo(defaultFromDate, defaultToDate);
-            var model = new FacebookTotalsInfoVm
+            if (start.HasValue && end.HasValue)
             {
-                LevelName = "Daily",
-                TotalsInfo = totals.ToList()
-            };
-            return View("Totals", model);
+                return View("Totals", new FacebookTotalsInfoVm
+                {
+                    LevelName = "Daily",
+                    TotalsInfo = dataService.GetDailyTotalsInfo(start.Value, end.Value).ToList(),
+                });
+            }
+            else
+            {
+                return RedirectToAction("DailyTotals", "Facebook", GetCurrentMonthStartEndDateParams());
+            }
         }
 
         /// <summary>
@@ -64,18 +67,21 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers.Facebook
         /// </summary>
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
-        /// <returns></returns>
+        /// <returns>Strategy totals action results.</returns>
         public ActionResult StrategyTotals(DateTime? start, DateTime? end)
         {
-            var defaultFromDate = DateTime.Now.AddDays(-10);
-            var defaultToDate = DateTime.Now;
-            var totals = facebookWebPortalDataService.GetCampaignTotalsInfo(defaultFromDate, defaultToDate);
-            var model = new FacebookTotalsInfoVm
+            if (start.HasValue && end.HasValue)
             {
-                LevelName = "Strategy",
-                TotalsInfo = totals.ToList()
-            };
-            return View("Totals", model);
+                return View("Totals", new FacebookTotalsInfoVm
+                {
+                    LevelName = "Strategy",
+                    TotalsInfo = dataService.GetCampaignTotalsInfo(start.Value, end.Value).ToList(),
+                });
+            }
+            else
+            {
+                return RedirectToAction("StrategyTotals", "Facebook", GetCurrentMonthStartEndDateParams());
+            }
         }
 
         /// <summary>
@@ -83,18 +89,21 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers.Facebook
         /// </summary>
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
-        /// <returns></returns>
+        /// <returns>Adset totals action result.</returns>
         public ActionResult AdSetTotals(DateTime? start, DateTime? end)
         {
-            var defaultFromDate = DateTime.Now.AddDays(-10);
-            var defaultToDate = DateTime.Now;
-            var totals = facebookWebPortalDataService.GetAdsetsTotalsInfo(defaultFromDate, defaultToDate);
-            var model = new FacebookTotalsInfoVm
+            if (start.HasValue && end.HasValue)
             {
-                LevelName = "AdSet",
-                TotalsInfo = totals.ToList()
-            };
-            return View("Totals", model);
+                return View("Totals", new FacebookTotalsInfoVm
+                {
+                    LevelName = "AdSet",
+                    TotalsInfo = dataService.GetAdsetsTotalsInfo(start.Value, end.Value).ToList(),
+                });
+            }
+            else
+            {
+                return RedirectToAction("AdSetTotals", "Facebook", GetCurrentMonthStartEndDateParams());
+            }
         }
 
         /// <summary>
@@ -102,18 +111,32 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers.Facebook
         /// </summary>
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
-        /// <returns></returns>
+        /// <returns>Creatives totals action result</returns>
         public ActionResult CreativeTotals(DateTime? start, DateTime? end)
         {
-            var defaultFromDate = DateTime.Now.AddDays(-10);
-            var defaultToDate = DateTime.Now;
-            var totals = facebookWebPortalDataService.GetAdsTotalsInfo(defaultFromDate, defaultToDate);
-            var model = new FacebookTotalsInfoVm
+            if (start.HasValue && end.HasValue)
             {
-                LevelName = "Ad",
-                TotalsInfo = totals.ToList()
+                return View("Totals", new FacebookTotalsInfoVm
+                {
+                    LevelName = "Ad",
+                    TotalsInfo = dataService.GetAdsTotalsInfo(start.Value, end.Value).ToList(),
+                });
+            }
+            else
+            {
+                return RedirectToAction("CreativeTotals", "Facebook", GetCurrentMonthStartEndDateParams());
+            }
+        }
+
+        private object GetCurrentMonthStartEndDateParams()
+        {
+            var firstDayOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
+            return new
+            {
+                start = firstDayOfMonth,
+                end = lastDayOfMonth,
             };
-            return View("Totals", model);
         }
     }
 }

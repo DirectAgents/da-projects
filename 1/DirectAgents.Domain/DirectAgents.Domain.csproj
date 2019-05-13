@@ -134,9 +134,9 @@
     <Compile Include="MigrationsTD\201904301624478_Mig_DbmCreativeExpansion.cs" />
     <Compile Include="MigrationsTD\201904301624478_Mig_DbmCreativeExpansion.Designer.cs">
       <DependentUpon>201904301624478_Mig_DbmCreativeExpansion.cs</DependentUpon>
-	</Compile>
-	<Compile Include="MigrationsTD\201904221606279_FacebookCreativeExpansion.cs" />
-	<Compile Include="MigrationsTD\201904221606279_FacebookCreativeExpansion.Designer.cs">
+    </Compile>
+    <Compile Include="MigrationsTD\201904221606279_FacebookCreativeExpansion.cs" />
+    <Compile Include="MigrationsTD\201904221606279_FacebookCreativeExpansion.Designer.cs">
       <DependentUpon>201904221606279_FacebookCreativeExpansion.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201904252123496_Mig_EventConv_TransactionId.cs" />
@@ -1075,7 +1075,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201904301624478_Mig_DbmCreativeExpansion.resx">
       <DependentUpon>201904301624478_Mig_DbmCreativeExpansion.cs</DependentUpon>
-	</EmbeddedResource>
+    </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201904221606279_FacebookCreativeExpansion.resx">
       <DependentUpon>201904221606279_FacebookCreativeExpansion.cs</DependentUpon>
     </EmbeddedResource>

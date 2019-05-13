@@ -1,12 +1,12 @@
-﻿using DirectAgents.Domain.Abstract;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.Facebook;
 using DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook.Models;
 using DirectAgents.Domain.SpecialPlatformsDataProviders.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook
 {
@@ -30,7 +30,9 @@ namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook
         /// <summary>
         /// Gets the accounts latests information.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// Latests dates for accounts
+        /// </returns>
         public IEnumerable<FacebookLatestsInfo> GetAccountsLatestsInfo()
         {
             var accounts = GetAccountsForStatsDisplaying();
@@ -47,9 +49,11 @@ namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook
         /// <summary>
         /// Gets the accounts totals information on Campaigns Level.
         /// </summary>
-        /// <param name="fromDate"></param>
-        /// <param name="toDate"></param>
-        /// <returns></returns>
+        /// <param name="fromDate">From date.</param>
+        /// <param name="toDate">To date.</param>
+        /// <returns>
+        /// Latests Campaigns Totals for accounts.
+        /// </returns>
         public IEnumerable<FacebookTotalsInfo> GetCampaignTotalsInfo(DateTime fromDate, DateTime toDate)
         {
             var accountsTotals = GetAccountsForStatsDisplaying().Select(account => new FacebookTotalsInfo { Account = account }).ToList();
@@ -63,7 +67,9 @@ namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook
         /// </summary>
         /// <param name="fromDate">From date.</param>
         /// <param name="toDate">To date.</param>
-        /// <returns></returns>
+        /// <returns>
+        /// Latests Daily Totals for accounts.
+        /// </returns>
         public IEnumerable<FacebookTotalsInfo> GetDailyTotalsInfo(DateTime fromDate, DateTime toDate)
         {
             var accountsTotals = GetAccountsForStatsDisplaying().Select(account => new FacebookTotalsInfo { Account = account }).ToList();
@@ -77,7 +83,9 @@ namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook
         /// </summary>
         /// <param name="fromDate">From date.</param>
         /// <param name="toDate">To date.</param>
-        /// <returns></returns>
+        /// <returns>
+        /// Latests Adsets Totals for accounts.
+        /// </returns>
         public IEnumerable<FacebookTotalsInfo> GetAdsetsTotalsInfo(DateTime fromDate, DateTime toDate)
         {
             var accountsTotals = GetAccountsForStatsDisplaying().Select(account => new FacebookTotalsInfo { Account = account }).ToList();
@@ -91,7 +99,9 @@ namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook
         /// </summary>
         /// <param name="fromDate">From date.</param>
         /// <param name="toDate">To date.</param>
-        /// <returns></returns>
+        /// <returns>
+        /// Latests Ads Totals for accounts.
+        /// </returns>
         public IEnumerable<FacebookTotalsInfo> GetAdsTotalsInfo(DateTime fromDate, DateTime toDate)
         {
             var accountsTotals = GetAccountsForStatsDisplaying().Select(account => new FacebookTotalsInfo { Account = account }).ToList();
@@ -126,7 +136,7 @@ namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook
                 {
                     AccountId = x.Key,
                     EarliestDate = x.Min(z => z.Date),
-                    LatestDate = x.Max(z => z.Date)
+                    LatestDate = x.Max(z => z.Date),
                 }).ToList();
             latestsData.ForEach(latests =>
                 allAccountsLatestsInfo.First(accountLatests => accountLatests.Account.Id == latests.AccountId).DailyLatestsInfo = latests);
@@ -140,7 +150,7 @@ namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook
                 {
                     AccountId = x.Key,
                     EarliestDate = x.Min(z => z.Date),
-                    LatestDate = x.Max(z => z.Date)
+                    LatestDate = x.Max(z => z.Date),
                 }).ToList();
             latestsData.ForEach(latests =>
                 allAccountsLatestsInfo.First(accountLatests => accountLatests.Account.Id == latests.AccountId).DailyLatestsInfo = latests);
@@ -154,7 +164,7 @@ namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook
                 {
                     AccountId = x.Key,
                     EarliestDate = x.Min(z => z.Date),
-                    LatestDate = x.Max(z => z.Date)
+                    LatestDate = x.Max(z => z.Date),
                 }).ToList();
             latestsData.ForEach(latests =>
                 allAccountsLatestsInfo.First(accountLatests => accountLatests.Account.Id == latests.AccountId).CampaignLatestsInfo = latests);
@@ -168,7 +178,7 @@ namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook
                 {
                     AccountId = x.Key,
                     EarliestDate = x.Min(z => z.Date),
-                    LatestDate = x.Max(z => z.Date)
+                    LatestDate = x.Max(z => z.Date),
                 }).ToList();
             latestsData.ForEach(latests =>
                 allAccountsLatestsInfo.First(accountLatests => accountLatests.Account.Id == latests.AccountId).AdsetsLatestsInfo = latests);
@@ -182,7 +192,7 @@ namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook
                 {
                     AccountId = x.Key,
                     EarliestDate = x.Min(z => z.Date),
-                    LatestDate = x.Max(z => z.Date)
+                    LatestDate = x.Max(z => z.Date),
                 }).ToList();
             latestsData.ForEach(latests =>
                 allAccountsLatestsInfo.First(accountLatests => accountLatests.Account.Id == latests.AccountId).AdsetsActionsLatestsInfo = latests);
@@ -196,7 +206,7 @@ namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook
                   {
                       AccountId = x.Key,
                       EarliestDate = x.Min(z => z.Date),
-                      LatestDate = x.Max(z => z.Date)
+                      LatestDate = x.Max(z => z.Date),
                   }).ToList();
             latestsData.ForEach(latests =>
                 allAccountsLatestsInfo.First(accountLatests => accountLatests.Account.Id == latests.AccountId).AdsLatestsInfo = latests);
@@ -210,7 +220,7 @@ namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook
                 {
                     AccountId = x.Key,
                     EarliestDate = x.Min(z => z.Date),
-                    LatestDate = x.Max(z => z.Date)
+                    LatestDate = x.Max(z => z.Date),
                 }).ToList();
             latestsData.ForEach(latests =>
                 allAccountsLatestsInfo.First(accountLatests => accountLatests.Account.Id == latests.AccountId).AdsActionsLatestsInfo = latests);
