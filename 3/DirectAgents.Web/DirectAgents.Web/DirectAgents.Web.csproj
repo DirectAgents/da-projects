@@ -274,6 +274,7 @@
     <Compile Include="Areas\ProgAdmin\Models\DailySummariesVM.cs" />
     <Compile Include="Areas\ProgAdmin\Models\DashboardVM.cs" />
     <Compile Include="Areas\ProgAdmin\Models\ExtraItemsVM.cs" />
+    <Compile Include="Areas\ProgAdmin\Models\FacebookActionsTotalsVm.cs" />
     <Compile Include="Areas\ProgAdmin\Models\FacebookTotalsInfoVm.cs" />
     <Compile Include="Areas\ProgAdmin\Models\FacebookLatestsInfoVm.cs" />
     <Compile Include="Areas\ProgAdmin\Models\ReportingVM.cs" />
@@ -1203,6 +1204,7 @@
     <Content Include="Areas\ProgAdmin\Views\Facebook\Totals.cshtml" />
     <Content Include="Areas\ProgAdmin\Views\Facebook\Latests.cshtml" />
     <Content Include="Areas\ProgAdmin\Views\Shared\DatePicker.cshtml" />
+    <Content Include="Areas\ProgAdmin\Views\Facebook\ActionTotals.cshtml" />
     <None Include="Properties\PublishProfiles\dagents_vm_staging.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\DayOfWeek.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />

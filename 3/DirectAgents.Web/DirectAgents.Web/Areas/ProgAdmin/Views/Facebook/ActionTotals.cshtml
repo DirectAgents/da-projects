@@ -1,0 +1,46 @@
+﻿@model DirectAgents.Web.Areas.ProgAdmin.Models.FacebookActionsTotalsVm
+@{
+    ViewBag.Title = "Facebook Latests Stats";
+    var yesterday = DateTime.Today.AddDays(-1);
+}
+
+<h2>Facebook Actions Totals Stats for @Model.LevelName level</h2>
+
+@Html.Partial("DatePicker")
+
+@foreach (var accountActSummary in Model.AccountActionsTotals)
+{
+    <div>
+        <h4>
+            @accountActSummary.Account.Name
+        </h4>
+        @if (accountActSummary.ActionTotals != null)
+        {
+            <table>
+                <tr>
+                    <th>Id</th>
+                    <th>Code</th>
+                    <th>PostClick</th>
+                    <th>PostView</th>
+                    <th>PostClickVal</th>
+                    <th>PostViewVal</th>
+                    <th>ClickAttrWindow</th>
+                    <th>ViewAttrWindow</th>
+                </tr>
+                @foreach (var actTotal in accountActSummary.ActionTotals)
+                {
+                    <tr>
+                        <td>@actTotal.Id</td>
+                        <td>@actTotal.Code</td>
+                        <td>@actTotal.PostClick</td>
+                        <td>@actTotal.PostView</td>
+                        <td>@actTotal.PostClickVal</td>
+                        <td>@actTotal.PostViewVal</td>
+                        <td>@actTotal.ClickAttrWindow</td>
+                        <td>@actTotal.ViewAttrWindow</td>
+                    </tr>
+                }
+            </table>
+        }
+    </div>
+}

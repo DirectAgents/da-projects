@@ -4,17 +4,17 @@ using DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook.Models;
 namespace DirectAgents.Web.Areas.ProgAdmin.Models
 {
     /// <summary>
-    /// Facebook Summary totals web model.
+    /// View model for account action totals.
     /// </summary>
-    public class FacebookTotalsInfoVm
+    public class FacebookActionsTotalsVm
     {
         /// <summary>
-        /// Gets or sets the facebook totals information.
+        /// Gets or sets the account actions totals information.
         /// </summary>
         /// <value>
-        /// The facebook totals information.
+        /// The account actions totals information.
         /// </value>
-        public List<FacebookTotalsInfo> TotalsInfo { get; set; }
+        public List<FacebookAccountActionsTotals> AccountActionsTotals { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the level.

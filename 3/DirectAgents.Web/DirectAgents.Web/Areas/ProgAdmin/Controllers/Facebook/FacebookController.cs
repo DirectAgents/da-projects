@@ -111,7 +111,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers.Facebook
         /// </summary>
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
-        /// <returns>Creatives totals action result</returns>
+        /// <returns>Creatives totals action result.</returns>
         public ActionResult CreativeTotals(DateTime? start, DateTime? end)
         {
             if (start.HasValue && end.HasValue)
@@ -125,6 +125,50 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers.Facebook
             else
             {
                 return RedirectToAction("CreativeTotals", "Facebook", GetCurrentMonthStartEndDateParams());
+            }
+        }
+
+        /// <summary>
+        /// Endpoint for Adsets action totals page.
+        /// </summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <returns>Adset action totals action result.</returns>
+        public ActionResult AdSetActionTotals(DateTime? start, DateTime? end)
+        {
+            if (start.HasValue && end.HasValue)
+            {
+                return View("ActionTotals", new FacebookActionsTotalsVm
+                {
+                    LevelName = "AdSet",
+                    AccountActionsTotals = dataService.GetAdSetActionsTotalsInfo(start.Value, end.Value).ToList(),
+                });
+            }
+            else
+            {
+                return RedirectToAction("AdSetActionTotals", "Facebook", GetCurrentMonthStartEndDateParams());
+            }
+        }
+
+        /// <summary>
+        /// Endpoint for Ads action totals page.
+        /// </summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <returns>Ads action totals action result.</returns>
+        public ActionResult CreativeActionTotals(DateTime? start, DateTime? end)
+        {
+            if (start.HasValue && end.HasValue)
+            {
+                return View("ActionTotals", new FacebookActionsTotalsVm
+                {
+                    LevelName = "Ads",
+                    AccountActionsTotals = dataService.GetAdsActionsTotalsInfo(start.Value, end.Value).ToList(),
+                });
+            }
+            else
+            {
+                return RedirectToAction("CreativeActionTotals", "Facebook", GetCurrentMonthStartEndDateParams());
             }
         }
 

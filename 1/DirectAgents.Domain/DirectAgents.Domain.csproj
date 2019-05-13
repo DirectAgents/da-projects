@@ -145,6 +145,8 @@
     </Compile>
     <Compile Include="SpecialPlatformsDataProviders\CommissiobJunction\CommissionJunctionProvider.cs" />
     <Compile Include="SpecialPlatformsDataProviders\DSP\DspProvider.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\Facebook\Models\FacebookAccountActionsTotals.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\Facebook\Models\FacebookActionsTotals.cs" />
     <Compile Include="SpecialPlatformsDataProviders\Facebook\Models\FacebookTotalsInfo.cs" />
     <Compile Include="SpecialPlatformsDataProviders\Facebook\Models\FacebookLatestsInfo.cs" />
     <Compile Include="SpecialPlatformsDataProviders\Kochava\KochavaProvider.cs" />

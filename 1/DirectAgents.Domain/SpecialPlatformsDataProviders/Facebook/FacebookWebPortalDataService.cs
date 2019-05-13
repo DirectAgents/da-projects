@@ -110,6 +110,80 @@ namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook
             return accountsTotals;
         }
 
+        /// <summary>
+        /// Gets the ad set actions totals information.
+        /// </summary>
+        /// <param name="fromDate">From date.</param>
+        /// <param name="toDate">To date.</param>
+        /// <returns>Adset Actions Totals Info.</returns>
+        public IEnumerable<FacebookAccountActionsTotals> GetAdSetActionsTotalsInfo(DateTime fromDate, DateTime toDate)
+        {
+            return context.FbAdSetActions.Where(sum => sum.Date >= fromDate && sum.Date <= toDate)
+                 .GroupBy(x => new { x.AdSet.AccountId, x.ActionTypeId }).Select(gr => new
+                 {
+                     gr.FirstOrDefault().ActionType,
+                     gr.FirstOrDefault().AdSet.ExtAccount,
+                     gr.FirstOrDefault().ClickAttrWindow,
+                     gr.FirstOrDefault().ViewAttrWindow,
+                     PostClick = gr.Sum(z => z.PostClick),
+                     PostView = gr.Sum(z => z.PostView),
+                     PostClickVal = gr.Sum(z => z.PostClickVal),
+                     PostViewVal = gr.Sum(z => z.PostViewVal),
+                 }).ToList().GroupBy(item => item.ExtAccount.Id).Select(gr =>
+                     new FacebookAccountActionsTotals
+                     {
+                         Account = gr.First().ExtAccount,
+                         ActionTotals = gr.Select(act => new FacebookActionsTotals
+                         {
+                             Id = act.ActionType.Id,
+                             Code = act.ActionType.Code,
+                             ClickAttrWindow = act.ClickAttrWindow,
+                             ViewAttrWindow = act.ViewAttrWindow,
+                             PostClick = act.PostClick,
+                             PostView = act.PostView,
+                             PostClickVal = act.PostClickVal,
+                             PostViewVal = act.PostViewVal,
+                         }).ToList(),
+                     });
+        }
+
+        /// <summary>
+        /// Gets the ads actions totals information.
+        /// </summary>
+        /// <param name="fromDate">From date.</param>
+        /// <param name="toDate">To date.</param>
+        /// <returns>Ads Actions Totals Info.</returns>
+        public IEnumerable<FacebookAccountActionsTotals> GetAdsActionsTotalsInfo(DateTime fromDate, DateTime toDate)
+        {
+            return context.FbAdActions.Where(sum => sum.Date >= fromDate && sum.Date <= toDate)
+                 .GroupBy(x => new { x.Ad.AccountId, x.ActionTypeId }).Select(gr => new
+                 {
+                     gr.FirstOrDefault().ActionType,
+                     gr.FirstOrDefault().Ad.ExtAccount,
+                     gr.FirstOrDefault().ClickAttrWindow,
+                     gr.FirstOrDefault().ViewAttrWindow,
+                     PostClick = gr.Sum(z => z.PostClick),
+                     PostView = gr.Sum(z => z.PostView),
+                     PostClickVal = gr.Sum(z => z.PostClickVal),
+                     PostViewVal = gr.Sum(z => z.PostViewVal),
+                 }).ToList().GroupBy(item => item.ExtAccount.Id).Select(gr =>
+                     new FacebookAccountActionsTotals
+                     {
+                         Account = gr.First().ExtAccount,
+                         ActionTotals = gr.Select(act => new FacebookActionsTotals
+                         {
+                             Id = act.ActionType.Id,
+                             Code = act.ActionType.Code,
+                             ClickAttrWindow = act.ClickAttrWindow,
+                             ViewAttrWindow = act.ViewAttrWindow,
+                             PostClick = act.PostClick,
+                             PostView = act.PostView,
+                             PostClickVal = act.PostClickVal,
+                             PostViewVal = act.PostViewVal,
+                         }).ToList(),
+                     });
+        }
+
         private void SetTotalsInfoForAccount(IGrouping<int, FbBaseSummary> gr, List<FacebookTotalsInfo> allAccountsTotalInfo)
         {
             var totalsInfo = allAccountsTotalInfo.Find(ti => ti.Account.Id == gr.Key);

@@ -46,5 +46,21 @@ namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook
         /// <param name="toDate">To date.</param>
         /// <returns>Latests Ads Totals for accounts.</returns>
         IEnumerable<FacebookTotalsInfo> GetAdsTotalsInfo(DateTime fromDate, DateTime toDate);
+
+        /// <summary>
+        /// Gets the ad set actions totals information.
+        /// </summary>
+        /// <param name="fromDate">From date.</param>
+        /// <param name="toDate">To date.</param>
+        /// <returns>Adset Actions Totals Info.</returns>
+        IEnumerable<FacebookAccountActionsTotals> GetAdSetActionsTotalsInfo(DateTime fromDate, DateTime toDate);
+
+        /// <summary>
+        /// Gets the ads actions totals information.
+        /// </summary>
+        /// <param name="fromDate">From date.</param>
+        /// <param name="toDate">To date.</param>
+        /// <returns>Ads Actions Totals Info.</returns>
+        IEnumerable<FacebookAccountActionsTotals> GetAdsActionsTotalsInfo(DateTime fromDate, DateTime toDate);
     }
 }
