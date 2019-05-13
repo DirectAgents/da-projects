@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Net;
+using Polly;
 using System.Threading;
 using Adform.Entities;
 using Adform.Entities.ReportEntities;
+using Adform.Entities.RequestEntities;
 using Adform.Entities.RequestHelpers;
 using Adform.Helpers;
 using RestSharp;
@@ -16,16 +18,18 @@ namespace Adform
 {
     public class AdformUtility
     {
-        public const int MaxPageSize = 3000;
+        public const int MaxPageSize = 0; //3000;
         public const int MaxNumberOfMetrics = 10;
         public const int MaxNumberOfDimensions = 8;
         public const int NumAlts = 10; // including the default (0)
+        public const int MaxRetryAttempt = 10;
+        public TimeSpan PauseBetweenAttempts = new TimeSpan(0, 0, 30);
 
-        private const string Scope = "https://api.adform.com/scope/eapi";
-        private const string ReportDataPath = "/v1/reportingstats/agency/reportdata";
+        private const string Scope = "https://api.adform.com/scope/buyer.stats";
         private const string MetadataDimensionsPath = "/v1/reportingstats/agency/metadata/dimensions";
         private const string MetadataMetricsPath = "/v1/reportingstats/agency/metadata/metrics";
         private const string CreateDataJobPath = "/v1/buyer/stats/data";
+        private const string AllOperationsPath = "/v1/buyer/stats/operations";
 
         // From Config:
         public string[] AccessTokens = new string[NumAlts];
@@ -33,32 +37,54 @@ namespace Adform
         private readonly string[] ClientIDs = new string[NumAlts];
         private readonly string[] ClientSecrets = new string[NumAlts];
 
+        private readonly string adformAuthBaseUrl = ConfigurationManager.AppSettings["AdformAuthBaseUrl"];
+        private readonly string adformBaseUrl = ConfigurationManager.AppSettings["AdformBaseUrl"];
+
         public int WhichAlt { get; set; } // default: 0
         public string TrackingId { get; set; }
-        private string AuthBaseUrl { get; set; }
-        private string BaseUrl { get; set; }
 
-        // --- Logging ---
-        private Action<string> _LogInfo;
-        private Action<string> _LogError;
+        #region Logging
+
+        private readonly Action<string> logInfo;
+        private readonly Action<string> logError;
+        private const string LoggerPrefix = "[AdformUtility]";
+
+        private static string GetMessageInCorrectFormat(string message)
+        {
+            var updatedMessage = message.Replace('{', '\'').Replace('}', '\'');
+            return $"{LoggerPrefix} {updatedMessage}";
+        }
 
         private void LogInfo(string message)
         {
-            if (_LogInfo == null)
-                Console.WriteLine(message);
+            var updatedMessage = GetMessageInCorrectFormat(message);
+            if (logInfo == null)
+            {
+                Console.WriteLine(updatedMessage);
+            }
             else
-                _LogInfo("[AdformUtility] " + message);
+            {
+                logInfo(updatedMessage);
+            }
         }
 
         private void LogError(string message)
         {
-            if (_LogError == null)
-                Console.WriteLine(message);
+            var updatedMessage = GetMessageInCorrectFormat(message);
+            if (logError == null)
+            {
+                Console.WriteLine(updatedMessage);
+            }
             else
-                _LogError("[AdformUtility] " + message);
+            {
+                logError(updatedMessage);
+            }
         }
 
-        // --- Constructors ---
+        #endregion
+
+        #region Constructors
+
         public AdformUtility()
         {
             Setup();
@@ -67,13 +93,12 @@ namespace Adform
         public AdformUtility(Action<string> logInfo, Action<string> logError)
             : this()
         {
-            _LogInfo = logInfo;
-            _LogError = logError;
+            this.logInfo = logInfo;
+            this.logError = logError;
         }
 
         private void Setup()
         {
-            AuthBaseUrl = ConfigurationManager.AppSettings["AdformAuthBaseUrl"];
             ClientIDs[0] = ConfigurationManager.AppSettings["AdformClientID"];
             ClientSecrets[0] = ConfigurationManager.AppSettings["AdformClientSecret"];
             for (var i = 1; i < NumAlts; i++)
@@ -82,7 +107,6 @@ namespace Adform
                 ClientIDs[i] = ConfigurationManager.AppSettings["AdformClientID_Alt" + i];
                 ClientSecrets[i] = ConfigurationManager.AppSettings["AdformClientSecret_Alt" + i];
             }
-            BaseUrl = ConfigurationManager.AppSettings["AdformBaseUrl"];
         }
 
         private string PlaceLeadingAndTrailingCommas(string idString)
@@ -99,6 +123,8 @@ namespace Adform
         {
             return symbol == ',' ? string.Empty : ",";
         }
+
+        #endregion
 
         // for alternative credentials...
         public void SetWhichAlt(string accountId)
@@ -118,7 +144,7 @@ namespace Adform
         {
             var restClient = new RestClient
             {
-                BaseUrl = new Uri(AuthBaseUrl),
+                BaseUrl = new Uri(adformAuthBaseUrl),
                 Authenticator = new HttpBasicAuthenticator(ClientIDs[WhichAlt], ClientSecrets[WhichAlt])
             };
             restClient.AddHandler("application/json", new JsonDeserializer());
@@ -134,13 +160,10 @@ namespace Adform
             }
         }
 
-        private IRestResponse<T> ProcessRequest<T>(RestRequest restRequest, bool postNotGet = false)
+        private IRestResponse<T> ProcessRequest<T>(RestRequest restRequest, bool isPostMethod = false)
             where T : new()
         {
-            var restClient = new RestClient
-            {
-                BaseUrl = new Uri(BaseUrl)
-            };
+            var restClient = new RestClient(adformBaseUrl);
             restClient.AddHandler("application/json", new JsonDeserializer());
 
             if (string.IsNullOrEmpty(AccessTokens[WhichAlt]))
@@ -155,7 +178,7 @@ namespace Adform
             IRestResponse<T> response = null;
             while (!done)
             {
-                response = postNotGet
+                response = isPostMethod
                     ? restClient.ExecuteAsPost<T>(restRequest, "POST")
                     : restClient.ExecuteAsGet<T>(restRequest, "GET");
                 tries++;
@@ -201,7 +224,7 @@ namespace Adform
                 dimensions = (object)null
             };
             request.AddJsonBody(parms);
-            var restResponse = ProcessRequest<object>(request, postNotGet: true);
+            var restResponse = ProcessRequest<object>(request, isPostMethod: true);
         }
 
         /// <summary>
@@ -215,7 +238,7 @@ namespace Adform
                 metrics = (object)null
             };
             request.AddJsonBody(parms);
-            var restResponse = ProcessRequest<object>(request, postNotGet: true);
+            var restResponse = ProcessRequest<object>(request, isPostMethod: true);
         }
 
         public ReportParams CreateReportParams(ReportSettings settings)
@@ -227,22 +250,21 @@ namespace Adform
                 metrics = AdformApiHelper.GetMetrics(settings),
                 paging = new Paging
                 {
-                    offset = 0,
+                    //offset = 0,
                     limit = MaxPageSize
                 },
                 includeRowCount = true
             };
             return reportParams;
         }
-
-        public ReportData GetReportData(ReportParams reportParams)
+        
+        public ReportData GetReportData(string dataLocationPath)
         {
-            var request = new RestRequest(ReportDataPath);
-            request.AddJsonBody(reportParams);
-            var restResponse = ProcessRequest<ReportResponse>(request, postNotGet: true);
+            var request = new RestRequest(dataLocationPath);
+            var restResponse = ProcessRequest<ReportResponse>(request, isPostMethod: false);
             return restResponse?.Data?.reportData;
         }
-
+        
         public IEnumerable<ReportData> GetReportDataWithPaging(ReportParams reportParams)
         {
             var allReportData = new List<ReportData>();
@@ -254,8 +276,11 @@ namespace Adform
                 {
                     var reportWithCorrectDimensionsParams = reportWithCorrectMetricsParams.Clone();
                     reportWithCorrectDimensionsParams.dimensions = GetItemsRange(reportParams.dimensions, j, MaxNumberOfDimensions);
-                    var reportData = GetReportDataWithPagingAndParamsUnderLimit(reportWithCorrectDimensionsParams);
-                    allReportData.AddRange(reportData);
+
+                    var operationLocation = CreateDataJob(reportWithCorrectDimensionsParams);
+                    var dataLocationPath = PollingOperation(operationLocation);
+                    var reportData = GetReportData(dataLocationPath);
+                    allReportData.Add(reportData);
                 }
             }
 
@@ -266,54 +291,48 @@ namespace Adform
         {
             return items.Skip(startIndex).Take(count).ToArray();
         }
-
-        private IEnumerable<ReportData> GetReportDataWithPagingAndParamsUnderLimit(ReportParams reportParams)
-        {
-            var offset = reportParams.paging.offset;
-            var calculatedSize = CalculatePageSize(offset, MaxPageSize);
-            while (calculatedSize > 0)
-            {
-                var request = new RestRequest(ReportDataPath);
-                reportParams.paging.offset = offset;
-                reportParams.paging.limit = calculatedSize;
-                request.AddJsonBody(reportParams);
-
-                var restResponse = ProcessRequest<ReportResponse>(request, postNotGet: true);
-                if (restResponse?.Data?.reportData != null)
-                {
-                    yield return restResponse.Data.reportData;
-
-                    offset += calculatedSize;
-                    calculatedSize = CalculatePageSize(offset, MaxPageSize, restResponse.Data.totalRowCount);
-                    if (calculatedSize > 0)
-                    {
-                        LogInfo($"Next page. offset {offset} limit {calculatedSize} totalRows {restResponse.Data.totalRowCount}");
-                    }
-                }
-                else
-                {
-                    calculatedSize = 0;
-                }
-            }
-        }
-
-        private static int CalculatePageSize(int offset, int limit, int total = -1)
-        {
-            return total < 0 || limit <= 0
-                ? limit
-                : offset + limit > total
-                    ? total - offset
-                    : offset == total // from api docs; don't think will ever be the case
-                        ? 0
-                        : limit;
-        }
-
+        
         // ---Asynchronous operations---
-        public void CreateDataJob(ReportParams reportParams)
+        public string CreateDataJob(ReportParams reportParams)
         {
             var request = new RestRequest(CreateDataJobPath);
             request.AddJsonBody(reportParams);
-            var restResponse = ProcessRequest<CreateJobResponse>(request, postNotGet: true);
+            var restResponse = ProcessRequest<CreateJobResponse>(request, isPostMethod: true);
+
+            if (restResponse.StatusCode != HttpStatusCode.Accepted)
+            {
+                LogError("Creating a data job failed.");
+                return null;
+            }
+
+            return restResponse.Headers.First(header => header.Name == "Operation-Location").Value.ToString();
+        }
+
+        public string PollingOperation(string operationLocationPath)
+        {
+            var response = Policy
+                .Handle<Exception>()
+                .OrResult<IRestResponse<PollingOperationResponse>>(resp => 
+                    resp.Data.Status.ToLower() != "succeeded" && resp?.Data.Status.ToLower() != "failed")
+                .WaitAndRetry(MaxRetryAttempt, i => PauseBetweenAttempts, (exception, timeSpan, retryCount, context) =>
+                    LogInfo($"Operation is not ready. Will repeat polling operation status. Waiting {timeSpan}. (number of retrying - {retryCount})"))
+                .Execute(() =>
+                {
+                    var request = new RestRequest(operationLocationPath);
+                    return ProcessRequest<PollingOperationResponse>(request, isPostMethod: false);
+                });
+
+            if (response.Data.Status.ToLower() != "succeeded")
+            {
+                throw new Exception("Failed");
+            }
+            return response.Data.Location;
+        }
+
+        public void GetAllOperations()
+        {
+            var request = new RestRequest(AllOperationsPath);
+            var response = ProcessRequest<List<PollingOperationResponse>>(request, false);
         }
     }
 }

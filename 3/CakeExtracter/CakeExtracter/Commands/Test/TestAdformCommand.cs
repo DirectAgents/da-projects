@@ -47,8 +47,12 @@ namespace CakeExtracter.Commands.Test
                 ClientId = 54314, // G&T
                 Dimensions = new List<Dimension> {Dimension.Media}
             };
-            var parms = adformUtility.CreateReportParams(settings);
-            var reportData = adformUtility.GetReportData(parms);
+            var parameters = adformUtility.CreateReportParams(settings);
+
+            var operationLocation = adformUtility.CreateDataJob(parameters);
+            var dataLocationPath = adformUtility.PollingOperation(operationLocation);
+            
+            var reportData = adformUtility.GetReportData(dataLocationPath);
 
             foreach (var row in reportData.rows)
             {

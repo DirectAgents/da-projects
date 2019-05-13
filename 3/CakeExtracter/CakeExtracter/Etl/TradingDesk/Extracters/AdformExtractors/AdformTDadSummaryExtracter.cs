@@ -36,8 +36,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         {
             var settings = GetBaseSettings();
             settings.Dimensions.Add(Dimension.Banner);
-            var parms = AfUtility.CreateReportParams(settings);
-            var allReportData = AfUtility.GetReportDataWithPaging(parms);
+            var parameters = AfUtility.CreateReportParams(settings);
+            var allReportData = AfUtility.GetReportDataWithPaging(parameters);
             var adFormSums = allReportData.SelectMany(TransformReportData).ToList();
             return adFormSums;
         }

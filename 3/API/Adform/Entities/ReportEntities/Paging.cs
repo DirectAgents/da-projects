@@ -6,11 +6,6 @@
     public class Paging
     {
         /// <summary>
-        /// Row index to start from.
-        /// </summary>
-        public int offset { get; set; }
-
-        /// <summary>
         /// Rows per page.
         /// </summary>
         public int limit { get; set; }
