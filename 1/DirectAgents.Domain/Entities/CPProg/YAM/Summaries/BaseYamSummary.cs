@@ -38,5 +38,18 @@ namespace DirectAgents.Domain.Entities.CPProg.YAM.Summaries
             ConversionValue = stats.Sum(x => x.ConversionValue);
             AdvertiserSpending = stats.Sum(x => x.AdvertiserSpending);
         }
+
+        public virtual bool IsEmpty()
+        {
+            const decimal emptyValue = default(decimal);
+            return Impressions == emptyValue
+                   && Clicks == emptyValue
+                   && ClickThroughConversion == emptyValue
+                   && ViewThroughConversion == emptyValue
+                   && ConversionValue == emptyValue
+                   && AdvertiserSpending == emptyValue
+                   && (!ClickConversionValueByPixelQuery.HasValue || ClickConversionValueByPixelQuery == emptyValue)
+                   && (!ViewConversionValueByPixelQuery.HasValue || ViewConversionValueByPixelQuery == emptyValue);
+        }
     }
 }

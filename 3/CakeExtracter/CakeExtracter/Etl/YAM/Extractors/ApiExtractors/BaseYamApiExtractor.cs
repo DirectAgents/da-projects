@@ -129,7 +129,8 @@ namespace CakeExtracter.Etl.YAM.Extractors.ApiExtractors
         private IEnumerable<T> TransformItems(IEnumerable<YamRow> items)
         {
             var sums = items.GroupBy(GroupedRowsWithUniqueEntitiesFunction).Select(CreateSummary);
-            return sums.ToList();
+            var notEmptySums = sums.Where(x => !x.IsEmpty()).ToList();
+            return notEmptySums;
         }
 
         private T CreateSummary(IEnumerable<YamRow> items)
