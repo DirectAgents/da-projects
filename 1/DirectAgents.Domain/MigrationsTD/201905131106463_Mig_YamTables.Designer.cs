@@ -13,7 +13,7 @@ namespace DirectAgents.Domain.MigrationsTD
         
         string IMigrationMetadata.Id
         {
-            get { return "201905021107413_Mig_YamTables"; }
+            get { return "201905131106463_Mig_YamTables"; }
         }
         
         string IMigrationMetadata.Source
