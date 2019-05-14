@@ -411,6 +411,7 @@
     <Compile Include="Commands\DA\DASynchFacebookMigration.cs" />
     <Compile Include="Commands\DA\DASynchFacebookStats.cs" />
     <Compile Include="Commands\DA\DASynchKochavaStats.cs" />
+    <Compile Include="Commands\DA\DASynchTaboolaStats.cs" />
     <Compile Include="Commands\DA\DASynchYAMStats.cs" />
     <Compile Include="Commands\EOMSynchCPCCommand.cs" />
     <Compile Include="Commands\DA\DASynchDBMCreatives.cs" />
@@ -913,6 +914,10 @@
     <ProjectReference Include="..\..\DirectAgents.Web\CommissionJunction\CommissionJunction.csproj">
       <Project>{0038b6b4-357a-4721-99bc-7659ad00dd3a}</Project>
       <Name>CommissionJunction</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DirectAgents.Web\Taboola\Taboola.csproj">
+      <Project>{FE2CCFF5-9F7A-448A-B9D1-9F3E3FD2F9B2}</Project>
+      <Name>Taboola</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
