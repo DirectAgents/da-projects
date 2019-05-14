@@ -13,9 +13,14 @@ using Yahoo.Constants;
 using Yahoo.Exceptions;
 using Yahoo.Helpers;
 using Yahoo.Models;
+using Yahoo.Models.Requests;
+using Yahoo.Models.Responses;
 
 namespace Yahoo
 {
+    /// <summary>
+    /// The Yahoo utility to extract data from the OATH API.
+    /// </summary>
     public class YamUtility
     {
         private const string TokenDelimiter = "|YAMYAM|";
@@ -48,12 +53,19 @@ namespace Yahoo
 
         public event Action<FailedReportGenerationException> ProcessFailedReportGeneration;
 
-        public static string[] TokenSets // each string in the array is a combination of Access + Refresh Token
+        /// <summary>
+        /// Gets or sets access and refresh tokens.
+        /// Each string in the array is a combination of Access + Refresh Token.
+        /// </summary>
+        public static string[] TokenSets
         {
             get => CreateTokenSets().ToArray();
             set => SetTokens(value);
         }
-        
+
+        /// <summary>
+        /// Number of an alt account number to use specific access values ​​for Api (for alternate credentials)
+        /// </summary>
         public int WhichAlt { get; set; } // default: 0
 
         private string AuthBaseUrl { get; set; }
@@ -70,6 +82,9 @@ namespace Yahoo
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="YamUtility"/> class.
+        /// </summary>
         public YamUtility()
         {
             if (logger == null)
@@ -80,13 +95,23 @@ namespace Yahoo
             Setup();
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:Yahoo.YamUtility" /> class.
+        /// </summary>
+        /// <param name="logInfo">Action that logs infos</param>
+        /// <param name="logError">Action that logs errors</param>
+        /// <param name="logWarning">Action that logs warnings</param>
         public YamUtility(Action<string> logInfo, Action<string> logWarning, Action<Exception> logError)
             : this()
         {
             logger = new YamLogger(logInfo, logError, logWarning);
         }
 
-        // for alternative credentials...
+        /// <summary>
+        /// Set an alt account number to use specific access values ​​for Api (for alternative credentials).
+        /// </summary>
+        /// <param name="accountId">Account external id</param>
         public void SetWhichAlt(string accountId)
         {
             WhichAlt = 0; //default
@@ -202,7 +227,7 @@ namespace Yahoo
         {
             var restClient = GetAccessTokenClient();
             var request = GetAccessTokenRequest();
-            var response = restClient.ExecuteAsPost<GetTokenResponse>(request, "POST");
+            var response = restClient.ExecuteAsPost<CreateAccessTokenResponse>(request, "POST");
 
             if (response.Data?.access_token == null)
             {
@@ -286,7 +311,6 @@ namespace Yahoo
         /// The method requests a report and waits until a status of response will be "SUBMITTED"
         /// </summary>
         /// <param name="payload">Report settings</param>
-        /// <returns>CreateReportResponse that contains a customer report Id</returns>
         private IRestResponse<CreateReportResponse> TryRequestReport(ReportPayload payload)
         {
             var createReportResponse = Policy
@@ -318,7 +342,7 @@ namespace Yahoo
             logger.LogInfo($"YAM Report ID: {customerReportId}");
             var getReportResponse = Policy
                 .Handle<Exception>()
-                .OrResult<IRestResponse<GetReportResponse>>(response => response.Data?.Status == null)
+                .OrResult<IRestResponse<ReadReportStatusResponse>>(response => response.Data?.Status == null)
                 .OrResult(response => !IsStatus(response.Data.Status, ReportStatus.Success) && !IsStatus(response.Data.Status, ReportStatus.Failed))
                 .WaitAndRetry(NumTriesGetReportStatus, GetPauseBetweenAttempts, (exception, timeSpan, retryCount, context) =>
                     logger.LogWaiting("Will check if the report is ready. Waiting {0} ...", timeSpan, retryCount, exception))
@@ -331,10 +355,10 @@ namespace Yahoo
             return getReportResponse.Data.Url;
         }
 
-        private IRestResponse<GetReportResponse> GetReportStatus(string reportId)
+        private IRestResponse<ReadReportStatusResponse> GetReportStatus(string reportId)
         {
             var request = CreateRestRequest(ReportResourceUrl + reportId);
-            var response = ProcessRequest<GetReportResponse>(request);
+            var response = ProcessRequest<ReadReportStatusResponse>(request);
             return response;
         }
 

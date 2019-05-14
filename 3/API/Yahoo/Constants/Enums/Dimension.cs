@@ -1,5 +1,8 @@
 ﻿namespace Yahoo.Constants.Enums
 {
+    /// <summary>
+    /// The enum contains options that available for the dimensions of data returned in the report.
+    /// </summary>
     internal enum Dimension
     {
         //...

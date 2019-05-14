@@ -1,5 +1,8 @@
 ﻿namespace Yahoo.Constants.Enums
 {
+    /// <summary>
+    /// The enum contains options that available for the reporting period.
+    /// </summary>
     internal enum DateTypeId
     {
         Today = 1,

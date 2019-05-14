@@ -1,6 +1,8 @@
-﻿
-namespace Yahoo.Constants.Enums
+﻿namespace Yahoo.Constants.Enums
 {
+    /// <summary>
+    /// The enum contains options that available for the granularity of report intervals.
+    /// </summary>
     internal enum IntervalTypeId
     {
         Cumulative = 1,

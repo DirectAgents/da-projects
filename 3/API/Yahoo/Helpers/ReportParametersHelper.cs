@@ -3,13 +3,22 @@ using System.Linq;
 using Yahoo.Constants;
 using Yahoo.Constants.Enums;
 using Yahoo.Models;
+using Yahoo.Models.Requests;
 
 namespace Yahoo.Helpers
 {
+    /// <summary>
+    /// The helper that helps to prepare data for Yahoo API requests.
+    /// </summary>
     internal static class ReportParametersHelper
     {
         private const string DateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'sszzz";
 
+        /// <summary>
+        /// Creates a prepared object used in a request to create a new report. 
+        /// </summary>
+        /// <param name="reportSettings">The settings of the creating report.</param>
+        /// <returns>The prepared for request object.</returns>
         public static ReportPayload CreateReportRequestPayload(ReportSettings reportSettings)
         {
             //This produced an InvalidTimeZoneException so we're just going with the system timezone, relying on it to be Eastern(daylight savings adjusted)
@@ -48,7 +57,7 @@ namespace Yahoo.Helpers
 
         private static int[] GetMetrics(ReportSettings reportSettings)
         {
-            var metricList = reportSettings.ByPixelParameter && reportSettings.IsOutdated
+            var metricList = reportSettings.IsOutdated && reportSettings.ByPixelParameter
                 ? new[]
                 {
                     // used to obtain the *real* conversion values from the pixel parameter

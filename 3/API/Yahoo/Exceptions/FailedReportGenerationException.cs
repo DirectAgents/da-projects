@@ -3,6 +3,10 @@ using Yahoo.Models;
 
 namespace Yahoo.Exceptions
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// The exception for unsuccessful OATH report generation.
+    /// </summary>
     public class FailedReportGenerationException : Exception
     {
         private const string ExceptionMessage = "Could not generate a report: ";
@@ -51,6 +55,7 @@ namespace Yahoo.Exceptions
         /// <summary>
         /// Initializes a new instance of the <see cref="FailedReportGenerationException"/> class.
         /// </summary>
+        /// <param name="reportSettings">The settings of a failed report.</param>
         /// <param name="exception">Source exception</param>
         public FailedReportGenerationException(ReportSettings reportSettings, Exception exception) : base(GetMessage(reportSettings, exception))
         {

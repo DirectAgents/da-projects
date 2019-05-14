@@ -59,11 +59,11 @@
     <Compile Include="Exceptions\FailedReportGenerationException.cs" />
     <Compile Include="Helpers\ReportParametersHelper.cs" />
     <Compile Include="Helpers\YamLogger.cs" />
-    <Compile Include="Models\CreateReportResponse.cs" />
-    <Compile Include="Models\GetReportResponse.cs" />
-    <Compile Include="Models\GetTokenResponse.cs" />
-    <Compile Include="Models\ReportPayload.cs" />
-    <Compile Include="Models\ReportOption.cs" />
+    <Compile Include="Models\Responses\CreateReportResponse.cs" />
+    <Compile Include="Models\Responses\ReadReportStatusResponse.cs" />
+    <Compile Include="Models\Responses\CreateAccessTokenResponse.cs" />
+    <Compile Include="Models\Requests\ReportPayload.cs" />
+    <Compile Include="Models\Requests\ReportOption.cs" />
     <Compile Include="Models\ReportSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="YamUtility.cs" />

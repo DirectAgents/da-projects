@@ -9,7 +9,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
     /// <summary>
     /// Job execution history management service.
     /// </summary>
-    /// <seealso cref="IJobExecutionHistoryItemService" />
+    /// <seealso cref="IJobExecutionItemService" />
     public class JobExecutionItemService : IJobExecutionItemService
     {
         private readonly IJobExecutionItemRepository jobExecutionHistoryRepository;
@@ -25,6 +25,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
             this.jobExecutionHistoryRepository = jobExecutionHistoryRepository;
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Creates the job execution item.
         /// </summary>
@@ -38,10 +39,14 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
                 JobRequestId = jobRequest.Id,
                 StartTime = DateTime.UtcNow
             };
-            jobExecutionHistoryRepository.AddItem(jobRequestExecutionItem);
+            lock (executionItemHistoryLockObject)
+            {
+                jobExecutionHistoryRepository.AddItem(jobRequestExecutionItem);
+            }
             return jobRequestExecutionItem;
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Sets the state of the job execution item failed.
         /// </summary>
@@ -50,9 +55,13 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
         {
             executionHistoryItem.Status = JobExecutionStatus.Failed;
             executionHistoryItem.EndTime = DateTime.UtcNow;
-            jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
+            lock (executionItemHistoryLockObject)
+            {
+                jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
+            }
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Sets the state of the job execution item finished.
         /// </summary>
@@ -61,9 +70,13 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
         {
             executionHistoryItem.Status = JobExecutionStatus.Completed;
             executionHistoryItem.EndTime = DateTime.UtcNow;
-            jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
+            lock (executionItemHistoryLockObject)
+            {
+                jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
+            }
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Adds the error to job execution item.
         /// </summary>
@@ -81,6 +94,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
             }
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Adds the warning to job execution item.
         /// </summary>
@@ -98,8 +112,9 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
             }
         }
 
+        /// <inheritdoc />
         /// <summary>
-        /// Adds the state message.
+        /// Sets the state message.
         /// </summary>
         /// <param name="executionHistoryItem">The execution history item.</param>
         /// <param name="message">The message.</param>
@@ -115,6 +130,13 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
             }
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// Adds the state message to job execution item.
+        /// </summary>
+        /// <param name="executionHistoryItem">The execution history item.</param>
+        /// <param name="message">The message.</param>
+        /// <param name="accountId">The account identifier.</param>
         public void AddStateMessage(JobRequestExecution executionHistoryItem, string message, int? accountId = null)
         {
             var messageWithTimeStamp = $"{DateTime.UtcNow.ToLongTimeString()}: {message}";

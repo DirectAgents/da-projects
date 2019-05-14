@@ -137,7 +137,7 @@ namespace CakeExtracter.Etl.YAM.Extractors.ApiExtractors
         {
             var sums = items.Select(Mapper.Map<T>).ToList();
             var sum = sums.FirstOrDefault();
-            sum.SetStats(sums);
+            sum.SetBaseStats(sums);
             if (byPixelParameter)
             {
                 SetStatsByPixelQuery(sum, items);

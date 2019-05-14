@@ -429,9 +429,6 @@
     <Compile Include="Commands\Test\TestAppleCommand.cs" />
     <Compile Include="Commands\Test\TestCakeCommand.cs" />
     <Compile Include="Commands\Test\TestFacebookCommand.cs" />
-    <Compile Include="Commands\Test\TestYAMCommand.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Common\Extractors\ArchiveExctractors\Contract\IArchiveExtractor.cs" />
     <Compile Include="Common\Extractors\ArchiveExctractors\GzipArchiveExtractor.cs" />
     <Compile Include="Common\Extractors\ArchiveExctractors\ZipArchiveExtractor.cs" />

@@ -5,7 +5,7 @@ using RestSharp;
 namespace Yahoo.Helpers
 {
     /// <summary>
-    /// The logger of Commission Junction utility
+    /// The logger of Yam utility.
     /// </summary>
     internal class YamLogger
     {
@@ -44,7 +44,11 @@ namespace Yahoo.Helpers
                 logInfo(updatedMessage);
             }
         }
-
+        
+        /// <summary>
+        /// Log a message as error.
+        /// </summary>
+        /// <param name="message">Message for logging</param>
         public void LogError(string message)
         {
             var exception = new Exception(message);

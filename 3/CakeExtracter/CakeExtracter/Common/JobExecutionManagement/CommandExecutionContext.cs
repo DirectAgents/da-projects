@@ -97,10 +97,10 @@ namespace CakeExtracter.Common.JobExecutionManagement
         }
 
         /// <summary>
-        /// Logs the warning in job execution history history.
+        /// Logs the warning in job execution history.
         /// </summary>
-        /// <param name="message"></param>
-        /// <param name="accountId"></param>
+        /// <param name="message">The message.</param>
+        /// <param name="accountId">The account identifier.</param>
         public void LogWarningInHistory(string message, int? accountId = null)
         {
             if (currentJobRequestExecution != null)
@@ -110,7 +110,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         }
 
         /// <summary>
-        /// Sets the state in job execution history history.
+        /// Sets the state in job execution history.
         /// </summary>
         /// <param name="stateMessage">The state message.</param>
         /// <param name="accountId">The account identifier.</param>
@@ -122,6 +122,11 @@ namespace CakeExtracter.Common.JobExecutionManagement
             }
         }
 
+        /// <summary>
+        /// Appends the state in job execution history.
+        /// </summary>
+        /// <param name="stateMessage">The state message.</param>
+        /// <param name="accountId">The account identifier.</param>
         public void AppendJobExecutionStateInHistory(string stateMessage, int? accountId = null)
         {
             if (currentJobRequestExecution != null)
