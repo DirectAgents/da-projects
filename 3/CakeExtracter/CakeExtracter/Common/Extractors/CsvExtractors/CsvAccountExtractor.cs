@@ -4,32 +4,47 @@ using System.IO;
 using System.Linq;
 using CakeExtracter.Common.Extractors.CsvExtractors.Contracts;
 using CakeExtracter.Etl;
+using CakeExtracter.Helpers;
 using CsvHelper;
 using CsvHelper.Configuration;
+using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Common.Extractors.CsvExtractors
 {
-    internal class CsvAccountExtractor<T, TRowMap> : Extracter<T>, ICsvExtractor<T>
+    public class CsvAccountExtractor<T, TRowMap> : Extracter<T>, ICsvExtractor<T>
         where TRowMap : CsvClassMap<T>
     {
+        protected readonly int AccountId;
+        protected readonly StreamReader StreamReader;
+
         public event Action<Exception> ReadingExceptionCallback;
 
-        private readonly int accountId;
-        private readonly string itemsName;
-        private readonly StreamReader streamReader;
+        public string ItemsName { get; set; } = "items";
 
-        public CsvAccountExtractor(int accountId, string itemsName, StreamReader streamReader)
+        public CsvAccountExtractor(ExtAccount account)
         {
-            this.accountId = accountId;
-            this.itemsName = itemsName;
-            this.streamReader = streamReader;
+            AccountId = account.Id;
         }
 
-        public List<T> EnumerateRows()
+        public CsvAccountExtractor(ExtAccount account, string itemsName, StreamReader streamReader) : this(account)
+        {
+            ItemsName = itemsName;
+            StreamReader = streamReader;
+        }
+
+        public virtual List<T> EnumerateRows(string url)
+        {
+            using (var streamReader = RequestHelper.CreateStreamReaderFromUrl(url))
+            {
+                return EnumerateRows(streamReader);
+            }
+        }
+
+        public virtual List<T> EnumerateRows(StreamReader streamReader)
         {
             try
             {
-                return EnumerateRowsInner(streamReader);
+                return EnumerateRowsInner(StreamReader);
             }
             catch (Exception exception)
             {
@@ -39,16 +54,21 @@ namespace CakeExtracter.Common.Extractors.CsvExtractors
                 }
                 else
                 {
-                    Logger.Error(accountId, exception);
+                    Logger.Error(AccountId, exception);
                 }
 
                 return new List<T>();
             }
         }
 
+        public List<T> EnumerateRows()
+        {
+            return EnumerateRows(StreamReader);
+        }
+
         protected override void Extract()
         {
-            Logger.Info(accountId, $"Extracting {itemsName} using stream reader.");
+            Logger.Info(AccountId, $"Extracting {ItemsName} using stream reader.");
             var items = EnumerateRows();
             Add(items);
             End();
@@ -79,7 +99,7 @@ namespace CakeExtracter.Common.Extractors.CsvExtractors
         {
             var rowFields = row.FieldHeaders.Select((x, i) => $"{x} = {row.CurrentRecord[i]}").ToList();
             var message = $"The wrong record: {string.Join(", ", rowFields)}";
-            Logger.Error(accountId, new Exception(message, exception));
+            Logger.Error(AccountId, new Exception(message, exception));
         }
 
         private List<T> EnumerateRowsInner(TextReader reader)

@@ -109,29 +109,12 @@ namespace Yahoo
         }
 
         /// <summary>
-        /// Set an alt account number to use specific access values ​​for Api (for alternative credentials).
-        /// </summary>
-        /// <param name="accountId">Account external id</param>
-        public void SetWhichAlt(string accountId)
-        {
-            WhichAlt = 0; //default
-            for (var i = 1; i < NumAlts; i++)
-            {
-                if (altAccountIDs[i] != null && altAccountIDs[i].Contains(',' + accountId + ','))
-                {
-                    WhichAlt = i;
-                    break;
-                }
-            }
-        }
-
-        /// <summary>
         /// The common method that generates a statistics report (for different dimensions).
         /// Returns the report URL that can be used to download the generated report.
         /// </summary>
         /// <param name="reportSettings">Report settings to customize the requested report.</param>
         /// <returns>URL of report location (may be null)</returns>
-        public string TryGenerateReport(ReportSettings reportSettings)
+        public virtual string TryGenerateReport(ReportSettings reportSettings)
         {
             try
             {
@@ -145,6 +128,23 @@ namespace Yahoo
                 logger.LogError(exc);
                 ProcessFailedReportGeneration?.Invoke(exc);
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// Set an alt account number to use specific access values ​​for Api (for alternative credentials).
+        /// </summary>
+        /// <param name="accountId">Account external id</param>
+        public void SetWhichAlt(string accountId)
+        {
+            WhichAlt = 0; //default
+            for (var i = 1; i < NumAlts; i++)
+            {
+                if (altAccountIDs[i] != null && altAccountIDs[i].Contains(',' + accountId + ','))
+                {
+                    WhichAlt = i;
+                    break;
+                }
             }
         }
 

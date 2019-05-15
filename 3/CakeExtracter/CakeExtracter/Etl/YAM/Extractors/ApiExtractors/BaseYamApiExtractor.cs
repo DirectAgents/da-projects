@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using AutoMapper;
 using CakeExtracter.Common;
+using CakeExtracter.Common.Extractors.CsvExtractors.Contracts;
 using CakeExtracter.Common.JobExecutionManagement;
-using CakeExtracter.Etl.YAM.Extractors.CsvExtractors;
 using CakeExtracter.Etl.YAM.Extractors.CsvExtractors.RowModels;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Entities.CPProg;
@@ -16,31 +16,34 @@ using Yahoo.Models;
 
 namespace CakeExtracter.Etl.YAM.Extractors.ApiExtractors
 {
-    internal abstract class BaseYamApiExtractor<T> : Extracter<T>
+    public abstract class BaseYamApiExtractor<T> : Extracter<T>
         where T: BaseYamSummary, new()
     {
         protected const string ConversionValuePixelQueryPattern = @"gv=(\d*\.?\d*)";
 
+        protected readonly ICsvExtractor<YamRow> CsvExtractor;
         protected readonly YamUtility YamUtility;
         protected readonly DateRange DateRange;
         protected readonly int YamAdvertiserId;
-
-        private readonly bool byPixelParameter;
-        private readonly int accountId;
+        protected readonly bool ByPixelParameter;
+        protected readonly int AccountId;
 
         public event Action<FailedReportGenerationException> ProcessFailedExtraction;
 
-        public abstract string SummariesDisplayName { get; }
+        public virtual string SummariesDisplayName { get; } = "Yam Summaries";
 
         protected abstract Func<YamRow, object> GroupedRowsWithUniqueEntitiesFunction { get; }
 
-        protected BaseYamApiExtractor(YamUtility yamUtility, DateRange dateRange, ExtAccount account, bool byPixelParameter)
+        protected BaseYamApiExtractor(ICsvExtractor<YamRow> csvExtractor, YamUtility yamUtility, DateRange dateRange,
+            ExtAccount account, bool byPixelParameter)
         {
+            CsvExtractor = csvExtractor;
+            CsvExtractor.ItemsName = SummariesDisplayName;
             YamUtility = yamUtility;
             DateRange = dateRange;
             YamAdvertiserId = int.Parse(account.ExternalId);
-            this.byPixelParameter = byPixelParameter;
-            accountId = account.Id;
+            ByPixelParameter = byPixelParameter;
+            AccountId = account.Id;
             ProcessFailedExtraction += exception => Logger.Error(account.Id, exception);
         }
 
@@ -82,48 +85,39 @@ namespace CakeExtracter.Etl.YAM.Extractors.ApiExtractors
 
         private void LogStartOfItemsExtracting()
         {
-            CommandExecutionContext.Current?.AppendJobExecutionStateInHistory($"{SummariesDisplayName} - Extraction", accountId);
-            var startExtractionMessage = $"Extracting {SummariesDisplayName} from YAM API for ({accountId} - {YamAdvertiserId}) " +
+            CommandExecutionContext.Current?.AppendJobExecutionStateInHistory($"{SummariesDisplayName} - Extraction", AccountId);
+            var startExtractionMessage = $"Extracting {SummariesDisplayName} from YAM API for ({AccountId} - {YamAdvertiserId}) " +
                                          $"from {DateRange.FromDate:d} to {DateRange.ToDate:d}";
-            Logger.Info(accountId, startExtractionMessage);
+            Logger.Info(AccountId, startExtractionMessage);
         }
 
         private void LogEndOfItemsExtracting()
         {
-            CommandExecutionContext.Current?.AppendJobExecutionStateInHistory($"{SummariesDisplayName} - Extraction finished", accountId);
+            CommandExecutionContext.Current?.AppendJobExecutionStateInHistory($"{SummariesDisplayName} - Extraction finished", AccountId);
         }
 
         private IEnumerable<YamRow> ExtractItems()
         {
             var reportSettings = GetReportSettings();
-            if (byPixelParameter)
+            if (ByPixelParameter)
             {
                 reportSettings.ByPixelParameter = true;
             }
 
-            var items = ExtractData(reportSettings, SummariesDisplayName);
+            var items = ExtractData(reportSettings);
             return items;
         }
 
-        private IEnumerable<YamRow> ExtractData(ReportSettings reportSettings, string summariesName)
+        private IEnumerable<YamRow> ExtractData(ReportSettings reportSettings)
         {
             var reportUrl = YamUtility.TryGenerateReport(reportSettings);
             if (!string.IsNullOrWhiteSpace(reportUrl))
             {
-                return ExtractRawDataFromCsv(reportUrl, summariesName);
+                return CsvExtractor.EnumerateRows(reportUrl);
             }
 
-            Logger.Warn(accountId, $"The report URL is empty.");
+            Logger.Warn(AccountId, "The report URL is empty.");
             return new List<YamRow>();
-        }
-
-        private IEnumerable<YamRow> ExtractRawDataFromCsv(string reportUrl, string summariesName)
-        {
-            using (var streamReader = RequestHelper.CreateStreamReaderFromUrl(reportUrl))
-            {
-                var csvExtractor = new YamCsvExtractor(accountId, summariesName, streamReader);
-                return csvExtractor.EnumerateRows();
-            }
         }
 
         private IEnumerable<T> TransformItems(IEnumerable<YamRow> items)
@@ -138,7 +132,7 @@ namespace CakeExtracter.Etl.YAM.Extractors.ApiExtractors
             var sums = items.Select(Mapper.Map<T>).ToList();
             var sum = sums.FirstOrDefault();
             sum.SetBaseStats(sums);
-            if (byPixelParameter)
+            if (ByPixelParameter)
             {
                 SetStatsByPixelQuery(sum, items);
             }

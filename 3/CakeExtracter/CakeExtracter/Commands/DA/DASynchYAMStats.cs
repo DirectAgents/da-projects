@@ -12,6 +12,7 @@ using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Etl;
 using CakeExtracter.Etl.YAM.CommonClassesExtensions;
 using CakeExtracter.Etl.YAM.Extractors.ApiExtractors;
+using CakeExtracter.Etl.YAM.Extractors.CsvExtractors;
 using CakeExtracter.Etl.YAM.Loaders;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Concrete;
@@ -188,42 +189,48 @@ namespace CakeExtracter.Commands.DA
 
         private void DoETL_Daily(DateRange dateRange, ExtAccount account, YamUtility yamUtility, bool usePixelParameters)
         {
-            var extractor = new YamDailySummaryExtractor(yamUtility, dateRange, account, usePixelParameters);
+            var csvExtractor = new YamCsvExtractor(account);
+            var extractor = new YamDailySummaryExtractor(csvExtractor, yamUtility, dateRange, account, usePixelParameters);
             var loader = new YamDailySummaryLoader(account.Id);
             DoEtl<YamDailySummary, YamDailySummaryExtractor, YamDailySummaryLoader>(extractor, loader, account);
         }
 
         private void DoETL_Campaign(DateRange dateRange, ExtAccount account, YamUtility yamUtility, bool usePixelParameters)
         {
-            var extractor = new YamCampaignSummaryExtractor(yamUtility, dateRange, account, usePixelParameters);
+            var csvExtractor = new YamCsvExtractor(account);
+            var extractor = new YamCampaignSummaryExtractor(csvExtractor, yamUtility, dateRange, account, usePixelParameters);
             var loader = new YamCampaignSummaryLoader(account.Id);
             DoEtl<YamCampaignSummary, YamCampaignSummaryExtractor, YamCampaignSummaryLoader>(extractor, loader, account);
         }
 
         private void DoETL_Line(DateRange dateRange, ExtAccount account, YamUtility yamUtility, bool usePixelParameters)
         {
-            var extractor = new YamLineSummaryExtractor(yamUtility, dateRange, account, usePixelParameters);
+            var csvExtractor = new YamCsvExtractor(account);
+            var extractor = new YamLineSummaryExtractor(csvExtractor, yamUtility, dateRange, account, usePixelParameters);
             var loader = new YamLineSummaryLoader(account.Id);
             DoEtl<YamLineSummary, YamLineSummaryExtractor, YamLineSummaryLoader>(extractor, loader, account);
         }
 
         private void DoETL_Creative(DateRange dateRange, ExtAccount account, YamUtility yamUtility, bool usePixelParameters)
         {
-            var extractor = new YamCreativeSummaryExtractor(yamUtility, dateRange, account, usePixelParameters);
+            var csvExtractor = new YamCsvExtractor(account);
+            var extractor = new YamCreativeSummaryExtractor(csvExtractor, yamUtility, dateRange, account, usePixelParameters);
             var loader = new YamCreativeSummaryLoader(account.Id);
             DoEtl<YamCreativeSummary, YamCreativeSummaryExtractor, YamCreativeSummaryLoader>(extractor, loader, account);
         }
 
         private void DoETL_Ad(DateRange dateRange, ExtAccount account, YamUtility yamUtility, bool usePixelParameters)
         {
-            var extractor = new YamAdSummaryExtractor(yamUtility, dateRange, account, usePixelParameters);
+            var csvExtractor = new YamCsvExtractor(account);
+            var extractor = new YamAdSummaryExtractor(csvExtractor, yamUtility, dateRange, account, usePixelParameters);
             var loader = new YamAdSummaryLoader(account.Id);
             DoEtl<YamAdSummary, YamAdSummaryExtractor, YamAdSummaryLoader>(extractor, loader, account);
         }
 
         private void DoETL_Pixel(DateRange dateRange, ExtAccount account, YamUtility yamUtility, bool usePixelParameters)
         {
-            var extractor = new YamPixelSummaryExtractor(yamUtility, dateRange, account, usePixelParameters);
+            var csvExtractor = new YamCsvExtractor(account);
+            var extractor = new YamPixelSummaryExtractor(csvExtractor, yamUtility, dateRange, account, usePixelParameters);
             var loader = new YamPixelSummaryLoader(account.Id);
             DoEtl<YamPixelSummary, YamPixelSummaryExtractor, YamPixelSummaryLoader>(extractor, loader, account);
         }
