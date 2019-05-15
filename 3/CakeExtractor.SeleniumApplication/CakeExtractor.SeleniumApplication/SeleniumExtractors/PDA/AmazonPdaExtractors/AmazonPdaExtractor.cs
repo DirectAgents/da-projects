@@ -206,7 +206,9 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
         {
             var cookies = pageActions.GetAllCookies();
             var cmApiUtility = new AmazonConsoleManagerUtility(cookies,
-                x => Logger.Info(account.Id, x), x => Logger.Warn(account.Id, x));
+                x => Logger.Info(account.Id, x), 
+                x => Logger.Error(account.Id, new Exception(x)),
+                x => Logger.Warn(account.Id, x));
             return cmApiUtility;
         }
 
@@ -393,7 +395,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
                     (exception, timeSpan, retryCount, context) =>
                     {
                         var message = $"Waiting {timeSpan} before setting URLs";
-                        LoggerHelper.LogWaiting(message, retryCount);
+                        LoggerHelper.LogWaiting(message, retryCount, x => Logger.Info(x));
                     })
                 .Execute(SetAvailableProfiles);
         }

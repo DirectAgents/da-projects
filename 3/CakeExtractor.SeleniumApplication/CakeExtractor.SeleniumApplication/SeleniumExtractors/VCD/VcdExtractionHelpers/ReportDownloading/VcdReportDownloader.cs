@@ -72,7 +72,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
                         failed = true;
                         ProcessFailedResponse(exception.Result, accountInfo);
                         var message = $"Waiting {timeSpan} for ({reportDay}, {reportLevel}, {accountInfo.Account.Name}) before report generating";
-                        LoggerHelper.LogWaiting(message, retryCount, accountInfo.Account.Id);
+                        LoggerHelper.LogWaiting(message, retryCount, x => Logger.Info(accountInfo.Account.Id, x));
                     })
                 .Execute(() =>
                 {
@@ -94,7 +94,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
         {
             var timeSpan = GetTimeSpanForWaiting();
             var message = $"Waiting {timeSpan} for ({reportDay}, {reportLevel}, {accountInfo.Account.Name}) before report generating";
-            LoggerHelper.LogWaiting(message, null, accountInfo.Account.Id);
+            LoggerHelper.LogWaiting(message, null, x => Logger.Info(accountInfo.Account.Id, x));
             Thread.Sleep(timeSpan);
         }
         

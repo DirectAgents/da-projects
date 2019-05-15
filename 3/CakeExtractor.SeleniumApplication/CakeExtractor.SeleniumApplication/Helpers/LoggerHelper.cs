@@ -1,25 +1,17 @@
-﻿using CakeExtracter;
+﻿using System;
 
 namespace CakeExtractor.SeleniumApplication.Helpers
 {
     internal static class LoggerHelper
     {
-        public static void LogWaiting(string baseMessage, int? retryCount, int accountId = 0)
+        public static void LogWaiting(string baseMessage, int? retryCount, Action<string> log)
         {
             var message = baseMessage;
             if (retryCount.HasValue)
             {
                 message += $" (number of retrying - {retryCount})";
             }
-
-            if (accountId > 0)
-            {
-                Logger.Info(message);
-            }
-            else
-            {
-                Logger.Info(accountId, message);
-            }
+            log(message);
         }
     }
 }

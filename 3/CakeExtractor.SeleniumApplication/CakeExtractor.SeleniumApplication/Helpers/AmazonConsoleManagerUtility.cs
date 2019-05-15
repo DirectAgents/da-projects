@@ -18,13 +18,15 @@ namespace CakeExtractor.SeleniumApplication.Utilities
         private readonly Dictionary<string, string> cookies;
         private readonly Action<string> logInfo;
         private readonly Action<string> logError;
+        private readonly Action<string> logWarning;
         
-        public AmazonConsoleManagerUtility(IEnumerable<Cookie> cookies, Action<string> logInfo, Action<string> logError)
+        public AmazonConsoleManagerUtility(IEnumerable<Cookie> cookies, Action<string> logInfo, Action<string> logError, Action<string> logWarning)
         {
             var simpleCookies = cookies.ToDictionary(x => x.Name, x => x.Value);
             this.cookies = simpleCookies;
             this.logInfo = logInfo;
             this.logError = logError;
+            this.logWarning = logWarning;
         }
 
         public IEnumerable<AmazonCmApiCampaignSummary> GetPdaCampaignsTruncatedSummaries(string accountEntityId, DateRange dateRange)
@@ -57,6 +59,11 @@ namespace CakeExtractor.SeleniumApplication.Utilities
         private void LogInfo(string message)
         {
             Log(message, logInfo);
+        }
+
+        private void LogWarning(string message)
+        {
+            Log(message, logWarning);
         }
 
         private IEnumerable<AmazonCmApiCampaignSummary> GetCampaignsSummaries(DateRange dateRange,
@@ -125,7 +132,7 @@ namespace CakeExtractor.SeleniumApplication.Utilities
                     (exception, timeSpan, retryCount, context) =>
                     {
                         var message = $"Failed to process request. Waiting {timeSpan}";
-                        LoggerHelper.LogWaiting(message, retryCount);
+                        LoggerHelper.LogWaiting(message, retryCount, logInfo);
                     })
                 .Execute(() => ProcessRequest<dynamic>(queryParams, body));
             return response.Data;
@@ -144,7 +151,7 @@ namespace CakeExtractor.SeleniumApplication.Utilities
             var message = string.IsNullOrWhiteSpace(response.Content)
                 ? response.ErrorMessage
                 : response.Content;
-            LogError(message);
+            LogWarning(message);
             return response;
         }
 
