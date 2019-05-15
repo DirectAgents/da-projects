@@ -18,7 +18,7 @@ namespace CakeExtractor.SeleniumApplication.Utilities
         private readonly Dictionary<string, string> cookies;
         private readonly Action<string> logInfo;
         private readonly Action<string> logError;
-
+        
         public AmazonConsoleManagerUtility(IEnumerable<Cookie> cookies, Action<string> logInfo, Action<string> logError)
         {
             var simpleCookies = cookies.ToDictionary(x => x.Name, x => x.Value);
@@ -65,8 +65,15 @@ namespace CakeExtractor.SeleniumApplication.Utilities
             var resultData = new List<AmazonCmApiCampaignSummary>();
             foreach (var date in dateRange.Dates)
             {
-                var data = GetCampaignsSummaries(date, queryParams, parameters);
-                resultData.AddRange(data);
+                try
+                {
+                    var data = GetCampaignsSummaries(date, queryParams, parameters);
+                    resultData.AddRange(data);
+                }
+                catch (Exception e)
+                {
+                    LogError($"Failed: {e.Message}");
+                }
             }
 
             return resultData;
@@ -85,9 +92,8 @@ namespace CakeExtractor.SeleniumApplication.Utilities
             }
             catch (Exception e)
             {
-                LogError(e.Message);
+                throw new Exception($"Could not get campaign summaries for {date}", e);
             }
-
             return data;
         }
 
@@ -112,13 +118,13 @@ namespace CakeExtractor.SeleniumApplication.Utilities
             var pauseBetweenAttempts = TimeSpan.FromSeconds(1);
             var response = Policy
                 .Handle<Exception>()
-                .OrResult<IRestResponse<dynamic>>(resp => resp.StatusCode == HttpStatusCode.Forbidden)
-                .WaitAndRetry(
-                    maxRetryAttempts,
-                    i => pauseBetweenAttempts,
+                .OrResult<IRestResponse<dynamic>>(resp => 
+                    resp.StatusCode != HttpStatusCode.OK &&
+                    resp.StatusCode == HttpStatusCode.Forbidden)
+                .WaitAndRetry(maxRetryAttempts, i => pauseBetweenAttempts,
                     (exception, timeSpan, retryCount, context) =>
                     {
-                        var message = $"Waiting {timeSpan} before processing request";
+                        var message = $"Failed to process request. Waiting {timeSpan}";
                         LoggerHelper.LogWaiting(message, retryCount);
                     })
                 .Execute(() => ProcessRequest<dynamic>(queryParams, body));
@@ -135,14 +141,13 @@ namespace CakeExtractor.SeleniumApplication.Utilities
             {
                 return response;
             }
-
             var message = string.IsNullOrWhiteSpace(response.Content)
                 ? response.ErrorMessage
                 : response.Content;
             LogError(message);
             return response;
         }
-        
+
         private void AddDynamicCampaignDataToResultData(List<AmazonCmApiCampaignSummary> resultData, dynamic data)
         {
             var campaignsData = AmazonCmApiHelper.GetDynamicCampaigns(data);
