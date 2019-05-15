@@ -1,10 +1,13 @@
 ﻿using CakeExtracter.Common;
 using CakeExtractor.SeleniumApplication.Helpers;
 using CakeExtractor.SeleniumApplication.Models.ConsoleManagerUtilityModels;
-using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using Polly;
+using RestSharp;
+using Cookie = OpenQA.Selenium.Cookie;
 
 namespace CakeExtractor.SeleniumApplication.Utilities
 {
@@ -105,11 +108,41 @@ namespace CakeExtractor.SeleniumApplication.Utilities
 
         private dynamic GetCampaignSummaries(Dictionary<string, string> queryParams, AmazonCmApiParams body)
         {
-            var request = RestRequestHelper.CreateRestRequest(AmazonCmApiHelper.CampaignsApiRelativePath, cookies, queryParams, body);
-            var response = RestRequestHelper.SendPostRequest<dynamic>(AmazonCmApiHelper.AmazonAdvertisingPortalUrl, request);
+            const int maxRetryAttempts = 10;
+            var pauseBetweenAttempts = TimeSpan.FromSeconds(1);
+            var response = Policy
+                .Handle<Exception>()
+                .OrResult<IRestResponse<dynamic>>(resp => resp.StatusCode == HttpStatusCode.Forbidden)
+                .WaitAndRetry(
+                    maxRetryAttempts,
+                    i => pauseBetweenAttempts,
+                    (exception, timeSpan, retryCount, context) =>
+                    {
+                        var message = $"Waiting {timeSpan} before processing request";
+                        LoggerHelper.LogWaiting(message, retryCount);
+                    })
+                .Execute(() => ProcessRequest<dynamic>(queryParams, body));
             return response.Data;
         }
 
+        private IRestResponse<T> ProcessRequest<T>(Dictionary<string, string> queryParams, AmazonCmApiParams body)
+            where T : new()
+        {
+            var request = RestRequestHelper.CreateRestRequest(AmazonCmApiHelper.CampaignsApiRelativePath, cookies, queryParams, body);
+            var response = RestRequestHelper.SendPostRequest<T>(AmazonCmApiHelper.AmazonAdvertisingPortalUrl, request);
+
+            if (response.IsSuccessful)
+            {
+                return response;
+            }
+
+            var message = string.IsNullOrWhiteSpace(response.Content)
+                ? response.ErrorMessage
+                : response.Content;
+            LogError(message);
+            return response;
+        }
+        
         private void AddDynamicCampaignDataToResultData(List<AmazonCmApiCampaignSummary> resultData, dynamic data)
         {
             var campaignsData = AmazonCmApiHelper.GetDynamicCampaigns(data);

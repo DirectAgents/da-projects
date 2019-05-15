@@ -636,7 +636,6 @@ namespace Amazon
             {
                 response = ProcessRequest<T>(restClient, restRequest, isPostMethod);
             }
-
             if (response.IsSuccessful)
             {
                 return response;
