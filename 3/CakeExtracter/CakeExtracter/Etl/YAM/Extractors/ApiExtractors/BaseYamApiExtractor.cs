@@ -7,7 +7,6 @@ using CakeExtracter.Common;
 using CakeExtracter.Common.Extractors.CsvExtractors.Contracts;
 using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Etl.YAM.Extractors.CsvExtractors.RowModels;
-using CakeExtracter.Helpers;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
 using Yahoo;

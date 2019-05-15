@@ -286,6 +286,7 @@ namespace Yahoo
                 .Retry(NumTriesRequestReport, (exception, retryCount, context) => logger.LogWarning(
                     $"Could not get a report URL: {exception.Message}. Try regenerate a report (number of retrying - {retryCount})"))
                 .Execute(() => GenerateReport(payload));
+            logger.LogInfo($"Report URL - {reportUrl}");
             return reportUrl;
         }
 
