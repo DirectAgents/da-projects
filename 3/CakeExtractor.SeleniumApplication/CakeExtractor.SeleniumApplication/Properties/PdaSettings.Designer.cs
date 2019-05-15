@@ -164,5 +164,35 @@ namespace CakeExtractor.SeleniumApplication.Properties {
                 this["FromRequest"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int MaxRetryAttempts
+        {
+            get
+            {
+                return ((int)(this["MaxRetryAttempts"]));
+            }
+            set
+            {
+                this["MaxRetryAttempts"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int PauseBetweenAttemptsInSeconds
+        {
+            get
+            {
+                return ((int)(this["PauseBetweenAttemptsInSeconds"]));
+            }
+            set
+            {
+                this["PauseBetweenAttemptsInSeconds"] = value;
+            }
+        }
     }
 }

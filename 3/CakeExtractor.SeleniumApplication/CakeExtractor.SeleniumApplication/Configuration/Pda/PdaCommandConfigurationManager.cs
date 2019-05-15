@@ -6,7 +6,7 @@ namespace CakeExtractor.SeleniumApplication.Configuration.Pda
     internal class PdaCommandConfigurationManager
     {
         private const int DefaultDaysAgoValue = 41;
-
+        
         public string GetCampaignsPageUrl()
         {
             return PdaSettings.Default.CampaignsPageUrl;
