@@ -33,7 +33,8 @@ namespace CakeExtractor.SeleniumApplication.Helpers
             try
             {
                 var strings = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(pathToFile));
-                return new Cookie(strings["Name"], strings["Value"], strings["Domain"], strings["Path"], DateTime.Parse(strings["Expiry"]));
+                var expiryDate = string.IsNullOrEmpty(strings["Expiry"]) ? (DateTime?) null : DateTime.Parse(strings["Expiry"]);
+                return new Cookie(strings["Name"], strings["Value"], strings["Domain"], strings["Path"], expiryDate);
             }
             catch (Exception e)
             {
