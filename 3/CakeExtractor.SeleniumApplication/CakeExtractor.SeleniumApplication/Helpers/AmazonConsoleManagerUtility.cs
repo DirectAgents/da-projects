@@ -14,6 +14,8 @@ namespace CakeExtractor.SeleniumApplication.Utilities
     internal class AmazonConsoleManagerUtility
     {
         private const int PageSize = 100;
+        private static int MaxRetryAttempts = Properties.PdaSettings.Default.MaxRetryAttempts;
+        private static TimeSpan PauseBetweenAttempts = TimeSpan.FromSeconds(Properties.PdaSettings.Default.PauseBetweenAttemptsInSeconds);
 
         private readonly Dictionary<string, string> cookies;
         private readonly Action<string> logInfo;
@@ -121,14 +123,12 @@ namespace CakeExtractor.SeleniumApplication.Utilities
 
         private dynamic GetCampaignSummaries(Dictionary<string, string> queryParams, AmazonCmApiParams body)
         {
-            const int maxRetryAttempts = 10;
-            var pauseBetweenAttempts = TimeSpan.FromSeconds(1);
             var response = Policy
                 .Handle<Exception>()
                 .OrResult<IRestResponse<dynamic>>(resp => 
                     resp.StatusCode != HttpStatusCode.OK &&
                     resp.StatusCode == HttpStatusCode.Forbidden)
-                .WaitAndRetry(maxRetryAttempts, i => pauseBetweenAttempts,
+                .WaitAndRetry(MaxRetryAttempts, i => PauseBetweenAttempts,
                     (exception, timeSpan, retryCount, context) =>
                     {
                         var message = $"Failed to process request. Waiting {timeSpan}";
