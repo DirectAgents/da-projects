@@ -44,7 +44,7 @@ namespace CakeExtracter.Common.Extractors.CsvExtractors
         {
             try
             {
-                return EnumerateRowsInner(StreamReader);
+                return EnumerateRowsInner(streamReader);
             }
             catch (Exception exception)
             {
