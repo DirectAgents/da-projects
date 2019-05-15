@@ -71,7 +71,8 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
                     {
                         failed = true;
                         ProcessFailedResponse(exception.Result, accountInfo);
-                        LogWaiting(timeSpan, retryCount, reportDay, reportLevel, accountInfo);
+                        var message = $"Waiting {timeSpan} for ({reportDay}, {reportLevel}, {accountInfo.Account.Name}) before report generating";
+                        LoggerHelper.LogWaiting(message, retryCount, accountInfo.Account.Id);
                     })
                 .Execute(() =>
                 {
@@ -92,21 +93,11 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
         private void WaitBeforeReportGenerating(DateTime reportDay, string reportLevel, AccountInfo accountInfo)
         {
             var timeSpan = GetTimeSpanForWaiting();
-            LogWaiting(timeSpan, null, reportDay, reportLevel, accountInfo);
+            var message = $"Waiting {timeSpan} for ({reportDay}, {reportLevel}, {accountInfo.Account.Name}) before report generating";
+            LoggerHelper.LogWaiting(message, null, accountInfo.Account.Id);
             Thread.Sleep(timeSpan);
         }
-
-        private void LogWaiting(TimeSpan timeSpan, int? retryCount, DateTime reportDay, string reportLevel,
-            AccountInfo accountInfo)
-        {
-            var message = $"Waiting {timeSpan} for ({reportDay}, {reportLevel}, {accountInfo.Account.Name}) before report generating";
-            if (retryCount.HasValue)
-            {
-                message += $" (number of retrying - {retryCount})";
-            }
-            Logger.Info(accountInfo.Account.Id, message);
-        }
-
+        
         private string ProcessResponse(IRestResponse response, AccountInfo accountInfo)
         {
             if (IsSuccessfulResponse(response))

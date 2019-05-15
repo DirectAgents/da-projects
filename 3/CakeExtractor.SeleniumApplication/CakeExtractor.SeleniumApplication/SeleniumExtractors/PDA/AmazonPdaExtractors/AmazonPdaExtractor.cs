@@ -390,18 +390,12 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
                 .WaitAndRetry(
                     maxRetryAttempts,
                     i => pauseBetweenAttempts,
-                    (exception, timeSpan, retryCount, context) => LogWaiting(timeSpan, retryCount))
+                    (exception, timeSpan, retryCount, context) =>
+                    {
+                        var message = $"Waiting {timeSpan} before setting URLs";
+                        LoggerHelper.LogWaiting(message, retryCount);
+                    })
                 .Execute(SetAvailableProfiles);
-        }
-
-        private static void LogWaiting(TimeSpan timeSpan, int? retryCount)
-        {
-            var message = $"Waiting {timeSpan} before setting URLs";
-            if (retryCount.HasValue)
-            {
-                message += $" (number of retrying - {retryCount})";
-            }
-            Logger.Info(message);
         }
     }
 }
