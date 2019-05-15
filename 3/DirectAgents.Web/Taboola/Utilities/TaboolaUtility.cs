@@ -16,13 +16,17 @@ namespace Taboola.Utilities
     public class TaboolaUtility
     {
         private const int NumAlts = 1;
+        private const string DateFormat = "yyyy-MM-ddTHH:mm:ssZ"; // The API expects ISO 8601 datetime
         private const string TaboolaAPIEndpointUrl = "https://backstage.taboola.com";
-        private const string TokenUrl = "https://backstage.taboola.com/backstage/oauth/token";
+        private const string PrefixUrl = "/backstage/api/1.0";
+        private const string TokenUrl = "/backstage/oauth/token";
+        private const string AllowedAccountsUrl = "/users/current/allowed-accounts/";
         private const string UrlEncodedContentType = "application/x-www-form-urlencoded";
         private const string ClientCredentialsGrantType = "client_credentials";
         private const string HttpPostMethod = "POST";
         private const string HttpGetMethod = "GET";
         private const string AuthorizationHeader = "Authorization";
+        private const string GrantTypeHeader = "grant_type";
 
         private static readonly object RequestLock = new object();
 
@@ -124,12 +128,12 @@ namespace Taboola.Utilities
             return response;
         }
 
-        private IRestResponse<T> GetRestResponse<T>(IRestClient restClient, IRestRequest restRequest, bool isPostMethod)
+        private static IRestResponse<T> GetRestResponse<T>(IRestClient restClient, IRestRequest restRequest, bool isPostMethod)
             where T : new()
         {
             var response = isPostMethod
-                ? restClient.ExecuteAsPost<T>(restRequest, "POST")
-                : restClient.ExecuteAsGet<T>(restRequest, "GET");
+                ? restClient.ExecuteAsPost<T>(restRequest, HttpPostMethod)
+                : restClient.ExecuteAsGet<T>(restRequest, HttpGetMethod);
             return response;
         }
 
@@ -186,22 +190,21 @@ namespace Taboola.Utilities
         private static IRestRequest GetAccessTokenRequest()
         {
             var restRequest = new RestRequest(TokenUrl);
-            restRequest.AddParameter("grant_type", ClientCredentialsGrantType);
+            restRequest.AddParameter(GrantTypeHeader, ClientCredentialsGrantType);
             return restRequest;
         }
-
+        
         #region HelpAPIMethods
 
         public void GetAccounts()
         {
             var accounts = GetUsers();
-            // LOG
+            // LOG or Create
         }
 
         private IEnumerable<TaboolaAccountResponse> GetUsers()
         {
-            const string prefix = "/backstage/api/1.0";
-            var resourcePath = $"{prefix}/users/current/allowed-accounts/";
+            var resourcePath = $"{PrefixUrl}{AllowedAccountsUrl}";
             var request = CreateRestRequest(resourcePath);
             var response = ProcessRequest<TaboolaAccountsResponse>(request);
             return response.Data.Results;
