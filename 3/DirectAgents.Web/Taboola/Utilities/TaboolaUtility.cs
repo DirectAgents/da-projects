@@ -162,7 +162,7 @@ namespace Taboola.Utilities
             return $"bearer {accessTokens[WhichAlt]}";
         }
 
-        private void GetAccessToken()
+        public void GetAccessToken()
         {
             var client = GetAccessTokenClient();
             var request = GetAccessTokenRequest();

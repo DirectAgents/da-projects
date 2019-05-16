@@ -37,7 +37,7 @@ namespace CakeExtracter.Commands.DA
             TaboolaUtility.TokenSets = GetTokensFromDb();
             var utility = CreateUtility();
 
-            utility.GetAccounts();
+            utility.GetAccessToken();
 
             SaveTokens(TaboolaUtility.TokenSets);
             return 0;
