@@ -87,8 +87,6 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
                 DASynchAdformStats.RunStatic(startDate: start);
             else if (platform.Code == Platform.Code_AdRoll)
                 DASynchAdrollStats.RunStatic(startDate: start, oneStatPer: "all");
-            else if (platform.Code == Platform.Code_DBM)
-                DASynchDBMStats.RunStatic(startDate: start);
             else if (platform.Code == Platform.Code_FB)
                 DASynchFacebookStats.RunStatic(startDate: start);
             else if (platform.Code == Platform.Code_YAM)

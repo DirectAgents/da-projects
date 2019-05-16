@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Auth.OAuth2.Flows;
@@ -160,10 +158,7 @@ namespace DBM
         {
             var request = QueriesResource.Getquery(queryId);
             var query = request.Execute();
-            if (query != null)
-                return query.Metadata.GoogleCloudStoragePathForLatestReport;
-            else
-                return null;
+            return query?.Metadata.GoogleCloudStoragePathForLatestReport;
         }
 
         public void Test()
