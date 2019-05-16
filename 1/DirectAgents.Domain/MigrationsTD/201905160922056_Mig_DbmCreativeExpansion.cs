@@ -12,118 +12,118 @@ namespace DirectAgents.Domain.MigrationsTD
             CreateTable(
                 "td.DbmCampaign",
                 c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        AdvertiserId = c.Int(),
-                        ExternalId = c.String(),
-                        Name = c.String(),
-                        AccountId = c.Int(),
-                    })
+                {
+                    Id = c.Int(nullable: false, identity: true),
+                    AdvertiserId = c.Int(),
+                    ExternalId = c.String(),
+                    Name = c.String(),
+                    AccountId = c.Int(),
+                })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("td.Account", t => t.AccountId)
                 .ForeignKey("td.DbmAdvertiser", t => t.AdvertiserId)
                 .Index(t => t.AdvertiserId)
                 .Index(t => t.AccountId);
-            
+
             CreateTable(
                 "td.DbmAdvertiser",
                 c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        CurrencyCode = c.String(),
-                        ExternalId = c.String(),
-                        Name = c.String(),
-                        AccountId = c.Int(),
-                    })
+                {
+                    Id = c.Int(nullable: false, identity: true),
+                    CurrencyCode = c.String(),
+                    ExternalId = c.String(),
+                    Name = c.String(),
+                    AccountId = c.Int(),
+                })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("td.Account", t => t.AccountId)
                 .Index(t => t.AccountId);
-            
+
             CreateTable(
                 "td.DbmCreative",
                 c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        AdvertiserId = c.Int(),
-                        Height = c.Int(),
-                        Width = c.Int(),
-                        Size = c.String(),
-                        Type = c.String(),
-                        ExternalId = c.String(),
-                        Name = c.String(),
-                        AccountId = c.Int(),
-                    })
+                {
+                    Id = c.Int(nullable: false, identity: true),
+                    AdvertiserId = c.Int(),
+                    Height = c.Int(),
+                    Width = c.Int(),
+                    Size = c.String(),
+                    Type = c.String(),
+                    ExternalId = c.String(),
+                    Name = c.String(),
+                    AccountId = c.Int(),
+                })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("td.Account", t => t.AccountId)
                 .ForeignKey("td.DbmAdvertiser", t => t.AdvertiserId)
                 .Index(t => t.AdvertiserId)
                 .Index(t => t.AccountId);
-            
+
             CreateTable(
                 "td.DbmCreativeSummary",
                 c => new
-                    {
-                        CreativeId = c.Int(nullable: false),
-                        Date = c.DateTime(nullable: false),
-                        Revenue = c.Decimal(nullable: false, precision: 18, scale: 6),
-                        Impressions = c.Int(nullable: false),
-                        Clicks = c.Int(nullable: false),
-                        PostClickConversions = c.Int(nullable: false),
-                        PostViewConversions = c.Int(nullable: false),
-                        CMPostClickRevenue = c.Decimal(nullable: false, precision: 18, scale: 6),
-                        CMPostViewRevenue = c.Decimal(nullable: false, precision: 18, scale: 6),
-                    })
+                {
+                    CreativeId = c.Int(nullable: false),
+                    Date = c.DateTime(nullable: false),
+                    Revenue = c.Decimal(nullable: false, precision: 18, scale: 6),
+                    Impressions = c.Int(nullable: false),
+                    Clicks = c.Int(nullable: false),
+                    PostClickConversions = c.Int(nullable: false),
+                    PostViewConversions = c.Int(nullable: false),
+                    CMPostClickRevenue = c.Decimal(nullable: false, precision: 18, scale: 6),
+                    CMPostViewRevenue = c.Decimal(nullable: false, precision: 18, scale: 6),
+                })
                 .PrimaryKey(t => new { t.CreativeId, t.Date })
                 .ForeignKey("td.DbmCreative", t => t.CreativeId, cascadeDelete: true);
-            
+
             CreateTable(
                 "td.DbmInsertionOrder",
                 c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        CampaignId = c.Int(),
-                        ExternalId = c.String(),
-                        Name = c.String(),
-                        AccountId = c.Int(),
-                    })
+                {
+                    Id = c.Int(nullable: false, identity: true),
+                    CampaignId = c.Int(),
+                    ExternalId = c.String(),
+                    Name = c.String(),
+                    AccountId = c.Int(),
+                })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("td.Account", t => t.AccountId)
                 .ForeignKey("td.DbmCampaign", t => t.CampaignId)
                 .Index(t => t.CampaignId)
                 .Index(t => t.AccountId);
-            
+
             CreateTable(
                 "td.DbmLineItem",
                 c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        InsertionOrderId = c.Int(),
-                        Type = c.String(),
-                        Status = c.String(),
-                        ExternalId = c.String(),
-                        Name = c.String(),
-                        AccountId = c.Int(),
-                    })
+                {
+                    Id = c.Int(nullable: false, identity: true),
+                    InsertionOrderId = c.Int(),
+                    Type = c.String(),
+                    Status = c.String(),
+                    ExternalId = c.String(),
+                    Name = c.String(),
+                    AccountId = c.Int(),
+                })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("td.Account", t => t.AccountId)
                 .ForeignKey("td.DbmInsertionOrder", t => t.InsertionOrderId)
                 .Index(t => t.InsertionOrderId)
                 .Index(t => t.AccountId);
-            
+
             CreateTable(
                 "td.DbmLineItemSummary",
                 c => new
-                    {
-                        LineItemId = c.Int(nullable: false),
-                        Date = c.DateTime(nullable: false),
-                        Revenue = c.Decimal(nullable: false, precision: 18, scale: 6),
-                        Impressions = c.Int(nullable: false),
-                        Clicks = c.Int(nullable: false),
-                        PostClickConversions = c.Int(nullable: false),
-                        PostViewConversions = c.Int(nullable: false),
-                        CMPostClickRevenue = c.Decimal(nullable: false, precision: 18, scale: 6),
-                        CMPostViewRevenue = c.Decimal(nullable: false, precision: 18, scale: 6),
-                    })
+                {
+                    LineItemId = c.Int(nullable: false),
+                    Date = c.DateTime(nullable: false),
+                    Revenue = c.Decimal(nullable: false, precision: 18, scale: 6),
+                    Impressions = c.Int(nullable: false),
+                    Clicks = c.Int(nullable: false),
+                    PostClickConversions = c.Int(nullable: false),
+                    PostViewConversions = c.Int(nullable: false),
+                    CMPostClickRevenue = c.Decimal(nullable: false, precision: 18, scale: 6),
+                    CMPostViewRevenue = c.Decimal(nullable: false, precision: 18, scale: 6),
+                })
                 .PrimaryKey(t => new { t.LineItemId, t.Date })
                 .ForeignKey("td.DbmLineItem", t => t.LineItemId, cascadeDelete: true);
 
