@@ -18,7 +18,7 @@ namespace CakeExtracter.Common
             x => $"{x.AccountId} {x.Name} {x.ExternalId}",
             x => $"{x.AccountId} {x.ExternalId}");
 
-        public static EntityIdStorage<Strategy> StrategyWithoutEidStorage = new EntityIdStorage<Strategy>(x => x.Id,
+        public static EntityIdStorage<Strategy> AdformStrategyWithoutEidStorage = new EntityIdStorage<Strategy>(x => x.Id,
             x => (x.ExternalId == null && x.Name == null) ? null : $"{x.AccountId} {x.Name} {x.ExternalId}",
             x => (x.ExternalId == null) ? null : $"{x.AccountId} {x.ExternalId}",
             x => (x.Name == null) ? null : $"{x.AccountId} {x.Name}");
@@ -27,10 +27,13 @@ namespace CakeExtracter.Common
             x => $"{x.AccountId} {x.StrategyId} {x.Name} {x.ExternalId}",
             x => $"{x.AccountId} {x.Name} {x.ExternalId}");
 
-        public static EntityIdStorage<AdSet> AdSetWithoutEidStorage = new EntityIdStorage<AdSet>(x => x.Id,
+        public static EntityIdStorage<AdSet> AdformAdSetWithoutEidStorage = new EntityIdStorage<AdSet>(x => x.Id,
             x => (x.ExternalId == null && x.Name == null) ? null : $"{x.AccountId} {x.StrategyId} {x.Name} {x.ExternalId}",
+            x => (x.ExternalId == null && x.Name == null) ? null : $"{x.AccountId} {x.Name} {x.ExternalId}",
             x => (x.ExternalId == null) ? null : $"{x.AccountId} {x.StrategyId} {x.ExternalId}",
-            x => (x.Name == null) ? null : $"{x.AccountId} {x.StrategyId} {x.Name}");
+            x => (x.ExternalId == null) ? null : $"{x.AccountId} {x.ExternalId}",
+            x => (x.Name == null) ? null : $"{x.AccountId} {x.StrategyId} {x.Name}",
+            x => (x.Name == null) ? null : $"{x.AccountId} {x.Name}");
 
         public static EntityIdStorage<TDad> TDadStorage = new EntityIdStorage<TDad>(x => x.Id,
             x => $"{x.AccountId} {x.AdSetId} {x.Name} {x.ExternalId}", 
