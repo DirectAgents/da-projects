@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Amazon;
-using CakeExtracter.Common.ArchiveExtractors.Contract;
+using CakeExtracter.Common.Extractors.ArchiveExctractors.Contract;
 using CakeExtracter.Etl.Kochava.Configuration;
 using CakeExtracter.Etl.Kochava.Extractors.Parsers;
 using CakeExtracter.Etl.Kochava.Models;

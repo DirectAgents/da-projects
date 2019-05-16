@@ -9,145 +9,138 @@ using Polly;
 using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Deserializers;
+using Yahoo.Constants;
+using Yahoo.Exceptions;
+using Yahoo.Helpers;
+using Yahoo.Models;
+using Yahoo.Models.Requests;
+using Yahoo.Models.Responses;
 
 namespace Yahoo
 {
-    public class YAMUtility
+    /// <summary>
+    /// The Yahoo utility to extract data from the OATH API.
+    /// </summary>
+    public class YamUtility
     {
+        private const string TokenDelimiter = "|YAMYAM|";
+        private const string ReportResourceUrl = "extreport/";
+        private const string AuthorizationHeader = "X-Auth-Token";
+
+        private const int NumAlts = 10; // including the default (0)
+
+        private const int RequestPerMinuteLimit = 5;
+        private const int SecondIntervalForLimit = 63; // 1 min + 3 sec for errors
+
+        private const int NumTriesRequestReportDefault = 12; // 240 sec (4 min)
+        private const int NumTriesGetReportStatusDefault = 24; // 480 sec (8 min)
+        private const int UnauthorizedAttemptsNumberDefault = 2;
+        private const int WaitTimeSecondsDefault = 20;
+
         private static readonly object RequestLock = new object();
         private static readonly object AccessTokenLock = new object();
 
-        private const int NUMTRIES_REQUESTREPORT_DEFAULT = 12; // 240 sec (4 min)
-        private const int NUMTRIES_GETREPORTSTATUS_DEFAULT = 24; // 480 sec (8 min)
-        private const int WAITTIME_SECONDS_DEFAULT = 20;
+        private static readonly string[] AccessToken = new string[NumAlts];
+        private static readonly string[] RefreshToken = new string[NumAlts];
 
-        private const string TOKEN_DELIMITER = "|YAMYAM|";
-        public const int NumAlts = 10; // including the default (0)
-
-        // From Config:
-        private string AuthBaseUrl { get; set; }
-        private string[] ClientID = new string[NumAlts];
-        private string[] ClientSecret = new string[NumAlts];
-        private string[] ApplicationAccessCode = new string[NumAlts];
-        private string YAMBaseUrl { get; set; }
-        private int NumTries_GetReportStatus { get; set; }
-        private int NumTries_RequestReport { get; set; }
-        private int WaitTime_Seconds { get; set; }
+        private static readonly ConcurrentQueue<DateTime> TimesOfRequestPerMinute = new ConcurrentQueue<DateTime>();
         
-        private const int REQUEST_PER_MINUTE_LIMIT = 5;
-        private const int SECOND_INTERVAL_FOR_LIMIT = 63; // 1 min + 3 sec for errors
-        private static readonly ConcurrentQueue<DateTime> timesOfRequestPerMinute = new ConcurrentQueue<DateTime>();
+        private readonly string[] clientId = new string[NumAlts];
+        private readonly string[] clientSecret = new string[NumAlts];
+        private readonly string[] applicationAccessCode = new string[NumAlts];
+        private readonly string[] altAccountIDs = new string[NumAlts];
+        private readonly YamLogger logger;
 
-        private static string[] AccessToken = new string[NumAlts];
-        private static string[] RefreshToken = new string[NumAlts];
-        private string[] AltAccountIDs = new string[NumAlts];
+        public event Action<FailedReportGenerationException> ProcessFailedReportGeneration;
+
+        /// <summary>
+        /// Gets or sets access and refresh tokens.
+        /// Each string in the array is a combination of Access + Refresh Token.
+        /// </summary>
+        public static string[] TokenSets
+        {
+            get => CreateTokenSets().ToArray();
+            set => SetTokens(value);
+        }
+
+        /// <summary>
+        /// Number of an alt account number to use specific access values ​​for Api (for alternate credentials)
+        /// </summary>
         public int WhichAlt { get; set; } // default: 0
 
-        private static IEnumerable<string> CreateTokenSets()
+        private string AuthBaseUrl { get; set; }
+        private string YamBaseUrl { get; set; }
+        private int NumTriesGetReportStatus { get; set; }
+        private int NumTriesRequestReport { get; set; }
+        private int WaitTimeSeconds { get; set; }
+
+        static YamUtility()
         {
-            for (int i = 0; i < NumAlts; i++)
-                yield return AccessToken[i] + TOKEN_DELIMITER + RefreshToken[i];
-        }
-        public static string[] TokenSets // each string in the array is a combination of Access + Refresh Token
-        {
-            get { return CreateTokenSets().ToArray(); }
-            set
+            for (var i = 0; i < RequestPerMinuteLimit; i++)
             {
-                lock (AccessTokenLock)
-                {
-                    for (int i = 0; i < value.Length; i++)
-                    {
-                        var tokenSet = value[i].Split(new string[] { TOKEN_DELIMITER }, StringSplitOptions.None);
-                        AccessToken[i] = tokenSet[0];
-                        if (tokenSet.Length > 1)
-                            RefreshToken[i] = tokenSet[1];
-                    }
-                }
+                TimesOfRequestPerMinute.Enqueue(DateTime.MinValue);
             }
         }
 
-        // --- Logging ---
-        private Action<string> _LogInfo;
-        private Action<string> _LogError;
-
-        private void LogInfo(string message)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="YamUtility"/> class.
+        /// </summary>
+        public YamUtility()
         {
-            if (_LogInfo == null)
-                Console.WriteLine(message);
-            else
-                _LogInfo("[YAMUtility] " + message);
-        }
-
-        private void LogError(string message)
-        {
-            if (_LogError == null)
-                Console.WriteLine(message);
-            else
-                _LogError("[YAMUtility] " + message);
-        }
-
-        // --- Constructors ---
-        static YAMUtility()
-        {
-            for (var i = 0; i < REQUEST_PER_MINUTE_LIMIT; i++)
+            if (logger == null)
             {
-                timesOfRequestPerMinute.Enqueue(DateTime.MinValue);
+                logger = new YamLogger(null, null, null);
             }
-        }
-        public YAMUtility()
-        {
+
             Setup();
         }
-        public YAMUtility(Action<string> logInfo, Action<string> logError)
+
+        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:Yahoo.YamUtility" /> class.
+        /// </summary>
+        /// <param name="logInfo">Action that logs infos</param>
+        /// <param name="logError">Action that logs errors</param>
+        /// <param name="logWarning">Action that logs warnings</param>
+        public YamUtility(Action<string> logInfo, Action<string> logWarning, Action<Exception> logError)
             : this()
         {
-            _LogInfo = logInfo;
-            _LogError = logError;
+            logger = new YamLogger(logInfo, logError, logWarning);
         }
 
-        private void Setup()
+        /// <summary>
+        /// The common method that generates a statistics report (for different dimensions).
+        /// Returns the report URL that can be used to download the generated report.
+        /// </summary>
+        /// <param name="reportSettings">Report settings to customize the requested report.</param>
+        /// <returns>URL of report location (may be null)</returns>
+        public virtual string TryGenerateReport(ReportSettings reportSettings)
         {
-            ClientID[0] = ConfigurationManager.AppSettings["YahooClientID"];
-            ClientSecret[0] = ConfigurationManager.AppSettings["YahooClientSecret"];
-            ApplicationAccessCode[0] = ConfigurationManager.AppSettings["YahooApplicationAccessCode"]; // aka Auth Code
-            for (var i = 1; i < NumAlts; i++)
+            try
             {
-                AltAccountIDs[i] = PlaceLeadingAndTrailingCommas(ConfigurationManager.AppSettings["Yahoo_Alt" + i]);
-                ClientID[i] = ConfigurationManager.AppSettings["YahooClientID_Alt" + i];
-                ClientSecret[i] = ConfigurationManager.AppSettings["YahooClientSecret_Alt" + i];
-                ApplicationAccessCode[i] =
-                    ConfigurationManager.AppSettings["YahooApplicationAccessCode_Alt" + i]; // aka Auth Code
+                var payload = ReportParametersHelper.CreateReportRequestPayload(reportSettings);
+                var reportUrl = TryGenerateReport(payload);
+                return reportUrl;
             }
-            AuthBaseUrl = ConfigurationManager.AppSettings["YahooAuthBaseUrl"];
-            YAMBaseUrl = ConfigurationManager.AppSettings["YAMBaseUrl"];
-
-            this.NumTries_GetReportStatus = int.TryParse(ConfigurationManager.AppSettings["YAM_NumTries_GetReportStatus"]
-                , out var tmpInt)
-                ? tmpInt
-                : NUMTRIES_GETREPORTSTATUS_DEFAULT;
-            this.NumTries_RequestReport = int.TryParse(ConfigurationManager.AppSettings["YAM_NumTries_RequestReport"],
-                out tmpInt)
-                ? tmpInt
-                : NUMTRIES_REQUESTREPORT_DEFAULT;
-            this.WaitTime_Seconds = int.TryParse(ConfigurationManager.AppSettings["YAM_WaitTime_Seconds"], out tmpInt)
-                ? tmpInt
-                : WAITTIME_SECONDS_DEFAULT;
+            catch (Exception exception)
+            {
+                var exc = new FailedReportGenerationException(reportSettings, exception);
+                logger.LogError(exc);
+                ProcessFailedReportGeneration?.Invoke(exc);
+                return null;
+            }
         }
 
-        private string PlaceLeadingAndTrailingCommas(string idString)
-        {
-            if (string.IsNullOrEmpty(idString))
-                return idString;
-            return (idString[0] == ',' ? "" : ",") + idString + (idString[idString.Length - 1] == ',' ? "" : ",");
-        }
-
-        // for alternative credentials...
+        /// <summary>
+        /// Set an alt account number to use specific access values ​​for Api (for alternative credentials).
+        /// </summary>
+        /// <param name="accountId">Account external id</param>
         public void SetWhichAlt(string accountId)
         {
             WhichAlt = 0; //default
-            for (int i = 1; i < NumAlts; i++)
+            for (var i = 1; i < NumAlts; i++)
             {
-                if (AltAccountIDs[i] != null && AltAccountIDs[i].Contains(',' + accountId + ','))
+                if (altAccountIDs[i] != null && altAccountIDs[i].Contains(',' + accountId + ','))
                 {
                     WhichAlt = i;
                     break;
@@ -155,175 +148,146 @@ namespace Yahoo
             }
         }
 
-        // Use the refreshToken if we have one, otherwise use the auth code
-        public void GetAccessToken()
+        #region Private constructor methods
+
+        private void Setup()
+        {
+            clientId[0] = ConfigurationManager.AppSettings["YahooClientID"];
+            clientSecret[0] = ConfigurationManager.AppSettings["YahooClientSecret"];
+            applicationAccessCode[0] = ConfigurationManager.AppSettings["YahooApplicationAccessCode"]; // aka Auth Code
+            for (var i = 1; i < NumAlts; i++)
+            {
+                SetupClient(i);
+            }
+
+            AuthBaseUrl = ConfigurationManager.AppSettings["YahooAuthBaseUrl"];
+            YamBaseUrl = ConfigurationManager.AppSettings["YAMBaseUrl"];
+            NumTriesGetReportStatus = GetDefaultOrConfigIntValue("YAM_NumTries_GetReportStatus", NumTriesGetReportStatusDefault);
+            NumTriesRequestReport = GetDefaultOrConfigIntValue("YAM_NumTries_RequestReport", NumTriesRequestReportDefault);
+            WaitTimeSeconds = GetDefaultOrConfigIntValue("YAM_WaitTime_Seconds", WaitTimeSecondsDefault);
+        }
+
+        private void SetupClient(int clientNumber)
+        {
+            altAccountIDs[clientNumber] = PlaceLeadingAndTrailingCommas(ConfigurationManager.AppSettings["Yahoo_Alt" + clientNumber]);
+            clientId[clientNumber] = ConfigurationManager.AppSettings["YahooClientID_Alt" + clientNumber];
+            clientSecret[clientNumber] = ConfigurationManager.AppSettings["YahooClientSecret_Alt" + clientNumber];
+            applicationAccessCode[clientNumber] = ConfigurationManager.AppSettings["YahooApplicationAccessCode_Alt" + clientNumber]; // aka Auth Code
+        }
+
+        private string PlaceLeadingAndTrailingCommas(string idString)
+        {
+            if (string.IsNullOrEmpty(idString))
+            {
+                return idString;
+            }
+
+            return (idString[0] == ',' ? "" : ",") + idString + (idString[idString.Length - 1] == ',' ? "" : ",");
+        }
+
+        private int GetDefaultOrConfigIntValue(string configValueName, int defaultValue)
+        {
+            return int.TryParse(ConfigurationManager.AppSettings[configValueName], out var tmpInt)
+                ? tmpInt
+                : defaultValue;
+        }
+
+        #endregion
+
+        #region Private token methods
+
+        private static IEnumerable<string> CreateTokenSets()
+        {
+            for (var i = 0; i < NumAlts; i++)
+            {
+                lock (AccessTokenLock)
+                {
+                    yield return AccessToken[i] + TokenDelimiter + RefreshToken[i];
+                }
+            }
+        }
+
+        private static void SetTokens(string[] tokens)
+        {
+            lock (AccessTokenLock)
+            {
+                for (var i = 0; i < tokens.Length; i++)
+                {
+                    var tokenSet = tokens[i].Split(new[] {TokenDelimiter}, StringSplitOptions.None);
+                    AccessToken[i] = tokenSet[0];
+                    if (tokenSet.Length > 1)
+                    {
+                        RefreshToken[i] = tokenSet[1];
+                    }
+                }
+            }
+        }
+
+        private void GetAccessToken()
+        {
+            var restClient = GetAccessTokenClient();
+            var request = GetAccessTokenRequest();
+            var response = restClient.ExecuteAsPost<CreateAccessTokenResponse>(request, "POST");
+
+            if (response.Data?.access_token == null)
+            {
+                logger.LogError("Failed to get access token");
+            }
+
+            if (response.Data != null && response.Data.refresh_token == null)
+            {
+                logger.LogError("Failed to get refresh token");
+            }
+
+            if (response.Data == null)
+            {
+                return;
+            }
+
+            AccessToken[WhichAlt] = response.Data.access_token;
+            RefreshToken[WhichAlt] = response.Data.refresh_token; // update this in case it changed
+        }
+
+        private IRestClient GetAccessTokenClient()
         {
             var restClient = new RestClient
             {
                 BaseUrl = new Uri(AuthBaseUrl),
-                Authenticator = new HttpBasicAuthenticator(ClientID[WhichAlt], ClientSecret[WhichAlt])
+                Authenticator = new HttpBasicAuthenticator(clientId[WhichAlt], clientSecret[WhichAlt])
             };
             restClient.AddHandler("application/x-www-form-urlencoded", new JsonDeserializer());
+            return restClient;
+        }
 
+        private IRestRequest GetAccessTokenRequest()
+        {
             var request = new RestRequest();
             request.AddParameter("redirect_uri", "oob");
-            if (String.IsNullOrWhiteSpace(RefreshToken[WhichAlt]))
+            if (string.IsNullOrWhiteSpace(RefreshToken[WhichAlt]))
             {
                 request.AddParameter("grant_type", "authorization_code");
-                request.AddParameter("code", ApplicationAccessCode[WhichAlt]);
+                request.AddParameter("code", applicationAccessCode[WhichAlt]);
             }
             else
             {
                 request.AddParameter("grant_type", "refresh_token");
                 request.AddParameter("refresh_token", RefreshToken[WhichAlt]);
             }
-            var response = restClient.ExecuteAsPost<GetTokenResponse>(request, "POST");
 
-            if (response.Data == null || response.Data.access_token == null)
-                LogError("Failed to get access token");
-            if (response.Data != null && response.Data.refresh_token == null)
-                LogError("Failed to get refresh token");
-
-            if (response.Data != null)
-            {
-                AccessToken[WhichAlt] = response.Data.access_token;
-                RefreshToken[WhichAlt] = response.Data.refresh_token; // update this in case it changed
-            }
+            return request;
         }
 
-        private IRestResponse<T> ProcessRequest<T>(RestRequest restRequest, bool postNotGet = false)
-            where T : new()
-        {
-            lock (RequestLock)
-            {
-                var restClient = new RestClient
-                {
-                    BaseUrl = new Uri(YAMBaseUrl)
-                };
-                restClient.AddHandler("application/json", new JsonDeserializer());
-
-                if (String.IsNullOrEmpty(AccessToken[WhichAlt]))
-                    GetAccessToken();
-
-                restRequest.AddHeader("X-Auth-Method", "OAUTH");
-                restRequest.AddHeader("X-Auth-Token", AccessToken[WhichAlt]);
-
-                bool done = false;
-                int tries = 0;
-                IRestResponse<T> response = null;
-                while (!done)
-                {
-                    WaitUntilLimitExpires();
-                    response = postNotGet
-                        ? restClient.ExecuteAsPost<T>(restRequest, "POST")
-                        : restClient.ExecuteAsGet<T>(restRequest, "GET");
-                    tries++;
-
-                    if (response.StatusCode == HttpStatusCode.Unauthorized && tries < 2)
-                    { // Get a new access token and use that.
-                        GetAccessToken();
-                        var param = restRequest.Parameters.Find(p => p.Type == ParameterType.HttpHeader && p.Name == "X-Auth-Token");
-                        param.Value = AccessToken[WhichAlt];
-                    }
-                    else
-                        done = true; //TODO: distinguish between success and failure of ProcessRequest
-                }
-                if (!String.IsNullOrWhiteSpace(response.ErrorMessage))
-                    LogError(response.ErrorMessage);
-
-                return response;
-            }
-        }
-
-        // ---
-
-        /// <summary>
-        /// The method gets a report status and waits until the report is ready.
-        /// Returns the location (URL) of the CSV
-        /// </summary>
-        /// <param name="customerReportId">Customer report Id</param>
-        /// <returns>Report URL (may be null)</returns>
-        private string TryGetReportUrl(string customerReportId)
-        {
-            if (string.IsNullOrWhiteSpace(customerReportId))
-            {
-                throw new Exception("Missing Report Id");
-            }
-            LogInfo($"YAM Report ID: {customerReportId}");
-
-            var maxRetryAttempts = this.NumTries_GetReportStatus;
-            var pauseBetweenAttempts = new TimeSpan(0, 0, this.WaitTime_Seconds);
-            var getReportResponse = Policy
-                .Handle<Exception>()
-                .OrResult<GetReportResponse>(response =>
-                    response?.status == null)
-                .OrResult(response => 
-                    response.status.ToUpper() != "SUCCESS" && 
-                    response.status.ToUpper() != "FAILED")
-                .WaitAndRetry(maxRetryAttempts,
-                    i => pauseBetweenAttempts,
-                    (exception, timeSpan, retryCount, context) =>
-                        LogWaiting($"Will check if the report is ready in {timeSpan.TotalSeconds:N0} seconds...",
-                            retryCount))
-                .Execute(() => GetReportStatus(customerReportId));
-
-            if (getReportResponse.status.ToUpper() != "SUCCESS")
-            {
-                throw new Exception("Failed to obtain report URL"); 
-            }    
-            return getReportResponse.url;
-        }
-
-        private GetReportResponse GetReportStatus(string reportId)
-        {
-            var request = new RestRequest("extreport/" + reportId);
-            var response = ProcessRequest<GetReportResponse>(request);
-            return response?.Data;
-        }
-
-        /// <summary>
-        /// The common method that generates a statistics report (for different dimensions).
-        /// Returns the report URL that can be used to download the generated report.
-        /// </summary>
-        /// <param name="fromDate">Start date</param>
-        /// <param name="toDate">End date</param>
-        /// <param name="accountId">Account Id (may be null)</param>
-        /// <param name="byAdvertiser">Flag for Advertiser dimension (may be null)</param>
-        /// <param name="byCampaign">Flag for Campaign dimension (may be null)</param>
-        /// <param name="byLine">Flag for Line dimension (may be null)</param>
-        /// <param name="byAd">Flag for Ad dimension (may be null)</param>
-        /// <param name="byCreative">Flag for Creative dimension (may be null)</param>
-        /// <param name="byPixel">Flag for Pixel dimension (may be null)</param>
-        /// <param name="byPixelParameter">Flag for Pixel Parameter dimension (may be null)</param>
-        /// <returns>URL of report location (may be null)</returns>
-        public string TryGenerateReport(DateTime fromDate, DateTime toDate, int? accountId = null,
-            bool byAdvertiser = false, bool byCampaign = false, bool byLine = false, bool byAd = false,
-            bool byCreative = false, bool byPixel = false, bool byPixelParameter = false)
-        {
-            var payload = CreateReportRequestPayload(fromDate, toDate, accountId, byAdvertiser, byCampaign, byLine,
-                byAd, byCreative, byPixel, byPixelParameter);
-            var reportUrl = TryGenerateReport(payload);
-            return reportUrl;
-        }
+        #endregion
 
         private string TryGenerateReport(ReportPayload payload)
         {
-            try
-            {
-                var maxRetryAttempts = this.NumTries_RequestReport;
-                var reportUrl = Policy
-                    .Handle<Exception>()
-                    .Retry(maxRetryAttempts, (exception, retryCount, context) =>
-                        LogInfo(
-                            $"Could not get a report URL: {exception.Message}. Try regenerate a report (number of retrying - {retryCount})"))
-                    .Execute(() => GenerateReport(payload));
-                return reportUrl;
-            }
-            catch (Exception e)
-            {
-                LogError($"Could not generate a report: {e.Message}");
-                return null;
-            }
+            var reportUrl = Policy
+                .Handle<Exception>()
+                .Retry(NumTriesRequestReport, (exception, retryCount, context) => logger.LogWarning(
+                    $"Could not get a report URL: {exception.Message}. Try regenerate a report (number of retrying - {retryCount})"))
+                .Execute(() => GenerateReport(payload));
+            logger.LogInfo($"Report URL - {reportUrl}");
+            return reportUrl;
         }
 
         /// <summary>
@@ -334,146 +298,172 @@ namespace Yahoo
         private string GenerateReport(ReportPayload payload)
         {
             var reportResponse = TryRequestReport(payload);
-            var reportUrl = TryGetReportUrl(reportResponse.customerReportId);
+            var reportInfo = reportResponse?.Data;
+            if (string.IsNullOrWhiteSpace(reportInfo?.CustomerReportId))
+            {
+                throw new Exception("Missing Report Id");
+            }
+
+            var reportUrl = TryGetReportUrl(reportInfo.CustomerReportId);
             return reportUrl;
         }
 
-        private ReportPayload CreateReportRequestPayload(DateTime startDate, DateTime endDate, int? accountId = null,
-            bool byAdvertiser = false, bool byCampaign = false, bool byLine = false, bool byAd = false,
-            bool byCreative = false, bool byPixel = false, bool byPixelParameter = false)
+        /// <summary>
+        /// The method requests a report and waits until a status of response will be "SUBMITTED"
+        /// </summary>
+        /// <param name="payload">Report settings</param>
+        private IRestResponse<CreateReportResponse> TryRequestReport(ReportPayload payload)
         {
-            //This produced an InvalidTimeZoneException so we're just going with the system timezone, relying on it to be Eastern(daylight savings adjusted)
-            //var offset = TimeZoneInfo.FindSystemTimeZoneById(@"Eastern Standard Time\Dynamic DST").BaseUtcOffset;
-            //var start = new DateTimeOffset(startDate.Year, startDate.Month, startDate.Day, 0, 0, 0, offset);
-            //var end = new DateTimeOffset(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59, offset);
-
-            var accountList = new List<int>();
-            if (accountId.HasValue)
-                accountList.Add(accountId.Value);
-
-            var dimensionList = GetDimensions(byAdvertiser, byCampaign, byLine, byAd, byCreative, byPixel,
-                byPixelParameter);
-            var metricList = GetMetrics(byPixelParameter);
-
-            var reportOption = new ReportOption
-            {
-                timezone = Timezone.NEW_YORK,
-                currency = Currency.USD,
-                accountIds = accountList.ToArray(),
-                dimensionTypeIds = dimensionList.ToArray(),
-                metricTypeIds = metricList.ToArray()
-            };
-
-            const string dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'sszzz";
-            var adjustedEndDate = endDate.AddDays(1).AddSeconds(-1);
-            var payload = new ReportPayload
-            {
-                reportOption = reportOption,
-                intervalTypeId = IntervalTypeId.DAY,
-                dateTypeId = DateTypeId.CUSTOM_RANGE,
-                startDate = startDate.ToString(dateFormat),
-                endDate = adjustedEndDate.ToString(dateFormat)
-            };
-            return payload;
+            var createReportResponse = Policy
+                .Handle<Exception>()
+                .OrResult<IRestResponse<CreateReportResponse>>(response => response.Data?.Status == null)
+                .OrResult(response => !IsStatus(response.Data.Status, ReportStatus.Submitted))
+                .WaitAndRetry(NumTriesRequestReport, GetPauseBetweenAttempts, (exception, timeSpan, retryCount, context) =>
+                    logger.LogWaiting("Invalid createReportResponse. Will retry. Waiting {0} ...", timeSpan, retryCount, exception))
+                .Execute(() => RequestReport(payload));
+            return createReportResponse;
         }
 
-        private List<int> GetDimensions(bool byAdvertiser, bool byCampaign, bool byLine, bool byAd, bool byCreative, bool byPixel, bool byPixelParameter)
+        private IRestResponse<CreateReportResponse> RequestReport(ReportPayload payload)
         {
-            var dimensionList = new List<int>();
-            AddDimension(dimensionList, byAdvertiser, Dimension.ADVERTISER);
-            AddDimension(dimensionList, byCampaign, Dimension.CAMPAIGN);
-            AddDimension(dimensionList, byLine, Dimension.LINE);
-            AddDimension(dimensionList, byAd, Dimension.AD);
-            AddDimension(dimensionList, byCreative, Dimension.CREATIVE);
-            AddDimension(dimensionList, byPixel, Dimension.PIXEL);
-            AddDimension(dimensionList, byPixelParameter, Dimension.PIXEL_PARAMETER);
-            return dimensionList;
-        }
-
-        private void AddDimension(List<int> dimensionList, bool condition, int dimensionCoded)
-        {
-            if (condition)
-            {
-                dimensionList.Add(dimensionCoded);
-            }
-        }
-
-        private List<int> GetMetrics(bool byPixelParameter)
-        {
-            var metricList = !byPixelParameter
-                ? new[]
-                {
-                    Metric.IMPRESSIONS, Metric.CLICKS, Metric.ADVERTISER_SPENDING, Metric.CLICK_THROUGH_CONVERSIONS,
-                    Metric.VIEW_THROUGH_CONVERSIONS, Metric.ROAS_ACTION_VALUE
-                }
-                : new[]
-                {
-                    // used to obtain the *real* conversion values from the pixel parameter
-                    Metric.CLICK_THROUGH_CONVERSIONS, Metric.VIEW_THROUGH_CONVERSIONS
-                };
-            return metricList.ToList();
-        }
-
-        private CreateReportResponse RequestReport(ReportPayload payload, bool logResponse = false)
-        {
-            var request = new RestRequest("extreport/");
+            var request = CreateRestRequest(ReportResourceUrl);
             request.AddJsonBody(payload);
+            var response = ProcessRequest<CreateReportResponse>(request, true);
+            return response;
+        }
 
-            var response = ProcessRequest<CreateReportResponse>(request, postNotGet: true);
-            if (response == null)
+        /// <summary>
+        /// The method gets a report status and waits until the report is ready.
+        /// Returns the location (URL) of the CSV
+        /// </summary>
+        /// <param name="customerReportId">Customer report Id</param>
+        /// <returns>Report URL (may be null)</returns>
+        private string TryGetReportUrl(string customerReportId)
+        {
+            logger.LogInfo($"YAM Report ID: {customerReportId}");
+            var getReportResponse = Policy
+                .Handle<Exception>()
+                .OrResult<IRestResponse<ReadReportStatusResponse>>(response => response.Data?.Status == null)
+                .OrResult(response => !IsStatus(response.Data.Status, ReportStatus.Success) && !IsStatus(response.Data.Status, ReportStatus.Failed))
+                .WaitAndRetry(NumTriesGetReportStatus, GetPauseBetweenAttempts, (exception, timeSpan, retryCount, context) =>
+                    logger.LogWaiting("Will check if the report is ready. Waiting {0} ...", timeSpan, retryCount, exception))
+                .Execute(() => GetReportStatus(customerReportId));
+
+            if (getReportResponse.Data.Status.ToUpper() != ReportStatus.Success)
             {
-                return null;
+                throw new Exception("Failed to obtain report URL");
             }
-            if (logResponse)
+            return getReportResponse.Data.Url;
+        }
+
+        private IRestResponse<ReadReportStatusResponse> GetReportStatus(string reportId)
+        {
+            var request = CreateRestRequest(ReportResourceUrl + reportId);
+            var response = ProcessRequest<ReadReportStatusResponse>(request);
+            return response;
+        }
+
+        private IRestRequest CreateRestRequest(string resourceUri)
+        {
+            var request = new RestRequest(resourceUri);
+            AddAuthorizationHeaders(request);
+            return request;
+        }
+
+        private IRestResponse<T> ProcessRequest<T>(IRestRequest restRequest, bool isPostMethod = false)
+            where T : new()
+        {
+            IRestResponse<T> response;
+            var restClient = GetRequestRestClient();
+            lock (RequestLock)
             {
-                //LogInfo("ResponseStatus: " + response.ResponseStatus.ToString());
-                LogInfo("StatusCode: " + response.StatusCode.ToString());
+                response = ProcessRequest<T>(restClient, restRequest, isPostMethod);
             }
-            return response.Data;
+
+            if (response.IsSuccessful)
+            {
+                return response;
+            }
+
+            var message = string.IsNullOrWhiteSpace(response.ErrorMessage)
+                ? response.Content
+                : response.ErrorMessage;
+            logger.LogWarning(message);
+            return response;
+        }
+
+        private RestClient GetRequestRestClient()
+        {
+            var restClient = new RestClient(YamBaseUrl);
+            restClient.AddHandler("application/json", new JsonDeserializer());
+            return restClient;
+        }
+
+        private IRestResponse<T> ProcessRequest<T>(IRestClient restClient, IRestRequest restRequest, bool isPostMethod)
+            where T : new()
+        {
+            if (string.IsNullOrEmpty(AccessToken[WhichAlt]))
+            {
+                GetAccessToken();
+            }
+
+            var response = Policy
+                .Handle<Exception>()
+                .OrResult<IRestResponse<T>>(resp => resp.StatusCode == HttpStatusCode.Unauthorized)
+                .Retry(UnauthorizedAttemptsNumberDefault, (exception, retryCount, context) => UpdateAccessTokenForRestRequest(restRequest))
+                .Execute(() => GetRestResponse<T>(restClient, restRequest, isPostMethod));
+
+            return response;
+        }
+
+        private IRestResponse<T> GetRestResponse<T>(IRestClient restClient, IRestRequest restRequest, bool isPostMethod)
+            where T : new()
+        {
+            WaitUntilLimitExpires();
+            var response = isPostMethod
+                ? restClient.ExecuteAsPost<T>(restRequest, "POST")
+                : restClient.ExecuteAsGet<T>(restRequest, "GET");
+            return response;
+        }
+
+        private void AddAuthorizationHeaders(IRestRequest request)
+        {
+            request.AddHeader("X-Auth-Method", "OAUTH");
+            lock (AccessTokenLock)
+            {
+                request.AddHeader(AuthorizationHeader, AccessToken[WhichAlt]);
+            }
+        }
+
+        private void UpdateAccessTokenForRestRequest(IRestRequest request)
+        {
+            // Get a new access token and use that.
+            GetAccessToken();
+            var param = request.Parameters.Find(p => p.Type == ParameterType.HttpHeader && p.Name == AuthorizationHeader);
+            param.Value = AccessToken[WhichAlt];
         }
 
         private void WaitUntilLimitExpires()
         {
             DateTime requestTime;
-            while (!timesOfRequestPerMinute.TryDequeue(out requestTime)) { }
-            var timeDifference = requestTime.AddSeconds(SECOND_INTERVAL_FOR_LIMIT) - DateTime.Now;
+            while (!TimesOfRequestPerMinute.TryDequeue(out requestTime)) { }
+            var timeDifference = requestTime.AddSeconds(SecondIntervalForLimit) - DateTime.Now;
             if (timeDifference.TotalSeconds > 0)
             {
                 var timeSpan = new TimeSpan(timeDifference.Hours, timeDifference.Minutes, timeDifference.Seconds);
                 Thread.Sleep(timeSpan);
             }
-            timesOfRequestPerMinute.Enqueue(DateTime.Now);
-        }
-        
-        /// <summary>
-        /// The method requests a report and waits until a status of response will be "SUBMITTED"
-        /// </summary>
-        /// <param name="payload">Report settings</param>
-        /// <returns>CreateReportResponse that contains a customer report Id</returns>
-        private CreateReportResponse TryRequestReport(ReportPayload payload)
-        {
-            var maxRetryAttempts = this.NumTries_RequestReport;
-            var pauseBetweenAttempts = new TimeSpan(0, 0, this.WaitTime_Seconds);
-            var createReportResponse = Policy
-                .Handle<Exception>()
-                .OrResult<CreateReportResponse>(response => response?.status == null)
-                .OrResult(response => response.status.ToUpper() != "SUBMITTED")
-                .WaitAndRetry(
-                    maxRetryAttempts,
-                    i => pauseBetweenAttempts,
-                    (exception, timeSpan, retryCount, context) =>
-                        LogWaiting($"Invalid createReportResponse. Will retry. Waiting {timeSpan} ...", retryCount))
-                .Execute(() => RequestReport(payload));
-            return createReportResponse;
+            TimesOfRequestPerMinute.Enqueue(DateTime.Now);
         }
 
-        private void LogWaiting(string baseMessage, int? retryCount)
+        private bool IsStatus(string status, string statusToCompare)
         {
-            if (retryCount.HasValue)
-            {
-                baseMessage += $" (number of retrying - {retryCount})";
-            }
-            LogInfo(baseMessage);
+            return string.Equals(status, statusToCompare, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private TimeSpan GetPauseBetweenAttempts(int attemptNumber)
+        {
+            return new TimeSpan(0, 0, WaitTimeSeconds);
         }
     }
 }

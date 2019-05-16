@@ -104,16 +104,18 @@ namespace CakeExtracter.Helpers
             }
         }
 
-        public static void TryMakeTransactionWithLock<T>(Action<T> transactionAction, object contextLocker, string level)
+        public static bool TryMakeTransactionWithLock<T>(Action<T> transactionAction, object contextLocker, string level)
            where T : DbContext, new()
         {
             try
             {
                 TryToMakeTransactionManyTimes(false, contextLocker, transactionAction);
+                return true;
             }
             catch (Exception exception)
             {
                 LogEndOfRetrying(exception, level);
+                return false;
             }
         }
 

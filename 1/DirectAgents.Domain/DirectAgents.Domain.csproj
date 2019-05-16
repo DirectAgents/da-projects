@@ -128,6 +128,19 @@
     <Compile Include="Entities\CPProg\DBM\SummaryMetrics\DbmBaseSummaryEntity.cs" />
     <Compile Include="Entities\CPProg\DBM\SummaryMetrics\DbmCreativeSummary.cs" />
     <Compile Include="Entities\CPProg\DBM\SummaryMetrics\DbmLineItemSummary.cs" />
+    <Compile Include="Entities\CPProg\YAM\BaseYamEntity.cs" />
+    <Compile Include="Entities\CPProg\YAM\Summaries\BaseYamSummary.cs" />
+    <Compile Include="Entities\CPProg\YAM\Summaries\YamCampaignSummary.cs" />
+    <Compile Include="Entities\CPProg\YAM\Summaries\YamCreativeSummary.cs" />
+    <Compile Include="Entities\CPProg\YAM\Summaries\YamAdSummary.cs" />
+    <Compile Include="Entities\CPProg\YAM\Summaries\YamDailySummary.cs" />
+    <Compile Include="Entities\CPProg\YAM\Summaries\YamLineSummary.cs" />
+    <Compile Include="Entities\CPProg\YAM\Summaries\YamPixelSummary.cs" />
+    <Compile Include="Entities\CPProg\YAM\YamAd.cs" />
+    <Compile Include="Entities\CPProg\YAM\YamCampaign.cs" />
+    <Compile Include="Entities\CPProg\YAM\YamLine.cs" />
+    <Compile Include="Entities\CPProg\YAM\YamPixel.cs" />
+    <Compile Include="Entities\CPProg\YAM\YamCreative.cs" />
     <Compile Include="Entities\CPProg\Facebook\Daily\FbDailySummary.cs" />
     <Compile Include="Entities\CPProg\Facebook\FbBaseSummary.cs" />
     <Compile Include="Entities\CPProg\Facebook\FbEntity.cs" />
@@ -138,6 +151,10 @@
     <Compile Include="MigrationsTD\201905160922056_Mig_DbmCreativeExpansion.cs" />
     <Compile Include="MigrationsTD\201905160922056_Mig_DbmCreativeExpansion.Designer.cs">
       <DependentUpon>201905160922056_Mig_DbmCreativeExpansion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\201905161007112_Mig_YamTables.cs" />
+    <Compile Include="MigrationsTD\201905161007112_Mig_YamTables.Designer.cs">
+      <DependentUpon>201905161007112_Mig_YamTables.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201904252123496_Mig_EventConv_TransactionId.cs" />
     <Compile Include="Migrations\201904252123496_Mig_EventConv_TransactionId.Designer.cs">
@@ -1080,6 +1097,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201905160922056_Mig_DbmCreativeExpansion.resx">
       <DependentUpon>201905160922056_Mig_DbmCreativeExpansion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201905161007112_Mig_YamTables.resx">
+      <DependentUpon>201905161007112_Mig_YamTables.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

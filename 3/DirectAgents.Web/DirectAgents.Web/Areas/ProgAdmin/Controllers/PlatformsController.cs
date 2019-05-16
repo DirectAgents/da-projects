@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using CakeExtracter.Commands;
+using CakeExtracter.Commands.DA;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Entities.CPProg;
 
@@ -89,7 +90,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             else if (platform.Code == Platform.Code_FB)
                 DASynchFacebookStats.RunStatic(startDate: start);
             else if (platform.Code == Platform.Code_YAM)
-                DASynchYAMStats.RunStatic(startDate: start);
+                DaSynchYamStats.RunStatic(startDate: start);
 
             return RedirectToAction("Maintenance", new { id = id });
         }

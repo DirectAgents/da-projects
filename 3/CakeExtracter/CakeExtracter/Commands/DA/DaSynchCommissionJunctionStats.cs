@@ -194,10 +194,6 @@ namespace CakeExtracter.Commands.DA
             command.AccountId = exception.AccountId;
         }
 
-        private void UpdateCommandParameters(DaSynchCommissionJunctionStats command, Exception exception)
-        {
-        }
-
         private List<CommandWithSchedule> GetUniqueBroadAccountCommands(IEnumerable<CommandWithSchedule> commandsWithSchedule)
         {
             var accountCommands = new List<Tuple<DaSynchCommissionJunctionStats, DateRange, CommandWithSchedule>>();
