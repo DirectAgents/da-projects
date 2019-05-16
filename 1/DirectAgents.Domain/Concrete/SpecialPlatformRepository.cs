@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Contexts;
-using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.SpecialPlatformProviders.Contracts;
+using DirectAgents.Domain.SpecialPlatformsDataProviders.Models;
 
 namespace DirectAgents.Domain.Concrete
 {
@@ -21,7 +21,7 @@ namespace DirectAgents.Domain.Concrete
             this.SpecialPlatformProviders = specialPlatformProviders;
         }
 
-        public IEnumerable<SpecialPlatformSummary> GetSpecialPlatformStats(string platformCode)
+        public IEnumerable<SpecialPlatformLatestsSummary> GetSpecialPlatformStats(string platformCode)
         {
             if (this.SpecialPlatformProviders.All(job => job.PlatformCode != platformCode))
             {
@@ -36,9 +36,9 @@ namespace DirectAgents.Domain.Concrete
             context.SaveChanges();
         }
         
-        private IEnumerable<SpecialPlatformSummary> GetAllSummaries(IEnumerable<SpecialPlatformProvider> providers)
+        private IEnumerable<SpecialPlatformLatestsSummary> GetAllSummaries(IEnumerable<SpecialPlatformProvider> providers)
         {
-            var allSummaries = new List<SpecialPlatformSummary>();
+            var allSummaries = new List<SpecialPlatformLatestsSummary>();
             foreach (var provider in providers)
             {
                 allSummaries.AddRange(provider.GetDatesRangeByAccounts(context));

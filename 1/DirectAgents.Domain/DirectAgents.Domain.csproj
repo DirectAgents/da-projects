@@ -93,6 +93,7 @@
     <Compile Include="Abstract\IDepartmentRepository.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SpecialPlatformsDataProviders\Facebook\IFacebookWebPortalDataService.cs" />
     <Compile Include="Abstract\IMainRepository.cs" />
     <Compile Include="Abstract\IPlatformAccountRepository.cs" />
     <Compile Include="Abstract\IRevTrackRepository.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="Concrete\CPSearchRepository.cs" />
     <Compile Include="Concrete\DepartmentRepository.cs" />
     <Compile Include="Concrete\Extensions.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\Facebook\FacebookWebPortalDataService.cs" />
     <Compile Include="Concrete\MainRepository.cs" />
     <Compile Include="Concrete\PlatformAccountRepository.cs" />
     <Compile Include="Concrete\RevTrackRepository.cs" />
@@ -141,11 +143,15 @@
     <Compile Include="Migrations\201904252123496_Mig_EventConv_TransactionId.Designer.cs">
       <DependentUpon>201904252123496_Mig_EventConv_TransactionId.cs</DependentUpon>
     </Compile>
-    <Compile Include="SpecialPlatformProviders\Implementation\CommissionJunctionProvider.cs" />
-    <Compile Include="SpecialPlatformProviders\Implementation\DspProvider.cs" />
-    <Compile Include="SpecialPlatformProviders\Implementation\KochavaProvider.cs" />
-    <Compile Include="SpecialPlatformProviders\Contracts\SpecialPlatformProvider.cs" />
-    <Compile Include="SpecialPlatformProviders\Implementation\VcdProvider.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\CommissiobJunction\CommissionJunctionProvider.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\DSP\DspProvider.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\Facebook\Models\FacebookAccountActionsTotals.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\Facebook\Models\FacebookActionsTotals.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\Facebook\Models\FacebookTotalsInfo.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\Facebook\Models\FacebookLatestsInfo.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\Kochava\KochavaProvider.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\Common\SpecialPlatformProvider.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\VCD\VcdProvider.cs" />
     <Compile Include="Concrete\SuperRepository.cs" />
     <Compile Include="Concrete\TDRepository.cs" />
     <Compile Include="Contexts\ABContext.cs" />
@@ -160,7 +166,7 @@
     <Compile Include="DTO\ProgClientStats.cs" />
     <Compile Include="DTO\ProgMediaStat.cs" />
     <Compile Include="DTO\RTLineItem.cs" />
-    <Compile Include="DTO\SpecialPlatformSummary.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\Models\SpecialPlatformLatestsSummary.cs" />
     <Compile Include="DTO\TDCampStats.cs" />
     <Compile Include="DTO\TDLineItem.cs" />
     <Compile Include="DTO\TDStat.cs" />

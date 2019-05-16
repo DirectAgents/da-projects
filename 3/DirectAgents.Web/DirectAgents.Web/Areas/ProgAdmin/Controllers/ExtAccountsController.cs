@@ -9,6 +9,7 @@ using CakeExtracter.Commands;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.SpecialPlatformsDataProviders.Models;
 using DirectAgents.Web.Areas.ProgAdmin.Models;
 using DirectAgents.Web.Constants;
 
@@ -186,14 +187,14 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         }
 
         private static IEnumerable<SpecialPlatformSummariesVM> GetSpecialPlatformStatsGroupedByPlatform(
-            IEnumerable<SpecialPlatformSummary> stats)
+            IEnumerable<SpecialPlatformLatestsSummary> stats)
         {
             var platformGroups = stats.GroupBy(s => s.Account.Platform);
             return platformGroups.Select(GetSpecialPlatformSummaries);
         }
 
         private static SpecialPlatformSummariesVM GetSpecialPlatformSummaries(
-            IGrouping<Platform, SpecialPlatformSummary> platformGroup)
+            IGrouping<Platform, SpecialPlatformLatestsSummary> platformGroup)
         {
             return new SpecialPlatformSummariesVM
             {

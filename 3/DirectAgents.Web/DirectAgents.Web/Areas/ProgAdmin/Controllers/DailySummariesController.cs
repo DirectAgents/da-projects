@@ -69,6 +69,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             }
             return View(daySum);
         }
+
         [HttpPost]
         public ActionResult Edit(DailySummary daySum)
         {
