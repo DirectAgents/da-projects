@@ -22,7 +22,7 @@ namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook
         /// Initializes a new instance of the <see cref="FacebookWebPortalDataService"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
-        public FacebookWebPortalDataService(ClientPortalProgContext context, IPlatformAccountRepository accountsRepository)
+        public FacebookWebPortalDataService(ClientPortalProgContext context)
         {
             this.context = context;
         }
