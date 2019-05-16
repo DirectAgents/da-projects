@@ -63,6 +63,7 @@
     <Compile Include="JobTests\Kochava\KochavaLoaderTests.cs" />
     <Compile Include="JobTests\Yam\ExtractorTests\YamDailySummariesExtractorTests.cs" />
     <Compile Include="JobTests\Yam\Helpers\PredefinedTestObjectsStorage.cs" />
+    <Compile Include="JobTests\Yam\LoaderTests\YamDailySummariesLoaderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestsSetUp.cs" />
   </ItemGroup>

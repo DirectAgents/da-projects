@@ -42,7 +42,7 @@ namespace CakeExtracter.Tests.JobTests.Yam.ExtractorTests
         [TestCase("2019/1/1", 0, 0, 0, 0, 0.5, 0)]
         [TestCase("2017/1/1", 8, 9, 13, 17888, 5.19, 18.3122)]
         [TestCase("2019/4/1", int.MaxValue, int.MaxValue, int.MaxValue, int.MaxValue, MaxDecimal, MaxDecimal)]
-        public void YamDailyLoader_CheckCorrectItemsTransformationWithoutPixelParameter(string date, int impressions, int clicks, int conversionClicks,
+        public void YamDailyExtractor_CheckCorrectItemsTransformationWithoutPixelParameter(string date, int impressions, int clicks, int conversionClicks,
             int conversionViews, decimal conversionValue, decimal spend)
         {
             csvExtractorMock.Setup(m => m.EnumerateRows(It.IsAny<string>())).Returns(new List<YamRow>
@@ -74,7 +74,7 @@ namespace CakeExtracter.Tests.JobTests.Yam.ExtractorTests
         [TestCase("2019/1/1", 0, 0, 0, 1, 0, 0, "gv=18")]
         [TestCase("2017/1/1", 843, 9, 13, 345, 65.19, 128.3176522, "gv=18.5&&w=90")]
         [TestCase("2019/4/1", int.MaxValue, int.MaxValue, int.MaxValue, int.MaxValue, MaxDecimal, MaxDecimal, "test=2&gv=14363453,85&w=90")]
-        public void YamDailyLoader_CheckCorrectItemsTransformationWithPixelParameter(string date, int impressions, int clicks, int conversionClicks,
+        public void YamDailyExtractor_CheckCorrectItemsTransformationWithPixelParameter(string date, int impressions, int clicks, int conversionClicks,
             int conversionViews, decimal conversionValue, decimal spend, string pixelParameter)
         {
             csvExtractorMock.Setup(m => m.EnumerateRows(It.IsAny<string>())).Returns(new List<YamRow>
@@ -107,7 +107,7 @@ namespace CakeExtracter.Tests.JobTests.Yam.ExtractorTests
         [TestCase(4, "2019/1/1", 0, 0, 0, 0, 0.1, 0, "gv=0")]
         [TestCase(1000, "2019/1/1", 0, 0, 0, 1, 0, 0, "test=2&gv=14363453,85&w=90")]
         [TestCase(200, "2017/1/1", 843, 9, 13, 345, 65.19, 128.3176522, "gv=18.5&&w=90")]
-        public void YamDailyLoader_CheckItemsGrouping(int repeatingNum, string date, int impressions, int clicks, int conversionClicks,
+        public void YamDailyExtractor_CheckItemsGrouping(int repeatingNum, string date, int impressions, int clicks, int conversionClicks,
             int conversionViews, decimal conversionValue, decimal spend, string pixelParameter)
         {
             var realDate = DateTime.Parse(date);
@@ -133,7 +133,7 @@ namespace CakeExtracter.Tests.JobTests.Yam.ExtractorTests
         [Test(Description = "Checks correct items transformation, empty items should be not returned.")]
         [TestCase(0, 0, 0, 0, 0, 0, "gv=0")]
         [TestCase(0, 0, 0, 0, 0, 0, "gv=18")]
-        public void YamDailyLoader_CheckEmptyItemsNotReturning(int impressions, int clicks, int conversionClicks,
+        public void YamDailyExtractor_CheckEmptyItemsNotReturning(int impressions, int clicks, int conversionClicks,
             int conversionViews, decimal conversionValue, decimal spend, string pixelParameter)
         {
             csvExtractorMock.Setup(m => m.EnumerateRows(It.IsAny<string>())).Returns(new List<YamRow>

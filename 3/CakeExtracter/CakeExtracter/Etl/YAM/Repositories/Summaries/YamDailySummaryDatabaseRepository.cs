@@ -4,7 +4,7 @@ using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
 
 namespace CakeExtracter.Etl.YAM.Repositories.Summaries
 {
-    internal class YamDailySummaryDatabaseRepository : BaseDatabaseRepository<YamDailySummary, ClientPortalProgContext>
+    public class YamDailySummaryDatabaseRepository : BaseDatabaseRepository<YamDailySummary, ClientPortalProgContext>
     {
         private static readonly object RequestLocker = new object();
 

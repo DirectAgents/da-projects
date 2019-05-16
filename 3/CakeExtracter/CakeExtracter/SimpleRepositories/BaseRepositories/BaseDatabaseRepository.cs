@@ -14,7 +14,7 @@ namespace CakeExtracter.SimpleRepositories.BaseRepositories
     /// </summary>
     /// <typeparam name="T">The type of repository entity.</typeparam>
     /// <typeparam name="TContext">The context of repository.</typeparam>
-    internal abstract class BaseDatabaseRepository<T, TContext> : IBaseRepository<T> 
+    public abstract class BaseDatabaseRepository<T, TContext> : IBaseRepository<T> 
         where T: class
         where TContext : DbContext, new()
     {
@@ -32,6 +32,20 @@ namespace CakeExtracter.SimpleRepositories.BaseRepositories
         /// <param name="item">The entity of type for which the repository is used.</param>
         /// <returns>The set of keys.</returns>
         public abstract object[] GetKeys(T item);
+
+        /// <inheritdoc />
+        public virtual bool MergeItems(IEnumerable<T> itemsToMerge)
+        {
+            return MergeItems(itemsToMerge, null);
+        }
+
+        /// <inheritdoc />
+        public virtual bool MergeItems(IEnumerable<T> itemsToMerge, Action<EntityBulkOperation<T>> entityBulkOptionsAction)
+        {
+            return SafeContextWrapper.TryMakeTransactionWithLock<TContext>(
+                dbContext => MergeItems(dbContext, itemsToMerge, entityBulkOptionsAction), Locker,
+                $"Merging {typeof(T).Name} database items");
+        }
 
         /// <inheritdoc />
         public T GetItem(int id)
@@ -86,18 +100,6 @@ namespace CakeExtracter.SimpleRepositories.BaseRepositories
         {
             SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => UpdateItems(dbContext, itemsToUpdate), Locker,
                 $"Updating {typeof(T).Name} database items");
-        }
-
-        public bool MergeItems(IEnumerable<T> itemsToMerge)
-        {
-            return MergeItems(itemsToMerge, null);
-        }
-
-        public bool MergeItems(IEnumerable<T> itemsToMerge, Action<EntityBulkOperation<T>> entityBulkOptionsAction)
-        {
-            return SafeContextWrapper.TryMakeTransactionWithLock<TContext>(
-                dbContext => MergeItems(dbContext, itemsToMerge, entityBulkOptionsAction), Locker,
-                $"Merging {typeof(T).Name} database items");
         }
 
         private T GetItem(TContext dbContext, params object[] keys)
