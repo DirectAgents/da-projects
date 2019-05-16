@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CakeExtracter.Helpers;
-using DirectAgents.Domain.Contexts;
+using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.CPProg.YAM;
 using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
@@ -10,53 +9,56 @@ using Z.EntityFramework.Extensions;
 
 namespace CakeExtracter.Etl.YAM.Loaders
 {
-    internal class BaseYamSummaryLoader
+    public abstract class BaseYamSummaryLoader<TEntity, TSummary> : Loader<TSummary>
+        where TEntity : BaseYamEntity
+        where TSummary : BaseYamSummary
     {
-        private readonly int accountId;
+        private readonly IBaseRepository<TEntity> entityRepository;
+        private readonly IBaseRepository<TSummary> summaryRepository;
 
-        public BaseYamSummaryLoader(int accountId)
+        protected BaseYamSummaryLoader(int accountId, IBaseRepository<TEntity> entityRepository,
+            IBaseRepository<TSummary> summaryRepository) : base(accountId)
         {
-            this.accountId = accountId;
+            this.entityRepository = entityRepository;
+            this.summaryRepository = summaryRepository;
         }
 
-        public bool MergeDependentEntitiesWithExisted<TEntity>(IEnumerable<TEntity> items, MergeHelper mergeHelper,
-            Action<TEntity> setParentsAction)
-            where TEntity : BaseYamEntity
+        protected abstract void SetEntityParents(TEntity entity);
+
+        protected abstract void SetSummaryParents(TSummary summary);
+
+        public bool MergeDependentEntitiesWithExisted(IEnumerable<TEntity> items)
         {
-            return MergeDependentEntitiesWithExisted(items, mergeHelper, setParentsAction, options =>
+            return MergeDependentEntitiesWithExisted(items, options =>
             {
                 options.ColumnPrimaryKeyExpression = x => x.ExternalId;
             });
         }
 
-        public bool MergeDependentEntitiesWithExisted<TEntity>(IEnumerable<TEntity> items, MergeHelper mergeHelper,
-            Action<TEntity> setParentsAction, Action<EntityBulkOperation<TEntity>> entityBulkOptionsAction)
-            where TEntity : BaseYamEntity
+        public bool MergeDependentEntitiesWithExisted(IEnumerable<TEntity> items,
+            Action<EntityBulkOperation<TEntity>> entityBulkOptionsAction)
         {
-            var entities = GetUniqueEntities(items, setParentsAction);
-            var result = MergeEntities(entities, mergeHelper.Locker, entityBulkOptionsAction);
+            var entities = GetUniqueEntities(items, SetEntityParents);
+            var result = entityRepository.MergeItems(entities, entityBulkOptionsAction);
             SetEntityDatabaseIds(items, entities);
-            LogMergedEntities(entities, mergeHelper, result);
+            LogMergedEntities(items, entityRepository.EntityName);
             return result;
         }
 
-        public bool MergeSummariesWithExisted<TSummary>(IEnumerable<TSummary> items, MergeHelper mergeHelper,
-            Action<TSummary> setParentsAction)
-            where TSummary : BaseYamSummary
+        public bool MergeSummariesWithExisted(IEnumerable<TSummary> items)
         {
-            items.ForEach(setParentsAction);
-            var result = MergeSummaries(items, mergeHelper.Locker);
-            LogMergedEntities(items, mergeHelper, result);
+            items.ForEach(SetSummaryParents);
+            var result = summaryRepository.MergeItems(items);
+            LogMergedEntities(items, summaryRepository.EntityName);
             return result;
         }
 
-        private void LogMergedEntities(IEnumerable<object> items, MergeHelper mergeHelper, bool result)
+        private void LogMergedEntities(IEnumerable<object> items, string entitiesName)
         {
-            Logger.Info(accountId, $"YAM {mergeHelper.EntitiesName} were merged: {items.Count()}.");
+            Logger.Info(accountId, $"{entitiesName} were merged: {items.Count()}.");
         }
 
-        private static IEnumerable<TEntity> GetUniqueEntities<TEntity>(IEnumerable<TEntity> items, Action<TEntity> setParentsAction)
-            where TEntity : BaseYamEntity
+        private static IEnumerable<TEntity> GetUniqueEntities(IEnumerable<TEntity> items, Action<TEntity> setParentsAction)
         {
             var notNullableItems = items.Where(x => x != null).ToList();
             notNullableItems.ForEach(setParentsAction);
@@ -65,27 +67,6 @@ namespace CakeExtracter.Etl.YAM.Loaders
                 .Select(x => x.First())
                 .ToList();
             return entities;
-        }
-
-        private static bool MergeEntities<TEntity>(IEnumerable<TEntity> items, object locker,
-            Action<EntityBulkOperation<TEntity>> entityBulkOptionsAction)
-            where TEntity : BaseYamEntity
-        {
-            return SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
-                {
-                    db.BulkMerge(items, entityBulkOptionsAction);
-                },
-                locker, "BulkMerge");
-        }
-
-        private static bool MergeSummaries<TSummary>(IEnumerable<TSummary> items, object locker)
-            where TSummary : BaseYamSummary
-        {
-            return SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
-                {
-                    db.BulkMerge(items);
-                },
-                locker, "BulkMerge");
         }
 
         private static void SetEntityDatabaseIds<TEntity>(IEnumerable<TEntity> items, IEnumerable<TEntity> dbEntities)

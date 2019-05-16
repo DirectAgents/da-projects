@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using CakeExtracter.Helpers;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
+using Z.EntityFramework.Extensions;
 
 namespace CakeExtracter.SimpleRepositories.BaseRepositories
 {
@@ -17,15 +18,13 @@ namespace CakeExtracter.SimpleRepositories.BaseRepositories
         where T: class
         where TContext : DbContext, new()
     {
+        /// <inheritdoc />
+        public abstract string EntityName { get; }
+
         /// <summary>
         /// The object to lock work with entities in a database.
         /// </summary>
         protected virtual object Locker { get; set; } = new object();
-
-        /// <summary>
-        /// The string name of the entity for which the repository is used.
-        /// </summary>
-        public abstract string EntityName { get; }
 
         /// <summary>
         /// Returns database keys of the entity.
@@ -89,6 +88,18 @@ namespace CakeExtracter.SimpleRepositories.BaseRepositories
                 $"Updating {typeof(T).Name} database items");
         }
 
+        public bool MergeItems(IEnumerable<T> itemsToMerge)
+        {
+            return MergeItems(itemsToMerge, null);
+        }
+
+        public bool MergeItems(IEnumerable<T> itemsToMerge, Action<EntityBulkOperation<T>> entityBulkOptionsAction)
+        {
+            return SafeContextWrapper.TryMakeTransactionWithLock<TContext>(
+                dbContext => MergeItems(dbContext, itemsToMerge, entityBulkOptionsAction), Locker,
+                $"Merging {typeof(T).Name} database items");
+        }
+
         private T GetItem(TContext dbContext, params object[] keys)
         {
             return dbContext.Set<T>().Find(keys);
@@ -126,6 +137,19 @@ namespace CakeExtracter.SimpleRepositories.BaseRepositories
         private void UpdateItems(TContext dbContext, IEnumerable<T> itemsToUpdate)
         {
             dbContext.BulkUpdate(itemsToUpdate);
+        }
+
+        private void MergeItems(TContext dbContext, IEnumerable<T> itemsToMerge,
+            Action<EntityBulkOperation<T>> entityBulkOptionsAction)
+        {
+            if (entityBulkOptionsAction == null)
+            {
+                dbContext.BulkMerge(itemsToMerge);
+            }
+            else
+            {
+                dbContext.BulkMerge(itemsToMerge, entityBulkOptionsAction);
+            }
         }
     }
 }

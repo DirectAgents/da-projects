@@ -1,28 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.CPProg.YAM;
 using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
 
 namespace CakeExtracter.Etl.YAM.Loaders
 {
-    internal class YamPixelSummaryLoader : Loader<YamPixelSummary>
+    internal class YamPixelSummaryLoader : BaseYamSummaryLoader<YamPixel, YamPixelSummary>
     {
-        private static readonly MergeHelper PixelMergeHelper = new MergeHelper
+        public YamPixelSummaryLoader(int accountId, IBaseRepository<YamPixel> entityRepository,
+            IBaseRepository<YamPixelSummary> summaryRepository)
+            : base(accountId, entityRepository, summaryRepository)
         {
-            EntitiesName = "Pixel",
-            Locker = new object()
-        };
-        private static readonly MergeHelper PixelSummariesMergeHelper = new MergeHelper
-        {
-            EntitiesName = "Pixel Summaries",
-            Locker = new object()
-        };
-
-        private readonly BaseYamSummaryLoader baseLoader;
-
-        public YamPixelSummaryLoader(int accountId = -1) : base(accountId)
-        {
-            baseLoader = new BaseYamSummaryLoader(accountId);
         }
 
         public bool MergeItemsWithExisted(List<YamPixelSummary> items)
@@ -31,7 +20,7 @@ namespace CakeExtracter.Etl.YAM.Loaders
             var result = MergeDependentPixels(entities);
             if (result)
             {
-                result = baseLoader.MergeSummariesWithExisted(items, PixelSummariesMergeHelper, x => x.EntityId = x.Pixel.Id);
+                result = MergeSummariesWithExisted(items);
             }
 
             return result;
@@ -39,8 +28,7 @@ namespace CakeExtracter.Etl.YAM.Loaders
 
         public bool MergeDependentPixels(List<YamPixel> items)
         {
-            return baseLoader.MergeDependentEntitiesWithExisted(items, PixelMergeHelper,
-                pixel => pixel.AccountId = accountId,
+            return MergeDependentEntitiesWithExisted(items,
                 options => { options.ColumnPrimaryKeyExpression = x => new {x.AccountId, x.ExternalId}; });
         }
 
@@ -49,6 +37,16 @@ namespace CakeExtracter.Etl.YAM.Loaders
             Logger.Info(accountId, "Loading {0} YamPixelSummaries..", items.Count);
             var result = MergeItemsWithExisted(items);
             return result ? items.Count : 0;
+        }
+
+        protected override void SetEntityParents(YamPixel entity)
+        {
+            entity.AccountId = accountId;
+        }
+
+        protected override void SetSummaryParents(YamPixelSummary summary)
+        {
+            summary.EntityId = summary.Pixel.Id;
         }
     }
 }

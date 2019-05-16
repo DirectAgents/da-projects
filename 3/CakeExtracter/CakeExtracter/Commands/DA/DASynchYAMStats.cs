@@ -14,6 +14,8 @@ using CakeExtracter.Etl.YAM.CommonClassesExtensions;
 using CakeExtracter.Etl.YAM.Extractors.ApiExtractors;
 using CakeExtracter.Etl.YAM.Extractors.CsvExtractors;
 using CakeExtracter.Etl.YAM.Loaders;
+using CakeExtracter.Etl.YAM.Repositories;
+using CakeExtracter.Etl.YAM.Repositories.Summaries;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
@@ -191,7 +193,7 @@ namespace CakeExtracter.Commands.DA
         {
             var csvExtractor = new YamCsvExtractor(account);
             var extractor = new YamDailySummaryExtractor(csvExtractor, yamUtility, dateRange, account, usePixelParameters);
-            var loader = new YamDailySummaryLoader(account.Id);
+            var loader = CreateDailyLoader(account);
             DoEtl<YamDailySummary, YamDailySummaryExtractor, YamDailySummaryLoader>(extractor, loader, account);
         }
 
@@ -199,7 +201,7 @@ namespace CakeExtracter.Commands.DA
         {
             var csvExtractor = new YamCsvExtractor(account);
             var extractor = new YamCampaignSummaryExtractor(csvExtractor, yamUtility, dateRange, account, usePixelParameters);
-            var loader = new YamCampaignSummaryLoader(account.Id);
+            var loader = CreateCampaignLoader(account);
             DoEtl<YamCampaignSummary, YamCampaignSummaryExtractor, YamCampaignSummaryLoader>(extractor, loader, account);
         }
 
@@ -207,7 +209,7 @@ namespace CakeExtracter.Commands.DA
         {
             var csvExtractor = new YamCsvExtractor(account);
             var extractor = new YamLineSummaryExtractor(csvExtractor, yamUtility, dateRange, account, usePixelParameters);
-            var loader = new YamLineSummaryLoader(account.Id);
+            var loader = CreateLineLoader(account);
             DoEtl<YamLineSummary, YamLineSummaryExtractor, YamLineSummaryLoader>(extractor, loader, account);
         }
 
@@ -215,7 +217,7 @@ namespace CakeExtracter.Commands.DA
         {
             var csvExtractor = new YamCsvExtractor(account);
             var extractor = new YamCreativeSummaryExtractor(csvExtractor, yamUtility, dateRange, account, usePixelParameters);
-            var loader = new YamCreativeSummaryLoader(account.Id);
+            var loader = CreateCreativeLoader(account);
             DoEtl<YamCreativeSummary, YamCreativeSummaryExtractor, YamCreativeSummaryLoader>(extractor, loader, account);
         }
 
@@ -223,7 +225,7 @@ namespace CakeExtracter.Commands.DA
         {
             var csvExtractor = new YamCsvExtractor(account);
             var extractor = new YamAdSummaryExtractor(csvExtractor, yamUtility, dateRange, account, usePixelParameters);
-            var loader = new YamAdSummaryLoader(account.Id);
+            var loader = CreateAdLoader(account);
             DoEtl<YamAdSummary, YamAdSummaryExtractor, YamAdSummaryLoader>(extractor, loader, account);
         }
 
@@ -231,8 +233,52 @@ namespace CakeExtracter.Commands.DA
         {
             var csvExtractor = new YamCsvExtractor(account);
             var extractor = new YamPixelSummaryExtractor(csvExtractor, yamUtility, dateRange, account, usePixelParameters);
-            var loader = new YamPixelSummaryLoader(account.Id);
+            var loader = CreatePixelLoader(account);
             DoEtl<YamPixelSummary, YamPixelSummaryExtractor, YamPixelSummaryLoader>(extractor, loader, account);
+        }
+
+        private YamDailySummaryLoader CreateDailyLoader(ExtAccount account)
+        {
+            var summaryRepository = new YamDailySummaryDatabaseRepository();
+            return new YamDailySummaryLoader(account.Id, summaryRepository);
+        }
+
+        private YamCampaignSummaryLoader CreateCampaignLoader(ExtAccount account)
+        {
+            var entityRepository = new YamCampaignDatabaseRepository();
+            var summaryRepository = new YamCampaignSummaryDatabaseRepository();
+            return new YamCampaignSummaryLoader(account.Id, entityRepository, summaryRepository);
+        }
+
+        private YamLineSummaryLoader CreateLineLoader(ExtAccount account)
+        {
+            var entityRepository = new YamLineDatabaseRepository();
+            var summaryRepository = new YamLineSummaryDatabaseRepository();
+            var campaignLoader = CreateCampaignLoader(account);
+            return new YamLineSummaryLoader(account.Id, entityRepository, summaryRepository, campaignLoader);
+        }
+
+        private YamCreativeSummaryLoader CreateCreativeLoader(ExtAccount account)
+        {
+            var entityRepository = new YamCreativeDatabaseRepository();
+            var summaryRepository = new YamCreativeSummaryDatabaseRepository();
+            return new YamCreativeSummaryLoader(account.Id, entityRepository, summaryRepository);
+        }
+
+        private YamAdSummaryLoader CreateAdLoader(ExtAccount account)
+        {
+            var entityRepository = new YamAdDatabaseRepository();
+            var summaryRepository = new YamAdSummaryDatabaseRepository();
+            var lineLoader = CreateLineLoader(account);
+            var creativeLoader = CreateCreativeLoader(account);
+            return new YamAdSummaryLoader(account.Id, entityRepository, summaryRepository, lineLoader, creativeLoader);
+        }
+
+        private YamPixelSummaryLoader CreatePixelLoader(ExtAccount account)
+        {
+            var entityRepository = new YamPixelDatabaseRepository();
+            var summaryRepository = new YamPixelSummaryDatabaseRepository();
+            return new YamPixelSummaryLoader(account.Id, entityRepository, summaryRepository);
         }
 
         private void DoEtl<TSummary, TExtractor, TLoader>(TExtractor extractor, TLoader loader, ExtAccount account)

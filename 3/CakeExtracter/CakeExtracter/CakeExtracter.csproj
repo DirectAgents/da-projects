@@ -769,7 +769,6 @@
     <Compile Include="Etl\YAM\Extractors\CsvExtractors\RowMaps\YamRowMap.cs" />
     <Compile Include="Etl\YAM\CommonClassesExtensions\YamStatsType.cs" />
     <Compile Include="Etl\YAM\Loaders\BaseYamSummaryLoader.cs" />
-    <Compile Include="Etl\YAM\Loaders\MergeHelper.cs" />
     <Compile Include="Etl\YAM\Loaders\YamAdSummaryLoader.cs" />
     <Compile Include="Etl\YAM\Loaders\YamCampaignSummaryLoader.cs" />
     <Compile Include="Etl\YAM\Loaders\YamCreativeSummaryLoader.cs" />
@@ -781,6 +780,17 @@
     <Compile Include="Etl\YAM\Outdated\YamConValCsvExtracter.cs" />
     <Compile Include="Etl\YAM\Outdated\YAMConValExtracters.cs" />
     <Compile Include="Etl\YAM\Outdated\YAMExtracters.cs" />
+    <Compile Include="Etl\YAM\Repositories\Summaries\YamAdSummaryDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\Summaries\YamCampaignSummaryDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\Summaries\YamCreativeSummaryDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\Summaries\YamDailySummaryDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\Summaries\YamLineSummaryDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\Summaries\YamPixelSummaryDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\YamAdDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\YamCampaignDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\YamCreativeDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\YamLineDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\YamPixelDatabaseRepository.cs" />
     <Compile Include="Helpers\CommandHelper.cs" />
     <Compile Include="Helpers\ConfigurationHelper.cs" />
     <Compile Include="Helpers\EntityIdStorage.cs" />

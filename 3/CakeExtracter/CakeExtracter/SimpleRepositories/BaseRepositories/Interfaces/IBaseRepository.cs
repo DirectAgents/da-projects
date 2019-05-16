@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Z.EntityFramework.Extensions;
 
 namespace CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces
 {
@@ -8,7 +9,13 @@ namespace CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces
     /// </summary>
     /// <typeparam name="T">The type of repository entity.</typeparam>
     public interface IBaseRepository<T>
+        where T : class
     {
+        /// <summary>
+        /// The string name of the entity for which the repository is used.
+        /// </summary>
+        string EntityName { get; }
+
         /// <summary>
         /// Receives an item by ID from the repository.
         /// </summary>
@@ -53,5 +60,9 @@ namespace CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces
         /// </summary>
         /// <param name="itemsToUpdate">The repository entities that was updated.</param>
         void UpdateItems(IEnumerable<T> itemsToUpdate);
+
+        bool MergeItems(IEnumerable<T> itemsToMerge);
+
+        bool MergeItems(IEnumerable<T> itemsToMerge, Action<EntityBulkOperation<T>> entityBulkOptionsAction);
     }
 }

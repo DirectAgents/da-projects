@@ -1,28 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.CPProg.YAM;
 using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
 
 namespace CakeExtracter.Etl.YAM.Loaders
 {
-    internal class YamCreativeSummaryLoader : Loader<YamCreativeSummary>
+    internal class YamCreativeSummaryLoader : BaseYamSummaryLoader<YamCreative, YamCreativeSummary>
     {
-        private static readonly MergeHelper CreativeMergeHelper = new MergeHelper
+        public YamCreativeSummaryLoader(int accountId, IBaseRepository<YamCreative> entityRepository,
+            IBaseRepository<YamCreativeSummary> summaryRepository)
+            : base(accountId, entityRepository, summaryRepository)
         {
-            EntitiesName = "Creatives",
-            Locker = new object()
-        };
-        private static readonly MergeHelper CreativeSummariesMergeHelper = new MergeHelper
-        {
-            EntitiesName = "Creative Summaries",
-            Locker = new object()
-        };
-
-        private readonly BaseYamSummaryLoader baseLoader;
-
-        public YamCreativeSummaryLoader(int accountId = -1) : base(accountId)
-        {
-            baseLoader = new BaseYamSummaryLoader(accountId);
         }
 
         public bool MergeItemsWithExisted(List<YamCreativeSummary> items)
@@ -31,8 +20,7 @@ namespace CakeExtracter.Etl.YAM.Loaders
             var result = MergeDependentCreatives(entities);
             if (result)
             {
-                result = baseLoader.MergeSummariesWithExisted(items, CreativeSummariesMergeHelper,
-                    x => x.EntityId = x.Creative.Id);
+                result = MergeSummariesWithExisted(items);
             }
 
             return result;
@@ -40,7 +28,7 @@ namespace CakeExtracter.Etl.YAM.Loaders
 
         public bool MergeDependentCreatives(List<YamCreative> items)
         {
-            return baseLoader.MergeDependentEntitiesWithExisted(items, CreativeMergeHelper, creative => creative.AccountId = accountId);
+            return MergeDependentEntitiesWithExisted(items);
         }
 
         protected override int Load(List<YamCreativeSummary> items)
@@ -48,6 +36,16 @@ namespace CakeExtracter.Etl.YAM.Loaders
             Logger.Info(accountId, "Loading {0} YamCreativeSummaries..", items.Count);
             var result = MergeItemsWithExisted(items);
             return result ? items.Count : 0;
+        }
+
+        protected override void SetEntityParents(YamCreative entity)
+        {
+            entity.AccountId = accountId;
+        }
+
+        protected override void SetSummaryParents(YamCreativeSummary summary)
+        {
+            summary.EntityId = summary.Creative.Id;
         }
     }
 }

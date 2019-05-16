@@ -1,28 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.CPProg.YAM;
 using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
 
 namespace CakeExtracter.Etl.YAM.Loaders
 {
-    internal class YamCampaignSummaryLoader : Loader<YamCampaignSummary>
+    internal class YamCampaignSummaryLoader : BaseYamSummaryLoader<YamCampaign, YamCampaignSummary>
     {
-        private static readonly MergeHelper CampaignMergeHelper = new MergeHelper
+        public YamCampaignSummaryLoader(int accountId, IBaseRepository<YamCampaign> entityRepository,
+            IBaseRepository<YamCampaignSummary> summaryRepository)
+            : base(accountId, entityRepository, summaryRepository)
         {
-            EntitiesName = "Campaigns",
-            Locker = new object()
-        };
-        private static readonly MergeHelper CampaignSummariesMergeHelper = new MergeHelper
-        {
-            EntitiesName = "Campaign Summaries",
-            Locker = new object()
-        };
-
-        private readonly BaseYamSummaryLoader baseLoader;
-
-        public YamCampaignSummaryLoader(int accountId = -1) : base(accountId)
-        {
-            baseLoader = new BaseYamSummaryLoader(accountId);
         }
 
         public bool MergeItemsWithExisted(List<YamCampaignSummary> items)
@@ -31,8 +20,7 @@ namespace CakeExtracter.Etl.YAM.Loaders
             var result = MergeDependentCampaigns(entities);
             if (result)
             {
-                result = baseLoader.MergeSummariesWithExisted(items, CampaignSummariesMergeHelper,
-                    x => x.EntityId = x.Campaign.Id);
+                result = MergeSummariesWithExisted(items);
             }
 
             return result;
@@ -40,7 +28,7 @@ namespace CakeExtracter.Etl.YAM.Loaders
 
         public bool MergeDependentCampaigns(List<YamCampaign> items)
         {
-            return baseLoader.MergeDependentEntitiesWithExisted(items, CampaignMergeHelper, campaign => campaign.AccountId = accountId);
+            return MergeDependentEntitiesWithExisted(items);
         }
 
         protected override int Load(List<YamCampaignSummary> items)
@@ -48,6 +36,16 @@ namespace CakeExtracter.Etl.YAM.Loaders
             Logger.Info(accountId, "Loading {0} YamCampaignSummaries..", items.Count);
             var result = MergeItemsWithExisted(items);
             return result ? items.Count : 0;
+        }
+
+        protected override void SetEntityParents(YamCampaign entity)
+        {
+            entity.AccountId = accountId;
+        }
+
+        protected override void SetSummaryParents(YamCampaignSummary summary)
+        {
+            summary.EntityId = summary.Campaign.Id;
         }
     }
 }

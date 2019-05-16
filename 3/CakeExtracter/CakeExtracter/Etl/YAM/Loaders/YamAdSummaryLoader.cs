@@ -1,32 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.CPProg.YAM;
 using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
 
 namespace CakeExtracter.Etl.YAM.Loaders
 {
-    internal class YamAdSummaryLoader : Loader<YamAdSummary>
+    internal class YamAdSummaryLoader : BaseYamSummaryLoader<YamAd, YamAdSummary>
     {
-        private static readonly MergeHelper AdMergeHelper = new MergeHelper
-        {
-            EntitiesName = "Ads",
-            Locker = new object()
-        };
-        private static readonly MergeHelper AdSummariesMergeHelper = new MergeHelper
-        {
-            EntitiesName = "Ad Summaries",
-            Locker = new object()
-        };
-
-        private readonly BaseYamSummaryLoader baseLoader;
         private readonly YamLineSummaryLoader lineLoader;
         private readonly YamCreativeSummaryLoader creativeLoader;
 
-        public YamAdSummaryLoader(int accountId = -1) : base(accountId)
+        public YamAdSummaryLoader(int accountId, IBaseRepository<YamAd> entityRepository,
+            IBaseRepository<YamAdSummary> summaryRepository, YamLineSummaryLoader lineLoader, YamCreativeSummaryLoader creativeLoader)
+            : base(accountId, entityRepository, summaryRepository)
         {
-            baseLoader = new BaseYamSummaryLoader(accountId);
-            lineLoader = new YamLineSummaryLoader(accountId);
-            creativeLoader = new YamCreativeSummaryLoader(accountId);
+            this.lineLoader = lineLoader;
+            this.creativeLoader = creativeLoader;
         }
 
         public bool MergeItemsWithExisted(List<YamAdSummary> items)
@@ -35,7 +25,7 @@ namespace CakeExtracter.Etl.YAM.Loaders
             var result = MergeDependentAds(entities);
             if (result)
             {
-                result = baseLoader.MergeSummariesWithExisted(items, AdSummariesMergeHelper, x => x.EntityId = x.Ad.Id);
+                result = MergeSummariesWithExisted(items);
             }
 
             return result;
@@ -57,11 +47,7 @@ namespace CakeExtracter.Etl.YAM.Loaders
                 return false;
             }
 
-            return baseLoader.MergeDependentEntitiesWithExisted(items, AdMergeHelper, ad =>
-            {
-                ad.LineId = ad.Line.Id;
-                ad.CreativeId = ad.Creative.Id;
-            });
+            return MergeDependentEntitiesWithExisted(items);
         }
 
         protected override int Load(List<YamAdSummary> items)
@@ -69,6 +55,17 @@ namespace CakeExtracter.Etl.YAM.Loaders
             Logger.Info(accountId, "Loading {0} YamAdSummaries..", items.Count);
             var result = MergeItemsWithExisted(items);
             return result ? items.Count : 0;
+        }
+
+        protected override void SetEntityParents(YamAd entity)
+        {
+            entity.LineId = entity.Line.Id;
+            entity.CreativeId = entity.Creative.Id;
+        }
+
+        protected override void SetSummaryParents(YamAdSummary summary)
+        {
+            summary.EntityId = summary.Ad.Id;
         }
     }
 }

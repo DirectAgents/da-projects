@@ -1,30 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.CPProg.YAM;
 using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
 
 namespace CakeExtracter.Etl.YAM.Loaders
 {
-    internal class YamLineSummaryLoader : Loader<YamLineSummary>
+    internal class YamLineSummaryLoader : BaseYamSummaryLoader<YamLine, YamLineSummary>
     {
-        private static readonly MergeHelper LineMergeHelper = new MergeHelper
-        {
-            EntitiesName = "Lines",
-            Locker = new object()
-        };
-        private static readonly MergeHelper LineSummariesMergeHelper = new MergeHelper
-        {
-            EntitiesName = "Line Summaries",
-            Locker = new object()
-        };
-
-        private readonly BaseYamSummaryLoader baseLoader;
         private readonly YamCampaignSummaryLoader campaignLoader;
 
-        public YamLineSummaryLoader(int accountId = -1) : base(accountId)
+        public YamLineSummaryLoader(int accountId, IBaseRepository<YamLine> entityRepository,
+            IBaseRepository<YamLineSummary> summaryRepository, YamCampaignSummaryLoader campaignLoader)
+            : base(accountId, entityRepository, summaryRepository)
         {
-            baseLoader = new BaseYamSummaryLoader(accountId);
-            campaignLoader = new YamCampaignSummaryLoader(accountId);
+            this.campaignLoader = campaignLoader;
         }
 
         public bool MergeItemsWithExisted(List<YamLineSummary> items)
@@ -33,7 +23,7 @@ namespace CakeExtracter.Etl.YAM.Loaders
             var result = MergeDependentLines(entities);
             if (result)
             {
-                result = baseLoader.MergeSummariesWithExisted(items, LineSummariesMergeHelper, x => x.EntityId = x.Line.Id);
+                result = MergeSummariesWithExisted(items);
             }
 
             return result;
@@ -45,8 +35,7 @@ namespace CakeExtracter.Etl.YAM.Loaders
             var result = campaignLoader.MergeDependentCampaigns(campaigns);
             if (result)
             {
-                result = baseLoader.MergeDependentEntitiesWithExisted(items, LineMergeHelper,
-                    line => line.CampaignId = line.Campaign.Id);
+                result = MergeDependentEntitiesWithExisted(items);
             }
 
             return result;
@@ -57,6 +46,16 @@ namespace CakeExtracter.Etl.YAM.Loaders
             Logger.Info(accountId, "Loading {0} YamLineSummaries..", items.Count);
             var result = MergeItemsWithExisted(items);
             return result ? items.Count : 0;
+        }
+
+        protected override void SetEntityParents(YamLine entity)
+        {
+            entity.CampaignId = entity.Campaign.Id;
+        }
+
+        protected override void SetSummaryParents(YamLineSummary summary)
+        {
+            summary.EntityId = summary.Line.Id;
         }
     }
 }
