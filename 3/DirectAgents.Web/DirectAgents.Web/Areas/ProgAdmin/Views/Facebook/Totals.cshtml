@@ -22,23 +22,23 @@
             <th colspan="1">CostTotal</th>
         </tr>
         <tr>
-            <th style="text-align:right">ID</th>
+            <th>ID</th>
             <th colspan="2">External&nbsp;Account&nbsp;&nbsp;&nbsp;</th>
         </tr>
         @foreach (var accountSummary in Model.TotalsInfo)
         {
             <tr>
-                <td style="text-align: right">@accountSummary.Account.Id</td>
+                <td>@accountSummary.Account.Id</td>
                 <td>@accountSummary.Account.Name</td>
                 <td style="text-align: center">@(accountSummary.Account.Disabled ? "X" : "")</td>
-                <td style="text-align: right">@accountSummary.ImpressionsTotal</td>
-                <td style="text-align: right">@accountSummary.ClicksTotal</td>
-                <td style="text-align: right">@accountSummary.AllClicksTotal</td>
-                <td style="text-align: right">@accountSummary.PostClickConvTotal</td>
-                <td style="text-align: right">@accountSummary.PostViewConvTotal</td>
-                <td style="text-align: right">@accountSummary.PostClickRevTotal</td>
-                <td style="text-align: right">@accountSummary.PostViewRevTotal</td>
-                <td style="text-align: right">@accountSummary.CostTotal</td>
+                <td>@accountSummary.ImpressionsTotal</td>
+                <td>@accountSummary.ClicksTotal</td>
+                <td>@accountSummary.AllClicksTotal</td>
+                <td>@accountSummary.PostClickConvTotal</td>
+                <td>@accountSummary.PostViewConvTotal</td>
+                <td>@accountSummary.PostClickRevTotal</td>
+                <td>@accountSummary.PostViewRevTotal</td>
+                <td>@accountSummary.CostTotal</td>
             </tr>
         }
     </table>

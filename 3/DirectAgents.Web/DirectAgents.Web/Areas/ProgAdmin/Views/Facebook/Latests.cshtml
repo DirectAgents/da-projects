@@ -17,7 +17,7 @@
         <th colspan="2">AdsActions</th>
     </tr>
     <tr>
-        <th style="text-align:right">ID</th>
+        <th>ID</th>
         <th colspan="2">External&nbsp;Account&nbsp;&nbsp;&nbsp;</th>
         <th>Earliest</th>
         <th>Latest</th>
@@ -40,76 +40,76 @@
     @foreach (var accountSummary in Model.LatestsInfo)
     {
 
-    <tr>
-        <td style="text-align: right">@accountSummary.Account.Id</td>
-        <td>@accountSummary.Account.Name</td>
-        <td style="text-align: center">@(accountSummary.Account.Disabled ? "X" : "")</td>
+        <tr>
+            <td>@accountSummary.Account.Id</td>
+            <td>@accountSummary.Account.Name</td>
+            <td style="text-align: center">@(accountSummary.Account.Disabled ? "X" : "")</td>
 
-        @if (accountSummary.DailyLatestsInfo != null)
-        {
-            <td style="text-align: right">@accountSummary.DailyLatestsInfo.EarliestDate.ToShortDateString()</td>
-            <td style="@(accountSummary.DailyLatestsInfo.LatestDate >=  yesterday ? "background-color: lightgreen" : ""); text-align: right">@accountSummary.DailyLatestsInfo.LatestDate.ToShortDateString()</td>
-        }
-        else
-        {
-            <td style="text-align: right"></td>
-            <td style="text-align: right"></td>
-        }
+            @if (accountSummary.DailyLatestsInfo != null)
+            {
+                <td>@accountSummary.DailyLatestsInfo.EarliestDate.ToShortDateString()</td>
+                <td style="@(accountSummary.DailyLatestsInfo.LatestDate >=  yesterday ? "background-color: lightgreen" : "")">@accountSummary.DailyLatestsInfo.LatestDate.ToShortDateString()</td>
+                }
+                else
+                {
+                <td></td>
+                <td></td>
+                }
 
-        @if (accountSummary.CampaignLatestsInfo != null)
-        {
-            <td style="text-align: right">@accountSummary.CampaignLatestsInfo.EarliestDate.ToShortDateString()</td>
-            <td style="@(accountSummary.CampaignLatestsInfo.LatestDate >=  yesterday ? "background-color: lightgreen" : ""); text-align: right">@accountSummary.CampaignLatestsInfo.LatestDate.ToShortDateString()</td>
-        }
-        else
-        {
-            <td style="text-align: right"></td>
-            <td style="text-align: right"></td>
-        }
+                @if (accountSummary.CampaignLatestsInfo != null)
+                {
+                    <td>@accountSummary.CampaignLatestsInfo.EarliestDate.ToShortDateString()</td>
+                    <td style="@(accountSummary.CampaignLatestsInfo.LatestDate >=  yesterday ? "background-color: lightgreen" : "")">@accountSummary.CampaignLatestsInfo.LatestDate.ToShortDateString()</td>
+                }
+                else
+                {
+                    <td></td>
+                    <td></td>
+                }
 
-        @if (accountSummary.AdsetsLatestsInfo != null)
-        {
-            <td style="text-align: right">@accountSummary.AdsetsLatestsInfo.EarliestDate.ToShortDateString()</td>
-            <td style="@(accountSummary.AdsetsLatestsInfo.LatestDate >=  yesterday ? "background-color: lightgreen" : ""); text-align: right">@accountSummary.AdsetsLatestsInfo.LatestDate.ToShortDateString()</td>
-        }
-        else
-        {
-            <td style="text-align: right"></td>
-            <td style="text-align: right"></td>
-        }
+                @if (accountSummary.AdsetsLatestsInfo != null)
+                {
+                    <td>@accountSummary.AdsetsLatestsInfo.EarliestDate.ToShortDateString()</td>
+                    <td style="@(accountSummary.AdsetsLatestsInfo.LatestDate >=  yesterday ? "background-color: lightgreen" : "")">@accountSummary.AdsetsLatestsInfo.LatestDate.ToShortDateString()</td>
+                }
+                else
+                {
+                    <td></td>
+                    <td></td>
+                }
 
-        @if (accountSummary.AdsetsActionsLatestsInfo != null)
-        {
-            <td style="text-align: right">@accountSummary.AdsetsActionsLatestsInfo.EarliestDate.ToShortDateString()</td>
-            <td style="@(accountSummary.AdsetsActionsLatestsInfo.LatestDate >=  yesterday ? "background-color: lightgreen" : ""); text-align: right">@accountSummary.AdsetsActionsLatestsInfo.LatestDate.ToShortDateString()</td>
-        }
-        else
-        {
-            <td style="text-align: right"></td>
-            <td style="text-align: right"></td>
-        }
+                @if (accountSummary.AdsetsActionsLatestsInfo != null)
+                {
+                    <td>@accountSummary.AdsetsActionsLatestsInfo.EarliestDate.ToShortDateString()</td>
+                    <td style="@(accountSummary.AdsetsActionsLatestsInfo.LatestDate >=  yesterday ? "background-color: lightgreen" : "")">@accountSummary.AdsetsActionsLatestsInfo.LatestDate.ToShortDateString()</td>
+                }
+                else
+                {
+                    <td></td>
+                    <td></td>
+                }
 
-        @if (accountSummary.AdsLatestsInfo != null)
-        {
-            <td style="text-align: right">@accountSummary.AdsLatestsInfo.EarliestDate.ToShortDateString()</td>
-            <td style="@(accountSummary.AdsLatestsInfo.LatestDate >=  yesterday ? "background-color: lightgreen" : ""); text-align: right">@accountSummary.AdsLatestsInfo.LatestDate.ToShortDateString()</td>
-        }
-        else
-        {
-            <td style="text-align: right"></td>
-            <td style="text-align: right"></td>
-        }
+                @if (accountSummary.AdsLatestsInfo != null)
+                {
+                    <td>@accountSummary.AdsLatestsInfo.EarliestDate.ToShortDateString()</td>
+                    <td style="@(accountSummary.AdsLatestsInfo.LatestDate >=  yesterday ? "background-color: lightgreen" : "")">@accountSummary.AdsLatestsInfo.LatestDate.ToShortDateString()</td>
+                }
+                else
+                {
+                    <td></td>
+                    <td></td>
+                }
 
-        @if (accountSummary.AdsActionsLatestsInfo != null)
-        {
-            <td style="text-align: right">@accountSummary.AdsActionsLatestsInfo.EarliestDate.ToShortDateString()</td>
-            <td style="@(accountSummary.AdsActionsLatestsInfo.LatestDate >=  yesterday ? "background-color: lightgreen" : ""); text-align: right">@accountSummary.AdsActionsLatestsInfo.LatestDate.ToShortDateString()</td>
-        }
-        else
-        {
-            <td style="text-align: right"></td>
-            <td style="text-align: right"></td>
-        }
-    </tr>
-    }
-</table>
+                @if (accountSummary.AdsActionsLatestsInfo != null)
+                {
+                    <td>@accountSummary.AdsActionsLatestsInfo.EarliestDate.ToShortDateString()</td>
+                    <td style="@(accountSummary.AdsActionsLatestsInfo.LatestDate >=  yesterday ? "background-color: lightgreen" : "")">@accountSummary.AdsActionsLatestsInfo.LatestDate.ToShortDateString()</td>
+                }
+                else
+                {
+                    <td></td>
+                    <td></td>
+                }
+            </tr>
+            }
+        </table>
