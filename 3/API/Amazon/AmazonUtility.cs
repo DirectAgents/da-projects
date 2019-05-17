@@ -310,22 +310,6 @@ namespace Amazon
             return GetEntities<AmazonCampaign>(EntitesType.Campaigns, campaignType, null, profileId);
         }
 
-        /// For Sponsored Brands only the following attributed metrics are available:
-        /// attributedSales14d, attributedSales14dSameSKU, attributedConversions14d, attributedConversions14dSameSKU
-        public List<AmazonDailySummary> ReportCampaigns(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
-        {
-            var param = AmazonApiHelper.CreateReportParams(EntitesType.Campaigns, campaignType, date, includeCampaignName);
-            return GetReportInfoManyTimes<AmazonDailySummary>(EntitesType.Campaigns, campaignType, param, profileId);
-        }
-
-        /// For Sponsored Brands only the following attributed metrics are available:
-        /// attributedSales14d, attributedSales14dSameSKU, attributedConversions14d, attributedConversions14dSameSKU
-        public List<AmazonAdGroupSummary> ReportAdGroups(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
-        {
-            var param = AmazonApiHelper.CreateReportParams(EntitesType.AdGroups, campaignType, date, includeCampaignName);
-            return GetReportInfoManyTimes<AmazonAdGroupSummary>(EntitesType.AdGroups, campaignType, param, profileId);
-        }
-
         /// Only for Sponsored Product
         /// sku metric - is not available for vendor accounts
         public List<AmazonAdDailySummary> ReportProductAds(DateTime date, string profileId, bool includeCampaignName)
@@ -344,27 +328,11 @@ namespace Amazon
         }
 
         /// Only for Sponsored Product
-        public List<AmazonSearchTermDailySummary> ReportSearchTerms(DateTime date, string profileId, bool includeCampaignName)
-        {
-            const CampaignType campaignType = CampaignType.SponsoredProducts;
-            var param = AmazonApiHelper.CreateReportParams(EntitesType.SearchTerm, campaignType, date, includeCampaignName);
-            return GetReportInfoManyTimes<AmazonSearchTermDailySummary>(EntitesType.SearchTerm, campaignType, param, profileId);
-        }
-
-        /// Only for Sponsored Product
         public List<AmazonTargetKeywordDailySummary> ReportTargetKeywords(DateTime date, string profileId, bool includeCampaignName)
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = AmazonApiHelper.CreateReportParams(EntitesType.TargetKeywords, campaignType, date, includeCampaignName);
             return GetReportInfoManyTimes<AmazonTargetKeywordDailySummary>(EntitesType.TargetKeywords, campaignType, param, profileId);
-        }
-
-        /// Only for Sponsored Product
-        public List<AmazonTargetSearchTermDailySummary> ReportTargetSearchTerms(DateTime date, string profileId, bool includeCampaignName)
-        {
-            const CampaignType campaignType = CampaignType.SponsoredProducts;
-            var param = AmazonApiHelper.CreateReportParams(EntitesType.TargetSearchTerm, campaignType, date, includeCampaignName);
-            return GetReportInfoManyTimes<AmazonTargetSearchTermDailySummary>(EntitesType.TargetSearchTerm, campaignType, param, profileId);
         }
 
         /// Only for Sponsored Product
@@ -408,7 +376,7 @@ namespace Amazon
         }
 
         private List<TStat> GetReportInfoManyTimes<TStat>(EntitesType reportType, CampaignType campaignType, AmazonApiReportParams parameters, string profileId)
-            where TStat : AmazonDailySummary
+            where TStat : AmazonStatSummary
         {
             var reportName = GetReportName(parameters.reportDate, reportType, campaignType);
             try
@@ -444,7 +412,7 @@ namespace Amazon
 
         private List<TStat> GetReportInfo<TStat>(EntitesType reportType, CampaignType campaignType, AmazonApiReportParams parameters,
             string profileId, string reportName)
-            where TStat : AmazonDailySummary
+            where TStat : AmazonStatSummary
         {
             var submitReportResponse = SubmitReport(parameters, campaignType, reportType, profileId);
             var data = DownloadPreparedData<ReportResponseDownloadInfo, TStat>("reports", submitReportResponse.ReportId, profileId, reportName);
@@ -453,7 +421,7 @@ namespace Amazon
         }
 
         private void SetCampaignType<TStat>(List<TStat> summaries, CampaignType campaignType)
-            where TStat : AmazonDailySummary
+            where TStat : AmazonStatSummary
         {
             var campaignTypeName = AmazonApiHelper.GetCampaignTypeName(campaignType);
             summaries.ForEach(x => x.CampaignType = campaignTypeName);

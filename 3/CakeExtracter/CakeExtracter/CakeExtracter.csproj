@@ -558,13 +558,9 @@
     <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformStrategySummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformTDadSummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiAdExtractor.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiAdSetExtractor.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiCampaignSummaryExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonCampaignMetadataExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonDatabaseKeywordsToDailySummaryExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiDailySummaryExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiKeywordExtractor.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiSearchTermExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\BaseAmazonExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonTransformers.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformTransformers.cs" />
@@ -724,12 +720,10 @@
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollCampaignSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollConvLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonAdSummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonAdSetSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonCampaignSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonKeywordSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonPdaDailySummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonSearchTermSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonSummaryMetricLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AnalyticTablesSync\AmazonAmsAnalyticSyncher.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\BaseAmazonLevelLoader.cs" />

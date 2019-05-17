@@ -21,8 +21,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         private readonly AmazonCampaignMetadataExtractor campaignMetadataExtractor;
 
         //NOTE: We can only get ad stats for SponsoredProduct campaigns, for these reasons:
-        public AmazonApiAdExtrator(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, bool clearBeforeLoad, string campaignFilter = null, string campaignFilterOut = null)
-            : base(amazonUtility, dateRange, account, clearBeforeLoad, campaignFilter, campaignFilterOut)
+        public AmazonApiAdExtrator(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, string campaignFilter = null, string campaignFilterOut = null)
+            : base(amazonUtility, dateRange, account, campaignFilter, campaignFilterOut)
         {
             campaignMetadataExtractor = new AmazonCampaignMetadataExtractor(amazonUtility);
         }
@@ -55,10 +55,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
                 var asinSums = ExtractAsinSummaries(date);
                 items = TransformSummaries(productAdSums, asinSums, date, campaignInfo);
             }, accountId, AmazonJobLevels.creative, AmazonJobOperations.reportExtracting);
-            if (ClearBeforeLoad)
-            {
-                RemoveOldData(date);
-            }
+            RemoveOldData(date);
             Add(items);
         }
 

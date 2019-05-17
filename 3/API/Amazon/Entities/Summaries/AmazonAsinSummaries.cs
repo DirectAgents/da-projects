@@ -1,9 +1,7 @@
 ﻿namespace Amazon.Entities.Summaries
 {
-    public class AmazonAsinSummaries : AmazonDailySummary
+    public class AmazonAsinSummaries : AmazonStatSummary
     {
-        public string AdGroupId { get; set; }
-        public string AdGroupName { get; set; }
         public string KeywordId { get; set; }
         public string KeywordText { get; set; }
         public string Asin { get; set; }

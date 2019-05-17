@@ -32,8 +32,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         /// <param name="clearBeforeLoad">Parameter value. Indicates whether clean before update needed.</param>
         /// <param name="campaignFilter">Campaign filter value.</param>
         /// <param name="campaignFilterOut">Campaign filter value out.</param>
-        public AmazonApiKeywordExtractor(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, bool clearBeforeLoad, string campaignFilter = null, string campaignFilterOut = null)
-            : base(amazonUtility, dateRange, account, clearBeforeLoad, campaignFilter, campaignFilterOut)
+        public AmazonApiKeywordExtractor(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, string campaignFilter = null, string campaignFilterOut = null)
+            : base(amazonUtility, dateRange, account, campaignFilter, campaignFilterOut)
         {
             campaignMetadataExtractor = new AmazonCampaignMetadataExtractor(amazonUtility);
         }
@@ -69,10 +69,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             {
                 items = GetKeywordSummariesFromApi(date, campaignsData);
             }, accountId, AmazonJobLevels.keyword, AmazonJobOperations.reportExtracting);
-            if (ClearBeforeLoad)
-            {
-                RemoveOldData(date);
-            }
+            RemoveOldData(date);
             Add(items);
         }
 
@@ -130,7 +127,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
 
         private KeywordSummary CreateSummary(AmazonKeywordDailySummary keywordStat, DateTime date, AmazonCampaign relatedCampaign)
         {
-            var sum = CreateSummary(keywordStat as AmazonAdGroupSummary, date, relatedCampaign);
+            var sum = CreateSummary(keywordStat as AmazonStatSummary, date, relatedCampaign);
             sum.KeywordEid = keywordStat.KeywordId;
             sum.KeywordName = keywordStat.KeywordText;
             return sum;
@@ -138,13 +135,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
 
         private KeywordSummary CreateSummary(AmazonTargetKeywordDailySummary targetStat, DateTime date, AmazonCampaign relatedCampaign)
         {
-            var sum = CreateSummary(targetStat as AmazonAdGroupSummary, date, relatedCampaign);
+            var sum = CreateSummary(targetStat as AmazonStatSummary, date, relatedCampaign);
             sum.KeywordEid = targetStat.TargetId;
             sum.KeywordName = targetStat.TargetingText;
             return sum;
         }
 
-        private KeywordSummary CreateSummary(AmazonAdGroupSummary stat, DateTime date, AmazonCampaign relatedCampaign)
+        private KeywordSummary CreateSummary(AmazonStatSummary stat, DateTime date, AmazonCampaign relatedCampaign)
         {
             var sum = new KeywordSummary
             {
