@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Net;
-using Polly;
 using System.Threading;
+using Polly;
 using Adform.Entities;
 using Adform.Entities.ReportEntities;
 using Adform.Entities.RequestEntities;
@@ -18,15 +18,19 @@ namespace Adform
 {
     public class AdformUtility
     {
-        public const int MaxPageSize = 0; //3000;
-        public const int MaxNumberOfMetrics = 10;
-        public const int MaxNumberOfDimensions = 8;
-        public const int NumAlts = 10; // including the default (0)
-        public const int MaxRetryAttempt = 10;
-        public TimeSpan PauseBetweenAttempts = new TimeSpan(0, 0, 30);
-
+        private const int MaxPageSize = 0; //3000;
+        private const int MaxNumberOfMetrics = 10;
+        private const int MaxNumberOfDimensions = 8;
+        private const int NumAlts = 10; // including the default (0)
+        private const int MaxPollingRetryAttempt = 10;
+        private readonly TimeSpan PauseBetweenPollingAttempts = new TimeSpan(0, 0, 30);
+        private const int UnauthorizedAttemptsNumber = 1;
+        private const int MaxAttemptsNumber = 2;
+        private const int QuotaLimitAttemptsNumber = 30;
+        
         private static readonly object AccessTokenLock = new object();
 
+        private const string AuthorizationHeader = "Authorization";
         private const string Scope = "https://api.adform.com/scope/buyer.stats";
         private const string MetadataDimensionsPath = "/v1/reportingstats/agency/metadata/dimensions";
         private const string MetadataMetricsPath = "/v1/reportingstats/agency/metadata/metrics";
@@ -42,9 +46,9 @@ namespace Adform
         private readonly string adformAuthBaseUrl = ConfigurationManager.AppSettings["AdformAuthBaseUrl"];
         private readonly string adformBaseUrl = ConfigurationManager.AppSettings["AdformBaseUrl"];
 
-        public int WhichAlt { get; set; } // default: 0
         public string TrackingId { get; set; }
-
+        private int WhichAlt { get; set; } // default: 0
+        
         #region Logging
 
         private readonly Action<string> logInfo;
@@ -81,6 +85,34 @@ namespace Adform
             {
                 logError(updatedMessage);
             }
+        }
+
+        private void LogInfo(string info, int retryNumber)
+        {
+            var message = GetAttemptMessage(info, retryNumber);
+            LogInfo(message);
+        }
+
+        private void LogGenerationError(string baseMessage, Exception exception, int retryNumber)
+        {
+            var info = $"{baseMessage}: {exception.Message}";
+            var message = GetAttemptMessage(info, retryNumber);
+            LogError(message);
+        }
+
+        private static string GetAttemptMessage(string info, int retryNumber, string baseMessage = null)
+        {
+            var details = baseMessage == null ? string.Empty : $": {baseMessage}";
+            return $"{info} (attempt - {retryNumber}){details}";
+        }
+
+        private void LogWaiting(string baseMessage, int? retryCount)
+        {
+            if (retryCount.HasValue)
+            {
+                baseMessage += $" (number of retrying - {retryCount})";
+            }
+            LogInfo(baseMessage);
         }
 
         #endregion
@@ -202,73 +234,45 @@ namespace Adform
             return request;
         }
 
+        private void UpdateAccessTokenForRestRequest(IRestRequest request)
+        {
+            // Get a new access token and use that.
+            GetAccessToken();
+            AddAuthorizationHeader(request);
+        }
+
+        private void AddAuthorizationHeader(IRestRequest request)
+        {
+            var headerValue = GetAuthorizationHeaderValue();
+            var param = request.Parameters.Find(p => p.Type == ParameterType.HttpHeader && p.Name == AuthorizationHeader);
+            if (param != null)
+            {
+                param.Value = headerValue;
+                return;
+            }
+            request.AddHeader(AuthorizationHeader, headerValue);
+        }
+
+        private string GetAuthorizationHeaderValue()
+        {
+            return $"Bearer {AccessTokens[WhichAlt]}";
+        }
+
         #endregion
 
-        private IRestResponse<T> ProcessRequest<T>(RestRequest restRequest, bool isPostMethod = false)
-            where T : new()
-        {
-            var restClient = new RestClient(adformBaseUrl);
-            restClient.AddHandler("application/json", new JsonDeserializer());
-
-            if (string.IsNullOrEmpty(AccessTokens[WhichAlt]))
-            {
-                GetAccessToken();
-            }
-
-            restRequest.AddHeader("Authorization", "Bearer " + AccessTokens[WhichAlt]);
-
-            var done = false;
-            var tries = 0;
-            IRestResponse<T> response = null;
-            while (!done)
-            {
-                response = isPostMethod
-                    ? restClient.ExecuteAsPost<T>(restRequest, "POST")
-                    : restClient.ExecuteAsGet<T>(restRequest, "GET");
-                tries++;
-
-                if (response.StatusCode == HttpStatusCode.Unauthorized && tries < 2)
-                {
-                    // Get a new access token and use that.
-                    GetAccessToken();
-                    var param = restRequest.Parameters.Find(p =>
-                        p.Type == ParameterType.HttpHeader && p.Name == "Authorization");
-                    param.Value = "Bearer " + AccessTokens[WhichAlt];
-                }
-                else
-                {
-                    if (response.StatusDescription != null && response.StatusDescription.Contains("API calls quota exceeded") && tries < 5)
-                    {
-                        var throttleRecommendedRetryAfter = (int) response.Headers.First(header => header.Name == "Throttle-Retry-After").Value;
-                        LogInfo($"API calls quota exceeded. Waiting {throttleRecommendedRetryAfter} seconds.");
-                        Thread.Sleep(throttleRecommendedRetryAfter * 1000);
-                    }
-                    else
-                    {
-                        done = true; //TODO: distinguish between success and failure of ProcessRequest
-                    }
-                }
-            }
-
-            if (!string.IsNullOrWhiteSpace(response.ErrorMessage))
-            {
-                LogError(response.ErrorMessage);
-            }
-
-            return response;
-        }
+        #region AdditionalMethods
 
         /// <summary>
         /// Returns all available dimensions to be used in Reporting Stats API.
         /// </summary>
         public void GetDimensions()
         {
-            var request = new RestRequest(MetadataDimensionsPath);
-            var parms = new
+            var request = CreateRestRequest(MetadataDimensionsPath);
+            var parameters = new
             {
                 dimensions = (object)null
             };
-            request.AddJsonBody(parms);
+            request.AddJsonBody(parameters);
             var restResponse = ProcessRequest<object>(request, isPostMethod: true);
         }
 
@@ -277,13 +281,92 @@ namespace Adform
         /// </summary>
         public void GetMetrics()
         {
-            var request = new RestRequest(MetadataMetricsPath);
-            var parms = new
+            var request = CreateRestRequest(MetadataMetricsPath);
+            var parameters = new
             {
                 metrics = (object)null
             };
-            request.AddJsonBody(parms);
+            request.AddJsonBody(parameters);
             var restResponse = ProcessRequest<object>(request, isPostMethod: true);
+        }
+
+        public void GetAllOperations()
+        {
+            var request = CreateRestRequest(AllOperationsPath);
+            var response = ProcessRequest<List<PollingOperationResponse>>(request, false);
+        }
+
+        #endregion
+        
+        private IRestResponse<T> ProcessRequest<T>(IRestRequest restRequest, bool isPostMethod = false)
+            where T : new()
+        {
+            var restClient = new RestClient(adformBaseUrl);
+            restClient.AddHandler("application/json", new JsonDeserializer());
+            var response = ProcessRequest<T>(restClient, restRequest, isPostMethod);
+            
+            if (response.IsSuccessful || response.StatusCode == HttpStatusCode.Accepted)
+            {
+                return response;
+            }
+
+            var message = string.IsNullOrWhiteSpace(response.Content)
+                ? response.ErrorMessage
+                : response.Content;
+            LogError(message);
+            return response;
+        }
+
+        private IRestResponse<T> ProcessRequest<T>(IRestClient restClient, IRestRequest restRequest, bool isPostMethod)
+            where T : new()
+        {
+            if (string.IsNullOrEmpty(AccessTokens[WhichAlt]))
+            {
+                GetAccessToken();
+            }
+
+            var response = Policy
+                .Handle<Exception>()
+                .OrResult<IRestResponse<T>>(resp => resp.StatusCode == HttpStatusCode.Unauthorized)
+                .Retry(UnauthorizedAttemptsNumber, (exception, retryCount, context) => UpdateAccessTokenForRestRequest(restRequest))
+                .Execute(() => TryGetRestResponse<T>(restClient, restRequest, isPostMethod));
+
+            return response;
+        }
+
+        private IRestRequest CreateRestRequest(string resourceUri)
+        {
+            var request = new RestRequest(resourceUri);
+            AddAuthorizationHeader(request);
+            request.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
+            return request;
+        }
+
+        private IRestResponse<T> TryGetRestResponse<T>(IRestClient restClient, IRestRequest restRequest, bool isPostMethod)
+            where T : new()
+        {
+            var response = Policy
+                .Handle<Exception>()
+                .OrResult<IRestResponse<T>>(resp => resp.StatusDescription != null && resp.StatusDescription.Contains("API calls quota exceeded"))
+                .Retry(QuotaLimitAttemptsNumber, (exception, retryCount, context) => WaitingRecommendedTime(exception, retryCount))
+                .Execute(() => GetRestResponse<T>(restClient, restRequest, isPostMethod));
+            return response;
+        }
+
+        private static IRestResponse<T> GetRestResponse<T>(IRestClient restClient, IRestRequest restRequest, bool isPostMethod)
+            where T : new()
+        {
+            var response = isPostMethod
+                ? restClient.ExecuteAsPost<T>(restRequest, "POST")
+                : restClient.ExecuteAsGet<T>(restRequest, "GET");
+            return response;
+        }
+
+        private void WaitingRecommendedTime<T>(DelegateResult<IRestResponse<T>> response, int retryCount)
+        {
+            var throttleRecommendedRetryAfter = (int)response.Result.Headers.First(header => header.Name == "Throttle-Retry-After").Value;
+            LogInfo($"API calls quota exceeded. Waiting {throttleRecommendedRetryAfter} seconds.", retryCount);
+            Thread.Sleep(TimeSpan.FromSeconds(throttleRecommendedRetryAfter));
         }
 
         public ReportParams CreateReportParams(ReportSettings settings)
@@ -301,10 +384,20 @@ namespace Adform
             };
             return reportParams;
         }
-        
-        public ReportData GetReportData(string dataLocationPath)
+
+        public ReportData TryGetReportData(string dataLocationPath)
         {
-            var request = new RestRequest(dataLocationPath);
+            var reportData = Policy
+                .Handle<Exception>()
+                .Retry(MaxAttemptsNumber, (exception, retryCount, context) =>
+                    LogGenerationError("Try retrieving a report data", exception, retryCount))
+                .Execute(() => GetReportData(dataLocationPath));
+            return reportData;
+        }
+
+        private ReportData GetReportData(string dataLocationPath)
+        {
+            var request = CreateRestRequest(dataLocationPath);
             var restResponse = ProcessRequest<ReportResponse>(request, isPostMethod: false);
             return restResponse?.Data?.reportData;
         }
@@ -320,63 +413,79 @@ namespace Adform
                 {
                     var reportWithCorrectDimensionsParams = reportWithCorrectMetricsParams.Clone();
                     reportWithCorrectDimensionsParams.dimensions = GetItemsRange(reportParams.dimensions, j, MaxNumberOfDimensions);
-
-                    var operationLocation = CreateDataJob(reportWithCorrectDimensionsParams);
-                    var dataLocationPath = PollingOperation(operationLocation);
-                    var reportData = GetReportData(dataLocationPath);
+                    
+                    var dataLocationPath = ProcessDataReport(reportWithCorrectDimensionsParams);
+                    var reportData = TryGetReportData(dataLocationPath);
                     allReportData.Add(reportData);
                 }
             }
-
             return allReportData;
         }
 
-        private T[] GetItemsRange<T>(IEnumerable<T> items, int startIndex, int count)
+        private static T[] GetItemsRange<T>(IEnumerable<T> items, int startIndex, int count)
         {
             return items.Skip(startIndex).Take(count).ToArray();
         }
         
-        // ---Asynchronous operations---
-        public string CreateDataJob(ReportParams reportParams)
+        public string ProcessDataReport(ReportParams reportParams)
         {
-            var request = new RestRequest(CreateDataJobPath);
+            try
+            {
+                var operationLocation = TryCreateDataJob(reportParams);
+                var dataLocationPath = PollingOperation(operationLocation);
+                return dataLocationPath;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed processing report data", e);
+            }
+        }
+
+        private string TryCreateDataJob(ReportParams reportParams)
+        {
+            var operationLocation = Policy
+                .Handle<Exception>()
+                .Retry(MaxAttemptsNumber, (exception, retryCount, context) => 
+                    LogGenerationError("Try recreating a Data job", exception, retryCount))
+                .Execute(() => CreateDataJob(reportParams));
+            return operationLocation;
+        }
+
+        private string CreateDataJob(ReportParams reportParams)
+        {
+            var request = CreateRestRequest(CreateDataJobPath);
             request.AddJsonBody(reportParams);
             var restResponse = ProcessRequest<CreateJobResponse>(request, isPostMethod: true);
 
             if (restResponse.StatusCode != HttpStatusCode.Accepted)
             {
-                LogError("Creating a data job failed.");
-                return null;
+                throw new Exception("Failed creating data job.");
             }
 
-            return restResponse.Headers.First(header => header.Name == "Operation-Location").Value.ToString();
+            return restResponse.Headers.FirstOrDefault(header => header.Name == "Operation-Location")?.Value.ToString();
         }
 
-        public string PollingOperation(string operationLocationPath)
+        private string PollingOperation(string operationLocationPath)
         {
             var response = Policy
                 .Handle<Exception>()
-                .OrResult<IRestResponse<PollingOperationResponse>>(resp => 
-                    resp.Data.Status.ToLower() != "succeeded" && resp?.Data.Status.ToLower() != "failed")
-                .WaitAndRetry(MaxRetryAttempt, i => PauseBetweenAttempts, (exception, timeSpan, retryCount, context) =>
-                    LogInfo($"Operation is not ready. Will repeat polling operation status. Waiting {timeSpan}. (number of retrying - {retryCount})"))
+                .OrResult<IRestResponse<PollingOperationResponse>>(resp =>
+                    resp.Data?.Status?.ToLower() != "succeeded" && resp.Data?.Status?.ToLower() != "failed")
+                .WaitAndRetry(MaxPollingRetryAttempt, i => PauseBetweenPollingAttempts,
+                    (exception, timeSpan, retryCount, context) =>
+                        LogWaiting($"Operation is not ready. Will repeat polling operation status. Waiting {timeSpan}", retryCount))
                 .Execute(() =>
                 {
-                    var request = new RestRequest(operationLocationPath);
+                    var request = CreateRestRequest(operationLocationPath);
                     return ProcessRequest<PollingOperationResponse>(request, isPostMethod: false);
                 });
 
             if (response.Data.Status.ToLower() != "succeeded")
             {
-                throw new Exception("Failed");
+                throw new Exception("Failed polling operation.");
             }
-            return response.Data.Location;
-        }
 
-        public void GetAllOperations()
-        {
-            var request = new RestRequest(AllOperationsPath);
-            var response = ProcessRequest<List<PollingOperationResponse>>(request, false);
+            return response.Data.Location;
         }
     }
 }

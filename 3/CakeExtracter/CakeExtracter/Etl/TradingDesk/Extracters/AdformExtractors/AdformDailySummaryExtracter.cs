@@ -42,10 +42,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             settings.ConvMetrics = false;
             settings.Dimensions = null;
             var parameters = AfUtility.CreateReportParams(settings);
-            
-            var operationLocation = AfUtility.CreateDataJob(parameters);
-            var dataLocationPath = AfUtility.PollingOperation(operationLocation);
-            var basicStatsReportData = AfUtility.GetReportData(dataLocationPath);
+            var dataLocationPath = AfUtility.ProcessDataReport(parameters);
+            var basicStatsReportData = AfUtility.TryGetReportData(dataLocationPath);
 
             return basicStatsReportData;
         }
@@ -55,10 +53,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             var settings = GetBaseSettings();
             settings.BasicMetrics = false;
             var parameters = AfUtility.CreateReportParams(settings);
-
-            var operationLocation = AfUtility.CreateDataJob(parameters);
-            var dataLocationPath = AfUtility.PollingOperation(operationLocation);
-            var convStatsReportData = AfUtility.GetReportData(dataLocationPath);
+            var dataLocationPath = AfUtility.ProcessDataReport(parameters);
+            var convStatsReportData = AfUtility.TryGetReportData(dataLocationPath);
 
             return convStatsReportData;
         }

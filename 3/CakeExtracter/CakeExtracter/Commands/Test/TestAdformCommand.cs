@@ -49,10 +49,8 @@ namespace CakeExtracter.Commands.Test
             };
             var parameters = adformUtility.CreateReportParams(settings);
 
-            var operationLocation = adformUtility.CreateDataJob(parameters);
-            var dataLocationPath = adformUtility.PollingOperation(operationLocation);
-            
-            var reportData = adformUtility.GetReportData(dataLocationPath);
+            var dataLocationPath = adformUtility.ProcessDataReport(parameters);
+            var reportData = adformUtility.TryGetReportData(dataLocationPath);
 
             foreach (var row in reportData.rows)
             {
