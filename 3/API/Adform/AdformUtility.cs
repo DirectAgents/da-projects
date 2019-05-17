@@ -25,6 +25,8 @@ namespace Adform
         public const int MaxRetryAttempt = 10;
         public TimeSpan PauseBetweenAttempts = new TimeSpan(0, 0, 30);
 
+        private static readonly object AccessTokenLock = new object();
+
         private const string Scope = "https://api.adform.com/scope/buyer.stats";
         private const string MetadataDimensionsPath = "/v1/reportingstats/agency/metadata/dimensions";
         private const string MetadataMetricsPath = "/v1/reportingstats/agency/metadata/metrics";
@@ -32,7 +34,7 @@ namespace Adform
         private const string AllOperationsPath = "/v1/buyer/stats/operations";
 
         // From Config:
-        public string[] AccessTokens = new string[NumAlts];
+        private static readonly string[] AccessTokens = new string[NumAlts];
         private readonly string[] AltAccountIDs = new string[NumAlts];
         private readonly string[] ClientIDs = new string[NumAlts];
         private readonly string[] ClientSecrets = new string[NumAlts];
@@ -126,6 +128,36 @@ namespace Adform
 
         #endregion
 
+        #region Tokens
+
+        public static string[] TokenSets
+        {
+            get => CreateTokenSets().ToArray();
+            set
+            {
+                lock (AccessTokenLock)
+                {
+                    SetTokens(value);
+                }
+            }
+        }
+
+        private static IEnumerable<string> CreateTokenSets()
+        {
+            for (var i = 0; i < NumAlts; i++)
+            {
+                yield return AccessTokens[i];
+            }
+        }
+
+        private static void SetTokens(string[] tokens)
+        {
+            for (var i = 0; i < tokens.Length && i < NumAlts; i++)
+            {
+                AccessTokens[i] = tokens[i];
+            }
+        }
+
         // for alternative credentials...
         public void SetWhichAlt(string accountId)
         {
@@ -142,23 +174,35 @@ namespace Adform
 
         public void GetAccessToken()
         {
+            var restClient = GetAccessTokenClient();
+            var request = GetAccessTokenRequest();
+            var response = restClient.ExecuteAsPost<GetTokenResponse>(request, "POST");
+            if (response.Data != null)
+            {
+                AccessTokens[WhichAlt] = response.Data.AccessToken;
+            }
+        }
+
+        private IRestClient GetAccessTokenClient()
+        {
             var restClient = new RestClient
             {
                 BaseUrl = new Uri(adformAuthBaseUrl),
                 Authenticator = new HttpBasicAuthenticator(ClientIDs[WhichAlt], ClientSecrets[WhichAlt])
             };
             restClient.AddHandler("application/json", new JsonDeserializer());
+            return restClient;
+        }
 
+        private IRestRequest GetAccessTokenRequest()
+        {
             var request = new RestRequest();
             request.AddParameter("grant_type", "client_credentials");
             request.AddParameter("scope", Scope);
-
-            var response = restClient.ExecuteAsPost<GetTokenResponse>(request, "POST");
-            if (response.Data != null)
-            {
-                AccessTokens[WhichAlt] = response.Data.access_token;
-            }
+            return request;
         }
+
+        #endregion
 
         private IRestResponse<T> ProcessRequest<T>(RestRequest restRequest, bool isPostMethod = false)
             where T : new()
@@ -250,7 +294,6 @@ namespace Adform
                 metrics = AdformApiHelper.GetMetrics(settings),
                 paging = new Paging
                 {
-                    //offset = 0,
                     limit = MaxPageSize
                 },
                 includeRowCount = true
