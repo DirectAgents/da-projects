@@ -12,17 +12,19 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
     public class AdformAdSetSummaryExtractor : AdformApiBaseExtractor<AdSetSummary>
     {
         private readonly bool byOrder;
+        private readonly int accountId;
 
         public AdformAdSetSummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account,
             bool byOrder)
             : base(adformUtility, dateRange, account)
         {
             this.byOrder = byOrder;
+            accountId = account.Id;
         }
 
         protected override void Extract()
         {
-            Logger.Info($"Extracting AdSetSummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d}");
+            Logger.Info(accountId, $"Extracting AdSetSummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d}");
             //TODO: Do X days at a time...?
             try
             {
@@ -32,7 +34,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             }
             catch (Exception ex)
             {
-                Logger.Error(ex);
+                Logger.Error(accountId, ex);
             }
             End();
         }

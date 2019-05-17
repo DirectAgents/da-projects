@@ -12,17 +12,19 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
     public class AdformStrategySummaryExtractor : AdformApiBaseExtractor<StrategySummary>
     {
         private readonly bool byOrder;
+        private readonly int accountId;
 
         public AdformStrategySummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account, bool byOrder = false)
             : base(adformUtility, dateRange, account)
         {
             this.byOrder = byOrder;
+            accountId = account.Id;
         }
 
         protected override void Extract()
         {
             var additionInfo = byOrder ? "Orders" : "Campaigns";
-            Logger.Info($"Extracting StrategySummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d} - {additionInfo}");
+            Logger.Info(accountId, $"Extracting StrategySummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d} - {additionInfo}");
             //TODO: Do X days at a time...?
             try
             {
@@ -32,7 +34,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             }
             catch (Exception ex)
             {
-                Logger.Error(ex);
+                Logger.Error(accountId, ex);
             }
             End();
         }

@@ -10,13 +10,17 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 {
     public class AdformDailySummaryExtractor : AdformApiBaseExtractor<DailySummary>
     {
+        private readonly int accountId;
+
         public AdformDailySummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account)
             : base(adformUtility, dateRange, account)
-        { }
+        {
+            accountId = account.Id;
+        }
 
         protected override void Extract()
         {
-            Logger.Info($"Extracting DailySummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d}");
+            Logger.Info(accountId, $"Extracting DailySummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d}");
             try
             {
                 var basicStatsReportData = GetBasicStatsReportData();
@@ -27,7 +31,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             }
             catch (Exception ex)
             {
-                Logger.Error(ex);
+                Logger.Error(accountId, ex);
             }
             End();
         }
