@@ -1,11 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Linq;
 using System.Threading.Tasks;
+using AdRoll.Entities;
 using Amazon;
 using CakeExtracter.Bootstrappers;
+using CakeExtracter.Commands.DA;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Exceptions;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
+using CakeExtracter.Etl;
+using CakeExtracter.Etl.Amazon.Exceptions;
+using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors;
 using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders.AnalyticTablesSync;
@@ -112,6 +120,25 @@ namespace CakeExtracter.Commands
             return 0;
         }
 
+        /// <inheritdoc />
+        public override IEnumerable<CommandWithSchedule> GetUniqueBroadCommands(
+            IEnumerable<CommandWithSchedule> commands)
+        {
+            var broadCommands = new List<CommandWithSchedule>();
+            var commandsGroupedByAccountAndLevel = commands.GroupBy(x =>
+            {
+                var command = x.Command as DASynchAmazonStats;
+                return new { command?.AccountId, command?.StatsType };
+            });
+            foreach (var commandsGroup in commandsGroupedByAccountAndLevel)
+            {
+                var accountLevelBroadCommands = GetUniqueBroadAccountLevelCommands(commandsGroup);
+                broadCommands.AddRange(accountLevelBroadCommands);
+            }
+
+            return broadCommands;
+        }
+
         private string[] GetTokens()
         {
             // Get tokens, if any, from the database
@@ -143,6 +170,11 @@ namespace CakeExtracter.Commands
                 {
                     var extractor = new AmazonDatabaseKeywordsToDailySummaryExtracter(dateRange, account.Id);
                     var loader = new AmazonDailySummaryLoader(account.Id);
+                    extractor.ProcessFailedExtraction += exception =>
+                        ScheduleNewCommandLaunch<DASynchAmazonStats>(command =>
+                            UpdateCommandParameters(command, exception));
+                    InitEtlEventsWithoutInformation<DailySummary, AmazonDatabaseKeywordsToDailySummaryExtracter,
+                        AmazonDailySummaryLoader>(extractor, loader);
                     CommandHelper.DoEtl(extractor, loader);
                 }, account.Id, AmazonJobLevels.account, AmazonJobOperations.total);
         }
@@ -154,6 +186,7 @@ namespace CakeExtracter.Commands
                 {
                     var extractor = new AmazonApiAdExtrator(amazonUtility, dateRange, account, account.Filter);
                     var loader = new AmazonAdSummaryLoader(account.Id);
+                    InitEtlEvents<TDadSummary, AmazonApiAdExtrator, AmazonAdSummaryLoader>(extractor, loader);
                     CommandHelper.DoEtl(extractor, loader);
                     SynchAsinAnalyticTables(account.Id);
                 }, account.Id, AmazonJobLevels.creative, AmazonJobOperations.total);
@@ -166,6 +199,7 @@ namespace CakeExtracter.Commands
                 {
                     var extractor = new AmazonApiKeywordExtractor(amazonUtility, dateRange, account, account.Filter);
                     var loader = new AmazonKeywordSummaryLoader(account.Id);
+                    InitEtlEvents<KeywordSummary, AmazonApiKeywordExtractor, AmazonKeywordSummaryLoader>(extractor, loader);
                     CommandHelper.DoEtl(extractor, loader);
                 }, account.Id, AmazonJobLevels.keyword, AmazonJobOperations.total);
         }
@@ -199,6 +233,83 @@ namespace CakeExtracter.Commands
             {
                 Logger.Error(new Exception("Error occurred while Asin analytic table sync.", ex));
             }
+        }
+
+        private void InitEtlEvents<TSummary, TExtractor, TLoader>(TExtractor extractor, TLoader loader)
+            where TSummary : DatedStatsSummary, new()
+            where TExtractor : BaseAmazonExtractor<TSummary>
+            where TLoader : Loader<TSummary>
+        {
+            extractor.ProcessFailedExtraction += exception =>
+                ScheduleNewCommandLaunch<DASynchAmazonStats>(command =>
+                    UpdateCommandParameters(command, exception));
+            InitEtlEventsWithoutInformation<TSummary, TExtractor, TLoader>(extractor, loader);
+        }
+
+        private void InitEtlEventsWithoutInformation<TSummary, TExtractor, TLoader>(TExtractor extractor, TLoader loader)
+            where TSummary : new()
+            where TExtractor : Extracter<TSummary>
+            where TLoader : Loader<TSummary>
+        {
+            extractor.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewCommandLaunch<DASynchAmazonStats>(command =>
+                    UpdateCommandParameters(command, exception));
+            loader.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewCommandLaunch<DASynchAmazonStats>(command =>
+                    UpdateCommandParameters(command, exception));
+        }
+
+        private void UpdateCommandParameters(DASynchAmazonStats command, FailedStatsExtractionException exception)
+        {
+            command.StartDate = exception.StartDate;
+            command.EndDate = exception.EndDate;
+            command.AccountId = exception.AccountId;
+            var statsType = new StatsTypeAgg
+            {
+                Creative = exception.ByAd,
+                Keyword = exception.ByKeyword,
+                Daily = exception.ByDaily,
+            };
+            command.StatsType = statsType.GetStatsTypeString();
+        }
+
+        private void UpdateCommandParameters(DASynchAmazonStats command, FailedEtlException exception)
+        {
+            command.AccountId = exception.AccountId;
+        }
+
+        private IEnumerable<CommandWithSchedule> GetUniqueBroadAccountLevelCommands(IEnumerable<CommandWithSchedule> commandsWithSchedule)
+        {
+            var accountLevelCommands = new List<Tuple<DASynchAmazonStats, DateRange, CommandWithSchedule>>();
+            foreach (var commandWithSchedule in commandsWithSchedule)
+            {
+                var command = (DASynchAmazonStats)commandWithSchedule.Command;
+                var commandDateRange = CommandHelper.GetDateRange(command.StartDate, command.EndDate, command.DaysAgoToStart, DefaultDaysAgo);
+                var crossCommands = accountLevelCommands.Where(x => commandDateRange.IsCrossDateRange(x.Item2)).ToList();
+                foreach (var crossCommand in crossCommands)
+                {
+                    commandDateRange = commandDateRange.MergeDateRange(crossCommand.Item2);
+                    commandWithSchedule.ScheduledTime =
+                        crossCommand.Item3.ScheduledTime > commandWithSchedule.ScheduledTime
+                            ? crossCommand.Item3.ScheduledTime
+                            : commandWithSchedule.ScheduledTime;
+                    accountLevelCommands.Remove(crossCommand);
+                }
+
+                accountLevelCommands.Add(new Tuple<DASynchAmazonStats, DateRange, CommandWithSchedule>(command, commandDateRange, commandWithSchedule));
+            }
+
+            var broadCommands = accountLevelCommands.Select(GetCommandWithCorrectDateRange).ToList();
+            return broadCommands;
+        }
+
+        private CommandWithSchedule GetCommandWithCorrectDateRange(Tuple<DASynchAmazonStats, DateRange, CommandWithSchedule> setting)
+        {
+            setting.Item1.StartDate = setting.Item2.FromDate;
+            setting.Item1.EndDate = setting.Item2.ToDate;
+            setting.Item1.DaysAgoToStart = null;
+            setting.Item3.Command = setting.Item1;
+            return setting.Item3;
         }
     }
 }

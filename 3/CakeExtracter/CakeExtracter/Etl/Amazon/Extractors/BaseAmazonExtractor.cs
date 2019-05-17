@@ -5,6 +5,7 @@ using Amazon;
 using Amazon.Entities.Summaries;
 using Amazon.Enums;
 using CakeExtracter.Common;
+using CakeExtracter.Etl.Amazon.Exceptions;
 using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
@@ -20,6 +21,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
         protected readonly string clientId; // external id
         protected readonly string campaignFilter;
         protected readonly string campaignFilterOut;
+
+        public event Action<FailedStatsExtractionException> ProcessFailedExtraction;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseAmazonExtractor{T}"/> class.
@@ -37,6 +40,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
             this.clientId = account.ExternalId;
             this.campaignFilter = campaignFilter;
             this.campaignFilterOut = campaignFilterOut;
+        }
+
+        protected void InvokeProcessFailedExtractionHandlers(FailedStatsExtractionException exception)
+        {
+            ProcessFailedExtraction?.Invoke(exception);
         }
 
         protected IEnumerable<TStat> FilterByCampaigns<TStat>(IEnumerable<TStat> reportEntities, Func<TStat, string> getFilterProp)

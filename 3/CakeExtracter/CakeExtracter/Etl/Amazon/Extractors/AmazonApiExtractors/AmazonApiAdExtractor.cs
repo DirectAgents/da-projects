@@ -7,6 +7,7 @@ using Amazon.Entities.Summaries;
 using Amazon.Enums;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement;
+using CakeExtracter.Etl.Amazon.Exceptions;
 using CakeExtracter.Helpers;
 using CakeExtracter.Logging.TimeWatchers;
 using CakeExtracter.Logging.TimeWatchers.Amazon;
@@ -40,9 +41,10 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
                 }
                 catch (Exception e)
                 {
-                    Logger.Error(accountId, e);
+                    ProcessFailedStatsExtraction(e, date);
                 }
             }
+
             End();
         }
 
@@ -57,6 +59,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             }, accountId, AmazonJobLevels.creative, AmazonJobOperations.reportExtracting);
             RemoveOldData(date);
             Add(items);
+        }
+
+        private void ProcessFailedStatsExtraction(Exception e, DateTime date)
+        {
+            Logger.Error(accountId, e);
+            var exception = new FailedStatsExtractionException(date, date, accountId, e, byAd: true);
+            InvokeProcessFailedExtractionHandlers(exception);
         }
 
         private List<AmazonCampaign> GetCampaignInfo()

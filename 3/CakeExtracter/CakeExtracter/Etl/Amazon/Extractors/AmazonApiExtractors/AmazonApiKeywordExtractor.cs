@@ -12,6 +12,7 @@ using CakeExtracter.Logging.TimeWatchers.Amazon;
 using CakeExtracter.Logging.TimeWatchers;
 using Amazon.Entities;
 using CakeExtracter.Common.JobExecutionManagement;
+using CakeExtracter.Etl.Amazon.Exceptions;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors
 {
@@ -55,7 +56,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
                 }
                 catch (Exception e)
                 {
-                    Logger.Error(accountId, e);
+                    ProcessFailedStatsExtraction(e, date);
                 }
             }
             End();
@@ -81,6 +82,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
                 campaignsData = campaignMetadataExtractor.LoadCampaignsMetadata(accountId, clientId).ToList();
             }, accountId, AmazonJobLevels.keyword, AmazonJobOperations.loadCampaignMetadata);
             return campaignsData;
+        }
+
+        private void ProcessFailedStatsExtraction(Exception e, DateTime date)
+        {
+            Logger.Error(accountId, e);
+            var exception = new FailedStatsExtractionException(date, date, accountId, e, byKeyword: true);
+            InvokeProcessFailedExtractionHandlers(exception);
         }
 
         private IEnumerable<KeywordSummary> GetKeywordSummariesFromApi(DateTime date, List<AmazonCampaign> campaignsData)
