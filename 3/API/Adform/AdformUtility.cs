@@ -239,8 +239,9 @@ namespace Adform
                 {
                     if (response.StatusDescription != null && response.StatusDescription.Contains("API calls quota exceeded") && tries < 5)
                     {
-                        LogInfo("API calls quota exceeded. Waiting 62 seconds.");
-                        Thread.Sleep(62000);
+                        var throttleRecommendedRetryAfter = (int) response.Headers.First(header => header.Name == "Throttle-Retry-After").Value;
+                        LogInfo($"API calls quota exceeded. Waiting {throttleRecommendedRetryAfter} seconds.");
+                        Thread.Sleep(throttleRecommendedRetryAfter * 1000);
                     }
                     else
                     {
