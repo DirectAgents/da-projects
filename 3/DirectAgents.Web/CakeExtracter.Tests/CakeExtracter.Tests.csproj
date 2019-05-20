@@ -22,6 +22,9 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>$(SolutionDir)\build\stylecop\StyleCopRuleSet.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -61,22 +64,37 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="JobTests\Kochava\KochavaLoaderTests.cs" />
+    <Compile Include="JobTests\Yam\ExtractorTests\YamDailySummariesExtractorTests.cs" />
+    <Compile Include="JobTests\Yam\Helpers\PredefinedTestObjectsStorage.cs" />
+    <Compile Include="JobTests\Yam\LoaderTests\YamDailySummariesLoaderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestsSetUp.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\1\DirectAgents.Domain\DirectAgents.Domain.csproj">
       <Project>{278911AB-CB92-4316-843E-4571CD0C3410}</Project>
       <Name>DirectAgents.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\API\Yahoo\Yahoo.csproj">
+      <Project>{b5c95cb8-dbe8-4d94-9a6d-6c2ed3535a26}</Project>
+      <Name>Yahoo</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\CakeExtracter\CakeExtracter\CakeExtracter.csproj">
       <Project>{3B6C5433-5392-4165-A7E4-4AA431A75BB3}</Project>
       <Name>CakeExtracter</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

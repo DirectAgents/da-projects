@@ -6,24 +6,44 @@ using System.Linq;
 using System.Threading.Tasks;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
-using CakeExtracter.Etl.TradingDesk.Extracters;
-using CakeExtracter.Etl.TradingDesk.LoadersDA;
+using CakeExtracter.Common.JobExecutionManagement;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Exceptions;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
+using CakeExtracter.Etl;
+using CakeExtracter.Etl.YAM.CommonClassesExtensions;
+using CakeExtracter.Etl.YAM.Extractors.ApiExtractors;
+using CakeExtracter.Etl.YAM.Extractors.CsvExtractors;
+using CakeExtracter.Etl.YAM.Loaders;
+using CakeExtracter.Etl.YAM.Repositories;
+using CakeExtracter.Etl.YAM.Repositories.Summaries;
 using CakeExtracter.Helpers;
-using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
 using Yahoo;
+using Yahoo.Exceptions;
 
-namespace CakeExtracter.Commands
+namespace CakeExtracter.Commands.DA
 {
     [Export(typeof(ConsoleCommand))]
-    public class DASynchYAMStats : ConsoleCommand
+    public class DaSynchYamStats : ConsoleCommand
     {
         private const int DefaultDaysAgo = 41;
+
+        private List<string> extIdsUsePixelParams;
+        private List<Action> etlList;
+
+        public int? AccountId { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public int? DaysAgoToStart { get; set; }
+        public string StatsType { get; set; }
+        public bool DisabledOnly { get; set; }
 
         public static int RunStatic(int? accountId = null, DateTime? startDate = null, DateTime? endDate = null, string statsType = null)
         {
             AutoMapperBootstrapper.CheckRunSetup();
-            var cmd = new DASynchYAMStats
+            var cmd = new DaSynchYamStats
             {
                 AccountId = accountId,
                 StartDate = startDate,
@@ -33,15 +53,16 @@ namespace CakeExtracter.Commands
             return cmd.Run();
         }
 
-        public int? AccountId { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
-        public int? DaysAgoToStart { get; set; }
-        public string StatsType { get; set; }
-        public bool DisabledOnly { get; set; }
-
-        private string[] extIds_UsePixelParm;
-        private List<Action> etlList;
+        public DaSynchYamStats()
+        {
+            IsCommand("daSynchYAMStats", "synch YAM Stats");
+            HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
+            HasOption("s|startDate=", "Start Date (default is 'daysAgo')", c => StartDate = DateTime.Parse(c));
+            HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
+            HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default = {DefaultDaysAgo})", c => DaysAgoToStart = c);
+            HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
+            HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
+        }
 
         public override void ResetProperties()
         {
@@ -53,55 +74,108 @@ namespace CakeExtracter.Commands
             DisabledOnly = false;
         }
 
-        public DASynchYAMStats()
-        {
-            IsCommand("daSynchYAMStats", "synch YAM Stats");
-            HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
-            HasOption("s|startDate=", "Start Date (default is 'daysAgo')", c => StartDate = DateTime.Parse(c));
-            HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
-            HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default = {DefaultDaysAgo})", c => DaysAgoToStart = c);
-            HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
-            HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
-        }
-
         //TODO: if synching all accounts, can we make one API call to get everything?
 
         public override int Execute(string[] remainingArguments)
         {
+            SetConfigurationVariables();
             var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
-            Logger.Info("YAM ETL. DateRange {0}.", dateRange);
-
-            var statsType = new StatsTypeAgg(StatsType);
-            var ppIds = ConfigurationManager.AppSettings["YAMids_UsePixelParm"];
-            extIds_UsePixelParm = ppIds != null ? ppIds.Split(',') : new string[] { };
-
+            var statsType = new YamStatsType(StatsType);
             var accounts = GetAccounts();
-            YAMUtility.TokenSets = GetTokens();
+            DoEtlsParallel(dateRange, statsType, accounts);
+            return 0;
+        }
 
+        public override IEnumerable<CommandWithSchedule> GetUniqueBroadCommands(
+            IEnumerable<CommandWithSchedule> commands)
+        {
+            var broadCommands = new List<CommandWithSchedule>();
+            var commandsGroupedByAccountAndLevel = commands.GroupBy(x =>
+            {
+                var command = x.Command as DaSynchYamStats;
+                return new {command?.AccountId, command?.StatsType};
+            });
+            foreach (var commandsGroup in commandsGroupedByAccountAndLevel)
+            {
+                var accountLevelBroadCommands = GetUniqueBroadAccountLevelCommands(commandsGroup);
+                broadCommands.AddRange(accountLevelBroadCommands);
+            }
+
+            return broadCommands;
+        }
+
+        private void SetConfigurationVariables()
+        {
+            extIdsUsePixelParams = ConfigurationHelper.ExtractEnumerableFromConfig("YAMids_UsePixelParm");
+            IntervalBetweenUnsuccessfulAndNewRequestInMinutes = int.Parse(ConfigurationManager.AppSettings["YamIntervalBetweenRequestsInMinutes"]);
+        }
+
+        private IEnumerable<ExtAccount> GetAccounts()
+        {
+            var repository = new PlatformAccountRepository();
+            if (!AccountId.HasValue)
+            {
+                var accounts = repository.GetAccountsWithFilledExternalIdByPlatformCode(Platform.Code_YAM, DisabledOnly);
+                return accounts;
+            }
+            var account = repository.GetAccount(AccountId.Value);
+            return new[] { account };
+        }
+
+        private void DoEtlsParallel(DateRange dateRange, YamStatsType statsType, IEnumerable<ExtAccount> accounts)
+        {
+            Logger.Info("YAM ETL. DateRange {0}.", dateRange);
+            YamUtility.TokenSets = GetTokens();
             etlList = new List<Action>();
             foreach (var account in accounts)
             {
-                Logger.Info(account.Id, "Commencing ETL for YAM account ({0}) {1}", account.Id, account.Name);
-                var yamUtility = new YAMUtility(m => Logger.Info(account.Id, m), m => Logger.Error(account.Id, new Exception(m)));
-                yamUtility.SetWhichAlt(account.ExternalId);
-
-                AddEnabledEtl(statsType.Daily, account, () => DoETL_Daily(dateRange, account, yamUtility));
-                AddEnabledEtl(statsType.Strategy, account, () => DoETL_Strategy(dateRange, account, yamUtility));
-                AddEnabledEtl(statsType.AdSet, account, () => DoETL_AdSet(dateRange, account, yamUtility));
-                AddEnabledEtl(statsType.Keyword, account, () => DoETL_Keyword(dateRange, account, yamUtility));
-                AddEnabledEtl(statsType.SearchTerm, account, () => DoETL_SearchTerm(dateRange, account, yamUtility));
-                //don't include when getting "all" statstypes
-                AddEnabledEtl(statsType.Creative && !statsType.All, account, () => DoETL_Creative(dateRange, account, yamUtility));
+                DoEtls(dateRange, statsType, account);
             }
-            Parallel.Invoke(etlList.ToArray());
 
+            Parallel.Invoke(etlList.ToArray());
             SaveTokens();
-            return 0;
+        }
+
+        private string[] GetTokens()
+        {
+            // Get tokens, if any, from the database
+            return Platform.GetPlatformTokens(Platform.Code_YAM);
+        }
+
+        private void SaveTokens()
+        {
+            Platform.SavePlatformTokens(Platform.Code_YAM, YamUtility.TokenSets);
+        }
+
+        private void DoEtls(DateRange dateRange, YamStatsType statsType, ExtAccount account)
+        {
+            Logger.Info(account.Id, "Commencing ETL for YAM account ({0}) {1}", account.Id, account.Name);
+            var yamUtility = CreateUtility(account);
+            var usePixelParameters = extIdsUsePixelParams.Contains(account.ExternalId);
+            AddEnabledEtl(statsType.Daily, account, () => DoETL_Daily(dateRange, account, yamUtility, usePixelParameters));
+            AddEnabledEtl(statsType.Campaign, account, () => DoETL_Campaign(dateRange, account, yamUtility, usePixelParameters));
+            AddEnabledEtl(statsType.Line, account, () => DoETL_Line(dateRange, account, yamUtility, usePixelParameters));
+            AddEnabledEtl(statsType.Creative, account, () => DoETL_Creative(dateRange, account, yamUtility, usePixelParameters));
+            AddEnabledEtl(statsType.Ad, account, () => DoETL_Ad(dateRange, account, yamUtility, usePixelParameters));
+            AddEnabledEtl(statsType.Pixel, account, () => DoETL_Pixel(dateRange, account, yamUtility, usePixelParameters));
+        }
+
+        private YamUtility CreateUtility(ExtAccount account)
+        {
+            var yamUtility = new YamUtility(m => Logger.Info(account.Id, m), m => Logger.Warn(account.Id, m),
+                exc => Logger.Error(account.Id, exc));
+            yamUtility.SetWhichAlt(account.ExternalId);
+            InitUtilityEvents(yamUtility);
+            return yamUtility;
         }
 
         private void AddEnabledEtl(bool etlEnabled, ExtAccount account, Action etlAction)
         {
-            if (!etlEnabled) return;
+            if (!etlEnabled)
+            {
+                return;
+            }
+
             etlList.Add(() =>
             {
                 try
@@ -115,109 +189,187 @@ namespace CakeExtracter.Commands
             });
         }
 
-        private string[] GetTokens()
+        private void DoETL_Daily(DateRange dateRange, ExtAccount account, YamUtility yamUtility, bool usePixelParameters)
         {
-            // Get tokens, if any, from the database
-            return Platform.GetPlatformTokens(Platform.Code_YAM);
+            var csvExtractor = new YamCsvExtractor(account);
+            var extractor = new YamDailySummaryExtractor(csvExtractor, yamUtility, dateRange, account, usePixelParameters);
+            var loader = CreateDailyLoader(account);
+            DoEtl<YamDailySummary, YamDailySummaryExtractor, YamDailySummaryLoader>(extractor, loader, account);
         }
 
-        private void SaveTokens()
+        private void DoETL_Campaign(DateRange dateRange, ExtAccount account, YamUtility yamUtility, bool usePixelParameters)
         {
-            Platform.SavePlatformTokens(Platform.Code_YAM, YAMUtility.TokenSets);
+            var csvExtractor = new YamCsvExtractor(account);
+            var extractor = new YamCampaignSummaryExtractor(csvExtractor, yamUtility, dateRange, account, usePixelParameters);
+            var loader = CreateCampaignLoader(account);
+            DoEtl<YamCampaignSummary, YamCampaignSummaryExtractor, YamCampaignSummaryLoader>(extractor, loader, account);
         }
 
-        private void DoETL_Daily(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
+        private void DoETL_Line(DateRange dateRange, ExtAccount account, YamUtility yamUtility, bool usePixelParameters)
         {
-            var extractor = new YAMDailySummaryExtracter(yamUtility, dateRange, account);
-            var loader = new TDDailySummaryLoader(account.Id);
+            var csvExtractor = new YamCsvExtractor(account);
+            var extractor = new YamLineSummaryExtractor(csvExtractor, yamUtility, dateRange, account, usePixelParameters);
+            var loader = CreateLineLoader(account);
+            DoEtl<YamLineSummary, YamLineSummaryExtractor, YamLineSummaryLoader>(extractor, loader, account);
+        }
+
+        private void DoETL_Creative(DateRange dateRange, ExtAccount account, YamUtility yamUtility, bool usePixelParameters)
+        {
+            var csvExtractor = new YamCsvExtractor(account);
+            var extractor = new YamCreativeSummaryExtractor(csvExtractor, yamUtility, dateRange, account, usePixelParameters);
+            var loader = CreateCreativeLoader(account);
+            DoEtl<YamCreativeSummary, YamCreativeSummaryExtractor, YamCreativeSummaryLoader>(extractor, loader, account);
+        }
+
+        private void DoETL_Ad(DateRange dateRange, ExtAccount account, YamUtility yamUtility, bool usePixelParameters)
+        {
+            var csvExtractor = new YamCsvExtractor(account);
+            var extractor = new YamAdSummaryExtractor(csvExtractor, yamUtility, dateRange, account, usePixelParameters);
+            var loader = CreateAdLoader(account);
+            DoEtl<YamAdSummary, YamAdSummaryExtractor, YamAdSummaryLoader>(extractor, loader, account);
+        }
+
+        private void DoETL_Pixel(DateRange dateRange, ExtAccount account, YamUtility yamUtility, bool usePixelParameters)
+        {
+            var csvExtractor = new YamCsvExtractor(account);
+            var extractor = new YamPixelSummaryExtractor(csvExtractor, yamUtility, dateRange, account, usePixelParameters);
+            var loader = CreatePixelLoader(account);
+            DoEtl<YamPixelSummary, YamPixelSummaryExtractor, YamPixelSummaryLoader>(extractor, loader, account);
+        }
+
+        private YamDailySummaryLoader CreateDailyLoader(ExtAccount account)
+        {
+            var summaryRepository = new YamDailySummaryDatabaseRepository();
+            return new YamDailySummaryLoader(account.Id, summaryRepository);
+        }
+
+        private YamCampaignSummaryLoader CreateCampaignLoader(ExtAccount account)
+        {
+            var entityRepository = new YamCampaignDatabaseRepository();
+            var summaryRepository = new YamCampaignSummaryDatabaseRepository();
+            return new YamCampaignSummaryLoader(account.Id, entityRepository, summaryRepository);
+        }
+
+        private YamLineSummaryLoader CreateLineLoader(ExtAccount account)
+        {
+            var entityRepository = new YamLineDatabaseRepository();
+            var summaryRepository = new YamLineSummaryDatabaseRepository();
+            var campaignLoader = CreateCampaignLoader(account);
+            return new YamLineSummaryLoader(account.Id, entityRepository, summaryRepository, campaignLoader);
+        }
+
+        private YamCreativeSummaryLoader CreateCreativeLoader(ExtAccount account)
+        {
+            var entityRepository = new YamCreativeDatabaseRepository();
+            var summaryRepository = new YamCreativeSummaryDatabaseRepository();
+            return new YamCreativeSummaryLoader(account.Id, entityRepository, summaryRepository);
+        }
+
+        private YamAdSummaryLoader CreateAdLoader(ExtAccount account)
+        {
+            var entityRepository = new YamAdDatabaseRepository();
+            var summaryRepository = new YamAdSummaryDatabaseRepository();
+            var lineLoader = CreateLineLoader(account);
+            var creativeLoader = CreateCreativeLoader(account);
+            return new YamAdSummaryLoader(account.Id, entityRepository, summaryRepository, lineLoader, creativeLoader);
+        }
+
+        private YamPixelSummaryLoader CreatePixelLoader(ExtAccount account)
+        {
+            var entityRepository = new YamPixelDatabaseRepository();
+            var summaryRepository = new YamPixelSummaryDatabaseRepository();
+            return new YamPixelSummaryLoader(account.Id, entityRepository, summaryRepository);
+        }
+
+        private void DoEtl<TSummary, TExtractor, TLoader>(TExtractor extractor, TLoader loader, ExtAccount account)
+            where TSummary : BaseYamSummary, new()
+            where TExtractor : BaseYamApiExtractor<TSummary>
+            where TLoader : Loader<TSummary>
+        {
+            InitEtlEvents<TSummary, TExtractor, TLoader>(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
+            CommandExecutionContext.Current?.AppendJobExecutionStateInHistory($"{extractor.SummariesDisplayName} - Finished", account.Id);
+        }
 
-            if (!extIds_UsePixelParm.Contains(account.ExternalId))
+        private void InitUtilityEvents(YamUtility utility)
+        {
+            utility.ProcessFailedReportGeneration += exception =>
+                ScheduleNewCommandLaunch<DaSynchYamStats>(command =>
+                    UpdateCommandParameters(command, exception));
+        }
+
+        private void InitEtlEvents<TSummary, TExtractor, TLoader>(TExtractor extractor, TLoader loader)
+            where TSummary : BaseYamSummary, new()
+            where TExtractor : BaseYamApiExtractor<TSummary>
+            where TLoader : Loader<TSummary>
+        {
+            extractor.ProcessFailedExtraction += exception =>
+                ScheduleNewCommandLaunch<DaSynchYamStats>(command =>
+                    UpdateCommandParameters(command, exception));
+            extractor.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewCommandLaunch<DaSynchYamStats>(command =>
+                    UpdateCommandParameters(command, exception));
+            loader.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewCommandLaunch<DaSynchYamStats>(command =>
+                    UpdateCommandParameters(command, exception));
+        }
+
+        private void UpdateCommandParameters(DaSynchYamStats command, FailedReportGenerationException exception)
+        {
+            command.StartDate = exception.StartDate;
+            command.EndDate = exception.EndDate;
+            var repository = new PlatformAccountRepository();
+            var dbAccount = repository.GetAccountByExternalId(exception.AccountId.ToString(), Platform.Code_YAM);
+            command.AccountId = dbAccount.Id;
+            var statsType = new YamStatsType
             {
-                return;
-            } 
-            
-            // Get ConVals using the pixel parameter...
-            var e = new YAMDailyConValExtracter(yamUtility, dateRange, account);
-            var l = new TDDailyConValLoader(account.Id);
-            CommandHelper.DoEtl(e, l);
+                Ad = exception.ByAd,
+                Campaign = exception.ByCampaign,
+                Creative = exception.ByCreative,
+                Daily = true,
+                Line = exception.ByLine,
+                Pixel = exception.ByPixel
+            };
+            command.StatsType = statsType.GetStatsTypeString();
         }
 
-        private void DoETL_Strategy(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
+        private void UpdateCommandParameters(DaSynchYamStats command, FailedEtlException exception)
         {
-            var extractor = new YAMStrategySummaryExtracter(yamUtility, dateRange, account);
-            var loader = new TDStrategySummaryLoader(account.Id);
-            CommandHelper.DoEtl(extractor, loader);
+            command.AccountId = exception.AccountId;
+        }
 
-            if (!extIds_UsePixelParm.Contains(account.ExternalId))
+        private List<CommandWithSchedule> GetUniqueBroadAccountLevelCommands(IEnumerable<CommandWithSchedule> commandsWithSchedule)
+        {
+            var accountLevelCommands = new List<Tuple<DaSynchYamStats, DateRange, CommandWithSchedule>>();
+            foreach (var commandWithSchedule in commandsWithSchedule)
             {
-                return;
-            } 
-            
-            // Get ConVals using the pixel parameter...
-            var stratNames = GetExistingStrategyNames(dateRange, account.Id);
-            var e = new YAMStrategyConValExtracter(yamUtility, dateRange, account, existingStrategyNames: stratNames);
-            var l = new TDStrategyConValLoader(account.Id);
-            CommandHelper.DoEtl(e, l);
-        }
+                var command = (DaSynchYamStats)commandWithSchedule.Command;
+                var commandDateRange = CommandHelper.GetDateRange(command.StartDate, command.EndDate, command.DaysAgoToStart, DefaultDaysAgo);
+                var crossCommands = accountLevelCommands.Where(x => commandDateRange.IsCrossDateRange(x.Item2)).ToList();
+                foreach (var crossCommand in crossCommands)
+                {
+                    commandDateRange = commandDateRange.MergeDateRange(crossCommand.Item2);
+                    commandWithSchedule.ScheduledTime =
+                        crossCommand.Item3.ScheduledTime > commandWithSchedule.ScheduledTime
+                            ? crossCommand.Item3.ScheduledTime
+                            : commandWithSchedule.ScheduledTime;
+                    accountLevelCommands.Remove(crossCommand);
+                }
 
-        private void DoETL_AdSet(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
-        {
-            var extractor = new YAMAdSetSummaryExtracter(yamUtility, dateRange, account);
-            var loader = new TDAdSetSummaryLoader(account.Id);
-            CommandHelper.DoEtl(extractor, loader);
-        }
-
-        private void DoETL_Creative(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
-        {
-            var extractor = new YAMTDadSummaryExtracter(yamUtility, dateRange, account);
-            var loader = new TDadSummaryLoader(account.Id);
-            CommandHelper.DoEtl(extractor, loader);
-        }
-
-        private void DoETL_Keyword(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
-        {
-            var extractor = new YAMKeywordSummaryExtracter(yamUtility, dateRange, account);
-            var loader = new KeywordSummaryLoader(account.Id);
-            CommandHelper.DoEtl(extractor, loader);
-        }
-
-        private void DoETL_SearchTerm(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
-        {
-            var extractor = new YAMSearchTermSummaryExtracter(yamUtility, dateRange, account);
-            var loader = new SearchTermSummaryLoader(account.Id);
-            CommandHelper.DoEtl(extractor, loader);
-        }
-
-        //Get the names of strategies that have stats for the specified dateRange and account (and whose stats' ConVals are not zero)
-        private string[] GetExistingStrategyNames(DateRange dateRange, int accountId)
-        {
-            using (var db = new ClientPortalProgContext())
-            {
-                var stratSums = db.StrategySummaries.Where(s => s.Strategy.AccountId == accountId && s.Date >= dateRange.FromDate && s.Date <= dateRange.ToDate
-                                                           && (s.PostClickRev != 0 || s.PostViewRev != 0));
-                var strategies = stratSums.Select(s => s.Strategy).Distinct();
-                var stratNames = strategies.Select(s => s.Name).Distinct().ToArray();
-                return stratNames;
+                accountLevelCommands.Add(new Tuple<DaSynchYamStats, DateRange, CommandWithSchedule>(command, commandDateRange, commandWithSchedule));
             }
+
+            var broadCommands = accountLevelCommands.Select(GetCommandWithCorrectDateRange).ToList();
+            return broadCommands;
         }
 
-        private IEnumerable<ExtAccount> GetAccounts()
+        private CommandWithSchedule GetCommandWithCorrectDateRange(Tuple<DaSynchYamStats, DateRange, CommandWithSchedule> setting)
         {
-            using (var db = new ClientPortalProgContext())
-            {
-                var accounts = db.ExtAccounts.Include("Platform.PlatColMapping").Where(a => a.Platform.Code == Platform.Code_YAM);
-                if (AccountId.HasValue)
-                    accounts = accounts.Where(a => a.Id == AccountId.Value);
-                else if (!DisabledOnly)
-                    accounts = accounts.Where(a => !a.Disabled);
-
-                if (DisabledOnly)
-                    accounts = accounts.Where(a => a.Disabled);
-
-                return accounts.ToList().Where(a => !string.IsNullOrWhiteSpace(a.ExternalId));
-            }
+            setting.Item1.StartDate = setting.Item2.FromDate;
+            setting.Item1.EndDate = setting.Item2.ToDate;
+            setting.Item1.DaysAgoToStart = null;
+            setting.Item3.Command = setting.Item1;
+            return setting.Item3;
         }
-
     }
 }

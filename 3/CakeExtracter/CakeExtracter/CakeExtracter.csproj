@@ -28,6 +28,9 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <NuGetPackageImportStamp>914f3a7f</NuGetPackageImportStamp>
   </PropertyGroup>
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>$(SolutionDir)\build\stylecop\StyleCopRuleSet.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Prefer32Bit>True</Prefer32Bit>
@@ -407,16 +410,15 @@
     <Compile Include="Commands\DA\DASynchCampSums.cs" />
     <Compile Include="Commands\DA\DaSynchCommissionJunctionStats.cs" />
     <Compile Include="Commands\DA\DASynchCriteoStats.cs" />
+    <Compile Include="Commands\DA\DASynchDBMStats.cs" />
     <Compile Include="Commands\DA\DASynchDBMStats2.cs" />
     <Compile Include="Commands\DA\DASynchFacebookMigration.cs" />
-    <Compile Include="Commands\DA\DASynchFacebookStats.cs" />
     <Compile Include="Commands\DA\DASynchKochavaStats.cs" />
-    <Compile Include="Commands\DA\DASynchYAMStats.cs" />
+    <Compile Include="Commands\DA\DaSynchYamStats.cs" />
+    <Compile Include="Commands\DA\DASynchYAMStats_Outdated.cs" />
     <Compile Include="Commands\EOMSynchCPCCommand.cs" />
-    <Compile Include="Commands\DA\DASynchDBMCreatives.cs" />
     <Compile Include="Commands\DA\DASeed.cs" />
     <Compile Include="Commands\DA\DASynchAdrollAds.cs" />
-    <Compile Include="Commands\DA\DASynchDBMStatsOld.cs" />
     <Compile Include="Commands\RT\RTSynchTest.cs" />
     <Compile Include="Commands\ScheduledRequestsLauncherCommand.cs" />
     <Compile Include="Commands\Search\CopySearchDailySummariesCommand.cs" />
@@ -428,14 +430,13 @@
     <Compile Include="Commands\Test\TestAppleCommand.cs" />
     <Compile Include="Commands\Test\TestCakeCommand.cs" />
     <Compile Include="Commands\Test\TestFacebookCommand.cs" />
-    <Compile Include="Commands\Test\TestYAMCommand.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Common\ArchiveExctractors\Contract\IArchiveExtractor.cs" />
-    <Compile Include="Common\ArchiveExctractors\GzipArchiveExtractor.cs" />
-    <Compile Include="Common\ArchiveExctractors\ZipArchiveExtractor.cs" />
+    <Compile Include="Common\Extractors\ArchiveExctractors\Contract\IArchiveExtractor.cs" />
+    <Compile Include="Common\Extractors\ArchiveExctractors\GzipArchiveExtractor.cs" />
+    <Compile Include="Common\Extractors\ArchiveExctractors\ZipArchiveExtractor.cs" />
     <Compile Include="Common\CommandLineUtils.cs" />
     <Compile Include="Common\Compare.cs" />
+    <Compile Include="Common\Extractors\CsvExtractors\Contracts\ICsvExtractor.cs" />
+    <Compile Include="Common\Extractors\CsvExtractors\CsvAccountExtractor.cs" />
     <Compile Include="Common\Constants\AnlyticTablesSyncConstants.cs" />
     <Compile Include="Common\JobExecutionManagement\CommandExecutionContext.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Models\AccountLogData.cs" />
@@ -470,6 +471,26 @@
     </Compile>
     <Compile Include="Etl\CakeMarketing\Extracters\SubIdSummariesExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\CPCLoader.cs" />
+    <Compile Include="Etl\DBM\Composer\DbmReportDataComposer.cs" />
+    <Compile Include="Etl\DBM\Extractors\DbmExtractor.cs" />
+    <Compile Include="Etl\DBM\Extractors\DbmLineItemExtractor.cs" />
+    <Compile Include="Etl\DBM\Extractors\Parsers\Models\DbmLineItemReportRow.cs" />
+    <Compile Include="Etl\DBM\Extractors\Parsers\ParsingConverters\DbmLineItemReportEntityRowMap.cs" />
+    <Compile Include="Etl\DBM\Extractors\Parsers\ParsingConverters\DbmReportDataConverter.cs" />
+    <Compile Include="Etl\DBM\Extractors\Parsers\DbmReportCsvParser.cs" />
+    <Compile Include="Etl\DBM\Extractors\Parsers\Models\DbmBaseReportRow.cs" />
+    <Compile Include="Etl\DBM\Extractors\Parsers\Models\DbmCreativeReportRow.cs" />
+    <Compile Include="Etl\DBM\Extractors\Parsers\ParsingConverters\DbmCreativeReportEntityRowMap.cs" />
+    <Compile Include="Etl\DBM\Loaders\EntitiesLoaders\DbmAdvertiserLoader.cs" />
+    <Compile Include="Etl\DBM\Loaders\EntitiesLoaders\DbmBaseEntityLoader.cs" />
+    <Compile Include="Etl\DBM\Loaders\EntitiesLoaders\DbmCampaignLoader.cs" />
+    <Compile Include="Etl\DBM\Loaders\EntitiesLoaders\DbmCreativeLoader.cs" />
+    <Compile Include="Etl\DBM\Loaders\EntitiesLoaders\DbmInsertionOrderLoader.cs" />
+    <Compile Include="Etl\DBM\Loaders\EntitiesLoaders\DbmLineItemLoader.cs" />
+    <Compile Include="Etl\DBM\Loaders\SummariesLoaders\DbmCreativeSummaryLoader.cs" />
+    <Compile Include="Etl\DBM\Loaders\SummariesLoaders\DbmLineItemSummaryLoader.cs" />
+    <Compile Include="Etl\DBM\Models\DbmAccountLineItemReportData.cs" />
+    <Compile Include="Etl\DBM\Models\DbmAccountCreativeReportData.cs" />
     <Compile Include="Etl\DSP\Configuration\AmazonDspConfigurationProvider.cs" />
     <Compile Include="Etl\CommandsExecutionAccountsProvider.cs" />
     <Compile Include="Etl\DSP\Extractors\AmazonDspExtractor.cs" />
@@ -554,8 +575,8 @@
     <Compile Include="Etl\TradingDesk\Extracters\CriteoExtracters.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DataBaseSourceExtractors\DatabaseKeywordsToDailySummaryExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DataBaseSourceExtractors\DatabaseStrategyToDailySummaryExtractor.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\DbmCreativeCloudStorageExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\DBMCreativeExtracter.cs" />
+    <Compile Include="Etl\DBM\Downloader\DbmReportDownloader.cs" />
+    <Compile Include="Etl\DBM\Extractors\DbmCreativeExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\DbmStrategyCsvExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\KeywordSummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\SearchTermSummaryExtracter.cs" />
@@ -564,12 +585,16 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\TDadSummaryExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\YamConValCsvExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\TDConvExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\TDSiteSummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\TDStrategySummaryExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\YAMConValExtracters.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\YAMExtracters.cs" />
+    <Compile Include="Etl\YAM\Extractors\ApiExtractors\YamCampaignSummaryExtractor.cs" />
+    <Compile Include="Etl\YAM\Extractors\ApiExtractors\BaseYamApiExtractor.cs" />
+    <Compile Include="Etl\YAM\Extractors\ApiExtractors\YamDailySummaryExtractor.cs" />
+    <Compile Include="Etl\YAM\Extractors\ApiExtractors\YamCreativeSummaryExtractor.cs" />
+    <Compile Include="Etl\YAM\Extractors\ApiExtractors\YamLineSummaryExtractor.cs" />
+    <Compile Include="Etl\YAM\Extractors\ApiExtractors\YamAdSummaryExtractor.cs" />
+    <Compile Include="Etl\YAM\Extractors\ApiExtractors\YamPixelSummaryExtractor.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\Adders\DailySummaryAdder.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\Adders\SummaryMetricAdder.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdformLoaders\AdformCampaignSummaryLoader.cs" />
@@ -582,8 +607,8 @@
     <Compile Include="Commands\DA\DASynchAdrollConvCsv.cs" />
     <Compile Include="Commands\DA\DASynchAdrollStats.cs" />
     <Compile Include="Commands\DA\DASynchAdvertisers.cs" />
-    <Compile Include="Commands\DA\DASynchDBMStats.cs" />
     <Compile Include="Commands\DA\DASynchFacebookStatsV2.cs" />
+    <Compile Include="Commands\DA\DASynchFacebookStats.cs" />
     <Compile Include="Commands\DA\DASynchOfferBudgetStats2.cs" />
     <Compile Include="Commands\DA\DASynchOfferBudgetStats.cs" />
     <Compile Include="Commands\DA\DASynchOfferDailySummaries.cs" />
@@ -610,19 +635,10 @@
     <Compile Include="Commands\Search\SynchSearchDailySummariesCriteoCommand.cs" />
     <Compile Include="Commands\TD\TDSynchAdDailySummariesAdroll.cs" />
     <Compile Include="Commands\TD\TDSynchAdDailySummariesAdrollCsv.cs" />
-    <Compile Include="Commands\TD\TDSynchCreativeDailySummariesDbm.cs" />
-    <Compile Include="Commands\TD\TDSynchCreativeDailySummariesDbmCsv.cs" />
-    <Compile Include="Commands\TD\TDSynchDailyStatsDbm.cs" />
-    <Compile Include="Commands\TD\TDSynchDailySummariesDbmCsv.cs" />
-    <Compile Include="Commands\TD\TDSynchDataTransferFilesDbm.cs" />
-    <Compile Include="Commands\TD\TDSynchUserListStats.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Commands\Test\TestAdRollCommand.cs" />
     <Compile Include="Commands\Test\TestBingCommand.cs" />
     <Compile Include="Commands\Test\TestChartCommand.cs" />
     <Compile Include="Commands\Test\TestCriteoCommand.cs" />
-    <Compile Include="Commands\Test\TestDbmCommand.cs" />
     <Compile Include="Commands\Test\TestExcelCommand.cs" />
     <Compile Include="Commands\Test\TestLCCommand.cs" />
     <Compile Include="Common\CopyPropertiesUtility.cs" />
@@ -649,7 +665,6 @@
     <Compile Include="Commands\SynchDailySummariesCommand.cs" />
     <Compile Include="Commands\Search\SynchSearchDailySummariesXmlCommand.cs" />
     <Compile Include="Common\SqlUtility.cs" />
-    <Compile Include="Common\Utility.cs" />
     <Compile Include="Common\XmlExtensions.cs" />
     <Compile Include="DataWarehouse.cs" />
     <Compile Include="Bootstrappers\EnterpriseLibraryBootstrapper.cs" />
@@ -704,11 +719,6 @@
     <Compile Include="Etl\TradingDesk\Extracters\AdrollApiExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollConvCsvExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollCsvExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\DbmCloudStorageExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\DbmConversionExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\DbmCsvExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\DbmDailyStatsExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\DbmUserListStatExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\TDDailySummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollAdDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollCampaignSummaryLoader.cs" />
@@ -726,35 +736,22 @@
     <Compile Include="Etl\TradingDesk\LoadersDA\CommissionJunctionLoaders\CommissionJunctionAdvertiserLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\CommissionJunctionLoaders\CommissionJunctionAdvertiserCleaner.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\CommissionJunctionLoaders\CommissionJunctionAdvertiserMapper.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\DbmConvLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\Interfaces\IDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\Interfaces\ISummaryMetricLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\KeywordSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\SearchTermSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\SummaryMetricLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\TDadPreviewLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\DBMCreativeDailySummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\DbmCreativeSummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\DbmDailySummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\DbmLineItemSummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\DbmSiteSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollAdSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\TDAdSetSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\TDadSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\TDConvLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\TDDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\TDSiteSummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\TDStrategyConValLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\TDStrategySummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\TDDailyConValLoader.cs" />
     <Compile Include="Etl\TradingDesk\Loaders\AdrollAdDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\Loaders\AdrollAdDailySummaryLoader2.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollDailySummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\Loaders\DbmConversionLoader.cs" />
-    <Compile Include="Etl\TradingDesk\Loaders\DbmCreativeDailySummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\Loaders\DbmDailyStatsLoader.cs" />
-    <Compile Include="Etl\TradingDesk\Loaders\DbmDailySummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\Loaders\DbmUserListStatLoader.cs" />
     <Compile Include="Etl\Transformer.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\AdWordsXmlReportExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\AdWordsLoader.cs" />
@@ -762,11 +759,39 @@
     <Compile Include="Etl\Loader.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\DailySummariesLoader.cs" />
     <Compile Include="Etl\LoaderTask.cs" />
+    <Compile Include="Etl\YAM\Extractors\CsvExtractors\RowModels\YamRow.cs" />
+    <Compile Include="Etl\YAM\Extractors\CsvExtractors\YamCsvExtractor.cs" />
+    <Compile Include="Etl\YAM\Extractors\CsvExtractors\RowMaps\YamRowMap.cs" />
+    <Compile Include="Etl\YAM\CommonClassesExtensions\YamStatsType.cs" />
+    <Compile Include="Etl\YAM\Loaders\BaseYamSummaryLoader.cs" />
+    <Compile Include="Etl\YAM\Loaders\YamAdSummaryLoader.cs" />
+    <Compile Include="Etl\YAM\Loaders\YamCampaignSummaryLoader.cs" />
+    <Compile Include="Etl\YAM\Loaders\YamCreativeSummaryLoader.cs" />
+    <Compile Include="Etl\YAM\Loaders\YamDailySummaryLoader.cs" />
+    <Compile Include="Etl\YAM\Loaders\YamLineSummaryLoader.cs" />
+    <Compile Include="Etl\YAM\Loaders\YamPixelSummaryLoader.cs" />
+    <Compile Include="Etl\YAM\Outdated\TDDailyConValLoader.cs" />
+    <Compile Include="Etl\YAM\Outdated\TDStrategyConValLoader.cs" />
+    <Compile Include="Etl\YAM\Outdated\YamConValCsvExtracter.cs" />
+    <Compile Include="Etl\YAM\Outdated\YAMConValExtracters.cs" />
+    <Compile Include="Etl\YAM\Outdated\YAMExtracters.cs" />
+    <Compile Include="Etl\YAM\Repositories\Summaries\YamAdSummaryDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\Summaries\YamCampaignSummaryDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\Summaries\YamCreativeSummaryDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\Summaries\YamDailySummaryDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\Summaries\YamLineSummaryDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\Summaries\YamPixelSummaryDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\YamAdDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\YamCampaignDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\YamCreativeDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\YamLineDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\YamPixelDatabaseRepository.cs" />
     <Compile Include="Helpers\CommandHelper.cs" />
     <Compile Include="Helpers\ConfigurationHelper.cs" />
     <Compile Include="Helpers\EntityIdStorage.cs" />
     <Compile Include="Extensions\ExceptionExtension.cs" />
     <Compile Include="Helpers\LoadingProgress.cs" />
+    <Compile Include="Helpers\RequestHelper.cs" />
     <Compile Include="Helpers\SafeContextWrapper.cs" />
     <Compile Include="ICakeMarketing.cs" />
     <Compile Include="ICakeMarketingCache.cs" />
@@ -921,6 +946,9 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Analyzer Include="..\..\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

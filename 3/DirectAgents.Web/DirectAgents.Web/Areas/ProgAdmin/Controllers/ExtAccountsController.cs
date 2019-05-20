@@ -6,9 +6,11 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using CakeExtracter.Commands;
+using CakeExtracter.Commands.DA;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.SpecialPlatformsDataProviders.Models;
 using DirectAgents.Web.Areas.ProgAdmin.Models;
 using DirectAgents.Web.Constants;
 
@@ -186,14 +188,14 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         }
 
         private static IEnumerable<SpecialPlatformSummariesVM> GetSpecialPlatformStatsGroupedByPlatform(
-            IEnumerable<SpecialPlatformSummary> stats)
+            IEnumerable<SpecialPlatformLatestsSummary> stats)
         {
             var platformGroups = stats.GroupBy(s => s.Account.Platform);
             return platformGroups.Select(GetSpecialPlatformSummaries);
         }
 
         private static SpecialPlatformSummariesVM GetSpecialPlatformSummaries(
-            IGrouping<Platform, SpecialPlatformSummary> platformGroup)
+            IGrouping<Platform, SpecialPlatformLatestsSummary> platformGroup)
         {
             return new SpecialPlatformSummariesVM
             {
@@ -363,7 +365,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
                     DASynchFacebookStats.RunStatic(accountId: extAcct.Id, startDate: start, endDate: end, statsType: statsType);
                     break;
                 case Platform.Code_YAM:
-                    DASynchYAMStats.RunStatic(accountId: extAcct.Id, startDate: start, endDate: end, statsType: statsType);
+                    DaSynchYamStats.RunStatic(accountId: extAcct.Id, startDate: start, endDate: end, statsType: statsType);
                     break;
             }
         }

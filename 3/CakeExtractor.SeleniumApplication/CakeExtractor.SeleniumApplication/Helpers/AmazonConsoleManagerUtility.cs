@@ -1,27 +1,34 @@
 ﻿using CakeExtracter.Common;
 using CakeExtractor.SeleniumApplication.Helpers;
 using CakeExtractor.SeleniumApplication.Models.ConsoleManagerUtilityModels;
-using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using Polly;
+using RestSharp;
+using Cookie = OpenQA.Selenium.Cookie;
 
 namespace CakeExtractor.SeleniumApplication.Utilities
 {
     internal class AmazonConsoleManagerUtility
     {
         private const int PageSize = 100;
+        private static int MaxRetryAttempts = Properties.PdaSettings.Default.MaxRetryAttempts;
+        private static TimeSpan PauseBetweenAttempts = TimeSpan.FromSeconds(Properties.PdaSettings.Default.PauseBetweenAttemptsInSeconds);
 
         private readonly Dictionary<string, string> cookies;
         private readonly Action<string> logInfo;
         private readonly Action<string> logError;
-
-        public AmazonConsoleManagerUtility(IEnumerable<Cookie> cookies, Action<string> logInfo, Action<string> logError)
+        private readonly Action<string> logWarning;
+        
+        public AmazonConsoleManagerUtility(IEnumerable<Cookie> cookies, Action<string> logInfo, Action<string> logError, Action<string> logWarning)
         {
             var simpleCookies = cookies.ToDictionary(x => x.Name, x => x.Value);
             this.cookies = simpleCookies;
             this.logInfo = logInfo;
             this.logError = logError;
+            this.logWarning = logWarning;
         }
 
         public IEnumerable<AmazonCmApiCampaignSummary> GetPdaCampaignsTruncatedSummaries(string accountEntityId, DateRange dateRange)
@@ -56,14 +63,26 @@ namespace CakeExtractor.SeleniumApplication.Utilities
             Log(message, logInfo);
         }
 
+        private void LogWarning(string message)
+        {
+            Log(message, logWarning);
+        }
+
         private IEnumerable<AmazonCmApiCampaignSummary> GetCampaignsSummaries(DateRange dateRange,
             Dictionary<string, string> queryParams, AmazonCmApiParams parameters)
         {
             var resultData = new List<AmazonCmApiCampaignSummary>();
             foreach (var date in dateRange.Dates)
             {
-                var data = GetCampaignsSummaries(date, queryParams, parameters);
-                resultData.AddRange(data);
+                try
+                {
+                    var data = GetCampaignsSummaries(date, queryParams, parameters);
+                    resultData.AddRange(data);
+                }
+                catch (Exception e)
+                {
+                    LogError($"Failed: {e.Message}");
+                }
             }
 
             return resultData;
@@ -82,9 +101,8 @@ namespace CakeExtractor.SeleniumApplication.Utilities
             }
             catch (Exception e)
             {
-                LogError(e.Message);
+                throw new Exception($"Could not get campaign summaries for {date}", e);
             }
-
             return data;
         }
 
@@ -105,9 +123,36 @@ namespace CakeExtractor.SeleniumApplication.Utilities
 
         private dynamic GetCampaignSummaries(Dictionary<string, string> queryParams, AmazonCmApiParams body)
         {
-            var request = RestRequestHelper.CreateRestRequest(AmazonCmApiHelper.CampaignsApiRelativePath, cookies, queryParams, body);
-            var response = RestRequestHelper.SendPostRequest<dynamic>(AmazonCmApiHelper.AmazonAdvertisingPortalUrl, request);
+            var response = Policy
+                .Handle<Exception>()
+                .OrResult<IRestResponse<dynamic>>(resp => 
+                    resp.StatusCode != HttpStatusCode.OK &&
+                    resp.StatusCode == HttpStatusCode.Forbidden)
+                .WaitAndRetry(MaxRetryAttempts, i => PauseBetweenAttempts,
+                    (exception, timeSpan, retryCount, context) =>
+                    {
+                        var message = $"Failed to process request. Waiting {timeSpan}";
+                        LoggerHelper.LogWaiting(message, retryCount, logInfo);
+                    })
+                .Execute(() => ProcessRequest<dynamic>(queryParams, body));
             return response.Data;
+        }
+
+        private IRestResponse<T> ProcessRequest<T>(Dictionary<string, string> queryParams, AmazonCmApiParams body)
+            where T : new()
+        {
+            var request = RestRequestHelper.CreateRestRequest(AmazonCmApiHelper.CampaignsApiRelativePath, cookies, queryParams, body);
+            var response = RestRequestHelper.SendPostRequest<T>(AmazonCmApiHelper.AmazonAdvertisingPortalUrl, request);
+
+            if (response.IsSuccessful)
+            {
+                return response;
+            }
+            var message = string.IsNullOrWhiteSpace(response.Content)
+                ? response.ErrorMessage
+                : response.Content;
+            LogWarning(message);
+            return response;
         }
 
         private void AddDynamicCampaignDataToResultData(List<AmazonCmApiCampaignSummary> resultData, dynamic data)

@@ -3,241 +3,208 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Configuration;
 using System.Linq;
-using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
-using CakeExtracter.Etl.TradingDesk.Extracters;
-using CakeExtracter.Etl.TradingDesk.LoadersDA;
+using CakeExtracter.Etl.DBM.Extractors;
+using CakeExtracter.Etl.DBM.Loaders.SummariesLoaders;
+using CakeExtracter.Helpers;
 using DBM;
-using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
-
-namespace CakeExtracter.Commands
+namespace CakeExtracter.Commands.DA
 {
+    ///The class represents a command that is used to retrieve statistics from the Google DBM portal
     [Export(typeof(ConsoleCommand))]
     public class DASynchDBMStats : ConsoleCommand
     {
-        //Note: if make a RunStatic, be sure to add 'DBM_AllSiteBucket', etc to the web.config
-        public static int RunStatic(int? insertionOrderID = null, DateTime? startDate = null, DateTime? endDate = null, string statsType = null, string advertiserId = "")
-        {
-            AutoMapperBootstrapper.CheckRunSetup();
-            var cmd = new DASynchDBMStats
-            {
-                InsertionOrderID = insertionOrderID,
-                StartDate = startDate ?? DateTime.Today,
-                EndDate = endDate ?? DateTime.Today,
-                StatsType = statsType,
-                AdvertiserID = advertiserId
-            };
-            return cmd.Run();
-        }
+        private const int DefaultDaysAgo = 14;
 
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
-        public bool Historical { get; set; }
-        public string StatsType { get; set; }
+        /// <summary>
+        /// Command argument: Account ID in the database for which the command will be executed (default = all)
+        /// </summary>
         public int? AccountId { get; set; }
-        public int? InsertionOrderID { get; set; }
-        public string AdvertiserID { get; set; }
 
-        private DBMUtility dbmUtility { get; set; }
+        /// <summary>
+        /// Command argument: Start date from which statistics will be extracted (default is 'daysAgo')
+        /// </summary>
+        public DateTime? StartDate { get; set; }
 
-        public override void ResetProperties()
-        {
-            StartDate = null;
-            EndDate = null;
-            Historical = false;
-            StatsType = null;
-            AccountId = null;
-            InsertionOrderID = null;
-            AdvertiserID = null;
-        }
+        /// <summary>
+        /// Command argument: End date to which statistics will be extracted (default is yesterday)
+        /// </summary>
+        public DateTime? EndDate { get; set; }
 
+        /// <summary>
+        /// Command argument: The number of days ago to calculate the start date from which statistics will be retrieved,
+        /// used if StartDate not specified (default = 14)
+        /// </summary>
+        public int? DaysAgoToStart { get; set; }
+
+        /// <summary>
+        /// Command argument: Store all reports from DBM portal in a separate folder
+        /// </summary>
+        public bool KeepReports { get; set; }
+        
+        /// <summary>
+        /// List of creative report identifiers specified on the configuration file
+        /// </summary>
+        public List<int> CreativeReportIds { get; set; }
+        /// <summary>
+        /// List of line item report identifiers specified on the configuration file
+        /// </summary>
+        public List<int> LineItemReportIds { get; set; }
+
+        private DBMUtility DbmUtility { get; set; }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// The constructor sets a command name and command arguments names, provides a description for them.
+        /// </summary>
         public DASynchDBMStats()
         {
-            IsCommand("daSynchDBMStats", "synch DBM Daily Stats - by lineitem/creative/site...");
-            HasOption<DateTime>("s|startDate=", "Start Date - for conversions only (default is today & ignore end date)", c => StartDate = c);
-            HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
-            HasOption("h|Historical=", "Get historical stats (ignore endDate)", c => Historical = bool.Parse(c));
-            HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
+            IsCommand("DASynchDBMStats", "synch DBM Stats");
             HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
-            HasOption<int?>("i|insertionOrder=", "Insertion Order (default: all)", c => InsertionOrderID = c);
-            HasOption<string>("v|advertiserId=", "Advertiser ID (default: all)", c => AdvertiserID = c);
+            HasOption("s|startDate=", "Start Date (default is 'daysAgo')", c => StartDate = DateTime.Parse(c));
+            HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
+            HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default = {DefaultDaysAgo})", c => DaysAgoToStart = c);
+            HasOption<bool>("k|keepReports=", "Store received DBM reports in a separate folder (default = false)", c => KeepReports = c);
         }
 
-        private void Test()
+        /// <inheritdoc />
+        /// <summary>
+        /// The method runs the current command and extract and save statistics from the DBM portal based on the command arguments.
+        /// </summary>
+        /// <param name="remainingArguments"></param>
+        /// <returns>Execution code</returns>
+        public override int Execute(string[] remainingArguments)
         {
-            SetupDBMUtility();
-            //dbmUtility.TokenSets = new string[] { "|DBMDBM|1/VC8MQArCKHna2NmLFYg4GVcftxtgMo1p4lpw-ZeLXRo" };
-            dbmUtility.Test();
+            SetConfigurationVariables();
+            SetupDbmUtility();
+            var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
+            var accounts = GetAccounts();
+
+            DoETLs(dateRange, accounts);
+
             SaveTokens();
+            return 0;
         }
-        private void SetupDBMUtility()
+
+        /// <inheritdoc />
+        /// <summary>
+        /// The method resets command arguments to defaults
+        /// </summary>
+        public override void ResetProperties()
         {
-            this.dbmUtility = new DBMUtility(m => Logger.Info(m), m => Logger.Warn(m));
-            GetTokens();
+            AccountId = null;
+            StartDate = null;
+            EndDate = null;
+            DaysAgoToStart = null;
+            KeepReports = false;
         }
+
+        private void SetConfigurationVariables()
+        {
+            LineItemReportIds = GetValuesFromConfig("DBM_LineItemReportIds", ConfigurationHelper.ExtractNumbersFromConfigValue);
+            CreativeReportIds = GetValuesFromConfig("DBM_CreativeReportIds", ConfigurationHelper.ExtractNumbersFromConfigValue);
+        }
+
+        private static List<T> GetValuesFromConfig<T>(string parameterName, Func<string, IEnumerable<T>> extractFromConfigFunc)
+        {
+            var configValue = ConfigurationManager.AppSettings[parameterName];
+            var values = string.IsNullOrEmpty(configValue) ? new List<T>() : extractFromConfigFunc(configValue);
+            return values.ToList();
+        }
+
+        private void DoETLs(DateRange dateRange, IEnumerable<ExtAccount> accounts)
+        {
+            Logger.Info("DBM ETL. DateRange {0}.", dateRange);
+            DoETLs_Creative(dateRange, accounts);
+            DoETLs_LineItem(dateRange, accounts);
+        }
+
+        private void DoETLs_Creative(DateRange dateRange, IEnumerable<ExtAccount> accounts)
+        {
+            Logger.Info($"Start processing Creative reports (report count: {CreativeReportIds.Count})...");
+            CreativeReportIds.ForEach(creativeReportId =>
+            {
+                DoETL_Creative(dateRange, accounts, creativeReportId);
+            });
+            Logger.Info("Finished processing Creative reports");
+        }
+
+        private void DoETL_Creative(DateRange dateRange, IEnumerable<ExtAccount> accounts, int creativeReportId)
+        {
+            try
+            {
+                var extractor = new DbmCreativeExtractor(DbmUtility, dateRange, accounts, creativeReportId, KeepReports);
+                var summaries = extractor.Extract();
+
+                var loader = new DbmCreativeSummaryLoader(dateRange);
+                loader.Load(summaries);
+            }
+            catch (Exception e)
+            {
+                Logger.Warn($"Could not process a report [report ID: {creativeReportId}]: {e.Message}");
+            }
+        }
+
+        private void DoETLs_LineItem(DateRange dateRange, IEnumerable<ExtAccount> accounts)
+        {
+            Logger.Info($"Start processing Line item reports (report count: {LineItemReportIds.Count})...");
+            LineItemReportIds.ForEach(lineItemReportId =>
+            {
+                DoETL_LineItem(dateRange, accounts, lineItemReportId);
+            });
+            Logger.Info("Finished processing Line item reports");
+        }
+
+        private void DoETL_LineItem(DateRange dateRange, IEnumerable<ExtAccount> accounts, int lineItemReportId)
+        {
+            try
+            {
+                var extractor = new DbmLineItemExtractor(DbmUtility, dateRange, accounts, lineItemReportId, KeepReports);
+                var summaries = extractor.Extract();
+
+                var loader = new DbmLineItemSummaryLoader(dateRange);
+                loader.Load(summaries);
+            }
+            catch (Exception e)
+            {
+                Logger.Warn($"Could not process a report [report ID: {lineItemReportId}]: {e.Message}");
+            }
+        }
+        
+        private IEnumerable<ExtAccount> GetAccounts()
+        {
+            var repository = new PlatformAccountRepository();
+            if (!AccountId.HasValue)
+            {
+                var accounts = repository.GetAccountsWithFilledExternalIdByPlatformCode(Platform.Code_DBM, false);
+                return accounts;
+            }
+
+            var account = repository.GetAccount(AccountId.Value);
+            return new[] { account };
+        }
+        
+        // --- setup ---
+
+        private void SetupDbmUtility()
+        {
+            DbmUtility = new DBMUtility(m => Logger.Info(m), m => Logger.Warn(m));
+            GetTokens();
+            DbmUtility.SetupService();
+        }
+
         private void GetTokens()
         {
             // Get tokens, if any, from the database
-            string[] tokenSets = Platform.GetPlatformTokens(Platform.Code_DBM);
-            dbmUtility.TokenSets = tokenSets;
+            var tokenSets = Platform.GetPlatformTokens(Platform.Code_DBM);
+            DbmUtility.TokenSets = tokenSets;
         }
+
         private void SaveTokens()
         {
-            Platform.SavePlatformTokens(Platform.Code_DBM, dbmUtility.TokenSets);
-        }
-
-        public override int Execute(string[] remainingArguments)
-        {
-            //Test();
-
-            SetInsertionOrderFromAccount();
-            if (Historical)
-                DoHistorical();
-            else
-                DoRegular();
-            return 0;
-        }
-        private void SetInsertionOrderFromAccount()
-        {
-            if (InsertionOrderID.HasValue || !AccountId.HasValue)
-                return; // skip if ioID is already specified (or no account is specified)
-            using (var db = new ClientPortalProgContext())
-            {
-                var extAcct = db.ExtAccounts.Find(AccountId.Value);
-                if (extAcct != null)
-                {
-                    int externalId;
-                    if (int.TryParse(extAcct.ExternalId, out externalId))
-                        InsertionOrderID = externalId;
-                }
-            }
-        }
-
-        public void DoRegular()
-        {
-            // Note: The reportDate will be one day after the endDate of the desired stats
-            DateTime endDate = EndDate ?? DateTime.Today.AddDays(-1);
-            var reportDate = endDate.AddDays(1);
-
-            var statsType = new StatsTypeAgg(this.StatsType);
-
-            if (statsType.Daily)
-                DoETL_Daily(reportDate: reportDate);
-            if (statsType.Strategy)
-                DoETL_Strategy(reportDate: reportDate);
-            if (statsType.Creative)
-                DoETL_Creative(reportDate: reportDate);
-            if (statsType.Site)
-                DoETL_Site(reportDate: reportDate);
-
-            if (statsType.Conv && !statsType.All) // don't include when getting "all" statstypes
-                DoETL_Conv();
-        }
-
-        public void DoHistorical()
-        {
-            var statsType = new StatsTypeAgg(this.StatsType);
-            if (statsType.Daily)
-                DoETL_Daily(buckets: BucketNamesFromConfig("DBM_AllIOBucket_Historical"));
-            if (statsType.Strategy)
-                DoETL_Strategy(buckets: BucketNamesFromConfig("DBM_AllLineItemBucket_Historical"));
-            if (statsType.Creative)
-                DoETL_Creative(buckets: BucketNamesFromConfig("DBM_AllCreativeBucket_Historical"));
-            if (statsType.Site)
-                DoETL_Site(buckets: BucketNamesFromConfig("DBM_AllSiteBucket_Historical"));
-            //if (statsType.Conv)
-            // TODO: implement
-        }
-        public static IEnumerable<string> BucketNamesFromConfig(string configKey)
-        {
-            var configVal = ConfigurationManager.AppSettings[configKey];
-            if (configVal == null)
-                configVal = String.Empty;
-            return configVal.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-        }
-
-        public void DoETL_Daily(DateTime? reportDate = null, IEnumerable<string> buckets = null)
-        {
-            if (buckets == null)
-                buckets = new List<string> { ConfigurationManager.AppSettings["DBM_AllIOBucket"] };
-
-            var extracter = new DbmCloudStorageExtracter(reportDate, buckets, ioFilter: InsertionOrderID);
-            var loader = new DbmDailySummaryLoader();
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
-        }
-        public void DoETL_Strategy(DateTime? reportDate = null, IEnumerable<string> buckets = null)
-        {
-            if (buckets == null)
-                buckets = new List<string> { ConfigurationManager.AppSettings["DBM_AllLineItemBucket"] };
-
-            var extracter = new DbmCloudStorageExtracter(reportDate, buckets, byLineItem: true, ioFilter: InsertionOrderID);
-            var loader = new DbmLineItemSummaryLoader();
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
-        }
-        public void DoETL_Creative(DateTime? reportDate = null, IEnumerable<string> buckets = null)
-        {
-            if (buckets == null)
-                buckets = new List<string> { ConfigurationManager.AppSettings["DBM_AllCreativeBucket"] };
-
-            var extracter = new DbmCloudStorageExtracter(reportDate, buckets, byCreative: true, ioFilter: InsertionOrderID);
-            var loader = new DbmCreativeSummaryLoader();
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
-        }
-        public void DoETL_Site(DateTime? reportDate = null, IEnumerable<string> buckets = null)
-        {
-            if (buckets == null)
-                buckets = new List<string> { ConfigurationManager.AppSettings["DBM_AllSiteBucket"] };
-
-            var extracter = new DbmCloudStorageExtracter(reportDate, buckets, bySite: true, ioFilter: InsertionOrderID);
-            var impThresholdString = ConfigurationManager.AppSettings["TD_SiteStats_ImpressionThreshold"];
-            int impThreshold;
-            if (int.TryParse(impThresholdString, out impThreshold))
-                extracter.ImpressionThreshold = impThreshold;
-
-            var loader = new DbmSiteSummaryLoader();
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
-        }
-
-        // to be tested...
-        // report for each day has data from two days ago, i.e. report for 12/11/2016 will have conv data for 12/9/2016.
-        public void DoETL_Conv() //null for all
-        {
-            var today = DateTime.Today;
-            var dateRange = (StartDate == null) ? new DateRange(today, today) : new DateRange(StartDate.Value, EndDate.Value);
-
-            if (InsertionOrderID != null)
-            {
-                using (var db = new ClientPortalProgContext())
-                {
-                    var insertionOrder = db.InsertionOrders.Where(c => c.ID == InsertionOrderID.Value).FirstOrDefault();
-                    if (insertionOrder != null)
-                        AdvertiserID = insertionOrder.Bucket.ToString();
-                }
-            }
-
-            var advertiserIds = (AdvertiserID == "" || AdvertiserID == null) ? (BucketNamesFromConfig("DBM_AllAdvertiserIds")) : new string[] { AdvertiserID };
-            int timezoneOffset = -5; // w/o daylight savings
-            var convConverter = new CakeExtracter.Etl.TradingDesk.Loaders.DbmConvConverter(timezoneOffset);
-
-            var extracter = new DbmConversionExtracter(dateRange, advertiserIds, InsertionOrderID, true);
-            var loader = new DbmConvLoader(convConverter);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            Platform.SavePlatformTokens(Platform.Code_DBM, DbmUtility.TokenSets);
         }
     }
 }

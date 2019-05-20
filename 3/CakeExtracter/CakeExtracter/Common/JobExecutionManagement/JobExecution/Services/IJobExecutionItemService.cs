@@ -43,7 +43,15 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
         void AddErrorToJobExecutionItem(JobRequestExecution executionHistoryItem, string message, int? accountId = null);
 
         /// <summary>
-        /// Adds the state message.
+        /// Sets the state message.
+        /// </summary>
+        /// <param name="executionHistoryItem">The execution history item.</param>
+        /// <param name="message">The message.</param>
+        /// <param name="accountId">The account identifier.</param>
+        void SetStateMessage(JobRequestExecution executionHistoryItem, string message, int? accountId = null);
+
+        /// <summary>
+        /// Adds the state message to job execution item.
         /// </summary>
         /// <param name="executionHistoryItem">The execution history item.</param>
         /// <param name="message">The message.</param>

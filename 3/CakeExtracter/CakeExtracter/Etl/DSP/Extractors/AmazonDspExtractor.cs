@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Amazon;
-using CakeExtracter.Common.ArchiveExtractors;
-using CakeExtracter.Common.ArchiveExtractors.Contract;
+using CakeExtracter.Common.Extractors.ArchiveExctractors;
+using CakeExtracter.Common.Extractors.ArchiveExctractors.Contract;
 using CakeExtracter.Etl.DSP.Configuration;
 using CakeExtracter.Etl.DSP.Extractors.Composer;
 using CakeExtracter.Etl.DSP.Extractors.Parser;

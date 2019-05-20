@@ -24,6 +24,9 @@
     <UseGlobalApplicationHostFile />
     <Use64BitIISExpress />
   </PropertyGroup>
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>$(SolutionDir)\build\stylecop\StyleCopRuleSet.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -257,6 +260,7 @@
     <Compile Include="Areas\ProgAdmin\Controllers\CampaignsController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\EmployeesController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\ExtraItemsController.cs" />
+    <Compile Include="Areas\ProgAdmin\Controllers\Facebook\FacebookController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\MainController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\MaintenanceController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\PlatColMappingsController.cs" />
@@ -270,6 +274,9 @@
     <Compile Include="Areas\ProgAdmin\Models\DailySummariesVM.cs" />
     <Compile Include="Areas\ProgAdmin\Models\DashboardVM.cs" />
     <Compile Include="Areas\ProgAdmin\Models\ExtraItemsVM.cs" />
+    <Compile Include="Areas\ProgAdmin\Models\FacebookActionsTotalsVm.cs" />
+    <Compile Include="Areas\ProgAdmin\Models\FacebookTotalsInfoVm.cs" />
+    <Compile Include="Areas\ProgAdmin\Models\FacebookLatestsInfoVm.cs" />
     <Compile Include="Areas\ProgAdmin\Models\ReportingVM.cs" />
     <Compile Include="Areas\ProgAdmin\Models\SpecialPlatformSummariesVm.cs" />
     <Compile Include="Areas\ProgAdmin\Models\StatsGaugeVM.cs" />
@@ -1194,11 +1201,19 @@
     <Content Include="Areas\Admin\Views\Shared\_LayoutAdmin.cshtml" />
     <Content Include="Areas\Admin\Views\web.config" />
     <Content Include="Areas\ProgAdmin\Views\ExtAccounts\IndexSpecialPlatformStats.cshtml" />
+    <Content Include="Areas\ProgAdmin\Views\Facebook\Totals.cshtml" />
+    <Content Include="Areas\ProgAdmin\Views\Facebook\Latests.cshtml" />
+    <Content Include="Areas\ProgAdmin\Views\Shared\DatePicker.cshtml" />
+    <Content Include="Areas\ProgAdmin\Views\Facebook\ActionTotals.cshtml" />
     <None Include="Properties\PublishProfiles\dagents_vm_staging.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\DayOfWeek.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
     <None Include="Properties\PublishProfiles\dagents_vm_production.pubxml" />
     <Content Include="Areas\Admin\Views\JobsExecution\History.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

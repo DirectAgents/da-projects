@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.SpecialPlatformProviders.Contracts;
+using DirectAgents.Domain.SpecialPlatformsDataProviders.Models;
 
 namespace DirectAgents.Domain.Abstract
 {
@@ -15,6 +15,6 @@ namespace DirectAgents.Domain.Abstract
         /// </summary>
         /// <param name="platformCode">Code of platform</param>
         /// <returns>List of date ranges (earliest - latest) jobs of all special platforms</returns>
-        IEnumerable<SpecialPlatformSummary> GetSpecialPlatformStats(string platformCode);
+        IEnumerable<SpecialPlatformLatestsSummary> GetSpecialPlatformStats(string platformCode);
     }
 }

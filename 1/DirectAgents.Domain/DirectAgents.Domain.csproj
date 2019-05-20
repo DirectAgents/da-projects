@@ -14,6 +14,9 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>$(SolutionDir)\build\stylecop\StyleCopRuleSet.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -90,6 +93,7 @@
     <Compile Include="Abstract\IDepartmentRepository.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SpecialPlatformsDataProviders\Facebook\IFacebookWebPortalDataService.cs" />
     <Compile Include="Abstract\IMainRepository.cs" />
     <Compile Include="Abstract\IPlatformAccountRepository.cs" />
     <Compile Include="Abstract\IRevTrackRepository.cs" />
@@ -109,27 +113,62 @@
     <Compile Include="Concrete\CPSearchRepository.cs" />
     <Compile Include="Concrete\DepartmentRepository.cs" />
     <Compile Include="Concrete\Extensions.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\Facebook\FacebookWebPortalDataService.cs" />
     <Compile Include="Concrete\MainRepository.cs" />
     <Compile Include="Concrete\PlatformAccountRepository.cs" />
     <Compile Include="Concrete\RevTrackRepository.cs" />
     <Compile Include="Concrete\SecurityRepository.cs" />
     <Compile Include="Concrete\SpecialPlatformRepository.cs" />
+    <Compile Include="Entities\CPProg\DBM\Entities\DbmAdvertiser.cs" />
+    <Compile Include="Entities\CPProg\DBM\Entities\DbmEntity.cs" />
+    <Compile Include="Entities\CPProg\DBM\Entities\DbmCampaign.cs" />
+    <Compile Include="Entities\CPProg\DBM\Entities\DbmCreative.cs" />
+    <Compile Include="Entities\CPProg\DBM\Entities\DbmInsertionOrder.cs" />
+    <Compile Include="Entities\CPProg\DBM\Entities\DbmLineItem.cs" />
+    <Compile Include="Entities\CPProg\DBM\SummaryMetrics\DbmBaseSummaryEntity.cs" />
+    <Compile Include="Entities\CPProg\DBM\SummaryMetrics\DbmCreativeSummary.cs" />
+    <Compile Include="Entities\CPProg\DBM\SummaryMetrics\DbmLineItemSummary.cs" />
+    <Compile Include="Entities\CPProg\YAM\BaseYamEntity.cs" />
+    <Compile Include="Entities\CPProg\YAM\Summaries\BaseYamSummary.cs" />
+    <Compile Include="Entities\CPProg\YAM\Summaries\YamCampaignSummary.cs" />
+    <Compile Include="Entities\CPProg\YAM\Summaries\YamCreativeSummary.cs" />
+    <Compile Include="Entities\CPProg\YAM\Summaries\YamAdSummary.cs" />
+    <Compile Include="Entities\CPProg\YAM\Summaries\YamDailySummary.cs" />
+    <Compile Include="Entities\CPProg\YAM\Summaries\YamLineSummary.cs" />
+    <Compile Include="Entities\CPProg\YAM\Summaries\YamPixelSummary.cs" />
+    <Compile Include="Entities\CPProg\YAM\YamAd.cs" />
+    <Compile Include="Entities\CPProg\YAM\YamCampaign.cs" />
+    <Compile Include="Entities\CPProg\YAM\YamLine.cs" />
+    <Compile Include="Entities\CPProg\YAM\YamPixel.cs" />
+    <Compile Include="Entities\CPProg\YAM\YamCreative.cs" />
     <Compile Include="Entities\CPProg\Facebook\Daily\FbDailySummary.cs" />
     <Compile Include="Entities\CPProg\Facebook\FbBaseSummary.cs" />
     <Compile Include="Entities\CPProg\Facebook\FbEntity.cs" />
     <Compile Include="MigrationsTD\201904221606279_FacebookCreativeExpansion.cs" />
+    <Compile Include="MigrationsTD\201904221606279_FacebookCreativeExpansion.Designer.cs">
+      <DependentUpon>201904221606279_FacebookCreativeExpansion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\201905160922056_Mig_DbmCreativeExpansion.cs" />
+    <Compile Include="MigrationsTD\201905160922056_Mig_DbmCreativeExpansion.Designer.cs">
+      <DependentUpon>201905160922056_Mig_DbmCreativeExpansion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\201905161007112_Mig_YamTables.cs" />
+    <Compile Include="MigrationsTD\201905161007112_Mig_YamTables.Designer.cs">
+      <DependentUpon>201905161007112_Mig_YamTables.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\201904252123496_Mig_EventConv_TransactionId.cs" />
     <Compile Include="Migrations\201904252123496_Mig_EventConv_TransactionId.Designer.cs">
       <DependentUpon>201904252123496_Mig_EventConv_TransactionId.cs</DependentUpon>
     </Compile>
-    <Compile Include="MigrationsTD\201904221606279_FacebookCreativeExpansion.Designer.cs">
-      <DependentUpon>201904221606279_FacebookCreativeExpansion.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SpecialPlatformProviders\Implementation\CommissionJunctionProvider.cs" />
-    <Compile Include="SpecialPlatformProviders\Implementation\DspProvider.cs" />
-    <Compile Include="SpecialPlatformProviders\Implementation\KochavaProvider.cs" />
-    <Compile Include="SpecialPlatformProviders\Contracts\SpecialPlatformProvider.cs" />
-    <Compile Include="SpecialPlatformProviders\Implementation\VcdProvider.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\CommissiobJunction\CommissionJunctionProvider.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\DSP\DspProvider.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\Facebook\Models\FacebookAccountActionsTotals.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\Facebook\Models\FacebookActionsTotals.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\Facebook\Models\FacebookTotalsInfo.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\Facebook\Models\FacebookLatestsInfo.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\Kochava\KochavaProvider.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\Common\SpecialPlatformProvider.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\VCD\VcdProvider.cs" />
     <Compile Include="Concrete\SuperRepository.cs" />
     <Compile Include="Concrete\TDRepository.cs" />
     <Compile Include="Contexts\ABContext.cs" />
@@ -144,7 +183,7 @@
     <Compile Include="DTO\ProgClientStats.cs" />
     <Compile Include="DTO\ProgMediaStat.cs" />
     <Compile Include="DTO\RTLineItem.cs" />
-    <Compile Include="DTO\SpecialPlatformSummary.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\Models\SpecialPlatformLatestsSummary.cs" />
     <Compile Include="DTO\TDCampStats.cs" />
     <Compile Include="DTO\TDLineItem.cs" />
     <Compile Include="DTO\TDStat.cs" />
@@ -1056,6 +1095,12 @@
     <EmbeddedResource Include="MigrationsTD\201904221606279_FacebookCreativeExpansion.resx">
       <DependentUpon>201904221606279_FacebookCreativeExpansion.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201905160922056_Mig_DbmCreativeExpansion.resx">
+      <DependentUpon>201905160922056_Mig_DbmCreativeExpansion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201905161007112_Mig_YamTables.resx">
+      <DependentUpon>201905161007112_Mig_YamTables.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
@@ -1126,7 +1171,10 @@
       <DependentUpon>201904252123496_Mig_EventConv_TransactionId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Analyzer Include="..\..\3\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\..\3\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

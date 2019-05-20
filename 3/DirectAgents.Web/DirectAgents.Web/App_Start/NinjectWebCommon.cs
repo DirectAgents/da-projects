@@ -14,6 +14,7 @@ namespace DirectAgents.Web.App_Start
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
     using Ninject;
     using Ninject.Web.Common;
+    using DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook;
 
     public static class NinjectWebCommon 
     {
@@ -77,6 +78,9 @@ namespace DirectAgents.Web.App_Start
             kernel.Bind<IABRepository>().To<ABRepository>();
             kernel.Bind<ISuperRepository>().To<SuperRepository>();
             kernel.Bind<ISpecialPlatformRepository>().To<SpecialPlatformRepository>();
+
+            kernel.Bind<IFacebookWebPortalDataService>().To<FacebookWebPortalDataService>();
+            kernel.Bind<IPlatformAccountRepository>().To<PlatformAccountRepository>();
 
             kernel.Bind<IJobHistoryDataProvider>().To<JobHistoryDataProvider>();
             kernel.Bind<ClientPortal.Data.Contracts.IClientPortalRepository>().To<ClientPortal.Data.Services.ClientPortalRepository>();

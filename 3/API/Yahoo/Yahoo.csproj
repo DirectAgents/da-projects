@@ -13,6 +13,9 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>$(SolutionDir)\build\stylecop\StyleCopRuleSet.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -49,13 +52,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Const.cs" />
-    <Compile Include="HelperClasses.cs" />
-    <Compile Include="YAMUtility.cs" />
+    <Compile Include="Constants\Enums\IntervalTypeId.cs" />
+    <Compile Include="Constants\Enums\Currency.cs" />
+    <Compile Include="Constants\Enums\DateTypeId.cs" />
+    <Compile Include="Constants\Enums\Dimension.cs" />
+    <Compile Include="Constants\Enums\Metric.cs" />
+    <Compile Include="Constants\ReportStatus.cs" />
+    <Compile Include="Constants\Timezone.cs" />
+    <Compile Include="Exceptions\FailedReportGenerationException.cs" />
+    <Compile Include="Helpers\ReportParametersHelper.cs" />
+    <Compile Include="Helpers\YamLogger.cs" />
+    <Compile Include="Models\Responses\CreateReportResponse.cs" />
+    <Compile Include="Models\Responses\ReadReportStatusResponse.cs" />
+    <Compile Include="Models\Responses\CreateAccessTokenResponse.cs" />
+    <Compile Include="Models\Requests\ReportPayload.cs" />
+    <Compile Include="Models\Requests\ReportOption.cs" />
+    <Compile Include="Models\ReportSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="YamUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\..\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
