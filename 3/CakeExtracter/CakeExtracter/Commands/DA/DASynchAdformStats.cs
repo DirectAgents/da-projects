@@ -40,6 +40,8 @@ namespace CakeExtracter.Commands
         public string StatsType { get; set; }
         public bool DisabledOnly { get; set; }
 
+        private List<Action> etlList;
+
         public override void ResetProperties()
         {
             AccountId = null;
@@ -75,33 +77,38 @@ namespace CakeExtracter.Commands
             var accounts = GetAccounts();
             AdformUtility.TokenSets = GetTokens();
 
-            foreach (var account in accounts)
+            foreach (var account in accounts)    
             {
+                etlList = new List<Action>();
                 Logger.Info("Commencing ETL for Adform account ({0}) {1}", account.Id, account.Name);
                 var orderInsteadOfCampaign = accountIdsForOrders.Contains(account.ExternalId);
                 var adformUtility = CreateUtility(account, trackingIdsOfAccounts);
 
-                DoEtl(statsType.Daily, account, () => DoETL_Daily(dateRange, account, adformUtility));
-                DoEtl(statsType.Strategy, account, () => DoETL_Strategy(dateRange, account, orderInsteadOfCampaign, adformUtility));
-                DoEtl(statsType.AdSet, account, () => DoETL_AdSet(dateRange, account, orderInsteadOfCampaign, adformUtility));
-                DoEtl(statsType.Creative, account, () => DoETL_Creative(dateRange, account, adformUtility));
-                Logger.Info("Finished ETL for Adform account ({0}) {1}", account.Id, account.Name);
+                AddEnabledEtl(statsType.Daily, account, () => DoETL_Daily(dateRange, account, adformUtility));
+                AddEnabledEtl(statsType.Strategy, account, () => DoETL_Strategy(dateRange, account, orderInsteadOfCampaign, adformUtility));
+                AddEnabledEtl(statsType.AdSet, account, () => DoETL_AdSet(dateRange, account, orderInsteadOfCampaign, adformUtility));
+                AddEnabledEtl(statsType.Creative, account, () => DoETL_Creative(dateRange, account, adformUtility));
+                
+                Parallel.Invoke(etlList.ToArray());
             }
             SaveTokens(AdformUtility.TokenSets);
             return 0;
         }
 
-        private static void DoEtl(bool etlEnabled, ExtAccount account, Action etlAction)
+        private void AddEnabledEtl(bool etlEnabled, ExtAccount account, Action etlAction)
         {
             if (!etlEnabled) return;
-            try
+            etlList.Add(() =>
             {
-                etlAction();
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(account.Id, ex);
-            }
+                try
+                {
+                    etlAction();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(account.Id, ex);
+                }
+            });
         }
 
         private static AdformUtility CreateUtility(ExtAccount account, Dictionary<string, string> trackingIdsOfAccounts)
