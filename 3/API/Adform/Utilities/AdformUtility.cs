@@ -15,6 +15,9 @@ using RestSharp.Deserializers;
 
 namespace Adform.Utilities
 {
+    /// <summary>
+    /// Adform utility to send API requests
+    /// </summary>
     public class AdformUtility
     {
         public string TrackingId { get; set; }
@@ -48,7 +51,6 @@ namespace Adform.Utilities
 
         private static string adformAuthBaseUrl;
         private static string adformBaseUrl;
-        private static int maxPageSize;
         private static int maxNumberOfMetrics;
         private static int maxNumberOfDimensions;
         private static int maxPollingRetryAttempt;
@@ -69,6 +71,11 @@ namespace Adform.Utilities
             InitializeVariablesFromConfig();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AdformUtility"/> class.
+        /// </summary>
+        /// <param name="logInfo">Action that logs infos</param>
+        /// <param name="logError">Action that logs errors</param>
         public AdformUtility(Action<string> logInfo, Action<Exception> logError)
         {
             logger = new AdformLogger(logInfo, logError);
@@ -78,7 +85,6 @@ namespace Adform.Utilities
         {
             adformAuthBaseUrl = ConfigurationManager.AppSettings["AdformAuthBaseUrl"];
             adformBaseUrl = ConfigurationManager.AppSettings["AdformBaseUrl"];
-            maxPageSize = int.Parse(ConfigurationManager.AppSettings["AdformMaxPageSize"]);
             maxNumberOfMetrics = int.Parse(ConfigurationManager.AppSettings["AdformMaxNumberOfMetrics"]);
             maxNumberOfDimensions = int.Parse(ConfigurationManager.AppSettings["AdformMaxNumberOfDimensions"]);
             maxPollingRetryAttempt = int.Parse(ConfigurationManager.AppSettings["AdformMaxPollingRetryAttempt"]);
@@ -119,6 +125,9 @@ namespace Adform.Utilities
 
         #region Tokens
 
+        /// <summary>
+        /// Array of access tokens
+        /// </summary>
         public static string[] TokenSets
         {
             get => CreateTokenSets().ToArray();
@@ -131,7 +140,10 @@ namespace Adform.Utilities
             }
         }
 
-        // for alternative credentials...
+        /// <summary>
+        /// Set an alt account number to use specific access values ​​for Api (for alternate credentials)
+        /// </summary>
+        /// <param name="accountId">Account external id</param>
         public void SetWhichAlt(string accountId)
         {
             WhichAlt = 0; //default
@@ -247,6 +259,10 @@ namespace Adform.Utilities
             var restResponse = ProcessRequest<object>(request, isPostMethod: true);
         }
 
+        /// <summary>
+        /// Returns all operations to be created with their states.
+        /// See more - https://api.adform.com/v1/help/buyer/stats#!/Operations/Operations_GetOperations
+        /// </summary>
         public void GetAllOperations()
         {
             var request = CreateRestRequest(AllOperationsPath);
@@ -255,7 +271,12 @@ namespace Adform.Utilities
 
         #endregion
 
-        public IEnumerable<ReportData> GetReportDataWithPaging(ReportParams reportParams)
+        /// <summary>
+        /// Returns all report data with dimension and metrics limits
+        /// </summary>
+        /// <param name="reportParams">Parameters of report</param>
+        /// <returns>List of report data <see cref="ReportData"/></returns>
+        public IEnumerable<ReportData> GetReportDataWithLimits(ReportParams reportParams)
         {
             var allReportData = new List<ReportData>();
             for (var i = 0; i < reportParams.metrics.Length; i += maxNumberOfMetrics)
@@ -275,6 +296,11 @@ namespace Adform.Utilities
             return allReportData;
         }
 
+        /// <summary>
+        /// Tries to get the report data several times using the specified path
+        /// </summary>
+        /// <param name="dataLocationPath">Relative path to report data</param>
+        /// <returns>Report data <see cref="ReportData"/></returns>
         public ReportData TryGetReportData(string dataLocationPath)
         {
             var reportData = Policy
@@ -285,6 +311,11 @@ namespace Adform.Utilities
             return reportData;
         }
 
+        /// <summary>
+        /// Returns a report parameters by report settings
+        /// </summary>
+        /// <param name="settings">Settings of report <see cref="ReportSettings"/></param>
+        /// <returns>Parameters of report <see cref="ReportParams"/></returns>
         public ReportParams CreateReportParams(ReportSettings settings)
         {
             var reportParams = new ReportParams
@@ -292,15 +323,16 @@ namespace Adform.Utilities
                 filter = AdformApiHelper.GetFilters(settings),
                 dimensions = AdformApiHelper.GetDimensions(settings),
                 metrics = AdformApiHelper.GetMetrics(settings),
-                paging = new Paging
-                {
-                    limit = maxPageSize
-                },
                 includeRowCount = true
             };
             return reportParams;
         }
 
+        /// <summary>
+        /// Initiates a process of generation a report data
+        /// </summary>
+        /// <param name="reportParams">Parameters of report</param>
+        /// <returns>Relative path to the data job result</returns>
         public string ProcessDataReport(ReportParams reportParams)
         {
             try

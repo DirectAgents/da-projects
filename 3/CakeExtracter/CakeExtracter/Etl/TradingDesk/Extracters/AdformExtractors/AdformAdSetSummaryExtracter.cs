@@ -46,7 +46,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             settings.Dimensions.Add(Dimension.LineItem);
             settings.Dimensions.Add(byOrder ? Dimension.Order : Dimension.Campaign);
             var parameters = AfUtility.CreateReportParams(settings);
-            var allReportData = AfUtility.GetReportDataWithPaging(parameters);
+            var allReportData = AfUtility.GetReportDataWithLimits(parameters);
             var adFormSums = allReportData.SelectMany(TransformReportData).ToList();
             return adFormSums;
         }
