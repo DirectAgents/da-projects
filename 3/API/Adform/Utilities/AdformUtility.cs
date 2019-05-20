@@ -389,7 +389,7 @@ namespace Adform.Utilities
         private static int GetRecommendedRetryAfter(IRestResponse response)
         {
             var throttleRetryAfterHeaderValue = GetHeaderValue(response, ThrottleRetryAfterHeader);
-            var throttleRecommendedRetryAfter = (int) throttleRetryAfterHeaderValue;
+            var throttleRecommendedRetryAfter = Convert.ToInt32(throttleRetryAfterHeaderValue);
             return throttleRecommendedRetryAfter;
         }
 
