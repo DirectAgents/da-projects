@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using Adform;
+using Adform.Utilities;
 using Adform.Entities;
 using Adform.Enums;
 using CakeExtracter.Common;
 using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Deserializers;
-using Yahoo;
 
 namespace CakeExtracter.Commands.Test
 {
@@ -32,14 +31,14 @@ namespace CakeExtracter.Commands.Test
 
         public void Test3()
         {
-            var adformUtility = new AdformUtility();
+            var adformUtility = new AdformUtility(message => Logger.Info(message), Logger.Error);
             adformUtility.GetDimensions();
             adformUtility.GetMetrics();
         }
 
         public void Test2()
         {
-            var adformUtility = new AdformUtility();
+            var adformUtility = new AdformUtility(message => Logger.Info(message), Logger.Error);
             var settings = new ReportSettings
             {
                 StartDate = new DateTime(2017, 4, 20),

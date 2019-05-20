@@ -4,6 +4,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 using Adform;
+using Adform.Utilities;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors;
@@ -113,7 +114,7 @@ namespace CakeExtracter.Commands
 
         private static AdformUtility CreateUtility(ExtAccount account, Dictionary<string, string> trackingIdsOfAccounts)
         {
-            var adformUtility = new AdformUtility(m => Logger.Info(account.Id, m), m => Logger.Warn(account.Id, m));
+            var adformUtility = new AdformUtility(message => Logger.Info(account.Id, message), exc => Logger.Error(account.Id, exc));
             adformUtility.SetWhichAlt(account.ExternalId);
             adformUtility.TrackingId = trackingIdsOfAccounts.ContainsKey(account.ExternalId)
                 ? trackingIdsOfAccounts[account.ExternalId]

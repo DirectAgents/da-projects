@@ -49,10 +49,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdformUtility.cs" />
+    <Compile Include="Utilities\AdformLogger.cs" />
+    <Compile Include="Utilities\AdformUtility.cs" />
     <Compile Include="Entities\ReportEntities\MetricMetadata.cs" />
     <Compile Include="Entities\ReportSettings.cs" />
-    <Compile Include="Entities\RequestEntities\CreateJobResponse.cs" />
     <Compile Include="Entities\ReportEntities\Dates.cs" />
     <Compile Include="Entities\RequestEntities\GetTokenResponse.cs" />
     <Compile Include="Entities\ReportEntities\Paging.cs" />

@@ -2,7 +2,7 @@
 
 namespace Adform.Entities.RequestEntities
 {
-    public class PollingOperationResponse
+    internal class PollingOperationResponse
     {
         public string Id { get; set; }
         public string Status { get; set; }

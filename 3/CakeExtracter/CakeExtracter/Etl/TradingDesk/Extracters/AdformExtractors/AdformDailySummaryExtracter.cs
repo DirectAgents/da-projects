@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Adform;
 using Adform.Entities.ReportEntities;
+using Adform.Utilities;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
 

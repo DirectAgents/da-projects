@@ -1,6 +1,6 @@
 ﻿namespace Adform.Entities.RequestEntities
 {
-    public class GetTokenResponse
+    internal class GetTokenResponse
     {
         public string AccessToken { get; set; }
         public int ExpiresIn { get; set; }
