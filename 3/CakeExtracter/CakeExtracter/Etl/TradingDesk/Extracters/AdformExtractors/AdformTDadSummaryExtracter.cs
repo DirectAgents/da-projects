@@ -12,17 +12,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 {
     public class AdformTDadSummaryExtractor : AdformApiBaseExtractor<TDadSummary>
     {
-        private readonly int accountId;
-
         public AdformTDadSummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account)
             : base(adformUtility, dateRange, account)
         {
-            accountId = account.Id;
         }
 
         protected override void Extract()
         {
-            Logger.Info(accountId, $"Extracting TDadSummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d}");
+            Logger.Info(AccountId, $"Extracting TDadSummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d}");
             //TODO: Do X days at a time...?
             try
             {
@@ -32,8 +29,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             }
             catch (Exception ex)
             {
-                Logger.Error(accountId, ex);
+                Logger.Error(AccountId, ex);
             }
+
             End();
         }
 
@@ -68,7 +66,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             {
                 var sum = new TDadSummary
                 {
-                    TDadName = bdGroup.Key.Banner
+                    TDadName = bdGroup.Key.Banner,
                 };
                 SetStats(sum, bdGroup, bdGroup.Key.Date);
                 yield return sum;

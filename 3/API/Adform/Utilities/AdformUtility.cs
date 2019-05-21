@@ -6,7 +6,7 @@ using System.Net;
 using System.Threading;
 using Adform.Entities;
 using Adform.Entities.ReportEntities;
-using Adform.Entities.RequestEntities;
+using Adform.Entities.ResponseEntities;
 using Adform.Helpers;
 using Polly;
 using RestSharp;
@@ -16,32 +16,30 @@ using RestSharp.Deserializers;
 namespace Adform.Utilities
 {
     /// <summary>
-    /// Adform utility to send API requests
+    /// Adform utility to send API requests.
     /// </summary>
     public class AdformUtility
     {
-        public string TrackingId { get; set; }
-
-        private static readonly object AccessTokenLock = new object();
-
         private const int NumAlts = 10; // including the default (0)
 
         private const string Scope = "https://api.adform.com/scope/buyer.stats";
+        private const string AuthBaseUrl = "https://id.adform.com/sts/connect/token";
+        private const string BaseUrl = "https://api.adform.com";
         private const string MetadataDimensionsPath = "/v1/reportingstats/agency/metadata/dimensions";
         private const string MetadataMetricsPath = "/v1/reportingstats/agency/metadata/metrics";
         private const string CreateDataJobPath = "/v1/buyer/stats/data";
         private const string AllOperationsPath = "/v1/buyer/stats/operations";
+        private const int MaxNumberOfMetrics = 10;
+        private const int MaxNumberOfDimensions = 8;
 
         private const string JsonContentType = "application/json";
         private const string ClientCredentialsGrantType = "client_credentials";
         private const string AuthorizationHeader = "Authorization";
         private const string OperationLocationHeader = "Operation-Location";
         private const string ThrottleRetryAfterHeader = "Throttle-Retry-After";
-        private const HttpStatusCode ExceededQuotaStatusCode = (HttpStatusCode) 429;
+        private const HttpStatusCode ExceededQuotaStatusCode = (HttpStatusCode)429;
         private const string HttpPostMethod = "POST";
         private const string HttpGetMethod = "GET";
-        private const string SucceededResponseStatus = "SUCCEEDED";
-        private const string FailedResponseStatus = "FAILED";
 
         // From Config:
         private static readonly string[] AccessTokens = new string[NumAlts];
@@ -49,20 +47,23 @@ namespace Adform.Utilities
         private static readonly string[] ClientIDs = new string[NumAlts];
         private static readonly string[] ClientSecrets = new string[NumAlts];
 
-        private static string adformAuthBaseUrl;
-        private static string adformBaseUrl;
-        private static int maxNumberOfMetrics;
-        private static int maxNumberOfDimensions;
+        private static readonly object AccessTokenLock = new object();
+
         private static int maxPollingRetryAttempt;
         private static int unauthorizedAttemptsNumber;
         private static int maxAttemptsNumber;
         private static int quotaLimitAttemptsNumber;
         private static TimeSpan pauseBetweenPollingAttemptsSeconds;
 
-        private readonly AdformLogger logger;
+        /// <summary>
+        /// Gets or sets tracking identifier for report settings.
+        /// </summary>
+        public string TrackingId { get; set; }
 
         private int WhichAlt { get; set; } // default: 0
-        
+
+        private readonly AdformLogger logger;
+
         #region Constructors
 
         static AdformUtility()
@@ -83,10 +84,6 @@ namespace Adform.Utilities
 
         private static void InitializeVariablesFromConfig()
         {
-            adformAuthBaseUrl = ConfigurationManager.AppSettings["AdformAuthBaseUrl"];
-            adformBaseUrl = ConfigurationManager.AppSettings["AdformBaseUrl"];
-            maxNumberOfMetrics = int.Parse(ConfigurationManager.AppSettings["AdformMaxNumberOfMetrics"]);
-            maxNumberOfDimensions = int.Parse(ConfigurationManager.AppSettings["AdformMaxNumberOfDimensions"]);
             maxPollingRetryAttempt = int.Parse(ConfigurationManager.AppSettings["AdformMaxPollingRetryAttempt"]);
             unauthorizedAttemptsNumber = int.Parse(ConfigurationManager.AppSettings["AdformUnauthorizedAttemptsNumber"]);
             maxAttemptsNumber = int.Parse(ConfigurationManager.AppSettings["AdformMaxAttemptsNumber"]);
@@ -126,7 +123,7 @@ namespace Adform.Utilities
         #region Tokens
 
         /// <summary>
-        /// Array of access tokens
+        /// Gets or sets array of access tokens.
         /// </summary>
         public static string[] TokenSets
         {
@@ -146,7 +143,7 @@ namespace Adform.Utilities
         /// <param name="accountId">Account external id</param>
         public void SetWhichAlt(string accountId)
         {
-            WhichAlt = 0; //default
+            WhichAlt = 0; // default
             for (var i = 1; i < NumAlts; i++)
             {
                 if (AltAccountIDs[i] != null && AltAccountIDs[i].Contains(',' + accountId + ','))
@@ -172,7 +169,7 @@ namespace Adform.Utilities
                 AccessTokens[i] = tokens[i];
             }
         }
-        
+
         private void GetAccessToken()
         {
             var restClient = GetAccessTokenClient();
@@ -188,8 +185,8 @@ namespace Adform.Utilities
         {
             var restClient = new RestClient
             {
-                BaseUrl = new Uri(adformAuthBaseUrl),
-                Authenticator = new HttpBasicAuthenticator(ClientIDs[WhichAlt], ClientSecrets[WhichAlt])
+                BaseUrl = new Uri(AuthBaseUrl),
+                Authenticator = new HttpBasicAuthenticator(ClientIDs[WhichAlt], ClientSecrets[WhichAlt]),
             };
             restClient.AddHandler(JsonContentType, new JsonDeserializer());
             return restClient;
@@ -219,6 +216,7 @@ namespace Adform.Utilities
                 param.Value = headerValue;
                 return;
             }
+
             request.AddHeader(AuthorizationHeader, headerValue);
         }
 
@@ -239,7 +237,7 @@ namespace Adform.Utilities
             var request = CreateRestRequest(MetadataDimensionsPath);
             var parameters = new
             {
-                dimensions = (object)null
+                dimensions = (object)null,
             };
             request.AddJsonBody(parameters);
             var restResponse = ProcessRequest<object>(request, isPostMethod: true);
@@ -253,7 +251,7 @@ namespace Adform.Utilities
             var request = CreateRestRequest(MetadataMetricsPath);
             var parameters = new
             {
-                metrics = (object)null
+                metrics = (object)null,
             };
             request.AddJsonBody(parameters);
             var restResponse = ProcessRequest<object>(request, isPostMethod: true);
@@ -272,37 +270,38 @@ namespace Adform.Utilities
         #endregion
 
         /// <summary>
-        /// Returns all report data with dimension and metrics limits
+        /// Returns all report data with dimension and metrics limits.
         /// </summary>
-        /// <param name="reportParams">Parameters of report</param>
-        /// <returns>List of report data <see cref="ReportData"/></returns>
+        /// <param name="reportParams">Parameters of report.</param>
+        /// <returns>List of report data <see cref="ReportData"/>.</returns>
         public IEnumerable<ReportData> GetReportDataWithLimits(ReportParams reportParams)
         {
             var allReportData = new List<ReportData>();
-            for (var i = 0; i < reportParams.metrics.Length; i += maxNumberOfMetrics)
+            for (var i = 0; i < reportParams.metrics.Length; i += MaxNumberOfMetrics)
             {
                 var reportWithCorrectMetricsParams = reportParams.Clone();
-                reportWithCorrectMetricsParams.metrics = GetItemsRange(reportParams.metrics, i, maxNumberOfMetrics);
-                for (var j = 0; j < reportWithCorrectMetricsParams.dimensions.Length; j += maxNumberOfDimensions)
+                reportWithCorrectMetricsParams.metrics = GetItemsRange(reportParams.metrics, i, MaxNumberOfMetrics);
+                for (var j = 0; j < reportWithCorrectMetricsParams.dimensions.Length; j += MaxNumberOfDimensions)
                 {
                     var reportWithCorrectDimensionsParams = reportWithCorrectMetricsParams.Clone();
-                    reportWithCorrectDimensionsParams.dimensions = GetItemsRange(reportParams.dimensions, j, maxNumberOfDimensions);
+                    reportWithCorrectDimensionsParams.dimensions = GetItemsRange(reportParams.dimensions, j, MaxNumberOfDimensions);
 
-                    var dataLocationPath = ProcessDataReport(reportWithCorrectDimensionsParams);
-                    var reportData = TryGetReportData(dataLocationPath);
+                    var reportData = TryGetReportData(reportWithCorrectDimensionsParams);
                     allReportData.Add(reportData);
                 }
             }
+
             return allReportData;
         }
 
         /// <summary>
-        /// Tries to get the report data several times using the specified path
+        /// Tries to get the report data several times using the specified path.
         /// </summary>
-        /// <param name="dataLocationPath">Relative path to report data</param>
-        /// <returns>Report data <see cref="ReportData"/></returns>
-        public ReportData TryGetReportData(string dataLocationPath)
+        /// <param name="reportParameters">Parameters of report.</param>
+        /// <returns>Report data <see cref="ReportData"/>.</returns>
+        public ReportData TryGetReportData(ReportParams reportParameters)
         {
+            var dataLocationPath = ProcessDataReport(reportParameters);
             var reportData = Policy
                 .Handle<Exception>()
                 .Retry(maxAttemptsNumber, (exception, retryCount, context) =>
@@ -312,10 +311,10 @@ namespace Adform.Utilities
         }
 
         /// <summary>
-        /// Returns a report parameters by report settings
+        /// Returns a report parameters by report settings.
         /// </summary>
-        /// <param name="settings">Settings of report <see cref="ReportSettings"/></param>
-        /// <returns>Parameters of report <see cref="ReportParams"/></returns>
+        /// <param name="settings">Settings of report <see cref="ReportSettings"/>.</param>
+        /// <returns>Parameters of report <see cref="ReportParams"/>.</returns>
         public ReportParams CreateReportParams(ReportSettings settings)
         {
             var reportParams = new ReportParams
@@ -323,17 +322,17 @@ namespace Adform.Utilities
                 filter = AdformApiHelper.GetFilters(settings),
                 dimensions = AdformApiHelper.GetDimensions(settings),
                 metrics = AdformApiHelper.GetMetrics(settings),
-                includeRowCount = true
+                includeRowCount = true,
             };
             return reportParams;
         }
 
         /// <summary>
-        /// Initiates a process of generation a report data
+        /// Initiates a process of generation a report data.
         /// </summary>
-        /// <param name="reportParams">Parameters of report</param>
-        /// <returns>Relative path to the data job result</returns>
-        public string ProcessDataReport(ReportParams reportParams)
+        /// <param name="reportParams">Parameters of report.</param>
+        /// <returns>Relative path to the data job result.</returns>
+        private string ProcessDataReport(ReportParams reportParams)
         {
             try
             {
@@ -350,7 +349,7 @@ namespace Adform.Utilities
         private IRestResponse<T> ProcessRequest<T>(IRestRequest restRequest, bool isPostMethod = false)
             where T : new()
         {
-            var restClient = new RestClient(adformBaseUrl);
+            var restClient = new RestClient(BaseUrl);
             restClient.AddHandler(JsonContentType, new JsonDeserializer());
             var response = ProcessRequest<T>(restClient, restRequest, isPostMethod);
 
@@ -431,12 +430,12 @@ namespace Adform.Utilities
             var restResponse = ProcessRequest<ReportResponse>(request, isPostMethod: false);
             return restResponse?.Data?.reportData;
         }
-        
+
         private static T[] GetItemsRange<T>(IEnumerable<T> items, int startIndex, int count)
         {
             return items.Skip(startIndex).Take(count).ToArray();
         }
-        
+
         private string TryCreateDataJob(ReportParams reportParams)
         {
             var operationLocation = Policy
@@ -478,9 +477,11 @@ namespace Adform.Utilities
             var response = Policy
                 .Handle<Exception>()
                 .OrResult<IRestResponse<PollingOperationResponse>>(resp =>
-                    !IsResponseWithStatus(resp, SucceededResponseStatus) &&
-                    !IsResponseWithStatus(resp, FailedResponseStatus))
-                .WaitAndRetry(maxPollingRetryAttempt, i => pauseBetweenPollingAttemptsSeconds,
+                    !IsResponseWithStatus(resp, AdformResponseStatus.Succeeded) &&
+                    !IsResponseWithStatus(resp, AdformResponseStatus.Failed))
+                .WaitAndRetry(
+                    maxPollingRetryAttempt,
+                    i => pauseBetweenPollingAttemptsSeconds,
                     (exception, timeSpan, retryCount, context) =>
                         logger.LogWaiting($"Operation is not ready. Will repeat polling operation status. Waiting {timeSpan}", retryCount))
                 .Execute(() =>
@@ -489,7 +490,7 @@ namespace Adform.Utilities
                     return ProcessRequest<PollingOperationResponse>(request, isPostMethod: false);
                 });
 
-            if (!IsResponseWithStatus(response, SucceededResponseStatus))
+            if (!IsResponseWithStatus(response, AdformResponseStatus.Succeeded))
             {
                 throw new Exception("Failed polling operation.");
             }

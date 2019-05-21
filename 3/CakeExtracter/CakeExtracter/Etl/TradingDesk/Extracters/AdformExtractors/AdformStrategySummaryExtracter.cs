@@ -13,19 +13,17 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
     public class AdformStrategySummaryExtractor : AdformApiBaseExtractor<StrategySummary>
     {
         private readonly bool byOrder;
-        private readonly int accountId;
 
         public AdformStrategySummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account, bool byOrder = false)
             : base(adformUtility, dateRange, account)
         {
             this.byOrder = byOrder;
-            accountId = account.Id;
         }
 
         protected override void Extract()
         {
             var additionInfo = byOrder ? "Orders" : "Campaigns";
-            Logger.Info(accountId, $"Extracting StrategySummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d} - {additionInfo}");
+            Logger.Info(AccountId, $"Extracting StrategySummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d} - {additionInfo}");
             //TODO: Do X days at a time...?
             try
             {
@@ -35,8 +33,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             }
             catch (Exception ex)
             {
-                Logger.Error(accountId, ex);
+                Logger.Error(AccountId, ex);
             }
+
             End();
         }
 
@@ -66,12 +65,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 
         private IEnumerable<StrategySummary> EnumerateRows(IEnumerable<AdformSummary> afSums)
         {
-            var campDateGroups = afSums.GroupBy(x => new {x.Campaign, x.Order, x.Date});
+            var campDateGroups = afSums.GroupBy(x => new { x.Campaign, x.Order, x.Date });
             foreach (var campDateGroup in campDateGroups)
             {
                 var sum = new StrategySummary
                 {
-                    StrategyName = byOrder ? campDateGroup.Key.Order : campDateGroup.Key.Campaign
+                    StrategyName = byOrder ? campDateGroup.Key.Order : campDateGroup.Key.Campaign,
                 };
                 SetStats(sum, campDateGroup, campDateGroup.Key.Date);
                 yield return sum;

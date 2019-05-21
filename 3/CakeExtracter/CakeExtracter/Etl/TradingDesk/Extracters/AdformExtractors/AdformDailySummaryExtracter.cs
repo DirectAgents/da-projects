@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Adform;
 using Adform.Entities.ReportEntities;
 using Adform.Utilities;
 using CakeExtracter.Common;
@@ -11,29 +10,27 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 {
     public class AdformDailySummaryExtractor : AdformApiBaseExtractor<DailySummary>
     {
-        private readonly int accountId;
-
         public AdformDailySummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account)
             : base(adformUtility, dateRange, account)
         {
-            accountId = account.Id;
         }
 
         protected override void Extract()
         {
-            Logger.Info(accountId, $"Extracting DailySummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d}");
+            Logger.Info(AccountId, $"Extracting DailySummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d}");
             try
             {
                 var basicStatsReportData = GetBasicStatsReportData();
                 var convStatsReportData = GetConvStatsReportData();
-                var daysums = EnumerateRows(basicStatsReportData, convStatsReportData);
-                daysums = AdjustItems(daysums);
-                Add(daysums);
+                var daySums = EnumerateRows(basicStatsReportData, convStatsReportData);
+                daySums = AdjustItems(daySums);
+                Add(daySums);
             }
             catch (Exception ex)
             {
-                Logger.Error(accountId, ex);
+                Logger.Error(AccountId, ex);
             }
+
             End();
         }
 
@@ -43,8 +40,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             settings.ConvMetrics = false;
             settings.Dimensions = null;
             var parameters = AfUtility.CreateReportParams(settings);
-            var dataLocationPath = AfUtility.ProcessDataReport(parameters);
-            var basicStatsReportData = AfUtility.TryGetReportData(dataLocationPath);
+            var basicStatsReportData = AfUtility.TryGetReportData(parameters);
 
             return basicStatsReportData;
         }
@@ -54,8 +50,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             var settings = GetBaseSettings();
             settings.BasicMetrics = false;
             var parameters = AfUtility.CreateReportParams(settings);
-            var dataLocationPath = AfUtility.ProcessDataReport(parameters);
-            var convStatsReportData = AfUtility.TryGetReportData(dataLocationPath);
+            var convStatsReportData = AfUtility.TryGetReportData(parameters);
 
             return convStatsReportData;
         }
@@ -67,29 +62,29 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 
             var convStatsTransformer = new AdformTransformer(convStatsReportData, convStatsOnly: true);
             var convSums = convStatsTransformer.EnumerateAdformSummaries();
-            var convsumGroups = convSums.GroupBy(x => x.Date);
+            var convSumGroups = convSums.GroupBy(x => x.Date).ToList();
             // Steps:
-            // loop through convsumGroups; get daysum or create blank one
-            // then go through daysums that didn't have a convsumGroup
-            foreach (var csGroup in convsumGroups)
+            // loop through convSumGroups; get daySum or create blank one
+            // then go through daySums that didn't have a convSumGroup
+            foreach (var csGroup in convSumGroups)
             {
-                var daysum = new DailySummary {Date = csGroup.Key};
+                var daySum = new DailySummary { Date = csGroup.Key };
                 if (daySumDict.ContainsKey(csGroup.Key))
                 {
-                    SetBaseStats(daysum, daySumDict[csGroup.Key]);
+                    SetBaseStats(daySum, daySumDict[csGroup.Key]);
                 }
 
-                SetConversionStats(daysum, csGroup, csGroup.Key);
-                yield return daysum;
+                SetConversionStats(daySum, csGroup, csGroup.Key);
+                yield return daySum;
             }
 
-            var convsumDates = convsumGroups.Select(x => x.Key).ToArray();
-            var remainingDaySums = daySumDict.Values.Where(ds => !convsumDates.Contains(ds.Date));
-            foreach (var adfsum in remainingDaySums) // the daily summaries that didn't have any conversion summaries
+            var convSumDates = convSumGroups.Select(x => x.Key).ToArray();
+            var remainingDaySums = daySumDict.Values.Where(ds => !convSumDates.Contains(ds.Date));
+            foreach (var adfSum in remainingDaySums) // the daily summaries that didn't have any conversion summaries
             {
-                var daysum = new DailySummary {Date = adfsum.Date};
-                SetBaseStats(daysum, adfsum);
-                yield return daysum;
+                var daySum = new DailySummary { Date = adfSum.Date };
+                SetBaseStats(daySum, adfSum);
+                yield return daySum;
             }
         }
     }

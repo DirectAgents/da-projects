@@ -47,9 +47,7 @@ namespace CakeExtracter.Commands.Test
                 Dimensions = new List<Dimension> {Dimension.Media}
             };
             var parameters = adformUtility.CreateReportParams(settings);
-
-            var dataLocationPath = adformUtility.ProcessDataReport(parameters);
-            var reportData = adformUtility.TryGetReportData(dataLocationPath);
+            var reportData = adformUtility.TryGetReportData(parameters);
 
             foreach (var row in reportData.rows)
             {

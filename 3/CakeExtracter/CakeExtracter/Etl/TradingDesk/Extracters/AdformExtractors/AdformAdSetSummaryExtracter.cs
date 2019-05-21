@@ -13,19 +13,16 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
     public class AdformAdSetSummaryExtractor : AdformApiBaseExtractor<AdSetSummary>
     {
         private readonly bool byOrder;
-        private readonly int accountId;
 
-        public AdformAdSetSummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account,
-            bool byOrder)
+        public AdformAdSetSummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account, bool byOrder)
             : base(adformUtility, dateRange, account)
         {
             this.byOrder = byOrder;
-            accountId = account.Id;
         }
 
         protected override void Extract()
         {
-            Logger.Info(accountId, $"Extracting AdSetSummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d}");
+            Logger.Info(AccountId, $"Extracting AdSetSummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d}");
             //TODO: Do X days at a time...?
             try
             {
@@ -35,8 +32,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             }
             catch (Exception ex)
             {
-                Logger.Error(accountId, ex);
+                Logger.Error(AccountId, ex);
             }
+
             End();
         }
 
@@ -73,7 +71,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                 var sum = new AdSetSummary
                 {
                     StrategyName = byOrder ? liDateGroup.First().Order : liDateGroup.First().Campaign,
-                    AdSetName = liDateGroup.Key.LineItem
+                    AdSetName = liDateGroup.Key.LineItem,
                 };
                 SetStats(sum, liDateGroup, liDateGroup.Key.Date);
                 yield return sum;

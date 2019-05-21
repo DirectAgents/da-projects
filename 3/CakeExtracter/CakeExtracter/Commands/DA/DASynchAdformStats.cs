@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
-using Adform;
 using Adform.Utilities;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
@@ -35,10 +34,15 @@ namespace CakeExtracter.Commands
         }
 
         public int? AccountId { get; set; }
+
         public DateTime? StartDate { get; set; }
+
         public DateTime? EndDate { get; set; }
+
         public int? DaysAgoToStart { get; set; }
+
         public string StatsType { get; set; }
+
         public bool DisabledOnly { get; set; }
 
         private List<Action> etlList;
@@ -78,7 +82,7 @@ namespace CakeExtracter.Commands
             var accounts = GetAccounts();
             AdformUtility.TokenSets = GetTokens();
 
-            foreach (var account in accounts)    
+            foreach (var account in accounts)
             {
                 etlList = new List<Action>();
                 Logger.Info("Commencing ETL for Adform account ({0}) {1}", account.Id, account.Name);
@@ -89,16 +93,21 @@ namespace CakeExtracter.Commands
                 AddEnabledEtl(statsType.Strategy, account, () => DoETL_Strategy(dateRange, account, orderInsteadOfCampaign, adformUtility));
                 AddEnabledEtl(statsType.AdSet, account, () => DoETL_AdSet(dateRange, account, orderInsteadOfCampaign, adformUtility));
                 AddEnabledEtl(statsType.Creative, account, () => DoETL_Creative(dateRange, account, adformUtility));
-                
+
                 Parallel.Invoke(etlList.ToArray());
             }
+
             SaveTokens(AdformUtility.TokenSets);
             return 0;
         }
 
         private void AddEnabledEtl(bool etlEnabled, ExtAccount account, Action etlAction)
         {
-            if (!etlEnabled) return;
+            if (!etlEnabled)
+            {
+                return;
+            }
+
             etlList.Add(() =>
             {
                 try
@@ -114,7 +123,9 @@ namespace CakeExtracter.Commands
 
         private static AdformUtility CreateUtility(ExtAccount account, Dictionary<string, string> trackingIdsOfAccounts)
         {
-            var adformUtility = new AdformUtility(message => Logger.Info(account.Id, message), exc => Logger.Error(account.Id, exc));
+            var adformUtility = new AdformUtility(
+                message => Logger.Info(account.Id, message),
+                exc => Logger.Error(account.Id, exc));
             adformUtility.SetWhichAlt(account.ExternalId);
             adformUtility.TrackingId = trackingIdsOfAccounts.ContainsKey(account.ExternalId)
                 ? trackingIdsOfAccounts[account.ExternalId]
@@ -131,8 +142,8 @@ namespace CakeExtracter.Commands
         {
             Platform.SavePlatformTokens(Platform.Code_Adform, tokens);
         }
-        // ---
 
+        // ---
         private static void DoETL_Daily(DateRange dateRange, ExtAccount account, AdformUtility adformUtility)
         {
             var extractor = new AdformDailySummaryExtractor(adformUtility, dateRange, account);
@@ -168,12 +179,18 @@ namespace CakeExtracter.Commands
                 var accounts = db.ExtAccounts.Include("Campaign.BudgetInfos").Include("Campaign.PlatformBudgetInfos")
                     .Where(a => a.Platform.Code == Platform.Code_Adform);
                 if (AccountId.HasValue)
+                {
                     accounts = accounts.Where(a => a.Id == AccountId.Value);
+                }
                 else if (!DisabledOnly)
+                {
                     accounts = accounts.Where(a => !a.Disabled);
+                }
 
                 if (DisabledOnly)
+                {
                     accounts = accounts.Where(a => a.Disabled);
+                }
 
                 return accounts.ToList().Where(a => !string.IsNullOrWhiteSpace(a.ExternalId));
             }
