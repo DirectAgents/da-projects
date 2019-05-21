@@ -29,6 +29,12 @@ namespace Amazon
         private const string TokenDelimiter = "|AMZNAMZN|";
         private const int NumAlts = 10; // including the default (0)
 
+        private const int WaitTimeSecondsDefault = 5;
+        private const int WaitAttemptsNumberDefault = 3;
+        private const int UnauthorizedAttemptsNumberDefault = 3;
+        private const int FailedRequestAttemptsNumberDefault = 2;
+        private const int ReportGenerationAttemptsNumberDefault = 2;
+
         private const string AuthorizationHeader = "Authorization";
         private const string AmazonHeaderProfile = "Amazon-Advertising-API-Scope";
         private const string AmazonHeaderClient = "Amazon-Advertising-API-ClientId";
@@ -37,26 +43,27 @@ namespace Amazon
         private static readonly object FileLock = new object();
         private static readonly object AccessTokenLock = new object();
 
-        // From Config File
-        // Wait time is increased after every third attempt by the value of waitTimeSeconds. (15 min - async report generation time, service guarantees)
-        private readonly int waitTimeSeconds = int.Parse(ConfigurationManager.AppSettings["AmazonWaitTimeSeconds"]);
-        private readonly int waitAttemptsNumber = int.Parse(ConfigurationManager.AppSettings["AmazonWaitAttemptsNumber"]);
-        private readonly int unauthorizedAttemptsNumber = int.Parse(ConfigurationManager.AppSettings["AmazonUnauthorizedAttemptsNumber"]);
-        private readonly int failedRequestAttemptsNumber = int.Parse(ConfigurationManager.AppSettings["AmazonFailedRequestAttemptsNumber"]);
-        private readonly int reportGenerationAttemptsNumber = int.Parse(ConfigurationManager.AppSettings["AmazonReportGenerationAttemptsNumber"]);
-
-        private readonly string amazonClientId = ConfigurationManager.AppSettings["AmazonClientId"];
-        private readonly string amazonClientSecret = ConfigurationManager.AppSettings["AmazonClientSecret"];
-        private readonly string amazonApiEndpointUrl = ConfigurationManager.AppSettings["AmazonAPIEndpointUrl"];
-        private readonly string amazonAuthorizeUrl = ConfigurationManager.AppSettings["AmazonAuthorizeUrl"];
-        private readonly string amazonTokenUrl = ConfigurationManager.AppSettings["AmazonTokenUrl"];
-        private readonly string amazonClientUrl = ConfigurationManager.AppSettings["AmazonClientUrl"];
-        private readonly string amazonReportsFolder = GetReportFolderName(ConfigurationManager.AppSettings["AmazonReportsBaseFolder"]);
-
         private static readonly string[] AccessToken = new string[NumAlts];
         private static readonly string[] RefreshToken = new string[NumAlts];
+
         private readonly string[] authCode = new string[NumAlts];
         private readonly string[] altAccountIDs = new string[NumAlts];
+
+        // From Config File
+        // Wait time is increased after every third attempt by the value of waitTimeSeconds. (15 min - async report generation time, service guarantees)
+        private int waitTimeSeconds;
+        private int waitAttemptsNumber;
+        private int unauthorizedAttemptsNumber;
+        private int failedRequestAttemptsNumber;
+        private int reportGenerationAttemptsNumber;
+
+        private string amazonClientId;
+        private string amazonClientSecret;
+        private string amazonApiEndpointUrl;
+        private string amazonAuthorizeUrl;
+        private string amazonTokenUrl;
+        private string amazonClientUrl;
+        private string amazonReportsFolder;
 
         public int WhichAlt { get; set; } // default: 0
         public bool KeepReports { get; set; }
@@ -234,6 +241,7 @@ namespace Amazon
 
         public AmazonUtility()
         {
+            SetupConfigurationValues();
             ResetCredentials();
             Setup();
         }
@@ -244,7 +252,44 @@ namespace Amazon
             this.logInfo = logInfo;
             this.logError = logError;
         }
-        
+
+        private void SetupConfigurationValues()
+        {
+            waitTimeSeconds = GetIntConfigurationValue("AmazonWaitTimeSeconds", WaitTimeSecondsDefault);
+            waitAttemptsNumber = GetIntConfigurationValue("AmazonWaitAttemptsNumber", WaitAttemptsNumberDefault);
+            unauthorizedAttemptsNumber = GetIntConfigurationValue("AmazonUnauthorizedAttemptsNumber", UnauthorizedAttemptsNumberDefault);
+            failedRequestAttemptsNumber = GetIntConfigurationValue("AmazonFailedRequestAttemptsNumber", FailedRequestAttemptsNumberDefault);
+            reportGenerationAttemptsNumber = GetIntConfigurationValue("AmazonReportGenerationAttemptsNumber", ReportGenerationAttemptsNumberDefault);
+
+            amazonClientId = GetConfigurationValue("AmazonClientId");
+            amazonClientSecret = GetConfigurationValue("AmazonClientSecret");
+            amazonApiEndpointUrl = GetConfigurationValue("AmazonAPIEndpointUrl");
+            amazonAuthorizeUrl = GetConfigurationValue("AmazonAuthorizeUrl");
+            amazonTokenUrl = GetConfigurationValue("AmazonTokenUrl");
+            amazonClientUrl = GetConfigurationValue("AmazonClientUrl");
+            amazonReportsFolder = GetReportFolderName(GetConfigurationValue("AmazonReportsBaseFolder"));
+        }
+
+        private int GetIntConfigurationValue(string configurationValueName, int defaultValue = 0)
+        {
+            var configurationValue = GetConfigurationValue(configurationValueName, defaultValue.ToString());
+            return int.Parse(configurationValue);
+        }
+
+        private string GetConfigurationValue(string configurationValueName, string defaultValue = "")
+        {
+            try
+            {
+                var configurationValue = ConfigurationManager.AppSettings[configurationValueName];
+                return configurationValue ?? defaultValue;
+            }
+            catch (Exception e)
+            {
+                logInfo(e.Message);
+                return defaultValue;
+            }
+        }
+
         private static string GetReportFolderName(string baseFolderName)
         {
             var today = DateTime.Today.ToUniversalTime();
