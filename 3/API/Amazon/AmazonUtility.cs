@@ -345,19 +345,19 @@ namespace Amazon
             }
         }
 
-        public List<AmazonProfile> GetProfiles()
+        public virtual List<AmazonProfile> GetProfiles()
         {
             return GetEntities<AmazonProfile>(EntitesType.Profiles);
         }
 
-        public List<AmazonCampaign> GetCampaigns(CampaignType campaignType, string profileId)
+        public virtual List<AmazonCampaign> GetCampaigns(CampaignType campaignType, string profileId)
         {
             return GetEntities<AmazonCampaign>(EntitesType.Campaigns, campaignType, null, profileId);
         }
 
         /// Only for Sponsored Product
         /// sku metric - is not available for vendor accounts
-        public List<AmazonAdDailySummary> ReportProductAds(DateTime date, string profileId, bool includeCampaignName)
+        public virtual List<AmazonAdDailySummary> ReportProductAds(DateTime date, string profileId, bool includeCampaignName)
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = AmazonApiHelper.CreateReportParams(EntitesType.ProductAds, campaignType, date, includeCampaignName);
@@ -366,14 +366,14 @@ namespace Amazon
 
         /// For Sponsored Brands only the following attributed metrics are available:
         /// attributedSales14d, attributedSales14dSameSKU, attributedConversions14d, attributedConversions14dSameSKU
-        public List<AmazonKeywordDailySummary> ReportKeywords(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
+        public virtual List<AmazonKeywordDailySummary> ReportKeywords(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
         {
             var param = AmazonApiHelper.CreateReportParams(EntitesType.Keywords, campaignType, date, includeCampaignName);
             return GetReportInfoManyTimes<AmazonKeywordDailySummary>(EntitesType.Keywords, campaignType, param, profileId);
         }
 
         /// Only for Sponsored Product
-        public List<AmazonTargetKeywordDailySummary> ReportTargetKeywords(DateTime date, string profileId, bool includeCampaignName)
+        public virtual List<AmazonTargetKeywordDailySummary> ReportTargetKeywords(DateTime date, string profileId, bool includeCampaignName)
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = AmazonApiHelper.CreateReportParams(EntitesType.TargetKeywords, campaignType, date, includeCampaignName);

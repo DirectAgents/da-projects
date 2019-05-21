@@ -28,11 +28,41 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             campaignMetadataExtractor = new AmazonCampaignMetadataExtractor(amazonUtility);
         }
 
+        public virtual void RemoveOldData(DateTime date)
+        {
+            Logger.Info(accountId, "The cleaning of AdSummaries for account ({0}) has begun - {1}.", accountId, date);
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
+            {
+                SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
+                {
+                    db.TDadSummaryMetrics.Where(x => x.Date == date && x.TDad.AccountId == accountId).DeleteFromQuery();
+                    db.TDadSummaries.Where(x => x.Date == date && x.TDad.AccountId == accountId).DeleteFromQuery();
+                }, "DeleteFromQuery");
+            }, accountId, AmazonJobLevels.creative, AmazonJobOperations.cleanExistingData);
+            Logger.Info(accountId, "The cleaning of AdSummaries for account ({0}) is over - {1}.", accountId, date);
+        }
+
         protected override void Extract()
         {
             Logger.Info(accountId, "Extracting TDadSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 clientId, dateRange.FromDate, dateRange.ToDate);
-            var campaignsData = GetCampaignInfo();
+            try
+            {
+                var campaignsData = GetCampaignInfo();
+                ExtractDataForDays(campaignsData);
+            }
+            catch (Exception e)
+            {
+                ProcessFailedStatsExtraction(e, dateRange.FromDate, dateRange.ToDate);
+            }
+            finally
+            {
+                End();
+            }
+        }
+
+        private void ExtractDataForDays(List<AmazonCampaign> campaignsData)
+        {
             foreach (var date in dateRange.Dates)
             {
                 try
@@ -41,11 +71,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
                 }
                 catch (Exception e)
                 {
-                    ProcessFailedStatsExtraction(e, date);
+                    ProcessFailedStatsExtraction(e, dateRange.FromDate, dateRange.ToDate);
                 }
             }
-
-            End();
         }
 
         private void Extract(DateTime date, List<AmazonCampaign> campaignInfo)
@@ -61,10 +89,10 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             Add(items);
         }
 
-        private void ProcessFailedStatsExtraction(Exception e, DateTime date)
+        private void ProcessFailedStatsExtraction(Exception e, DateTime fromDate, DateTime toDate)
         {
             Logger.Error(accountId, e);
-            var exception = new FailedStatsExtractionException(date, date, accountId, e, byAd: true);
+            var exception = new FailedStatsExtractionException(fromDate, toDate, accountId, e, byAd: true);
             InvokeProcessFailedExtractionHandlers(exception);
         }
 
@@ -147,20 +175,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
                 ExternalId = value
             };
             ids.Add(id);
-        }
-
-        private void RemoveOldData(DateTime date)
-        {
-            Logger.Info(accountId, "The cleaning of AdSummaries for account ({0}) has begun - {1}.", accountId, date);
-            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() => 
-            {
-                SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
-                {
-                    db.TDadSummaryMetrics.Where(x => x.Date == date && x.TDad.AccountId == accountId).DeleteFromQuery();
-                    db.TDadSummaries.Where(x => x.Date == date && x.TDad.AccountId == accountId).DeleteFromQuery();
-                }, "DeleteFromQuery");
-            }, accountId, AmazonJobLevels.creative, AmazonJobOperations.cleanExistingData);
-            Logger.Info(accountId, "The cleaning of AdSummaries for account ({0}) is over - {1}.", accountId, date);
         }
     }
 }

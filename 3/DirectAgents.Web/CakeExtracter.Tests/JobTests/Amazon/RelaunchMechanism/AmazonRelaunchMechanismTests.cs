@@ -106,6 +106,87 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
             AssertRelaunchIsValid(commandMock);
         }
 
+        [Test(Description = "Checks if all required job requests are created if any error occurs when a campaign info is received in the keyword extractor.")]
+        [TestCase(null, null, 1)]
+        [TestCase(null, null, 10)]
+        [TestCase("12/1/2018", null, 10)]
+        [TestCase("1/1/2019", "1/31/2019", null)]
+        [TestCase("1/1/2019", "1/31/2019", 4)]
+        [TestCase(null, null, null)]
+        public void AmazonRelaunchMechanism_RelaunchCommandAfterExceptionInCampaignsInfoReceivingOfKeywordExtractor(DateTime? fromDateTime, DateTime? toDateTime, int? daysAgo)
+        {
+            var commandMock = CreateCommandMock(null, fromDateTime, toDateTime, daysAgo, StatsTypeAgg.KeywordArg);
+            var utilityMock = new Mock<AmazonUtility>();
+            var exception = new ExtractDataException(
+                It.IsAny<Exception>(),
+                It.IsAny<string>(),
+                It.IsAny<EntitesType>(),
+                It.IsAny<CampaignType>(),
+                It.IsAny<string>());
+            utilityMock.Setup(m => m.GetCampaigns(It.IsAny<CampaignType>(), It.IsAny<string>())).Throws(exception);
+            commandMock.Setup(m => m.CreateKeywordExtractor(It.IsAny<DateRange>(), It.IsAny<ExtAccount>(), It.IsAny<AmazonUtility>()))
+                .Returns<DateRange, ExtAccount, AmazonUtility>(
+                    (dateRange, account, utility) =>
+                    {
+                        var extractorMock =
+                            new Mock<AmazonApiKeywordExtractor>(utility, dateRange, account, null, null)
+                            {
+                                CallBase = true,
+                            };
+                        extractorMock.Setup(m => m.RemoveOldData(It.IsAny<DateTime>())).Verifiable();
+                        return extractorMock.Object;
+                    });
+            commandMock.Setup(m => m.CreateKeywordLoader(It.IsAny<ExtAccount>())).Returns(() =>
+            {
+                var loaderMock = new Mock<AmazonKeywordSummaryLoader>(It.IsAny<int>()) { CallBase = true };
+                loaderMock.Setup(m => m.LoadItems(It.IsAny<List<KeywordSummary>>())).Verifiable();
+                return loaderMock.Object;
+            });
+
+            commandMock.Object.Run();
+            AssertRelaunchIsValid(commandMock);
+        }
+
+        [Test(Description = "Checks if all required job requests are created if any error occurs when a campaign info is received in the ad extractor.")]
+        [TestCase(null, null, 1)]
+        [TestCase(null, null, 10)]
+        [TestCase("12/1/2018", null, 10)]
+        [TestCase("1/1/2019", "1/31/2019", null)]
+        [TestCase("1/1/2019", "1/31/2019", 4)]
+        [TestCase(null, null, null)]
+        public void AmazonRelaunchMechanism_RelaunchCommandAfterExceptionInCampaignsInfoReceivingOfAdExtractor(DateTime? fromDateTime, DateTime? toDateTime, int? daysAgo)
+        {
+            var commandMock = CreateCommandMock(null, fromDateTime, toDateTime, daysAgo, StatsTypeAgg.CreativeArg);
+            var utilityMock = new Mock<AmazonUtility>();
+            var exception = new ExtractDataException(
+                It.IsAny<Exception>(),
+                It.IsAny<string>(),
+                It.IsAny<EntitesType>(),
+                It.IsAny<CampaignType>(),
+                It.IsAny<string>());
+            utilityMock.Setup(m => m.GetCampaigns(It.IsAny<CampaignType>(), It.IsAny<string>())).Throws(exception);
+            commandMock.Setup(m => m.CreateCreativeExtractor(It.IsAny<DateRange>(), It.IsAny<ExtAccount>(), It.IsAny<AmazonUtility>()))
+                .Returns<DateRange, ExtAccount, AmazonUtility>(
+                    (dateRange, account, utility) =>
+                    {
+                        var extractorMock =
+                            new Mock<AmazonApiAdExtrator>(utility, dateRange, account, null, null)
+                            {
+                                CallBase = true,
+                            };
+                        extractorMock.Setup(m => m.RemoveOldData(It.IsAny<DateTime>())).Verifiable();
+                        return extractorMock.Object;
+                    });
+            commandMock.Setup(m => m.CreateCreativeLoader(It.IsAny<ExtAccount>())).Returns(() =>
+            {
+                var loaderMock = new Mock<AmazonAdSummaryLoader>(It.IsAny<int>()) { CallBase = true };
+                loaderMock.Setup(m => m.LoadItems(It.IsAny<List<TDadSummary>>())).Verifiable();
+                return loaderMock.Object;
+            });
+
+            commandMock.Object.Run();
+            AssertRelaunchIsValid(commandMock);
+        }
         private void AssertRelaunchIsValid(Mock<DASynchAmazonStats> commandMock)
         {
             var command = commandMock.Object;
@@ -198,7 +279,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
             commandMock.Setup(m => m.SynchAsinAnalyticTables(It.IsAny<int>()));
             commandMock.Setup(m => m.GetTokens()).Returns(new string[0]);
             commandMock.Setup(m => m.SaveTokens(It.IsAny<string[]>())).Verifiable();
-            commandMock.Setup(m => m.CreateUtility(It.IsAny<ExtAccount>())).Returns(CreateUtilityMock().Object);
+            commandMock.Setup(m => m.CreateUtility(It.IsAny<ExtAccount>())).Returns(new AmazonUtility());
         }
 
         private void ResetCommandExecutionContext(ConsoleCommand currentCommand)
@@ -206,19 +287,6 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
             var jobExecutionItemService = new JobExecutionItemService(executionItemRepository);
             var jobExecutionRequestService = new JobExecutionRequestService(requestRepository);
             CommandExecutionContext.ResetContext(currentCommand, jobExecutionItemService, jobExecutionRequestService);
-        }
-
-        private Mock<AmazonUtility> CreateUtilityMock()
-        {
-            var mock = new Mock<AmazonUtility>();
-            var exception = new ExtractDataException(
-                It.IsAny<Exception>(),
-                It.IsAny<string>(),
-                It.IsAny<EntitesType>(),
-                It.IsAny<CampaignType>(),
-                It.IsAny<string>());
-            mock.Setup(m => m.ReportProductAds(It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<bool>())).Throws(exception);
-            return mock;
         }
     }
 }

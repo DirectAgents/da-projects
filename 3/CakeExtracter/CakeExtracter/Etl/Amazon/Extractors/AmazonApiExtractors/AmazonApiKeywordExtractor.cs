@@ -39,6 +39,20 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             campaignMetadataExtractor = new AmazonCampaignMetadataExtractor(amazonUtility);
         }
 
+        public virtual void RemoveOldData(DateTime date)
+        {
+            Logger.Info(accountId, "The cleaning of KeywordSummaries for account ({0}) has begun - {1}.", accountId, date);
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
+            {
+                SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
+                {
+                    db.KeywordSummaryMetrics.Where(x => x.Date == date && x.Keyword.AccountId == accountId).DeleteFromQuery();
+                    db.KeywordSummaries.Where(x => x.Date == date && x.Keyword.AccountId == accountId).DeleteFromQuery();
+                }, "DeleteFromQuery");
+            }, accountId, AmazonJobLevels.keyword, AmazonJobOperations.cleanExistingData);
+            Logger.Info(accountId, "The cleaning of KeywordSummaries for account ({0}) is over - {1}.", accountId, date);
+        }
+
         /// <summary>
         /// The derived class implements this method, which calls Add() for each item
         /// extracted and then calls End() when complete.
@@ -47,7 +61,23 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         {
             Logger.Info(accountId, "Extracting KeywordSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 clientId, dateRange.FromDate, dateRange.ToDate);
-            var campaignsData = GetCampaignInfo();
+            try
+            {
+                var campaignsData = GetCampaignInfo();
+                ExtractDataForDays(campaignsData);
+            }
+            catch (Exception e)
+            {
+                ProcessFailedStatsExtraction(e, dateRange.FromDate, dateRange.ToDate);
+            }
+            finally
+            {
+                End();
+            }
+        }
+
+        private void ExtractDataForDays(List<AmazonCampaign> campaignsData)
+        {
             foreach (var date in dateRange.Dates)
             {
                 try
@@ -56,10 +86,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
                 }
                 catch (Exception e)
                 {
-                    ProcessFailedStatsExtraction(e, date);
+                    ProcessFailedStatsExtraction(e, date, date);
                 }
             }
-            End();
         }
 
         private void ExtractDaily(DateTime date, List<AmazonCampaign> campaignsData)
@@ -84,10 +113,10 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             return campaignsData;
         }
 
-        private void ProcessFailedStatsExtraction(Exception e, DateTime date)
+        private void ProcessFailedStatsExtraction(Exception e, DateTime fromDate, DateTime toDate)
         {
             Logger.Error(accountId, e);
-            var exception = new FailedStatsExtractionException(date, date, accountId, e, byKeyword: true);
+            var exception = new FailedStatsExtractionException(fromDate, toDate, accountId, e, byKeyword: true);
             InvokeProcessFailedExtractionHandlers(exception);
         }
 
@@ -162,20 +191,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             };
             SetCPProgStats(sum, stat, date);
             return sum;
-        }
-
-        private void RemoveOldData(DateTime date)
-        {
-            Logger.Info(accountId, "The cleaning of KeywordSummaries for account ({0}) has begun - {1}.", accountId, date);
-            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
-            {
-                SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
-                {
-                    db.KeywordSummaryMetrics.Where(x => x.Date == date && x.Keyword.AccountId == accountId).DeleteFromQuery();
-                    db.KeywordSummaries.Where(x => x.Date == date && x.Keyword.AccountId == accountId).DeleteFromQuery();
-                }, "DeleteFromQuery");
-            }, accountId, AmazonJobLevels.keyword, AmazonJobOperations.cleanExistingData);
-            Logger.Info(accountId, "The cleaning of KeywordSummaries for account ({0}) is over - {1}.", accountId, date);
         }
     }
 }

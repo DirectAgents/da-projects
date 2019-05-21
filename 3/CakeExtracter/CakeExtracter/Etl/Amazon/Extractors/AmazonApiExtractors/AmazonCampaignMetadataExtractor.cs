@@ -31,16 +31,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         /// <returns></returns>
         public IEnumerable<AmazonCampaign> LoadCampaignsMetadata(int accountId, string accountExternalId)
         {
-            try
-            {
-                var campaigns = LoadCampaignsFromAmazonApi(accountExternalId);
-                return campaigns;
-            }
-            catch (Exception e)
-            {
-                Logger.Error(accountId, e);
-                return new List<AmazonCampaign>();
-            }
+            var campaigns = LoadCampaignsFromAmazonApi(accountExternalId);
+            return campaigns;
         }
 
         private IEnumerable<AmazonCampaign> LoadCampaignsFromAmazonApi(string accountExternalId)
