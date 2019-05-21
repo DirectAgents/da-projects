@@ -45,8 +45,6 @@ namespace CakeExtracter.Commands
 
         public bool DisabledOnly { get; set; }
 
-        private List<Action> EtlLevelActions;
-
         public override void ResetProperties()
         {
             AccountId = null;
@@ -84,31 +82,53 @@ namespace CakeExtracter.Commands
 
             foreach (var account in accounts)
             {
-                EtlLevelActions = new List<Action>();
                 Logger.Info("Commencing ETL for Adform account ({0}) {1}", account.Id, account.Name);
-                var orderInsteadOfCampaign = accountIdsForOrders.Contains(account.ExternalId);
-                var adformUtility = CreateUtility(account, trackingIdsOfAccounts);
 
-                AddEnabledEtl(statsType.Daily, account, () => DoETL_Daily(dateRange, account, adformUtility));
-                AddEnabledEtl(statsType.Strategy, account, () => DoETL_Strategy(dateRange, account, orderInsteadOfCampaign, adformUtility));
-                AddEnabledEtl(statsType.AdSet, account, () => DoETL_AdSet(dateRange, account, orderInsteadOfCampaign, adformUtility));
-                AddEnabledEtl(statsType.Creative, account, () => DoETL_Creative(dateRange, account, adformUtility));
-
-                Parallel.Invoke(EtlLevelActions.ToArray());
+                var etlLevelActions = GetEtlLevelActions(account, dateRange, accountIdsForOrders, trackingIdsOfAccounts, statsType);
+                Parallel.Invoke(etlLevelActions.ToArray());
             }
 
             SaveTokens(AdformUtility.TokenSets);
             return 0;
         }
 
-        private void AddEnabledEtl(bool etlEnabled, ExtAccount account, Action etlAction)
+        private static List<Action> GetEtlLevelActions(ExtAccount account, DateRange dateRange, List<string> accountIdsForOrders, Dictionary<string, string> trackingIdsOfAccounts, StatsTypeAgg statsType)
         {
-            if (!etlEnabled)
+            var etlLevelActions = new List<Action>();
+
+            var orderInsteadOfCampaign = accountIdsForOrders.Contains(account.ExternalId);
+            var adformUtility = CreateUtility(account, trackingIdsOfAccounts);
+
+            if (statsType.Daily)
             {
-                return;
+                var etlLevelAction = GetEtlLevelAction(account, () => DoETL_Daily(dateRange, account, adformUtility));
+                etlLevelActions.Add(etlLevelAction);
             }
 
-            EtlLevelActions.Add(() =>
+            if (statsType.Strategy)
+            {
+                var etlLevelAction = GetEtlLevelAction(account, () => DoETL_Strategy(dateRange, account, orderInsteadOfCampaign, adformUtility));
+                etlLevelActions.Add(etlLevelAction);
+            }
+
+            if (statsType.AdSet)
+            {
+                var etlLevelAction = GetEtlLevelAction(account, () => DoETL_AdSet(dateRange, account, orderInsteadOfCampaign, adformUtility));
+                etlLevelActions.Add(etlLevelAction);
+            }
+
+            if (statsType.Creative)
+            {
+                var etlLevelAction = GetEtlLevelAction(account, () => DoETL_Creative(dateRange, account, adformUtility));
+                etlLevelActions.Add(etlLevelAction);
+            }
+
+            return etlLevelActions;
+        }
+
+        private static Action GetEtlLevelAction(ExtAccount account, Action etlAction)
+        {
+            return () =>
             {
                 try
                 {
@@ -118,7 +138,7 @@ namespace CakeExtracter.Commands
                 {
                     Logger.Error(account.Id, ex);
                 }
-            });
+            };
         }
 
         private static AdformUtility CreateUtility(ExtAccount account, Dictionary<string, string> trackingIdsOfAccounts)
