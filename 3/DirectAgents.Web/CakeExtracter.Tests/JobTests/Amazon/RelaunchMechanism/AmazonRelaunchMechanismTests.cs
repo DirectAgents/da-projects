@@ -45,7 +45,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
         [TestCase(null, null, null)]
         public void AmazonRelaunchMechanism_RelaunchCommandAfterExceptionInDailyExtractor(DateTime? fromDateTime, DateTime? toDateTime, int? daysAgo)
         {
-            var commandMock = CreateCommandMock(null, fromDateTime, toDateTime, daysAgo, "daily");
+            var commandMock = CreateCommandMock(null, fromDateTime, toDateTime, daysAgo, StatsTypeAgg.DailyArg);
             commandMock.Setup(m => m.CreateDailyExtractor(It.IsAny<DateRange>(), It.IsAny<ExtAccount>()))
                 .Returns<DateRange, ExtAccount>(
                     (dateRange, account) =>
@@ -70,6 +70,40 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
             AssertRelaunchIsValid(commandMock);
         }
 
+        [Test(Description = "Checks if all required job requests are created if any error occurs in the daily database cleaner.")]
+        [TestCase(null, null, 1)]
+        [TestCase(null, null, 10)]
+        [TestCase("12/1/2018", null, 10)]
+        [TestCase("1/1/2019", "1/31/2019", null)]
+        [TestCase("1/1/2019", "1/31/2019", 4)]
+        [TestCase(null, null, null)]
+        public void AmazonRelaunchMechanism_RelaunchCommandAfterExceptionInDailyCleaner(DateTime? fromDateTime, DateTime? toDateTime, int? daysAgo)
+        {
+            var commandMock = CreateCommandMock(null, fromDateTime, toDateTime, daysAgo, StatsTypeAgg.DailyArg);
+            commandMock.Setup(m => m.CreateDailyExtractor(It.IsAny<DateRange>(), It.IsAny<ExtAccount>()))
+                .Returns<DateRange, ExtAccount>(
+                    (dateRange, account) =>
+                    {
+                        var extractorMock =
+                            new Mock<AmazonDatabaseKeywordsToDailySummaryExtracter>(dateRange, account.Id)
+                            {
+                                CallBase = true,
+                            };
+                        extractorMock.Setup(m => m.RemoveOldData(It.IsAny<DateRange>())).Throws<Exception>();
+                        extractorMock.Setup(m => m.GetDailySummaryDataFromDataBase()).Returns(new List<DailySummary> { new DailySummary() });
+                        return extractorMock.Object;
+                    });
+            commandMock.Setup(m => m.CreateDailyLoader(It.IsAny<ExtAccount>())).Returns(() =>
+            {
+                var loaderMock = new Mock<AmazonDailySummaryLoader>(It.IsAny<int>()) { CallBase = true };
+                loaderMock.Setup(m => m.LoadItems(It.IsAny<List<DailySummary>>())).Verifiable();
+                return loaderMock.Object;
+            });
+
+            commandMock.Object.Run();
+            AssertRelaunchIsValid(commandMock);
+        }
+
         [Test(Description = "Checks if all required job requests are created if any error occurs in the daily loader.")]
         [TestCase(null, null, 20)]
         [TestCase(null, null, 4)]
@@ -79,7 +113,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
         [TestCase(null, null, null)]
         public void AmazonRelaunchMechanism_RelaunchCommandAfterExceptionInDailyLoader(DateTime? fromDateTime, DateTime? toDateTime, int? daysAgo)
         {
-            var commandMock = CreateCommandMock(null, fromDateTime, toDateTime, daysAgo, "daily");
+            var commandMock = CreateCommandMock(null, fromDateTime, toDateTime, daysAgo, StatsTypeAgg.DailyArg);
             commandMock.Setup(m => m.CreateDailyExtractor(It.IsAny<DateRange>(), It.IsAny<ExtAccount>()))
                 .Returns<DateRange, ExtAccount>(
                     (dateRange, account) =>
