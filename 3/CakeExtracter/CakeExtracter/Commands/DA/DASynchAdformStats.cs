@@ -45,7 +45,7 @@ namespace CakeExtracter.Commands
 
         public bool DisabledOnly { get; set; }
 
-        private List<Action> etlList;
+        private List<Action> EtlLevelActions;
 
         public override void ResetProperties()
         {
@@ -84,7 +84,7 @@ namespace CakeExtracter.Commands
 
             foreach (var account in accounts)
             {
-                etlList = new List<Action>();
+                EtlLevelActions = new List<Action>();
                 Logger.Info("Commencing ETL for Adform account ({0}) {1}", account.Id, account.Name);
                 var orderInsteadOfCampaign = accountIdsForOrders.Contains(account.ExternalId);
                 var adformUtility = CreateUtility(account, trackingIdsOfAccounts);
@@ -94,7 +94,7 @@ namespace CakeExtracter.Commands
                 AddEnabledEtl(statsType.AdSet, account, () => DoETL_AdSet(dateRange, account, orderInsteadOfCampaign, adformUtility));
                 AddEnabledEtl(statsType.Creative, account, () => DoETL_Creative(dateRange, account, adformUtility));
 
-                Parallel.Invoke(etlList.ToArray());
+                Parallel.Invoke(EtlLevelActions.ToArray());
             }
 
             SaveTokens(AdformUtility.TokenSets);
@@ -108,7 +108,7 @@ namespace CakeExtracter.Commands
                 return;
             }
 
-            etlList.Add(() =>
+            EtlLevelActions.Add(() =>
             {
                 try
                 {
