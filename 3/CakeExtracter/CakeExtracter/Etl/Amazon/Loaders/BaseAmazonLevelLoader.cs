@@ -54,6 +54,18 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
             summaryMetricsItemsLoader = new AmazonSummaryMetricLoader<TSummaryMetricLevelEntity>();
         }
 
+        public virtual void LoadItems(List<TSummaryLevelEntity> items)
+        {
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
+                () => { EnsureRelatedItems(items); },
+                accountId,
+                LevelName,
+                AmazonJobOperations.ensureRelatedEntities);
+            UpsertSummaryItems(items);
+            var summaryMetricItems = GetSummaryMetricsToInsert(items);
+            UpsertSummaryMetricItems(summaryMetricItems);
+        }
+
         /// <summary>
         /// Loads the specified metrics and related summary metric items.
         /// </summary>
@@ -62,13 +74,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
         protected override int Load(List<TSummaryLevelEntity> items)
         {
             Logger.Info(accountId, "Loading {0} {1}..", items.Count, LevelName);
-            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
-            {
-                EnsureRelatedItems(items);
-            }, accountId, LevelName, AmazonJobOperations.ensureRelatedEntities);
-            UpsertSummaryItems(items);
-            var summaryMetricItems = GetSummaryMetricsToInsert(items);
-            UpsertSummaryMetricItems(summaryMetricItems);
+            LoadItems(items);
             return items.Count;
         }
 

@@ -354,7 +354,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
                     DASynchAdformStats.RunStatic(accountId: extAcct.Id, startDate: start, endDate: end, statsType: statsType);
                     break;
                 case Platform.Code_Amazon:
-                    DASynchAmazonStats.RunStatic(accountId: extAcct.Id, startDate: start, endDate: end, statsType: statsType, fromDatabase: true);
+                    DASynchAmazonStats.RunStatic(accountId: extAcct.Id, startDate: start, endDate: end, statsType: statsType);
                     //Note: daily stats are just summed by day from strategy stats
                     break;
                 case Platform.Code_Criteo:

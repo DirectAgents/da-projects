@@ -55,7 +55,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
             var scheduledCommand = new CommandWithSchedule
             {
                 Command = command,
-                ScheduledTime = GetScheduledTime(command)
+                ScheduledTime = GetScheduledTime(command),
             };
             scheduledCommands.Enqueue(scheduledCommand);
         }

@@ -5,7 +5,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
     /// <summary>
     /// Service for work with job request items.
     /// </summary>
-    internal interface IJobExecutionRequestService
+    public interface IJobExecutionRequestService
     {
         /// <summary>
         /// Returns a saved job request object for a command.

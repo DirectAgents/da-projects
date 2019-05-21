@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
-using AdRoll.Entities;
 using Amazon;
 using CakeExtracter.Bootstrappers;
-using CakeExtracter.Commands.DA;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Exceptions;
@@ -28,7 +26,33 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class DASynchAmazonStats : ConsoleCommand
     {
-        private const int DefaultDaysAgo = 41;
+        public const int DefaultDaysAgo = 41;
+
+        public virtual int? AccountId { get; set; }
+
+        public virtual DateTime? StartDate { get; set; }
+
+        public virtual DateTime? EndDate { get; set; }
+
+        public virtual int? DaysAgoToStart { get; set; }
+
+        public virtual string StatsType { get; set; }
+
+        public virtual bool DisabledOnly { get; set; }
+
+        public virtual bool KeepAmazonReports { get; set; }
+
+        public DASynchAmazonStats()
+        {
+            IsCommand("daSynchAmazonStats", "Synch Amazon Stats");
+            HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
+            HasOption("s|startDate=", "Start Date (default is 'daysAgo')", c => StartDate = DateTime.Parse(c));
+            HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
+            HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default = {DefaultDaysAgo})", c => DaysAgoToStart = c);
+            HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
+            HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
+            HasOption<bool>("k|keepAmazonReports=", "Store received Amazon reports in a separate folder (default = false)", c => KeepAmazonReports = c);
+        }
 
         public static int RunStatic(int? accountId = null, DateTime? startDate = null, DateTime? endDate = null, string statsType = null)
         {
@@ -43,20 +67,6 @@ namespace CakeExtracter.Commands
             return cmd.Run();
         }
 
-        public int? AccountId { get; set; }
-
-        public DateTime? StartDate { get; set; }
-
-        public DateTime? EndDate { get; set; }
-
-        public int? DaysAgoToStart { get; set; }
-
-        public string StatsType { get; set; }
-
-        public bool DisabledOnly { get; set; }
-
-        public bool KeepAmazonReports { get; set; }
-
         public override void ResetProperties()
         {
             AccountId = null;
@@ -66,18 +76,6 @@ namespace CakeExtracter.Commands
             StatsType = null;
             DisabledOnly = false;
             KeepAmazonReports = false;
-        }
-
-        public DASynchAmazonStats()
-        {
-            IsCommand("daSynchAmazonStats", "Synch Amazon Stats");
-            HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
-            HasOption("s|startDate=", "Start Date (default is 'daysAgo')", c => StartDate = DateTime.Parse(c));
-            HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
-            HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default = {DefaultDaysAgo})", c => DaysAgoToStart = c);
-            HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
-            HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
-            HasOption<bool>("k|keepAmazonReports=", "Store received Amazon reports in a separate folder (default = false)", c => KeepAmazonReports = c);
         }
 
         public override int Execute(string[] remainingArguments)
@@ -139,18 +137,87 @@ namespace CakeExtracter.Commands
             return broadCommands;
         }
 
-        private string[] GetTokens()
+        public virtual IEnumerable<ExtAccount> GetAccounts()
+        {
+            var accountRepository = new PlatformAccountRepository();
+            if (!AccountId.HasValue)
+            {
+                var accounts = accountRepository.GetAccountsWithFilledExternalIdByPlatformCode(Platform.Code_Amazon, DisabledOnly);
+                return accounts;
+            }
+
+            var account = accountRepository.GetAccount(AccountId.Value);
+            return new[] { account };
+        }
+
+        public virtual AmazonDatabaseKeywordsToDailySummaryExtracter CreateDailyExtractor(
+            DateRange dateRange,
+            ExtAccount account)
+        {
+            return new AmazonDatabaseKeywordsToDailySummaryExtracter(dateRange, account.Id);
+        }
+
+        public virtual AmazonDailySummaryLoader CreateDailyLoader(ExtAccount account)
+        {
+            return new AmazonDailySummaryLoader(account.Id);
+        }
+
+        public virtual AmazonApiAdExtrator CreateCreativeExtractor(
+            DateRange dateRange,
+            ExtAccount account,
+            AmazonUtility amazonUtility)
+        {
+            return new AmazonApiAdExtrator(amazonUtility, dateRange, account, account.Filter);
+        }
+
+        public virtual AmazonAdSummaryLoader CreateCreativeLoader(ExtAccount account)
+        {
+            return new AmazonAdSummaryLoader(account.Id);
+        }
+
+        public virtual AmazonApiKeywordExtractor CreateKeywordExtractor(
+            DateRange dateRange,
+            ExtAccount account,
+            AmazonUtility amazonUtility)
+        {
+            return new AmazonApiKeywordExtractor(amazonUtility, dateRange, account, account.Filter);
+        }
+
+        public virtual AmazonKeywordSummaryLoader CreateKeywordLoader(ExtAccount account)
+        {
+            return new AmazonKeywordSummaryLoader(account.Id);
+        }
+
+        public virtual string[] GetTokens()
         {
             // Get tokens, if any, from the database
             return Platform.GetPlatformTokens(Platform.Code_Amazon);
         }
 
-        private void SaveTokens(string[] tokens)
+        public virtual void SaveTokens(string[] tokens)
         {
             Platform.SavePlatformTokens(Platform.Code_Amazon, tokens);
         }
 
-        private AmazonUtility CreateUtility(ExtAccount account)
+        public virtual void SynchAsinAnalyticTables(int accountId)
+        {
+            try
+            {
+                CommandExecutionContext.Current?.SetJobExecutionStateInHistory("Sync analytic table.", accountId);
+                AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
+                    () =>
+                    {
+                        var amazonAmsSyncher = new AmazonAmsAnalyticSyncher();
+                        amazonAmsSyncher.SyncAsinLevelForAccount(accountId);
+                    }, accountId, AmazonJobLevels.creative, AmazonJobOperations.syncToAnalyticTables);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(new Exception("Error occurred while Asin analytic table sync.", ex));
+            }
+        }
+
+        public virtual AmazonUtility CreateUtility(ExtAccount account)
         {
             var amazonUtility = new AmazonUtility(m => Logger.Info(account.Id, m), m => Logger.Warn(account.Id, m));
             amazonUtility.SetWhichAlt(account.ExternalId);
@@ -158,6 +225,7 @@ namespace CakeExtracter.Commands
             {
                 return amazonUtility;
             }
+
             amazonUtility.KeepReports = KeepAmazonReports;
             amazonUtility.ReportPrefix = account.Id.ToString();
             return amazonUtility;
@@ -168,8 +236,8 @@ namespace CakeExtracter.Commands
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
                 () =>
                 {
-                    var extractor = new AmazonDatabaseKeywordsToDailySummaryExtracter(dateRange, account.Id);
-                    var loader = new AmazonDailySummaryLoader(account.Id);
+                    var extractor = CreateDailyExtractor(dateRange, account);
+                    var loader = CreateDailyLoader(account);
                     extractor.ProcessFailedExtraction += exception =>
                         ScheduleNewCommandLaunch<DASynchAmazonStats>(command =>
                             UpdateCommandParameters(command, exception));
@@ -184,8 +252,8 @@ namespace CakeExtracter.Commands
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
                 () =>
                 {
-                    var extractor = new AmazonApiAdExtrator(amazonUtility, dateRange, account, account.Filter);
-                    var loader = new AmazonAdSummaryLoader(account.Id);
+                    var extractor = CreateCreativeExtractor(dateRange, account, amazonUtility);
+                    var loader = CreateCreativeLoader(account);
                     InitEtlEvents<TDadSummary, AmazonApiAdExtrator, AmazonAdSummaryLoader>(extractor, loader);
                     CommandHelper.DoEtl(extractor, loader);
                     SynchAsinAnalyticTables(account.Id);
@@ -197,42 +265,11 @@ namespace CakeExtracter.Commands
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
                 () =>
                 {
-                    var extractor = new AmazonApiKeywordExtractor(amazonUtility, dateRange, account, account.Filter);
-                    var loader = new AmazonKeywordSummaryLoader(account.Id);
+                    var extractor = CreateKeywordExtractor(dateRange, account, amazonUtility);
+                    var loader = CreateKeywordLoader(account);
                     InitEtlEvents<KeywordSummary, AmazonApiKeywordExtractor, AmazonKeywordSummaryLoader>(extractor, loader);
                     CommandHelper.DoEtl(extractor, loader);
                 }, account.Id, AmazonJobLevels.keyword, AmazonJobOperations.total);
-        }
-
-        private IEnumerable<ExtAccount> GetAccounts()
-        {
-            var repository = new PlatformAccountRepository();
-            if (!AccountId.HasValue)
-            {
-                var accounts = repository.GetAccountsWithFilledExternalIdByPlatformCode(Platform.Code_Amazon, DisabledOnly);
-                return accounts;
-            }
-
-            var account = repository.GetAccount(AccountId.Value);
-            return new[] { account };
-        }
-
-        private void SynchAsinAnalyticTables(int accountId)
-        {
-            try
-            {
-                CommandExecutionContext.Current?.SetJobExecutionStateInHistory("Sync analytic table." ,accountId);
-                AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
-                    () =>
-                    {
-                        var amazonAmsSyncher = new AmazonAmsAnalyticSyncher();
-                        amazonAmsSyncher.SyncAsinLevelForAccount(accountId);
-                    }, accountId, AmazonJobLevels.creative, AmazonJobOperations.syncToAnalyticTables);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(new Exception("Error occurred while Asin analytic table sync.", ex));
-            }
         }
 
         private void InitEtlEvents<TSummary, TExtractor, TLoader>(TExtractor extractor, TLoader loader)
