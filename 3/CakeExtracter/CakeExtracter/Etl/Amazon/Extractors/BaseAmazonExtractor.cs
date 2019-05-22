@@ -22,7 +22,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
         protected readonly string campaignFilter;
         protected readonly string campaignFilterOut;
 
-        public event Action<FailedStatsExtractionException> ProcessFailedExtraction;
+        public event Action<FailedStatsLoadingException> ProcessFailedExtraction;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseAmazonExtractor{T}"/> class.
@@ -42,7 +42,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
             this.campaignFilterOut = campaignFilterOut;
         }
 
-        protected void InvokeProcessFailedExtractionHandlers(FailedStatsExtractionException exception)
+        protected void InvokeProcessFailedExtractionHandlers(FailedStatsLoadingException exception)
         {
             ProcessFailedExtraction?.Invoke(exception);
         }

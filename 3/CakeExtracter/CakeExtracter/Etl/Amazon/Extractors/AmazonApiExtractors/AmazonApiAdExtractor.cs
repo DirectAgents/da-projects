@@ -92,7 +92,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         private void ProcessFailedStatsExtraction(Exception e, DateTime fromDate, DateTime toDate)
         {
             Logger.Error(accountId, e);
-            var exception = new FailedStatsExtractionException(fromDate, toDate, accountId, e, byAd: true);
+            var exception = new FailedStatsLoadingException(fromDate, toDate, accountId, e, byAd: true);
             InvokeProcessFailedExtractionHandlers(exception);
         }
 

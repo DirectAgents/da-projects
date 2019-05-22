@@ -18,7 +18,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
     public class AmazonDatabaseKeywordsToDailySummaryExtracter : DatabaseKeywordsToDailySummaryExtractor
     {
 
-        public event Action<FailedStatsExtractionException> ProcessFailedExtraction;
+        public event Action<FailedStatsLoadingException> ProcessFailedExtraction;
 
         public AmazonDatabaseKeywordsToDailySummaryExtracter(DateRange dateRange, int accountId)
             :base(dateRange, accountId)
@@ -64,7 +64,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         private void ProcessFailedStatsExtraction(Exception e)
         {
             Logger.Error(accountId, e);
-            var exception = new FailedStatsExtractionException(dateRange.FromDate, dateRange.ToDate, accountId, e, byDaily: true);
+            var exception = new FailedStatsLoadingException(dateRange.FromDate, dateRange.ToDate, accountId, e, byDaily: true);
             ProcessFailedExtraction?.Invoke(exception);
         }
     }

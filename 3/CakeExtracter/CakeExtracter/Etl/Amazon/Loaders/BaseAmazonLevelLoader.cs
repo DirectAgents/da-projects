@@ -1,10 +1,12 @@
-﻿using CakeExtracter.Helpers;
+﻿using System;
+using CakeExtracter.Helpers;
 using CakeExtracter.Logging.TimeWatchers;
 using CakeExtracter.Logging.TimeWatchers.Amazon;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.Etl.Amazon.Exceptions;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
 {
@@ -21,6 +23,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
         private const int loadingBatchesSize = 500;
 
         private readonly AmazonSummaryMetricLoader<TSummaryMetricLevelEntity> summaryMetricsItemsLoader;
+
+        public event Action<FailedStatsLoadingException> ProcessFailedExtraction;
 
         /// <summary>
         /// Gets the name of amazon job information level.
@@ -73,9 +77,27 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
         /// <returns></returns>
         protected override int Load(List<TSummaryLevelEntity> items)
         {
-            Logger.Info(accountId, "Loading {0} {1}..", items.Count, LevelName);
-            LoadItems(items);
-            return items.Count;
+            try
+            {
+                Logger.Info(accountId, "Loading {0} {1}..", items.Count, LevelName);
+                LoadItems(items);
+                return items.Count;
+            }
+            catch (Exception e)
+            {
+                ProcessFailedStatsExtraction(e, items);
+                return items.Count;
+            }
+        }
+
+        protected virtual FailedStatsLoadingException GetFailedStatsLoadingException(Exception e, List<TSummaryLevelEntity> items)
+        {
+            var fromDate = items.Min(x => x.Date);
+            var toDate = items.Max(x => x.Date);
+            var fromDateArg = fromDate == default(DateTime) ? null : (DateTime?)fromDate;
+            var toDateArg = toDate == default(DateTime) ? null : (DateTime?)toDate;
+            var exception = new FailedStatsLoadingException(fromDateArg, toDateArg, accountId, e);
+            return exception;
         }
 
         /// <summary>
@@ -130,6 +152,13 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
                 }
             });
             return summaryMetricsToInsert;
+        }
+
+        private void ProcessFailedStatsExtraction(Exception e, List<TSummaryLevelEntity> items)
+        {
+            Logger.Error(accountId, e);
+            var exception = GetFailedStatsLoadingException(e, items);
+            ProcessFailedExtraction?.Invoke(exception);
         }
     }
 }

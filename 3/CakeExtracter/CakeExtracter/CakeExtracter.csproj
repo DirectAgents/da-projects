@@ -457,7 +457,7 @@
     <Compile Include="Common\SqlScriptsExecutor.cs" />
     <Compile Include="Common\StorageCollection.cs" />
     <Compile Include="Common\TextUtils.cs" />
-    <Compile Include="Etl\Amazon\Exceptions\FailedStatsExtractionException.cs" />
+    <Compile Include="Etl\Amazon\Exceptions\FailedStatsLoadingException.cs" />
     <Compile Include="Etl\CakeMarketing\DALoaders\DAAffiliatesLoader.cs" />
     <Compile Include="Etl\CakeMarketing\DALoaders\DAAffSubSummaryLoader.cs" />
     <Compile Include="Etl\CakeMarketing\DALoaders\DACampLoader.cs">

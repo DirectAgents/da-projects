@@ -22,6 +22,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
         
         public SyncAmazonPdaCommand() : base()
         {
+            NoNeedToCreateRepeatRequests = true;
             IsCommand("SyncAmazonPdaCommand", "Sync Amazon PDA Stats");
             configurationManager = new PdaCommandConfigurationManager();
         }

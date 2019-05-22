@@ -241,7 +241,7 @@ namespace CakeExtracter.Commands
                     extractor.ProcessFailedExtraction += exception =>
                         ScheduleNewCommandLaunch<DASynchAmazonStats>(command =>
                             UpdateCommandParameters(command, exception));
-                    InitEtlEventsWithoutInformation<DailySummary, AmazonDatabaseKeywordsToDailySummaryExtracter,
+                    InitCommonEtlEvents<DailySummary, DailySummaryMetric, AmazonDatabaseKeywordsToDailySummaryExtracter,
                         AmazonDailySummaryLoader>(extractor, loader);
                     CommandHelper.DoEtl(extractor, loader);
                 }, account.Id, AmazonJobLevels.account, AmazonJobOperations.total);
@@ -254,7 +254,8 @@ namespace CakeExtracter.Commands
                 {
                     var extractor = CreateCreativeExtractor(dateRange, account, amazonUtility);
                     var loader = CreateCreativeLoader(account);
-                    InitEtlEvents<TDadSummary, AmazonApiAdExtrator, AmazonAdSummaryLoader>(extractor, loader);
+                    InitEtlEvents<TDadSummary, TDadSummaryMetric, AmazonApiAdExtrator, AmazonAdSummaryLoader>(
+                        extractor, loader);
                     CommandHelper.DoEtl(extractor, loader);
                     SynchAsinAnalyticTables(account.Id);
                 }, account.Id, AmazonJobLevels.creative, AmazonJobOperations.total);
@@ -267,27 +268,33 @@ namespace CakeExtracter.Commands
                 {
                     var extractor = CreateKeywordExtractor(dateRange, account, amazonUtility);
                     var loader = CreateKeywordLoader(account);
-                    InitEtlEvents<KeywordSummary, AmazonApiKeywordExtractor, AmazonKeywordSummaryLoader>(extractor, loader);
+                    InitEtlEvents<KeywordSummary, KeywordSummaryMetric, AmazonApiKeywordExtractor,
+                        AmazonKeywordSummaryLoader>(extractor, loader);
                     CommandHelper.DoEtl(extractor, loader);
                 }, account.Id, AmazonJobLevels.keyword, AmazonJobOperations.total);
         }
 
-        private void InitEtlEvents<TSummary, TExtractor, TLoader>(TExtractor extractor, TLoader loader)
+        private void InitEtlEvents<TSummary, TSummaryMetric, TExtractor, TLoader>(TExtractor extractor, TLoader loader)
             where TSummary : DatedStatsSummary, new()
+            where TSummaryMetric : SummaryMetric, new()
             where TExtractor : BaseAmazonExtractor<TSummary>
-            where TLoader : Loader<TSummary>
+            where TLoader : BaseAmazonLevelLoader<TSummary, TSummaryMetric>
         {
             extractor.ProcessFailedExtraction += exception =>
                 ScheduleNewCommandLaunch<DASynchAmazonStats>(command =>
                     UpdateCommandParameters(command, exception));
-            InitEtlEventsWithoutInformation<TSummary, TExtractor, TLoader>(extractor, loader);
+            InitCommonEtlEvents<TSummary, TSummaryMetric, TExtractor, TLoader>(extractor, loader);
         }
 
-        private void InitEtlEventsWithoutInformation<TSummary, TExtractor, TLoader>(TExtractor extractor, TLoader loader)
-            where TSummary : new()
+        private void InitCommonEtlEvents<TSummary, TSummaryMetric, TExtractor, TLoader>(TExtractor extractor, TLoader loader)
+            where TSummary : DatedStatsSummary, new()
+            where TSummaryMetric : SummaryMetric, new()
             where TExtractor : Extracter<TSummary>
-            where TLoader : Loader<TSummary>
+            where TLoader : BaseAmazonLevelLoader<TSummary, TSummaryMetric>
         {
+            loader.ProcessFailedExtraction += exception =>
+                ScheduleNewCommandLaunch<DASynchAmazonStats>(command =>
+                    UpdateCommandParameters(command, exception));
             extractor.ProcessEtlFailedWithoutInformation += exception =>
                 ScheduleNewCommandLaunch<DASynchAmazonStats>(command =>
                     UpdateCommandParameters(command, exception));
@@ -296,16 +303,17 @@ namespace CakeExtracter.Commands
                     UpdateCommandParameters(command, exception));
         }
 
-        private void UpdateCommandParameters(DASynchAmazonStats command, FailedStatsExtractionException exception)
+        private void UpdateCommandParameters(DASynchAmazonStats command, FailedStatsLoadingException exception)
         {
-            command.StartDate = exception.StartDate;
-            command.EndDate = exception.EndDate;
-            command.AccountId = exception.AccountId;
+            command.StartDate = exception.StartDate ?? command.StartDate;
+            command.EndDate = exception.EndDate ?? command.EndDate;
+            command.AccountId = exception.AccountId ?? command.AccountId;
             var statsType = new StatsTypeAgg
             {
                 Creative = exception.ByAd,
                 Keyword = exception.ByKeyword,
                 Daily = exception.ByDaily,
+                Strategy = exception.ByCampaign,
             };
             command.StatsType = statsType.GetStatsTypeString();
         }
