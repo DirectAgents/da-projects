@@ -492,6 +492,7 @@ namespace Amazon
             {
                 ThrowGenerationTimedOutException(reportResponse);
             }
+
             return reportInfo;
         }
 
@@ -627,6 +628,7 @@ namespace Amazon
             {
                 LogInfo($"Report {reportName} has been saved.");
             }
+
             return json;
         }
 
@@ -649,6 +651,7 @@ namespace Amazon
             {
                 response = ProcessRequest<T>(restClient, restRequest, isPostMethod);
             }
+
             if (response.IsSuccessful)
             {
                 return response;
@@ -658,6 +661,12 @@ namespace Amazon
                 ? response.Content
                 : response.ErrorMessage;
             LogError(message);
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new Exception(response.Content);
+            }
+
             return response;
         }
 
