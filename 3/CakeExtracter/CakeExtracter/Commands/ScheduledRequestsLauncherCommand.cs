@@ -2,7 +2,7 @@
 using System.Configuration;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestManagers;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestLaunchers;
 
 namespace CakeExtracter.Commands
 {
@@ -39,10 +39,10 @@ namespace CakeExtracter.Commands
             return 0;
         }
 
-        private JobExecutionRequestService CreateRequestService()
+        private JobExecutionRequestLauncher CreateRequestService()
         {
             var requestRepository = new JobRequestRepository();
-            var requestService = new JobExecutionRequestService(requestRepository);
+            var requestService = new JobExecutionRequestLauncher(requestRepository);
             return requestService;
         }
     }
