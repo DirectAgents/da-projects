@@ -164,6 +164,7 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="AppleCertificateCourseHero.p12" />
     <None Include="AppleCertificateDA.p12">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
