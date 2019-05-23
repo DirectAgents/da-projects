@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using Amazon;
@@ -80,6 +81,7 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
+            IntervalBetweenUnsuccessfulAndNewRequestInMinutes = int.Parse(ConfigurationManager.AppSettings["AmazonIntervalBetweenRequestsInMinutes"]);
             var statsType = new StatsTypeAgg(StatsType);
             var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info("Amazon ETL. DateRange {0}.", dateRange);
