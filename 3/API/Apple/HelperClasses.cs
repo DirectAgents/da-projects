@@ -75,7 +75,12 @@ namespace Apple
     {
         public int impressions { get; set; }
         public int taps { get; set; }
-        public int conversions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the reporting field for conversions (renamed since API version 2.0).
+        /// </summary>
+        public int installs { get; set; }
+
         // (decimal) ttr
         // (CurrAmount) avgCPA
         // (CurrAmount) avgCPT

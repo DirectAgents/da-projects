@@ -58,7 +58,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                             Device = pk4,
                             //Revenue =
                             Cost = appleStat.localSpend.amount,
-                            Orders = appleStat.conversions,
+                            Orders = appleStat.installs,
                             Clicks = appleStat.taps,
                             Impressions = appleStat.impressions,
                             CurrencyId = 1 // appleStat.localSpend.currency == "USD" ? 1 : -1 // NOTE: non USD (if exists) -1 for now
