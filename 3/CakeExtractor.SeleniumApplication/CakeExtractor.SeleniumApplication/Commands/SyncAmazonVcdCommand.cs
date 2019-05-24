@@ -29,6 +29,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
 
         public SyncAmazonVcdCommand()
         {
+            NoNeedToCreateRepeatRequests = true;
             IsCommand("SyncAmazonVcdCommand", "Sync VCD Stats");
             HasOption<int>("p|profileNumber=", "Profile Number", c => ProfileNumber = c);
         }

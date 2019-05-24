@@ -18,6 +18,7 @@ namespace CakeExtracter.Commands
         /// </summary>
         public ScheduledRequestsLauncherCommand()
         {
+            NoNeedToCreateRepeatRequests = true;
             IsCommand("ScheduledRequestsLauncherCommand", "Runs Job Requests that have been scheduled");
         }
 
