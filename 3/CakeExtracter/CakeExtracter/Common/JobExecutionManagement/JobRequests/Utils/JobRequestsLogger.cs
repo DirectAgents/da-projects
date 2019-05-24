@@ -5,16 +5,18 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils
 {
     static class JobRequestsLogger
     {
-        public static void LogInfo(string message, JobRequest request)
+        public static string LogInfo(string message, JobRequest request)
         {
             var info = GetMessageAboutJobRequest(message, request);
             Logger.Info(info);
+            return info;
         }
 
-        public static void LogError(string message, JobRequest request)
+        public static string LogError(string message, JobRequest request)
         {
             var info = GetMessageAboutJobRequest(message, request);
             Logger.Error(new Exception(info));
+            return info;
         }
 
         private static string GetMessageAboutJobRequest(string message, JobRequest request)

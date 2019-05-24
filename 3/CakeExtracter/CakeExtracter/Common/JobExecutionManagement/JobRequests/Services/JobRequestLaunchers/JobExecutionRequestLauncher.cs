@@ -40,7 +40,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
 
         private void RunRequestInNewProcess(JobRequest request)
         {
-            JobRequestsLogger.LogInfo("Run the job request", request);
+            LogStateInfo("Run the job request", request);
             var arguments = CommandArgumentsConverter.GetJobArgumentsAsArgumentsForConsole(request);
             ProcessManager.RestartApplicationInNewProcess(arguments);
         }
@@ -58,7 +58,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         {
             var failedRequests = requests.Where(x => x.AttemptNumber == maxNumberOfJobRequests).ToList();
             UpdateRequests(failedRequests, JobRequestStatus.Failed);
-            failedRequests.ForEach(x => JobRequestsLogger.LogInfo("Fail the request", x));
+            failedRequests.ForEach(x => LogStateInfo("Fail the request", x));
             return failedRequests;
         }
 
@@ -68,7 +68,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
                 .Select(x => x.OrderByDescending(y => y.ScheduledTime).First()).ToList();
             var duplicatedRequests = requests.Except(distinctLastRequests).ToList();
             UpdateRequests(duplicatedRequests, JobRequestStatus.StartedByAnotherRequest);
-            duplicatedRequests.ForEach(x => JobRequestsLogger.LogInfo("Replace the request with another", x));
+            duplicatedRequests.ForEach(x => LogStateInfo("Replace the request with another", x));
             return distinctLastRequests;
         }
 
@@ -114,6 +114,12 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         {
             requests.ForEach(request => request.Status = status);
             requestRepository.UpdateItems(requests);
+        }
+
+        private void LogStateInfo(string message, JobRequest request)
+        {
+            var requestInfo = JobRequestsLogger.LogInfo(message, request);
+            CommandExecutionContext.Current.AppendJobExecutionStateInHistory(requestInfo);
         }
     }
 }
