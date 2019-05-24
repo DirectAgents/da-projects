@@ -20,7 +20,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         private readonly Queue<CommandWithSchedule> scheduledCommands;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="JobExecutionRequestScheduler"/>
+        /// Initializes a new instance of the <see cref="JobExecutionRequestScheduler"/> class.
         /// </summary>
         /// <param name="jobRequestRepository">The repository for job requests.</param>
         public JobExecutionRequestScheduler(IBaseRepository<JobRequest> jobRequestRepository)
@@ -46,11 +46,6 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         /// <inheritdoc />
         public void ScheduleCommandLaunch(ConsoleCommand command)
         {
-            if (command.NoNeedToCreateRepeatRequests)
-            {
-                return;
-            }
-
             var scheduledCommand = new CommandWithSchedule
             {
                 Command = command,
@@ -62,6 +57,13 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         /// <inheritdoc />
         public void RescheduleRequest(JobRequest request, ConsoleCommand sourceCommand)
         {
+            if (sourceCommand.NoNeedToCreateRepeatRequests)
+            {
+                UpdateRequest(request, JobRequestStatus.Failed);
+                LogNotScheduledCommand(sourceCommand.Command, CommandArgumentsConverter.GetCommandArgumentsAsLine(sourceCommand));
+                return;
+            }
+
             var scheduledTime = GetScheduledTime(sourceCommand);
             RescheduleRequest(request, scheduledTime);
         }
@@ -69,11 +71,15 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         /// <inheritdoc />
         public void CreateRequestsForScheduledCommands(ConsoleCommand sourceCommand, JobRequest sourceRequest)
         {
-            var broadCommands = sourceCommand.GetUniqueBroadCommands(scheduledCommands);
-            var jobRequests = broadCommands.Select(x => CreateJobRequest(x.Command, x.ScheduledTime, sourceRequest.Id)).ToList();
-            ProcessEndOfRequest(jobRequests, sourceRequest);
-            requestRepository.AddItems(jobRequests);
-            jobRequests.ForEach(x => JobRequestsLogger.LogInfo("Schedule the new request", x));
+            var jobRequests = GetUniqueJobRequests(sourceCommand, sourceRequest);
+            if (sourceCommand.NoNeedToCreateRepeatRequests)
+            {
+                UpdateRequest(sourceRequest, JobRequestStatus.Failed);
+                jobRequests.ForEach(x => LogNotScheduledCommand(x.CommandName, x.CommandExecutionArguments));
+                return;
+            }
+
+            ScheduleRequests(sourceRequest, jobRequests);
         }
 
         /// <inheritdoc />
@@ -83,8 +89,23 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
             {
                 return;
             }
+
             UpdateRequest(request, JobRequestStatus.Aborted);
             JobRequestsLogger.LogError("The request is aborted", request);
+        }
+
+        private List<JobRequest> GetUniqueJobRequests(ConsoleCommand sourceCommand, JobRequest sourceRequest)
+        {
+            var broadCommands = sourceCommand.GetUniqueBroadCommands(scheduledCommands);
+            var jobRequests = broadCommands.Select(x => CreateJobRequest(x.Command, x.ScheduledTime, sourceRequest.Id));
+            return jobRequests.ToList();
+        }
+
+        private void ScheduleRequests(JobRequest sourceRequest, List<JobRequest> jobRequests)
+        {
+            ProcessEndOfRequest(jobRequests, sourceRequest);
+            requestRepository.AddItems(jobRequests);
+            jobRequests.ForEach(x => JobRequestsLogger.LogInfo("Schedule the new request", x));
         }
 
         private void ProcessEndOfRequest(List<JobRequest> newRequests, JobRequest endedRequest)
@@ -118,7 +139,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
                 CommandExecutionArguments = CommandArgumentsConverter.GetCommandArgumentsAsLine(command),
                 ScheduledTime = scheduledTime,
                 Status = JobRequestStatus.Scheduled,
-                ParentJobRequestId = parentRequestId
+                ParentJobRequestId = parentRequestId,
             };
         }
 
@@ -153,6 +174,11 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         private DateTime GetScheduledTime(ConsoleCommand command)
         {
             return DateTime.Now.AddMinutes(command.IntervalBetweenUnsuccessfulAndNewRequestInMinutes);
+        }
+
+        private void LogNotScheduledCommand(string commandName, string commandArguments)
+        {
+            Logger.Info($"This command should be scheduled but it does not because NoNeedToCreateRepeatRequests = true: {commandName} {commandArguments}");
         }
     }
 }
