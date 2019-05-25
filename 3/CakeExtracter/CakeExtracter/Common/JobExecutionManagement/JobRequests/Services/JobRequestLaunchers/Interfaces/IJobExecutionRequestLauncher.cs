@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestLaunchers.Interfaces
+﻿namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestLaunchers.Interfaces
 {
+    /// <summary>
+    /// The service for work with launch of job request items.
+    /// </summary>
     public interface IJobExecutionRequestLauncher
     {
         /// <summary>

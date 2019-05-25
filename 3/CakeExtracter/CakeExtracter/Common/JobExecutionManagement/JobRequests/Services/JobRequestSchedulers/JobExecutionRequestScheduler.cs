@@ -12,7 +12,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
 {
     /// <inheritdoc />
     /// <summary>
-    /// The service for work with job request items.
+    /// The service for work with scheduling of job request items.
     /// </summary>
     public class JobExecutionRequestScheduler : IJobExecutionRequestScheduler
     {

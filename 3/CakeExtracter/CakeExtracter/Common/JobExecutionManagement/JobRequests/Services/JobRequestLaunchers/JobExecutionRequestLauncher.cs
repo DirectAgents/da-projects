@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestLaunchers.Interfaces;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
@@ -9,10 +10,15 @@ using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 
 namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestLaunchers
 {
-    class JobExecutionRequestLauncher
+    /// <inheritdoc />
+    internal class JobExecutionRequestLauncher : IJobExecutionRequestLauncher
     {
         private readonly IBaseRepository<JobRequest> requestRepository;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JobExecutionRequestLauncher"/> class.
+        /// </summary>
+        /// <param name="requestRepository">Job request repository</param>
         public JobExecutionRequestLauncher(IBaseRepository<JobRequest> requestRepository)
         {
             this.requestRepository = requestRepository;
@@ -33,7 +39,9 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
             var runningRequests = GetRunningJobRequests();
             var distinctScheduledNotRunningRequests =
                 GetJobRequestsOfNotRunningJobs(distinctScheduledValidRequests, runningRequests);
-            var requestsToRun = GetRightAmountOfJobRequestsToRun(distinctScheduledNotRunningRequests, runningRequests,
+            var requestsToRun = GetRightAmountOfJobRequestsToRun(
+                distinctScheduledNotRunningRequests,
+                runningRequests,
                 maxNumberOfRunningRequests);
             return requestsToRun;
         }
@@ -48,7 +56,8 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         private List<JobRequest> GetScheduledValidJobRequests(int maxNumberOfJobRequests)
         {
             var now = DateTime.Now;
-            var scheduledInPastRequests = requestRepository.GetItems(x => x.Status == JobRequestStatus.Scheduled && x.ScheduledTime <= now);
+            var scheduledInPastRequests = requestRepository
+                .GetItems(x => x.Status == JobRequestStatus.Scheduled && x.ScheduledTime <= now);
             var failedRequests = FailOverdueRequests(scheduledInPastRequests, maxNumberOfJobRequests);
             var validRequests = scheduledInPastRequests.Except(failedRequests).ToList();
             return validRequests;
