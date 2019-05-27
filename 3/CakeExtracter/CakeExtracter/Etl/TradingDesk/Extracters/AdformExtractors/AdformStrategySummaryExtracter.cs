@@ -4,6 +4,7 @@ using System.Linq;
 using Adform;
 using Adform.Entities.ReportEntities;
 using Adform.Enums;
+using Adform.Utilities;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
 
@@ -22,7 +23,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         protected override void Extract()
         {
             var additionInfo = byOrder ? "Orders" : "Campaigns";
-            Logger.Info($"Extracting StrategySummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d} - {additionInfo}");
+            Logger.Info(AccountId, $"Extracting StrategySummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d} - {additionInfo}");
             //TODO: Do X days at a time...?
             try
             {
@@ -32,8 +33,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             }
             catch (Exception ex)
             {
-                Logger.Error(ex);
+                Logger.Error(AccountId, ex);
             }
+
             End();
         }
 
@@ -41,8 +43,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         {
             var settings = GetBaseSettings();
             settings.Dimensions.Add(byOrder ? Dimension.Order : Dimension.Campaign);
-            var parms = AfUtility.CreateReportParams(settings);
-            var allReportData = AfUtility.GetReportDataWithPaging(parms);
+            var parameters = AfUtility.CreateReportParams(settings);
+            var allReportData = AfUtility.GetReportDataWithLimits(parameters);
             var adFormSums = allReportData.SelectMany(TransformReportData).ToList();
             return adFormSums;
         }
@@ -63,12 +65,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 
         private IEnumerable<StrategySummary> EnumerateRows(IEnumerable<AdformSummary> afSums)
         {
-            var campDateGroups = afSums.GroupBy(x => new {x.Campaign, x.Order, x.Date});
+            var campDateGroups = afSums.GroupBy(x => new { x.Campaign, x.Order, x.Date });
             foreach (var campDateGroup in campDateGroups)
             {
                 var sum = new StrategySummary
                 {
-                    StrategyName = byOrder ? campDateGroup.Key.Order : campDateGroup.Key.Campaign
+                    StrategyName = byOrder ? campDateGroup.Key.Order : campDateGroup.Key.Campaign,
                 };
                 SetStats(sum, campDateGroup, campDateGroup.Key.Date);
                 yield return sum;

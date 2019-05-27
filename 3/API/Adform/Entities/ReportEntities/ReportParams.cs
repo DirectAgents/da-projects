@@ -21,11 +21,6 @@
         public object filter { get; set; }
 
         /// <summary>
-        /// Paging defines the maximum number of rows to include in the response. 
-        /// </summary>
-        public Paging paging { get; set; }
-
-        /// <summary>
         /// The field turns on a return of the total number of rows in the query result.
         /// </summary>
         public bool includeRowCount { get; set; }
@@ -39,7 +34,6 @@
             {
                 filter = filter,
                 includeRowCount = includeRowCount,
-                paging = paging,
                 dimensions = dimensions,
                 metrics = metrics
             };
