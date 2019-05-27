@@ -1,31 +1,34 @@
-﻿using DirectAgents.Domain.Entities.Administration.JobExecution;
-using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
-using MVCGrid.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DirectAgents.Domain.Entities.Administration.JobExecution;
+using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
+using MVCGrid.Models;
 
 namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
 {
     /// <summary>
-    /// job history qury extensions for applying paging and filtering.
+    /// job history query extensions for applying paging and filtering.
     /// </summary>
     public static class JobHistoryQueryExtensions
     {
         /// <summary>
         /// Applies the command name filter.
         /// </summary>
-        /// <param name="source">The source query object.</param>
-        /// <param name="options">The grid options.</param>
-        /// <returns></returns>
-        public static IQueryable<JobRequestExecution> ApplyCommandNameFilter(this IQueryable<JobRequestExecution> source, QueryOptions options,
+        /// <param name="source">The source.</param>
+        /// <param name="options">The options.</param>
+        /// <param name="historyItemJobsBlackList">The history item jobs black list.</param>
+        /// <returns>Query with applied command name filter</returns>
+        public static IQueryable<JobRequestExecution> ApplyCommandNameFilter(
+            this IQueryable<JobRequestExecution> source,
+            QueryOptions options,
             List<string> historyItemJobsBlackList)
         {
             const string commandNameFilterKey = "CommandName";
             if (options.Filters.ContainsKey(commandNameFilterKey))
             {
                 var filterValue = options.Filters[commandNameFilterKey];
-                source = source.Where(jExecution => jExecution.JobRequest.CommandName.StartsWith(filterValue));
+                source = source.Where(jExecution => jExecution.JobRequest.CommandName.ToLower().Contains(filterValue.ToLower()));
             }
             else
             {
@@ -35,25 +38,11 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
         }
 
         /// <summary>
-        /// Applies the commands black list filter.
-        /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="options">The options.</param>
-        /// <param name="historyItemJobsBlackList">The history item jobs black list.</param>
-        /// <returns></returns>
-        public static IQueryable<JobRequestExecution> ApplyCommandsBlackListFilter(this IQueryable<JobRequestExecution> source, QueryOptions options,
-            List<string> historyItemJobsBlackList)
-        {
-            
-            return source;
-        }
-
-        /// <summary>
         /// Applies the parent job identifier filter.
         /// </summary>
         /// <param name="source">The source query object.</param>
         /// <param name="options">The grid options.</param>
-        /// <returns></returns>
+        /// <returns>Query with applied parent job filter.</returns>
         public static IQueryable<JobRequestExecution> ApplyParentJobIdFilter(this IQueryable<JobRequestExecution> source, QueryOptions options)
         {
             const string parentJobFilterKey = "ParentJobId";
@@ -63,7 +52,7 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
                 if (int.TryParse(options.Filters[parentJobFilterKey], out filterJobIdValue))
                 {
                     source = filterJobIdValue > 0 ?
-                        source.Where(jExecution => jExecution.JobRequest.ParentJobRequestId == filterJobIdValue):
+                        source.Where(jExecution => jExecution.JobRequest.ParentJobRequestId == filterJobIdValue) :
                         source.Where(jExecution => jExecution.JobRequest.ParentJobRequestId == null);
                 }
             }
@@ -75,17 +64,25 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
         /// </summary>
         /// <param name="source">The source query object.</param>
         /// <param name="options">The grid options.</param>
-        /// <returns></returns>
+        /// <returns>Query with applied status filter.</returns>
         public static IQueryable<JobRequestExecution> ApplyStatusFilter(this IQueryable<JobRequestExecution> source, QueryOptions options)
         {
             const string statusFilterKey = "Status";
-            if (options.Filters.ContainsKey(statusFilterKey))
+            if (options.Filters.ContainsKey(statusFilterKey) )
             {
-                int statusValue;
-                if (int.TryParse(options.Filters[statusFilterKey], out statusValue))
+                const string withErrorsStatus = "errors";
+                if (options.Filters[statusFilterKey] != withErrorsStatus)
                 {
-                    var status = (JobExecutionStatus)statusValue;
-                    source = source.Where(jExecution => jExecution.Status == status);
+                    int statusValue;
+                    if (int.TryParse(options.Filters[statusFilterKey], out statusValue))
+                    {
+                        var status = (JobExecutionStatus)statusValue;
+                        source = source.Where(jExecution => jExecution.Status == status);
+                    }
+                }
+                else
+                {
+                    source = source.Where(jExecution => jExecution.Errors != null);
                 }
             }
             return source;
@@ -96,13 +93,13 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
         /// </summary>
         /// <param name="source">The source query object.</param>
         /// <param name="options">The grid options.</param>
-        /// <returns></returns>
+        /// <returns>Query with applied start date filter.</returns>
         public static IQueryable<JobRequestExecution> ApplyStartDateFilter(this IQueryable<JobRequestExecution> source, QueryOptions options)
         {
             const string startDateFilterKey = "StartTime";
             if (options.Filters.ContainsKey(startDateFilterKey))
             {
-                DateTime dateFilterValue = new DateTime();
+                DateTime dateFilterValue = default(DateTime);
                 if (DateTime.TryParse(options.Filters[startDateFilterKey], out dateFilterValue))
                 {
                     source = source.Where(jExecution => jExecution.StartTime.Value.Day == dateFilterValue.Day);
@@ -116,7 +113,7 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
         /// </summary>
         /// <param name="source">The source query object.</param>
         /// <param name="options">The grid options.</param>
-        /// <returns></returns>
+        /// <returns>Query with applied  start time sorting.</returns>
         public static IQueryable<JobRequestExecution> ApplyStartTimeSorting(this IQueryable<JobRequestExecution> source, QueryOptions options)
         {
             source = source.OrderByDescending(p => p.StartTime);
@@ -128,7 +125,7 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
         /// </summary>
         /// <param name="source">The source query object.</param>
         /// <param name="options">The grid options.</param>
-        /// <returns></returns>
+        /// <returns>Query will applied paging.</returns>
         public static IQueryable<JobRequestExecution> ApplyPaging(this IQueryable<JobRequestExecution> source, QueryOptions options)
         {
             if (options.GetLimitOffset().HasValue)

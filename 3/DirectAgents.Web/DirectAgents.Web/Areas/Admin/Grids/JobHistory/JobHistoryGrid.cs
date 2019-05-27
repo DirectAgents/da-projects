@@ -1,13 +1,13 @@
-﻿using DirectAgents.Domain.Entities.Administration.JobExecution;
+﻿using System.Web.Mvc;
+using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Web.Areas.Admin.Grids.JobHistory;
 using MVCGrid.Models;
 using MVCGrid.Web;
-using System.Web.Mvc;
 
 namespace DirectAgents.Web.Areas.Admin.Grids
 {
     /// <summary>
-    /// Job History Grid Configuration
+    /// Job History Grid Configuration.
     /// </summary>
     public static class JobHistoryGrid
     {
@@ -44,8 +44,8 @@ namespace DirectAgents.Web.Areas.Admin.Grids
                         .WithHeaderText("End")
                         .WithValueExpression((i, c) => i.EndTime.ToString());
                     cols.Add().WithColumnName("ElapsedTime")
-                        .WithHeaderText("ElapsedTime")
-                        .WithValueExpression((i, c) => (i.StartTime.HasValue && i.EndTime.HasValue) ? ((i.EndTime - i.StartTime).ToString()) : null);
+                        .WithHeaderText("Elapsed")
+                        .WithValueExpression((i, c) => (i.StartTime.HasValue && i.EndTime.HasValue) ? (i.EndTime - i.StartTime).Value.ToString(@"hh\:mm\:ss") : null);
                     cols.Add().WithColumnName("Status")
                         .WithHeaderText("Status")
                         .WithValueExpression((i, c) => i.Status.ToString())
@@ -54,7 +54,7 @@ namespace DirectAgents.Web.Areas.Admin.Grids
                         .WithHeaderText("CurrentState")
                         .WithValueExpression((i, c) => i.CurrentState).WithCellCssClassExpression(i => "json-cell state");
                     cols.Add().WithColumnName("Errors")
-                       .WithHeaderText("Erorrs")
+                       .WithHeaderText("Errors")
                        .WithValueExpression((i, c) => i.Errors).WithCellCssClassExpression(i => "json-cell errors");
                     cols.Add().WithColumnName("Warnings")
                        .WithHeaderText("Warnings")
@@ -68,8 +68,7 @@ namespace DirectAgents.Web.Areas.Admin.Grids
                     QueryOptions options = context.QueryOptions;
                     var dataProvider = DependencyResolver.Current.GetService<IJobHistoryDataProvider>();
                     return dataProvider.GetQueryResult(options);
-                })
-            );
+                }));
         }
     }
 }

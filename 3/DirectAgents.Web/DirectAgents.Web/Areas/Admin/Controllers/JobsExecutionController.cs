@@ -3,7 +3,7 @@
 namespace DirectAgents.Web.Areas.Admin.Controllers
 {
     /// <summary>
-    /// Jobs Execution Controller
+    /// Jobs Execution Controller.
     /// </summary>
     /// <seealso cref="System.Web.Mvc.Controller" />
     public class JobsExecutionController : Controller
@@ -18,9 +18,10 @@ namespace DirectAgents.Web.Areas.Admin.Controllers
         /// <summary>
         /// History Endpoint.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Action result for job execution history page.</returns>
         public ActionResult History()
         {
+
             return View("History");
         }
     }

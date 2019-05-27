@@ -154,5 +154,7 @@
     <Rule Id="SX1309" Action="None" />
     <!-- SX1309S: StaticFieldNamesMustBeginWithUnderscore -->
     <Rule Id="SX1309S" Action="None" />
+	<!-- SA1513: ClosingCurlyBracketMustBeFollowedByBlankLine -->
+    <Rule Id="SA1513" Action="None" />
   </Rules>
 </RuleSet>
