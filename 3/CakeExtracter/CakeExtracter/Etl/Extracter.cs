@@ -105,6 +105,7 @@ namespace CakeExtracter.Etl
             {
                 var exception = new FailedEtlException(null, null, null, e);
                 ProcessEtlFailedWithoutInformation?.Invoke(exception);
+                End();
             }
         }
 

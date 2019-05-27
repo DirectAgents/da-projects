@@ -8,7 +8,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories
     /// <summary>
     /// The repository for working with Job Request objects in the database.
     /// </summary>
-    internal class JobRequestRepository : BaseDatabaseRepository<JobRequest, ClientPortalProgContext>
+    public class JobRequestRepository : BaseDatabaseRepository<JobRequest, ClientPortalProgContext>
     {
         private static readonly object RequestLocker = new object();
 
