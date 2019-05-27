@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Apple.Entities;
 
 namespace Apple
 {
@@ -61,32 +61,12 @@ namespace Apple
     }
     public class AppleStatGroup
     {
-        public List<AppleStat> granularity { get; set; }
+        public List<AppleReportingResponse> granularity { get; set; }
         public Metadata metadata { get; set; }
         public object total { get; set; }
         public object other { get; set; } // true/false
     }
 
-    public class AppleStat : AppleStatBase
-    {
-        public DateTime date { get; set; }
-    }
-    public class AppleStatBase
-    {
-        public int impressions { get; set; }
-        public int taps { get; set; }
-
-        /// <summary>
-        /// Gets or sets the reporting field for conversions (renamed since API version 2.0).
-        /// </summary>
-        public int installs { get; set; }
-
-        // (decimal) ttr
-        // (CurrAmount) avgCPA
-        // (CurrAmount) avgCPT
-        public CurrAmount localSpend { get; set; }
-        // (decimal) conversionRate
-    }
     public class CurrAmount
     {
         public decimal amount { get; set; }

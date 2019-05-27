@@ -47,7 +47,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     foreach (var appleStat in statGroup.granularity)
                     {
                         var pk1 = searchCampaignId;
-                        var pk2 = appleStat.date;
+                        var pk2 = appleStat.Date;
                         var pk3 = ".";
                         var pk4 = ".";
                         var source = new SearchDailySummary
@@ -57,10 +57,10 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                             Network = pk3,
                             Device = pk4,
                             //Revenue =
-                            Cost = appleStat.localSpend.amount,
-                            Orders = appleStat.installs,
-                            Clicks = appleStat.taps,
-                            Impressions = appleStat.impressions,
+                            Cost = appleStat.LocalSpend.amount,
+                            Orders = appleStat.Installs,
+                            Clicks = appleStat.Taps,
+                            Impressions = appleStat.Impressions,
                             CurrencyId = 1 // appleStat.localSpend.currency == "USD" ? 1 : -1 // NOTE: non USD (if exists) -1 for now
                         };
                         var target = db.Set<SearchDailySummary>().Find(pk1, pk2, pk3, pk4);
