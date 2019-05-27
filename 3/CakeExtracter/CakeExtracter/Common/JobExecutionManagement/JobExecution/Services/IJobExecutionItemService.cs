@@ -11,7 +11,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
         /// Creates the job execution item.
         /// </summary>
         /// <param name="jobRequest">The job request to create.</param>
-        /// <returns></returns>
+        /// <returns>Created job execution item.</returns>
         JobRequestExecution CreateJobExecutionItem(JobRequest jobRequest);
 
         /// <summary>
@@ -25,6 +25,12 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
         /// </summary>
         /// <param name="executionHistoryItem">The execution history item.</param>
         void SetJobExecutionItemFailedState(JobRequestExecution executionHistoryItem);
+
+        /// <summary>
+        /// Sets the state of the job execution items to aborted.
+        /// </summary>
+        /// <param name="itemIds">The item ids.</param>
+        void SetJobExecutionItemsAbortedState(int[] itemIds);
 
         /// <summary>
         /// Adds the warning to job execution item.

@@ -8,7 +8,7 @@ using MVCGrid.Models;
 namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
 {
     /// <summary>
-    /// Job History Data Provider
+    /// Job History Data Provider.
     /// </summary>
     /// <seealso cref="IJobHistoryDataProvider" />
     public class JobHistoryDataProvider : IJobHistoryDataProvider
@@ -17,8 +17,6 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
         {
             "ScheduledRequestsLauncherCommand",
         };
-
-        private List<string> commandNames = null;
 
         /// <summary>
         /// Gets the query result.
@@ -38,9 +36,20 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
                     .ApplyCommandNameFilter(options, historyItemJobsBlackList);
                 result.TotalRecords = query.Count();
                 query = query.ApplyPaging(options);
-                result.Items = query.ToList();
+                var queryItems = query.ToList();
+                result.Items = ConvertDatesToLocalFormat(queryItems); // Dates should be displayed in server local time.
                 return result;
             }
+        }
+
+        private List<JobRequestExecution> ConvertDatesToLocalFormat(List<JobRequestExecution> sourceItems)
+        {
+            sourceItems.ForEach(item =>
+            {
+                item.StartTime = item.StartTime?.ToLocalTime();
+                item.EndTime = item.EndTime?.ToLocalTime();
+            });
+            return sourceItems;
         }
     }
 }

@@ -15,6 +15,7 @@ namespace DirectAgents.Web.App_Start
     using Ninject;
     using Ninject.Web.Common;
     using DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook;
+    using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
 
     public static class NinjectWebCommon 
     {
@@ -83,6 +84,8 @@ namespace DirectAgents.Web.App_Start
             kernel.Bind<IPlatformAccountRepository>().To<PlatformAccountRepository>();
 
             kernel.Bind<IJobHistoryDataProvider>().To<JobHistoryDataProvider>();
+            kernel.Bind<IJobExecutionItemRepository>().To<JobExecutionItemRepository>();
+            kernel.Bind<IJobExecutionItemService>().To<JobExecutionItemService>();
             kernel.Bind<ClientPortal.Data.Contracts.IClientPortalRepository>().To<ClientPortal.Data.Services.ClientPortalRepository>();
 
             kernel.Bind<SpecialPlatformProvider>().To<DspProvider>();

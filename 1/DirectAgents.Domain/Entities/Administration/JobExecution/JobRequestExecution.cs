@@ -15,7 +15,7 @@ namespace DirectAgents.Domain.Entities.Administration.JobExecution
         /// The identifier.
         /// </value>
         public int Id { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the identifier of a job request.
         /// </summary>
@@ -25,7 +25,7 @@ namespace DirectAgents.Domain.Entities.Administration.JobExecution
         public int JobRequestId { get; set; }
 
         /// <summary>
-        /// Job execution start time.
+        /// Gets or sets job execution start time.
         /// </summary>
         /// <value>
         /// The start time.
@@ -33,7 +33,7 @@ namespace DirectAgents.Domain.Entities.Administration.JobExecution
         public DateTime? StartTime { get; set; }
 
         /// <summary>
-        /// Job execution end time.
+        /// Gets or sets job execution end time.
         /// </summary>
         /// <value>
         /// The end time.
@@ -41,7 +41,7 @@ namespace DirectAgents.Domain.Entities.Administration.JobExecution
         public DateTime? EndTime { get; set; }
 
         /// <summary>
-        /// Job execution status. <see cref="JobExecutionStatus"/>
+        /// Gets or sets job execution status. <see cref="JobExecutionStatus"/>.
         /// </summary>
         /// <value>
         /// The execution status.
@@ -49,7 +49,7 @@ namespace DirectAgents.Domain.Entities.Administration.JobExecution
         public JobExecutionStatus Status { get; set; }
 
         /// <summary>
-        /// Job error messages.
+        /// Gets or sets job error messages.
         /// </summary>
         /// <value>
         /// The errors.
@@ -57,7 +57,7 @@ namespace DirectAgents.Domain.Entities.Administration.JobExecution
         public string Errors { get; set; }
 
         /// <summary>
-        /// Job warning messages.
+        /// Gets or sets job warning messages.
         /// </summary>
         /// <value>
         /// The warnings.
@@ -65,7 +65,7 @@ namespace DirectAgents.Domain.Entities.Administration.JobExecution
         public string Warnings { get; set; }
 
         /// <summary>
-        /// Job free status description. Contain information about execution state of job. 
+        /// Gets or sets job free status description. Contain information about execution state of job.
         /// </summary>
         /// <value>
         /// The state of the current.
@@ -73,7 +73,7 @@ namespace DirectAgents.Domain.Entities.Administration.JobExecution
         public string CurrentState { get; set; }
 
         /// <summary>
-        /// Gets or sets the job request. <see cref="JobRequest"/>
+        /// Gets or sets the job request. <see cref="JobRequest"/>.
         /// </summary>
         /// <value>
         /// The job request.

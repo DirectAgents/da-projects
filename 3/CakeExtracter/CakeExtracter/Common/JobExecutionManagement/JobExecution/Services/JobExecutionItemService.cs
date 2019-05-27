@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Utils;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
@@ -146,6 +147,26 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
                     ? ExecutionLoggingUtils.AddAccountMessageToLogData(executionHistoryItem.CurrentState, messageWithTimeStamp, accountId.Value)
                     : ExecutionLoggingUtils.AddCommonMessageToLogData(executionHistoryItem.CurrentState, messageWithTimeStamp);
                 jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
+            }
+        }
+
+        /// <summary>
+        /// Sets the state of the job execution items to aborted.
+        /// </summary>
+        /// <param name="itemIds">The item ids.</param>
+        public void SetJobExecutionItemsAbortedState(int[] itemIds)
+        {
+            if (itemIds != null && itemIds.Length >= 1)
+            {
+                var itemsToUpdate = jobExecutionHistoryRepository.GetAll(item => itemIds.Contains(item.Id)).ToList();
+                itemsToUpdate.ForEach(executionHistoryItem =>
+                {
+                    executionHistoryItem.Status = JobExecutionStatus.Aborted;
+                    lock (executionItemHistoryLockObject)
+                    {
+                        jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
+                    }
+                });
             }
         }
     }

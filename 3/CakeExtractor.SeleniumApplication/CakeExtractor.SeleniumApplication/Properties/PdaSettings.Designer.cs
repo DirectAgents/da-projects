@@ -12,7 +12,7 @@ namespace CakeExtractor.SeleniumApplication.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.8.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.9.0.0")]
     internal sealed partial class PdaSettings : global::System.Configuration.ApplicationSettingsBase {
         
         private static PdaSettings defaultInstance = ((PdaSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new PdaSettings())));
@@ -162,36 +162,6 @@ namespace CakeExtractor.SeleniumApplication.Properties {
             }
             set {
                 this["FromRequest"] = value;
-            }
-        }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10")]
-        public int MaxRetryAttempts
-        {
-            get
-            {
-                return ((int)(this["MaxRetryAttempts"]));
-            }
-            set
-            {
-                this["MaxRetryAttempts"] = value;
-            }
-        }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int PauseBetweenAttemptsInSeconds
-        {
-            get
-            {
-                return ((int)(this["PauseBetweenAttemptsInSeconds"]));
-            }
-            set
-            {
-                this["PauseBetweenAttemptsInSeconds"] = value;
             }
         }
     }

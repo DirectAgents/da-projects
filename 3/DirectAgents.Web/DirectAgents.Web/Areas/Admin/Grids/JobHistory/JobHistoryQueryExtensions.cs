@@ -68,7 +68,7 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
         public static IQueryable<JobRequestExecution> ApplyStatusFilter(this IQueryable<JobRequestExecution> source, QueryOptions options)
         {
             const string statusFilterKey = "Status";
-            if (options.Filters.ContainsKey(statusFilterKey) )
+            if (options.Filters.ContainsKey(statusFilterKey))
             {
                 const string withErrorsStatus = "errors";
                 if (options.Filters[statusFilterKey] != withErrorsStatus)
@@ -102,7 +102,11 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
                 DateTime dateFilterValue = default(DateTime);
                 if (DateTime.TryParse(options.Filters[startDateFilterKey], out dateFilterValue))
                 {
-                    source = source.Where(jExecution => jExecution.StartTime.Value.Day == dateFilterValue.Day);
+                    // Filtering should be applied in local time. In db dates stored in UTC.
+                    // Filter values are first tick and last tick of the day of local time converted to UTC.
+                    DateTime startTimeOfDayUtc = dateFilterValue.Date.ToUniversalTime();
+                    DateTime endTimeOfDayUtc = startTimeOfDayUtc.AddDays(1).AddTicks(-1).ToUniversalTime();
+                    source = source.Where(jExecution => jExecution.StartTime.Value >= startTimeOfDayUtc && jExecution.StartTime.Value <= endTimeOfDayUtc);
                 }
             }
             return source;
