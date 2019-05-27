@@ -125,10 +125,10 @@ namespace CakeExtractor.SeleniumApplication.Utilities
         {
             var response = Policy
                 .Handle<Exception>()
-                .OrResult<IRestResponse<dynamic>>(resp => 
-                    resp.StatusCode != HttpStatusCode.OK &&
-                    resp.StatusCode == HttpStatusCode.Forbidden)
-                .WaitAndRetry(MaxRetryAttempts, i => PauseBetweenAttempts,
+                .OrResult<IRestResponse<dynamic>>(resp => resp.StatusCode != HttpStatusCode.OK)
+                .WaitAndRetry(
+                    MaxRetryAttempts,
+                    i => PauseBetweenAttempts,
                     (exception, timeSpan, retryCount, context) =>
                     {
                         var message = $"Failed to process request. Waiting {timeSpan}";

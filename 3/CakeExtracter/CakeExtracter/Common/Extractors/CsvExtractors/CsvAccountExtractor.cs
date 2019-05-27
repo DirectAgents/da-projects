@@ -48,15 +48,12 @@ namespace CakeExtracter.Common.Extractors.CsvExtractors
             }
             catch (Exception exception)
             {
-                if (ReadingExceptionCallback != null)
+                if (ReadingExceptionCallback == null)
                 {
-                    ReadingExceptionCallback.Invoke(exception);
-                }
-                else
-                {
-                    Logger.Error(AccountId, exception);
+                    throw;
                 }
 
+                ReadingExceptionCallback.Invoke(exception);
                 return new List<T>();
             }
         }
@@ -98,8 +95,8 @@ namespace CakeExtracter.Common.Extractors.CsvExtractors
         private void LogReadingException(Exception exception, ICsvReader row)
         {
             var rowFields = row.FieldHeaders.Select((x, i) => $"{x} = {row.CurrentRecord[i]}").ToList();
-            var message = $"The wrong record: {string.Join(", ", rowFields)}";
-            Logger.Error(AccountId, new Exception(message, exception));
+            var message = $"The wrong record: {string.Join(", ", rowFields)} => {exception.Message}";
+            throw new Exception(message);
         }
 
         private List<T> EnumerateRowsInner(TextReader reader)
