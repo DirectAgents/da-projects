@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Polly">
+      <HintPath>..\..\DirectAgents.Web\packages\Polly.6.1.2\lib\netstandard2.0\Polly.dll</HintPath>
+    </Reference>
     <Reference Include="RestSharp, Version=106.3.1.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
       <HintPath>..\..\DirectAgents.Web\packages\RestSharp.106.3.1\lib\net452\RestSharp.dll</HintPath>
       <Private>True</Private>
@@ -49,16 +52,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdformUtility.cs" />
+    <Compile Include="Entities\ResponseStatus.cs" />
+    <Compile Include="Utilities\AdformLogger.cs" />
+    <Compile Include="Utilities\AdformUtility.cs" />
     <Compile Include="Entities\ReportEntities\MetricMetadata.cs" />
     <Compile Include="Entities\ReportSettings.cs" />
-    <Compile Include="Entities\RequestEntities\CreateJobResponse.cs" />
     <Compile Include="Entities\ReportEntities\Dates.cs" />
-    <Compile Include="Entities\RequestEntities\GetTokenResponse.cs" />
+    <Compile Include="Entities\ResponseEntities\GetTokenResponse.cs" />
     <Compile Include="Entities\ReportEntities\Paging.cs" />
     <Compile Include="Entities\ReportEntities\ReportData.cs" />
     <Compile Include="Entities\ReportEntities\ReportParams.cs" />
     <Compile Include="Entities\ReportEntities\ReportResponse.cs" />
+    <Compile Include="Entities\ResponseEntities\PollingOperationResponse.cs" />
     <Compile Include="Enums\AdInteractionType.cs" />
     <Compile Include="Enums\ConversionMetric.cs" />
     <Compile Include="Enums\Dimension.cs" />

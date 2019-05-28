@@ -121,7 +121,7 @@
 	<!-- SA1201: ElementsMustAppearInTheCorrectOrder -->
     <Rule Id="SA1201" Action="None" />
     <!-- SA1202: ElementsMustBeOrderedByAccess -->
-    <Rule Id="SA1202" Action="None" />
+    <Rule Id="SA1202" Action="Warning" />
     <!-- SA1204: StaticElementsMustAppearBeforeInstanceElements -->
     <Rule Id="SA1204" Action="None" />
     <!-- SA1210: UsingDirectivesMustBeOrderedAlphabeticallyByNamespace -->

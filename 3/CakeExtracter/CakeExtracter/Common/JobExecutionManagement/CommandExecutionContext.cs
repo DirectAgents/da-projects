@@ -1,8 +1,8 @@
 ﻿using CakeExtracter.Common.JobExecutionManagement.JobExecution;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestManagers;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestManagers.Interfaces;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers.Interfaces;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 
 namespace CakeExtracter.Common.JobExecutionManagement
@@ -15,7 +15,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         public static CommandExecutionContext Current;
         
         private readonly IJobExecutionItemService jobExecutionItemService;
-        private readonly IJobExecutionRequestService jobExecutionRequestService;
+        private readonly IJobExecutionRequestScheduler jobExecutionRequestScheduler;
 
         private ConsoleCommand currentCommand;
         private JobRequest currentJobRequest;
@@ -26,7 +26,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
             var executionItemRepository = new JobExecutionItemRepository();
             jobExecutionItemService = new JobExecutionItemService(executionItemRepository);
             var requestRepository = new JobRequestRepository();
-            jobExecutionRequestService = new JobExecutionRequestService(requestRepository);
+            jobExecutionRequestScheduler = new JobExecutionRequestScheduler(requestRepository);
             InitCurrentJobRequest(command);
         }
 
@@ -44,7 +44,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         /// </summary>
         public void StartRequestExecution()
         {
-            jobExecutionRequestService.SetJobRequestAsProcessing(currentJobRequest);
+            jobExecutionRequestScheduler.SetJobRequestAsProcessing(currentJobRequest);
             currentJobRequestExecution = jobExecutionItemService.CreateJobExecutionItem(currentJobRequest);
         }
 
@@ -54,7 +54,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         public void CompleteRequestExecution()
         {
             jobExecutionItemService.SetJobExecutionItemFinishedState(currentJobRequestExecution);
-            jobExecutionRequestService.CreateRequestsForScheduledCommands(currentCommand, currentJobRequest);
+            jobExecutionRequestScheduler.CreateRequestsForScheduledCommands(currentCommand, currentJobRequest);
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         public void FailedRequestExecution()
         {
             jobExecutionItemService.SetJobExecutionItemFailedState(currentJobRequestExecution);
-            jobExecutionRequestService.RescheduleRequest(currentJobRequest, currentCommand);
+            jobExecutionRequestScheduler.RescheduleRequest(currentJobRequest, currentCommand);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         /// </summary>
         public void CloseContext()
         {
-            jobExecutionRequestService.EndRequest(currentJobRequest);
+            jobExecutionRequestScheduler.EndRequest(currentJobRequest);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         /// <param name="command">The command for a new job request.</param>
         public void ScheduleCommandLaunch(ConsoleCommand command)
         {
-            jobExecutionRequestService.ScheduleCommandLaunch(command);
+            jobExecutionRequestScheduler.ScheduleCommandLaunch(command);
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         private void InitCurrentJobRequest(ConsoleCommand command)
         {
             currentCommand = command;
-            currentJobRequest = jobExecutionRequestService.GetJobRequest(currentCommand);
+            currentJobRequest = jobExecutionRequestScheduler.GetJobRequest(currentCommand);
         }
     }
 }
