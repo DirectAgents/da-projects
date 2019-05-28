@@ -12,6 +12,8 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
     /// </summary>
     public static class JobHistoryQueryExtensions
     {
+        private const string StatusFilterKey = "Status";
+
         /// <summary>
         /// Applies the command name filter.
         /// </summary>
@@ -28,7 +30,7 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
             if (options.Filters.ContainsKey(commandNameFilterKey))
             {
                 var filterValue = options.Filters[commandNameFilterKey];
-                source = source.Where(jExecution => jExecution.JobRequest.CommandName.ToLower().Contains(filterValue.ToLower()));
+                source = source.Where(jExecution => jExecution.JobRequest.CommandName.Contains(filterValue));
             }
             else
             {
@@ -51,9 +53,9 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
                 int filterJobIdValue;
                 if (int.TryParse(options.Filters[parentJobFilterKey], out filterJobIdValue))
                 {
-                    source = filterJobIdValue > 0 ?
-                        source.Where(jExecution => jExecution.JobRequest.ParentJobRequestId == filterJobIdValue) :
-                        source.Where(jExecution => jExecution.JobRequest.ParentJobRequestId == null);
+                    source = filterJobIdValue > 0
+                        ? source.Where(jExecution => jExecution.JobRequest.ParentJobRequestId == filterJobIdValue)
+                        : source.Where(jExecution => jExecution.JobRequest.ParentJobRequestId == null);
                 }
             }
             return source;
@@ -67,23 +69,27 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
         /// <returns>Query with applied status filter.</returns>
         public static IQueryable<JobRequestExecution> ApplyStatusFilter(this IQueryable<JobRequestExecution> source, QueryOptions options)
         {
-            const string statusFilterKey = "Status";
-            if (options.Filters.ContainsKey(statusFilterKey))
+            if (options.Filters.ContainsKey(StatusFilterKey))
             {
                 const string withErrorsStatus = "errors";
-                if (options.Filters[statusFilterKey] != withErrorsStatus)
+                if (options.Filters[StatusFilterKey] != withErrorsStatus)
                 {
-                    int statusValue;
-                    if (int.TryParse(options.Filters[statusFilterKey], out statusValue))
-                    {
-                        var status = (JobExecutionStatus)statusValue;
-                        source = source.Where(jExecution => jExecution.Status == status);
-                    }
+                    source = ApplyStatusColumnFilter(source, options);
                 }
                 else
                 {
                     source = source.Where(jExecution => jExecution.Errors != null);
                 }
+            }
+            return source;
+        }
+
+        private static IQueryable<JobRequestExecution> ApplyStatusColumnFilter(IQueryable<JobRequestExecution> source, QueryOptions options)
+        {
+            if (int.TryParse(options.Filters[StatusFilterKey], out int statusValue))
+            {
+                var status = (JobExecutionStatus)statusValue;
+                source = source.Where(jExecution => jExecution.Status == status);
             }
             return source;
         }
@@ -99,8 +105,7 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
             const string startDateFilterKey = "StartTime";
             if (options.Filters.ContainsKey(startDateFilterKey))
             {
-                DateTime dateFilterValue = default(DateTime);
-                if (DateTime.TryParse(options.Filters[startDateFilterKey], out dateFilterValue))
+                if (DateTime.TryParse(options.Filters[startDateFilterKey], out DateTime dateFilterValue))
                 {
                     // Filtering should be applied in local time. In db dates stored in UTC.
                     // Filter values are first tick and last tick of the day of local time converted to UTC.

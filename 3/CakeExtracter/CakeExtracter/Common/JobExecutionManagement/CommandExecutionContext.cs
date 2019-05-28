@@ -12,8 +12,18 @@ namespace CakeExtracter.Common.JobExecutionManagement
     /// </summary>
     public class CommandExecutionContext
     {
-        public static CommandExecutionContext Current;
-        
+        /// <summary>
+        /// Gets the current Execution Context.
+        /// </summary>
+        /// <value>
+        /// The current execution context.
+        /// </value>
+        public static CommandExecutionContext Current
+        {
+            get;
+            private set;
+        }
+
         private readonly IJobExecutionItemService jobExecutionItemService;
         private readonly IJobExecutionRequestScheduler jobExecutionRequestScheduler;
 
@@ -24,8 +34,8 @@ namespace CakeExtracter.Common.JobExecutionManagement
         private CommandExecutionContext(ConsoleCommand command)
         {
             var executionItemRepository = new JobExecutionItemRepository();
-            jobExecutionItemService = new JobExecutionItemService(executionItemRepository);
             var requestRepository = new JobRequestRepository();
+            jobExecutionItemService = new JobExecutionItemService(executionItemRepository, requestRepository);
             jobExecutionRequestScheduler = new JobExecutionRequestScheduler(requestRepository);
             InitCurrentJobRequest(command);
         }
@@ -86,8 +96,8 @@ namespace CakeExtracter.Common.JobExecutionManagement
         /// <summary>
         /// Logs the error in job execution history.
         /// </summary>
-        /// <param name="message"></param>
-        /// <param name="accountId"></param>
+        /// <param name="message">Message to log.</param>
+        /// <param name="accountId">Account Id.</param>
         public void LogErrorInHistory(string message, int? accountId = null)
         {
             if (currentJobRequestExecution != null)
