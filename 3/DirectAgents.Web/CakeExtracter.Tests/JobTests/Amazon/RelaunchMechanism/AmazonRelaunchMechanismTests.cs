@@ -10,7 +10,7 @@ using CakeExtracter.Commands;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestManagers;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils;
 using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
@@ -524,7 +524,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
         private void ResetCommandExecutionContext(ConsoleCommand currentCommand)
         {
             var jobExecutionItemService = new JobExecutionItemService(executionItemRepository);
-            var jobExecutionRequestService = new JobExecutionRequestService(requestRepository);
+            var jobExecutionRequestService = new JobExecutionRequestScheduler(requestRepository);
             CommandExecutionContext.ResetContext(currentCommand, jobExecutionItemService, jobExecutionRequestService);
         }
     }

@@ -4,6 +4,7 @@ using System.Linq;
 using Adform;
 using Adform.Entities;
 using Adform.Enums;
+using Adform.Utilities;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
 
@@ -16,6 +17,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         protected readonly DateRange DateRange;
         protected readonly int ClientId;
         protected Dictionary<DateTime, decimal> MonthlyCostMultipliers = new Dictionary<DateTime, decimal>();
+
+        /// <summary>
+        /// Internal identifier of account.
+        /// </summary>
+        protected readonly int AccountId;
 
         private static readonly Dictionary<AdInteractionType, string> AdInteractions = new Dictionary<AdInteractionType, string>
         {
@@ -55,6 +61,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             AfUtility = adformUtility;
             DateRange = dateRange;
             ClientId = int.Parse(account.ExternalId);
+            AccountId = account.Id;
             if (account.Campaign != null)
             {
                 SetMonthlyCostMultipliers(account, dateRange);
@@ -72,7 +79,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                 ConvMetrics = true,
                 RtbOnly = true,
                 TrackingId = AfUtility.TrackingId,
-                Dimensions = new List<Dimension> { Dimension.AdInteractionType}
+                Dimensions = new List<Dimension> { Dimension.AdInteractionType },
             };
         }
 

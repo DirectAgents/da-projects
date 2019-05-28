@@ -1,11 +1,11 @@
 ﻿using DirectAgents.Domain.Entities.Administration.JobExecution;
 
-namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestManagers.Interfaces
+namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers.Interfaces
 {
     /// <summary>
     /// Service for work with job request items.
     /// </summary>
-    public interface IJobExecutionRequestService
+    public interface IJobExecutionRequestScheduler
     {
         /// <summary>
         /// Returns a saved job request object for a command.
@@ -39,13 +39,6 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         /// <param name="sourceCommand">The source command.</param>
         /// <param name="sourceRequest">The source job request.</param>
         void CreateRequestsForScheduledCommands(ConsoleCommand sourceCommand, JobRequest sourceRequest);
-
-        /// <summary>
-        /// Runs all past job requests, if available.
-        /// </summary>
-        /// <param name="maxNumberOfJobRequests">The maximum number of attempts for each request.</param>
-        /// <param name="maxNumberOfRunningRequests">The maximum number of processes that execute job requests.</param>
-        void ExecuteScheduledInPastJobRequests(int maxNumberOfJobRequests, int maxNumberOfRunningRequests);
 
         /// <summary>
         /// Ends the job request.
