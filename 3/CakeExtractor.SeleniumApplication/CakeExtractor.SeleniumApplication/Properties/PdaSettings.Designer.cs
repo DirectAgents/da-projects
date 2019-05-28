@@ -8,229 +8,183 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CakeExtractor.SeleniumApplication.Properties
-{
-
-
+namespace CakeExtractor.SeleniumApplication.Properties {
+    
+    
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.8.0.0")]
-    internal sealed partial class PdaSettings : global::System.Configuration.ApplicationSettingsBase
-    {
-
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.9.0.0")]
+    internal sealed partial class PdaSettings : global::System.Configuration.ApplicationSettingsBase {
+        
         private static PdaSettings defaultInstance = ((PdaSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new PdaSettings())));
-
-        public static PdaSettings Default
-        {
-            get
-            {
+        
+        public static PdaSettings Default {
+            get {
                 return defaultInstance;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("https://advertising.amazon.com/cm/campaigns")]
-        public string CampaignsPageUrl
-        {
-            get
-            {
+        public string CampaignsPageUrl {
+            get {
                 return ((string)(this["CampaignsPageUrl"]));
             }
-            set
-            {
+            set {
                 this["CampaignsPageUrl"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("WebDriverDownloads")]
-        public string DownloadsDirectoryName
-        {
-            get
-            {
+        public string DownloadsDirectoryName {
+            get {
                 return ((string)(this["DownloadsDirectoryName"]));
             }
-            set
-            {
+            set {
                 this["DownloadsDirectoryName"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("*.csv")]
-        public string FilesNameTemplate
-        {
-            get
-            {
+        public string FilesNameTemplate {
+            get {
                 return ((string)(this["FilesNameTemplate"]));
             }
-            set
-            {
+            set {
                 this["FilesNameTemplate"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int DaysAgo
-        {
-            get
-            {
+        public int DaysAgo {
+            get {
                 return ((int)(this["DaysAgo"]));
             }
-            set
-            {
+            set {
                 this["DaysAgo"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.DateTime StartDate
-        {
-            get
-            {
+        public global::System.DateTime StartDate {
+            get {
                 return ((global::System.DateTime)(this["StartDate"]));
             }
-            set
-            {
+            set {
                 this["StartDate"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.DateTime EndDate
-        {
-            get
-            {
+        public global::System.DateTime EndDate {
+            get {
                 return ((global::System.DateTime)(this["EndDate"]));
             }
-            set
-            {
+            set {
                 this["EndDate"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Cookies")]
-        public string CookiesDirectory
-        {
-            get
-            {
+        public string CookiesDirectory {
+            get {
                 return ((string)(this["CookiesDirectory"]));
             }
-            set
-            {
+            set {
                 this["CookiesDirectory"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool FromDatabase
-        {
-            get
-            {
+        public bool FromDatabase {
+            get {
                 return ((bool)(this["FromDatabase"]));
             }
-            set
-            {
+            set {
                 this["FromDatabase"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int AccountId
-        {
-            get
-            {
+        public int AccountId {
+            get {
                 return ((int)(this["AccountId"]));
             }
-            set
-            {
+            set {
                 this["AccountId"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string StatsType
-        {
-            get
-            {
+        public string StatsType {
+            get {
                 return ((string)(this["StatsType"]));
             }
-            set
-            {
+            set {
                 this["StatsType"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool DisabledOnly
-        {
-            get
-            {
+        public bool DisabledOnly {
+            get {
                 return ((bool)(this["DisabledOnly"]));
             }
-            set
-            {
+            set {
                 this["DisabledOnly"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool FromRequest
-        {
-            get
-            {
+        public bool FromRequest {
+            get {
                 return ((bool)(this["FromRequest"]));
             }
-            set
-            {
+            set {
                 this["FromRequest"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("10")]
-        public int MaxRetryAttempts
-        {
-            get
-            {
+        public int MaxRetryAttempts {
+            get {
                 return ((int)(this["MaxRetryAttempts"]));
             }
-            set
-            {
+            set {
                 this["MaxRetryAttempts"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int PauseBetweenAttemptsInSeconds
-        {
-            get
-            {
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int PauseBetweenAttemptsInSeconds {
+            get {
                 return ((int)(this["PauseBetweenAttemptsInSeconds"]));
             }
-            set
-            {
+            set {
                 this["PauseBetweenAttemptsInSeconds"] = value;
             }
         }
