@@ -443,7 +443,6 @@
     <Compile Include="Common\JobExecutionManagement\JobExecution\Models\JobExecutionLogData.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Services\JobExecutionItemService.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Services\IJobExecutionItemService.cs" />
-    <Compile Include="Common\JobExecutionManagement\JobExecution\Repositories\IJobExecutionItemRepository.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Repositories\JobExecutionItemRepository.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Utils\ExecutionLoggingUtils.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Exceptions\FailedEtlException.cs" />

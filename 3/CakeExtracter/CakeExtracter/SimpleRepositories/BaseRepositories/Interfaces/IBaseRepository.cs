@@ -12,7 +12,7 @@ namespace CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces
         where T : class
     {
         /// <summary>
-        /// The string name of the entity for which the repository is used.
+        /// Gets the string name of the entity for which the repository is used.
         /// </summary>
         string EntityName { get; }
 
@@ -38,6 +38,14 @@ namespace CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces
         List<T> GetItems(Func<T, bool> predicate);
 
         /// <summary>
+        /// Gets the items  by the predicate from the repository with includes.
+        /// </summary>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="includeProperty">The include property.</param>
+        /// <returns>The items</returns>
+        List<T> GetItemsWithIncludes(Func<T, bool> predicate, string includeProperty);
+
+        /// <summary>
         /// Adds a new entity to the repository.
         /// </summary>
         /// <param name="item">The entity to add.</param>
@@ -61,8 +69,19 @@ namespace CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces
         /// <param name="itemsToUpdate">The repository entities that was updated.</param>
         void UpdateItems(IEnumerable<T> itemsToUpdate);
 
+        /// <summary>
+        /// Merges the items. Uses Third party EF extensions library.
+        /// </summary>
+        /// <param name="itemsToMerge">The items to merge.</param>
+        /// <returns>Merged items.</returns>
         bool MergeItems(IEnumerable<T> itemsToMerge);
 
+        /// <summary>
+        /// Merges the items with options. Uses Third party EF extensions library.
+        /// </summary>
+        /// <param name="itemsToMerge">The items to merge.</param>
+        /// <param name="entityBulkOptionsAction">The entity bulk options action.</param>
+        /// <returns>Merged items.</returns>
         bool MergeItems(IEnumerable<T> itemsToMerge, Action<EntityBulkOperation<T>> entityBulkOptionsAction);
     }
 }

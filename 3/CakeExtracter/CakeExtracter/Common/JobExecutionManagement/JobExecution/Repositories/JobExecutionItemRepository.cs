@@ -1,49 +1,27 @@
-﻿using CakeExtracter.Helpers;
+﻿using CakeExtracter.SimpleRepositories.BaseRepositories;
 using DirectAgents.Domain.Contexts;
-using System.Linq;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System;
-using System.Data.Entity;
 
 namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
 {
-    public class JobExecutionItemRepository : IJobExecutionItemRepository
+    /// <summary>
+    /// Job Execution Item Repository
+    /// </summary>
+    /// <seealso cref="CakeExtracter.SimpleRepositories.BaseRepositories.BaseDatabaseRepository{DirectAgents.Domain.Entities.Administration.JobExecution.JobRequestExecution, DirectAgents.Domain.Contexts.ClientPortalProgContext}" />
+    public class JobExecutionItemRepository : BaseDatabaseRepository<JobRequestExecution, ClientPortalProgContext>
     {
-        private static object ExecutionHistoryLocker = new object();
+        private static readonly object RequestLocker = new object();
 
-        public void UpdateItem(JobRequestExecution itemToUpdate)
-        {
-            SafeContextWrapper.TryMakeTransactionWithLock<ClientPortalProgContext>(dbContext =>
-            {
-                var historyItem = dbContext.JobRequestExecutions.SingleOrDefault(item => item.Id == itemToUpdate.Id);
-                if (historyItem != null)
-                {
-                    dbContext.Entry(historyItem).CurrentValues.SetValues(itemToUpdate);
-                    dbContext.SaveChanges();
-                }
-            }, ExecutionHistoryLocker, "Updating History Item");
-        }
+        /// <inheritdoc />
+        public override string EntityName => "Job Execution Item Request";
 
-        public JobRequestExecution AddItem(JobRequestExecution jobRequestExecution)
-        {
-            SafeContextWrapper.TryMakeTransactionWithLock<ClientPortalProgContext>(dbContext =>
-            {
-               dbContext.JobRequestExecutions.Add(jobRequestExecution);
-                dbContext.SaveChanges();
-            }, ExecutionHistoryLocker, "Inserting History item.");
-            return jobRequestExecution;
-        }
+        /// <inheritdoc />
+        protected override object Locker { get; set; } = RequestLocker;
 
-        public List<JobRequestExecution> GetAll(Expression<Func<JobRequestExecution, bool>> whereCondition)
+        /// <inheritdoc />
+        public override object[] GetKeys(JobRequestExecution item)
         {
-            var result = new List<JobRequestExecution>();
-            SafeContextWrapper.TryMakeTransactionWithLock<ClientPortalProgContext>(dbContext =>
-            {
-                result = dbContext.JobRequestExecutions.Where(whereCondition).Include(jobExecutionItem => jobExecutionItem.JobRequest).ToList();
-            }, ExecutionHistoryLocker, "Inserting History item.");
-            return result;
+            return new object[] { item.Id };
         }
     }
 }
