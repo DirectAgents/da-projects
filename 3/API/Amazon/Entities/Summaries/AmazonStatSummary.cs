@@ -2,6 +2,11 @@
 {
     public class AmazonStatSummary
     {
+        public string CampaignId { get; set; }
+        public string CampaignName { get; set; }
+        public string CampaignType { get; set; }
+        public string AdGroupId { get; set; }
+        public string AdGroupName { get; set; }
         public decimal Cost { get; set; }
         public int Impressions { get; set; }
         public int Clicks { get; set; }

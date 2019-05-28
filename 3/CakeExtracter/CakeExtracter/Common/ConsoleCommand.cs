@@ -9,7 +9,7 @@ namespace CakeExtracter.Common
     /// <summary>
     /// The base class for a console command.
     /// </summary>
-    public abstract class ConsoleCommand : ManyConsole.ConsoleCommand
+    public abstract class ConsoleCommand : ManyConsole.ConsoleCommand, ICloneable
     {
         public const string RequestIdArgumentName = "jobRequestId";
         public const string NoNeedToCreateRepeatRequestsArgumentName = "noRepeatedRequests";
@@ -92,6 +92,16 @@ namespace CakeExtracter.Common
             return commands;
         }
 
+        public virtual void ResetCommandExecutionContext()
+        {
+            CommandExecutionContext.ResetContext(this);
+        }
+
+        public virtual object Clone()
+        {
+            return MemberwiseClone();
+        }
+
         /// <summary>
         /// Schedules a new command that should become scheduled job requests.
         /// </summary>
@@ -100,14 +110,14 @@ namespace CakeExtracter.Common
         protected void ScheduleNewCommandLaunch<T>(Action<T> changeCurrentCommand)
             where T : ConsoleCommand
         {
-            var command = (T) MemberwiseClone();
+            var command = (T)Clone();
             changeCurrentCommand(command);
             CommandExecutionContext.Current.ScheduleCommandLaunch(command);
         }
 
         private int ExecuteJobWithContext(string[] remainingArguments)
         {
-            CommandExecutionContext.ResetContext(this);
+            ResetCommandExecutionContext();
             CommandExecutionContext.Current.StartRequestExecution();
             try
             {

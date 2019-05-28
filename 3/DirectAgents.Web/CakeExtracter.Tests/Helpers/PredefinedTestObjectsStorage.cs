@@ -4,22 +4,36 @@ using CakeExtracter.Etl.YAM.Extractors.CsvExtractors.RowModels;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
 
-namespace CakeExtracter.Tests.JobTests.Yam.Helpers
+namespace CakeExtracter.Tests.Helpers
 {
     internal static class PredefinedTestObjectsStorage
     {
-        public const string YamReportUrl = "TestURL";
+        public const string ReportUrl = "TestURL";
 
-        public static DateRange YamTestDateRange => new DateRange(new DateTime(2019, 1, 1), new DateTime(2019, 1, 31));
+        public static DateRange TestDateRange => new DateRange(new DateTime(2019, 1, 1), new DateTime(2019, 1, 31));
 
-        public static ExtAccount YamTestAccount => new ExtAccount
+        public static ExtAccount TestAccount1 => new ExtAccount
         {
             Id = 765,
-            Name = "TestYamAccount",
+            Name = "TestAccount1",
             ExternalId = "1234",
         };
 
-        public static T CreateSummary<T>(DateTime date, int impressions, int clicks, int conversionClicks,
+        public static ExtAccount TestAccount2 => new ExtAccount
+        {
+            Id = 789,
+            Name = "TestAccount2",
+            ExternalId = "5689",
+        };
+
+        public static ExtAccount TestAccount3 => new ExtAccount
+        {
+            Id = 78129,
+            Name = "TestAccount3",
+            ExternalId = "44444",
+        };
+
+        public static T CreateYamSummary<T>(DateTime date, int impressions, int clicks, int conversionClicks,
             int conversionViews, decimal conversionValue, decimal spend, decimal? conversionValueClicksQuery,
             decimal? conversionValueViewsQuery)
             where T : BaseYamSummary, new()
@@ -38,7 +52,7 @@ namespace CakeExtracter.Tests.JobTests.Yam.Helpers
             };
         }
 
-        public static YamRow CreateRow(DateTime date, int impressions, int clicks, int conversionClicks,
+        public static YamRow CreateYamRow(DateTime date, int impressions, int clicks, int conversionClicks,
             int conversionViews, decimal conversionValue, decimal spend, string pixelParameter)
         {
             return new YamRow

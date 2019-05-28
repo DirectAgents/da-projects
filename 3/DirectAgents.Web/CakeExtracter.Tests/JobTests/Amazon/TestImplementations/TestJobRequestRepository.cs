@@ -1,0 +1,62 @@
+﻿using System;
+using System.Collections.Generic;
+using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
+using DirectAgents.Domain.Entities.Administration.JobExecution;
+using Z.EntityFramework.Extensions;
+
+namespace CakeExtracter.Tests.JobTests.Amazon.TestImplementations
+{
+    public class TestJobRequestRepository : IBaseRepository<JobRequest>
+    {
+        public List<JobRequest> ScheduledRequests = new List<JobRequest>();
+
+        public string EntityName { get; }
+
+        public JobRequest GetItem(int id)
+        {
+            return new JobRequest();
+        }
+
+        public JobRequest GetFirstItem(Func<JobRequest, bool> predicate)
+        {
+            return new JobRequest();
+        }
+
+        public List<JobRequest> GetItems(Func<JobRequest, bool> predicate)
+        {
+            return new List<JobRequest>();
+        }
+
+        public void AddItem(JobRequest item)
+        {
+        }
+
+        public void AddItems(IEnumerable<JobRequest> items)
+        {
+            ScheduledRequests.AddRange(items);
+        }
+
+        public void UpdateItem(JobRequest itemToUpdate)
+        {
+        }
+
+        public void UpdateItems(IEnumerable<JobRequest> itemsToUpdate)
+        {
+        }
+
+        public bool MergeItems(IEnumerable<JobRequest> itemsToMerge)
+        {
+            return true;
+        }
+
+        public bool MergeItems(IEnumerable<JobRequest> itemsToMerge, Action entityBulkOptionsAction)
+        {
+            return true;
+        }
+
+        public bool MergeItems(IEnumerable<JobRequest> itemsToMerge, Action<EntityBulkOperation<JobRequest>> entityBulkOptionsAction)
+        {
+            return true;
+        }
+    }
+}

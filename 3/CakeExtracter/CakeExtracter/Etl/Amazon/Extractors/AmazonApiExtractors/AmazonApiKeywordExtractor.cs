@@ -12,6 +12,7 @@ using CakeExtracter.Logging.TimeWatchers.Amazon;
 using CakeExtracter.Logging.TimeWatchers;
 using Amazon.Entities;
 using CakeExtracter.Common.JobExecutionManagement;
+using CakeExtracter.Etl.Amazon.Exceptions;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors
 {
@@ -32,10 +33,24 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         /// <param name="clearBeforeLoad">Parameter value. Indicates whether clean before update needed.</param>
         /// <param name="campaignFilter">Campaign filter value.</param>
         /// <param name="campaignFilterOut">Campaign filter value out.</param>
-        public AmazonApiKeywordExtractor(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, bool clearBeforeLoad, string campaignFilter = null, string campaignFilterOut = null)
-            : base(amazonUtility, dateRange, account, clearBeforeLoad, campaignFilter, campaignFilterOut)
+        public AmazonApiKeywordExtractor(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, string campaignFilter = null, string campaignFilterOut = null)
+            : base(amazonUtility, dateRange, account, campaignFilter, campaignFilterOut)
         {
             campaignMetadataExtractor = new AmazonCampaignMetadataExtractor(amazonUtility);
+        }
+
+        public virtual void RemoveOldData(DateTime date)
+        {
+            Logger.Info(accountId, "The cleaning of KeywordSummaries for account ({0}) has begun - {1}.", accountId, date);
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
+            {
+                SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
+                {
+                    db.KeywordSummaryMetrics.Where(x => x.Date == date && x.Keyword.AccountId == accountId).DeleteFromQuery();
+                    db.KeywordSummaries.Where(x => x.Date == date && x.Keyword.AccountId == accountId).DeleteFromQuery();
+                }, "DeleteFromQuery");
+            }, accountId, AmazonJobLevels.keyword, AmazonJobOperations.cleanExistingData);
+            Logger.Info(accountId, "The cleaning of KeywordSummaries for account ({0}) is over - {1}.", accountId, date);
         }
 
         /// <summary>
@@ -46,7 +61,23 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         {
             Logger.Info(accountId, "Extracting KeywordSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 clientId, dateRange.FromDate, dateRange.ToDate);
-            var campaignsData = GetCampaignInfo();
+            try
+            {
+                var campaignsData = GetCampaignInfo();
+                ExtractDataForDays(campaignsData);
+            }
+            catch (Exception e)
+            {
+                ProcessFailedStatsExtraction(e, dateRange.FromDate, dateRange.ToDate);
+            }
+            finally
+            {
+                End();
+            }
+        }
+
+        private void ExtractDataForDays(List<AmazonCampaign> campaignsData)
+        {
             foreach (var date in dateRange.Dates)
             {
                 try
@@ -55,10 +86,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
                 }
                 catch (Exception e)
                 {
-                    Logger.Error(accountId, e);
+                    ProcessFailedStatsExtraction(e, date, date);
                 }
             }
-            End();
         }
 
         private void ExtractDaily(DateTime date, List<AmazonCampaign> campaignsData)
@@ -69,10 +99,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             {
                 items = GetKeywordSummariesFromApi(date, campaignsData);
             }, accountId, AmazonJobLevels.keyword, AmazonJobOperations.reportExtracting);
-            if (ClearBeforeLoad)
-            {
-                RemoveOldData(date);
-            }
+            RemoveOldData(date);
             Add(items);
         }
 
@@ -84,6 +111,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
                 campaignsData = campaignMetadataExtractor.LoadCampaignsMetadata(accountId, clientId).ToList();
             }, accountId, AmazonJobLevels.keyword, AmazonJobOperations.loadCampaignMetadata);
             return campaignsData;
+        }
+
+        private void ProcessFailedStatsExtraction(Exception e, DateTime fromDate, DateTime toDate)
+        {
+            Logger.Error(accountId, e);
+            var exception = new FailedStatsLoadingException(fromDate, toDate, accountId, e, byKeyword: true);
+            InvokeProcessFailedExtractionHandlers(exception);
         }
 
         private IEnumerable<KeywordSummary> GetKeywordSummariesFromApi(DateTime date, List<AmazonCampaign> campaignsData)
@@ -130,7 +164,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
 
         private KeywordSummary CreateSummary(AmazonKeywordDailySummary keywordStat, DateTime date, AmazonCampaign relatedCampaign)
         {
-            var sum = CreateSummary(keywordStat as AmazonAdGroupSummary, date, relatedCampaign);
+            var sum = CreateSummary(keywordStat as AmazonStatSummary, date, relatedCampaign);
             sum.KeywordEid = keywordStat.KeywordId;
             sum.KeywordName = keywordStat.KeywordText;
             return sum;
@@ -138,13 +172,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
 
         private KeywordSummary CreateSummary(AmazonTargetKeywordDailySummary targetStat, DateTime date, AmazonCampaign relatedCampaign)
         {
-            var sum = CreateSummary(targetStat as AmazonAdGroupSummary, date, relatedCampaign);
+            var sum = CreateSummary(targetStat as AmazonStatSummary, date, relatedCampaign);
             sum.KeywordEid = targetStat.TargetId;
             sum.KeywordName = targetStat.TargetingText;
             return sum;
         }
 
-        private KeywordSummary CreateSummary(AmazonAdGroupSummary stat, DateTime date, AmazonCampaign relatedCampaign)
+        private KeywordSummary CreateSummary(AmazonStatSummary stat, DateTime date, AmazonCampaign relatedCampaign)
         {
             var sum = new KeywordSummary
             {
@@ -157,20 +191,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             };
             SetCPProgStats(sum, stat, date);
             return sum;
-        }
-
-        private void RemoveOldData(DateTime date)
-        {
-            Logger.Info(accountId, "The cleaning of KeywordSummaries for account ({0}) has begun - {1}.", accountId, date);
-            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
-            {
-                SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
-                {
-                    db.KeywordSummaryMetrics.Where(x => x.Date == date && x.Keyword.AccountId == accountId).DeleteFromQuery();
-                    db.KeywordSummaries.Where(x => x.Date == date && x.Keyword.AccountId == accountId).DeleteFromQuery();
-                }, "DeleteFromQuery");
-            }, accountId, AmazonJobLevels.keyword, AmazonJobOperations.cleanExistingData);
-            Logger.Info(accountId, "The cleaning of KeywordSummaries for account ({0}) is over - {1}.", accountId, date);
         }
     }
 }

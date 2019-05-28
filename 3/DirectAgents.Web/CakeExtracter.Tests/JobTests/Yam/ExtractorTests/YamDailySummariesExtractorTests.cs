@@ -5,7 +5,7 @@ using CakeExtracter.Common;
 using CakeExtracter.Etl.YAM.Extractors.ApiExtractors;
 using CakeExtracter.Etl.YAM.Extractors.CsvExtractors;
 using CakeExtracter.Etl.YAM.Extractors.CsvExtractors.RowModels;
-using CakeExtracter.Tests.JobTests.Yam.Helpers;
+using CakeExtracter.Tests.Helpers;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
 using Moq;
@@ -22,8 +22,8 @@ namespace CakeExtracter.Tests.JobTests.Yam.ExtractorTests
     {
         private const double MaxDecimal = 79228162514264337593543955.0;
 
-        private readonly ExtAccount testAccount = PredefinedTestObjectsStorage.YamTestAccount;
-        private readonly DateRange testDateRange = PredefinedTestObjectsStorage.YamTestDateRange;
+        private readonly ExtAccount testAccount = PredefinedTestObjectsStorage.TestAccount1;
+        private readonly DateRange testDateRange = PredefinedTestObjectsStorage.TestDateRange;
 
         private Mock<YamUtility> utilityMock;
         private Mock<YamCsvExtractor> csvExtractorMock;
@@ -33,7 +33,7 @@ namespace CakeExtracter.Tests.JobTests.Yam.ExtractorTests
         {
             utilityMock = new Mock<YamUtility>();
             csvExtractorMock = new Mock<YamCsvExtractor>(testAccount);
-            utilityMock.Setup(m => m.TryGenerateReport(It.IsAny<ReportSettings>())).Returns(PredefinedTestObjectsStorage.YamReportUrl);
+            utilityMock.Setup(m => m.TryGenerateReport(It.IsAny<ReportSettings>())).Returns(PredefinedTestObjectsStorage.ReportUrl);
         }
 
         [Test(Description = "Checks correct not-empty items transformation (without pixel parameter metrics) from API entities to entities that are ready for a loader.")]
@@ -47,9 +47,9 @@ namespace CakeExtracter.Tests.JobTests.Yam.ExtractorTests
         {
             csvExtractorMock.Setup(m => m.EnumerateRows(It.IsAny<string>())).Returns(new List<YamRow>
             {
-                PredefinedTestObjectsStorage.CreateRow(DateTime.Parse(date), impressions, clicks, conversionClicks,
+                PredefinedTestObjectsStorage.CreateYamRow(DateTime.Parse(date), impressions, clicks, conversionClicks,
                     conversionViews, conversionValue, spend, null),
-                PredefinedTestObjectsStorage.CreateRow(DateTime.Parse(date).AddDays(1), impressions, clicks,
+                PredefinedTestObjectsStorage.CreateYamRow(DateTime.Parse(date).AddDays(1), impressions, clicks,
                     conversionClicks, conversionViews, conversionValue, spend, null)
             });
             var summaries = GetTransformedSummaries(false);
@@ -79,9 +79,9 @@ namespace CakeExtracter.Tests.JobTests.Yam.ExtractorTests
         {
             csvExtractorMock.Setup(m => m.EnumerateRows(It.IsAny<string>())).Returns(new List<YamRow>
             {
-                PredefinedTestObjectsStorage.CreateRow(DateTime.Parse(date), impressions, clicks, conversionClicks,
+                PredefinedTestObjectsStorage.CreateYamRow(DateTime.Parse(date), impressions, clicks, conversionClicks,
                     conversionViews, conversionValue, spend, pixelParameter),
-                PredefinedTestObjectsStorage.CreateRow(DateTime.Parse(date).AddDays(1), impressions, clicks,
+                PredefinedTestObjectsStorage.CreateYamRow(DateTime.Parse(date).AddDays(1), impressions, clicks,
                     conversionClicks, conversionViews, conversionValue, spend, pixelParameter)
             });
             var summaries = GetTransformedSummaries(true);
@@ -111,7 +111,7 @@ namespace CakeExtracter.Tests.JobTests.Yam.ExtractorTests
             int conversionViews, decimal conversionValue, decimal spend, string pixelParameter)
         {
             var realDate = DateTime.Parse(date);
-            var row = PredefinedTestObjectsStorage.CreateRow(realDate, impressions, clicks, conversionClicks,
+            var row = PredefinedTestObjectsStorage.CreateYamRow(realDate, impressions, clicks, conversionClicks,
                 conversionViews, conversionValue, spend, pixelParameter);
             var rows = Enumerable.Repeat(row, repeatingNum).ToList();
             csvExtractorMock.Setup(m => m.EnumerateRows(It.IsAny<string>())).Returns(rows);
@@ -138,7 +138,7 @@ namespace CakeExtracter.Tests.JobTests.Yam.ExtractorTests
         {
             csvExtractorMock.Setup(m => m.EnumerateRows(It.IsAny<string>())).Returns(new List<YamRow>
             {
-                PredefinedTestObjectsStorage.CreateRow(DateTime.Now, impressions, clicks, conversionClicks,
+                PredefinedTestObjectsStorage.CreateYamRow(DateTime.Now, impressions, clicks, conversionClicks,
                     conversionViews, conversionValue, spend, pixelParameter)
             });
             var summaries1 = GetTransformedSummaries(true);
@@ -148,11 +148,11 @@ namespace CakeExtracter.Tests.JobTests.Yam.ExtractorTests
             const int defaultMetricValue = 1;
             csvExtractorMock.Setup(m => m.EnumerateRows(It.IsAny<string>())).Returns(new List<YamRow>
             {
-                PredefinedTestObjectsStorage.CreateRow(DateTime.Now, impressions, clicks, conversionClicks,
+                PredefinedTestObjectsStorage.CreateYamRow(DateTime.Now, impressions, clicks, conversionClicks,
                     conversionViews, conversionValue, spend, pixelParameter),
-                PredefinedTestObjectsStorage.CreateRow(DateTime.Now, impressions, clicks, conversionClicks,
+                PredefinedTestObjectsStorage.CreateYamRow(DateTime.Now, impressions, clicks, conversionClicks,
                     conversionViews, conversionValue, spend, pixelParameter),
-                PredefinedTestObjectsStorage.CreateRow(DateTime.Now, defaultMetricValue, defaultMetricValue,
+                PredefinedTestObjectsStorage.CreateYamRow(DateTime.Now, defaultMetricValue, defaultMetricValue,
                     defaultMetricValue, defaultMetricValue, defaultMetricValue, defaultMetricValue, $"gv={defaultMetricValue}")
             });
             var summaries2 = GetTransformedSummaries(true);

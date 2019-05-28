@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using CakeExtracter.Etl.Amazon.Exceptions;
 using CakeExtracter.Helpers;
 using CakeExtracter.Logging.TimeWatchers;
 using DirectAgents.Domain.Entities.CPProg;
@@ -56,6 +58,13 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
         protected override void SetSummaryMetricEntityId(DailySummary summary, SummaryMetric summaryMetric)
         {
             summaryMetric.EntityId = summary.AccountId;
+        }
+
+        protected override FailedStatsLoadingException GetFailedStatsLoadingException(Exception e, List<DailySummary> items)
+        {
+            var exception = base.GetFailedStatsLoadingException(e, items);
+            exception.ByDaily = true;
+            return exception;
         }
     }
 }

@@ -8,7 +8,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils
     /// <summary>
     /// The utility that helps convert command and request arguments to console arguments and vice versa.
     /// </summary>
-    internal static class CommandArgumentsConverter
+    public static class CommandArgumentsConverter
     {
         private const string ArgumentsSeparatorForConsole = " ";
         private const string ArgumentsPrefix = "-";

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using CakeExtracter.Etl.YAM.Loaders;
 using CakeExtracter.Etl.YAM.Repositories.Summaries;
-using CakeExtracter.Tests.JobTests.Yam.Helpers;
+using CakeExtracter.Tests.Helpers;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
 using Moq;
@@ -15,7 +15,7 @@ namespace CakeExtracter.Tests.JobTests.Yam.LoaderTests
     [Description("Test proper behaviour of YAM DailySummaries loader.")]
     public class YamDailySummariesLoaderTests
     {
-        private readonly ExtAccount testAccount = PredefinedTestObjectsStorage.YamTestAccount;
+        private readonly ExtAccount testAccount = PredefinedTestObjectsStorage.TestAccount1;
 
         private Mock<YamDailySummaryDatabaseRepository> summaryRepositoryMock;
 
@@ -35,7 +35,7 @@ namespace CakeExtracter.Tests.JobTests.Yam.LoaderTests
         {
             var dataToLoad = new List<YamDailySummary>
             {
-                PredefinedTestObjectsStorage.CreateSummary<YamDailySummary>(DateTime.Parse(date), impressions, clicks, conversionClicks,
+                PredefinedTestObjectsStorage.CreateYamSummary<YamDailySummary>(DateTime.Parse(date), impressions, clicks, conversionClicks,
                     conversionViews, conversionValue, spend, conversionValueClicksQuery, conversionValueViewsQuery)
             };
             var mergeResult = MergeItemsUsingLoader(dataToLoad);

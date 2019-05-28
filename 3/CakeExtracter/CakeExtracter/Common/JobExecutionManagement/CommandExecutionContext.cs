@@ -40,6 +40,16 @@ namespace CakeExtracter.Common.JobExecutionManagement
             InitCurrentJobRequest(command);
         }
 
+        private CommandExecutionContext(
+            ConsoleCommand command,
+            IJobExecutionItemService jobExecutionItemService,
+            IJobExecutionRequestScheduler jobExecutionRequestScheduler)
+        {
+            this.jobExecutionItemService = jobExecutionItemService;
+            this.jobExecutionRequestScheduler = jobExecutionRequestScheduler;
+            InitCurrentJobRequest(command);
+        }
+
         /// <summary>
         /// Resets the current context for a new command.
         /// </summary>
@@ -47,6 +57,14 @@ namespace CakeExtracter.Common.JobExecutionManagement
         public static void ResetContext(ConsoleCommand command)
         {
             Current = new CommandExecutionContext(command);
+        }
+
+        public static void ResetContext(
+            ConsoleCommand command,
+            IJobExecutionItemService jobExecutionItemService,
+            IJobExecutionRequestScheduler jobExecutionRequestScheduler)
+        {
+            Current = new CommandExecutionContext(command, jobExecutionItemService, jobExecutionRequestScheduler);
         }
 
         /// <summary>
