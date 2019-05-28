@@ -56,6 +56,18 @@ namespace CakeExtracter.Helpers
             return GetSeparatorOrEmptyString(value.First()) + value + GetSeparatorOrEmptyString(value.Last());
         }
 
+        /// <summary>
+        /// Returns the configuration value, if it exists, or the default value, if it does not.
+        /// </summary>
+        /// <param name="configurationValueName">Configuration name of the value.</param>
+        /// <param name="defaultValue">Default value.</param>
+        /// <returns>Result value.</returns>
+        public static int GetIntConfigurationValue(string configurationValueName, int defaultValue = 0)
+        {
+            var configurationValue = GetConfigurationValue(configurationValueName, defaultValue.ToString());
+            return int.Parse(configurationValue);
+        }
+
         private static IEnumerable<string> ExtractEnumerableFromConfigValue(string configValue)
         {
             return configValue.Split(ConfigurationValuesSeparators);
@@ -64,6 +76,12 @@ namespace CakeExtracter.Helpers
         private static string GetSeparatorOrEmptyString(char symbol)
         {
             return symbol == Separator ? string.Empty : Separator.ToString();
+        }
+
+        private static string GetConfigurationValue(string configurationValueName, string defaultValue = "")
+        {
+            var configurationValue = ConfigurationManager.AppSettings[configurationValueName];
+            return configurationValue ?? defaultValue;
         }
     }
 }

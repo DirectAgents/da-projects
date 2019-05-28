@@ -81,7 +81,8 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            IntervalBetweenUnsuccessfulAndNewRequestInMinutes = int.Parse(ConfigurationManager.AppSettings["AmazonIntervalBetweenRequestsInMinutes"]);
+            IntervalBetweenUnsuccessfulAndNewRequestInMinutes = ConfigurationHelper.GetIntConfigurationValue(
+                "AmazonIntervalBetweenRequestsInMinutes", IntervalBetweenUnsuccessfulAndNewRequestInMinutes);
             var statsType = new StatsTypeAgg(StatsType);
             var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info("Amazon ETL. DateRange {0}.", dateRange);
