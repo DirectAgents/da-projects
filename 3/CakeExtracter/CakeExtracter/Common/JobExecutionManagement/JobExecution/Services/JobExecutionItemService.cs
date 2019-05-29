@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Utils;
+using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
 
@@ -12,7 +15,9 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
     /// <seealso cref="IJobExecutionItemService" />
     public class JobExecutionItemService : IJobExecutionItemService
     {
-        private readonly IJobExecutionItemRepository jobExecutionHistoryRepository;
+        private readonly IBaseRepository<JobRequestExecution> jobExecutionHistoryRepository;
+
+        private readonly IBaseRepository<JobRequest> jobRequestsRepository;
 
         private readonly object executionItemHistoryLockObject = new object();
 
@@ -20,9 +25,11 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
         /// Initializes a new instance of the <see cref="JobExecutionItemService"/> class.
         /// </summary>
         /// <param name="jobExecutionHistoryRepository">The job execution history repository.</param>
-        public JobExecutionItemService(IJobExecutionItemRepository jobExecutionHistoryRepository)
+        ///  /// <param name="jobRequestsRepository">The job requests repository.</param>
+        public JobExecutionItemService(IBaseRepository<JobRequestExecution> jobExecutionHistoryRepository, IBaseRepository<JobRequest> jobRequestsRepository)
         {
             this.jobExecutionHistoryRepository = jobExecutionHistoryRepository;
+            this.jobRequestsRepository = jobRequestsRepository;
         }
 
         /// <inheritdoc />
@@ -37,7 +44,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
             {
                 Status = JobExecutionStatus.Processing,
                 JobRequestId = jobRequest.Id,
-                StartTime = DateTime.UtcNow
+                StartTime = DateTime.UtcNow,
             };
             lock (executionItemHistoryLockObject)
             {
@@ -147,6 +154,39 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
                     : ExecutionLoggingUtils.AddCommonMessageToLogData(executionHistoryItem.CurrentState, messageWithTimeStamp);
                 jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
             }
+        }
+
+        /// <summary>
+        /// Sets the state of the job execution items to aborted.
+        /// </summary>
+        /// <param name="itemIds">The item ids.</param>
+        public void SetJobExecutionItemsAbortedState(int[] itemIds)
+        {
+            if (itemIds != null && itemIds.Length >= 1)
+            {
+                var jobHistoryItemsToUpdate = jobExecutionHistoryRepository.GetItemsWithIncludes(item => itemIds.Contains(item.Id), "JobRequest").ToList();
+                var relatedJobRequestsToUpdate = jobHistoryItemsToUpdate.Select(item => item.JobRequest).ToList();
+                SetRelatedJobHistoryItemsAbortedStatus(jobHistoryItemsToUpdate);
+                SetRelatedJobRequestsAbortedStatus(relatedJobRequestsToUpdate);
+            }
+        }
+
+        private void SetRelatedJobHistoryItemsAbortedStatus(List<JobRequestExecution> jobHistoryItems)
+        {
+            jobHistoryItems.ForEach(jobItem =>
+            {
+                jobItem.Status = JobExecutionStatus.Aborted;
+            });
+            jobExecutionHistoryRepository.UpdateItems(jobHistoryItems);
+        }
+
+        private void SetRelatedJobRequestsAbortedStatus(List<JobRequest> jobItems)
+        {
+            jobItems.ForEach(jobItem =>
+            {
+                jobItem.Status = JobRequestStatus.Aborted;
+            });
+            jobRequestsRepository.UpdateItems(jobItems);
         }
     }
 }

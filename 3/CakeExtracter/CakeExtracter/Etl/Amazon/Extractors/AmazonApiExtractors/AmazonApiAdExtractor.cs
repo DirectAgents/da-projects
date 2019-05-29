@@ -7,6 +7,7 @@ using Amazon.Entities.Summaries;
 using Amazon.Enums;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement;
+using CakeExtracter.Etl.Amazon.Exceptions;
 using CakeExtracter.Helpers;
 using CakeExtracter.Logging.TimeWatchers;
 using CakeExtracter.Logging.TimeWatchers.Amazon;
@@ -21,17 +22,47 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         private readonly AmazonCampaignMetadataExtractor campaignMetadataExtractor;
 
         //NOTE: We can only get ad stats for SponsoredProduct campaigns, for these reasons:
-        public AmazonApiAdExtrator(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, bool clearBeforeLoad, string campaignFilter = null, string campaignFilterOut = null)
-            : base(amazonUtility, dateRange, account, clearBeforeLoad, campaignFilter, campaignFilterOut)
+        public AmazonApiAdExtrator(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, string campaignFilter = null, string campaignFilterOut = null)
+            : base(amazonUtility, dateRange, account, campaignFilter, campaignFilterOut)
         {
             campaignMetadataExtractor = new AmazonCampaignMetadataExtractor(amazonUtility);
+        }
+
+        public virtual void RemoveOldData(DateTime date)
+        {
+            Logger.Info(accountId, "The cleaning of AdSummaries for account ({0}) has begun - {1}.", accountId, date);
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
+            {
+                SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
+                {
+                    db.TDadSummaryMetrics.Where(x => x.Date == date && x.TDad.AccountId == accountId).DeleteFromQuery();
+                    db.TDadSummaries.Where(x => x.Date == date && x.TDad.AccountId == accountId).DeleteFromQuery();
+                }, "DeleteFromQuery");
+            }, accountId, AmazonJobLevels.creative, AmazonJobOperations.cleanExistingData);
+            Logger.Info(accountId, "The cleaning of AdSummaries for account ({0}) is over - {1}.", accountId, date);
         }
 
         protected override void Extract()
         {
             Logger.Info(accountId, "Extracting TDadSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 clientId, dateRange.FromDate, dateRange.ToDate);
-            var campaignsData = GetCampaignInfo();
+            try
+            {
+                var campaignsData = GetCampaignInfo();
+                ExtractDataForDays(campaignsData);
+            }
+            catch (Exception e)
+            {
+                ProcessFailedStatsExtraction(e, dateRange.FromDate, dateRange.ToDate);
+            }
+            finally
+            {
+                End();
+            }
+        }
+
+        private void ExtractDataForDays(List<AmazonCampaign> campaignsData)
+        {
             foreach (var date in dateRange.Dates)
             {
                 try
@@ -40,10 +71,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
                 }
                 catch (Exception e)
                 {
-                    Logger.Error(accountId, e);
+                    ProcessFailedStatsExtraction(e, dateRange.FromDate, dateRange.ToDate);
                 }
             }
-            End();
         }
 
         private void Extract(DateTime date, List<AmazonCampaign> campaignInfo)
@@ -55,11 +85,15 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
                 var asinSums = ExtractAsinSummaries(date);
                 items = TransformSummaries(productAdSums, asinSums, date, campaignInfo);
             }, accountId, AmazonJobLevels.creative, AmazonJobOperations.reportExtracting);
-            if (ClearBeforeLoad)
-            {
-                RemoveOldData(date);
-            }
+            RemoveOldData(date);
             Add(items);
+        }
+
+        private void ProcessFailedStatsExtraction(Exception e, DateTime fromDate, DateTime toDate)
+        {
+            Logger.Error(accountId, e);
+            var exception = new FailedStatsLoadingException(fromDate, toDate, accountId, e, byAd: true);
+            InvokeProcessFailedExtractionHandlers(exception);
         }
 
         private List<AmazonCampaign> GetCampaignInfo()
@@ -141,20 +175,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
                 ExternalId = value
             };
             ids.Add(id);
-        }
-
-        private void RemoveOldData(DateTime date)
-        {
-            Logger.Info(accountId, "The cleaning of AdSummaries for account ({0}) has begun - {1}.", accountId, date);
-            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() => 
-            {
-                SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
-                {
-                    db.TDadSummaryMetrics.Where(x => x.Date == date && x.TDad.AccountId == accountId).DeleteFromQuery();
-                    db.TDadSummaries.Where(x => x.Date == date && x.TDad.AccountId == accountId).DeleteFromQuery();
-                }, "DeleteFromQuery");
-            }, accountId, AmazonJobLevels.creative, AmazonJobOperations.cleanExistingData);
-            Logger.Info(accountId, "The cleaning of AdSummaries for account ({0}) is over - {1}.", accountId, date);
         }
     }
 }

@@ -5,6 +5,7 @@ using Amazon;
 using Amazon.Entities.Summaries;
 using Amazon.Enums;
 using CakeExtracter.Common;
+using CakeExtracter.Etl.Amazon.Exceptions;
 using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
@@ -20,7 +21,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
         protected readonly string clientId; // external id
         protected readonly string campaignFilter;
         protected readonly string campaignFilterOut;
-        protected readonly bool ClearBeforeLoad;
+
+        public event Action<FailedStatsLoadingException> ProcessFailedExtraction;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseAmazonExtractor{T}"/> class.
@@ -29,16 +31,20 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
         /// <param name="date">The date.</param>
         /// <param name="clientId">The client identifier.</param>
         protected BaseAmazonExtractor(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account,
-            bool clearBeforeLoad = false, string campaignFilter = null, string campaignFilterOut = null)
+            string campaignFilter = null, string campaignFilterOut = null)
             : base(collectionBoundedCapacity)
         {
             _amazonUtility = amazonUtility;
             this.dateRange = dateRange;
             this.accountId = account.Id;
             this.clientId = account.ExternalId;
-            this.ClearBeforeLoad = clearBeforeLoad;
             this.campaignFilter = campaignFilter;
             this.campaignFilterOut = campaignFilterOut;
+        }
+
+        protected void InvokeProcessFailedExtractionHandlers(FailedStatsLoadingException exception)
+        {
+            ProcessFailedExtraction?.Invoke(exception);
         }
 
         protected IEnumerable<TStat> FilterByCampaigns<TStat>(IEnumerable<TStat> reportEntities, Func<TStat, string> getFilterProp)

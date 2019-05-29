@@ -6,6 +6,7 @@ using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.Etl.Amazon.Exceptions;
 using CakeExtracter.Helpers;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors
@@ -16,9 +17,26 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
     /// <seealso cref="CakeExtracter.Etl.TradingDesk.Extracters.DatabaseKeywordsToDailySummaryExtracter" />
     public class AmazonDatabaseKeywordsToDailySummaryExtracter : DatabaseKeywordsToDailySummaryExtractor
     {
+
+        public event Action<FailedStatsLoadingException> ProcessFailedExtraction;
+
         public AmazonDatabaseKeywordsToDailySummaryExtracter(DateRange dateRange, int accountId)
             :base(dateRange, accountId)
         {
+        }
+
+        public virtual void RemoveOldData(DateRange dateRange)
+        {
+            Logger.Info(accountId, "The cleaning of DailySummaries for account ({0}) has begun - {1}.", accountId, dateRange);
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
+            {
+                SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
+                {
+                    db.DailySummaryMetrics.Where(x => x.EntityId == accountId && (x.Date >= dateRange.FromDate && x.Date <= dateRange.ToDate)).DeleteFromQuery();
+                    db.DailySummaries.Where(x => x.AccountId == accountId && (x.Date >= dateRange.FromDate && x.Date <= dateRange.ToDate)).DeleteFromQuery();
+                }, "DeleteFromQuery");
+            }, accountId, AmazonJobLevels.account, AmazonJobOperations.cleanExistingData);
+            Logger.Info(accountId, "The cleaning of DailySummaries for account ({0}) is over - {1}. ", accountId, dateRange);
         }
 
         /// <summary>
@@ -37,23 +55,17 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             }
             catch (Exception e)
             {
-                Logger.Error(accountId, e);
+                ProcessFailedStatsExtraction(e);
             }
+
             End();
         }
 
-        private void RemoveOldData(DateRange dateRange)
+        private void ProcessFailedStatsExtraction(Exception e)
         {
-            Logger.Info(accountId, "The cleaning of DailySummaries for account ({0}) has begun - {1}.", accountId, dateRange);
-            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() => 
-            {
-                SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
-                {
-                    db.DailySummaryMetrics.Where(x => x.EntityId == accountId && (x.Date >= dateRange.FromDate && x.Date <= dateRange.ToDate)).DeleteFromQuery();
-                    db.DailySummaries.Where(x => x.AccountId == accountId && (x.Date >= dateRange.FromDate && x.Date <= dateRange.ToDate)).DeleteFromQuery();
-                }, "DeleteFromQuery");
-            }, accountId, AmazonJobLevels.account, AmazonJobOperations.cleanExistingData);
-            Logger.Info(accountId, "The cleaning of DailySummaries for account ({0}) is over - {1}. ", accountId, dateRange);
+            Logger.Error(accountId, e);
+            var exception = new FailedStatsLoadingException(dateRange.FromDate, dateRange.ToDate, accountId, e, byDaily: true);
+            ProcessFailedExtraction?.Invoke(exception);
         }
     }
 }

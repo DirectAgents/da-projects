@@ -5,6 +5,7 @@ using System.Linq;
 using CakeExtracter.Helpers;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using Z.EntityFramework.Extensions;
+using System.Data.Entity;
 
 namespace CakeExtracter.SimpleRepositories.BaseRepositories
 {
@@ -14,8 +15,8 @@ namespace CakeExtracter.SimpleRepositories.BaseRepositories
     /// </summary>
     /// <typeparam name="T">The type of repository entity.</typeparam>
     /// <typeparam name="TContext">The context of repository.</typeparam>
-    public abstract class BaseDatabaseRepository<T, TContext> : IBaseRepository<T> 
-        where T: class
+    public abstract class BaseDatabaseRepository<T, TContext> : IBaseRepository<T>
+        where T : class
         where TContext : DbContext, new()
     {
         /// <inheritdoc />
@@ -75,6 +76,15 @@ namespace CakeExtracter.SimpleRepositories.BaseRepositories
         }
 
         /// <inheritdoc />
+        public List<T> GetItemsWithIncludes(Func<T, bool> predicate, string includeProperty)
+        {
+            List<T> items = null;
+            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => items = GetItemsWithInclude(dbContext, predicate, includeProperty), Locker,
+                $"Getting {typeof(T).Name} database items with includes");
+            return items;
+        }
+
+        /// <inheritdoc />
         public void AddItem(T item)
         {
             SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => AddItem(dbContext, item), Locker,
@@ -115,6 +125,11 @@ namespace CakeExtracter.SimpleRepositories.BaseRepositories
         private List<T> GetItems(TContext dbContext, Func<T, bool> predicate)
         {
             return dbContext.Set<T>().Where(predicate).ToList();
+        }
+
+        private List<T> GetItemsWithInclude(TContext dbContext, Func<T, bool> predicate, string includeProperty)
+        {
+            return dbContext.Set<T>().Include(includeProperty).Where(predicate).ToList();
         }
 
         private void AddItem(TContext dbContext, T item)

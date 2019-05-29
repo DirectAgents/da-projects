@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using CakeExtracter.Etl.Amazon.Exceptions;
 using CakeExtracter.Helpers;
 using CakeExtracter.Logging.TimeWatchers;
 using DirectAgents.Domain.Entities.CPProg;
@@ -9,7 +11,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
     /// Summary loader for amazon AD level.
     /// </summary>
     /// <seealso cref="CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders.BaseAmazonLevelLoader{DirectAgents.Domain.Entities.CPProg.TDadSummary, DirectAgents.Domain.Entities.CPProg.TDadSummaryMetric}" />
-    internal class AmazonAdSummaryLoader : BaseAmazonLevelLoader<TDadSummary, TDadSummaryMetric>
+    public class AmazonAdSummaryLoader : BaseAmazonLevelLoader<TDadSummary, TDadSummaryMetric>
     {
         private readonly TDadSummaryLoader summaryItemsLoader;
 
@@ -35,6 +37,13 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
         protected override void SetSummaryMetricEntityId(TDadSummary summary, SummaryMetric summaryMetric)
         {
             summaryMetric.EntityId = summary.TDadId;
+        }
+
+        protected override FailedStatsLoadingException GetFailedStatsLoadingException(Exception e, List<TDadSummary> items)
+        {
+            var exception = base.GetFailedStatsLoadingException(e, items);
+            exception.ByAd = true;
+            return exception;
         }
     }
 }
