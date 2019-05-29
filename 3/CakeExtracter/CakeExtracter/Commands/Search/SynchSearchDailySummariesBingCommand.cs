@@ -4,9 +4,14 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using BingAds;
 using CakeExtracter.Bootstrappers;
+using CakeExtracter.Commands.DA;
 using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
+using CakeExtracter.Etl;
 using CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors;
 using CakeExtracter.Etl.SearchMarketing.Loaders;
+using CakeExtracter.Etl.TradingDesk.Extracters.CommissionJunctionExtractors;
+using CakeExtracter.Etl.TradingDesk.LoadersDA.CommissionJunctionLoaders;
 using CakeExtracter.Helpers;
 using ClientPortal.Data.Contexts;
 
@@ -152,27 +157,45 @@ namespace CakeExtracter.Commands.Search
             return searchAccounts;
         }
 
-        private static void DoEtlDailyShopping(BingUtility bingUtility, SearchAccount searchAccount, int accountId, DateTime startDate, DateTime endDate)
+        /// <inheritdoc />
+        public override IEnumerable<CommandWithSchedule> GetUniqueBroadCommands(
+            IEnumerable<CommandWithSchedule> commands)
+        {
+            var broadCommands = new List<CommandWithSchedule>();
+            var commandsGroupedByAccount = commands.GroupBy(x => (x.Command as SynchSearchDailySummariesBingCommand)?.AccountId);
+            foreach (var commandsGroup in commandsGroupedByAccount)
+            {
+                var accountBroadCommands = GetUniqueBroadAccountCommands(commandsGroup);
+                broadCommands.AddRange(accountBroadCommands);
+            }
+
+            return broadCommands;
+        }
+
+        private void DoEtlDailyShopping(BingUtility bingUtility, SearchAccount searchAccount, int accountId, DateTime startDate, DateTime endDate)
         {
             var extractor = new BingDailyShoppingSummaryExtractor(bingUtility, accountId, startDate, endDate);
             var loader = new BingLoader(searchAccount.SearchAccountId);
+            InitEtlEvents(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
         }
 
-        private static void DoEtlDailyNonShopping(BingUtility bingUtility, SearchAccount searchAccount, int accountId, DateTime startDate, DateTime endDate)
+        private void DoEtlDailyNonShopping(BingUtility bingUtility, SearchAccount searchAccount, int accountId, DateTime startDate, DateTime endDate)
         {
             var extractor = new BingDailyNonShoppingSummaryExtractor(bingUtility, accountId, startDate, endDate);
             var loader = new BingLoader(searchAccount.SearchAccountId);
+            InitEtlEvents(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
         }
 
-        private static void DoEtlConv(BingUtility bingUtility, SearchAccount searchAccount, int accountId, DateTime startDate, DateTime endDate)
+        private void DoEtlConv(BingUtility bingUtility, SearchAccount searchAccount, int accountId, DateTime startDate, DateTime endDate)
         {
             //TODO: handle dates with no stats... keep track of all dates within the range and for those missing when done, delete the SCS's
             //      (could do in extracter or loader or have loader return dates loaded, or missing dates, or have a method to call to delete SCS's
             //       that didn't have any items)
             var extractor = new BingConvSummaryExtractor(bingUtility, accountId, startDate, endDate);
             var loader = new BingConvSummaryLoader(searchAccount.SearchAccountId);
+            InitEtlEvents(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
         }
 
@@ -191,6 +214,48 @@ namespace CakeExtracter.Commands.Search
             {
                 DoEtlConv(bingUtility, searchAccount, accountId, startDate, endDate);
             }
+        }
+
+        private void InitEtlEvents<T>(Extracter<T> extractor, Loader<T> loader)
+        {
+            extractor.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewCommandLaunch<SynchSearchDailySummariesBingCommand>(command => { });
+            loader.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewCommandLaunch<SynchSearchDailySummariesBingCommand>(command => { });
+        }
+
+        private List<CommandWithSchedule> GetUniqueBroadAccountCommands(IEnumerable<CommandWithSchedule> commandsWithSchedule)
+        {
+            var accountCommands = new List<Tuple<SynchSearchDailySummariesBingCommand, DateRange, CommandWithSchedule>>();
+            foreach (var commandWithSchedule in commandsWithSchedule)
+            {
+                var command = (SynchSearchDailySummariesBingCommand)commandWithSchedule.Command;
+                var commandDateRange = CommandHelper.GetDateRange(command.StartDate, command.EndDate, command.DaysAgoToStart, DefaultDaysAgo);
+                var crossCommands = accountCommands.Where(x => commandDateRange.IsCrossDateRange(x.Item2)).ToList();
+                foreach (var crossCommand in crossCommands)
+                {
+                    commandDateRange = commandDateRange.MergeDateRange(crossCommand.Item2);
+                    commandWithSchedule.ScheduledTime =
+                        crossCommand.Item3.ScheduledTime > commandWithSchedule.ScheduledTime
+                            ? crossCommand.Item3.ScheduledTime
+                            : commandWithSchedule.ScheduledTime;
+                    accountCommands.Remove(crossCommand);
+                }
+
+                accountCommands.Add(new Tuple<SynchSearchDailySummariesBingCommand, DateRange, CommandWithSchedule>(command, commandDateRange, commandWithSchedule));
+            }
+
+            var broadCommands = accountCommands.Select(GetCommandWithCorrectDateRange).ToList();
+            return broadCommands;
+        }
+
+        private CommandWithSchedule GetCommandWithCorrectDateRange(Tuple<SynchSearchDailySummariesBingCommand, DateRange, CommandWithSchedule> setting)
+        {
+            setting.Item1.StartDate = setting.Item2.FromDate;
+            setting.Item1.EndDate = setting.Item2.ToDate;
+            setting.Item1.DaysAgoToStart = null;
+            setting.Item3.Command = setting.Item1;
+            return setting.Item3;
         }
     }
 }

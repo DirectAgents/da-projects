@@ -28,7 +28,8 @@ namespace BingAds
 
         private readonly int[] criticalErrorCodes =
         {
-            2004 // ReportingServiceNoCompleteDataAvaliable
+            2004, // ReportingServiceNoCompleteDataAvailable
+            2011, // ReportingServiceEndDateBeforeStartDate
         };
 
         private long CustomerID { get; set; }

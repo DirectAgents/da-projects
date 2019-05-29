@@ -36,6 +36,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors
             catch (Exception exception)
             {
                 Logger.Error(exception);
+                throw exception;
             }
 
             End();
