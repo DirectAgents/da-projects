@@ -43,6 +43,10 @@ namespace CakeExtracter.Etl.Apple.Loaders
             try
             {
                 Logger.Info("Loading {0} AppleStatGroups..", items.Count);
+                if (items.Count == 0)
+                {
+                    return 0;
+                }
                 AddUpdateDependentSearchCampaigns(items);
                 var count = UpsertSearchDailySummaries(items);
                 return count;
@@ -123,7 +127,7 @@ namespace CakeExtracter.Etl.Apple.Loaders
                 SafeContextWrapper.TrySaveChanges(db);
             }
             Logger.Info($"Saving {progress.ItemCount} SearchDailySummaries ({progress.UpdatedCount} updates, {progress.AddedCount} additions), {progress.DuplicateCount} duplicates)");
-            return progress.ItemCount;
+            return statGroups.Count;
         }
 
         private void AddUpdateDependentSearchCampaigns(List<AppleStatGroup> statGroups)
