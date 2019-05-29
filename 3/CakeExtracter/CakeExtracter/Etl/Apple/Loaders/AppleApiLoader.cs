@@ -4,33 +4,48 @@ using System.Data.Entity;
 using System.Linq;
 using Apple;
 using CakeExtracter.Etl.Apple.Exceptions;
+using CakeExtracter.Helpers;
 using ClientPortal.Data.Contexts;
 
 namespace CakeExtracter.Etl.Apple.Loaders
 {
+    /// <summary>
+    /// Apple daily Ads stats loader.
+    /// </summary>
     public class AppleApiLoader : Loader<AppleStatGroup>
     {
-        public const string AppleChannel = "Apple";
-        private readonly SearchAccount account;
+        private readonly SearchAccount searchAccount;
 
+        private readonly Dictionary<string, int> campaignIdLookupByExtIdString = new Dictionary<string, int>();
+
+        /// <summary>
+        /// Action for exception of failed loading.
+        /// </summary>
         public event Action<AppleFailedEtlException> ProcessFailedLoading;
 
-        private Dictionary<string, int> campaignIdLookupByExtIdString = new Dictionary<string, int>();
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AppleApiLoader"/> class.
+        /// </summary>
+        /// <param name="searchAccount">Current search account.</param>
         public AppleApiLoader(SearchAccount searchAccount)
         {
             this.BatchSize = AppleAdsUtility.RowsReturnedAtATime;
-            this.account = searchAccount;
+            this.searchAccount = searchAccount;
         }
 
+        /// <summary>
+        /// Loads the specified items.
+        /// </summary>
+        /// <param name="items">List of items for loading.</param>
+        /// <returns>Count of loaded items.</returns>
         protected override int Load(List<AppleStatGroup> items)
         {
             try
             {
                 Logger.Info("Loading {0} AppleStatGroups..", items.Count);
                 AddUpdateDependentSearchCampaigns(items);
-                UpsertSearchDailySummaries(items);
-                return items.Count;
+                var count = UpsertSearchDailySummaries(items);
+                return count;
             }
             catch (Exception e)
             {
@@ -45,15 +60,15 @@ namespace CakeExtracter.Etl.Apple.Loaders
             var toDate = items.Max(x => x.granularity.Max(y => y.Date));
             var fromDateArg = fromDate == default(DateTime) ? null : (DateTime?)fromDate;
             var toDateArg = toDate == default(DateTime) ? null : (DateTime?)toDate;
-            var exception = new AppleFailedEtlException(fromDateArg, toDateArg, account.AccountCode, e);
+            var exception = new AppleFailedEtlException(fromDateArg, toDateArg, searchAccount.AccountCode, e);
             return exception;
         }
 
         private int UpsertSearchDailySummaries(List<AppleStatGroup> statGroups)
         {
-            var addedCount = 0;
-            var updatedCount = 0;
-            var itemCount = 0;
+            const string networkValue = ".";
+            const string deviceValue = ".";
+            var progress = new LoadingProgress();
             using (var db = new ClientPortalContext())
             {
                 foreach (var statGroup in statGroups)
@@ -64,89 +79,93 @@ namespace CakeExtracter.Etl.Apple.Loaders
                         Logger.Warn("Skipping StatGroup. No campaign for ({0})", metadata.campaignId);
                         continue;
                     }
-                    int searchCampaignId = campaignIdLookupByExtIdString[metadata.campaignId];
+                    var searchCampaignId = campaignIdLookupByExtIdString[metadata.campaignId];
 
                     foreach (var appleStat in statGroup.granularity)
                     {
-                        var pk1 = searchCampaignId;
-                        var pk2 = appleStat.Date;
-                        var pk3 = ".";
-                        var pk4 = ".";
                         var source = new SearchDailySummary
                         {
-                            SearchCampaignId = pk1,
-                            Date = pk2,
-                            Network = pk3,
-                            Device = pk4,
-                            //Revenue =
+                            SearchCampaignId = searchCampaignId,
+                            Date = appleStat.Date,
+                            Network = networkValue,
+                            Device = deviceValue,
                             Cost = appleStat.LocalSpend.amount,
                             Orders = appleStat.Installs,
                             Clicks = appleStat.Taps,
                             Impressions = appleStat.Impressions,
-                            CurrencyId = 1 // appleStat.localSpend.currency == "USD" ? 1 : -1 // NOTE: non USD (if exists) -1 for now
+                            CurrencyId = 1, // appleStat.localSpend.currency == "USD" ? 1 : -1 // NOTE: non USD (if exists) -1 for now
                         };
-                        var target = db.Set<SearchDailySummary>().Find(pk1, pk2, pk3, pk4);
+                        var target = db.Set<SearchDailySummary>().Find(searchCampaignId, appleStat.Date, networkValue, deviceValue);
                         if (target == null)
                         {
                             db.SearchDailySummaries.Add(source);
-                            addedCount++;
+                            progress.AddedCount++;
                         }
                         else
                         {
                             var entry = db.Entry(target);
-                            entry.State = EntityState.Detached;
-                            AutoMapper.Mapper.Map(source, target);
-                            entry.State = EntityState.Modified;
-                            updatedCount++;
+                            if (entry.State != EntityState.Unchanged)
+                            {
+                                Logger.Warn("Encountered duplicate for {0:d} - Strategy {1}", appleStat.Date, searchCampaignId);
+                                progress.DuplicateCount++;
+                            }
+                            else
+                            {
+                                entry.State = EntityState.Detached;
+                                AutoMapper.Mapper.Map(source, target);
+                                entry.State = EntityState.Modified;
+                                progress.UpdatedCount++;
+                            }
                         }
-                        itemCount++;
+                        progress.ItemCount++;
                     }
                 }
-                Logger.Info("Saving {0} SearchDailySummaries ({1} updates, {2} additions)", itemCount, updatedCount, addedCount);
-                db.SaveChanges();
+                SafeContextWrapper.TrySaveChanges(db);
             }
-            return 0; // which count to return?
+            Logger.Info($"Saving {progress.ItemCount} SearchDailySummaries ({progress.UpdatedCount} updates, {progress.AddedCount} additions), {progress.DuplicateCount} duplicates)");
+            return progress.ItemCount;
         }
 
-        public void AddUpdateDependentSearchCampaigns(List<AppleStatGroup> statGroups)
+        private void AddUpdateDependentSearchCampaigns(List<AppleStatGroup> statGroups)
         {
             using (var db = new ClientPortalContext())
             {
-                var searchAccount = db.SearchAccounts.Find(account.SearchAccountId);
+                var existingSearchAccount = db.SearchAccounts.Find(searchAccount.SearchAccountId);
                 foreach (var statGroup in statGroups)
                 {
                     if (statGroup.metadata == null)
+                    {
                         continue;
+                    }
                     var metadata = statGroup.metadata;
 
-                    int campaignId;
-                    if (!int.TryParse(metadata.campaignId, out campaignId))
+                    if (!int.TryParse(metadata.campaignId, out var campaignId))
                     {
                         Logger.Warn("campaignId ({0}) is not an int", campaignId);
                         continue;
                     }
-                    var existing = searchAccount.SearchCampaigns.SingleOrDefault(c => c.ExternalId == campaignId);
-                    if (existing == null)
+                    var existingCampaign = existingSearchAccount?.SearchCampaigns.SingleOrDefault(c => c.ExternalId == campaignId);
+                    if (existingCampaign == null)
                     {
                         var searchCampaign = new SearchCampaign
                         {
                             SearchCampaignName = metadata.campaignName,
-                            ExternalId = campaignId
+                            ExternalId = campaignId,
                         };
-                        searchAccount.SearchCampaigns.Add(searchCampaign);
+                        existingSearchAccount?.SearchCampaigns.Add(searchCampaign);
                         Logger.Info("Saving new SearchCampaign: {0} ({1})", metadata.campaignName, campaignId);
                         db.SaveChanges();
                         campaignIdLookupByExtIdString[metadata.campaignId] = searchCampaign.SearchCampaignId;
                     }
                     else
                     {
-                        if (existing.SearchCampaignName != metadata.campaignName)
+                        if (existingCampaign.SearchCampaignName != metadata.campaignName)
                         {
-                            existing.SearchCampaignName = metadata.campaignName;
+                            existingCampaign.SearchCampaignName = metadata.campaignName;
                             Logger.Info("Saving updated SearchCampaign name: {0} ({1})", metadata.campaignName, campaignId);
                             db.SaveChanges();
                         }
-                        campaignIdLookupByExtIdString[metadata.campaignId] = existing.SearchCampaignId;
+                        campaignIdLookupByExtIdString[metadata.campaignId] = existingCampaign.SearchCampaignId;
                     }
                 }
             }
