@@ -238,6 +238,7 @@
     <Compile Include="Areas\AB\Controllers\VendorsController.cs" />
     <Compile Include="Areas\AB\Models\DashboardVM.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Controllers\JobsRequestController.cs" />
     <Compile Include="Areas\Admin\Grids\JobHistory\IJobHistoryDataProvider.cs" />
     <Compile Include="Areas\Admin\Grids\JobHistory\JobHistoryDataProvider.cs" />
     <Compile Include="Areas\Admin\Grids\JobHistory\JobHistoryGrid.cs" />
@@ -320,6 +321,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="Areas\ProgAdmin\Views\Shared\_LayoutTD.cshtml" />
     <Content Include="Content\css\jobHistory.css" />
+    <Content Include="Content\css\jobLaunch.css" />
     <Content Include="Content\DA.css" />
     <Content Include="Content\kendo\2014.1.416\Black\editor.png" />
     <Content Include="Content\kendo\2014.1.416\Black\imagebrowser.png" />
@@ -489,6 +491,7 @@
     <Content Include="Content\kendo\2014.1.416\Uniform\sprite.png" />
     <Content Include="Content\kendo\2014.1.416\Uniform\sprite_2x.png" />
     <Content Include="Content\scripts\jobHistory.js" />
+    <Content Include="Content\scripts\jobLaunch.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="ReportViewerWebForm.aspx" />
@@ -954,6 +957,10 @@
       <Project>{3b6c5433-5392-4165-a7e4-4aa431a75bb3}</Project>
       <Name>CakeExtracter</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\CakeExtractor.SeleniumApplication\CakeExtractor.SeleniumApplication\CakeExtractor.SeleniumApplication.csproj">
+      <Project>{cc1c4e5c-f431-4f95-9f20-b57e7da1343b}</Project>
+      <Name>CakeExtractor.SeleniumApplication</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ClientPortal.Data\ClientPortal.Data.csproj">
       <Project>{2e621b59-9455-4fa5-b9bd-6bdc418ffbfa}</Project>
       <Name>ClientPortal.Data</Name>
@@ -1205,6 +1212,7 @@
     <Content Include="Areas\ProgAdmin\Views\Facebook\Latests.cshtml" />
     <Content Include="Areas\ProgAdmin\Views\Shared\DatePicker.cshtml" />
     <Content Include="Areas\ProgAdmin\Views\Facebook\ActionTotals.cshtml" />
+    <Content Include="Areas\Admin\Views\JobsRequest\Launch.cshtml" />
     <None Include="Properties\PublishProfiles\dagents_vm_staging.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\DayOfWeek.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />

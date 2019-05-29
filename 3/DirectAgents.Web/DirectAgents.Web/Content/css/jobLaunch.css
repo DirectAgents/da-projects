@@ -1,0 +1,13 @@
+﻿span.filter-label {
+    font-size: 15px;
+    margin-right: 5px;
+    margin-left: 10px;
+}
+
+#argumentInput {
+    width: 85%;
+}
+
+.command-panel {
+    margin-top: 15px;
+}

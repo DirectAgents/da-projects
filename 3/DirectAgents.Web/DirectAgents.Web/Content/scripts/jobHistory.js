@@ -31,5 +31,7 @@ function setAbortedStatusToItems() {
     }
 }
 
-setupDatePicker();
-dataLoadedCallback();
+$(function () {
+    setupDatePicker();
+    dataLoadedCallback();
+});

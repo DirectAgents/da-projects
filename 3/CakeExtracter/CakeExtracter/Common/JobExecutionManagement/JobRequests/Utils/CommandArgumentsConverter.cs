@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
+using Mono.Options;
 
 namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils
 {
@@ -14,6 +17,8 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils
         private const string ArgumentsPrefix = "-";
         private const string ArgumentNameAndValueSeparator = " ";
         private const string ArgumentStringValueSeparator = "\"";
+
+        private static readonly Random Random = new Random();
 
         private static readonly string[] MissingCommandArguments =
         {
@@ -28,11 +33,17 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils
         /// <returns>Command arguments to run from console.</returns>
         public static string GetCommandArgumentsAsLine(ConsoleCommand command)
         {
-            var argNames = GetCommandArgumentNames(command);
-            var argValues = GetCommandArgumentValues(command);
-            Array.Sort(argNames, argValues);
-            return argNames.Select((x, i) => GetArgument(x, argValues[i]))
-                .Aggregate(string.Empty, (s, s1) => JoinArguments(s, s1));
+            return GetCommandArgumentsAsLine(command, GetCommandArgumentValues);
+        }
+
+        /// <summary>
+        /// Converts arguments of a console command object to use it as example of launch the command from the console.
+        /// </summary>
+        /// <param name="command">The command to convert.</param>
+        /// <returns>Example command arguments.</returns>
+        public static string GetExampleCommandArgumentsAsLine(ConsoleCommand command)
+        {
+            return GetCommandArgumentsAsLine(command, GetExampleCommandArgumentValues);
         }
 
         /// <summary>
@@ -45,6 +56,26 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils
             var requestArgument = GetArgument(ConsoleCommand.RequestIdArgumentName, request.Id);
             var arguments = JoinArguments(request.CommandName, request.CommandExecutionArguments, requestArgument);
             return arguments;
+        }
+
+        /// <summary>
+        /// Returns objects for command arguments.
+        /// </summary>
+        /// <param name="command">Command.</param>
+        /// <returns>Objects for command arguments.</returns>
+        public static List<Option> GetCommandArguments(ManyConsole.ConsoleCommand command)
+        {
+            var argOptions = command.GetActualOptions();
+            return argOptions.ToList();
+        }
+
+        private static string GetCommandArgumentsAsLine(ConsoleCommand command, Func<ConsoleCommand, object[]> getCommandArgumentValuesFunc)
+        {
+            var argNames = GetCommandArgumentNames(command);
+            var argValues = getCommandArgumentValuesFunc(command);
+            Array.Sort(argNames, argValues);
+            return argNames.Select((x, i) => GetArgument(x, argValues[i]))
+                .Aggregate(string.Empty, (s, s1) => JoinArguments(s, s1));
         }
 
         private static string[] GetCommandArgumentNames(ConsoleCommand command)
@@ -60,6 +91,31 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils
         {
             var argValues = command.GetArgumentProperties().Select(x => x.GetValue(command));
             return argValues.ToArray();
+        }
+
+        private static object[] GetExampleCommandArgumentValues(ConsoleCommand command)
+        {
+            var argValues = command.GetArgumentProperties().Select(x => GetExamplePropertyValue(x, command));
+            return argValues.ToArray();
+        }
+
+        private static object GetExamplePropertyValue(PropertyInfo property, ConsoleCommand command)
+        {
+            var propertyNameParts =
+                property.PropertyType.FullName.Split(new[] { '[', ']', ',', '`' }, StringSplitOptions.RemoveEmptyEntries);
+            var propertyRealName = string.Equals(propertyNameParts[0], typeof(Nullable).FullName)
+                ? propertyNameParts[2]
+                : propertyNameParts[0];
+            if (propertyRealName == typeof(short).FullName || propertyRealName == typeof(int).FullName ||
+                propertyRealName == typeof(long).FullName)
+            {
+                return Random.Next(1, 100);
+            }
+            if (propertyRealName == typeof(DateTime).FullName)
+            {
+                return new DateTime(DateTime.Now.Year, Random.Next(1, 12), Random.Next(1, 28));
+            }
+            return propertyRealName == typeof(string).FullName ? "example" : property.GetValue(command);
         }
 
         private static string JoinArguments(params string[] arguments)
