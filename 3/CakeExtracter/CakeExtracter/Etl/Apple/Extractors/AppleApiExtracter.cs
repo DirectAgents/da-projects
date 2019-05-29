@@ -1,21 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Apple;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.Apple.Exceptions;
 
 namespace CakeExtracter.Etl.Apple.Extractors
 {
+    /// <summary>
+    /// Apple daily Ads stats extractor.
+    /// </summary>
     public class AppleApiExtracter : Extracter<AppleStatGroup>
     {
-        protected readonly AppleAdsUtility appleAdsUtility;
-        protected readonly DateRange dateRange;
-        protected readonly string orgId;
-        protected readonly string certificateCode;
+        private const int MaxDaysNumberForSingleReport = 90;
+        private readonly AppleAdsUtility appleAdsUtility;
+        private readonly DateRange dateRange;
+        private readonly string orgId;
+        private readonly string certificateCode;
 
+        /// <summary>
+        /// Action for exception of failed extraction.
+        /// </summary>
         public event Action<AppleFailedEtlException> ProcessFailedExtraction;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AppleApiExtracter"/> class.
+        /// </summary>
+        /// <param name="appleAdsUtility">Utility to extract items for a target account code <see cref="appleAdsUtility"/>.</param>
+        /// <param name="dateRange">Date range.</param>
+        /// <param name="orgId">Database account code of the search account.</param>
+        /// <param name="certificateCode">Database External Id of the search account.</param>
         public AppleApiExtracter(AppleAdsUtility appleAdsUtility, DateRange dateRange, string orgId, string certificateCode)
         {
             this.appleAdsUtility = appleAdsUtility;
@@ -26,35 +41,17 @@ namespace CakeExtracter.Etl.Apple.Extractors
 
         //TODO: Handle gaps in the stats. Somehow pass deletion items... how to do this for all campaigns?
 
+        /// <inheritdoc />
+        /// <summary>
+        /// Extracts the specified items.
+        /// </summary>
         protected override void Extract()
         {
-            Logger.Info("Extracting daily stats from AppleAds API for ({0}) from {1:d} to {2:d}", orgId, dateRange.FromDate, dateRange.ToDate);
+            Logger.Info("Extracting stats from AppleAds API for ({0}) from {1:d} to {2:d}", orgId, dateRange.FromDate, dateRange.ToDate);
             try
             {
-                var start = dateRange.FromDate;
-                var end = dateRange.ToDate;
-                var date90daysAfterStart = start.AddDays(90);
-                if (end > date90daysAfterStart)
-                {
-                    end = date90daysAfterStart;
-                }
-
-                while (start <= dateRange.ToDate)
-                {
-                    var appleStatGroups = GetDailyStats(start, end);
-
-                    if (appleStatGroups != null)
-                    {
-                        Add(appleStatGroups);
-                    }
-
-                    start = start.AddDays(91);
-                    end = end.AddDays(91);
-                    if (end > dateRange.ToDate)
-                    {
-                        end = dateRange.ToDate;
-                    }
-                }
+                var items = GetStatsDataForAllDates(dateRange.FromDate, dateRange.ToDate, GetStatsData);
+                Add(items);
             }
             catch (Exception e)
             {
@@ -66,20 +63,42 @@ namespace CakeExtracter.Etl.Apple.Extractors
             }
         }
 
-        private IEnumerable<AppleStatGroup> GetDailyStats(DateTime startDate, DateTime endDate)
+        private IEnumerable<AppleStatGroup> GetStatsDataForAllDates(DateTime startDate, DateTime endDate, Func<DateTime, DateTime, IEnumerable<AppleStatGroup>> getItemsFunc)
         {
-            var appleStatGroups = new List<AppleStatGroup>();
+            const int daysNumberForNextStartDates = 1;
+            var allItems = new List<AppleStatGroup>();
+            var tasks = new List<Task>();
+
+            while (startDate < endDate)
+            {
+                var nextDateRangeStartTime = startDate.AddDays(MaxDaysNumberForSingleReport);
+                var endTime = endDate < nextDateRangeStartTime ? endDate : nextDateRangeStartTime;
+                var startTime = startDate;
+                var task = Task.Factory
+                    .StartNew(() => getItemsFunc(startTime, endTime))
+                    .ContinueWith(x => allItems.AddRange(x.Result));
+                tasks.Add(task);
+                startDate = endTime.AddDays(daysNumberForNextStartDates);
+            }
+
+            Task.WaitAll(tasks.ToArray());
+            return allItems;
+        }
+
+        private IEnumerable<AppleStatGroup> GetStatsData(DateTime startDate, DateTime endDate)
+        {
+            Logger.Info("Extracting daily stats for ({0}) from {1:d} to {2:d}", orgId, startDate, endDate);
+            var items = new List<AppleStatGroup>();
             try
             {
-                //throw new Exception("Failed extract!");
-                appleStatGroups = appleAdsUtility.GetCampaignDailyStats(startDate, endDate, orgId, certificateCode).ToList();
+                items = appleAdsUtility.GetCampaignDailyStats(startDate, endDate, orgId, certificateCode).ToList();
             }
             catch (Exception e)
             {
                 ProcessFailedStatsExtraction(e, startDate, endDate);
             }
 
-            return appleStatGroups;
+            return items;
         }
 
         private void ProcessFailedStatsExtraction(Exception e, DateTime fromDate, DateTime toDate)
