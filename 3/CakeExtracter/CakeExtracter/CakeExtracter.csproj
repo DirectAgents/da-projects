@@ -459,6 +459,7 @@
     <Compile Include="Common\SqlScriptsExecutor.cs" />
     <Compile Include="Common\StorageCollection.cs" />
     <Compile Include="Common\TextUtils.cs" />
+    <Compile Include="Etl\Apple\Exceptions\AppleFailedEtlException.cs" />
     <Compile Include="Etl\CakeMarketing\DALoaders\DAAffiliatesLoader.cs" />
     <Compile Include="Etl\CakeMarketing\DALoaders\DAAffSubSummaryLoader.cs" />
     <Compile Include="Etl\CakeMarketing\DALoaders\DACampLoader.cs">
@@ -523,13 +524,13 @@
     <Compile Include="Etl\Kochava\Loaders\KochavaItemsDbService.cs" />
     <Compile Include="Etl\Kochava\Loaders\KochavaLoader.cs" />
     <Compile Include="Etl\Kochava\Models\KochavaReportItem.cs" />
-    <Compile Include="Etl\SearchMarketing\Extracters\AppleApiExtracter.cs" />
+    <Compile Include="Etl\Apple\Extractors\AppleApiExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingConvSummaryExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingDailyNonShoppingSummaryExtractor.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingDailyShoppingSummaryExtractor.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\DbExtracters.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\AdWordsConvSummaryLoader.cs" />
-    <Compile Include="Etl\SearchMarketing\Loaders\AppleApiLoader.cs" />
+    <Compile Include="Etl\Apple\Loaders\AppleApiLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\BingConvSummaryLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\SearchDailySummaryLoaders.cs" />
     <Compile Include="Etl\SocialMarketing\Extractors\FacebookApiExtracter.cs" />
@@ -953,5 +954,6 @@
     <Analyzer Include="..\..\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\..\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

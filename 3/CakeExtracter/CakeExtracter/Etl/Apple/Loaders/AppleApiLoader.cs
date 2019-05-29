@@ -1,30 +1,52 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using Apple;
+using CakeExtracter.Etl.Apple.Exceptions;
 using ClientPortal.Data.Contexts;
 
-namespace CakeExtracter.Etl.SearchMarketing.Loaders
+namespace CakeExtracter.Etl.Apple.Loaders
 {
     public class AppleApiLoader : Loader<AppleStatGroup>
     {
         public const string AppleChannel = "Apple";
-        private readonly int searchAccountId;
+        private readonly SearchAccount account;
+
+        public event Action<AppleFailedEtlException> ProcessFailedLoading;
 
         private Dictionary<string, int> campaignIdLookupByExtIdString = new Dictionary<string, int>();
 
-        public AppleApiLoader(int searchAccountId)
+        public AppleApiLoader(SearchAccount searchAccount)
         {
             this.BatchSize = AppleAdsUtility.RowsReturnedAtATime;
-            this.searchAccountId = searchAccountId;
+            this.account = searchAccount;
         }
 
         protected override int Load(List<AppleStatGroup> items)
         {
-            Logger.Info("Loading {0} AppleStatGroups..", items.Count);
-            AddUpdateDependentSearchCampaigns(items);
-            UpsertSearchDailySummaries(items);
-            return items.Count;
+            try
+            {
+                Logger.Info("Loading {0} AppleStatGroups..", items.Count);
+                AddUpdateDependentSearchCampaigns(items);
+                UpsertSearchDailySummaries(items);
+                return items.Count;
+            }
+            catch (Exception e)
+            {
+                ProcessFailedStatsLoading(e, items);
+                return items.Count;
+            }
+        }
+
+        protected virtual AppleFailedEtlException GetFailedStatsLoadingException(Exception e, List<AppleStatGroup> items)
+        {
+            var fromDate = items.Min(x => x.granularity.Min(y => y.Date));
+            var toDate = items.Max(x => x.granularity.Max(y => y.Date));
+            var fromDateArg = fromDate == default(DateTime) ? null : (DateTime?)fromDate;
+            var toDateArg = toDate == default(DateTime) ? null : (DateTime?)toDate;
+            var exception = new AppleFailedEtlException(fromDateArg, toDateArg, account.AccountCode, e);
+            return exception;
         }
 
         private int UpsertSearchDailySummaries(List<AppleStatGroup> statGroups)
@@ -90,7 +112,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
         {
             using (var db = new ClientPortalContext())
             {
-                var searchAccount = db.SearchAccounts.Find(searchAccountId);
+                var searchAccount = db.SearchAccounts.Find(account.SearchAccountId);
                 foreach (var statGroup in statGroups)
                 {
                     if (statGroup.metadata == null)
@@ -130,5 +152,11 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             }
         }
 
+        private void ProcessFailedStatsLoading(Exception e, List<AppleStatGroup> items)
+        {
+            Logger.Error(e);
+            var exception = GetFailedStatsLoadingException(e, items);
+            ProcessFailedLoading?.Invoke(exception);
+        }
     }
 }

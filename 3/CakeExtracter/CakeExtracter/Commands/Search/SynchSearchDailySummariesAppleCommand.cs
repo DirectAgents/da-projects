@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Linq;
 using Apple;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
-using CakeExtracter.Etl.SearchMarketing.Extracters;
-using CakeExtracter.Etl.SearchMarketing.Loaders;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
+using CakeExtracter.Etl.Apple.Exceptions;
+using CakeExtracter.Etl.Apple.Extractors;
+using CakeExtracter.Etl.Apple.Loaders;
 using CakeExtracter.Helpers;
 using ClientPortal.Data.Contexts;
 
@@ -116,13 +119,13 @@ namespace CakeExtracter.Commands.Search
 
                 var appleAdsUtility = new AppleAdsUtility(m => Logger.Info(m), m => Logger.Warn(m));
                 var searchAccounts = GetSearchAccounts();
-                Logger.Info("Returned from GetSearchAccounts().");
 
                 foreach (var searchAccount in searchAccounts)
                 {
                     var revisedDateRange = ReviseDateRange(dateRange, searchAccount);
                     var extractor = new AppleApiExtracter(appleAdsUtility, revisedDateRange, searchAccount.AccountCode, searchAccount.ExternalId);
-                    var loader = new AppleApiLoader(searchAccount.SearchAccountId);
+                    var loader = new AppleApiLoader(searchAccount);
+                    InitEtlEvents(extractor, loader);
                     CommandHelper.DoEtl(extractor, loader);
                 }
             }
@@ -134,7 +137,31 @@ namespace CakeExtracter.Commands.Search
             return 0;
         }
 
-        private static DateRange ReviseDateRange(DateRange dateRange, SearchAccount searchAccount)
+        /// <inheritdoc />
+        public override IEnumerable<CommandWithSchedule> GetUniqueBroadCommands(IEnumerable<CommandWithSchedule> commands)
+        {
+            var broadCommands = new List<CommandWithSchedule>();
+            var commandsGroupedByAccount = commands.GroupBy(x => (x.Command as SynchSearchDailySummariesAppleCommand)?.ClientId);
+            foreach (var commandsGroup in commandsGroupedByAccount)
+            {
+                var accountBroadCommands = GetUniqueBroadAccountCommands(commandsGroup);
+                broadCommands.AddRange(accountBroadCommands);
+            }
+
+            return broadCommands;
+        }
+
+        private void InitEtlEvents(AppleApiExtracter extractor, AppleApiLoader loader)
+        {
+            extractor.ProcessFailedExtraction += exception =>
+                ScheduleNewCommandLaunch<SynchSearchDailySummariesAppleCommand>(command =>
+                    UpdateCommandParameters(command, exception));
+            loader.ProcessFailedLoading += exception =>
+                ScheduleNewCommandLaunch<SynchSearchDailySummariesAppleCommand>(command =>
+                    UpdateCommandParameters(command, exception));
+        }
+
+        private DateRange ReviseDateRange(DateRange dateRange, SearchAccount searchAccount)
         {
             var startDate = dateRange.FromDate;
             if (searchAccount.MinSynchDate.HasValue && startDate < searchAccount.MinSynchDate.Value)
@@ -149,6 +176,49 @@ namespace CakeExtracter.Commands.Search
         private IEnumerable<SearchAccount> GetSearchAccounts()
         {
             return SynchSearchDailySummariesAdWordsCommand.GetSearchAccounts("Apple", this.SearchProfileId, this.ClientId);
+        }
+
+        private IEnumerable<CommandWithSchedule> GetUniqueBroadAccountCommands(IEnumerable<CommandWithSchedule> commandsWithSchedule)
+        {
+            var accountCommands =
+                new List<Tuple<SynchSearchDailySummariesAppleCommand, DateRange, CommandWithSchedule>>();
+            foreach (var commandWithSchedule in commandsWithSchedule)
+            {
+                var command = (SynchSearchDailySummariesAppleCommand) commandWithSchedule.Command;
+                var commandDateRange = CommandHelper.GetDateRange(command.StartDate, command.EndDate, command.DaysAgoToStart, DefaultDaysAgo);
+                var crossCommands = accountCommands.Where(x => commandDateRange.IsCrossDateRange(x.Item2)).ToList();
+                foreach (var crossCommand in crossCommands)
+                {
+                    commandDateRange = commandDateRange.MergeDateRange(crossCommand.Item2);
+                    commandWithSchedule.ScheduledTime =
+                        crossCommand.Item3.ScheduledTime > commandWithSchedule.ScheduledTime
+                            ? crossCommand.Item3.ScheduledTime
+                            : commandWithSchedule.ScheduledTime;
+                    accountCommands.Remove(crossCommand);
+                }
+
+                accountCommands.Add(
+                    new Tuple<SynchSearchDailySummariesAppleCommand, DateRange, CommandWithSchedule>(command, commandDateRange, commandWithSchedule));
+            }
+
+            var broadCommands = accountCommands.Select(GetCommandWithCorrectDateRange).ToList();
+            return broadCommands;
+        }
+
+        private CommandWithSchedule GetCommandWithCorrectDateRange(Tuple<SynchSearchDailySummariesAppleCommand, DateRange, CommandWithSchedule> setting)
+        {
+            setting.Item1.StartDate = setting.Item2.FromDate;
+            setting.Item1.EndDate = setting.Item2.ToDate;
+            setting.Item1.DaysAgoToStart = null;
+            setting.Item3.Command = setting.Item1;
+            return setting.Item3;
+        }
+
+        private void UpdateCommandParameters(SynchSearchDailySummariesAppleCommand command, AppleFailedEtlException exception)
+        {
+            command.StartDate = exception.StartDate;
+            command.EndDate = exception.EndDate;
+            command.ClientId = exception.AccountCode;
         }
     }
 }
