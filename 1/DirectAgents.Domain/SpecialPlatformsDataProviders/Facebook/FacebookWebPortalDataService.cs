@@ -199,7 +199,11 @@ namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook
 
         private List<ExtAccount> GetAccountsForStatsDisplaying()
         {
-            return context.ExtAccounts.Where(x => x.Platform.Code == Platform.Code_FB && x.ExternalId != null).OrderBy(a => a.Disabled).ToList();
+            return context.ExtAccounts
+                .Where(x => x.Platform.Code == Platform.Code_FB && x.ExternalId != null)
+                .OrderBy(a => a.Disabled)
+                .ThenBy(a => a.Name)
+                .ToList();
         }
 
         private void FillDailySummaryTotalsInfo(List<FacebookLatestsInfo> allAccountsLatestsInfo)
