@@ -45,6 +45,30 @@ namespace CakeExtracter.Helpers
         }
 
         /// <summary>
+        /// The method returns a calculated date range for command execution based on nullable parameters
+        /// (null parameters are implied as not set).
+        /// </summary>
+        /// <param name="startDate">Start date from which statistics will be extracted (default is 'daysAgo').</param>
+        /// <param name="endDate">End date to which statistics will be extracted (default is yesterday).</param>
+        /// <param name="minStartDate">Minimal start date from which statistics will be extracted (default is Start date).</param>
+        /// <param name="daysAgoToStart">The number of days ago to calculate the start date from which statistics will be retrieved,
+        /// used if StartDate not specified (default = defaultDaysAgo).</param>
+        /// <param name="defaultDaysAgo">The default number of days ago.</param>
+        /// <returns>Calculated date range for command execution.</returns>
+        public static DateRange GetDateRange(DateTime? startDate, DateTime? endDate, DateTime? minStartDate, int? daysAgoToStart, int defaultDaysAgo)
+        {
+            var today = DateTime.Today;
+            var daysAgo = daysAgoToStart ?? defaultDaysAgo;
+            var calculatedStartDateInRange = startDate ?? today.AddDays(-daysAgo);
+            var startDateInRange = minStartDate.HasValue && calculatedStartDateInRange < minStartDate.Value
+                ? minStartDate.Value
+                : calculatedStartDateInRange;
+            var endDateInRange = endDate ?? today.AddDays(-1);
+            var dateRange = new DateRange(startDateInRange, endDateInRange);
+            return dateRange;
+        }
+
+        /// <summary>
         /// Load some items using the "extractor + loader" retrieving mechanism. 
         /// </summary>
         /// <typeparam name="T">Type of loaded items</typeparam>

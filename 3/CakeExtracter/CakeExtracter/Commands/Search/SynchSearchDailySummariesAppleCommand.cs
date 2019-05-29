@@ -115,16 +115,15 @@ namespace CakeExtracter.Commands.Search
         {
             try
             {
-                var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
-                Logger.Info("Apple ETL. DateRange {0}.", dateRange);
-
+                Logger.Info("Apple ETL.");
                 var appleAdsUtility = new AppleAdsUtility(m => Logger.Info(m), m => Logger.Warn(m));
                 var searchAccounts = GetSearchAccounts();
 
                 foreach (var searchAccount in searchAccounts)
                 {
-                    var revisedDateRange = ReviseDateRange(dateRange, searchAccount);
-                    var extractor = new AppleApiExtracter(appleAdsUtility, revisedDateRange, searchAccount.AccountCode, searchAccount.ExternalId);
+                    var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, searchAccount.MinSynchDate, DaysAgoToStart, DefaultDaysAgo);
+                    Logger.Info("DateRange {0}.", dateRange);
+                    var extractor = new AppleApiExtracter(appleAdsUtility, dateRange, searchAccount.AccountCode, searchAccount.ExternalId);
                     var loader = new AppleApiLoader(searchAccount);
                     InitEtlEvents(extractor, loader);
                     CommandHelper.DoEtl(extractor, loader);
@@ -171,18 +170,6 @@ namespace CakeExtracter.Commands.Search
                 ScheduleNewCommandLaunch<SynchSearchDailySummariesAppleCommand>(command => { });
         }
 
-        private DateRange ReviseDateRange(DateRange dateRange, SearchAccount searchAccount)
-        {
-            var startDate = dateRange.FromDate;
-            if (searchAccount.MinSynchDate.HasValue && startDate < searchAccount.MinSynchDate.Value)
-            {
-                startDate = searchAccount.MinSynchDate.Value;
-            }
-
-            var revisedDateRange = new DateRange(startDate, dateRange.ToDate);
-            return revisedDateRange;
-        }
-
         private IEnumerable<SearchAccount> GetSearchAccounts()
         {
             return SynchSearchDailySummariesAdWordsCommand.GetSearchAccounts("Apple", this.SearchProfileId, this.ClientId);
@@ -194,7 +181,7 @@ namespace CakeExtracter.Commands.Search
                 new List<Tuple<SynchSearchDailySummariesAppleCommand, DateRange, CommandWithSchedule>>();
             foreach (var commandWithSchedule in commandsWithSchedule)
             {
-                var command = (SynchSearchDailySummariesAppleCommand) commandWithSchedule.Command;
+                var command = (SynchSearchDailySummariesAppleCommand)commandWithSchedule.Command;
                 var commandDateRange = CommandHelper.GetDateRange(command.StartDate, command.EndDate, command.DaysAgoToStart, DefaultDaysAgo);
                 var crossCommands = accountCommands.Where(x => commandDateRange.IsCrossDateRange(x.Item2)).ToList();
                 foreach (var crossCommand in crossCommands)
