@@ -5,6 +5,7 @@ using System.Linq;
 using Apple;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Exceptions;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Etl.Apple.Exceptions;
 using CakeExtracter.Etl.Apple.Extractors;
@@ -153,12 +154,21 @@ namespace CakeExtracter.Commands.Search
 
         private void InitEtlEvents(AppleApiExtracter extractor, AppleApiLoader loader)
         {
+            GeneralInitEtlEvents(extractor, loader);
             extractor.ProcessFailedExtraction += exception =>
                 ScheduleNewCommandLaunch<SynchSearchDailySummariesAppleCommand>(command =>
                     UpdateCommandParameters(command, exception));
             loader.ProcessFailedLoading += exception =>
                 ScheduleNewCommandLaunch<SynchSearchDailySummariesAppleCommand>(command =>
                     UpdateCommandParameters(command, exception));
+        }
+
+        private void GeneralInitEtlEvents(AppleApiExtracter extractor, AppleApiLoader loader)
+        {
+            extractor.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewCommandLaunch<SynchSearchDailySummariesAppleCommand>(command => { });
+            loader.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewCommandLaunch<SynchSearchDailySummariesAppleCommand>(command => { });
         }
 
         private DateRange ReviseDateRange(DateRange dateRange, SearchAccount searchAccount)
