@@ -4,14 +4,11 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using BingAds;
 using CakeExtracter.Bootstrappers;
-using CakeExtracter.Commands.DA;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Etl;
 using CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors;
 using CakeExtracter.Etl.SearchMarketing.Loaders;
-using CakeExtracter.Etl.TradingDesk.Extracters.CommissionJunctionExtractors;
-using CakeExtracter.Etl.TradingDesk.LoadersDA.CommissionJunctionLoaders;
 using CakeExtracter.Helpers;
 using ClientPortal.Data.Contexts;
 
@@ -21,7 +18,8 @@ namespace CakeExtracter.Commands.Search
     public class SynchSearchDailySummariesBingCommand : ConsoleCommand
     {
         private const int DefaultDaysAgo = 41;
-        
+        private const int DefaultIntervalBetweenRequestsInMinutes = 40;
+
         private bool? includeShopping;
         private bool? includeNonShopping;
 
@@ -79,7 +77,8 @@ namespace CakeExtracter.Commands.Search
 
         public override int Execute(string[] remainingArguments)
         {
-            //GlobalProxySelection.Select = new WebProxy("127.0.0.1", 8888);
+            IntervalBetweenUnsuccessfulAndNewRequestInMinutes = ConfigurationHelper.GetIntConfigurationValue(
+                "BingIntervalBetweenRequestsInMinutes", DefaultIntervalBetweenRequestsInMinutes);
             var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info("Bing ETL. DateRange {0}.", dateRange);
 
