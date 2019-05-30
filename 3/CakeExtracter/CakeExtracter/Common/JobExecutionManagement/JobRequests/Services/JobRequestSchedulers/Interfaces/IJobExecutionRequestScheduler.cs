@@ -27,6 +27,12 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         void ScheduleCommandLaunch(ConsoleCommand command);
 
         /// <summary>
+        /// Schedules a new job request.
+        /// </summary>
+        /// <param name="jobRequest">The job request to launch.</param>
+        void ScheduleJobRequest(JobRequest jobRequest);
+
+        /// <summary>
         /// Reschedules the job request.
         /// </summary>
         /// <param name="request">The job request.</param>

@@ -4,8 +4,10 @@ using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers.Interfaces;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils;
 using CakeExtractor.SeleniumApplication.Commands;
+using DirectAgents.Domain.Entities.Administration.JobExecution;
 
 namespace DirectAgents.Web.Areas.Admin.Controllers
 {
@@ -15,6 +17,18 @@ namespace DirectAgents.Web.Areas.Admin.Controllers
     /// <seealso cref="Controller" />
     public class JobsRequestController : Controller
     {
+        private readonly IJobExecutionRequestScheduler requestScheduler;
+
+        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:DirectAgents.Web.Areas.Admin.Controllers.JobsRequestController" /> class.
+        /// </summary>
+        /// <param name="requestScheduler">Job request scheduler service.</param>
+        public JobsRequestController(IJobExecutionRequestScheduler requestScheduler)
+        {
+            this.requestScheduler = requestScheduler;
+        }
+
         /// <summary>
         /// GET: Admin/JobsRequest
         /// Job requests page endpoint.
@@ -39,6 +53,20 @@ namespace DirectAgents.Web.Areas.Admin.Controllers
             {
                 var commandInfo = GetCommandInfo(commandName);
                 return Json(commandInfo);
+            }
+            catch (Exception ex)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ScheduleJobRequest(JobRequest jobRequest)
+        {
+            try
+            {
+                requestScheduler.ScheduleJobRequest(jobRequest);
+                return Json(new { success = true });
             }
             catch (Exception ex)
             {

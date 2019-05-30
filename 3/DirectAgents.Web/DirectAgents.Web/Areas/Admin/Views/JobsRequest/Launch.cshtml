@@ -22,13 +22,13 @@
             <div class="form-group col-md-3">
                 <span class="filter-label">Time:</span>
                 <div class='input-group date' id='datetimepicker'>
-                    <input type='text' class="form-control" />
+                    <input type='text' class="form-control" id="scheduledTimeInput"/>
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
                 </div>
             </div>
-            <button type="button" class="btn btn-default col-md-1">Schedule</button>
+            <button type="button" class="btn btn-default col-md-1" onclick="scheduleRequest()">Schedule</button>
         </div>
         <div class="row">
             <div class="panel panel-default command-panel">
@@ -38,7 +38,7 @@
         </div>
     </div>
 </div>
-
+<h4>Scheduled requests</h4>
 @Html.MVCGrid("JobRequests")
 
 <script src="~/Content/scripts/jobLaunch.js"></script>

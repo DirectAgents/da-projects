@@ -5,7 +5,7 @@
 }
 
 function setupCommandDescription() {
-    var selectedCommand = $("#commandSelect").map(function () { return this.value; })[0];
+    var selectedCommand = getSelectedCommand();
     $.ajax({
         url: "/JobsRequest/GetCommandDescription",
         type: "POST",
@@ -21,6 +21,41 @@ function setupCommandDescription() {
             console.error(error);
         }
     });
+}
+
+function scheduleRequest() {
+    var command = getSelectedCommand();
+    var commandArguments = getCommandArguments();
+    var schedule = getScheduledTime();
+    $.ajax({
+        url: "/JobsRequest/ScheduleJobRequest",
+        type: "POST",
+        data: JSON.stringify({
+            CommandName: command,
+            CommandExecutionArguments: commandArguments,
+            ScheduledTime: schedule
+        }),
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function () {
+            location.reload();
+        },
+        error: function (error) {
+            console.error(error);
+        }
+    });
+}
+
+function getSelectedCommand() {
+    return $("#commandSelect").map(function () { return this.value; })[0];
+}
+
+function getCommandArguments() {
+    return $("#argumentInput")[0].value;
+}
+
+function getScheduledTime() {
+    return $("#scheduledTimeInput")[0].value;
 }
 
 function printCommandInfo(data) {

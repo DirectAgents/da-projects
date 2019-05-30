@@ -55,6 +55,12 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         }
 
         /// <inheritdoc />
+        public void ScheduleJobRequest(JobRequest jobRequest)
+        {
+            AddNotInheritedRequest(jobRequest);
+        }
+
+        /// <inheritdoc />
         public void RescheduleRequest(JobRequest request, ConsoleCommand sourceCommand)
         {
             if (sourceCommand.NoNeedToCreateRepeatRequests)
@@ -128,6 +134,14 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
             var request = CreateJobRequest(command, null, null);
             requestRepository.AddItem(request);
             return request;
+        }
+
+        private JobRequest AddNotInheritedRequest(JobRequest jobRequest)
+        {
+            jobRequest.AttemptNumber = 0;
+            jobRequest.Status = JobRequestStatus.Scheduled;
+            requestRepository.AddItem(jobRequest);
+            return jobRequest;
         }
 
         private JobRequest CreateJobRequest(ConsoleCommand command, DateTime? scheduledTime, int? parentRequestId)

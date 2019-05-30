@@ -32,7 +32,7 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobRequest
         public static IQueryable<Domain.Entities.Administration.JobExecution.JobRequest> ApplyScheduleTimeSorting(
             this IQueryable<Domain.Entities.Administration.JobExecution.JobRequest> source, QueryOptions options)
         {
-            source = source.OrderByDescending(x => x.ScheduledTime);
+            source = source.OrderBy(x => x.ScheduledTime);
             return source;
         }
 
