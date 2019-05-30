@@ -72,7 +72,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         public void CreateRequestsForScheduledCommands(ConsoleCommand sourceCommand, JobRequest sourceRequest)
         {
             var jobRequests = GetUniqueJobRequests(sourceCommand, sourceRequest);
-            if (sourceCommand.NoNeedToCreateRepeatRequests)
+            if (jobRequests.Count > 0 && sourceCommand.NoNeedToCreateRepeatRequests)
             {
                 UpdateRequest(sourceRequest, JobRequestStatus.Failed);
                 jobRequests.ForEach(x => LogNotScheduledCommand(x.CommandName, x.CommandExecutionArguments));
