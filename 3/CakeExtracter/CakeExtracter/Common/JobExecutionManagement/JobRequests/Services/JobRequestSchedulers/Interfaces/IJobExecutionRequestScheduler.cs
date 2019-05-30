@@ -1,4 +1,5 @@
-﻿using DirectAgents.Domain.Entities.Administration.JobExecution;
+﻿using System.Collections.Generic;
+using DirectAgents.Domain.Entities.Administration.JobExecution;
 
 namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers.Interfaces
 {
@@ -19,6 +20,13 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         /// </summary>
         /// <param name="request">The job request.</param>
         void SetJobRequestAsProcessing(JobRequest request);
+
+        /// <summary>
+        /// Checks the validity of the job request.
+        /// </summary>
+        /// <param name="existingCommands">Basic objects of all existing commands.</param>
+        /// <param name="jobRequest">The job request.</param>
+        void VerifyJobRequest(List<ManyConsole.ConsoleCommand> existingCommands, JobRequest jobRequest);
 
         /// <summary>
         /// Schedules a new command that should become scheduled job requests.

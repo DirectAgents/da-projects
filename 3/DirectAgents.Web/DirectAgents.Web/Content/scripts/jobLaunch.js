@@ -41,6 +41,7 @@ function scheduleRequest() {
             location.reload();
         },
         error: function (error) {
+            $("#errorText").text(`Scheduling of the command failed: ${error.statusText}`);
             console.error(error);
         }
     });

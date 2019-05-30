@@ -22,13 +22,16 @@
             <div class="form-group col-md-3">
                 <span class="filter-label">Time:</span>
                 <div class='input-group date' id='datetimepicker'>
-                    <input type='text' class="form-control" id="scheduledTimeInput"/>
+                    <input type='text' class="form-control" id="scheduledTimeInput" />
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
                 </div>
             </div>
             <button type="button" class="btn btn-default col-md-1" onclick="scheduleRequest()">Schedule</button>
+        </div>
+        <div class="row center-block">
+            <h5 class="text-danger" id="errorText"></h5>
         </div>
         <div class="row">
             <div class="panel panel-default command-panel">

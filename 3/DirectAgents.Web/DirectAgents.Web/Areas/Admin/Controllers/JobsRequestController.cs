@@ -60,11 +60,18 @@ namespace DirectAgents.Web.Areas.Admin.Controllers
             }
         }
 
+        /// <summary>
+        ///  Schedules a new command launch based on arguments.
+        /// </summary>
+        /// <param name="jobRequest">Job request object with arguments.</param>
+        /// <returns>Action result.</returns>
         [HttpPost]
         public ActionResult ScheduleJobRequest(JobRequest jobRequest)
         {
             try
             {
+                var existingCommands = GetAllExistingCommand();
+                requestScheduler.VerifyJobRequest(existingCommands, jobRequest);
                 requestScheduler.ScheduleJobRequest(jobRequest);
                 return Json(new { success = true });
             }

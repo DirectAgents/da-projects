@@ -7,6 +7,7 @@ using CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
+using ManyConsole.Internal;
 
 namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers
 {
@@ -41,6 +42,20 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         public void SetJobRequestAsProcessing(JobRequest request)
         {
             UpdateRequest(request, JobRequestStatus.Processing);
+        }
+
+        /// <inheritdoc />
+        public void VerifyJobRequest(List<ManyConsole.ConsoleCommand> existingCommands, JobRequest jobRequest)
+        {
+            var command = existingCommands.Find(x => x.Command == jobRequest.CommandName);
+            var commandLine = CommandArgumentsConverter.GetJobArgumentsAsArgumentsForConsole(jobRequest);
+            var arguments = CommandLineParser.Parse(commandLine);
+            var remainingArguments = command.GetActualOptions().Parse(arguments.Skip(1));
+            ConsoleUtil.VerifyNumberOfArguments(
+                remainingArguments.ToArray(),
+                command.RemainingArgumentsCountMin,
+                command.RemainingArgumentsCountMax);
+            command.OverrideAfterHandlingArgumentsBeforeRun(remainingArguments.ToArray());
         }
 
         /// <inheritdoc />
