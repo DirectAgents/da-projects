@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Linq;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
+using DirectAgents.Web.Areas.Admin.Grids.DataProviders;
 using MVCGrid.Models;
 
 namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
@@ -10,8 +11,8 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
     /// <summary>
     /// Job History Data Provider.
     /// </summary>
-    /// <seealso cref="IJobHistoryDataProvider" />
-    public class JobHistoryDataProvider : IJobHistoryDataProvider
+    /// <seealso cref="IGridDataProvider&lt;JobRequestExecution&gt;" />
+    public class JobHistoryDataProvider : IGridDataProvider<JobRequestExecution>
     {
         private readonly List<string> historyItemJobsBlackList = new List<string>
         {

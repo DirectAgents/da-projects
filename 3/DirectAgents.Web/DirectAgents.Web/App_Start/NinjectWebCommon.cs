@@ -1,3 +1,6 @@
+using DirectAgents.Web.Areas.Admin.Grids.DataProviders;
+using DirectAgents.Web.Areas.Admin.Grids.JobRequest;
+
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(DirectAgents.Web.App_Start.NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(DirectAgents.Web.App_Start.NinjectWebCommon), "Stop")]
 
@@ -86,7 +89,8 @@ namespace DirectAgents.Web.App_Start
             kernel.Bind<IFacebookWebPortalDataService>().To<FacebookWebPortalDataService>();
             kernel.Bind<IPlatformAccountRepository>().To<PlatformAccountRepository>();
 
-            kernel.Bind<IJobHistoryDataProvider>().To<JobHistoryDataProvider>();
+            kernel.Bind<IGridDataProvider<JobRequestExecution>>().To<JobHistoryDataProvider>();
+            kernel.Bind<IGridDataProvider<JobRequest>>().To<JobRequestsDataProvider>();
             kernel.Bind<IBaseRepository<JobRequest>>().To<JobRequestRepository>();
             kernel.Bind<IBaseRepository<JobRequestExecution>>().To<JobExecutionItemRepository>();
             kernel.Bind<IJobExecutionItemService>().To<JobExecutionItemService>();

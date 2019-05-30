@@ -23,7 +23,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils
         private static readonly string[] MissingCommandArguments =
         {
             ConsoleCommand.RequestIdArgumentName,
-            ConsoleCommand.NoNeedToCreateRepeatRequestsArgumentName
+            ConsoleCommand.NoNeedToCreateRepeatRequestsArgumentName,
         };
 
         /// <summary>

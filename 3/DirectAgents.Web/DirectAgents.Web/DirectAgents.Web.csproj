@@ -239,10 +239,13 @@
     <Compile Include="Areas\AB\Models\DashboardVM.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\JobsRequestController.cs" />
-    <Compile Include="Areas\Admin\Grids\JobHistory\IJobHistoryDataProvider.cs" />
+    <Compile Include="Areas\Admin\Grids\DataProviders\IGridDataProvider.cs" />
     <Compile Include="Areas\Admin\Grids\JobHistory\JobHistoryDataProvider.cs" />
     <Compile Include="Areas\Admin\Grids\JobHistory\JobHistoryGrid.cs" />
     <Compile Include="Areas\Admin\Grids\JobHistory\JobHistoryQueryExtensions.cs" />
+    <Compile Include="Areas\Admin\Grids\JobRequest\JobRequestsDataProvider.cs" />
+    <Compile Include="Areas\Admin\Grids\JobRequest\JobRequestsGrid.cs" />
+    <Compile Include="Areas\Admin\Grids\JobRequest\JobRequestsQueryExtensions.cs" />
     <Compile Include="Areas\Cake\CakeAreaRegistration.cs" />
     <Compile Include="Areas\Cake\Controllers\AdvertisersController.cs" />
     <Compile Include="Areas\Cake\Controllers\CampsController.cs" />

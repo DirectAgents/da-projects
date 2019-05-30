@@ -306,7 +306,7 @@ namespace DirectAgents.Domain.Contexts
 
         // Adm
         public DbSet<JobRequestExecution> JobRequestExecutions { get; set; }
-        public DbSet<JobRequest> JobExecutionRequests { get; set; }
+        public DbSet<JobRequest> JobRequests { get; set; }
 
         // TD
         public DbSet<Advertiser> Advertisers { get; set; }
