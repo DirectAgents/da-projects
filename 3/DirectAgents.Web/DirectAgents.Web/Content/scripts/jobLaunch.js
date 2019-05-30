@@ -47,6 +47,26 @@ function scheduleRequest() {
     });
 }
 
+function setAbortedStatusToItems() {
+    var ids = $("input[type=checkbox]:checked").map(function () { return this.value; }).get();
+    var result = confirm("Are you sure?");
+    if (result) {
+        $.ajax({
+            url: "/JobsRequest/SetAbortedStatusToItems",
+            type: "POST",
+            data: JSON.stringify(ids),
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function() {
+                location.reload();
+            },
+            error: function(error) {
+                console.error(error);
+            }
+        });
+    }
+}
+
 function getSelectedCommand() {
     return $("#commandSelect").map(function () { return this.value; })[0];
 }

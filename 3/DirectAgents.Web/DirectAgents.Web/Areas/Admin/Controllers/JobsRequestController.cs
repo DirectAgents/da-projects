@@ -78,6 +78,25 @@ namespace DirectAgents.Web.Areas.Admin.Controllers
                 var existingCommands = GetAllExistingCommand();
                 requestScheduler.VerifyJobRequest(existingCommands, jobRequest);
                 requestScheduler.ScheduleJobRequest(jobRequest);
+                return Json(new {success = true});
+            }
+            catch (Exception ex)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Sets the aborted status to items.
+        /// </summary>
+        /// <param name="ids">The ids.</param>
+        /// <returns>Action Result Status Code.</returns>
+        [HttpPost]
+        public ActionResult SetAbortedStatusToItems(int[] ids)
+        {
+            try
+            {
+                requestScheduler.SetJobRequestsAsAborted(ids);
                 return Json(new { success = true });
             }
             catch (Exception ex)

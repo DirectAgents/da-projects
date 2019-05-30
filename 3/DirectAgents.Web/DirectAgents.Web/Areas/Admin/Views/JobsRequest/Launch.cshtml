@@ -41,7 +41,12 @@
         </div>
     </div>
 </div>
-<h4>Scheduled requests</h4>
+<div class="form-inline container-fluid">
+    <div class="row">
+        <h4 class="col-md-10">Scheduled requests</h4>
+        <button type="button" class="btn btn-default abort col-md-2" onclick="setAbortedStatusToItems()">Abort Selected</button>
+    </div>
+</div>
 @Html.MVCGrid("JobRequests")
 
 <script src="~/Content/scripts/jobLaunch.js"></script>

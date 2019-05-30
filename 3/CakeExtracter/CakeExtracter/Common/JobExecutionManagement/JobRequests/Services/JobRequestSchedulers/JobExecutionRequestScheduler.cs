@@ -45,6 +45,14 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         }
 
         /// <inheritdoc />
+        public void SetJobRequestsAsAborted(int[] ids)
+        {
+            var requests = requestRepository.GetItems(x => ids.Contains(x.Id));
+            requests.ForEach(x => UpdateRequestProperties(x, JobRequestStatus.Aborted));
+            requestRepository.UpdateItems(requests);
+        }
+
+        /// <inheritdoc />
         public void VerifyJobRequest(List<ManyConsole.ConsoleCommand> existingCommands, JobRequest jobRequest)
         {
             var command = existingCommands.Find(x => x.Command == jobRequest.CommandName);

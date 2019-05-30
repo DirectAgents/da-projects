@@ -22,6 +22,12 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         void SetJobRequestAsProcessing(JobRequest request);
 
         /// <summary>
+        /// Sets a status of the job requests to Aborted.
+        /// </summary>
+        /// <param name="ids">The job request ids.</param>
+        void SetJobRequestsAsAborted(int[] ids);
+
+        /// <summary>
         /// Checks the validity of the job request.
         /// </summary>
         /// <param name="existingCommands">Basic objects of all existing commands.</param>

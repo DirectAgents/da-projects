@@ -21,6 +21,13 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobRequest
                 .WithAuthorizationType(AuthorizationType.AllowAnonymous)
                 .AddColumns(cols =>
                 {
+                    cols.Add("Abort")
+                        .WithHtmlEncoding(false)
+                        .WithSorting(false)
+                        .WithFiltering(false)
+                        .WithHeaderText("")
+                        .WithValueExpression((p, c) => $"<input type='checkbox' class='select' value='{p.Id}'>")
+                        .WithPlainTextValueExpression((p, c) => "");
                     cols.Add().WithColumnName("ParentJobId")
                         .WithHeaderText("PJId")
                         .WithValueExpression(i => i.ParentJobRequestId.ToString());
