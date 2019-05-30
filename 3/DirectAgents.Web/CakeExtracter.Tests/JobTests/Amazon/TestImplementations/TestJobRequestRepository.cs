@@ -27,6 +27,11 @@ namespace CakeExtracter.Tests.JobTests.Amazon.TestImplementations
             return new List<JobRequest>();
         }
 
+        public List<JobRequest> GetItemsWithIncludes(Func<JobRequest, bool> predicate, string includeProperty)
+        {
+            throw new NotImplementedException();
+        }
+
         public void AddItem(JobRequest item)
         {
         }
