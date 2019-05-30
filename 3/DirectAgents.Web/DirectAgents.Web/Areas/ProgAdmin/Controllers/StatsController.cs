@@ -1,16 +1,15 @@
-﻿using DirectAgents.Domain.Abstract;
-using DirectAgents.Domain.DTO;
-using DirectAgents.Domain.Entities.CPProg;
-using DirectAgents.Web.Areas.ProgAdmin.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Web.Helpers;
+using DirectAgents.Domain.Abstract;
+using DirectAgents.Domain.DTO;
+using DirectAgents.Web.Areas.ProgAdmin.Models;
 
 namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
 {
-    public class StatsController : DirectAgents.Web.Controllers.ControllerBase
+    public class StatsController : Web.Controllers.ControllerBase
     {
         public StatsController(ICPProgRepository cpProgRepository, ITDRepository tdRepository)
         {

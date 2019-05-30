@@ -35,7 +35,7 @@ namespace CakeExtracter.Common
 
         public bool IsInRange(DateTime date)
         {
-            return date >= FromDate && date <= ToDate;
+            return (date >= FromDate && date <= ToDate) || (date >= ToDate && date <= FromDate);
         }
 
         public bool IsCrossDateRange(DateRange dateRange)
