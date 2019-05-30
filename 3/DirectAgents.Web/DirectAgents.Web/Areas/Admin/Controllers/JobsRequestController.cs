@@ -68,6 +68,11 @@ namespace DirectAgents.Web.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult ScheduleJobRequest(JobRequest jobRequest)
         {
+            if (!jobRequest.ScheduledTime.HasValue)
+            {
+                jobRequest.ScheduledTime = DateTime.Now;
+            }
+
             try
             {
                 var existingCommands = GetAllExistingCommand();
