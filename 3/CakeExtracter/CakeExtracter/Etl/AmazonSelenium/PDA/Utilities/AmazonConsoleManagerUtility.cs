@@ -6,7 +6,6 @@ using CakeExtracter.Common;
 using CakeExtracter.Etl.AmazonSelenium.Helpers;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Helpers;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Models.ConsoleManagerUtilityModels;
-using CakeExtracter.Helpers;
 using Polly;
 using RestSharp;
 using Cookie = OpenQA.Selenium.Cookie;
@@ -16,18 +15,26 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Utilities
     internal class AmazonConsoleManagerUtility
     {
         private const int PageSize = 100;
-        private static readonly int MaxRetryAttempts = ConfigurationHelper.GetIntConfigurationValue("PDA_MaxRetryAttempts");
-        private static readonly TimeSpan PauseBetweenAttempts = TimeSpan.FromSeconds(ConfigurationHelper.GetIntConfigurationValue("PDA_PauseBetweenAttemptsInSeconds"));
 
         private readonly Dictionary<string, string> cookies;
         private readonly Action<string> logInfo;
         private readonly Action<string> logError;
         private readonly Action<string> logWarning;
+        private readonly int maxRetryAttempts;
+        private readonly TimeSpan pauseBetweenAttempts;
 
-        public AmazonConsoleManagerUtility(IEnumerable<Cookie> cookies, Action<string> logInfo, Action<string> logError, Action<string> logWarning)
+        public AmazonConsoleManagerUtility(
+            IEnumerable<Cookie> cookies,
+            int maxRetryAttempts,
+            TimeSpan pauseBetweenAttempts,
+            Action<string> logInfo,
+            Action<string> logError,
+            Action<string> logWarning)
         {
             var simpleCookies = cookies.ToDictionary(x => x.Name, x => x.Value);
             this.cookies = simpleCookies;
+            this.maxRetryAttempts = maxRetryAttempts;
+            this.pauseBetweenAttempts = pauseBetweenAttempts;
             this.logInfo = logInfo;
             this.logError = logError;
             this.logWarning = logWarning;
@@ -129,8 +136,8 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Utilities
                 .Handle<Exception>()
                 .OrResult<IRestResponse<dynamic>>(resp => resp.StatusCode != HttpStatusCode.OK)
                 .WaitAndRetry(
-                    MaxRetryAttempts,
-                    i => PauseBetweenAttempts,
+                    maxRetryAttempts,
+                    i => pauseBetweenAttempts,
                     (exception, timeSpan, retryCount, context) =>
                     {
                         var message = $"Failed to process request. Waiting {timeSpan}";

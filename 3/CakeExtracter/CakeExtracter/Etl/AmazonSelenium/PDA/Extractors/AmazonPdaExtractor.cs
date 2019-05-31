@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Web;
 using Amazon.Enums;
@@ -8,6 +7,7 @@ using Amazon.Helpers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.AmazonSelenium.Drivers;
 using CakeExtracter.Etl.AmazonSelenium.Helpers;
+using CakeExtracter.Etl.AmazonSelenium.PDA.Configuration;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Exceptions;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Models;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Models.CommonHelperModels;
@@ -15,7 +15,6 @@ using CakeExtracter.Etl.AmazonSelenium.PDA.Models.ConsoleManagerUtilityModels;
 using CakeExtracter.Etl.AmazonSelenium.PDA.PageActions;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Utilities;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Helpers;
-using CakeExtracter.Helpers;
 using DirectAgents.Domain.Entities.CPProg;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 using Polly;
@@ -29,8 +28,8 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
         private static AuthorizationModel authorizationModel;
         private static string downloadDir;
         private static string reportNameTemplate;
-        private static string campaignsUrl;
         private static Dictionary<string, string> availableProfileUrls;
+        private static PdaConfigurationManager configurationManager;
 
         private readonly ExtAccount account;
 
@@ -85,6 +84,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
 
         private static void Initialize()
         {
+            SetConfigurationManager();
             InitializeSettings();
             InitializeAuthorizationModel();
             InitializePageActions();
@@ -92,29 +92,33 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
             FileManager.CreateDirectoryIfNotExist(authorizationModel.CookiesDir);
         }
 
+        private static void SetConfigurationManager()
+        {
+            configurationManager = new PdaConfigurationManager();
+        }
+
         private static void InitializeSettings()
         {
-            campaignsUrl = ConfigurationManager.AppSettings["PDA_CampaignsPageUrl"];
-            reportNameTemplate = ConfigurationManager.AppSettings["PDA_FilesNameTemplate"];
-            downloadDir = FileManager.GetAssemblyRelativePath(ConfigurationManager.AppSettings["PDA_DownloadsDirectoryName"]);
+            reportNameTemplate = configurationManager.GetFilesNameTemplate();
+            downloadDir = FileManager.GetAssemblyRelativePath(configurationManager.GetDownloadsDirectoryName());
         }
 
         private static void InitializeAuthorizationModel()
         {
-            var cookieDir = ConfigurationManager.AppSettings["PDA_CookiesDirectory"];
+            var cookieDirName = configurationManager.GetCookiesDirectoryName();
             authorizationModel = new AuthorizationModel
             {
-                Login = ConfigurationManager.AppSettings["PDA_EMail"],
-                Password = ConfigurationManager.AppSettings["PDA_EMailPassword"],
-                SignInUrl = ConfigurationManager.AppSettings["PDA_SignInPageUrl"],
-                CookiesDir = FileManager.GetAssemblyRelativePath(cookieDir),
+                Login = configurationManager.GetEMail(),
+                Password = configurationManager.GetEMailPassword(),
+                SignInUrl = configurationManager.GetSignInPageUrl(),
+                CookiesDir = FileManager.GetAssemblyRelativePath(cookieDirName),
             };
         }
 
         private static void InitializePageActions()
         {
             var driver = new ChromeWebDriver(downloadDir);
-            var waitPageTimeoutInMinutes = ConfigurationHelper.GetIntConfigurationValue("PDA_WaitPageTimeoutInMinutes");
+            var waitPageTimeoutInMinutes = configurationManager.GetWaitPageTimeout();
             pageActions = new AmazonPdaPageActions(driver, waitPageTimeoutInMinutes);
         }
 
@@ -198,8 +202,14 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
         private AmazonConsoleManagerUtility GetAmazonConsoleManagerUtility()
         {
             var cookies = pageActions.GetAllCookies();
-            var cmApiUtility = new AmazonConsoleManagerUtility(cookies,
-                x => Logger.Info(account.Id, x), 
+            var maxRetryAttempts = configurationManager.GetMaxRetryAttempts();
+            var pauseBetweenAttempts = configurationManager.GetPauseBetweenAttempts();
+
+            var cmApiUtility = new AmazonConsoleManagerUtility(
+                cookies,
+                maxRetryAttempts,
+                pauseBetweenAttempts,
+                x => Logger.Info(account.Id, x),
                 x => Logger.Error(account.Id, new Exception(x)),
                 x => Logger.Warn(account.Id, x));
             return cmApiUtility;
@@ -367,6 +377,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
 
         private static void GoToPortalMainPage()
         {
+            var campaignsUrl = configurationManager.GetCampaignsPageUrl();
             pageActions.NavigateToUrl(campaignsUrl, AmazonPdaPageObjects.FilterByButton);
             if (!pageActions.IsElementPresent(AmazonPdaPageObjects.FilterByButton) &&
                 pageActions.IsElementPresent(AmazonPdaPageObjects.LoginPassInput))
