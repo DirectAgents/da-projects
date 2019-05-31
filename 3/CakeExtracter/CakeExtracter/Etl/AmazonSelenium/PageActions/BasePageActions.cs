@@ -21,6 +21,11 @@ namespace CakeExtracter.Etl.AmazonSelenium.PageActions
             timeout = TimeSpan.FromMinutes(timeoutMinutes);
         }
 
+        ~BasePageActions()
+        {
+            CloseWebDriver();
+        }
+
         public void NavigateToUrl(string url, By waitingElement)
         {
             Logger.Info("Go to URL [{0}]...", url);
@@ -247,6 +252,11 @@ namespace CakeExtracter.Etl.AmazonSelenium.PageActions
         {
             WaitElementClickable(itemElement, timeout);
             Driver.FindElement(listElement).FindElement(itemElement).Click();
+        }
+
+        private void CloseWebDriver()
+        {
+            Driver.Quit();
         }
     }
 }
