@@ -24,6 +24,20 @@ namespace CakeExtracter.Common.JobExecutionManagement
             private set;
         }
 
+        /// <summary>
+        /// Gets the name of the currently running command.
+        /// </summary>
+        /// <value>
+        /// The name of the currently running command.
+        /// </value>
+        public string CommandName
+        {
+            get
+            {
+                return currentCommand.Command;
+            }
+        }
+
         private readonly IJobExecutionItemService jobExecutionItemService;
         private readonly IJobExecutionRequestScheduler jobExecutionRequestScheduler;
 
@@ -59,6 +73,12 @@ namespace CakeExtracter.Common.JobExecutionManagement
             Current = new CommandExecutionContext(command);
         }
 
+        /// <summary>
+        /// Resets the context.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="jobExecutionItemService">The job execution item service.</param>
+        /// <param name="jobExecutionRequestScheduler">The job execution request scheduler.</param>
         public static void ResetContext(
             ConsoleCommand command,
             IJobExecutionItemService jobExecutionItemService,
@@ -88,10 +108,19 @@ namespace CakeExtracter.Common.JobExecutionManagement
         /// <summary>
         /// Updates all services according to the failed end of the main command.
         /// </summary>
-        public void FailedRequestExecution()
+        public void SetAsFailedRequestExecution()
         {
             jobExecutionItemService.SetJobExecutionItemFailedState(currentJobRequestExecution);
             jobExecutionRequestScheduler.RescheduleRequest(currentJobRequest, currentCommand);
+        }
+
+        /// <summary>
+        /// Sets as aborted by timeout request execution.
+        /// </summary>
+        public void SetAsAbortedByTimeoutRequestExecution()
+        {
+            jobExecutionItemService.SetJobExecutionItemAbortedByTimeoutState(currentJobRequestExecution);
+            jobExecutionRequestScheduler.EndRequest(currentJobRequest);
         }
 
         /// <summary>

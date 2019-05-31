@@ -1,17 +1,17 @@
-﻿using CakeExtracter.Commands;
-using CakeExtracter.Common;
-using DirectAgents.Domain.Concrete;
-using DirectAgents.Domain.Entities.CPProg;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using CakeExtracter;
+using CakeExtracter.Commands;
+using CakeExtracter.Common;
 using CakeExtracter.Etl;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
 using CakeExtractor.SeleniumApplication.Configuration.Pda;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtractors;
+using DirectAgents.Domain.Concrete;
+using DirectAgents.Domain.Entities.CPProg;
 using Platform = DirectAgents.Domain.Entities.CPProg.Platform;
-using System.ComponentModel.Composition;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
@@ -23,12 +23,9 @@ namespace CakeExtractor.SeleniumApplication.Commands
         public SyncAmazonPdaCommand()
         {
             NoNeedToCreateRepeatRequests = true;
+            IsAutoShutDownMechanismEnabled = false; // TODO : Enable shut down mechanism when selenium job will be refactored to common job.
             IsCommand("SyncAmazonPdaCommand", "Sync Amazon PDA Stats");
             configurationManager = new PdaCommandConfigurationManager();
-        }
-
-        public override void ResetProperties()
-        {
         }
 
         public override int Execute(string[] remainingArguments)
