@@ -93,6 +93,10 @@
     <Compile Include="Abstract\IDepartmentRepository.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MigrationsTD\201905311144009_Mig_ErrorEmailSentProperty.cs" />
+    <Compile Include="MigrationsTD\201905311144009_Mig_ErrorEmailSentProperty.Designer.cs">
+      <DependentUpon>201905311144009_Mig_ErrorEmailSentProperty.cs</DependentUpon>
+    </Compile>
     <Compile Include="SpecialPlatformsDataProviders\Facebook\IFacebookWebPortalDataService.cs" />
     <Compile Include="Abstract\IMainRepository.cs" />
     <Compile Include="Abstract\IPlatformAccountRepository.cs" />
@@ -1100,6 +1104,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201905161007112_Mig_YamTables.resx">
       <DependentUpon>201905161007112_Mig_YamTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201905311144009_Mig_ErrorEmailSentProperty.resx">
+      <DependentUpon>201905311144009_Mig_ErrorEmailSentProperty.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

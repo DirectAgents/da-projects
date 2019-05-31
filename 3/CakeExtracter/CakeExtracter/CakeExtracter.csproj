@@ -416,6 +416,9 @@
     <Compile Include="Commands\DA\DASynchKochavaStats.cs" />
     <Compile Include="Commands\DA\DaSynchYamStats.cs" />
     <Compile Include="Commands\DA\DASynchYAMStats_Outdated.cs" />
+    <Compile Include="Common\CommandAutoStopWatcher.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Services\IJobExecutionNotificationService.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Services\JobExecutionNotificationService.cs" />
     <Compile Include="Common\StatsTypeAgg.cs" />
     <Compile Include="Commands\EOMSynchCPCCommand.cs" />
     <Compile Include="Commands\DA\DASeed.cs" />

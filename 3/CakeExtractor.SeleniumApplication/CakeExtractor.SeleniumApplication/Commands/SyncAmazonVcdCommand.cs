@@ -1,18 +1,18 @@
-﻿using System.Collections.Generic;
-using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD;
-using CakeExtractor.SeleniumApplication.Loaders.VCD;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using CakeExtracter;
 using CakeExtracter.Common;
-using CakeExtracter.Helpers;
-using CakeExtractor.SeleniumApplication.Configuration.Vcd;
-using CakeExtractor.SeleniumApplication.Configuration.Models;
-using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
-using CakeExtractor.SeleniumApplication.Synchers;
-using System;
-using CakeExtractor.SeleniumApplication.PageActions.AmazonVcd;
-using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
-using System.ComponentModel.Composition;
 using CakeExtracter.Common.JobExecutionManagement;
+using CakeExtracter.Helpers;
+using CakeExtractor.SeleniumApplication.Configuration.Models;
+using CakeExtractor.SeleniumApplication.Configuration.Vcd;
+using CakeExtractor.SeleniumApplication.Loaders.VCD;
+using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
+using CakeExtractor.SeleniumApplication.PageActions.AmazonVcd;
+using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD;
+using CakeExtractor.SeleniumApplication.Synchers;
+using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
@@ -30,13 +30,9 @@ namespace CakeExtractor.SeleniumApplication.Commands
         public SyncAmazonVcdCommand()
         {
             NoNeedToCreateRepeatRequests = true;
+            IsAutoShutDownMechanismEnabled = false; // TODO : Enable shut down mechanism when selenium job will be refactored to common job.
             IsCommand("SyncAmazonVcdCommand", "Sync VCD Stats");
             HasOption<int>("p|profileNumber=", "Profile Number", c => ProfileNumber = c);
-        }
-
-        public override void ResetProperties()
-        {
-            ProfileNumber = 0;
         }
 
         public override int Execute(string[] remainingArguments)

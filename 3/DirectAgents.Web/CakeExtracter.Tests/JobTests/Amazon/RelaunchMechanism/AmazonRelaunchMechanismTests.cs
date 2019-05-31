@@ -25,7 +25,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
 {
     [TestFixture(TestName = "Amazon relaunch mechanism tests.")]
     [Category("Jobs")]
-    [Description("Test proper behaviour of Amazon relaunch mechanism.")]
+    [Description("Test proper behavior of Amazon relaunch mechanism.")]
     public class AmazonRelaunchMechanismTests
     {
         private TestJobExecutionItemRepository executionItemRepository;
@@ -512,7 +512,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
         private void SetupCommandMockBaseMethods(Mock<DASynchAmazonStats> commandMock)
         {
             commandMock.Setup(m => m.Clone()).Returns(() => CopyCommand(commandMock.Object));
-            commandMock.Setup(m => m.ResetCommandExecutionContext())
+            commandMock.Setup(m => m.PrepareCommandExecutionContext())
                 .Callback(() => ResetCommandExecutionContext(commandMock.Object));
             commandMock.Setup(m => m.GetAccounts()).Returns(testAccounts);
             commandMock.Setup(m => m.SynchAsinAnalyticTables(It.IsAny<int>()));

@@ -1,4 +1,5 @@
 ﻿using CakeExtracter.SimpleRepositories.BaseRepositories;
+using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 
@@ -8,7 +9,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
     /// Job Execution Item Repository
     /// </summary>
     /// <seealso cref="CakeExtracter.SimpleRepositories.BaseRepositories.BaseDatabaseRepository{DirectAgents.Domain.Entities.Administration.JobExecution.JobRequestExecution, DirectAgents.Domain.Contexts.ClientPortalProgContext}" />
-    public class JobExecutionItemRepository : BaseDatabaseRepository<JobRequestExecution, ClientPortalProgContext>
+    public class JobExecutionItemRepository : BaseDatabaseRepository<JobRequestExecution, ClientPortalProgContext>, IBaseRepository<JobRequestExecution>
     {
         private static readonly object RequestLocker = new object();
 

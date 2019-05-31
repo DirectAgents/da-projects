@@ -25,7 +25,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
         /// Initializes a new instance of the <see cref="JobExecutionItemService"/> class.
         /// </summary>
         /// <param name="jobExecutionHistoryRepository">The job execution history repository.</param>
-        ///  /// <param name="jobRequestsRepository">The job requests repository.</param>
+        /// <param name="jobRequestsRepository">The job requests repository.</param>
         public JobExecutionItemService(IBaseRepository<JobRequestExecution> jobExecutionHistoryRepository, IBaseRepository<JobRequest> jobRequestsRepository)
         {
             this.jobExecutionHistoryRepository = jobExecutionHistoryRepository;
@@ -81,6 +81,15 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
             {
                 jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
             }
+        }
+
+        /// <summary>
+        /// Sets the state of the job execution item to aborted by timeout.
+        /// </summary>
+        /// <param name="currentJobRequestExecution">The current job request execution.</param>
+        public void SetJobExecutionItemAbortedByTimeoutState(JobRequestExecution currentJobRequestExecution)
+        {
+            currentJobRequestExecution.Status = JobExecutionStatus.AbortedByTimeout;
         }
 
         /// <inheritdoc />
