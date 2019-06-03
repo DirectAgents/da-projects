@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.AmazonSelenium.Helpers;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Helpers;
@@ -85,6 +86,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Utilities
             {
                 try
                 {
+                    WaitBeforeRequest(date);
                     var data = GetCampaignsSummaries(date, queryParams, parameters);
                     resultData.AddRange(data);
                 }
@@ -100,7 +102,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Utilities
         private IEnumerable<AmazonCmApiCampaignSummary> GetCampaignsSummaries(DateTime date,
             Dictionary<string, string> queryParams, AmazonCmApiParams parameters)
         {
-            LogInfo($"Retrieve campaigns info from API for {date} date.");
+            LogInfo($"Retrieve campaigns info from API for {date.ToShortDateString()} date.");
             AmazonCmApiHelper.SetCampaignApiSpecificInitParams(parameters, date, PageSize);
             var data = new List<AmazonCmApiCampaignSummary>();
             try
@@ -172,6 +174,14 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Utilities
                 var convertedData = AmazonCmApiHelper.ConvertDynamicCampaignInfoToModel(campaignData);
                 resultData.Add(convertedData);
             }
+        }
+
+        private void WaitBeforeRequest(DateTime date)
+        {
+            var timeSpan = pauseBetweenAttempts;
+            var message = $"Waiting {timeSpan} before requesting a campaign info (for {date.ToShortDateString()})";
+            LoggerHelper.LogWaiting(message, null, logInfo);
+            Thread.Sleep(timeSpan);
         }
     }
 }

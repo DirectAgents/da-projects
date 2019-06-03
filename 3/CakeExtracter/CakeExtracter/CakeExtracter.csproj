@@ -475,6 +475,7 @@
     <Compile Include="Etl\AmazonSelenium\Helpers\TimeHelper.cs" />
     <Compile Include="Etl\AmazonSelenium\PageActions\BaseAmazonPageActions.cs" />
     <Compile Include="Etl\AmazonSelenium\PageActions\BasePageActions.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Configuration\PdaConfigurationManager.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Enums\AmazonCmApiMetrics.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Enums\AmazonReportMetrics.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Exceptions\AccountDoesNotHaveProfileException.cs" />
