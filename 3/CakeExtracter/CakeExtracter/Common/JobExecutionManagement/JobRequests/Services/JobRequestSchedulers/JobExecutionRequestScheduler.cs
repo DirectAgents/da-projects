@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
@@ -17,7 +18,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
     public class JobExecutionRequestScheduler : IJobExecutionRequestScheduler
     {
         private readonly IBaseRepository<JobRequest> requestRepository;
-        private readonly Queue<CommandWithSchedule> scheduledCommands;
+        private readonly ConcurrentQueue<CommandWithSchedule> scheduledCommands;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="JobExecutionRequestScheduler"/> class.
@@ -25,7 +26,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         /// <param name="jobRequestRepository">The repository for job requests.</param>
         public JobExecutionRequestScheduler(IBaseRepository<JobRequest> jobRequestRepository)
         {
-            scheduledCommands = new Queue<CommandWithSchedule>();
+            scheduledCommands = new ConcurrentQueue<CommandWithSchedule>();
             requestRepository = jobRequestRepository;
         }
 

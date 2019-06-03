@@ -418,7 +418,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
 
         private void AssertRelaunchIsValid(List<string> expectedResult)
         {
-            Assert.AreEqual(requestRepository.ScheduledRequests.Count, expectedResult.Count);
+            Assert.AreEqual(expectedResult.Count, requestRepository.ScheduledRequests.Count);
             Assert.IsTrue(expectedResult.TrueForAll(
                 res => requestRepository.ScheduledRequests.Any(
                     x => string.Equals(x.CommandName, "DASynchAmazonStats", StringComparison.OrdinalIgnoreCase) &&
