@@ -42,7 +42,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
                     }
                     else
                     {
-                        Logger.Info("Couldn't retrieve campaign {0} from Cake (offer {1})", campaignId, offerId);
+                        Logger.Warn("Couldn't retrieve campaign {0} from Cake (offer {1})", campaignId, offerId);
                         campIds_unableToRetrieve.Add(campaignId);
                     }
                 }
