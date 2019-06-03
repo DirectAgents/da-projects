@@ -4,7 +4,7 @@ using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestLaunchers;
 
-namespace CakeExtracter.Commands
+namespace CakeExtracter.Commands.Core
 {
     /// <summary>
     /// The class represents a command that is used to run scheduled job requests.

@@ -56,6 +56,8 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <Optimize>false</Optimize>
+    <CodeAnalysisRuleSet>..\..\DirectAgents.Web\build\stylecop\StyleCopRuleSet.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <Prefer32Bit>false</Prefer32Bit>
@@ -179,9 +181,15 @@
     <Reference Include="Quartz">
       <HintPath>..\..\DirectAgents.Web\packages\Quartz.2.1.2\lib\net40\Quartz.dll</HintPath>
     </Reference>
+    <Reference Include="RazorEngine, Version=3.10.0.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <HintPath>..\..\DirectAgents.Web\packages\RazorEngine.3.10.0\lib\net45\RazorEngine.dll</HintPath>
+    </Reference>
     <Reference Include="RestSharp, Version=106.3.1.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
       <HintPath>..\..\DirectAgents.Web\packages\RestSharp.106.3.1\lib\net452\RestSharp.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="SendGrid, Version=9.11.0.0, Culture=neutral, PublicKeyToken=4f047e93159395ca, processorArchitecture=MSIL">
+      <HintPath>..\..\DirectAgents.Web\packages\Sendgrid.9.11.0\lib\net452\SendGrid.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Private>True</Private>
@@ -302,6 +310,9 @@
     <Reference Include="System.Web.Extensions">
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\DirectAgents.Web\packages\Microsoft.AspNet.Razor.3.0.0\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Services">
       <Private>True</Private>
     </Reference>
@@ -416,7 +427,11 @@
     <Compile Include="Commands\DA\DASynchKochavaStats.cs" />
     <Compile Include="Commands\DA\DaSynchYamStats.cs" />
     <Compile Include="Commands\DA\DASynchYAMStats_Outdated.cs" />
+    <Compile Include="Commands\Core\FailedJobsNotifierCommand.cs" />
     <Compile Include="Common\CommandAutoStopWatcher.cs" />
+    <Compile Include="Common\Email\EmailNotificationsService.cs" />
+    <Compile Include="Common\Email\IEmailNotificationsService.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Models\FailedJobNotificationModel.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Services\IJobExecutionNotificationService.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Services\JobExecutionNotificationService.cs" />
     <Compile Include="Common\StatsTypeAgg.cs" />
@@ -424,7 +439,7 @@
     <Compile Include="Commands\DA\DASeed.cs" />
     <Compile Include="Commands\DA\DASynchAdrollAds.cs" />
     <Compile Include="Commands\RT\RTSynchTest.cs" />
-    <Compile Include="Commands\ScheduledRequestsLauncherCommand.cs" />
+    <Compile Include="Commands\Core\ScheduledRequestsLauncherCommand.cs" />
     <Compile Include="Commands\Search\CopySearchDailySummariesCommand.cs" />
     <Compile Include="Commands\Search\SynchSearchDailySummariesAppleCommand.cs" />
     <Compile Include="Commands\Test\TestABCommand.cs" />
@@ -645,7 +660,6 @@
     <Compile Include="Commands\Test\TestExcelCommand.cs" />
     <Compile Include="Commands\Test\TestLCCommand.cs" />
     <Compile Include="Common\CopyPropertiesUtility.cs" />
-    <Compile Include="Common\EmailUtility.cs" />
     <Compile Include="Common\EntityFrameworkExtensions.cs" />
     <Compile Include="Common\LinqExtensions.cs" />
     <Compile Include="Common\LogElapsedTime.cs" />
