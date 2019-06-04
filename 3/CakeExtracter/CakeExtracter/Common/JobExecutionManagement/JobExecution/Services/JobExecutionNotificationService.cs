@@ -92,8 +92,6 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
             };
         }
 
-       
-
         private void MarkFailedJobsAsProcessed(List<JobRequestExecution> jobs)
         {
             jobs.ForEach(job =>
