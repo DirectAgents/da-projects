@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
@@ -8,7 +9,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.TestImplementations
 {
     public class TestJobRequestRepository : IBaseRepository<JobRequest>
     {
-        public List<JobRequest> ScheduledRequests = new List<JobRequest>();
+        public ConcurrentBag<JobRequest> ScheduledRequests = new ConcurrentBag<JobRequest>();
 
         public string EntityName { get; }
 
@@ -38,7 +39,10 @@ namespace CakeExtracter.Tests.JobTests.Amazon.TestImplementations
 
         public void AddItems(IEnumerable<JobRequest> items)
         {
-            ScheduledRequests.AddRange(items);
+            foreach (var jobRequest in items)
+            {
+                ScheduledRequests.Add(jobRequest);
+            }
         }
 
         public void UpdateItem(JobRequest itemToUpdate)

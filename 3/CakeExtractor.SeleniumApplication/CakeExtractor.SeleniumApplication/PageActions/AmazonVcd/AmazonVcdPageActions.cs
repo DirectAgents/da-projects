@@ -79,7 +79,9 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonVcd
         {
             try
             {
-                ClickElement(AmazonVcdPageObjects.AccountsDropdownButton);
+                WaitElementClickable(AmazonVcdPageObjects.AccountsDropdownButton, timeout);
+                MoveToElementAndClick(AmazonVcdPageObjects.AccountsDropdownButton);
+                WaitElementClickable(AmazonVcdPageObjects.AccountsDropdownItem, timeout);
                 var accountItems = Driver.FindElements(AmazonVcdPageObjects.AccountsDropdownItem);
                 var accountItem = accountItems.FirstOrDefault(x => x.Text == TypeOfAccounts + account.Name);
                 accountItem.Click();
