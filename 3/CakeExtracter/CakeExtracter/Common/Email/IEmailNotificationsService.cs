@@ -12,7 +12,8 @@
         /// <param name="to">To emails array.</param>
         /// <param name="copy">The copy emails array.</param>
         /// <param name="model">The notification model.</param>
-        /// <param name="templateName">Name of the email template.</param>
-        void SendEmail<T>(string[] to, string[] copy, T model, string templateName);
+        /// <param name="bodyTemplateName">Name of the body template.</param>
+        /// <param name="subjectTemplateName">Name of the subject template.</param>
+        void SendEmail<T>(string[] to, string[] copy, T model, string bodyTemplateName, string subjectTemplateName);
     }
 }

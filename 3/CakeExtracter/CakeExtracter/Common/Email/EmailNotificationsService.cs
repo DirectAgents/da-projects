@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Configuration;
+using System.Linq;
+using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
+using RazorEngine;
+using RazorEngine.Templating;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
@@ -18,19 +22,30 @@ namespace CakeExtracter.Common.Email
         /// <param name="to">To emails array.</param>
         /// <param name="copy">The copy emails array.</param>
         /// <param name="model">The notification model.</param>
-        /// <param name="templateName">Name of the email template.</param>
-        public void SendEmail<T>(string[] to, string[] copy, T model, string templateName)
+        /// <param name="bodyTemplateName">Name of the body template.</param>
+        /// <param name="subjectTemplateName">Name of the subject template.</param>
+        public void SendEmail<T>(string[] to, string[] copy, T model, string bodyTemplateName, string subjectTemplateName)
         {
             var client = GetAuthenticatedSendGridClient();
+            var body = PrepareEmailTextContent(model, bodyTemplateName);
+            var subject = PrepareEmailTextContent(model, subjectTemplateName);
             var msg = new SendGridMessage()
             {
-                From = new EmailAddress("test@example.com", "DX Team"),
-                Subject = "Hello World from the SendGrid CSharp SDK!",
-                PlainTextContent = "Hello, Email!",
-                HtmlContent = "<strong>Hello, Email!</strong>"
+                From = new EmailAddress(GetEmailFromAddress()),
+                Subject = subject,
+                HtmlContent = body,
             };
-            msg.AddTo(new EmailAddress("o.harko@itransition.com", "Test User"));
+            to.Select(email => new EmailAddress(email)).ForEach(emailAddress => msg.AddTo(emailAddress));
+            copy.Select(email => new EmailAddress(email)).ForEach(emailAddress => msg.AddCc(emailAddress));
             var response = client.SendEmailAsync(msg).Result;
+        }
+
+        private string PrepareEmailTextContent<T>(T model, string templateName)
+        {
+            var templateRelativePath = $"\\Email\\{templateName}.html";
+            var templateFileContent = FileUtils.GetFileContentByRelativePath(templateRelativePath);
+            var result = Engine.Razor.RunCompile(templateFileContent, templateName, null, model);
+            return result;
         }
 
         private SendGridClient GetAuthenticatedSendGridClient()
@@ -42,6 +57,17 @@ namespace CakeExtracter.Common.Email
                 throw new ApplicationException("Send Grid Api Key should be defined in the configuration.");
             }
             return new SendGridClient(apiKey);
+        }
+
+        private string GetEmailFromAddress()
+        {
+            const string fromEmailConfigKey = "JEM_Failure_FromEmail";
+            var fromEmail = ConfigurationManager.AppSettings[fromEmailConfigKey];
+            if (string.IsNullOrEmpty(fromEmail))
+            {
+                throw new ApplicationException("From email should be defined in the configuration.");
+            }
+            return fromEmail;
         }
     }
 }

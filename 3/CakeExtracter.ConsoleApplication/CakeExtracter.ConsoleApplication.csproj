@@ -201,7 +201,9 @@
     <Content Include="Email\JobFailedBody.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Email\JobFailedSubject.html" />
+    <Content Include="Email\JobFailedSubject.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="SQL\AMS\CreateAsinAnalyticTable.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
+using CakeExtracter.Commands.Core;
 using CakeExtracter.Common.Email;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Models;
+using CakeExtracter.Common.JobExecutionManagement.JobExecution.Utils;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 
@@ -33,42 +36,58 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
         /// </summary>
         public void NotifyAboutFailedJobs()
         {
-            var jobsToNotify = GetExecutionItemsForErrorNotifying();
-            NotifyAboutFailedJobs(jobsToNotify);
-            MarkFailedJobsAsProcessed(jobsToNotify);
+            try
+            {
+                var jobsToNotify = GetExecutionItemsForErrorNotifying();
+                if (jobsToNotify?.Count > 0)
+                {
+                    NotifyAboutFailedJobs(jobsToNotify);
+                    MarkFailedJobsAsProcessed(jobsToNotify);
+                    CommandExecutionContext.Current.SetJobExecutionStateInHistory($"Sent {jobsToNotify.Count} failed jobs notifications.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
         }
 
         private List<JobRequestExecution> GetExecutionItemsForErrorNotifying()
         {
-            return jobRequestExecutionRepository.GetItems(item => item.ErrorEmailSent == false && item.Errors != null);
+            return jobRequestExecutionRepository.GetItemsWithIncludes(
+                    item => item.ErrorEmailSent == false &&
+                    item.Errors != null &&
+                    item.JobRequest.CommandName != FailedJobsNotifierCommand.CommandName, "JobRequest");
         }
 
         private void NotifyAboutFailedJobs(List<JobRequestExecution> jobsToNotify)
         {
             const string toEmailsConfigurationKey = "JEM_Failure_ToEmails";
-            const string copyEmailsConfigurationKey = "JEM_Failure_CopyEmails";
-
+            const string copyEmailsConfigurationKey = "JEM_Failure_CcEmails";
             var toEmails = GetEmailsFromConfig(toEmailsConfigurationKey);
             var copyEmails = GetEmailsFromConfig(copyEmailsConfigurationKey);
-
             jobsToNotify.ForEach(job =>
             {
-                SendFaildJobNotification(job, toEmails, copyEmails);
+                SendFailedJobNotification(job, toEmails, copyEmails);
             });
         }
 
-        private void SendFaildJobNotification(JobRequestExecution jobToNotify,string[] toEmails, string[] copyEmails)
+        private void SendFailedJobNotification(JobRequestExecution jobToNotify, string[] toEmails, string[] copyEmails)
         {
-            var notificationModel = PrepareFailedJobNotificationModel(jobToNotify);
-            const string notificationTemplateName = "JobFailed";
-            emailNotificationsService.SendEmail<FailedJobNotificationModel>(toEmails, copyEmails, notificationModel, notificationTemplateName);
+            var model = PrepareFailedJobNotificationModel(jobToNotify);
+            const string bodyTemplateName = "JobFailedBody";
+            const string subjectTemplateName = "JobFailedSubject";
+            emailNotificationsService.SendEmail(toEmails, copyEmails, model, bodyTemplateName, subjectTemplateName);
         }
 
         private FailedJobNotificationModel PrepareFailedJobNotificationModel(JobRequestExecution jobToNotify)
         {
             return new FailedJobNotificationModel
             {
-                Errors = jobToNotify.Errors,
+                JobRequest = jobToNotify.JobRequest,
+                JobRequestExecution = jobToNotify,
+                ExecutionStartTime = jobToNotify.StartTime?.ToLocalTime().ToString(),
+                Errors = ExecutionLoggingUtils.GetJobExecutionLogDataFromMessageText(jobToNotify.Errors),
             };
         }
 

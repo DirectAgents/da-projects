@@ -431,6 +431,7 @@
     <Compile Include="Common\CommandAutoStopWatcher.cs" />
     <Compile Include="Common\Email\EmailNotificationsService.cs" />
     <Compile Include="Common\Email\IEmailNotificationsService.cs" />
+    <Compile Include="Common\FileUtils.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Models\FailedJobNotificationModel.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Services\IJobExecutionNotificationService.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Services\JobExecutionNotificationService.cs" />
@@ -681,7 +682,6 @@
     <Compile Include="Common\DateRange.cs" />
     <Compile Include="Commands\SynchDailySummariesCommand.cs" />
     <Compile Include="Commands\Search\SynchSearchDailySummariesXmlCommand.cs" />
-    <Compile Include="Common\SqlUtility.cs" />
     <Compile Include="Common\XmlExtensions.cs" />
     <Compile Include="DataWarehouse.cs" />
     <Compile Include="Bootstrappers\EnterpriseLibraryBootstrapper.cs" />

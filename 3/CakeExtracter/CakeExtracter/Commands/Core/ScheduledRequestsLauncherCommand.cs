@@ -10,21 +10,21 @@ namespace CakeExtracter.Commands.Core
     /// The class represents a command that is used to run scheduled job requests.
     /// </summary>
     [Export(typeof(ConsoleCommand))]
-    internal class ScheduledRequestsLauncherCommand : ConsoleCommand
+    public class ScheduledRequestsLauncherCommand : ConsoleCommand
     {
-        /// <inheritdoc />
         /// <summary>
+        /// The command name.
+        /// </summary>
+        public const string CommandName = "ScheduledRequestsLauncherCommand";
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ScheduledRequestsLauncherCommand"/> class.
         /// The constructor sets a command name and command arguments names, provides a description for them.
         /// </summary>
         public ScheduledRequestsLauncherCommand()
         {
             NoNeedToCreateRepeatRequests = true;
-            IsCommand("ScheduledRequestsLauncherCommand", "Runs Job Requests that have been scheduled");
-        }
-
-        /// <inheritdoc />
-        public override void ResetProperties()
-        {
+            IsCommand(CommandName, "Runs Job Requests that have been scheduled");
         }
 
         /// <inheritdoc />
