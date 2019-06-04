@@ -5,8 +5,12 @@ using CakeExtracter.Common;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
 using CakeExtracter.Etl;
+using CakeExtracter.Etl.AmazonSelenium.PDA.Configuration;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Extractors;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Extractors.RequestExtractors;
+using CakeExtracter.Etl.AmazonSelenium.PDA.Helpers;
+using CakeExtracter.Etl.AmazonSelenium.PDA.Models.CommonHelperModels;
+using CakeExtracter.Etl.AmazonSelenium.PDA.PageActions;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
 using CakeExtracter.Helpers;
@@ -65,12 +69,6 @@ namespace CakeExtracter.Commands.Selenium
         /// </summary>
         public bool FromDatabase { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether to enable extracting stats
-        /// via requests to the Portal backend (default = false).
-        /// </summary>
-        public bool FromRequests { get; set; }
-
         /// <inheritdoc cref="ConsoleCommand"/>/>
         /// <summary>
         /// Initializes a new instance of the <see cref="SyncAmazonPdaCommand" /> class.
@@ -87,7 +85,6 @@ namespace CakeExtracter.Commands.Selenium
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
             HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
             HasOption<bool>("f|fromDatabase=", "To enable extracting stats of the Daily level from the Strategy level (default = false)", c => FromDatabase = c);
-            HasOption<bool>("r|fromRequest=", "To enable extracting stats via requests to the Portal backend (default = false)", c => FromRequests = c);
         }
 
         /// <inheritdoc />
@@ -103,7 +100,6 @@ namespace CakeExtracter.Commands.Selenium
             StatsType = null;
             DisabledOnly = false;
             FromDatabase = false;
-            FromRequests = false;
         }
 
         /// <inheritdoc />
@@ -116,10 +112,10 @@ namespace CakeExtracter.Commands.Selenium
         /// <returns>Execution code.</returns>
         public override int Execute(string[] remainingArguments)
         {
-            if (!AmazonPdaExtractor.IsInitialised)
-            {
-                AmazonPdaExtractor.PrepareExtractor();
-            }
+            var authorizationModel = InitializeAuthorizationModel();
+            var pageActions = InitializePageActions();
+            PdaLoginHelper.LoginToPortal(authorizationModel, pageActions);
+
             RunEtl();
             return 0;
         }
@@ -129,13 +125,31 @@ namespace CakeExtracter.Commands.Selenium
             var statsType = new StatsTypeAgg(StatsType);
             var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info("Amazon ETL (PDA Campaigns). DateRange: {0}.", dateRange);
-            AmazonPdaExtractor.SetAvailableProfileUrls();
             var accounts = GetAccounts();
             foreach (var account in accounts)
             {
                 DoEtls(account, dateRange, statsType);
             }
             Logger.Info("Amazon ETL (PDA Campaigns) has been finished.");
+        }
+
+        private AuthorizationModel InitializeAuthorizationModel()
+        {
+            var cookieDirName = PdaConfigurationHelper.GetCookiesDirectoryName();
+            var authorizationModel = new AuthorizationModel
+            {
+                Login = PdaConfigurationHelper.GetEMail(),
+                Password = PdaConfigurationHelper.GetEMailPassword(),
+                CookiesDir = cookieDirName,
+            };
+            return authorizationModel;
+        }
+
+        private AmazonPdaPageActions InitializePageActions()
+        {
+            var timeoutInMinutes = PdaConfigurationHelper.GetWaitPageTimeout();
+            var pageActions = new AmazonPdaPageActions(timeoutInMinutes);
+            return pageActions;
         }
 
         private void DoEtls(ExtAccount account, DateRange dateRange, StatsTypeAgg statsType)
@@ -145,26 +159,12 @@ namespace CakeExtracter.Commands.Selenium
             {
                 if (statsType.Daily && !FromDatabase)
                 {
-                    if (FromRequests)
-                    {
-                        DoEtlDailyFromRequests(account, dateRange);
-                    }
-                    else
-                    {
-                        DoEtlDaily(account, dateRange);
-                    }
+                    DoEtlDailyFromRequests(account, dateRange);
                 }
 
                 if (statsType.Strategy)
                 {
-                    if (FromRequests)
-                    {
-                        DoEtlStrategyFromRequests(account, dateRange);
-                    }
-                    else
-                    {
-                        DoEtlStrategy(account, dateRange);
-                    }
+                    DoEtlStrategyFromRequests(account, dateRange);
                 }
 
                 if (statsType.Daily && FromDatabase)
@@ -180,47 +180,25 @@ namespace CakeExtracter.Commands.Selenium
             Logger.Info(account.Id, "Finished ETL for Amazon account ({0}) {1}", account.Id, account.Name);
         }
 
-        private static void DoEtlDaily(ExtAccount account, DateRange dateRange)
-        {
-            var extractor = new AmazonPdaDailyExtractor(account, dateRange);
-            var loader = new AmazonPdaDailySummaryLoader(account.Id);
-            StartEtl(extractor, loader);
-        }
-
         private static void DoEtlDailyFromRequests(ExtAccount account, DateRange dateRange)
         {
             var extractor = new AmazonPdaDailyRequestExtractor(account, dateRange);
             var loader = new AmazonPdaDailySummaryLoader(account.Id);
-            StartEtl(extractor, loader);
+            CommandHelper.DoEtl(extractor, loader);
         }
 
         private static void DoEtlDailyFromStrategyInDatabase(ExtAccount account, DateRange dateRange)
         {
             var extractor = new DatabaseStrategyToDailySummaryExtractor(dateRange, account.Id);
             var loader = new AmazonDailySummaryLoader(account.Id);
-            StartEtl(extractor, loader);
-        }
-
-        private static void DoEtlStrategy(ExtAccount account, DateRange dateRange)
-        {
-            var extractor = new AmazonPdaCampaignExtractor(account, dateRange);
-            var loader = new AmazonCampaignSummaryLoader(account.Id);
-            StartEtl(extractor, loader);
+            CommandHelper.DoEtl(extractor, loader);
         }
 
         private static void DoEtlStrategyFromRequests(ExtAccount account, DateRange dateRange)
         {
             var extractor = new AmazonPdaCampaignRequestExtractor(account, dateRange);
             var loader = new AmazonCampaignSummaryLoader(account.Id);
-            StartEtl(extractor, loader);
-        }
-
-        private static void StartEtl<T>(Extracter<T> extractor, Loader<T> loader)
-        {
-            var extractorThread = extractor.Start();
-            var loaderThread = loader.Start(extractor);
-            extractorThread.Join();
-            loaderThread.Join();
+            CommandHelper.DoEtl(extractor, loader);
         }
 
         private IEnumerable<ExtAccount> GetAccounts()

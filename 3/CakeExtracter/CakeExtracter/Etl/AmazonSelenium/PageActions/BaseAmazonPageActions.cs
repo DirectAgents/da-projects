@@ -6,7 +6,8 @@ namespace CakeExtracter.Etl.AmazonSelenium.PageActions
 {
     public class BaseAmazonPageActions : BasePageActions
     {
-        public BaseAmazonPageActions(IWebDriver driver, int timeoutMinutes) : base(driver, timeoutMinutes)
+        public BaseAmazonPageActions(IWebDriver driver, int timeoutMinutes)
+            : base(driver, timeoutMinutes)
         {
         }
 
@@ -46,7 +47,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.PageActions
             LoginWithPassword(password);
         }
 
-        public void LoginWithPassword(string password)
+        private void LoginWithPassword(string password)
         {
             EnterPassword(password);
             ClickElement(AmazonPdaPageObjects.RememberMeCheckBox);

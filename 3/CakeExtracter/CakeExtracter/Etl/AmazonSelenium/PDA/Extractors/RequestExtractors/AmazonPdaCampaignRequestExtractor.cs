@@ -4,7 +4,6 @@ using System.Linq;
 using Amazon.Enums;
 using Amazon.Helpers;
 using CakeExtracter.Common;
-using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Enums;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Exceptions;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Models.ConsoleManagerUtilityModels;
@@ -14,18 +13,16 @@ using CakeExtracter.Helpers;
 
 namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors.RequestExtractors
 {
-    internal class AmazonPdaCampaignRequestExtractor : BaseAmazonExtractor<StrategySummary>
+    internal class AmazonPdaCampaignRequestExtractor : AmazonPdaExtractor<StrategySummary>
     {
-        public readonly AmazonPdaExtractor PdaExtractor;
-
         private readonly string[] campaignTypesFromApi =
         {
             AmazonApiHelper.GetCampaignTypeName(CampaignType.ProductDisplay)
         };
 
-        public AmazonPdaCampaignRequestExtractor(ExtAccount account, DateRange dateRange) : base(null, dateRange, account)
+        public AmazonPdaCampaignRequestExtractor(ExtAccount account, DateRange dateRange)
+            : base(account, dateRange)
         {
-            PdaExtractor = new AmazonPdaExtractor(account);
         }
 
         protected override void Extract()
@@ -52,7 +49,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors.RequestExtractors
 
         private IEnumerable<AmazonCmApiCampaignSummary> ExtractSummaries()
         {
-            var sums = PdaExtractor.ExtractCampaignApiFullSummaries(dateRange);
+            var sums = ExtractCampaignApiFullSummaries();
             var filteredSums = FilterByCampaigns(sums, x => x.Name);
             return filteredSums;
         }

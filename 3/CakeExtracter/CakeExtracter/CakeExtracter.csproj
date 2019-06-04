@@ -475,17 +475,16 @@
     <Compile Include="Etl\AmazonSelenium\Helpers\TimeHelper.cs" />
     <Compile Include="Etl\AmazonSelenium\PageActions\BaseAmazonPageActions.cs" />
     <Compile Include="Etl\AmazonSelenium\PageActions\BasePageActions.cs" />
-    <Compile Include="Etl\AmazonSelenium\PDA\Configuration\PdaConfigurationManager.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Configuration\PdaConfigurationHelper.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Enums\AmazonCmApiMetrics.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Enums\AmazonReportMetrics.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Exceptions\AccountDoesNotHaveProfileException.cs" />
-    <Compile Include="Etl\AmazonSelenium\PDA\Extractors\AmazonPdaCampaignExtractor.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Extractors\CsvExtractors\AmazonReportCsvExtractor.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Extractors\RequestExtractors\AmazonPdaCampaignRequestExtractor.cs" />
-    <Compile Include="Etl\AmazonSelenium\PDA\Extractors\AmazonPdaDailyExtractor.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Extractors\RequestExtractors\AmazonPdaDailyRequestExtractor.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Extractors\AmazonPdaExtractor.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Helpers\AmazonCmApiHelper.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Helpers\PdaLoginHelper.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Models\CampaignInfo.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Models\CommonHelperModels\AuthorizationModel.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Models\ConsoleManagerUtilityModels\AmazonCmApiCampaignSummary.cs" />
@@ -496,6 +495,7 @@
     <Compile Include="Etl\AmazonSelenium\PDA\PageActions\AmazonPdaPageActions.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\PageActions\AmazonPdaPageObjects.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Utilities\AmazonConsoleManagerUtility.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Utilities\PdaDataProvider.cs" />
     <Compile Include="Etl\Apple\Exceptions\AppleFailedEtlException.cs" />
     <Compile Include="Etl\Amazon\Exceptions\FailedStatsLoadingException.cs" />
     <Compile Include="Etl\CakeMarketing\DALoaders\DAAffiliatesLoader.cs" />

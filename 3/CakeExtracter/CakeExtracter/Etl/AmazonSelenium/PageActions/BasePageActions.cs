@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
@@ -32,20 +31,6 @@ namespace CakeExtracter.Etl.AmazonSelenium.PageActions
             NavigateToUrl(url, waitingElement, timeout);
         }
 
-        public void NavigateToUrl(string url, By waitingElement, TimeSpan timeout)
-        {
-            try
-            {
-                var navigation = Driver.Navigate();
-                navigation.GoToUrl(url);
-                WaitElementClickable(waitingElement, timeout);
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"Could not navigate to URL [{url}]: {e.Message}", e);
-            }
-        }
-
         public void NavigateToUrl(string url)
         {
             try
@@ -59,12 +44,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.PageActions
             }
         }
 
-        public string GetCurrentWindowUrl()
-        {
-            return Driver.Url;
-        }
-
-        public void SendKeys(By byElement, string keys)
+        protected void SendKeys(By byElement, string keys)
         {
             try
             {
@@ -89,38 +69,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.PageActions
             }
         }
 
-        public bool IsElementVisible(By byElement)
-        {
-            try
-            {
-                var element = Driver.FindElement(byElement);
-                return element.Displayed;
-            }
-            catch (NoSuchElementException exc)
-            {
-                return false;
-            }
-        }
-
-        public bool IsElementEnabledAndDisplayed(By byElement)
-        {
-            try
-            {
-                var element = Driver.FindElement(byElement);
-                return element.Displayed && element.Enabled;
-            }
-            catch (NoSuchElementException exc)
-            {
-                return false;
-            }
-        }
-
-        public bool IsElementClickable(By byElement)
-        {
-            return IsElementEnabledAndDisplayed(byElement);
-        }
-
-        public System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> GetChildrenElements(By parentElem,
+        protected System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> GetChildrenElements(By parentElem,
             By childElem)
         {
             try
@@ -135,7 +84,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.PageActions
             }
         }
 
-        public IWebElement GetChildElement(IWebElement parentElem, By childElem)
+        protected IWebElement GetChildElement(IWebElement parentElem, By childElem)
         {
             try
             {
@@ -144,20 +93,6 @@ namespace CakeExtracter.Etl.AmazonSelenium.PageActions
             catch (Exception)
             {
                 return null;
-            }
-        }
-
-        public IList<IWebElement> GetTableRows(By tableElem)
-        {
-            try
-            {
-                var tableElement = Driver.FindElement(tableElem);
-                var byElement = By.TagName("tr");
-                return tableElement.FindElements(byElement);
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"Could not get table rows [{tableElem}]: {e.Message}", e);
             }
         }
 
@@ -243,20 +178,54 @@ namespace CakeExtracter.Etl.AmazonSelenium.PageActions
             }
         }
 
-        protected void Wait(TimeSpan timeoutThread)
-        {
-            Thread.Sleep(timeoutThread);
-        }
-
-        protected void ClickOnTabItem(By listElement, By itemElement)
-        {
-            WaitElementClickable(itemElement, timeout);
-            Driver.FindElement(listElement).FindElement(itemElement).Click();
-        }
-
         private void CloseWebDriver()
         {
             Driver.Quit();
+        }
+
+        private void NavigateToUrl(string url, By waitingElement, TimeSpan timeout)
+        {
+            try
+            {
+                var navigation = Driver.Navigate();
+                navigation.GoToUrl(url);
+                WaitElementClickable(waitingElement, timeout);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Could not navigate to URL [{url}]: {e.Message}", e);
+            }
+        }
+
+        private bool IsElementVisible(By byElement)
+        {
+            try
+            {
+                var element = Driver.FindElement(byElement);
+                return element.Displayed;
+            }
+            catch (NoSuchElementException exc)
+            {
+                return false;
+            }
+        }
+
+        private bool IsElementClickable(By byElement)
+        {
+            return IsElementEnabledAndDisplayed(byElement);
+        }
+
+        private bool IsElementEnabledAndDisplayed(By byElement)
+        {
+            try
+            {
+                var element = Driver.FindElement(byElement);
+                return element.Displayed && element.Enabled;
+            }
+            catch (NoSuchElementException exc)
+            {
+                return false;
+            }
         }
     }
 }

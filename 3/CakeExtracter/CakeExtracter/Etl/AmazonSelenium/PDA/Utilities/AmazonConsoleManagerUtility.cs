@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
+using System.Web;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.AmazonSelenium.Helpers;
+using CakeExtracter.Etl.AmazonSelenium.PDA.Exceptions;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Helpers;
+using CakeExtracter.Etl.AmazonSelenium.PDA.Models.CommonHelperModels;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Models.ConsoleManagerUtilityModels;
+using CakeExtracter.Etl.AmazonSelenium.PDA.PageActions;
 using Polly;
 using RestSharp;
 using Cookie = OpenQA.Selenium.Cookie;
@@ -24,7 +28,12 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Utilities
         private readonly int maxRetryAttempts;
         private readonly TimeSpan pauseBetweenAttempts;
 
+        private AmazonPdaPageActions pageActions;
+        private AuthorizationModel authorizationModel;
+
         public AmazonConsoleManagerUtility(
+            AmazonPdaPageActions pageActions,
+            AuthorizationModel authorizationModel,
             IEnumerable<Cookie> cookies,
             int maxRetryAttempts,
             TimeSpan pauseBetweenAttempts,
@@ -32,6 +41,8 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Utilities
             Action<string> logError,
             Action<string> logWarning)
         {
+            this.pageActions = pageActions;
+            this.authorizationModel = authorizationModel;
             var simpleCookies = cookies.ToDictionary(x => x.Name, x => x.Value);
             this.cookies = simpleCookies;
             this.maxRetryAttempts = maxRetryAttempts;
@@ -41,12 +52,43 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Utilities
             this.logWarning = logWarning;
         }
 
-        public IEnumerable<AmazonCmApiCampaignSummary> GetPdaCampaignsSummaries(string accountEntityId, DateRange dateRange)
+        public IEnumerable<AmazonCmApiCampaignSummary> GetPdaCampaignsSummaries(DateRange dateRange, string accountName)
         {
+            var accountEntityId = GetCurrentProfileEntityId(accountName);
             var queryParams = AmazonCmApiHelper.GetCampaignsApiQueryParams(accountEntityId);
             var parameters = AmazonCmApiHelper.GetBasePdaCampaignsApiParams(true);
             var resultData = GetCampaignsSummaries(dateRange, queryParams, parameters);
             return resultData;
+        }
+
+        private string GetCurrentProfileEntityId(string accountName)
+        {
+            var profileUrl = GetAvailableProfileUrl(accountName);
+            var accountEntityId = GetProfileEntityId(profileUrl);
+            return accountEntityId;
+        }
+
+        private string GetAvailableProfileUrl(string profileName)
+        {
+            var name = profileName.Trim();
+            var availableProfileUrls = PdaLoginHelper.GetAvailableProfileUrls(authorizationModel, pageActions);
+            var availableProfileUrl = availableProfileUrls.FirstOrDefault(x =>
+                string.Equals(x.Key, name, StringComparison.OrdinalIgnoreCase));
+            var url = availableProfileUrl.Value;
+            if (string.IsNullOrEmpty(url))
+            {
+                // The current account does not have the following profile
+                throw new AccountDoesNotHaveProfileException(authorizationModel.Login, profileName);
+            }
+            return url;
+        }
+
+        private string GetProfileEntityId(string url)
+        {
+            var uri = new Uri(url);
+            var queryParams = HttpUtility.ParseQueryString(uri.Query);
+            var entityId = queryParams.Get(AmazonCmApiHelper.EntityIdArgName);
+            return entityId;
         }
 
         private static void Log(string message, Action<string> logAction)

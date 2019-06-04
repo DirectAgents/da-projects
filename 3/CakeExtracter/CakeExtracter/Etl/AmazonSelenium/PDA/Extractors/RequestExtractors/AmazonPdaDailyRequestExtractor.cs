@@ -3,21 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using DirectAgents.Domain.Entities.CPProg;
 using CakeExtracter.Common;
-using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Exceptions;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Models.ConsoleManagerUtilityModels;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Enums;
 
 namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors.RequestExtractors
 {
-    internal class AmazonPdaDailyRequestExtractor : BaseAmazonExtractor<DailySummary>
+    internal class AmazonPdaDailyRequestExtractor : AmazonPdaExtractor<DailySummary>
     {
-        public readonly AmazonPdaExtractor PdaExtractor;
-
-        public AmazonPdaDailyRequestExtractor(ExtAccount account, DateRange dateRange) 
-            : base(null, dateRange, account)
+        public AmazonPdaDailyRequestExtractor(ExtAccount account, DateRange dateRange)
+            : base(account, dateRange)
         {
-            PdaExtractor = new AmazonPdaExtractor(account);
         }
 
         protected override void Extract()
@@ -40,7 +36,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors.RequestExtractors
 
         private IEnumerable<AmazonCmApiCampaignSummary> ExtractSummaries()
         {
-            var sums = PdaExtractor.ExtractCampaignApiFullSummaries(dateRange);
+            var sums = ExtractCampaignApiFullSummaries();
             var filteredSums = FilterByCampaigns(sums, x => x.Name);
             return filteredSums;
         }
