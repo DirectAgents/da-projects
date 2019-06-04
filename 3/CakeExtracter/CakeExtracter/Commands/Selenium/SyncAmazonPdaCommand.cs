@@ -25,36 +25,55 @@ namespace CakeExtracter.Commands.Selenium
         private const int DefaultDaysAgo = 41;
 
         /// <summary>
-        /// Command argument: Account ID in the database for which the command will be executed (default = all)
+        /// Gets or sets the command argument: Account ID in the database
+        /// for which the command will be executed (default = all).
         /// </summary>
         public int? AccountId { get; set; }
 
         /// <summary>
-        /// Command argument: Start date from which statistics will be extracted (default is 'daysAgo')
+        /// Gets or sets the command argument: Start date
+        /// from which statistics will be extracted (default is 'daysAgo').
         /// </summary>
         public DateTime? StartDate { get; set; }
 
         /// <summary>
-        /// Command argument: End date to which statistics will be extracted (default is yesterday)
+        /// Gets or sets the command argument: End date
+        /// to which statistics will be extracted (default is yesterday).
         /// </summary>
         public DateTime? EndDate { get; set; }
 
         /// <summary>
-        /// Command argument: The number of days ago to calculate the start date from which statistics will be retrieved,
-        /// used if StartDate not specified (default = 31)
+        /// Gets or sets the command argument: The number of days ago to calculate the start date
+        /// from which statistics will be retrieved, used if StartDate not specified (default = 31).
         /// </summary>
         public int? DaysAgoToStart { get; set; }
 
+        /// <summary>
+        /// Gets or sets the command argument: Type of statistics will be extracted (default = all).
+        /// </summary>
         public string StatsType { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to enable extracting stats
+        /// for only disabled accounts (default = false).
+        /// </summary>
         public bool DisabledOnly { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to enable extracting stats of the Daily level
+        /// from the Strategy level (default = false).
+        /// </summary>
         public bool FromDatabase { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to enable extracting stats
+        /// via requests to the Portal backend (default = false).
+        /// </summary>
         public bool FromRequests { get; set; }
 
+        /// <inheritdoc cref="ConsoleCommand"/>/>
         /// <summary>
-        /// Initializes a new instance of the <see cref="SyncAmazonPdaCommand"/> class.
+        /// Initializes a new instance of the <see cref="SyncAmazonPdaCommand" /> class.
         /// </summary>
         public SyncAmazonPdaCommand()
         {
@@ -67,8 +86,8 @@ namespace CakeExtracter.Commands.Selenium
             HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default = {DefaultDaysAgo})", c => DaysAgoToStart = c);
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
             HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
-            HasOption<bool>("f|fromDatabase=", "??? maybe to remove ???", c => FromDatabase = c);
-            HasOption<bool>("r|fromRequest=", "??? maybe to remove ???", c => FromRequests = c);
+            HasOption<bool>("f|fromDatabase=", "To enable extracting stats of the Daily level from the Strategy level (default = false)", c => FromDatabase = c);
+            HasOption<bool>("r|fromRequest=", "To enable extracting stats via requests to the Portal backend (default = false)", c => FromRequests = c);
         }
 
         /// <inheritdoc />
@@ -87,6 +106,14 @@ namespace CakeExtracter.Commands.Selenium
             FromRequests = false;
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// The method runs the current command and extract and save statistics
+        /// of Product Display Ads type from the Amazon Advertising Portal
+        /// based on the command arguments.
+        /// </summary>
+        /// <param name="remainingArguments"></param>
+        /// <returns>Execution code.</returns>
         public override int Execute(string[] remainingArguments)
         {
             if (!AmazonPdaExtractor.IsInitialised)
