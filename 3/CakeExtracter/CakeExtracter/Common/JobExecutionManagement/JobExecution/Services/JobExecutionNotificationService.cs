@@ -5,6 +5,7 @@ using CakeExtracter.Commands.Core;
 using CakeExtracter.Common.Email;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Models;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Utils;
+using CakeExtracter.Helpers;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 
@@ -64,8 +65,8 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
         {
             const string toEmailsConfigurationKey = "JEM_Failure_ToEmails";
             const string copyEmailsConfigurationKey = "JEM_Failure_CcEmails";
-            var toEmails = GetEmailsFromConfig(toEmailsConfigurationKey);
-            var copyEmails = GetEmailsFromConfig(copyEmailsConfigurationKey);
+            var toEmails = ConfigurationHelper.ExtractEnumerableFromConfig(toEmailsConfigurationKey).ToArray();
+            var copyEmails = ConfigurationHelper.ExtractEnumerableFromConfig(copyEmailsConfigurationKey).ToArray();
             jobsToNotify.ForEach(job =>
             {
                 SendFailedJobNotification(job, toEmails, copyEmails);
@@ -91,15 +92,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
             };
         }
 
-        private string[] GetEmailsFromConfig(string configurationKey)
-        {
-            var emailsConfigValue = ConfigurationManager.AppSettings[configurationKey];
-            if (!string.IsNullOrEmpty(emailsConfigValue))
-            {
-                return emailsConfigValue.Split(';');
-            }
-            return new string[0];
-        }
+       
 
         private void MarkFailedJobsAsProcessed(List<JobRequestExecution> jobs)
         {
