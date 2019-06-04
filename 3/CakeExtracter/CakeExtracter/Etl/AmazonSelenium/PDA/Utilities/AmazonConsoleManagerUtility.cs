@@ -41,14 +41,6 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Utilities
             this.logWarning = logWarning;
         }
 
-        public IEnumerable<AmazonCmApiCampaignSummary> GetPdaCampaignsTruncatedSummaries(string accountEntityId, DateRange dateRange)
-        {
-            var queryParams = AmazonCmApiHelper.GetCampaignsApiQueryParams(accountEntityId);
-            var parameters = AmazonCmApiHelper.GetBasePdaCampaignsApiParams(false);
-            var resultData = GetCampaignsSummaries(dateRange, queryParams, parameters);
-            return resultData;
-        }
-
         public IEnumerable<AmazonCmApiCampaignSummary> GetPdaCampaignsSummaries(string accountEntityId, DateRange dateRange)
         {
             var queryParams = AmazonCmApiHelper.GetCampaignsApiQueryParams(accountEntityId);
