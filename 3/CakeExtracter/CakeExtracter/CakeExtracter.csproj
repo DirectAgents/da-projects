@@ -323,12 +323,6 @@
       <HintPath>..\..\DirectAgents.Web\packages\WatiN.2.1.0\lib\net40\WatiN.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="WebDriver, Version=3.141.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\DirectAgents.Web\packages\Selenium.WebDriver.3.141.0\lib\net45\WebDriver.dll</HintPath>
-    </Reference>
-    <Reference Include="WebDriver.Support, Version=3.141.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\DirectAgents.Web\packages\Selenium.Support.3.141.0\lib\net45\WebDriver.Support.dll</HintPath>
-    </Reference>
     <Reference Include="Z.EntityFramework.Extensions, Version=3.16.23.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
       <HintPath>..\..\DirectAgents.Web\packages\Z.EntityFramework.Extensions.3.16.23\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
     </Reference>
@@ -467,35 +461,13 @@
     <Compile Include="Common\SqlScriptsExecutor.cs" />
     <Compile Include="Common\StorageCollection.cs" />
     <Compile Include="Common\TextUtils.cs" />
-    <Compile Include="Etl\AmazonSelenium\Drivers\ChromeWebDriver.cs" />
-    <Compile Include="Etl\AmazonSelenium\Helpers\CookieManager.cs" />
-    <Compile Include="Etl\AmazonSelenium\Helpers\FileManager.cs" />
-    <Compile Include="Etl\AmazonSelenium\Helpers\LoggerHelper.cs" />
-    <Compile Include="Etl\AmazonSelenium\Helpers\RestRequestHelper.cs" />
-    <Compile Include="Etl\AmazonSelenium\Helpers\TimeHelper.cs" />
-    <Compile Include="Etl\AmazonSelenium\PageActions\BaseAmazonPageActions.cs" />
-    <Compile Include="Etl\AmazonSelenium\PageActions\BasePageActions.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Configuration\PdaConfigurationHelper.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Enums\AmazonCmApiMetrics.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Enums\AmazonReportMetrics.cs" />
-    <Compile Include="Etl\AmazonSelenium\PDA\Exceptions\AccountDoesNotHaveProfileException.cs" />
-    <Compile Include="Etl\AmazonSelenium\PDA\Extractors\CsvExtractors\AmazonReportCsvExtractor.cs" />
-    <Compile Include="Etl\AmazonSelenium\PDA\Extractors\RequestExtractors\AmazonPdaCampaignRequestExtractor.cs" />
-    <Compile Include="Etl\AmazonSelenium\PDA\Extractors\RequestExtractors\AmazonPdaDailyRequestExtractor.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Extractors\AmazonPdaCampaignRequestExtractor.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Extractors\AmazonPdaDailyRequestExtractor.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Extractors\AmazonPdaExtractor.cs" />
-    <Compile Include="Etl\AmazonSelenium\PDA\Helpers\AmazonCmApiHelper.cs" />
-    <Compile Include="Etl\AmazonSelenium\PDA\Helpers\PdaLoginHelper.cs" />
-    <Compile Include="Etl\AmazonSelenium\PDA\Models\CampaignInfo.cs" />
-    <Compile Include="Etl\AmazonSelenium\PDA\Models\CommonHelperModels\AuthorizationModel.cs" />
-    <Compile Include="Etl\AmazonSelenium\PDA\Models\ConsoleManagerUtilityModels\AmazonCmApiCampaignSummary.cs" />
-    <Compile Include="Etl\AmazonSelenium\PDA\Models\ConsoleManagerUtilityModels\AmazonCmApiParams.cs" />
-    <Compile Include="Etl\AmazonSelenium\PDA\Models\ConsoleManagerUtilityModels\Filter.cs" />
-    <Compile Include="Etl\AmazonSelenium\PDA\Models\ReportModels\AmazonReportColumnMapping.cs" />
-    <Compile Include="Etl\AmazonSelenium\PDA\Models\ReportModels\AmazonReportSummary.cs" />
-    <Compile Include="Etl\AmazonSelenium\PDA\PageActions\AmazonPdaPageActions.cs" />
-    <Compile Include="Etl\AmazonSelenium\PDA\PageActions\AmazonPdaPageObjects.cs" />
-    <Compile Include="Etl\AmazonSelenium\PDA\Utilities\AmazonConsoleManagerUtility.cs" />
-    <Compile Include="Etl\AmazonSelenium\PDA\Utilities\PdaDataProvider.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Models\AmazonPdaCampaignSummary.cs" />
     <Compile Include="Etl\Apple\Exceptions\AppleFailedEtlException.cs" />
     <Compile Include="Etl\Amazon\Exceptions\FailedStatsLoadingException.cs" />
     <Compile Include="Etl\CakeMarketing\DALoaders\DAAffiliatesLoader.cs" />
@@ -974,6 +946,10 @@
       <Project>{0038b6b4-357a-4721-99bc-7659ad00dd3a}</Project>
       <Name>CommissionJunction</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\DirectAgents.Web\SeleniumDataBrowser\SeleniumDataBrowser.csproj">
+      <Project>{09800c2e-2d96-495b-9f32-b461b38d015b}</Project>
+      <Name>SeleniumDataBrowser</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
@@ -987,11 +963,4 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\..\DirectAgents.Web\packages\Selenium.Chrome.WebDriver.2.43\build\Selenium.Chrome.WebDriver.targets" Condition="Exists('..\..\DirectAgents.Web\packages\Selenium.Chrome.WebDriver.2.43\build\Selenium.Chrome.WebDriver.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\DirectAgents.Web\packages\Selenium.Chrome.WebDriver.2.43\build\Selenium.Chrome.WebDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\DirectAgents.Web\packages\Selenium.Chrome.WebDriver.2.43\build\Selenium.Chrome.WebDriver.targets'))" />
-  </Target>
 </Project>

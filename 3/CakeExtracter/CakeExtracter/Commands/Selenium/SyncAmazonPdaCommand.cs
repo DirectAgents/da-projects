@@ -4,16 +4,14 @@ using System.ComponentModel.Composition;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
-using CakeExtracter.Etl;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Configuration;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Extractors;
-using CakeExtracter.Etl.AmazonSelenium.PDA.Extractors.RequestExtractors;
-using CakeExtracter.Etl.AmazonSelenium.PDA.Helpers;
-using CakeExtracter.Etl.AmazonSelenium.PDA.Models.CommonHelperModels;
-using CakeExtracter.Etl.AmazonSelenium.PDA.PageActions;
+using SeleniumDataBrowser.PDA;
+using SeleniumDataBrowser.PDA.Models;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
 using CakeExtracter.Helpers;
+using SeleniumDataBrowser.PDA.Helpers;
 using Platform = DirectAgents.Domain.Entities.CPProg.Platform;
 
 namespace CakeExtracter.Commands.Selenium
@@ -112,9 +110,9 @@ namespace CakeExtracter.Commands.Selenium
         /// <returns>Execution code.</returns>
         public override int Execute(string[] remainingArguments)
         {
-            var authorizationModel = InitializeAuthorizationModel();
-            var pageActions = InitializePageActions();
-            PdaLoginHelper.LoginToPortal(authorizationModel, pageActions);
+            PdaLoginHelper.authorizationModel = InitializeAuthorizationModel();
+            var loginHelper = new PdaLoginHelper();
+            loginHelper.LoginToPortal();
 
             RunEtl();
             return 0;
@@ -145,16 +143,20 @@ namespace CakeExtracter.Commands.Selenium
             return authorizationModel;
         }
 
-        private AmazonPdaPageActions InitializePageActions()
-        {
-            var timeoutInMinutes = PdaConfigurationHelper.GetWaitPageTimeout();
-            var pageActions = new AmazonPdaPageActions(timeoutInMinutes);
-            return pageActions;
-        }
-
         private void DoEtls(ExtAccount account, DateRange dateRange, StatsTypeAgg statsType)
         {
             Logger.Info(account.Id, "Commencing ETL for Amazon account ({0}) {1}", account.Id, account.Name);
+
+            var amazonPdaUtility = new AmazonConsoleManagerUtility();
+
+            /*            pdaDataProvider = new PdaDataProvider(
+                account.Name,
+                x => Logger.Info(account.Id, x),
+                x => Logger.Error(account.Id, new Exception(x)),
+                x => Logger.Warn(account.Id, x));*/
+
+
+
             try
             {
                 if (statsType.Daily && !FromDatabase)
