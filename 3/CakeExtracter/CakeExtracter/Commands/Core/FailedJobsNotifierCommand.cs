@@ -3,6 +3,7 @@ using CakeExtracter.Common;
 using CakeExtracter.Common.Email;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
 
 namespace CakeExtracter.Commands.Core
 {
@@ -38,6 +39,7 @@ namespace CakeExtracter.Commands.Core
         {
             IJobExecutionNotificationService jobExecutionNotificationService = new JobExecutionNotificationService(
                 new JobExecutionItemRepository(),
+                new JobRequestRepository(),
                 new EmailNotificationsService());
             jobExecutionNotificationService.NotifyAboutFailedJobs();
             return 0;

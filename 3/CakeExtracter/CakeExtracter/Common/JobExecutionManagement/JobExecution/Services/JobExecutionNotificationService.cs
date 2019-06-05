@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using CakeExtracter.Commands.Core;
 using CakeExtracter.Common.Email;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Models;
@@ -19,32 +18,42 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
     {
         private readonly IBaseRepository<JobRequestExecution> jobRequestExecutionRepository;
 
+        private readonly IBaseRepository<JobRequest> jobRequestsRepository;
+
         private readonly IEmailNotificationsService emailNotificationsService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="JobExecutionNotificationService"/> class.
         /// </summary>
-        /// <param name="jobRequestExecutionRepository">Job Requests Execution Repository.</param>
-        /// <param name="emailNotificationsService">Email Notification Service.</param>
-        public JobExecutionNotificationService(IBaseRepository<JobRequestExecution> jobRequestExecutionRepository, IEmailNotificationsService emailNotificationsService)
+        /// <param name="jobRequestExecutionRepository">Job requests execution repository.</param>
+        /// <param name="emailNotificationsService">Email notification service.</param>
+        /// <param name="jobRequestsRepository">Job requests repository.</param>
+        public JobExecutionNotificationService(
+                IBaseRepository<JobRequestExecution> jobRequestExecutionRepository,
+                IBaseRepository<JobRequest> jobRequestsRepository,
+                IEmailNotificationsService emailNotificationsService)
         {
             this.jobRequestExecutionRepository = jobRequestExecutionRepository;
             this.emailNotificationsService = emailNotificationsService;
+            this.jobRequestsRepository = jobRequestsRepository;
         }
 
-        /// <summary>
-        /// Notifies about failed jobs.
-        /// </summary>
+        /// <inheritdoc />
         public void NotifyAboutFailedJobs()
+        {
+        }
+
+        /// <inheritdoc />
+        public void NotifyAboutErrorsInJobExecution()
         {
             try
             {
-                var jobsToNotify = GetExecutionItemsForErrorNotifying();
-                if (jobsToNotify?.Count > 0)
+                var jobExecutionItemsToNotify = GetExecutionItemsForErrorNotifying();
+                if (jobExecutionItemsToNotify?.Count > 0)
                 {
-                    NotifyAboutFailedJobs(jobsToNotify);
-                    MarkFailedJobsAsProcessed(jobsToNotify);
-                    CommandExecutionContext.Current.SetJobExecutionStateInHistory($"Sent {jobsToNotify.Count} failed jobs notifications.");
+                    NotifyAboutErrorsInJobExecutionItems(jobExecutionItemsToNotify);
+                    MarkJobExecutionItemsAsEmailSent(jobExecutionItemsToNotify);
+                    CommandExecutionContext.Current.SetJobExecutionStateInHistory($"Sent {jobExecutionItemsToNotify.Count} execution items with errors notifications.");
                 }
             }
             catch (Exception ex)
@@ -61,7 +70,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
                     item.JobRequest.CommandName != FailedJobsNotifierCommand.CommandName, "JobRequest");
         }
 
-        private void NotifyAboutFailedJobs(List<JobRequestExecution> jobsToNotify)
+        private void NotifyAboutErrorsInJobExecutionItems(List<JobRequestExecution> jobsToNotify)
         {
             const string toEmailsConfigurationKey = "JEM_Failure_ToEmails";
             const string copyEmailsConfigurationKey = "JEM_Failure_CcEmails";
@@ -92,7 +101,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
             };
         }
 
-        private void MarkFailedJobsAsProcessed(List<JobRequestExecution> jobs)
+        private void MarkJobExecutionItemsAsEmailSent(List<JobRequestExecution> jobs)
         {
             jobs.ForEach(job =>
             {
