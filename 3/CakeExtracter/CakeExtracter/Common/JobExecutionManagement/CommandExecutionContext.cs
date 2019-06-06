@@ -1,8 +1,6 @@
-﻿using CakeExtracter.Common.JobExecutionManagement.JobExecution;
-using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers;
+﻿using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers.Interfaces;
+using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 
 namespace CakeExtracter.Common.JobExecutionManagement
@@ -30,13 +28,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         /// <value>
         /// The name of the currently running command.
         /// </value>
-        public string CommandName
-        {
-            get
-            {
-                return currentCommand.Command;
-            }
-        }
+        public string CommandName => currentCommand.Command;
 
         private readonly IJobExecutionItemService jobExecutionItemService;
         private readonly IJobExecutionRequestScheduler jobExecutionRequestScheduler;
@@ -47,20 +39,8 @@ namespace CakeExtracter.Common.JobExecutionManagement
 
         private CommandExecutionContext(ConsoleCommand command)
         {
-            var executionItemRepository = new JobExecutionItemRepository();
-            var requestRepository = new JobRequestRepository();
-            jobExecutionItemService = new JobExecutionItemService(executionItemRepository, requestRepository);
-            jobExecutionRequestScheduler = new JobExecutionRequestScheduler(requestRepository);
-            InitCurrentJobRequest(command);
-        }
-
-        private CommandExecutionContext(
-            ConsoleCommand command,
-            IJobExecutionItemService jobExecutionItemService,
-            IJobExecutionRequestScheduler jobExecutionRequestScheduler)
-        {
-            this.jobExecutionItemService = jobExecutionItemService;
-            this.jobExecutionRequestScheduler = jobExecutionRequestScheduler;
+            jobExecutionItemService = DIKernel.Get<IJobExecutionItemService>();
+            jobExecutionRequestScheduler = DIKernel.Get<IJobExecutionRequestScheduler>();
             InitCurrentJobRequest(command);
         }
 
@@ -71,20 +51,6 @@ namespace CakeExtracter.Common.JobExecutionManagement
         public static void ResetContext(ConsoleCommand command)
         {
             Current = new CommandExecutionContext(command);
-        }
-
-        /// <summary>
-        /// Resets the context.
-        /// </summary>
-        /// <param name="command">The command.</param>
-        /// <param name="jobExecutionItemService">The job execution item service.</param>
-        /// <param name="jobExecutionRequestScheduler">The job execution request scheduler.</param>
-        public static void ResetContext(
-            ConsoleCommand command,
-            IJobExecutionItemService jobExecutionItemService,
-            IJobExecutionRequestScheduler jobExecutionRequestScheduler)
-        {
-            Current = new CommandExecutionContext(command, jobExecutionItemService, jobExecutionRequestScheduler);
         }
 
         /// <summary>
