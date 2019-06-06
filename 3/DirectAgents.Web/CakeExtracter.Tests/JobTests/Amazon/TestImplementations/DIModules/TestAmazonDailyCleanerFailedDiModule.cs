@@ -8,8 +8,13 @@ using Moq;
 
 namespace CakeExtracter.Tests.JobTests.Amazon.TestImplementations.DIModules
 {
-    class TestAmazonDailyCleanerFailedDiModule : TestAmazonDependencyInjectionModule
+    /// <inheritdoc />
+    /// <summary>
+    /// DI module for loading bindings for amazon tests where there is an exception in daily cleaner.
+    /// </summary>
+    internal class TestAmazonDailyCleanerFailedDiModule : TestAmazonDependencyInjectionModule
     {
+        /// <inheritdoc />
         protected override void SetupDailyExtractor(Mock<AmazonDatabaseKeywordsToDailySummaryExtracter> extractorMock)
         {
             extractorMock.Setup(m => m.RemoveOldData(It.IsAny<DateRange>())).Throws<Exception>().Verifiable();

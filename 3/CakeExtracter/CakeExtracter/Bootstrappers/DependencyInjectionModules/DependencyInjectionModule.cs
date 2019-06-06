@@ -14,8 +14,16 @@ using Ninject.Modules;
 
 namespace CakeExtracter.Bootstrappers
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// DI module for loading app bindings.
+    /// </summary>
     internal class DependencyInjectionModule : NinjectModule
     {
+        /// <inheritdoc />
+        /// <summary>
+        /// Loads bindings for specified services.
+        /// </summary>
         public override void Load()
         {
             BindExtractors();

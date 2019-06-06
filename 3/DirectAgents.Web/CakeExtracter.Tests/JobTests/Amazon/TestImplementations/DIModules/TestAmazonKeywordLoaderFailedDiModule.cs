@@ -7,8 +7,13 @@ using Moq;
 
 namespace CakeExtracter.Tests.JobTests.Amazon.TestImplementations.DIModules
 {
-    class TestAmazonKeywordLoaderFailedDiModule : TestAmazonDependencyInjectionModule
+    /// <inheritdoc />
+    /// <summary>
+    /// DI module for loading bindings for amazon tests where there is an exception in keyword loader.
+    /// </summary>
+    internal class TestAmazonKeywordLoaderFailedDiModule : TestAmazonDependencyInjectionModule
     {
+        /// <inheritdoc />
         protected override void SetupKeywordLoader(Mock<AmazonKeywordSummaryLoader> loaderMock)
         {
             loaderMock.Setup(m => m.LoadItems(It.IsAny<List<KeywordSummary>>())).Throws<Exception>().Verifiable();

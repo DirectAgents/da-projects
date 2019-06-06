@@ -19,7 +19,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
     /// <summary>
     /// Keyword data extractor for amazon job.
     /// </summary>
-    /// <seealso cref="CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.BaseAmazonExtractor{DirectAgents.Domain.Entities.CPProg.KeywordSummary}" />
+    /// <seealso cref="AmazonExtractors.BaseAmazonExtractor{KeywordSummary}" />
     public class AmazonApiKeywordExtractor : BaseAmazonExtractor<KeywordSummary>
     {
         private readonly AmazonCampaignMetadataExtractor campaignMetadataExtractor;

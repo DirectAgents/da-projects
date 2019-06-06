@@ -7,8 +7,13 @@ using Moq;
 
 namespace CakeExtracter.Tests.JobTests.Amazon.TestImplementations.DIModules
 {
-    class TestAmazonDailyLoaderFailedDiModule : TestAmazonDependencyInjectionModule
+    /// <inheritdoc />
+    /// <summary>
+    /// DI module for loading bindings for amazon tests where there is an exception in daily loader.
+    /// </summary>
+    internal class TestAmazonDailyLoaderFailedDiModule : TestAmazonDependencyInjectionModule
     {
+        /// <inheritdoc />
         protected override void SetupDailyLoader(Mock<AmazonDailySummaryLoader> loaderMock)
         {
             loaderMock.Setup(m => m.LoadItems(It.IsAny<List<DailySummary>>())).Throws<Exception>().Verifiable();

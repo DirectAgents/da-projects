@@ -10,7 +10,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
     /// <summary>
     /// Summary loader for amazon Account level.
     /// </summary>
-    /// <seealso cref="CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders.BaseAmazonLevelLoader{DirectAgents.Domain.Entities.CPProg.DailySummary, DirectAgents.Domain.Entities.CPProg.DailySummaryMetric}" />
+    /// <seealso cref="BaseAmazonLevelLoader{DailySummary, DailySummaryMetric}" />
     public class AmazonDailySummaryLoader : BaseAmazonLevelLoader<DailySummary,DailySummaryMetric>
     {
         private readonly TDDailySummaryLoader summaryItemsLoader;
@@ -19,7 +19,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
         /// Initializes a new instance of the <see cref="AmazonDailySummaryLoader"/> class.
         /// </summary>
         /// <param name="accountId">The account identifier.</param>
-        public AmazonDailySummaryLoader(int accountId) 
+        public AmazonDailySummaryLoader(int accountId)
             : base(accountId)
         {
             summaryItemsLoader = new TDDailySummaryLoader(accountId);

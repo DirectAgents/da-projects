@@ -16,8 +16,16 @@ using Ninject.Modules;
 
 namespace CakeExtracter.Tests.JobTests.Amazon.TestImplementations.DIModules.Base
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// DI module for loading amazon test bindings.
+    /// </summary>
     internal class TestAmazonDependencyInjectionModule : NinjectModule
     {
+        /// <inheritdoc />
+        /// <summary>
+        /// Loads bindings for specified services.
+        /// </summary>
         public override void Load()
         {
             BindExtractors();
@@ -26,32 +34,56 @@ namespace CakeExtracter.Tests.JobTests.Amazon.TestImplementations.DIModules.Base
             BindRepositories();
         }
 
+        /// <summary>
+        /// Specifies a setup on the mocked amazon daily extractor.
+        /// </summary>
+        /// <param name="extractorMock">Mock implementation of amazon daily extractor.</param>
         protected virtual void SetupDailyExtractor(Mock<AmazonDatabaseKeywordsToDailySummaryExtracter> extractorMock)
         {
             extractorMock.Setup(m => m.RemoveOldData(It.IsAny<DateRange>())).Verifiable();
             extractorMock.Setup(m => m.GetDailySummaryDataFromDataBase()).Returns(new List<DailySummary> { new DailySummary() }).Verifiable();
         }
 
+        /// <summary>
+        /// Specifies a setup on the mocked amazon ad extractor.
+        /// </summary>
+        /// <param name="extractorMock">Mock implementation of amazon ad extractor.</param>
         protected virtual void SetupAdExtractor(Mock<AmazonApiAdExtrator> extractorMock)
         {
             extractorMock.Setup(m => m.RemoveOldData(It.IsAny<DateTime>())).Verifiable();
         }
 
+        /// <summary>
+        /// Specifies a setup on the mocked amazon keyword extractor.
+        /// </summary>
+        /// <param name="extractorMock">Mock implementation of amazon keyword extractor.</param>
         protected virtual void SetupKeywordExtractor(Mock<AmazonApiKeywordExtractor> extractorMock)
         {
             extractorMock.Setup(m => m.RemoveOldData(It.IsAny<DateTime>())).Verifiable();
         }
 
+        /// <summary>
+        /// Specifies a setup on the mocked amazon daily loader.
+        /// </summary>
+        /// <param name="extractorMock">Mock implementation of amazon daily loader.</param>
         protected virtual void SetupDailyLoader(Mock<AmazonDailySummaryLoader> loaderMock)
         {
             loaderMock.Setup(m => m.LoadItems(It.IsAny<List<DailySummary>>())).Verifiable();
         }
 
+        /// <summary>
+        /// Specifies a setup on the mocked amazon ad loader.
+        /// </summary>
+        /// <param name="extractorMock">Mock implementation of amazon ad loader.</param>
         protected virtual void SetupAdLoader(Mock<AmazonAdSummaryLoader> loaderMock)
         {
             loaderMock.Setup(m => m.LoadItems(It.IsAny<List<TDadSummary>>())).Verifiable();
         }
 
+        /// <summary>
+        /// Specifies a setup on the mocked amazon keyword loader.
+        /// </summary>
+        /// <param name="extractorMock">Mock implementation of amazon keyword loader.</param>
         protected virtual void SetupKeywordLoader(Mock<AmazonKeywordSummaryLoader> loaderMock)
         {
             loaderMock.Setup(m => m.LoadItems(It.IsAny<List<KeywordSummary>>())).Verifiable();
