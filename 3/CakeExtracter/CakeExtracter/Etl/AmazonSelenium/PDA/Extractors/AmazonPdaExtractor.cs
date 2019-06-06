@@ -16,17 +16,17 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
     internal abstract class AmazonPdaExtractor<T> : BaseAmazonExtractor<T>
         where T : DatedStatsSummary
     {
-        private readonly PdaDataProvider pdaDataProvider;
+        private readonly AmazonConsoleManagerUtility amazonPdaUtility;
 
-        protected AmazonPdaExtractor(ExtAccount account, DateRange dateRange, PdaDataProvider pdaDataProvider)
+        protected AmazonPdaExtractor(ExtAccount account, DateRange dateRange, AmazonConsoleManagerUtility amazonPdaUtility)
         : base(null, dateRange, account)
         {
-            this.pdaDataProvider = pdaDataProvider;
+            this.amazonPdaUtility = amazonPdaUtility;
         }
 
-        public IEnumerable<AmazonPdaCampaignSummary> ExtractCampaignApiFullSummaries()
+        public IEnumerable<AmazonPdaCampaignSummary> ExtractPdaCampaignSummaries()
         {
-            var apiCampaignSummaries = pdaDataProvider.GetCampaignApiFullSummaries(dateRange.Dates);
+            var apiCampaignSummaries = amazonPdaUtility.GetPdaCampaignsSummaries(dateRange.Dates);
             AssignCampaignType(apiCampaignSummaries);
             var items = TransformSummaries(apiCampaignSummaries);
             return items;

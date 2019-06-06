@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PageActions\BaseAmazonPageObjects.cs" />
     <Compile Include="PDA\AmazonConsoleManagerUtility.cs" />
     <Compile Include="Drivers\ChromeWebDriver.cs" />
     <Compile Include="Helpers\CookieManager.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="PDA\Exceptions\AccountDoesNotHaveProfileException.cs" />
     <Compile Include="PDA\Helpers\AmazonCmApiHelper.cs" />
     <Compile Include="PDA\Helpers\PdaLoginHelper.cs" />
+    <Compile Include="PDA\Helpers\PdaProfileUrlManager.cs" />
     <Compile Include="PDA\Models\AuthorizationModel.cs" />
     <Compile Include="PDA\Models\ConsoleManagerUtilityModels\AmazonCmApiCampaignSummary.cs" />
     <Compile Include="PDA\Models\ConsoleManagerUtilityModels\AmazonCmApiParams.cs" />

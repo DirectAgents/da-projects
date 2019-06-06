@@ -32,7 +32,6 @@ namespace SeleniumDataBrowser.Helpers
                     return;
                 }
                 Directory.CreateDirectory(path);
-                Logger.Info("Create the directory [{0}]", path);
             }
             catch (Exception e)
             {

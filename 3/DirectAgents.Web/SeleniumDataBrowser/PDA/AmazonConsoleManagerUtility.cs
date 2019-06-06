@@ -12,7 +12,6 @@ using SeleniumDataBrowser.PDA.PageActions;
 using SeleniumDataBrowser.PDA.Exceptions;
 using Polly;
 using RestSharp;
-using Cookie = OpenQA.Selenium.Cookie;
 
 namespace SeleniumDataBrowser.PDA
 {
@@ -20,21 +19,22 @@ namespace SeleniumDataBrowser.PDA
     {
         private const int PageSize = 100;
 
+        public static Dictionary<string, string> AvailableProfileUrls;
+
         private readonly string accountName;
+        private readonly AuthorizationModel authorizationModel;
+        private readonly AmazonPdaPageActions pageAction;
         private readonly Dictionary<string, string> cookies;
         private readonly Action<string> logInfo;
         private readonly Action<string> logError;
         private readonly Action<string> logWarning;
         private readonly int maxRetryAttempts;
         private readonly TimeSpan pauseBetweenAttempts;
-        private readonly PdaLoginHelper loginHelper;
-
-        private AmazonPdaPageActions pageActions;
 
         public AmazonConsoleManagerUtility(
             string accountName,
-            PdaLoginHelper loginHelper,
-            int timeoutInMinutes,
+            AuthorizationModel authorizationModel,
+            AmazonPdaPageActions pageAction,
             int maxRetryAttempts,
             TimeSpan pauseBetweenAttempts,
             Action<string> logInfo,
@@ -42,15 +42,16 @@ namespace SeleniumDataBrowser.PDA
             Action<string> logWarning)
         {
             this.accountName = accountName;
-            this.loginHelper = loginHelper;
+            this.authorizationModel = authorizationModel;
+            this.pageAction = pageAction;
             this.maxRetryAttempts = maxRetryAttempts;
             this.pauseBetweenAttempts = pauseBetweenAttempts;
+
             this.logInfo = logInfo;
             this.logError = logError;
             this.logWarning = logWarning;
 
-            this.pageActions = new AmazonPdaPageActions(timeoutInMinutes, logInfo, logError, logWarning);
-            var simpleCookies = pageActions.GetAllCookies();
+            var simpleCookies = this.pageAction.GetAllCookies();
             this.cookies = simpleCookies.ToDictionary(x => x.Name, x => x.Value);
         }
 
@@ -73,14 +74,13 @@ namespace SeleniumDataBrowser.PDA
         private string GetAvailableProfileUrl(string profileName)
         {
             var name = profileName.Trim();
-            var availableProfileUrls = loginHelper.GetAvailableProfileUrls();
-            var availableProfileUrl = availableProfileUrls.FirstOrDefault(x =>
+            var availableProfileUrl = AvailableProfileUrls.FirstOrDefault(x =>
                 string.Equals(x.Key, name, StringComparison.OrdinalIgnoreCase));
             var url = availableProfileUrl.Value;
             if (string.IsNullOrEmpty(url))
             {
                 // The current account does not have the following profile
-                throw new AccountDoesNotHaveProfileException(loginHelper.authorizationModel.Login, profileName);
+                throw new AccountDoesNotHaveProfileException(authorizationModel.Login, profileName);
             }
             return url;
         }

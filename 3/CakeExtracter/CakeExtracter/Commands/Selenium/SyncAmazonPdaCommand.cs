@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using CakeExtracter.Common;
-using DirectAgents.Domain.Concrete;
-using DirectAgents.Domain.Entities.CPProg;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Configuration;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Extractors;
-using SeleniumDataBrowser.PDA;
-using SeleniumDataBrowser.PDA.Models;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
 using CakeExtracter.Helpers;
+using DirectAgents.Domain.Concrete;
+using DirectAgents.Domain.Entities.CPProg;
+using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
+using SeleniumDataBrowser.PageActions;
+using SeleniumDataBrowser.PDA;
 using SeleniumDataBrowser.PDA.Helpers;
+using SeleniumDataBrowser.PDA.Models;
+using SeleniumDataBrowser.PDA.PageActions;
 using Platform = DirectAgents.Domain.Entities.CPProg.Platform;
 
 namespace CakeExtracter.Commands.Selenium
@@ -67,6 +70,9 @@ namespace CakeExtracter.Commands.Selenium
         /// </summary>
         public bool FromDatabase { get; set; }
 
+        private AuthorizationModel authorizationModel;
+        private AmazonPdaPageActions pageActionsManager;
+
         /// <inheritdoc cref="ConsoleCommand"/>/>
         /// <summary>
         /// Initializes a new instance of the <see cref="SyncAmazonPdaCommand" /> class.
@@ -110,12 +116,39 @@ namespace CakeExtracter.Commands.Selenium
         /// <returns>Execution code.</returns>
         public override int Execute(string[] remainingArguments)
         {
-            PdaLoginHelper.authorizationModel = InitializeAuthorizationModel();
-            var loginHelper = new PdaLoginHelper();
-            loginHelper.LoginToPortal();
+            PreparationForWork();
 
             RunEtl();
+
             return 0;
+        }
+
+        private void PreparationForWork()
+        {
+            InitializeAuthorizationModel();
+            InitializePageActionsManager();
+
+            LoginToPortal();
+            SetAvailableProfileUrls();
+        }
+
+        private void LoginToPortal()
+        {
+            var loginManager = new PdaLoginHelper(
+                authorizationModel,
+                pageActionsManager,
+                x => Logger.Info(x),
+                x => Logger.Warn(x));
+            loginManager.LoginToPortal();
+        }
+
+        private void SetAvailableProfileUrls()
+        {
+            var availableProfileUrls = PdaProfileUrlManager.GetAvailableProfileUrls(authorizationModel, pageActionsManager);
+            Logger.Info("The following profiles were found for the current account:");
+            availableProfileUrls.ForEach(x => Logger.Info($"{x.Key} - {x.Value}"));
+
+            AmazonConsoleManagerUtility.AvailableProfileUrls = availableProfileUrls;
         }
 
         private void RunEtl()
@@ -131,42 +164,62 @@ namespace CakeExtracter.Commands.Selenium
             Logger.Info("Amazon ETL (PDA Campaigns) has been finished.");
         }
 
-        private AuthorizationModel InitializeAuthorizationModel()
+        private void InitializeAuthorizationModel()
         {
-            var cookieDirName = PdaConfigurationHelper.GetCookiesDirectoryName();
-            var authorizationModel = new AuthorizationModel
+            var cookieDirectoryName = PdaConfigurationHelper.GetCookiesDirectoryName();
+
+            authorizationModel = GetConfigurableAuthModel(cookieDirectoryName);
+        }
+
+        private AuthorizationModel GetConfigurableAuthModel(string cookieDirectoryName)
+        {
+            return new AuthorizationModel
             {
                 Login = PdaConfigurationHelper.GetEMail(),
                 Password = PdaConfigurationHelper.GetEMailPassword(),
-                CookiesDir = cookieDirName,
+                CookiesDir = cookieDirectoryName,
             };
-            return authorizationModel;
+        }
+
+        private void InitializePageActionsManager()
+        {
+            SetLogActionsForPageActionsManager();
+
+            var timeoutInMinutes = PdaConfigurationHelper.GetWaitPageTimeout();
+            pageActionsManager = new AmazonPdaPageActions(timeoutInMinutes);
+        }
+
+        private void SetLogActionsForPageActionsManager(ExtAccount account = null)
+        {
+            if (account == null)
+            {
+                BasePageActions.LogInfo = x => Logger.Info(x);
+                BasePageActions.LogError = x => Logger.Error(new Exception(x));
+                BasePageActions.LogWarning = x => Logger.Warn(x);
+            }
+            else
+            {
+                BasePageActions.LogInfo = x => Logger.Info(account.Id, x);
+                BasePageActions.LogError = x => Logger.Error(account.Id, new Exception(x));
+                BasePageActions.LogWarning = x => Logger.Warn(account.Id, x);
+            }
         }
 
         private void DoEtls(ExtAccount account, DateRange dateRange, StatsTypeAgg statsType)
         {
             Logger.Info(account.Id, "Commencing ETL for Amazon account ({0}) {1}", account.Id, account.Name);
 
-            var amazonPdaUtility = new AmazonConsoleManagerUtility();
-
-            /*            pdaDataProvider = new PdaDataProvider(
-                account.Name,
-                x => Logger.Info(account.Id, x),
-                x => Logger.Error(account.Id, new Exception(x)),
-                x => Logger.Warn(account.Id, x));*/
-
-
-
+            var amazonPdaUtility = CreateAmazonPdaUtility(account);
             try
             {
                 if (statsType.Daily && !FromDatabase)
                 {
-                    DoEtlDailyFromRequests(account, dateRange);
+                    DoEtlDailyFromRequests(account, dateRange, amazonPdaUtility);
                 }
 
                 if (statsType.Strategy)
                 {
-                    DoEtlStrategyFromRequests(account, dateRange);
+                    DoEtlStrategyFromRequests(account, dateRange, amazonPdaUtility);
                 }
 
                 if (statsType.Daily && FromDatabase)
@@ -182,9 +235,25 @@ namespace CakeExtracter.Commands.Selenium
             Logger.Info(account.Id, "Finished ETL for Amazon account ({0}) {1}", account.Id, account.Name);
         }
 
-        private static void DoEtlDailyFromRequests(ExtAccount account, DateRange dateRange)
+        private AmazonConsoleManagerUtility CreateAmazonPdaUtility(ExtAccount account)
         {
-            var extractor = new AmazonPdaDailyRequestExtractor(account, dateRange);
+            SetLogActionsForPageActionsManager(account);
+            var amazonPdaUtility = new AmazonConsoleManagerUtility(
+                account.Name,
+                authorizationModel,
+                pageActionsManager,
+                PdaConfigurationHelper.GetMaxRetryAttempts(),
+                PdaConfigurationHelper.GetPauseBetweenAttempts(),
+                x => Logger.Info(account.Id, x),
+                x => Logger.Error(account.Id, new Exception(x)),
+                x => Logger.Warn(account.Id, x));
+
+            return amazonPdaUtility;
+        }
+
+        private static void DoEtlDailyFromRequests(ExtAccount account, DateRange dateRange, AmazonConsoleManagerUtility amazonPdaUtility)
+        {
+            var extractor = new AmazonPdaDailyRequestExtractor(account, dateRange, amazonPdaUtility);
             var loader = new AmazonPdaDailySummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
@@ -196,9 +265,9 @@ namespace CakeExtracter.Commands.Selenium
             CommandHelper.DoEtl(extractor, loader);
         }
 
-        private static void DoEtlStrategyFromRequests(ExtAccount account, DateRange dateRange)
+        private static void DoEtlStrategyFromRequests(ExtAccount account, DateRange dateRange, AmazonConsoleManagerUtility amazonPdaUtility)
         {
-            var extractor = new AmazonPdaCampaignRequestExtractor(account, dateRange);
+            var extractor = new AmazonPdaCampaignRequestExtractor(account, dateRange, amazonPdaUtility);
             var loader = new AmazonCampaignSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }

@@ -12,8 +12,8 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
 {
     internal class AmazonPdaDailyRequestExtractor : AmazonPdaExtractor<DailySummary>
     {
-        public AmazonPdaDailyRequestExtractor(ExtAccount account, DateRange dateRange, PdaDataProvider pdaDataProvider)
-            : base(account, dateRange, pdaDataProvider)
+        public AmazonPdaDailyRequestExtractor(ExtAccount account, DateRange dateRange, AmazonConsoleManagerUtility amazonPdaUtility)
+            : base(account, dateRange, amazonPdaUtility)
         {
         }
 
@@ -37,7 +37,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
 
         private IEnumerable<AmazonPdaCampaignSummary> ExtractSummaries()
         {
-            var sums = ExtractCampaignApiFullSummaries();
+            var sums = ExtractPdaCampaignSummaries();
             var filteredSums = FilterByCampaigns(sums, x => x.Name);
             return filteredSums;
         }

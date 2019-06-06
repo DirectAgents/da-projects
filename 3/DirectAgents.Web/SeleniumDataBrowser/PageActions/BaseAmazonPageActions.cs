@@ -5,15 +5,14 @@ namespace SeleniumDataBrowser.PageActions
 {
     public class BaseAmazonPageActions : BasePageActions
     {
-        public BaseAmazonPageActions(IWebDriver driver, int timeoutMinutes, 
-            Action<string> logInfo, Action<string> logError, Action<string> logWarning)
-            : base(driver, timeoutMinutes, logInfo, logError, logWarning)
+        public BaseAmazonPageActions(IWebDriver driver, int timeoutMinutes)
+            : base(driver, timeoutMinutes)
         {
         }
 
         public void LoginProcess(string email, string password)
         {
-            logInfo($"Login with e-mail [{email}]...");
+            LogInfo($"Login with e-mail [{email}]...");
             try
             {
                 LoginWithEmailAndPassword(email, password);
@@ -24,21 +23,13 @@ namespace SeleniumDataBrowser.PageActions
             }
         }
 
-        public void LoginByPassword(string password, By waitElement = null)
+        protected void LoginWithPassword(string password)
         {
-            logInfo("Need to repeat the password...");
-            try
-            {
-                LoginWithPassword(password);
-                if (waitElement != null)
-                {
-                    WaitElementClickable(waitElement, timeout);
-                }
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"Could not to repeat password: {e.Message}", e);
-            }
+            EnterPassword(password);
+            ClickElement(BaseAmazonPageObjects.RememberMeCheckBox);
+            ClickElement(BaseAmazonPageObjects.LoginButton);
+            IsPasswordCorrect();
+            WaitSecurityCodeIfNecessary();
         }
 
         private void LoginWithEmailAndPassword(string email, string password)
@@ -47,54 +38,44 @@ namespace SeleniumDataBrowser.PageActions
             LoginWithPassword(password);
         }
 
-        private void LoginWithPassword(string password)
-        {
-            EnterPassword(password);
-            ClickElement(AmazonPdaPageObjects.RememberMeCheckBox);
-            ClickElement(AmazonPdaPageObjects.LoginButton);
-            IsPasswordCorrect();
-            WaitSecurityCodeIfNecessary();
-        }
-
         private void IsPasswordCorrect()
         {
-            if (!IsElementPresent(AmazonPdaPageObjects.IncorrectPasswordSpan))
+            if (!IsElementPresent(BaseAmazonPageObjects.IncorrectPasswordSpan))
             {
                 return;
             }
-
-            logError("Password is incorrect");
+            LogError("Password is incorrect");
         }
 
         private void EnterEmail(string email)
         {
-            ClickElement(AmazonPdaPageObjects.LoginEmailInput);
-            SendKeys(AmazonPdaPageObjects.LoginEmailInput, email);
+            ClickElement(BaseAmazonPageObjects.LoginEmailInput);
+            SendKeys(BaseAmazonPageObjects.LoginEmailInput, email);
         }
 
         private void EnterPassword(string password)
         {
-            ClickElement(AmazonPdaPageObjects.LoginPassInput);
-            SendKeys(AmazonPdaPageObjects.LoginPassInput, password);
+            ClickElement(BaseAmazonPageObjects.LoginPassInput);
+            SendKeys(BaseAmazonPageObjects.LoginPassInput, password);
         }
 
         private void WaitSecurityCodeIfNecessary()
         {
-            if (!IsElementPresent(AmazonPdaPageObjects.CodeInput))
+            if (!IsElementPresent(BaseAmazonPageObjects.CodeInput))
             {
                 return;
             }
 
-            WaitElementClickable(AmazonPdaPageObjects.CodeInput, timeout);
-            ClickElement(AmazonPdaPageObjects.DontAskCodeCheckBox);
-            ClickElement(AmazonPdaPageObjects.CodeInput);
+            WaitElementClickable(BaseAmazonPageObjects.CodeInput, Timeout);
+            ClickElement(BaseAmazonPageObjects.DontAskCodeCheckBox);
+            ClickElement(BaseAmazonPageObjects.CodeInput);
             WaitSecurityCode();
         }
 
         private void WaitSecurityCode()
         {
-            logInfo("Waiting the code...");
-            WaitLoading(AmazonPdaPageObjects.CodeInput, timeout);
+            LogInfo("Waiting the code...");
+            WaitLoading(BaseAmazonPageObjects.CodeInput, Timeout);
         }
     }
 }

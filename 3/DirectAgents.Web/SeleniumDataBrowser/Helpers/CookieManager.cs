@@ -10,6 +10,7 @@ namespace SeleniumDataBrowser.Helpers
     public class CookieManager
     {
         private const string cookieFileName = "Cookie_{0}.json";
+
         private static int startNumberCookieFile = 1;
 
         public static void SaveCookiesToFiles(IEnumerable<Cookie> cookies, string directoryName)
@@ -35,9 +36,8 @@ namespace SeleniumDataBrowser.Helpers
                 var expiryDate = string.IsNullOrEmpty(strings["Expiry"]) ? (DateTime?) null : DateTime.Parse(strings["Expiry"]);
                 return new Cookie(strings["Name"], strings["Value"], strings["Domain"], strings["Path"], expiryDate);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Logger.Warn(e.Message);
                 return null;
             }
         }

@@ -24,7 +24,8 @@ namespace SeleniumDataBrowser.Drivers
             chromeOptions.AddUserProfilePreference("download.default_directory", downloadDir);
             chromeOptions.AddUserProfilePreference("intl.accept_languages", "nl");
             chromeOptions.AddUserProfilePreference("disable-popup-blocking", "true");
-            chromeOptions.AddArgument("headless");
+
+            //chromeOptions.AddArgument("headless");
 
             return chromeOptions;
         }
@@ -32,7 +33,9 @@ namespace SeleniumDataBrowser.Drivers
         private static ChromeDriverService GetDriverService()
         {
             var driverService = ChromeDriverService.CreateDefaultService();
-            driverService.HideCommandPromptWindow = true;
+
+            //driverService.HideCommandPromptWindow = true;
+
             return driverService;
         }
     }

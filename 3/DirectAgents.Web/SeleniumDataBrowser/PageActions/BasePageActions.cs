@@ -11,22 +11,18 @@ namespace SeleniumDataBrowser.PageActions
         protected const string HrefAttribute = "href";
 
         protected readonly IWebDriver Driver;
+        protected readonly TimeSpan Timeout;
 
-        protected readonly TimeSpan timeout;
+        public static Action<string> LogInfo;
 
-        protected readonly Action<string> logInfo;
+        public static Action<string> LogError;
 
-        protected readonly Action<string> logError;
+        public static Action<string> LogWarning;
 
-        protected readonly Action<string> logWarning;
-
-        public BasePageActions(IWebDriver driver, int timeoutMinutes, Action<string> logInfo, Action<string> logError, Action<string> logWarning)
+        public BasePageActions(IWebDriver driver, int timeoutMinutes)
         {
             Driver = driver;
-            timeout = TimeSpan.FromMinutes(timeoutMinutes);
-            this.logInfo = logInfo;
-            this.logError = logError;
-            this.logWarning = logWarning;
+            Timeout = TimeSpan.FromMinutes(timeoutMinutes);
         }
 
         ~BasePageActions()
@@ -36,8 +32,8 @@ namespace SeleniumDataBrowser.PageActions
 
         public void NavigateToUrl(string url, By waitingElement)
         {
-            logInfo($"Go to URL [{url}]...");
-            NavigateToUrl(url, waitingElement, timeout);
+            LogInfo($"Go to URL [{url}]...");
+            NavigateToUrl(url, waitingElement, Timeout);
         }
 
         public void NavigateToUrl(string url)
@@ -121,7 +117,7 @@ namespace SeleniumDataBrowser.PageActions
             }
             catch (Exception e)
             {
-                logWarning(e.Message);
+                LogWarning(e.Message);
                 return false;
             }
         }
