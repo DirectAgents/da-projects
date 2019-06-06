@@ -5,11 +5,11 @@ using Amazon.Enums;
 using Amazon.Helpers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Models;
-using SeleniumDataBrowser.PDA.Models.ConsoleManagerUtilityModels;
 using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors;
 using DirectAgents.Domain.Entities.CPProg;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 using SeleniumDataBrowser.PDA;
+using SeleniumDataBrowser.PDA.Models;
 
 namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
 {

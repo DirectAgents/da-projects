@@ -1,4 +1,4 @@
-﻿namespace SeleniumDataBrowser.PDA.Models.ConsoleManagerUtilityModels
+﻿namespace SeleniumDataBrowser.PDA.Models
 {
     internal class AmazonCmApiParams
     {

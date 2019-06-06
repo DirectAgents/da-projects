@@ -10,7 +10,6 @@ using CakeExtracter.Helpers;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
-using SeleniumDataBrowser.PageActions;
 using SeleniumDataBrowser.PDA;
 using SeleniumDataBrowser.PDA.Helpers;
 using SeleniumDataBrowser.PDA.Models;
@@ -167,13 +166,7 @@ namespace CakeExtracter.Commands.Selenium
         private void InitializeAuthorizationModel()
         {
             var cookieDirectoryName = PdaConfigurationHelper.GetCookiesDirectoryName();
-
-            authorizationModel = GetConfigurableAuthModel(cookieDirectoryName);
-        }
-
-        private AuthorizationModel GetConfigurableAuthModel(string cookieDirectoryName)
-        {
-            return new AuthorizationModel
+            authorizationModel = new AuthorizationModel
             {
                 Login = PdaConfigurationHelper.GetEMail(),
                 Password = PdaConfigurationHelper.GetEMailPassword(),
@@ -183,26 +176,16 @@ namespace CakeExtracter.Commands.Selenium
 
         private void InitializePageActionsManager()
         {
-            SetLogActionsForPageActionsManager();
-
             var timeoutInMinutes = PdaConfigurationHelper.GetWaitPageTimeout();
             pageActionsManager = new AmazonPdaPageActions(timeoutInMinutes);
+            SetLogActionsForPageActionsManager();
         }
 
-        private void SetLogActionsForPageActionsManager(ExtAccount account = null)
+        private void SetLogActionsForPageActionsManager()
         {
-            if (account == null)
-            {
-                BasePageActions.LogInfo = x => Logger.Info(x);
-                BasePageActions.LogError = x => Logger.Error(new Exception(x));
-                BasePageActions.LogWarning = x => Logger.Warn(x);
-            }
-            else
-            {
-                BasePageActions.LogInfo = x => Logger.Info(account.Id, x);
-                BasePageActions.LogError = x => Logger.Error(account.Id, new Exception(x));
-                BasePageActions.LogWarning = x => Logger.Warn(account.Id, x);
-            }
+            pageActionsManager.LogInfo = x => Logger.Info(x);
+            pageActionsManager.LogError = x => Logger.Error(new Exception(x));
+            pageActionsManager.LogWarning = x => Logger.Warn(x);
         }
 
         private void DoEtls(ExtAccount account, DateRange dateRange, StatsTypeAgg statsType)
@@ -237,7 +220,6 @@ namespace CakeExtracter.Commands.Selenium
 
         private AmazonConsoleManagerUtility CreateAmazonPdaUtility(ExtAccount account)
         {
-            SetLogActionsForPageActionsManager(account);
             var amazonPdaUtility = new AmazonConsoleManagerUtility(
                 account.Name,
                 authorizationModel,

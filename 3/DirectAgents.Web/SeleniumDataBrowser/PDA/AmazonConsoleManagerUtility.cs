@@ -7,7 +7,6 @@ using System.Web;
 using SeleniumDataBrowser.Helpers;
 using SeleniumDataBrowser.PDA.Helpers;
 using SeleniumDataBrowser.PDA.Models;
-using SeleniumDataBrowser.PDA.Models.ConsoleManagerUtilityModels;
 using SeleniumDataBrowser.PDA.PageActions;
 using SeleniumDataBrowser.PDA.Exceptions;
 using Polly;
@@ -23,7 +22,6 @@ namespace SeleniumDataBrowser.PDA
 
         private readonly string accountName;
         private readonly AuthorizationModel authorizationModel;
-        private readonly AmazonPdaPageActions pageAction;
         private readonly Dictionary<string, string> cookies;
         private readonly Action<string> logInfo;
         private readonly Action<string> logError;
@@ -43,7 +41,6 @@ namespace SeleniumDataBrowser.PDA
         {
             this.accountName = accountName;
             this.authorizationModel = authorizationModel;
-            this.pageAction = pageAction;
             this.maxRetryAttempts = maxRetryAttempts;
             this.pauseBetweenAttempts = pauseBetweenAttempts;
 
@@ -51,8 +48,7 @@ namespace SeleniumDataBrowser.PDA
             this.logError = logError;
             this.logWarning = logWarning;
 
-            var simpleCookies = this.pageAction.GetAllCookies();
-            this.cookies = simpleCookies.ToDictionary(x => x.Name, x => x.Value);
+            this.cookies = pageAction.GetAllCookies().ToDictionary(x => x.Name, x => x.Value);
         }
 
         public IEnumerable<AmazonCmApiCampaignSummary> GetPdaCampaignsSummaries(IEnumerable<DateTime> extractionDates)

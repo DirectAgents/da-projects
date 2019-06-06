@@ -81,9 +81,9 @@
     <Compile Include="PDA\Helpers\PdaLoginHelper.cs" />
     <Compile Include="PDA\Helpers\PdaProfileUrlManager.cs" />
     <Compile Include="PDA\Models\AuthorizationModel.cs" />
-    <Compile Include="PDA\Models\ConsoleManagerUtilityModels\AmazonCmApiCampaignSummary.cs" />
-    <Compile Include="PDA\Models\ConsoleManagerUtilityModels\AmazonCmApiParams.cs" />
-    <Compile Include="PDA\Models\ConsoleManagerUtilityModels\Filter.cs" />
+    <Compile Include="PDA\Models\AmazonCmApiCampaignSummary.cs" />
+    <Compile Include="PDA\Models\AmazonCmApiParams.cs" />
+    <Compile Include="PDA\Models\Filter.cs" />
     <Compile Include="PDA\PageActions\AmazonPdaPageActions.cs" />
     <Compile Include="PDA\PageActions\AmazonPdaPageObjects.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

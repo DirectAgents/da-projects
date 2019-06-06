@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SeleniumDataBrowser.PDA.Models.ConsoleManagerUtilityModels
+namespace SeleniumDataBrowser.PDA.Models
 {
     public class AmazonCmApiCampaignSummary
     {

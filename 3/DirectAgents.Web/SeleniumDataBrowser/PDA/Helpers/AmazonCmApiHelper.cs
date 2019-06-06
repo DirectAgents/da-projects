@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using SeleniumDataBrowser.PDA.Models.ConsoleManagerUtilityModels;
+using SeleniumDataBrowser.PDA.Models;
 using SeleniumDataBrowser.Helpers;
 
 namespace SeleniumDataBrowser.PDA.Helpers

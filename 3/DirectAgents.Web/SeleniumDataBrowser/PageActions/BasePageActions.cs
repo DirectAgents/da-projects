@@ -13,11 +13,32 @@ namespace SeleniumDataBrowser.PageActions
         protected readonly IWebDriver Driver;
         protected readonly TimeSpan Timeout;
 
-        public static Action<string> LogInfo;
+        public Action<string> LogInfo;
 
-        public static Action<string> LogError;
+        public Action<string> LogError;
 
-        public static Action<string> LogWarning;
+        public Action<string> LogWarning;
+
+        public IEnumerable<Cookie> GetAllCookies()
+        {
+            var options = Driver.Manage();
+            return options.Cookies.AllCookies;
+        }
+
+        public bool SetCookie(Cookie cookie)
+        {
+            try
+            {
+                var options = Driver.Manage();
+                options.Cookies.AddCookie(cookie);
+                return true;
+            }
+            catch (Exception e)
+            {
+                LogWarning(e.Message);
+                return false;
+            }
+        }
 
         public BasePageActions(IWebDriver driver, int timeoutMinutes)
         {
@@ -98,27 +119,6 @@ namespace SeleniumDataBrowser.PageActions
             catch (Exception)
             {
                 return null;
-            }
-        }
-
-        public IEnumerable<Cookie> GetAllCookies()
-        {
-            var options = Driver.Manage();
-            return options.Cookies.AllCookies;
-        }
-
-        public bool SetCookie(Cookie cookie)
-        {
-            try
-            {
-                var options = Driver.Manage();
-                options.Cookies.AddCookie(cookie);
-                return true;
-            }
-            catch (Exception e)
-            {
-                LogWarning(e.Message);
-                return false;
             }
         }
 
