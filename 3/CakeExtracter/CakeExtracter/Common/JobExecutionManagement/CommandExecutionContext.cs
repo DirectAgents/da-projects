@@ -65,6 +65,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         {
             this.jobExecutionItemService = jobExecutionItemService;
             this.jobExecutionLifeCycleManager = jobExecutionRequestScheduler;
+            retryRequestsHolder = new RetryRequestsHolder(command);
             InitCurrentJobRequest(command);
         }
 
