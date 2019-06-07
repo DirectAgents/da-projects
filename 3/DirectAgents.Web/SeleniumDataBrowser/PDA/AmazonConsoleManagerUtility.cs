@@ -14,14 +14,17 @@ using RestSharp;
 
 namespace SeleniumDataBrowser.PDA
 {
+    /// <summary>
+    /// Product Display Ads Utility for sent requests to the portal backend.
+    /// </summary>
     public class AmazonConsoleManagerUtility
     {
         private const int PageSize = 100;
-
-        public static Dictionary<string, string> AvailableProfileUrls;
+        private const string LoggerPrefix = "[AmazonConsoleManagerUtility]";
 
         private readonly string accountName;
         private readonly AuthorizationModel authorizationModel;
+        private readonly PdaProfileUrlManager profileUrlManager;
         private readonly Dictionary<string, string> cookies;
         private readonly Action<string> logInfo;
         private readonly Action<string> logError;
@@ -29,10 +32,23 @@ namespace SeleniumDataBrowser.PDA
         private readonly int maxRetryAttempts;
         private readonly TimeSpan pauseBetweenAttempts;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AmazonConsoleManagerUtility"/> class.
+        /// </summary>
+        /// <param name="accountName">Name of current account.</param>
+        /// <param name="authorizationModel">Authorization settings.</param>
+        /// <param name="pageActionManager">Page actions manager.</param>
+        /// <param name="profileUrlManager">Profile URLs manager.</param>
+        /// <param name="maxRetryAttempts">Max number of retry attempts.</param>
+        /// <param name="pauseBetweenAttempts">Time interval for pause between attempts.</param>
+        /// <param name="logInfo">Action for logging (info level).</param>
+        /// <param name="logError">Action for logging (error level).</param>
+        /// <param name="logWarning">Action for logging (warning level).</param>
         public AmazonConsoleManagerUtility(
             string accountName,
             AuthorizationModel authorizationModel,
-            AmazonPdaPageActions pageAction,
+            AmazonPdaPageActions pageActionManager,
+            PdaProfileUrlManager profileUrlManager,
             int maxRetryAttempts,
             TimeSpan pauseBetweenAttempts,
             Action<string> logInfo,
@@ -41,6 +57,7 @@ namespace SeleniumDataBrowser.PDA
         {
             this.accountName = accountName;
             this.authorizationModel = authorizationModel;
+            this.profileUrlManager = profileUrlManager;
             this.maxRetryAttempts = maxRetryAttempts;
             this.pauseBetweenAttempts = pauseBetweenAttempts;
 
@@ -48,40 +65,40 @@ namespace SeleniumDataBrowser.PDA
             this.logError = logError;
             this.logWarning = logWarning;
 
-            this.cookies = pageAction.GetAllCookies().ToDictionary(x => x.Name, x => x.Value);
+            this.cookies = pageActionManager.GetAllCookies().ToDictionary(x => x.Name, x => x.Value);
         }
 
+        /// <summary>
+        /// Returns summaries of PDA campaigns for specified dates.
+        /// </summary>
+        /// <param name="extractionDates">Dates for which summaries will be extracted.</param>
+        /// <returns>Summaries of PDA campaigns.</returns>
         public IEnumerable<AmazonCmApiCampaignSummary> GetPdaCampaignsSummaries(IEnumerable<DateTime> extractionDates)
         {
-            var accountEntityId = GetCurrentProfileEntityId(accountName);
+            var accountEntityId = GetCurrentProfileEntityId();
             var queryParams = AmazonCmApiHelper.GetCampaignsApiQueryParams(accountEntityId);
             var parameters = AmazonCmApiHelper.GetBasePdaCampaignsApiParams(true);
-            var apiCampaignSummaries = GetCampaignsSummaries(extractionDates, queryParams, parameters);
+            var apiCampaignSummaries = GetCampaignsSummariesForAllDates(extractionDates, queryParams, parameters);
             return apiCampaignSummaries;
         }
 
-        private string GetCurrentProfileEntityId(string accountName)
+        private static void AddDynamicCampaignDataToResultData(List<AmazonCmApiCampaignSummary> resultData, dynamic data)
         {
-            var profileUrl = GetAvailableProfileUrl(accountName);
-            var accountEntityId = GetProfileEntityId(profileUrl);
-            return accountEntityId;
-        }
-
-        private string GetAvailableProfileUrl(string profileName)
-        {
-            var name = profileName.Trim();
-            var availableProfileUrl = AvailableProfileUrls.FirstOrDefault(x =>
-                string.Equals(x.Key, name, StringComparison.OrdinalIgnoreCase));
-            var url = availableProfileUrl.Value;
-            if (string.IsNullOrEmpty(url))
+            var campaignsData = AmazonCmApiHelper.GetDynamicCampaigns(data);
+            foreach (var campaignData in campaignsData)
             {
-                // The current account does not have the following profile
-                throw new AccountDoesNotHaveProfileException(authorizationModel.Login, profileName);
+                var convertedData = AmazonCmApiHelper.ConvertDynamicCampaignInfoToModel(campaignData);
+                resultData.Add(convertedData);
             }
-            return url;
         }
 
-        private string GetProfileEntityId(string url)
+        private static void Log(string message, Action<string> logAction)
+        {
+            var updatedMessage = $"{LoggerPrefix} {message}";
+            logAction(updatedMessage);
+        }
+
+        private static string GetProfileEntityId(string url)
         {
             var uri = new Uri(url);
             var queryParams = HttpUtility.ParseQueryString(uri.Query);
@@ -89,10 +106,25 @@ namespace SeleniumDataBrowser.PDA
             return entityId;
         }
 
-        private static void Log(string message, Action<string> logAction)
+        private string GetCurrentProfileEntityId()
         {
-            var updatedMessage = $"[AmazonConsoleManagerUtility]: {message}";
-            logAction(updatedMessage);
+            var profileUrl = GetAvailableProfileUrl();
+            var accountEntityId = GetProfileEntityId(profileUrl);
+            return accountEntityId;
+        }
+
+        private string GetAvailableProfileUrl()
+        {
+            var profileName = accountName.Trim();
+            var availableProfileUrl = profileUrlManager.AvailableProfileUrls.FirstOrDefault(x =>
+                string.Equals(x.Key, profileName, StringComparison.OrdinalIgnoreCase));
+            var profileUrl = availableProfileUrl.Value;
+            if (string.IsNullOrEmpty(profileUrl))
+            {
+                // The current account does not have the following profile
+                throw new AccountDoesNotHaveProfileException(authorizationModel.Login, accountName);
+            }
+            return profileUrl;
         }
 
         private void LogError(string message)
@@ -110,8 +142,10 @@ namespace SeleniumDataBrowser.PDA
             Log(message, logWarning);
         }
 
-        private IEnumerable<AmazonCmApiCampaignSummary> GetCampaignsSummaries(IEnumerable<DateTime> extractionDates,
-            Dictionary<string, string> queryParams, AmazonCmApiParams parameters)
+        private IEnumerable<AmazonCmApiCampaignSummary> GetCampaignsSummariesForAllDates(
+            IEnumerable<DateTime> extractionDates,
+            Dictionary<string, string> queryParams,
+            AmazonCmApiParams parameters)
         {
             var resultData = new List<AmazonCmApiCampaignSummary>();
             foreach (var date in extractionDates)
@@ -119,7 +153,7 @@ namespace SeleniumDataBrowser.PDA
                 try
                 {
                     WaitBeforeRequest(date);
-                    var data = GetCampaignsSummaries(date, queryParams, parameters);
+                    var data = GetCampaignsSummariesForDate(date, queryParams, parameters);
                     resultData.AddRange(data);
                 }
                 catch (Exception e)
@@ -127,44 +161,43 @@ namespace SeleniumDataBrowser.PDA
                     LogError($"Failed: {e.Message}");
                 }
             }
-
             return resultData;
         }
 
-        private IEnumerable<AmazonCmApiCampaignSummary> GetCampaignsSummaries(DateTime date,
-            Dictionary<string, string> queryParams, AmazonCmApiParams parameters)
+        private IEnumerable<AmazonCmApiCampaignSummary> GetCampaignsSummariesForDate(
+            DateTime date,
+            Dictionary<string, string> queryParams,
+            AmazonCmApiParams parameters)
         {
             LogInfo($"Retrieve campaigns info from API for {date.ToShortDateString()} date.");
             AmazonCmApiHelper.SetCampaignApiSpecificInitParams(parameters, date, PageSize);
-            var data = new List<AmazonCmApiCampaignSummary>();
             try
             {
-                data = GetPdaCampaignsSummaries(queryParams, parameters);
+                var data = GetApiPdaCampaignsSummaries(queryParams, parameters);
                 data.ForEach(x => x.Date = date);
+                return data;
             }
             catch (Exception e)
             {
                 throw new Exception($"Could not get campaign summaries for {date}", e);
             }
-            return data;
         }
 
-        private List<AmazonCmApiCampaignSummary> GetPdaCampaignsSummaries(Dictionary<string, string> queryParams, AmazonCmApiParams parameters)
+        private List<AmazonCmApiCampaignSummary> GetApiPdaCampaignsSummaries(Dictionary<string, string> queryParams, AmazonCmApiParams parameters)
         {
             var resultData = new List<AmazonCmApiCampaignSummary>();
-            var data = GetCampaignSummaries(queryParams, parameters);
+            var data = TryProcessRequest(queryParams, parameters);
             AddDynamicCampaignDataToResultData(resultData, data);
             var numberOfRecords = AmazonCmApiHelper.GetNumberOfRecords(data);
             for (parameters.pageOffset = 1; numberOfRecords > parameters.pageSize * parameters.pageOffset; parameters.pageOffset++)
             {
-                data = GetCampaignSummaries(queryParams, parameters);
+                data = TryProcessRequest(queryParams, parameters);
                 AddDynamicCampaignDataToResultData(resultData, data);
             }
-
             return resultData;
         }
 
-        private dynamic GetCampaignSummaries(Dictionary<string, string> queryParams, AmazonCmApiParams body)
+        private dynamic TryProcessRequest(Dictionary<string, string> queryParams, AmazonCmApiParams body)
         {
             var response = Policy
                 .Handle<Exception>()
@@ -198,22 +231,11 @@ namespace SeleniumDataBrowser.PDA
             return response;
         }
 
-        private void AddDynamicCampaignDataToResultData(List<AmazonCmApiCampaignSummary> resultData, dynamic data)
-        {
-            var campaignsData = AmazonCmApiHelper.GetDynamicCampaigns(data);
-            foreach (var campaignData in campaignsData)
-            {
-                var convertedData = AmazonCmApiHelper.ConvertDynamicCampaignInfoToModel(campaignData);
-                resultData.Add(convertedData);
-            }
-        }
-
         private void WaitBeforeRequest(DateTime date)
         {
-            var timeSpan = pauseBetweenAttempts;
-            var message = $"Waiting {timeSpan} before requesting a campaign info (for {date.ToShortDateString()})";
+            var message = $"Waiting {pauseBetweenAttempts} before requesting a campaign info (for {date.ToShortDateString()})";
             LoggerHelper.LogWaiting(message, null, logInfo);
-            Thread.Sleep(timeSpan);
+            Thread.Sleep(pauseBetweenAttempts);
         }
     }
 }

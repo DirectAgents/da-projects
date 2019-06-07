@@ -3,13 +3,27 @@ using OpenQA.Selenium;
 
 namespace SeleniumDataBrowser.PageActions
 {
+    /// <inheritdoc cref="BasePageActions"/>
+    /// <summary>
+    /// Class for managing page actions of Amazon portals.
+    /// </summary>
     public class BaseAmazonPageActions : BasePageActions
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseAmazonPageActions"/> class.
+        /// </summary>
+        /// <param name="driver">Selenium web driver.</param>
+        /// <param name="timeoutMinutes">Number of minutes for waiting of elements.</param>
         public BaseAmazonPageActions(IWebDriver driver, int timeoutMinutes)
             : base(driver, timeoutMinutes)
         {
         }
 
+        /// <summary>
+        /// Login process: via e-mail and password, with waiting security code.
+        /// </summary>
+        /// <param name="email">E-mail for login.</param>
+        /// <param name="password">Password of login.</param>
         public void LoginProcess(string email, string password)
         {
             LogInfo($"Login with e-mail [{email}]...");
@@ -23,7 +37,26 @@ namespace SeleniumDataBrowser.PageActions
             }
         }
 
-        protected void LoginWithPassword(string password)
+        /// <summary>
+        /// Login process: if necessary, the method enters only the password and waits for the page to load.
+        /// </summary>
+        /// <param name="password">Password to be entered.</param>
+        /// <param name="waitElement">Web element that the method will wait for after logging in.</param>
+        public void LoginWithPasswordAndWaiting(string password, By waitElement)
+        {
+            LogInfo("Need to repeat the password...");
+            try
+            {
+                LoginWithPassword(password);
+                WaitElementClickable(waitElement, Timeout);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Could not to repeat password: {e.Message}", e);
+            }
+        }
+
+        private void LoginWithPassword(string password)
         {
             EnterPassword(password);
             ClickElement(BaseAmazonPageObjects.RememberMeCheckBox);
@@ -74,7 +107,7 @@ namespace SeleniumDataBrowser.PageActions
 
         private void WaitSecurityCode()
         {
-            LogInfo("Waiting the code...");
+            LogWarning("Waiting the code...");
             WaitLoading(BaseAmazonPageObjects.CodeInput, Timeout);
         }
     }

@@ -1,23 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 
 namespace SeleniumDataBrowser.PageActions
 {
+    /// <summary>
+    /// Basic class for managing page actions.
+    /// </summary>
     public class BasePageActions
     {
-        protected const string HrefAttribute = "href";
-
-        protected readonly IWebDriver Driver;
-        protected readonly TimeSpan Timeout;
-
         public Action<string> LogInfo;
 
         public Action<string> LogError;
 
         public Action<string> LogWarning;
+
+        protected readonly TimeSpan Timeout;
+
+        private readonly IWebDriver Driver;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BasePageActions"/> class.
+        /// </summary>
+        /// <param name="driver">Selenium web driver.</param>
+        /// <param name="timeoutMinutes">Number of minutes for waiting of elements.</param>
+        public BasePageActions(IWebDriver driver, int timeoutMinutes)
+        {
+            Driver = driver;
+            Timeout = TimeSpan.FromMinutes(timeoutMinutes);
+        }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="BasePageActions"/> class.
+        /// For closing the web driver.
+        /// </summary>
+        ~BasePageActions()
+        {
+            CloseWebDriver();
+        }
 
         public IEnumerable<Cookie> GetAllCookies()
         {
@@ -40,17 +63,6 @@ namespace SeleniumDataBrowser.PageActions
             }
         }
 
-        public BasePageActions(IWebDriver driver, int timeoutMinutes)
-        {
-            Driver = driver;
-            Timeout = TimeSpan.FromMinutes(timeoutMinutes);
-        }
-
-        ~BasePageActions()
-        {
-            CloseWebDriver();
-        }
-
         public void NavigateToUrl(string url, By waitingElement)
         {
             LogInfo($"Go to URL [{url}]...");
@@ -70,6 +82,18 @@ namespace SeleniumDataBrowser.PageActions
             }
         }
 
+        public bool IsElementPresent(By byElement)
+        {
+            try
+            {
+                return Driver.FindElements(byElement).Count > 0;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Failed to check if element [{byElement}] is present: {e.Message}", e);
+            }
+        }
+
         protected void SendKeys(By byElement, string keys)
         {
             try
@@ -83,20 +107,7 @@ namespace SeleniumDataBrowser.PageActions
             }
         }
 
-        public bool IsElementPresent(By byElement)
-        {
-            try
-            {
-                return Driver.FindElements(byElement).Count > 0;
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"Failed to check if element [{byElement}] is present: {e.Message}", e);
-            }
-        }
-
-        protected System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> GetChildrenElements(By parentElem,
-            By childElem)
+        protected ReadOnlyCollection<IWebElement> GetChildrenElements(By parentElem, By childElem)
         {
             try
             {

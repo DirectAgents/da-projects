@@ -4,8 +4,16 @@ using System.Reflection;
 
 namespace SeleniumDataBrowser.Helpers
 {
-    public class FileManager
+    /// <summary>
+    /// Class to help work with directory and files.
+    /// </summary>
+    public static class FileManager
     {
+        /// <summary>
+        /// Gets the relative path to the current execution assembly.
+        /// </summary>
+        /// <param name="itemName">Name of the file or directory that will be combined with the relative path.</param>
+        /// <returns>Relative path to the current execution assembly.</returns>
         public static string GetAssemblyRelativePath(string itemName)
         {
             var assembly = Assembly.GetExecutingAssembly();
@@ -13,16 +21,21 @@ namespace SeleniumDataBrowser.Helpers
             return CombinePath(assemblyDir, itemName);
         }
 
-        public static string GetApplicationName()
-        {
-            return AppDomain.CurrentDomain.FriendlyName;
-        }
-
+        /// <summary>
+        /// Combines the specified file name with the specified path to the directory.
+        /// </summary>
+        /// <param name="dirPath">Path to the directory.</param>
+        /// <param name="fileName">File name.</param>
+        /// <returns>Full path to the specified file name.</returns>
         public static string CombinePath(string dirPath, string fileName)
         {
             return Path.Combine(dirPath, fileName);
         }
 
+        /// <summary>
+        /// Creates a directory at the specified path if it does not exist.
+        /// </summary>
+        /// <param name="path">Full path to the exist directory.</param>
         public static void CreateDirectoryIfNotExist(string path)
         {
             try
@@ -38,61 +51,5 @@ namespace SeleniumDataBrowser.Helpers
                 throw new Exception($"Could not create the directory [{path}]: {e.Message}", e);
             }
         }
-
-        public static void CleanDirectory(string dirPath, string templateFileName)
-        {
-            try
-            {
-                var dir = new DirectoryInfo(dirPath);
-                var files = dir.GetFiles(templateFileName);
-                foreach (var file in files)
-                {
-                    try
-                    {
-                        file.Delete();
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception($"Error: Could not delete the file [{file.Name}]: {e.Message}", e);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"Could not clear the directory [{dirPath}]: {e.Message}", e);
-            }
-        }
-
-        public static string[] GetFilesFromPath(string dirPath, string templateFileName, string fileName)
-        {
-            try
-            {
-                var dir = new DirectoryInfo(dirPath);
-                var i = 0;
-                var ext = Path.GetExtension(templateFileName);
-                var fileNameMask = Path.GetFileNameWithoutExtension(templateFileName);
-                var formatTemplate = fileName
-                    .Replace('|', '-')
-                    .Replace('/', '-')
-                    .Replace("\"", "")
-                    .Replace(" ", "-")
-                    .Replace(".", "-")
-                    .Replace("(", "-")
-                    .Replace(")", "-");
-                var files = dir.GetFiles($"{formatTemplate}{fileNameMask}{ext}");
-                var result = new string[files.Length];
-                foreach (var file in files)
-                {
-                    result[i] = file.FullName;
-                    i++;
-                }
-                return result;
-            }
-            catch (Exception e)
-            {
-                throw new Exception(
-                    $"Could not get path of the file using template [{templateFileName}] in the directory [{dirPath}]: {e.Message}", e);
-            }
-        }       
     }
 }

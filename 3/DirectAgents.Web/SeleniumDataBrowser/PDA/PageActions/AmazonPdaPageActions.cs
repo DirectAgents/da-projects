@@ -1,19 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using SeleniumDataBrowser.PageActions;
 using SeleniumDataBrowser.Drivers;
-using OpenQA.Selenium;
 
 namespace SeleniumDataBrowser.PDA.PageActions
 {
+    /// <inheritdoc cref="BaseAmazonPageActions"/>
+    /// <summary>
+    /// Class for page actions of Amazon Advertiser Portal for Product Display Ads.
+    /// </summary>
     public class AmazonPdaPageActions : BaseAmazonPageActions
     {
+        private const string HrefAttribute = "href";
+
+        /// <inheritdoc cref="BaseAmazonPageActions"/>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AmazonPdaPageActions" /> class.
+        /// </summary>
+        /// <param name="timeoutMinutes">Number of minutes for waiting of elements.</param>
         public AmazonPdaPageActions(int timeoutMinutes)
             : base(new ChromeWebDriver(string.Empty), timeoutMinutes)
         {
         }
 
+        /// <summary>
+        /// Retrieves URLs of profiles which available in profile menu on the page.
+        /// </summary>
+        /// <returns>Dictionary of profile URLs which available in profile menu on the page.</returns>
         public Dictionary<string, string> GetAvailableProfileUrls()
         {
             WaitElementClickable(AmazonPdaPageObjects.CurrentProfileButton, Timeout);
@@ -22,23 +35,6 @@ namespace SeleniumDataBrowser.PDA.PageActions
             var menuContainers = GetChildrenElements(AmazonPdaPageObjects.ProfilesMenu, AmazonPdaPageObjects.ProfilesMenuItemContainer);
             var menuItems = menuContainers.Select(x => GetChildElement(x, AmazonPdaPageObjects.ProfilesMenuItem));
             return menuItems.ToDictionary(x => x.Text.Trim(), x => x.GetAttribute(HrefAttribute));
-        }
-
-        public void LoginByPassword(string password, By waitElement = null)
-        {
-            LogInfo("Need to repeat the password...");
-            try
-            {
-                LoginWithPassword(password);
-                if (waitElement != null)
-                {
-                    WaitElementClickable(waitElement, Timeout);
-                }
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"Could not to repeat password: {e.Message}", e);
-            }
         }
     }
 }

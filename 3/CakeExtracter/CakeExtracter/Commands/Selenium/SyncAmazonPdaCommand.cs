@@ -9,7 +9,6 @@ using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
-using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 using SeleniumDataBrowser.PDA;
 using SeleniumDataBrowser.PDA.Helpers;
 using SeleniumDataBrowser.PDA.Models;
@@ -27,6 +26,13 @@ namespace CakeExtracter.Commands.Selenium
     public class SyncAmazonPdaCommand : ConsoleCommand
     {
         private const int DefaultDaysAgo = 41;
+
+        private AuthorizationModel authorizationModel;
+        private AmazonPdaPageActions pageActionsManager;
+        private PdaLoginHelper loginProcessManager;
+        private PdaProfileUrlManager profileUrlManager;
+        private int maxRetryAttempts;
+        private TimeSpan pauseBetweenAttempts;
 
         /// <summary>
         /// Gets or sets the command argument: Account ID in the database
@@ -68,9 +74,6 @@ namespace CakeExtracter.Commands.Selenium
         /// from the Strategy level (default = false).
         /// </summary>
         public bool FromDatabase { get; set; }
-
-        private AuthorizationModel authorizationModel;
-        private AmazonPdaPageActions pageActionsManager;
 
         /// <inheritdoc cref="ConsoleCommand"/>/>
         /// <summary>
@@ -124,43 +127,20 @@ namespace CakeExtracter.Commands.Selenium
 
         private void PreparationForWork()
         {
-            InitializeAuthorizationModel();
-            InitializePageActionsManager();
+            InitializeFields();
 
             LoginToPortal();
             SetAvailableProfileUrls();
         }
 
-        private void LoginToPortal()
+        private void InitializeFields()
         {
-            var loginManager = new PdaLoginHelper(
-                authorizationModel,
-                pageActionsManager,
-                x => Logger.Info(x),
-                x => Logger.Warn(x));
-            loginManager.LoginToPortal();
-        }
+            InitializeAuthorizationModel();
+            InitializePageActionsManager();
+            InitializeLoginProcessManager();
 
-        private void SetAvailableProfileUrls()
-        {
-            var availableProfileUrls = PdaProfileUrlManager.GetAvailableProfileUrls(authorizationModel, pageActionsManager);
-            Logger.Info("The following profiles were found for the current account:");
-            availableProfileUrls.ForEach(x => Logger.Info($"{x.Key} - {x.Value}"));
-
-            AmazonConsoleManagerUtility.AvailableProfileUrls = availableProfileUrls;
-        }
-
-        private void RunEtl()
-        {
-            var statsType = new StatsTypeAgg(StatsType);
-            var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
-            Logger.Info("Amazon ETL (PDA Campaigns). DateRange: {0}.", dateRange);
-            var accounts = GetAccounts();
-            foreach (var account in accounts)
-            {
-                DoEtls(account, dateRange, statsType);
-            }
-            Logger.Info("Amazon ETL (PDA Campaigns) has been finished.");
+            maxRetryAttempts = PdaConfigurationHelper.GetMaxRetryAttempts();
+            pauseBetweenAttempts = PdaConfigurationHelper.GetPauseBetweenAttempts();
         }
 
         private void InitializeAuthorizationModel()
@@ -186,6 +166,45 @@ namespace CakeExtracter.Commands.Selenium
             pageActionsManager.LogInfo = x => Logger.Info(x);
             pageActionsManager.LogError = x => Logger.Error(new Exception(x));
             pageActionsManager.LogWarning = x => Logger.Warn(x);
+        }
+
+        private void InitializeLoginProcessManager()
+        {
+            loginProcessManager = new PdaLoginHelper(
+                authorizationModel,
+                pageActionsManager,
+                x => Logger.Info(x),
+                x => Logger.Warn(x));
+        }
+
+        private void LoginToPortal()
+        {
+            loginProcessManager.LoginToPortal();
+        }
+
+        private void SetAvailableProfileUrls()
+        {
+            profileUrlManager = new PdaProfileUrlManager(
+                authorizationModel,
+                pageActionsManager,
+                loginProcessManager,
+                maxRetryAttempts,
+                pauseBetweenAttempts,
+                x => Logger.Info(x));
+            profileUrlManager.SetAvailableProfileUrls();
+        }
+
+        private void RunEtl()
+        {
+            var statsType = new StatsTypeAgg(StatsType);
+            var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
+            Logger.Info("Amazon ETL (PDA Campaigns). DateRange: {0}.", dateRange);
+            var accounts = GetAccounts();
+            foreach (var account in accounts)
+            {
+                DoEtls(account, dateRange, statsType);
+            }
+            Logger.Info("Amazon ETL (PDA Campaigns) has been finished.");
         }
 
         private void DoEtls(ExtAccount account, DateRange dateRange, StatsTypeAgg statsType)
@@ -224,8 +243,9 @@ namespace CakeExtracter.Commands.Selenium
                 account.Name,
                 authorizationModel,
                 pageActionsManager,
-                PdaConfigurationHelper.GetMaxRetryAttempts(),
-                PdaConfigurationHelper.GetPauseBetweenAttempts(),
+                profileUrlManager,
+                maxRetryAttempts,
+                pauseBetweenAttempts,
                 x => Logger.Info(account.Id, x),
                 x => Logger.Error(account.Id, new Exception(x)),
                 x => Logger.Warn(account.Id, x));

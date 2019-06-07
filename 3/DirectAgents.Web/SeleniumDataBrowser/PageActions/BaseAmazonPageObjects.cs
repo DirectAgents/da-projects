@@ -2,7 +2,7 @@
 
 namespace SeleniumDataBrowser.PageActions
 {
-    public class BaseAmazonPageObjects
+    internal class BaseAmazonPageObjects
     {
         public static By LoginEmailInput = By.XPath(".//input[@id='ap_email']");
         public static By LoginPassInput = By.XPath(".//input[@id='ap_password']");
