@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers.Interfaces;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils;
-using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
 
@@ -16,13 +16,13 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
     /// <seealso cref="CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers.Interfaces.IJobRequestLifeCycleManager" />
     public class JobRequestLifeCycleManager : IJobRequestLifeCycleManager
     {
-        private readonly IBaseRepository<JobRequest> requestRepository;
+        private readonly IJobRequestsRepository requestRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="JobRequestLifeCycleManager"/> class.
         /// </summary>
         /// <param name="jobRequestRepository">The repository for job requests.</param>
-        public JobRequestLifeCycleManager(IBaseRepository<JobRequest> jobRequestRepository)
+        public JobRequestLifeCycleManager(IJobRequestsRepository jobRequestRepository)
         {
             requestRepository = jobRequestRepository;
         }
@@ -79,6 +79,41 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
             {
                 ProcessRequestWithoutRetriesCompletion(request);
             }
+        }
+
+        /// <inheritdoc />
+        public void ActualizeStatusOfRetryPendingJobs()
+        {
+            var retryPendingJobRequests = GetRetryPendingsJobRequests();
+            retryPendingJobRequests.ForEach(jobRequest =>
+            {
+                var actualStatus = GetActualStatusOfJobRequestBasedOnChildren(jobRequest);
+                if (jobRequest.Status != actualStatus)
+                {
+                    jobRequest.Status = actualStatus;
+                    requestRepository.UpdateItem(jobRequest);
+                    Logger.Info($"Retry rending job with id {jobRequest.Id} status updated to {jobRequest.Status}");
+                }
+            });
+        }
+
+        private JobRequestStatus GetActualStatusOfJobRequestBasedOnChildren(JobRequest jobRequest)
+        {
+            var childrenRequests = requestRepository.GetAllChildrenRequests(jobRequest);
+            if (childrenRequests.All(req => req.Status == JobRequestStatus.Completed))
+            {
+                return JobRequestStatus.Completed;
+            }
+            if (childrenRequests.Any(childReq => childReq.Status == JobRequestStatus.Processing || childReq.Status == JobRequestStatus.PendingRetries || childReq.Status == JobRequestStatus.Scheduled))
+            {
+                return JobRequestStatus.PendingRetries;
+            }
+            return JobRequestStatus.Failed;
+        }
+
+        private List<JobRequest> GetRetryPendingsJobRequests()
+        {
+            return requestRepository.GetItems(request => request.Status == JobRequestStatus.PendingRetries).ToList();
         }
 
         private void ProcessRequestWithRetriesCompletion(ConsoleCommand command, JobRequest request, List<JobRequest> jobRetryRequests)

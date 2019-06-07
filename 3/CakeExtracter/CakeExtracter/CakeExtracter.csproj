@@ -437,6 +437,7 @@
     <Compile Include="Common\JobExecutionManagement\JobExecution\Models\FailedJobNotificationModel.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Services\IJobExecutionNotificationService.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Services\JobExecutionNotificationService.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Repositories\IJobRequestsRepository.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Services\RetryRequestsHolder.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\CommandSchedulingUtils.cs" />
     <Compile Include="Common\StatsTypeAgg.cs" />

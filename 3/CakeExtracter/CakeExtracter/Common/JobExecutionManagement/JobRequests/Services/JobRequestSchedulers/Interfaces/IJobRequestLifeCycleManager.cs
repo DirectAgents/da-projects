@@ -40,5 +40,10 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         /// </summary>
         /// <param name="request">The job request.</param>
         void ProcessAbortedRequest(JobRequest request);
+
+        /// <summary>
+        /// Updates the status of retry pending jobs. Checks all retry pending jobs and it's retries jobs and actualize it's status. 
+        /// </summary>
+        void ActualizeStatusOfRetryPendingJobs();
     }
 }

@@ -3,6 +3,8 @@ using System.Configuration;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestLaunchers;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestLaunchers.Interfaces;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers;
 
 namespace CakeExtracter.Commands.Core
 {
@@ -33,18 +35,37 @@ namespace CakeExtracter.Commands.Core
         /// </summary>
         public override int Execute(string[] remainingArguments)
         {
-            var maxNumberOfJobRequests = int.Parse(ConfigurationManager.AppSettings["JEM_MaxNumberOfRequestsToRunWithUniqueArguments"]);
-            var maxNumberOfRunningRequests = int.Parse(ConfigurationManager.AppSettings["JEM_MaxNumberOfRunningRequests"]);
-            var requestService = CreateRequestService();
-            requestService.ExecuteScheduledInPastJobRequests(maxNumberOfJobRequests, maxNumberOfRunningRequests);
+            LaunchScheduledRequests();
+            ActualizeJobRequestsStatuses();
             return 0;
         }
 
-        private JobExecutionRequestLauncher CreateRequestService()
+        private void LaunchScheduledRequests()
+        {
+            var maxNumberOfJobRequests = int.Parse(ConfigurationManager.AppSettings["JEM_MaxNumberOfRequestsToRunWithUniqueArguments"]);
+            var maxNumberOfRunningRequests = int.Parse(ConfigurationManager.AppSettings["JEM_MaxNumberOfRunningRequests"]);
+            var requestsLauncher = InitRequestsLauncher();
+            requestsLauncher.ExecuteScheduledInPastJobRequests(maxNumberOfJobRequests, maxNumberOfRunningRequests);
+        }
+
+        private void ActualizeJobRequestsStatuses()
+        {
+            var jobRequestLifeCycleManager = InitJobRequestLifeCycleManager();
+            jobRequestLifeCycleManager.ActualizeStatusOfRetryPendingJobs();
+        }
+
+        private IJobExecutionRequestLauncher InitRequestsLauncher()
         {
             var requestRepository = new JobRequestRepository();
-            var requestService = new JobExecutionRequestLauncher(requestRepository);
-            return requestService;
+            var requestsLauncher = new JobExecutionRequestLauncher(requestRepository);
+            return requestsLauncher;
+        }
+
+        private JobRequestLifeCycleManager InitJobRequestLifeCycleManager()
+        {
+            var requestRepository = new JobRequestRepository();
+            var requestsLifeCycleManager = new JobRequestLifeCycleManager(requestRepository);
+            return requestsLifeCycleManager;
         }
     }
 }

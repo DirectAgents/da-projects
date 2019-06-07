@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 using Z.EntityFramework.Extensions;
 
 namespace CakeExtracter.Tests.JobTests.Amazon.TestImplementations
 {
-    public class TestJobRequestRepository : IBaseRepository<JobRequest>
+    public class TestJobRequestRepository : IJobRequestsRepository
     {
         public ConcurrentBag<JobRequest> ScheduledRequests = new ConcurrentBag<JobRequest>();
 
@@ -66,6 +66,11 @@ namespace CakeExtracter.Tests.JobTests.Amazon.TestImplementations
         public bool MergeItems(IEnumerable<JobRequest> itemsToMerge, Action<EntityBulkOperation<JobRequest>> entityBulkOptionsAction)
         {
             return true;
+        }
+
+        public List<JobRequest> GetAllChildrenRequests(JobRequest jobRequest)
+        {
+            return new List<JobRequest>();
         }
     }
 }
