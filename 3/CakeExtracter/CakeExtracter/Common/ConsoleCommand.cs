@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 using CakeExtracter.Common.JobExecutionManagement;
@@ -43,6 +44,11 @@ namespace CakeExtracter.Common
         ///   <c>true</c> if this instance is automatic shut down mechanism enabled; otherwise, <c>false</c>.
         /// </value>
         protected bool IsAutoShutDownMechanismEnabled { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets the retry commands.
+        /// </summary>
+        protected ConcurrentQueue<CommandWithSchedule> RetryCommands { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConsoleCommand"/> class.

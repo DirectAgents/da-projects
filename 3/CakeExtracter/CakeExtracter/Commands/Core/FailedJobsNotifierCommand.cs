@@ -41,6 +41,11 @@ namespace CakeExtracter.Commands.Core
                 new JobExecutionItemRepository(),
                 new JobRequestRepository(),
                 new EmailNotificationsService());
+
+            // First Level of notifications(Warning). Notifies about errors occurred in job execution. Relaunch mechanism can fix errors.
+            jobExecutionNotificationService.NotifyAboutErrorsInJobExecution();
+
+            // Second Level Of Notifications. (Critical) Notifies about failed state of jobs. Relaunch mechanism didn't fix errors.
             jobExecutionNotificationService.NotifyAboutFailedJobs();
             return 0;
         }

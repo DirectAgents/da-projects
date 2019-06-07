@@ -1,34 +1,9 @@
-﻿<h1>Job Execution Failed</h1>
+﻿<h1>Job Execution Failed. </h1>
+
+<div>
+    Retry mechanism didn't help. See more on the <a href="http://dagents.eastus.cloudapp.azure.com/Admin/JobsExecution">Job Execution history page</a>.
+</div>
 
 <div><b>Command name: </b>@Model.JobRequest.CommandName</div>
 <div><b>Command arguments: </b>@Model.JobRequest.CommandExecutionArguments</div>
 <div><b>Command execution start time: </b>@Model.ExecutionStartTime</div>
-
-
-@if (@Model.Errors.CommonMessages.Count  > 0)
-{
-<h3>Common Errors:</h3>
-}
-
-
-@foreach (var message in @Model.Errors.CommonMessages)
-{
-<p style='color: red'>@message</p>
-}
-
-@if (@Model.Errors.AccountsData.Count  > 0)
-{
-<h3>Account Errors:</h3>
-}
-
-
-@foreach (var accountData in @Model.Errors.AccountsData)
-{
-<div>
-    <b>@accountData.AccountId</b>
-    @foreach (var message in @accountData.Messages)
-    {
-    <p style='color: red'>@message</p>
-    }
-</div>
-}

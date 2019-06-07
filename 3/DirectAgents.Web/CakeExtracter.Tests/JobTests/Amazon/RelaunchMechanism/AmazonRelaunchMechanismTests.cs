@@ -524,7 +524,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
         private void ResetCommandExecutionContext(ConsoleCommand currentCommand)
         {
             var jobExecutionItemService = new JobExecutionItemService(executionItemRepository, requestRepository);
-            var jobExecutionRequestService = new JobExecutionRequestScheduler(requestRepository);
+            var jobExecutionRequestService = new JobRequestLifeCycleManager(requestRepository);
             CommandExecutionContext.ResetContext(currentCommand, jobExecutionItemService, jobExecutionRequestService);
         }
     }

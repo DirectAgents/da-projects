@@ -198,6 +198,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Email\JobErrorOccuredBody.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Email\JobErrorOccuredSubject.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Email\JobFailedBody.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

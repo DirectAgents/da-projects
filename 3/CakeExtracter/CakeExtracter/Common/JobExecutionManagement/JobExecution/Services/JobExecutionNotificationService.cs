@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using CakeExtracter.Commands.Core;
 using CakeExtracter.Common.Email;
+using CakeExtracter.Common.JobExecutionManagement.JobExecution.Constants;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Models;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Utils;
 using CakeExtracter.Helpers;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
+using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
 
 namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
 {
@@ -41,6 +43,20 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
         /// <inheritdoc />
         public void NotifyAboutFailedJobs()
         {
+            try
+            {
+                var failedJobs = GetFailedParentJobsForNotifying();
+                if (failedJobs?.Count > 0)
+                {
+                    NotifyAboutFailedJobs(failedJobs);
+                    MarkJobRequestItemsAsEmailSent(failedJobs);
+                    CommandExecutionContext.Current.AppendJobExecutionStateInHistory($"Sent {failedJobs.Count} failed jobs notifications.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
         }
 
         /// <inheritdoc />
@@ -53,7 +69,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
                 {
                     NotifyAboutErrorsInJobExecutionItems(jobExecutionItemsToNotify);
                     MarkJobExecutionItemsAsEmailSent(jobExecutionItemsToNotify);
-                    CommandExecutionContext.Current.SetJobExecutionStateInHistory($"Sent {jobExecutionItemsToNotify.Count} execution items with errors notifications.");
+                    CommandExecutionContext.Current.AppendJobExecutionStateInHistory($"Sent {jobExecutionItemsToNotify.Count} execution items with errors notifications.");
                 }
             }
             catch (Exception ex)
@@ -70,29 +86,48 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
                     item.JobRequest.CommandName != FailedJobsNotifierCommand.CommandName, "JobRequest");
         }
 
-        private void NotifyAboutErrorsInJobExecutionItems(List<JobRequestExecution> jobsToNotify)
+        private List<JobRequest> GetFailedParentJobsForNotifying()
         {
-            const string toEmailsConfigurationKey = "JEM_Failure_ToEmails";
-            const string copyEmailsConfigurationKey = "JEM_Failure_CcEmails";
-            var toEmails = ConfigurationHelper.ExtractEnumerableFromConfig(toEmailsConfigurationKey).ToArray();
-            var copyEmails = ConfigurationHelper.ExtractEnumerableFromConfig(copyEmailsConfigurationKey).ToArray();
-            jobsToNotify.ForEach(job =>
+            return jobRequestsRepository.GetItems(
+                    item => item.FailureEmailSent == false &&
+                    item.Status == JobRequestStatus.Failed &&
+                    item.ParentJobRequestId == null && // Emails should be not sent for child(retries) requests.
+                    item.CommandName != FailedJobsNotifierCommand.CommandName);
+        }
+
+        private void NotifyAboutErrorsInJobExecutionItems(List<JobRequestExecution> jobExecutionsToNotify)
+        {
+            var toEmails = ConfigurationHelper.ExtractEnumerableFromConfig(EmailConfigConstants.JobErrorOccurredToConfigKey).ToArray();
+            var ccEmails = ConfigurationHelper.ExtractEnumerableFromConfig(EmailConfigConstants.JobErrorOccurredCcConfigKey).ToArray();
+            jobExecutionsToNotify.ForEach(jobExecution =>
             {
-                SendFailedJobNotification(job, toEmails, copyEmails);
+                var model = PrepareErrorInJobNotificationModel(jobExecution);
+                emailNotificationsService.SendEmail(toEmails, ccEmails, model, EmailConfigConstants.JobErrorOccurredBodyTemplateName, EmailConfigConstants.JobErrorOccurredSubjectTemplateName);
             });
         }
 
-        private void SendFailedJobNotification(JobRequestExecution jobToNotify, string[] toEmails, string[] copyEmails)
+        private void NotifyAboutFailedJobs(List<JobRequest> jobsToNotify)
         {
-            var model = PrepareFailedJobNotificationModel(jobToNotify);
-            const string bodyTemplateName = "JobFailedBody";
-            const string subjectTemplateName = "JobFailedSubject";
-            emailNotificationsService.SendEmail(toEmails, copyEmails, model, bodyTemplateName, subjectTemplateName);
+            var toEmails = ConfigurationHelper.ExtractEnumerableFromConfig(EmailConfigConstants.JobFailedToConfigKey).ToArray();
+            var ccEmails = ConfigurationHelper.ExtractEnumerableFromConfig(EmailConfigConstants.JobFailedCcConfigKey).ToArray();
+            jobsToNotify.ForEach(job =>
+            {
+                var model = PrepareJobFailedNotificationModel(job);
+                emailNotificationsService.SendEmail(toEmails, ccEmails, model, EmailConfigConstants.JobFailedBodyTemplateName, EmailConfigConstants.JobFailedSubjectTemplateName);
+            });
         }
 
-        private FailedJobNotificationModel PrepareFailedJobNotificationModel(JobRequestExecution jobToNotify)
+        private FailedJobNotificationModel PrepareJobFailedNotificationModel(JobRequest jobRequest)
         {
             return new FailedJobNotificationModel
+            {
+                JobRequest = jobRequest,
+            };
+        }
+
+        private ErrorInJobNotificationModel PrepareErrorInJobNotificationModel(JobRequestExecution jobToNotify)
+        {
+            return new ErrorInJobNotificationModel
             {
                 JobRequest = jobToNotify.JobRequest,
                 JobRequestExecution = jobToNotify,
@@ -108,6 +143,15 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
                 job.ErrorEmailSent = true;
             });
             jobRequestExecutionRepository.UpdateItems(jobs);
+        }
+
+        private void MarkJobRequestItemsAsEmailSent(List<JobRequest> jobRequests)
+        {
+            jobRequests.ForEach(jobRequest =>
+            {
+                jobRequest.FailureEmailSent = true;
+            });
+            jobRequestsRepository.UpdateItems(jobRequests);
         }
     }
 }

@@ -432,9 +432,13 @@
     <Compile Include="Common\Email\EmailNotificationsService.cs" />
     <Compile Include="Common\Email\IEmailNotificationsService.cs" />
     <Compile Include="Common\FileUtils.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Constants\EmailConfigConstants.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Models\ErrorInJobNotificationModel.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Models\FailedJobNotificationModel.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Services\IJobExecutionNotificationService.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Services\JobExecutionNotificationService.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Services\RetryRequestsHolder.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\CommandSchedulingUtils.cs" />
     <Compile Include="Common\StatsTypeAgg.cs" />
     <Compile Include="Commands\EOMSynchCPCCommand.cs" />
     <Compile Include="Commands\DA\DASeed.cs" />
@@ -470,8 +474,8 @@
     <Compile Include="Common\JobExecutionManagement\JobRequests\Services\JobRequestLaunchers\JobExecutionRequestLauncher.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Models\CommandWithSchedule.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Repositories\JobRequestRepository.cs" />
-    <Compile Include="Common\JobExecutionManagement\JobRequests\Services\JobRequestSchedulers\Interfaces\IJobExecutionRequestScheduler.cs" />
-    <Compile Include="Common\JobExecutionManagement\JobRequests\Services\JobRequestSchedulers\JobExecutionRequestScheduler.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Services\JobRequestSchedulers\Interfaces\IJobRequestLifeCycleManager.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Services\JobRequestSchedulers\JobRequestLifeCycleManager.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\CommandArgumentsConverter.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\JobRequestsLogger.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\ProcessManager.cs" />
