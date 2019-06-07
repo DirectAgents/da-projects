@@ -10,7 +10,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
     /// <summary>
     /// Summary loader for amazon AD level.
     /// </summary>
-    /// <seealso cref="CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders.BaseAmazonLevelLoader{DirectAgents.Domain.Entities.CPProg.TDadSummary, DirectAgents.Domain.Entities.CPProg.TDadSummaryMetric}" />
+    /// <seealso cref="BaseAmazonLevelLoader{TDadSummary, TDadSummaryMetric}" />
     public class AmazonAdSummaryLoader : BaseAmazonLevelLoader<TDadSummary, TDadSummaryMetric>
     {
         private readonly TDadSummaryLoader summaryItemsLoader;

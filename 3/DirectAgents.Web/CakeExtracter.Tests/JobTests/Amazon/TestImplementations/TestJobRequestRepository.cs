@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 using Z.EntityFramework.Extensions;
@@ -25,7 +26,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.TestImplementations
 
         public List<JobRequest> GetItems(Func<JobRequest, bool> predicate)
         {
-            return new List<JobRequest>();
+            return ScheduledRequests.Where(predicate).ToList();
         }
 
         public List<JobRequest> GetItemsWithIncludes(Func<JobRequest, bool> predicate, string includeProperty)

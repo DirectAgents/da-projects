@@ -5,6 +5,7 @@ using CakeExtracter.Common.Email;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Constants;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Models;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Utils;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
 using CakeExtracter.Helpers;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
@@ -20,7 +21,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
     {
         private readonly IBaseRepository<JobRequestExecution> jobRequestExecutionRepository;
 
-        private readonly IBaseRepository<JobRequest> jobRequestsRepository;
+        private readonly IJobRequestsRepository jobRequestsRepository;
 
         private readonly IEmailNotificationsService emailNotificationsService;
 
@@ -32,7 +33,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
         /// <param name="jobRequestsRepository">Job requests repository.</param>
         public JobExecutionNotificationService(
                 IBaseRepository<JobRequestExecution> jobRequestExecutionRepository,
-                IBaseRepository<JobRequest> jobRequestsRepository,
+                IJobRequestsRepository jobRequestsRepository,
                 IEmailNotificationsService emailNotificationsService)
         {
             this.jobRequestExecutionRepository = jobRequestExecutionRepository;

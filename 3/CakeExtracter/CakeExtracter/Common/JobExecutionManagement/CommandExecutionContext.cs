@@ -1,8 +1,5 @@
-﻿using CakeExtracter.Common.JobExecutionManagement.JobExecution;
-using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
+﻿using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers.Interfaces;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
@@ -32,13 +29,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         /// <value>
         /// The name of the currently running command.
         /// </value>
-        public string CommandName
-        {
-            get
-            {
-                return currentCommand.Command;
-            }
-        }
+        public string CommandName => currentCommand.Command;
 
         private readonly IJobExecutionItemService jobExecutionItemService;
         private readonly IJobRequestLifeCycleManager jobExecutionLifeCycleManager;
@@ -50,21 +41,8 @@ namespace CakeExtracter.Common.JobExecutionManagement
 
         private CommandExecutionContext(ConsoleCommand command)
         {
-            var executionItemRepository = new JobExecutionItemRepository();
-            var requestRepository = new JobRequestRepository();
-            jobExecutionItemService = new JobExecutionItemService(executionItemRepository, requestRepository);
-            jobExecutionLifeCycleManager = new JobRequestLifeCycleManager(requestRepository);
-            retryRequestsHolder = new RetryRequestsHolder(command);
-            InitCurrentJobRequest(command);
-        }
-
-        private CommandExecutionContext(
-            ConsoleCommand command,
-            IJobExecutionItemService jobExecutionItemService,
-            IJobRequestLifeCycleManager jobExecutionRequestScheduler)
-        {
-            this.jobExecutionItemService = jobExecutionItemService;
-            this.jobExecutionLifeCycleManager = jobExecutionRequestScheduler;
+            jobExecutionItemService = DIKernel.Get<IJobExecutionItemService>();
+            jobExecutionLifeCycleManager = DIKernel.Get<IJobRequestLifeCycleManager>();
             retryRequestsHolder = new RetryRequestsHolder(command);
             InitCurrentJobRequest(command);
         }
@@ -76,20 +54,6 @@ namespace CakeExtracter.Common.JobExecutionManagement
         public static void ResetContext(ConsoleCommand command)
         {
             Current = new CommandExecutionContext(command);
-        }
-
-        /// <summary>
-        /// Resets the context.
-        /// </summary>
-        /// <param name="command">The command.</param>
-        /// <param name="jobExecutionItemService">The job execution item service.</param>
-        /// <param name="jobExecutionRequestScheduler">The job execution request scheduler.</param>
-        public static void ResetContext(
-            ConsoleCommand command,
-            IJobExecutionItemService jobExecutionItemService,
-            IJobRequestLifeCycleManager jobExecutionRequestScheduler)
-        {
-            Current = new CommandExecutionContext(command, jobExecutionItemService, jobExecutionRequestScheduler);
         }
 
         /// <summary>
