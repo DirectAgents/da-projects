@@ -49,7 +49,7 @@ namespace CakeExtractor.SeleniumApplication.Configuration.Vcd
                         {
                             Account = dbAccount,
                             McId = pageAccountData.mcId,
-                            VendorGroupId = pageAccountData.vendorGroupId
+                            VendorGroupId = pageAccountData.vendorGroupId,
                         });
                     }
                     else
