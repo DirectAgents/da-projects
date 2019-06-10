@@ -11,11 +11,9 @@ using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils;
 using CakeExtracter.Helpers;
-using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using CakeExtracter.Tests.Helpers;
 using CakeExtracter.Tests.JobTests.Amazon.TestImplementations.DIModules;
 using CakeExtracter.Tests.JobTests.Amazon.TestImplementations.DIModules.Base;
-using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
 using DirectAgents.Domain.Entities.CPProg;
 using Moq;
@@ -44,7 +42,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
         [TestCase(null, null, null)]
         public void AmazonRelaunchMechanism_RelaunchCommandAfterExceptionInDailyExtractor(DateTime? fromDateTime, DateTime? toDateTime, int? daysAgo)
         {
-            DIKernel.SetKernel<TestAmazonDailyExtractorFailedDiModule>();
+            DIKernel.SetKernel(new TestAmazonDailyExtractorFailedDiModule());
             var commandMock = CreateCommandMock(null, fromDateTime, toDateTime, daysAgo, StatsTypeAgg.DailyArg);
             commandMock.Object.Run();
             AssertRelaunchIsValid(commandMock);
@@ -59,7 +57,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
         [TestCase(null, null, null)]
         public void AmazonRelaunchMechanism_RelaunchCommandAfterExceptionInDailyCleaner(DateTime? fromDateTime, DateTime? toDateTime, int? daysAgo)
         {
-            DIKernel.SetKernel<TestAmazonDailyCleanerFailedDiModule>();
+            DIKernel.SetKernel(new TestAmazonDailyCleanerFailedDiModule());
             var commandMock = CreateCommandMock(null, fromDateTime, toDateTime, daysAgo, StatsTypeAgg.DailyArg);
             commandMock.Object.Run();
             AssertRelaunchIsValid(commandMock);
@@ -74,7 +72,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
         [TestCase(null, null, null)]
         public void AmazonRelaunchMechanism_RelaunchCommandAfterExceptionInDailyLoader(DateTime? fromDateTime, DateTime? toDateTime, int? daysAgo)
         {
-            DIKernel.SetKernel<TestAmazonDailyLoaderFailedDiModule>();
+            DIKernel.SetKernel(new TestAmazonDailyLoaderFailedDiModule());
             var commandMock = CreateCommandMock(null, fromDateTime, toDateTime, daysAgo, StatsTypeAgg.DailyArg);
             commandMock.Object.Run();
             AssertRelaunchIsValid(commandMock);
@@ -89,7 +87,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
         [TestCase(null, null, null)]
         public void AmazonRelaunchMechanism_RelaunchCommandAfterExceptionInCampaignsInfoReceivingOfKeywordExtractor(DateTime? fromDateTime, DateTime? toDateTime, int? daysAgo)
         {
-            DIKernel.SetKernel<TestAmazonDependencyInjectionModule>();
+            DIKernel.SetKernel(new TestAmazonDependencyInjectionModule());
             var commandMock = CreateCommandMock(null, fromDateTime, toDateTime, daysAgo, StatsTypeAgg.KeywordArg);
             var utilityMock = new Mock<AmazonUtility>();
             var exception = new ExtractDataException(
@@ -113,7 +111,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
         [TestCase(null, null, null)]
         public void AmazonRelaunchMechanism_RelaunchCommandAfterExceptionInCampaignsInfoReceivingOfAdExtractor(DateTime? fromDateTime, DateTime? toDateTime, int? daysAgo)
         {
-            DIKernel.SetKernel<TestAmazonDependencyInjectionModule>();
+            DIKernel.SetKernel(new TestAmazonDependencyInjectionModule());
             var commandMock = CreateCommandMock(null, fromDateTime, toDateTime, daysAgo, StatsTypeAgg.CreativeArg);
             var utilityMock = new Mock<AmazonUtility>();
             var exception = new ExtractDataException(
@@ -137,7 +135,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
         [TestCase(null, null, null)]
         public void AmazonRelaunchMechanism_RelaunchCommandAfterExceptionInTargetKeywordReportReceiving(DateTime? fromDateTime, DateTime? toDateTime, int? daysAgo)
         {
-            DIKernel.SetKernel<TestAmazonDependencyInjectionModule>();
+            DIKernel.SetKernel(new TestAmazonDependencyInjectionModule());
             var commandMock = CreateCommandMock(null, fromDateTime, toDateTime, daysAgo, StatsTypeAgg.KeywordArg);
             var utilityMock = new Mock<AmazonUtility>();
             var exception = new ExtractDataException(
@@ -164,7 +162,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
         [TestCase(null, null, null)]
         public void AmazonRelaunchMechanism_RelaunchCommandAfterExceptionInKeywordReportReceiving(DateTime? fromDateTime, DateTime? toDateTime, int? daysAgo)
         {
-            DIKernel.SetKernel<TestAmazonDependencyInjectionModule>();
+            DIKernel.SetKernel(new TestAmazonDependencyInjectionModule());
             var commandMock = CreateCommandMock(null, fromDateTime, toDateTime, daysAgo, StatsTypeAgg.KeywordArg);
             var utilityMock = new Mock<AmazonUtility>();
             var exception = new ExtractDataException(
@@ -192,7 +190,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
         [TestCase(null, null, null)]
         public void AmazonRelaunchMechanism_RelaunchCommandAfterExceptionInKeywordCleaner(DateTime? fromDateTime, DateTime? toDateTime, int? daysAgo)
         {
-            DIKernel.SetKernel<TestAmazonKeywordCleanerFailedDiModule>();
+            DIKernel.SetKernel(new TestAmazonKeywordCleanerFailedDiModule());
             var commandMock = CreateCommandMock(null, fromDateTime, toDateTime, daysAgo, StatsTypeAgg.KeywordArg);
             var utilityMock = new Mock<AmazonUtility>();
             utilityMock.Setup(m => m.GetCampaigns(It.IsAny<CampaignType>(), It.IsAny<string>())).Returns(new List<AmazonCampaign>());
@@ -214,7 +212,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
         [TestCase(null, null, null)]
         public void AmazonRelaunchMechanism_RelaunchCommandAfterExceptionInKeywordLoader(DateTime? fromDateTime, DateTime? toDateTime, int? daysAgo)
         {
-            DIKernel.SetKernel<TestAmazonKeywordLoaderFailedDiModule>();
+            DIKernel.SetKernel(new TestAmazonKeywordLoaderFailedDiModule());
             var commandMock = CreateCommandMock(null, fromDateTime, toDateTime, daysAgo, StatsTypeAgg.KeywordArg);
             var utilityMock = new Mock<AmazonUtility>();
             utilityMock.Setup(m => m.GetCampaigns(It.IsAny<CampaignType>(), It.IsAny<string>())).Returns(new List<AmazonCampaign>());
