@@ -914,6 +914,10 @@
       <Project>{3358a07a-a5a0-4933-9680-03d4308b278c}</Project>
       <Name>FacebookAPI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\API\SeleniumDataBrowser\SeleniumDataBrowser.csproj">
+      <Project>{09800c2e-2d96-495b-9f32-b461b38d015b}</Project>
+      <Name>SeleniumDataBrowser</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\API\Yahoo\Yahoo.csproj">
       <Project>{b5c95cb8-dbe8-4d94-9a6d-6c2ed3535a26}</Project>
       <Name>Yahoo</Name>
@@ -945,10 +949,6 @@
     <ProjectReference Include="..\..\DirectAgents.Web\CommissionJunction\CommissionJunction.csproj">
       <Project>{0038b6b4-357a-4721-99bc-7659ad00dd3a}</Project>
       <Name>CommissionJunction</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\DirectAgents.Web\SeleniumDataBrowser\SeleniumDataBrowser.csproj">
-      <Project>{09800c2e-2d96-495b-9f32-b461b38d015b}</Project>
-      <Name>SeleniumDataBrowser</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
