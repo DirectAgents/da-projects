@@ -13,19 +13,37 @@ using SeleniumDataBrowser.PDA.Models;
 
 namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
 {
+    /// <inheritdoc cref="BaseAmazonExtractor{T}"/>
+    /// <summary>
+    /// Campaign stats extractor for Amazon Product Display Ads.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     internal abstract class AmazonPdaExtractor<T> : BaseAmazonExtractor<T>
         where T : DatedStatsSummary
     {
         private readonly AmazonConsoleManagerUtility amazonPdaUtility;
 
+        /// <inheritdoc cref="BaseAmazonExtractor{T}"/>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AmazonPdaExtractor{T}"/> class.
+        /// </summary>
+        /// <param name="account">Account for which stats will be extracted.</param>
+        /// <param name="dateRange">Range of dates for which stats will be extracted.</param>
+        /// <param name="amazonPdaUtility">Amazon PDA utility.</param>
         protected AmazonPdaExtractor(ExtAccount account, DateRange dateRange, AmazonConsoleManagerUtility amazonPdaUtility)
         : base(null, dateRange, account)
         {
             this.amazonPdaUtility = amazonPdaUtility;
         }
 
+        /// <summary>
+        /// Returns summaries of Product Display Ads campaigns.
+        /// </summary>
+        /// <returns>Summaries of PDA campaigns.</returns>
         public IEnumerable<AmazonPdaCampaignSummary> ExtractPdaCampaignSummaries()
         {
+            throw new Exception("TEST");
+
             var apiCampaignSummaries = amazonPdaUtility.GetPdaCampaignsSummaries(dateRange.Dates);
             AssignCampaignType(apiCampaignSummaries);
             var items = TransformSummaries(apiCampaignSummaries);

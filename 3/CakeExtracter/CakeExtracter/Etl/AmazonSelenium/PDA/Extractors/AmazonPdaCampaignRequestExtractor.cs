@@ -14,6 +14,10 @@ using SeleniumDataBrowser.PDA;
 
 namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
 {
+    /// <inheritdoc cref="AmazonPdaExtractor{T}"/>
+    /// <summary>
+    /// Campaigns data extractor for Amazon PDA stats.
+    /// </summary>
     internal class AmazonPdaCampaignRequestExtractor : AmazonPdaExtractor<StrategySummary>
     {
         private readonly string[] campaignTypesFromApi =
@@ -21,11 +25,19 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
             AmazonApiHelper.GetCampaignTypeName(CampaignType.ProductDisplay),
         };
 
+        /// <inheritdoc cref="AmazonPdaExtractor{T}"/>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AmazonPdaCampaignRequestExtractor"/> class.
+        /// </summary>
         public AmazonPdaCampaignRequestExtractor(ExtAccount account, DateRange dateRange, AmazonConsoleManagerUtility amazonPdaUtility)
             : base(account, dateRange, amazonPdaUtility)
         {
         }
 
+        /// <inheritdoc/>
+        /// <summary>
+        /// Extracts campaign stats using HTTP requests from Amazon Platform.
+        /// </summary>
         protected override void Extract()
         {
             Logger.Info(accountId, "Extracting CampaignSummaries (PDA) using HTTP requests from Amazon Platform for ({0}) from {1:d} to {2:d}",
@@ -43,7 +55,9 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
             }
             catch (Exception e)
             {
-                Logger.Error(new Exception("Could not extract CampaignSummaries (PDA).", e));
+                var exception = new Exception("Could not extract CampaignSummaries (PDA).", e);
+                Logger.Error(exception);
+                throw exception;
             }
             End();
         }

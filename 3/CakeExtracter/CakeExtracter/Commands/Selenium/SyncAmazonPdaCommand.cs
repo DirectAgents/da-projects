@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Linq;
 using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Exceptions;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
+using CakeExtracter.Etl;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Configuration;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Extractors;
 using CakeExtracter.Etl.TradingDesk.Extracters;
@@ -26,6 +30,7 @@ namespace CakeExtracter.Commands.Selenium
     public class SyncAmazonPdaCommand : ConsoleCommand
     {
         private const int DefaultDaysAgo = 41;
+        private const int DefaultIntervalBetweenRequestsInMinutes = 60;
 
         private AuthorizationModel authorizationModel;
         private AmazonPdaPageActions pageActionsManager;
@@ -81,8 +86,6 @@ namespace CakeExtracter.Commands.Selenium
         /// </summary>
         public SyncAmazonPdaCommand()
         {
-            NoNeedToCreateRepeatRequests = true;
-
             IsCommand("SyncAmazonPdaCommand", "Sync Amazon Product Display Ads Stats");
             HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
             HasOption("s|startDate=", "Start Date (default is 'daysAgo')", c => StartDate = DateTime.Parse(c));
@@ -125,6 +128,25 @@ namespace CakeExtracter.Commands.Selenium
             return 0;
         }
 
+        /// <inheritdoc />
+        public override IEnumerable<CommandWithSchedule> GetUniqueBroadCommands(
+            IEnumerable<CommandWithSchedule> commands)
+        {
+            var broadCommands = new List<CommandWithSchedule>();
+            var commandsGroupedByAccountAndLevel = commands.GroupBy(x =>
+            {
+                var command = x.Command as SyncAmazonPdaCommand;
+                return new { command?.AccountId, command?.StatsType };
+            });
+            foreach (var commandsGroup in commandsGroupedByAccountAndLevel)
+            {
+                var accountLevelBroadCommands = GetUniqueBroadAccountLevelCommands(commandsGroup);
+                broadCommands.AddRange(accountLevelBroadCommands);
+            }
+
+            return broadCommands;
+        }
+
         private void PreparationForWork()
         {
             InitializeFields();
@@ -141,6 +163,9 @@ namespace CakeExtracter.Commands.Selenium
 
             maxRetryAttempts = PdaConfigurationHelper.GetMaxRetryAttempts();
             pauseBetweenAttempts = PdaConfigurationHelper.GetPauseBetweenAttempts();
+            IntervalBetweenUnsuccessfulAndNewRequestInMinutes = ConfigurationHelper.GetIntConfigurationValue(
+                    "PDAIntervalBetweenRequestsInMinutes",
+                    DefaultIntervalBetweenRequestsInMinutes);
         }
 
         private void InitializeAuthorizationModel()
@@ -253,25 +278,77 @@ namespace CakeExtracter.Commands.Selenium
             return amazonPdaUtility;
         }
 
-        private static void DoEtlDailyFromRequests(ExtAccount account, DateRange dateRange, AmazonConsoleManagerUtility amazonPdaUtility)
+        private void DoEtlDailyFromRequests(ExtAccount account, DateRange dateRange, AmazonConsoleManagerUtility amazonPdaUtility)
         {
             var extractor = new AmazonPdaDailyRequestExtractor(account, dateRange, amazonPdaUtility);
             var loader = new AmazonPdaDailySummaryLoader(account.Id);
+            InitEtlEvents(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
         }
 
-        private static void DoEtlDailyFromStrategyInDatabase(ExtAccount account, DateRange dateRange)
+        private void DoEtlDailyFromStrategyInDatabase(ExtAccount account, DateRange dateRange)
         {
             var extractor = new DatabaseStrategyToDailySummaryExtractor(dateRange, account.Id);
             var loader = new AmazonDailySummaryLoader(account.Id);
+            InitEtlEvents(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
         }
 
-        private static void DoEtlStrategyFromRequests(ExtAccount account, DateRange dateRange, AmazonConsoleManagerUtility amazonPdaUtility)
+        private void DoEtlStrategyFromRequests(ExtAccount account, DateRange dateRange, AmazonConsoleManagerUtility amazonPdaUtility)
         {
             var extractor = new AmazonPdaCampaignRequestExtractor(account, dateRange, amazonPdaUtility);
             var loader = new AmazonCampaignSummaryLoader(account.Id);
+            InitEtlEvents(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
+        }
+
+        private void InitEtlEvents<T>(Extracter<T> extractor, Loader<T> loader)
+        {
+            extractor.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewCommandLaunch<SyncAmazonPdaCommand>(command =>
+                    UpdateCommandParameters(command, exception));
+            loader.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewCommandLaunch<SyncAmazonPdaCommand>(command =>
+                    UpdateCommandParameters(command, exception));
+        }
+
+        private void UpdateCommandParameters(SyncAmazonPdaCommand command, FailedEtlException exception)
+        {
+            command.AccountId = exception.AccountId;
+        }
+
+        private IEnumerable<CommandWithSchedule> GetUniqueBroadAccountLevelCommands(IEnumerable<CommandWithSchedule> commandsWithSchedule)
+        {
+            var accountLevelCommands = new List<Tuple<SyncAmazonPdaCommand, DateRange, CommandWithSchedule>>();
+            foreach (var commandWithSchedule in commandsWithSchedule)
+            {
+                var command = (SyncAmazonPdaCommand)commandWithSchedule.Command;
+                var commandDateRange = CommandHelper.GetDateRange(command.StartDate, command.EndDate, command.DaysAgoToStart, DefaultDaysAgo);
+                var crossCommands = accountLevelCommands.Where(x => commandDateRange.IsCrossDateRange(x.Item2)).ToList();
+                foreach (var crossCommand in crossCommands)
+                {
+                    commandDateRange = commandDateRange.MergeDateRange(crossCommand.Item2);
+                    commandWithSchedule.ScheduledTime =
+                        crossCommand.Item3.ScheduledTime > commandWithSchedule.ScheduledTime
+                            ? crossCommand.Item3.ScheduledTime
+                            : commandWithSchedule.ScheduledTime;
+                    accountLevelCommands.Remove(crossCommand);
+                }
+
+                accountLevelCommands.Add(new Tuple<SyncAmazonPdaCommand, DateRange, CommandWithSchedule>(command, commandDateRange, commandWithSchedule));
+            }
+
+            var broadCommands = accountLevelCommands.Select(GetCommandWithCorrectDateRange).ToList();
+            return broadCommands;
+        }
+
+        private CommandWithSchedule GetCommandWithCorrectDateRange(Tuple<SyncAmazonPdaCommand, DateRange, CommandWithSchedule> setting)
+        {
+            setting.Item1.StartDate = setting.Item2.FromDate;
+            setting.Item1.EndDate = setting.Item2.ToDate;
+            setting.Item1.DaysAgoToStart = null;
+            setting.Item3.Command = setting.Item1;
+            return setting.Item3;
         }
 
         private IEnumerable<ExtAccount> GetAccounts()

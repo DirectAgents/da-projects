@@ -10,13 +10,25 @@ using SeleniumDataBrowser.PDA;
 
 namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
 {
+    /// <inheritdoc cref="AmazonPdaExtractor{T}"/>
+    /// <summary>
+    /// Daily data extractor for Amazon PDA stats (from Campaign data).
+    /// </summary>
     internal class AmazonPdaDailyRequestExtractor : AmazonPdaExtractor<DailySummary>
     {
+        /// <inheritdoc cref="AmazonPdaExtractor{T}"/>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AmazonPdaDailyRequestExtractor"/> class.
+        /// </summary>
         public AmazonPdaDailyRequestExtractor(ExtAccount account, DateRange dateRange, AmazonConsoleManagerUtility amazonPdaUtility)
             : base(account, dateRange, amazonPdaUtility)
         {
         }
 
+        /// <inheritdoc/>
+        /// <summary>
+        /// Extracts daily stats using HTTP requests from Amazon Platform.
+        /// </summary>
         protected override void Extract()
         {
             Logger.Info(accountId, "Extracting DailySummaries (PDA) using HTTP requests from Amazon Platform for ({0}) from {1:d} to {2:d}",
