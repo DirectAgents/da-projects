@@ -39,6 +39,8 @@ namespace CakeExtracter.Common.JobExecutionManagement
         private JobRequestExecution currentJobRequestExecution;
         private RetryRequestsHolder retryRequestsHolder;
 
+        private bool isFailedExecution;
+
         private CommandExecutionContext(ConsoleCommand command)
         {
             jobExecutionItemService = DIKernel.Get<IJobExecutionItemService>();
@@ -70,6 +72,12 @@ namespace CakeExtracter.Common.JobExecutionManagement
         /// </summary>
         public void CompleteRequestExecution()
         {
+            if (isFailedExecution)
+            {
+                SetAsFailedRequestExecution();
+                return;
+            }
+
             jobExecutionItemService.SetJobExecutionItemFinishedState(currentJobRequestExecution);
             jobExecutionLifeCycleManager.ProcessCompletedRequest(currentCommand, currentJobRequest, retryRequestsHolder);
         }
@@ -162,6 +170,14 @@ namespace CakeExtracter.Common.JobExecutionManagement
             {
                 jobExecutionItemService.AddStateMessage(currentJobRequestExecution, stateMessage, accountId);
             }
+        }
+
+        /// <summary>
+        /// Notes that the current execution has a Failed status, but does not update the execution status in the database at the moment.
+        /// </summary>
+        public void MarkCurrentExecutionAsFailed()
+        {
+            isFailedExecution = true;
         }
 
         private void InitCurrentJobRequest(ConsoleCommand command)

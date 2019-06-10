@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.UserInfoExtracting.Models
 {
@@ -14,7 +15,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
         public int primaryBusinessGroupId { get; set; }
         public string retailSubscriptionLevel { get; set; }
         public string status { get; set; }
-        public int mcId { get; set; }
+        public long mcId { get; set; }
     }
 
     //auto generated class from json value from amazon sales diagnostic page

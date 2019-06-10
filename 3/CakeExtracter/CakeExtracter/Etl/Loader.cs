@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Exceptions;
 
 namespace CakeExtracter.Etl
@@ -31,18 +32,6 @@ namespace CakeExtracter.Etl
         {
             this.accountId = accountId;
             BatchSize = batchSize;
-            ProcessEtlFailedWithoutInformation += exc =>
-            {
-                var exception = new Exception($"Exception in loader: {exc}", exc);
-                if (exc.AccountId.HasValue)
-                {
-                    Logger.Error(exc.AccountId.Value, exception);
-                }
-                else
-                {
-                    Logger.Error(exception);
-                }
-            };
         }
 
         public Thread Start(Extracter<T> source)
@@ -82,7 +71,15 @@ namespace CakeExtracter.Etl
             catch (Exception e)
             {
                 var exception = new FailedEtlException(null, null, accountId, e);
-                ProcessEtlFailedWithoutInformation?.Invoke(exception);
+                LogExceptionInLoader(exception);
+                if (ProcessEtlFailedWithoutInformation == null)
+                {
+                    CommandExecutionContext.Current.MarkCurrentExecutionAsFailed();
+                }
+                else
+                {
+                    ProcessEtlFailedWithoutInformation.Invoke(exception);
+                }
             }
         }
 
@@ -94,6 +91,19 @@ namespace CakeExtracter.Etl
 
         protected virtual void PreLoadAction()
         {
+        }
+
+        private void LogExceptionInLoader(FailedEtlException exc)
+        {
+            var exception = new Exception($"Exception in loader: {exc}", exc);
+            if (exc.AccountId.HasValue)
+            {
+                Logger.Error(exc.AccountId.Value, exception);
+            }
+            else
+            {
+                Logger.Error(exception);
+            }
         }
     }
 }
