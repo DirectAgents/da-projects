@@ -42,8 +42,6 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
         /// <returns>Summaries of PDA campaigns.</returns>
         public IEnumerable<AmazonPdaCampaignSummary> ExtractPdaCampaignSummaries()
         {
-            throw new Exception("TEST");
-
             var apiCampaignSummaries = amazonPdaUtility.GetPdaCampaignsSummaries(dateRange.Dates);
             AssignCampaignType(apiCampaignSummaries);
             var items = TransformSummaries(apiCampaignSummaries);

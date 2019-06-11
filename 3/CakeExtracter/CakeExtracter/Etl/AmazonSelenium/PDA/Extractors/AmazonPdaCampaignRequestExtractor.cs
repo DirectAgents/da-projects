@@ -56,7 +56,6 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
             catch (Exception e)
             {
                 var exception = new Exception("Could not extract CampaignSummaries (PDA).", e);
-                Logger.Error(exception);
                 throw exception;
             }
             End();
@@ -120,16 +119,17 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
         {
             Logger.Info(accountId, $"The cleaning of StrategySummaries for account ({accountId}) has begun - from {fromDate} to {toDate}.");
 
-            SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
+            SafeContextWrapper.TryMakeTransaction(
+                (ClientPortalProgContext db) =>
             {
                 db.StrategySummaryMetrics.Where(x =>
-                    x.Date >= fromDate && 
-                    x.Date <= toDate && 
+                    x.Date >= fromDate &&
+                    x.Date <= toDate &&
                     x.Strategy.AccountId == accountId &&
                     campaignTypesFromApi.Contains(x.Strategy.Type.Name)).DeleteFromQuery();
                 db.StrategySummaries.Where(x =>
-                    x.Date >= fromDate && 
-                    x.Date <= toDate && 
+                    x.Date >= fromDate &&
+                    x.Date <= toDate &&
                     x.Strategy.AccountId == accountId &&
                     campaignTypesFromApi.Contains(x.Strategy.Type.Name)).DeleteFromQuery();
             }, "DeleteFromQuery");

@@ -43,7 +43,11 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
             {
                 Logger.Warn(accountId, ex.Message);
             }
-
+            catch (Exception e)
+            {
+                var exception = new Exception("Could not extract DailySummaries (PDA).", e);
+                throw exception;
+            }
             End();
         }
 

@@ -8,7 +8,6 @@ using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Etl;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Configuration;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Extractors;
-using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Concrete;
@@ -74,12 +73,6 @@ namespace CakeExtracter.Commands.Selenium
         /// </summary>
         public bool DisabledOnly { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether to enable extracting stats of the Daily level
-        /// from the Strategy level (default = false).
-        /// </summary>
-        public bool FromDatabase { get; set; }
-
         /// <inheritdoc cref="ConsoleCommand"/>/>
         /// <summary>
         /// Initializes a new instance of the <see cref="SyncAmazonPdaCommand" /> class.
@@ -93,7 +86,6 @@ namespace CakeExtracter.Commands.Selenium
             HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default = {DefaultDaysAgo})", c => DaysAgoToStart = c);
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
             HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
-            HasOption<bool>("f|fromDatabase=", "To enable extracting stats of the Daily level from the Strategy level (default = false)", c => FromDatabase = c);
         }
 
         /// <inheritdoc />
@@ -108,7 +100,6 @@ namespace CakeExtracter.Commands.Selenium
             DaysAgoToStart = null;
             StatsType = null;
             DisabledOnly = false;
-            FromDatabase = false;
         }
 
         /// <inheritdoc />
@@ -239,7 +230,7 @@ namespace CakeExtracter.Commands.Selenium
             var amazonPdaUtility = CreateAmazonPdaUtility(account);
             try
             {
-                if (statsType.Daily && !FromDatabase)
+                if (statsType.Daily)
                 {
                     DoEtlDailyFromRequests(account, dateRange, amazonPdaUtility);
                 }
@@ -247,11 +238,6 @@ namespace CakeExtracter.Commands.Selenium
                 if (statsType.Strategy)
                 {
                     DoEtlStrategyFromRequests(account, dateRange, amazonPdaUtility);
-                }
-
-                if (statsType.Daily && FromDatabase)
-                {
-                    DoEtlDailyFromStrategyInDatabase(account, dateRange);
                 }
             }
             catch (Exception ex)
@@ -282,15 +268,7 @@ namespace CakeExtracter.Commands.Selenium
         {
             var extractor = new AmazonPdaDailyRequestExtractor(account, dateRange, amazonPdaUtility);
             var loader = new AmazonPdaDailySummaryLoader(account.Id);
-            InitEtlEvents(extractor, loader);
-            CommandHelper.DoEtl(extractor, loader);
-        }
-
-        private void DoEtlDailyFromStrategyInDatabase(ExtAccount account, DateRange dateRange)
-        {
-            var extractor = new DatabaseStrategyToDailySummaryExtractor(dateRange, account.Id);
-            var loader = new AmazonDailySummaryLoader(account.Id);
-            InitEtlEvents(extractor, loader);
+            InitEtlEvents<DailySummary, AmazonPdaDailyRequestExtractor, AmazonPdaDailySummaryLoader>(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
         }
 
@@ -298,11 +276,14 @@ namespace CakeExtracter.Commands.Selenium
         {
             var extractor = new AmazonPdaCampaignRequestExtractor(account, dateRange, amazonPdaUtility);
             var loader = new AmazonCampaignSummaryLoader(account.Id);
-            InitEtlEvents(extractor, loader);
+            InitEtlEvents<StrategySummary, AmazonPdaCampaignRequestExtractor, AmazonCampaignSummaryLoader>(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
         }
 
-        private void InitEtlEvents<T>(Extracter<T> extractor, Loader<T> loader)
+        private void InitEtlEvents<TSummary, TExtractor, TLoader>(TExtractor extractor, TLoader loader)
+            where TSummary : DatedStatsSummary, new()
+            where TExtractor : AmazonPdaExtractor<TSummary>
+            where TLoader : Loader<TSummary>
         {
             extractor.ProcessEtlFailedWithoutInformation += exception =>
                 ScheduleNewCommandLaunch<SyncAmazonPdaCommand>(command =>
