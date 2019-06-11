@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.CakeMarketingApi.Entities;
 using CakeExtracter.Etl.CakeMarketing.Extracters;
+using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities;
 using DirectAgents.Domain.Entities.Cake;
@@ -11,24 +12,64 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
 {
     public class DACampSumLoader : Loader<CampaignSummary>
     {
-        //private readonly DateTime date;
-        private readonly Func<CampaignSummary, bool> KeepFunc;
+        private readonly Func<CampaignSummary, bool> keepFunc;
+        private readonly List<int> idsOfNotLoadedCampaigns = new List<int>();
 
-        //public DACampSumLoader(DateTime date, bool keepAllNonZero = false)
+        private Dictionary<string, int> currencyIdLookupByAbbr = new Dictionary<string, int>();
+
         public DACampSumLoader(bool keepAllNonZero = false)
         {
-            //this.date = date;
             if (keepAllNonZero)
-                this.KeepFunc = cs => (cs.SourceAffiliate.SourceAffiliateId > 0 && cs.Campaign.CampaignId > 0)
-                                      && !cs.AllZeros();
+            {
+                keepFunc = cs =>
+                    (cs.SourceAffiliate.SourceAffiliateId > 0 && cs.Campaign.CampaignId > 0) && !cs.AllZeros();
+            }
             else
-                this.KeepFunc = cs => (cs.SourceAffiliate.SourceAffiliateId > 0 && cs.Campaign.CampaignId > 0)
-                                      && (cs.Paid > 0 || cs.Revenue > 0 || cs.Cost > 0);
+            {
+                keepFunc = cs =>
+                    (cs.SourceAffiliate.SourceAffiliateId > 0 && cs.Campaign.CampaignId > 0) &&
+                    (cs.Paid > 0 || cs.Revenue > 0 || cs.Cost > 0);
+            }
 
             LoadCurrencies();
         }
 
-        private Dictionary<string, int> currencyIdLookupByAbbr = new Dictionary<string, int>();
+        public static void DoOffersEtl(IEnumerable<int> offerIds)
+        {
+            if (!offerIds.Any())
+            {
+                return;
+            }
+
+            var extractor = new OffersExtracter(offerIds: offerIds);
+            var loader = new DAOffersLoader(loadInactive: true);
+            CommandHelper.DoEtl(extractor, loader);
+        }
+
+        public static void DoAffiliatesEtl(IEnumerable<int> affIds)
+        {
+            if (!affIds.Any())
+            {
+                return;
+            }
+
+            var extractor = new AffiliatesExtracter(affiliateIds: affIds);
+            var loader = new DAAffiliatesLoader();
+            CommandHelper.DoEtl(extractor, loader);
+        }
+
+        public static IEnumerable<int> DoCampaignsEtl(IEnumerable<int> campIds)
+        {
+            if (!campIds.Any())
+            {
+                return new int[] { };
+            }
+
+            var extractor = new CampaignsExtracter(campaignIds: campIds);
+            var loader = new DACampLoader();
+            CommandHelper.DoEtl(extractor, loader);
+            return extractor.CampIdsUnableToRetrieve;
+        }
 
         //private HashSet<int> offerIdsSaved = new HashSet<int>();
         //public IEnumerable<int> OfferIdsSaved
@@ -53,14 +94,11 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
             Logger.Info("Loading {0} CampSums..", items.Count);
             AddMissingOffers(items);
             AddMissingAffiliates(items);
-            AddMissingCampaigns(items);
+            var idsOfMissingCampaigns = AddMissingCampaigns(items);
+            idsOfNotLoadedCampaigns.AddRange(idsOfMissingCampaigns);
             var count = UpsertCampSums(items);
             return count;
         }
-
-        // used to determine which items to "keep"
-        //private static Func<CampaignSummary, bool> KeepFunc =
-        //    cs => (cs.Paid > 0 || cs.Revenue > 0 || cs.Cost > 0);
 
         private int UpsertCampSums(List<CampaignSummary> items)
         {
@@ -71,10 +109,14 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
             var alreadyDeleted = 0;
             using (var db = new DAContext())
             {
-                bool toDelete;
                 foreach (var item in items)
                 {
-                    toDelete = !KeepFunc(item);
+                    var toDelete = !keepFunc(item);
+                    if (!toDelete && idsOfNotLoadedCampaigns.Contains(item.Campaign.CampaignId))
+                    {
+                        toDelete = true;
+                        Logger.Info("Skipping CampSum for {0:d} because campaign {1} could not be loaded", item.Date, item.Campaign.CampaignId);
+                    }
 
                     var pk1 = item.Campaign.CampaignId;
                     var pk2 = item.Date;
@@ -83,7 +125,9 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                     if (toDelete)
                     {
                         if (target == null)
+                        {
                             alreadyDeleted++;
+                        }
                         else
                         {
                             db.CampSums.Remove(target);
@@ -97,7 +141,7 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                             target = new CampSum
                             {
                                 CampId = item.Campaign.CampaignId,
-                                Date = item.Date
+                                Date = item.Date,
                             };
                             item.CopyValuesTo(target);
                             db.CampSums.Add(target);
@@ -167,67 +211,47 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
             }
         }
 
-        private void AddMissingOffers(List<CampaignSummary> items)
+        private void AddMissingOffers(IEnumerable<CampaignSummary> items)
         {
             int[] existingOfferIds;
             using (var db = new DAContext())
             {
                 existingOfferIds = db.Offers.Select(x => x.OfferId).ToArray();
             }
-            var neededOfferIds = items.Where(KeepFunc).Select(cs => cs.SiteOffer.SiteOfferId).Distinct();
+            var neededOfferIds = items.Where(keepFunc).Select(cs => cs.SiteOffer.SiteOfferId).Distinct();
             var missingOfferIds = neededOfferIds.Where(id => !existingOfferIds.Contains(id));
 
             //NOTE: this _should_ be okay since the CampSum extracter just makes one call to Cake, so that's done by now
-            QuickETL_Offers(missingOfferIds);
-        }
-        public static void QuickETL_Offers(IEnumerable<int> offerIds)
-        {
-            if (!offerIds.Any())
-                return;
-            var extracter = new OffersExtracter(offerIds: offerIds);
-            var loader = new DAOffersLoader(loadInactive: true);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            DoOffersEtl(missingOfferIds);
         }
 
-        private void AddMissingAffiliates(List<CampaignSummary> items)
+        private void AddMissingAffiliates(IEnumerable<CampaignSummary> items)
         {
             int[] existingAffIds;
             using (var db = new DAContext())
             {
                 existingAffIds = db.Affiliates.Select(x => x.AffiliateId).ToArray();
             }
-            var neededAffIds = items.Where(KeepFunc).Select(cs => cs.SourceAffiliate.SourceAffiliateId).Distinct();
+            var neededAffIds = items.Where(keepFunc).Select(cs => cs.SourceAffiliate.SourceAffiliateId).Distinct();
             var missingAffIds = neededAffIds.Where(id => !existingAffIds.Contains(id));
 
             // ?Could just use the SourceAffiliateId and SourceAffiliateName?
             // ?future: may be interested in other attributes?
-            QuickETL_Affiliates(missingAffIds);
-        }
-        public static void QuickETL_Affiliates(IEnumerable<int> affIds)
-        {
-            if (!affIds.Any())
-                return;
-            var extracter = new AffiliatesExtracter(affiliateIds: affIds);
-            var loader = new DAAffiliatesLoader();
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            DoAffiliatesEtl(missingAffIds);
         }
 
         //TODO: make camp.AffId a foreign key
-        private void AddMissingCampaigns(List<CampaignSummary> items)
+
+        // returns the campIds of any missing campaigns that couldn't be retrieved
+        private IEnumerable<int> AddMissingCampaigns(IEnumerable<CampaignSummary> items)
         {
             int[] existingCampIds;
             using (var db = new DAContext())
             {
                 existingCampIds = db.Camps.Select(x => x.CampaignId).ToArray();
             }
-            var neededCampIds = items.Where(KeepFunc).Select(cs => cs.Campaign.CampaignId).Distinct();
-            var missingCampIds = neededCampIds.Where(id => !existingCampIds.Contains(id));
+            var neededCampIds = items.Where(keepFunc).Select(cs => cs.Campaign.CampaignId).Distinct();
+            var missingCampIds = neededCampIds.Where(id => !existingCampIds.Contains(id) && !idsOfNotLoadedCampaigns.Contains(id));
 
             //if (missingCampIds.Any())
             //{
@@ -237,19 +261,7 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
             //??? What to do if we fail to extract one of the needed campaigns? Will get a foreign-key violation error during the upsert
             //TODO: remember the campId and handle it when the related item gets processed.
 
-            QuickETL_Campaigns(missingCampIds);
+            return DoCampaignsEtl(missingCampIds);
         }
-        public static void QuickETL_Campaigns(IEnumerable<int> campIds)
-        {
-            if (!campIds.Any())
-                return;
-            var extracter = new CampaignsExtracter(campaignIds: campIds);
-            var loader = new DACampLoader();
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
-        }
-
     }
 }
