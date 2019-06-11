@@ -87,7 +87,7 @@ namespace DirectAgents.Web.App_Start
             kernel.Bind<IPlatformAccountRepository>().To<PlatformAccountRepository>();
 
             kernel.Bind<IJobHistoryDataProvider>().To<JobHistoryDataProvider>();
-            kernel.Bind<IBaseRepository<JobRequest>>().To<JobRequestRepository>();
+            kernel.Bind<IJobRequestsRepository>().To<JobRequestRepository>();
             kernel.Bind<IBaseRepository<JobRequestExecution>>().To<JobExecutionItemRepository>();
             kernel.Bind<IJobExecutionItemService>().To<JobExecutionItemService>();
             kernel.Bind<ClientPortal.Data.Contracts.IClientPortalRepository>().To<ClientPortal.Data.Services.ClientPortalRepository>();

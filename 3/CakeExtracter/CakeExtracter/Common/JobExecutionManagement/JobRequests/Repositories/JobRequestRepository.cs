@@ -40,6 +40,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories
                 var levelChildren = GetItems(jobRequest => jobRequest.ParentJobRequestId != null
                     && parentRequestsIds.Contains(jobRequest.ParentJobRequestId.Value)).ToList();
                 levelChildren.AddRange(GetAllChildrenRequestsRecursively(levelChildren));
+                return levelChildren;
             }
             return new List<JobRequest>();
         }

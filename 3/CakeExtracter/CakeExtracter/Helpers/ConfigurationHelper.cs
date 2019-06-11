@@ -95,7 +95,7 @@ namespace CakeExtracter.Helpers
 
         private static IEnumerable<string> ExtractEnumerableFromConfigValue(string configValue)
         {
-            return configValue.Split(ConfigurationValuesSeparators);
+            return configValue.Split(ConfigurationValuesSeparators, StringSplitOptions.RemoveEmptyEntries);
         }
 
         private static string GetSeparatorOrEmptyString(char symbol)

@@ -27,17 +27,25 @@ namespace CakeExtracter.Common.Email
         public void SendEmail<T>(string[] to, string[] copy, T model, string bodyTemplateName, string subjectTemplateName)
         {
             var client = GetAuthenticatedSendGridClient();
-            var body = PrepareEmailTextContent(model, bodyTemplateName);
-            var subject = PrepareEmailTextContent(model, subjectTemplateName);
+            var msg = InitMessage(to, copy, model, bodyTemplateName, subjectTemplateName);
+            var response = client.SendEmailAsync(msg).Result;
+            if (response.StatusCode != System.Net.HttpStatusCode.Accepted)
+            {
+                throw new ApplicationException("Error occurred while sending email");
+            }
+        }
+
+        private SendGridMessage InitMessage<T>(string[] to, string[] copy, T model, string bodyTemplateName, string subjectTemplateName)
+        {
             var msg = new SendGridMessage()
             {
                 From = new EmailAddress(GetEmailFromAddress()),
-                Subject = subject,
-                HtmlContent = body,
+                Subject = PrepareEmailTextContent(model, subjectTemplateName),
+                HtmlContent = PrepareEmailTextContent(model, bodyTemplateName),
             };
             to.Select(email => new EmailAddress(email)).ForEach(emailAddress => msg.AddTo(emailAddress));
             copy.Select(email => new EmailAddress(email)).ForEach(emailAddress => msg.AddCc(emailAddress));
-            var response = client.SendEmailAsync(msg).Result;
+            return msg;
         }
 
         private string PrepareEmailTextContent<T>(T model, string templateName)
