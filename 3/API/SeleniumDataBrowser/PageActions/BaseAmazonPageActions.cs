@@ -61,6 +61,7 @@ namespace SeleniumDataBrowser.PageActions
             EnterPassword(password);
             ClickElement(BaseAmazonPageObjects.RememberMeCheckBox);
             ClickElement(BaseAmazonPageObjects.LoginButton);
+            WaitEnterCharactersIfNeeded(password);
             IsPasswordCorrect();
             WaitSecurityCodeIfNecessary();
         }
@@ -78,6 +79,17 @@ namespace SeleniumDataBrowser.PageActions
                 return;
             }
             LogError("Password is incorrect");
+        }
+
+        private void WaitEnterCharactersIfNeeded(string password)
+        {
+            if (!IsElementPresent(BaseAmazonPageObjects.AuthWarningMessageBox))
+            {
+                return;
+            }
+            LogWarning("Waiting enter the characters...");
+            EnterPassword(password);
+            WaitLoading(BaseAmazonPageObjects.AuthWarningMessageBox, Timeout);
         }
 
         private void EnterEmail(string email)

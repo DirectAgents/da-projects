@@ -52,7 +52,7 @@ namespace SeleniumDataBrowser.PDA.Helpers
                 LoginWithCookie();
                 return;
             }
-            logWarn("Login into the portal without using cookies. Please enter an authorization code!");
+            logWarn("Login into the portal without using cookies. Please choose 'Amazon DSP console (formerly Amazon Advertising Platform)' and enter an authorization code!");
             LoginWithoutCookie();
         }
 

@@ -11,5 +11,6 @@ namespace SeleniumDataBrowser.PageActions
         public static By LoginButton = By.Id("signInSubmit");
         public static By IncorrectPasswordSpan = By.XPath(".//span[contains(text(),'Your password is incorrect')]");
         public static By DontAskCodeCheckBox = By.CssSelector("input#auth-mfa-remember-device");
+        public static By AuthWarningMessageBox = By.CssSelector("div#auth-warning-message-box");
     }
 }
