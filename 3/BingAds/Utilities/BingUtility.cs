@@ -19,6 +19,8 @@ namespace BingAds.Utilities
     /// </summary>
     public class BingUtility
     {
+        private const string LoggerMessagePrefix = "[BingAds.Reports]";
+
         private static ServiceClient<IReportingService> service;
 
         private readonly int[] criticalErrorCodes =
@@ -84,25 +86,27 @@ namespace BingAds.Utilities
 
         private void LogInfo(string message)
         {
+            var messageToLog = $"{LoggerMessagePrefix} {message}";
             if (logInfo == null)
             {
-                Console.WriteLine(message);
+                Console.WriteLine(messageToLog);
             }
             else
             {
-                logInfo("[BingAds.Reports] " + message);
+                logInfo(messageToLog);
             }
         }
 
         private void LogError(string message)
         {
+            var messageToLog = $"{LoggerMessagePrefix} {message}";
             if (logError == null)
             {
-                Console.WriteLine(message);
+                Console.WriteLine(messageToLog);
             }
             else
             {
-                logError("[BingAds.Reports] " + message);
+                logError(messageToLog);
             }
         }
 

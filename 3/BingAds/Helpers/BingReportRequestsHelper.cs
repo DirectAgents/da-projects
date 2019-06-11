@@ -17,6 +17,7 @@ namespace BingAds.Helpers
         /// <returns>Prepared report request.</returns>
         public static ReportRequest GetCampaignPerformanceReportRequest(long accountId, DateTime startDate, DateTime endDate)
         {
+            const string reportName = "Campaign Performance Report";
             var reportRequest = new CampaignPerformanceReportRequest
             {
                 Aggregation = ReportAggregation.Daily,
@@ -41,7 +42,7 @@ namespace BingAds.Helpers
                     CampaignPerformanceReportColumn.CampaignName,
                 },
             };
-            InitCommonFieldsInReportRequest(reportRequest, "Campaign Performance Report");
+            InitCommonFieldsInReportRequest(reportRequest, reportName);
             return reportRequest;
         }
 
@@ -54,6 +55,7 @@ namespace BingAds.Helpers
         /// <returns>Prepared report request.</returns>
         public static ReportRequest GetProductDimensionReportRequest(long accountId, DateTime startDate, DateTime endDate)
         {
+            const string reportName = "Product Dimension Performance Report";
             var reportRequest = new ProductDimensionPerformanceReportRequest
             {
                 Aggregation = ReportAggregation.Daily,
@@ -79,7 +81,7 @@ namespace BingAds.Helpers
                     ProductDimensionPerformanceReportColumn.CampaignName,
                 },
             };
-            InitCommonFieldsInReportRequest(reportRequest, "Product Dimension Performance Report");
+            InitCommonFieldsInReportRequest(reportRequest, reportName);
             return reportRequest;
         }
 
@@ -92,6 +94,7 @@ namespace BingAds.Helpers
         /// <returns>Prepared report request.</returns>
         public static ReportRequest GetGoalsReportRequest(long accountId, DateTime startDate, DateTime endDate)
         {
+            const string reportName = "Goals And Funnels Report";
             var reportRequest = new GoalsAndFunnelsReportRequest
             {
                 Aggregation = ReportAggregation.Daily,
@@ -116,7 +119,7 @@ namespace BingAds.Helpers
                     GoalsAndFunnelsReportColumn.CampaignName,
                 },
             };
-            InitCommonFieldsInReportRequest(reportRequest, "Goals And Funnels Report");
+            InitCommonFieldsInReportRequest(reportRequest, reportName);
             return reportRequest;
         }
 
