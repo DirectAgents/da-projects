@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using BingAds;
+using BingAds.Utilities;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
@@ -11,6 +11,7 @@ using CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors;
 using CakeExtracter.Etl.SearchMarketing.Loaders;
 using CakeExtracter.Helpers;
 using ClientPortal.Data.Contexts;
+using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Commands.Search
 {
@@ -82,6 +83,7 @@ namespace CakeExtracter.Commands.Search
             var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info("Bing ETL. DateRange {0}.", dateRange);
 
+            BingUtility.RefreshTokens = GetTokens();
             foreach (var searchAccount in GetSearchAccounts())
             {
                 var startDate = dateRange.FromDate;
@@ -100,6 +102,7 @@ namespace CakeExtracter.Commands.Search
                     Logger.Info("AccountCode should be an int. Skipping: {0}", searchAccount.AccountCode);
                 }
             }
+            SaveTokens(BingUtility.RefreshTokens);
             return 0;
         }
 
@@ -213,6 +216,16 @@ namespace CakeExtracter.Commands.Search
             {
                 DoEtlConv(bingUtility, searchAccount, accountId, startDate, endDate);
             }
+        }
+
+        private string[] GetTokens()
+        {
+            return Platform.GetPlatformTokens(Platform.Code_Bing);
+        }
+
+        private void SaveTokens(string[] tokens)
+        {
+            Platform.SavePlatformTokens(Platform.Code_Bing, tokens);
         }
 
         private void InitEtlEvents<T>(Extracter<T> extractor, Loader<T> loader)
