@@ -13,6 +13,7 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
     {
         //private readonly DateTime date;
         private readonly Func<CampaignSummary, bool> KeepFunc;
+        private List<int> CampIds_couldntRetrieve = new List<int>();
 
         //public DACampSumLoader(DateTime date, bool keepAllNonZero = false)
         public DACampSumLoader(bool keepAllNonZero = false)
@@ -53,7 +54,9 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
             Logger.Info("Loading {0} CampSums..", items.Count);
             AddMissingOffers(items);
             AddMissingAffiliates(items);
-            AddMissingCampaigns(items);
+            var campIds_couldntRetrieve = AddMissingCampaigns(items);
+            this.CampIds_couldntRetrieve.AddRange(campIds_couldntRetrieve);
+
             var count = UpsertCampSums(items);
             return count;
         }
@@ -75,6 +78,11 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                 foreach (var item in items)
                 {
                     toDelete = !KeepFunc(item);
+                    if (!toDelete && CampIds_couldntRetrieve.Contains(item.Campaign.CampaignId))
+                    {
+                        toDelete = true;
+                        Logger.Info("Skipping CampSum for {0:d} because campaign {1} could not be loaded", item.Date, item.Campaign.CampaignId);
+                    }
 
                     var pk1 = item.Campaign.CampaignId;
                     var pk2 = item.Date;
@@ -219,7 +227,9 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
         }
 
         //TODO: make camp.AffId a foreign key
-        private void AddMissingCampaigns(List<CampaignSummary> items)
+
+        // returns the campIds of any missing campaigns that couldn't be retrieved
+        private IEnumerable<int> AddMissingCampaigns(List<CampaignSummary> items)
         {
             int[] existingCampIds;
             using (var db = new DAContext())
@@ -227,7 +237,7 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                 existingCampIds = db.Camps.Select(x => x.CampaignId).ToArray();
             }
             var neededCampIds = items.Where(KeepFunc).Select(cs => cs.Campaign.CampaignId).Distinct();
-            var missingCampIds = neededCampIds.Where(id => !existingCampIds.Contains(id));
+            var missingCampIds = neededCampIds.Where(id => !existingCampIds.Contains(id) && !CampIds_couldntRetrieve.Contains(id));
 
             //if (missingCampIds.Any())
             //{
@@ -237,18 +247,21 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
             //??? What to do if we fail to extract one of the needed campaigns? Will get a foreign-key violation error during the upsert
             //TODO: remember the campId and handle it when the related item gets processed.
 
-            QuickETL_Campaigns(missingCampIds);
+            return QuickETL_Campaigns(missingCampIds);
         }
-        public static void QuickETL_Campaigns(IEnumerable<int> campIds)
+        public static IEnumerable<int> QuickETL_Campaigns(IEnumerable<int> campIds)
         {
             if (!campIds.Any())
-                return;
+                return new int[] { };
+
             var extracter = new CampaignsExtracter(campaignIds: campIds);
             var loader = new DACampLoader();
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();
             loaderThread.Join();
+
+            return extracter.CampIds_UnableToRetrieve;
         }
 
     }
