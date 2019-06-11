@@ -12,6 +12,7 @@ using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
+using Quartz.Impl.AdoJobStore;
 using SeleniumDataBrowser.PDA;
 using SeleniumDataBrowser.PDA.Helpers;
 using SeleniumDataBrowser.PDA.Models;
@@ -112,9 +113,9 @@ namespace CakeExtracter.Commands.Selenium
         /// <returns>Execution code.</returns>
         public override int Execute(string[] remainingArguments)
         {
-            PreparationForWork();
+            InitializeCommand();
 
-            RunEtl();
+            RunEtls();
 
             return 0;
         }
@@ -138,12 +139,18 @@ namespace CakeExtracter.Commands.Selenium
             return broadCommands;
         }
 
-        private void PreparationForWork()
+        private void InitializeCommand()
         {
-            InitializeFields();
-
-            LoginToPortal();
-            SetAvailableProfileUrls();
+            try
+            {
+                InitializeFields();
+                LoginToPortal();
+                SetAvailableProfileUrls();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to initialize PDA command.", e);
+            }
         }
 
         private void InitializeFields()
@@ -161,20 +168,34 @@ namespace CakeExtracter.Commands.Selenium
 
         private void InitializeAuthorizationModel()
         {
-            var cookieDirectoryName = PdaConfigurationHelper.GetCookiesDirectoryName();
-            authorizationModel = new AuthorizationModel
+            try
             {
-                Login = PdaConfigurationHelper.GetEMail(),
-                Password = PdaConfigurationHelper.GetEMailPassword(),
-                CookiesDir = cookieDirectoryName,
-            };
+                var cookieDirectoryName = PdaConfigurationHelper.GetCookiesDirectoryName();
+                authorizationModel = new AuthorizationModel
+                {
+                    Login = PdaConfigurationHelper.GetEMail(),
+                    Password = PdaConfigurationHelper.GetEMailPassword(),
+                    CookiesDir = cookieDirectoryName,
+                };
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to initialize authorization settings.", e);
+            }
         }
 
         private void InitializePageActionsManager()
         {
-            var timeoutInMinutes = PdaConfigurationHelper.GetWaitPageTimeout();
-            pageActionsManager = new AmazonPdaPageActions(timeoutInMinutes);
-            SetLogActionsForPageActionsManager();
+            try
+            {
+                var timeoutInMinutes = PdaConfigurationHelper.GetWaitPageTimeout();
+                pageActionsManager = new AmazonPdaPageActions(timeoutInMinutes);
+                SetLogActionsForPageActionsManager();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to initialize page actions manager.", e);
+            }
         }
 
         private void SetLogActionsForPageActionsManager()
@@ -186,31 +207,52 @@ namespace CakeExtracter.Commands.Selenium
 
         private void InitializeLoginProcessManager()
         {
-            loginProcessManager = new PdaLoginHelper(
-                authorizationModel,
-                pageActionsManager,
-                x => Logger.Info(x),
-                x => Logger.Warn(x));
+            try
+            {
+                loginProcessManager = new PdaLoginHelper(
+                    authorizationModel,
+                    pageActionsManager,
+                    x => Logger.Info(x),
+                    x => Logger.Warn(x));
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to initialize login process manager.", e);
+            }
         }
 
         private void LoginToPortal()
         {
-            loginProcessManager.LoginToPortal();
+            try
+            {
+                loginProcessManager.LoginToPortal();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to login to Amazon Advertiser Portal.", e);
+            }
         }
 
         private void SetAvailableProfileUrls()
         {
-            profileUrlManager = new PdaProfileUrlManager(
-                authorizationModel,
-                pageActionsManager,
-                loginProcessManager,
-                maxRetryAttempts,
-                pauseBetweenAttempts,
-                x => Logger.Info(x));
-            profileUrlManager.SetAvailableProfileUrls();
+            try
+            {
+                profileUrlManager = new PdaProfileUrlManager(
+                    authorizationModel,
+                    pageActionsManager,
+                    loginProcessManager,
+                    maxRetryAttempts,
+                    pauseBetweenAttempts,
+                    x => Logger.Info(x));
+                profileUrlManager.SetAvailableProfileUrls();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to set available profile URLs.", e);
+            }
         }
 
-        private void RunEtl()
+        private void RunEtls()
         {
             var statsType = new StatsTypeAgg(StatsType);
             var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
@@ -250,18 +292,24 @@ namespace CakeExtracter.Commands.Selenium
 
         private AmazonConsoleManagerUtility CreateAmazonPdaUtility(ExtAccount account)
         {
-            var amazonPdaUtility = new AmazonConsoleManagerUtility(
-                account.Name,
-                authorizationModel,
-                pageActionsManager,
-                profileUrlManager,
-                maxRetryAttempts,
-                pauseBetweenAttempts,
-                x => Logger.Info(account.Id, x),
-                x => Logger.Error(account.Id, new Exception(x)),
-                x => Logger.Warn(account.Id, x));
-
-            return amazonPdaUtility;
+            try
+            {
+                var amazonPdaUtility = new AmazonConsoleManagerUtility(
+                    account.Name,
+                    authorizationModel,
+                    pageActionsManager,
+                    profileUrlManager,
+                    maxRetryAttempts,
+                    pauseBetweenAttempts,
+                    x => Logger.Info(account.Id, x),
+                    x => Logger.Error(account.Id, new Exception(x)),
+                    x => Logger.Warn(account.Id, x));
+                return amazonPdaUtility;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to create Amazon PDA Utility.", e);
+            }
         }
 
         private void DoEtlDailyFromRequests(ExtAccount account, DateRange dateRange, AmazonConsoleManagerUtility amazonPdaUtility)

@@ -56,18 +56,11 @@ namespace SeleniumDataBrowser.PDA.Helpers
         /// </summary>
         public void SetAvailableProfileUrls()
         {
-            try
-            {
-                GoToPortalMainPage();
-                AvailableProfileUrls = TryGetAvailableProfiles();
+            GoToPortalMainPage();
+            AvailableProfileUrls = TryGetAvailableProfiles();
 
-                logInfo("The following profiles were found for the current account:");
-                AvailableProfileUrls.ForEach(x => logInfo($"{x.Key} - {x.Value}"));
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"Could not to get the profile URLs: {e.Message}", e);
-            }
+            logInfo("The following profiles were found for the current account:");
+            AvailableProfileUrls.ForEach(x => logInfo($"{x.Key} - {x.Value}"));
         }
 
         private void GoToPortalMainPage()
