@@ -7,10 +7,15 @@ using BingAds.Models;
 namespace BingAds.Helpers
 {
     /// <summary>
-    /// Provides methods for working with client credentials.
+    /// Provides methods for working with Bing client credentials.
     /// </summary>
     internal static class ClientCredentialsProvider
     {
+        /// <summary>
+        /// The URI to which the user will be redirected after receiving Bing user consent.
+        /// </summary>
+        public static readonly string RedirectUrl = ConfigurationManager.AppSettings["BingRedirectionUri"];
+
         private const int MaxNumAlts = 10;
 
         private static readonly Dictionary<int, string[]> AltAccountIDs = new Dictionary<int, string[]>(MaxNumAlts);
@@ -19,7 +24,7 @@ namespace BingAds.Helpers
         /// <summary>
         /// Gets or sets refresh tokens for accounts.
         /// </summary>
-        public static string[] RefreshTokens { get; set; }
+        public static string[] RefreshTokens { get; set; } = new string[MaxNumAlts];
 
         static ClientCredentialsProvider()
         {
@@ -37,6 +42,18 @@ namespace BingAds.Helpers
         {
             var credentials = new ClientCredentialsInfo();
             SetCredentials(credentials, clientId.ToString());
+            return credentials;
+        }
+
+        /// <summary>
+        /// Returns client credentials for the corresponding client.
+        /// </summary>
+        /// <param name="alt">Client internal alt number.</param>
+        /// <returns>Client credentials.</returns>
+        public static ClientCredentialsInfo GetAltCredentials(int alt)
+        {
+            var credentials = new ClientCredentialsInfo();
+            SetCredentialsForClientsWithAlt(credentials, alt);
             return credentials;
         }
 
@@ -67,14 +84,21 @@ namespace BingAds.Helpers
 
         private static void SetCredentials(ClientCredentialsInfo credentials, string accountId = "")
         {
-            credentials.Alt = GetAlt(accountId);
-            credentials.RefreshToken = RefreshTokens[credentials.Alt];
-            SetCredentialsFromConfiguration(credentials, accountId);
+            var alt = GetAlt(accountId);
+            SetCredentialsForClientsWithAlt(credentials, alt);
         }
 
         private static int GetAlt(string accountId)
         {
             return AltAccountIDs.FirstOrDefault(x => x.Value.Contains(accountId)).Key;
+        }
+
+        private static void SetCredentialsForClientsWithAlt(ClientCredentialsInfo credentials, int alt)
+        {
+            credentials.Alt = alt;
+            credentials.RefreshToken = RefreshTokens[credentials.Alt];
+            var postfixInConfigName = alt == default(int) ? string.Empty : alt.ToString();
+            SetCredentialsFromConfiguration(credentials, postfixInConfigName);
         }
 
         private static void SetCredentialsFromConfiguration(ClientCredentialsInfo credentials, string postfixInConfigName = "")

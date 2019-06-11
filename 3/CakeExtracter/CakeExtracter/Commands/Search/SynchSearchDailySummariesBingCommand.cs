@@ -218,12 +218,12 @@ namespace CakeExtracter.Commands.Search
             }
         }
 
-        public virtual string[] GetTokens()
+        private string[] GetTokens()
         {
             return Platform.GetPlatformTokens(Platform.Code_Bing);
         }
 
-        public virtual void SaveTokens(string[] tokens)
+        private void SaveTokens(string[] tokens)
         {
             Platform.SavePlatformTokens(Platform.Code_Bing, tokens);
         }

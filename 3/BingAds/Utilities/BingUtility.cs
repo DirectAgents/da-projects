@@ -27,7 +27,6 @@ namespace BingAds.Utilities
             2011, // ReportingServiceEndDateBeforeStartDate
         };
 
-        private readonly string redirectUrl = ConfigurationManager.AppSettings["BingRedirectionUri"];
         private readonly string folder = ConfigurationManager.AppSettings["BingReportFolder"];
         private readonly string filename = ConfigurationManager.AppSettings["BingReportFilename"];
 
@@ -127,19 +126,21 @@ namespace BingAds.Utilities
             {
                 CustomerId = credentials.CustomerId,
                 DeveloperToken = credentials.DeveloperToken,
+                Authentication =
+                    string.IsNullOrWhiteSpace(credentials.UserName) || credentials.UserName.Contains('@') // is an email address (Microsoft account); can't use PasswordAuthentication
+                        ? await GetTokensAuthentication(credentials)
+                        : new PasswordAuthentication(credentials.UserName, credentials.Password), // old style: BingAds username
             };
-            if (string.IsNullOrWhiteSpace(credentials.UserName) || credentials.UserName.Contains('@')) // is an email address (Microsoft account); can't use PasswordAuthentication
-            {
-                var authorization = new OAuthWebAuthCodeGrant(credentials.ClientId, credentials.ClientSecret, new Uri(redirectUrl));
-                await authorization.RequestAccessAndRefreshTokensAsync(credentials.RefreshToken);
-                ClientCredentialsProvider.UpdateRefreshToken(credentials, authorization.OAuthTokens.RefreshToken);
-                authorizationData.Authentication = authorization;
-            }
-            else
-            {
-                authorizationData.Authentication = new PasswordAuthentication(credentials.UserName, credentials.Password); // old style: BingAds username
-            }
             return authorizationData;
+        }
+
+        private async Task<Authentication> GetTokensAuthentication(ClientCredentialsInfo credentials)
+        {
+            var redirectUrl = new Uri(ClientCredentialsProvider.RedirectUrl);
+            var authorization = new OAuthWebAuthCodeGrant(credentials.ClientId, credentials.ClientSecret, redirectUrl);
+            await authorization.RequestAccessAndRefreshTokensAsync(credentials.RefreshToken);
+            ClientCredentialsProvider.UpdateRefreshToken(credentials, authorization.OAuthTokens.RefreshToken);
+            return authorization;
         }
 
         // returns the filepath of the report (downloaded and unzipped)
