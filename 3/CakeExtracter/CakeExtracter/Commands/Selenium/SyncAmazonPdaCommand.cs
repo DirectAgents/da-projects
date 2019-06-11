@@ -74,6 +74,11 @@ namespace CakeExtracter.Commands.Selenium
         /// </summary>
         public bool DisabledOnly { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to hide the browser window (default = false).
+        /// </summary>
+        public bool IsHidingBrowserWindow { get; set; }
+
         /// <inheritdoc cref="ConsoleCommand"/>/>
         /// <summary>
         /// Initializes a new instance of the <see cref="SyncAmazonPdaCommand" /> class.
@@ -87,6 +92,7 @@ namespace CakeExtracter.Commands.Selenium
             HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default = {DefaultDaysAgo})", c => DaysAgoToStart = c);
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
             HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
+            HasOption<bool>("h|hideWindow=", "Include hiding the browser window", c => IsHidingBrowserWindow = c);
         }
 
         /// <inheritdoc />
@@ -101,6 +107,7 @@ namespace CakeExtracter.Commands.Selenium
             DaysAgoToStart = null;
             StatsType = null;
             DisabledOnly = false;
+            IsHidingBrowserWindow = false;
         }
 
         /// <inheritdoc />
@@ -189,7 +196,7 @@ namespace CakeExtracter.Commands.Selenium
             try
             {
                 var timeoutInMinutes = PdaConfigurationHelper.GetWaitPageTimeout();
-                pageActionsManager = new AmazonPdaPageActions(timeoutInMinutes);
+                pageActionsManager = new AmazonPdaPageActions(timeoutInMinutes, IsHidingBrowserWindow);
                 SetLogActionsForPageActionsManager();
             }
             catch (Exception e)

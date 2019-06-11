@@ -13,29 +13,33 @@ namespace SeleniumDataBrowser.Drivers
         /// Initializes a new instance of the <see cref="ChromeWebDriver" /> class.
         /// </summary>
         /// <param name="downloadDir">Path to the directory for files that will be download.</param>
-        public ChromeWebDriver(string downloadDir)
-            : base(GetDriverService(), GetOptions(downloadDir))
+        /// <param name="isHiddenBrowserWindow">Include hiding the browser window.</param>
+        public ChromeWebDriver(string downloadDir, bool isHiddenBrowserWindow)
+            : base(GetDriverService(isHiddenBrowserWindow), GetOptions(downloadDir, isHiddenBrowserWindow))
         {
         }
 
-        private static ChromeOptions GetOptions(string downloadDir)
+        private static ChromeOptions GetOptions(string downloadDir, bool isHiddenBrowserWindow)
         {
             var chromeOptions = new ChromeOptions();
             chromeOptions.AddUserProfilePreference("download.default_directory", downloadDir);
             chromeOptions.AddUserProfilePreference("intl.accept_languages", "nl");
             chromeOptions.AddUserProfilePreference("disable-popup-blocking", "true");
 
-            //chromeOptions.AddArgument("headless");
-
+            if (isHiddenBrowserWindow)
+            {
+                chromeOptions.AddArgument("headless");
+            }
             return chromeOptions;
         }
 
-        private static ChromeDriverService GetDriverService()
+        private static ChromeDriverService GetDriverService(bool isHiddenBrowserWindow)
         {
             var driverService = ChromeDriverService.CreateDefaultService();
-
-            //driverService.HideCommandPromptWindow = true;
-
+            if (isHiddenBrowserWindow)
+            {
+                driverService.HideCommandPromptWindow = true;
+            }
             return driverService;
         }
     }

@@ -18,8 +18,9 @@ namespace SeleniumDataBrowser.PDA.PageActions
         /// Initializes a new instance of the <see cref="AmazonPdaPageActions" /> class.
         /// </summary>
         /// <param name="timeoutMinutes">Number of minutes for waiting of elements.</param>
-        public AmazonPdaPageActions(int timeoutMinutes)
-            : base(new ChromeWebDriver(string.Empty), timeoutMinutes)
+        /// <param name="isHiddenBrowserWindow">Include hiding the browser window.</param>
+        public AmazonPdaPageActions(int timeoutMinutes, bool isHiddenBrowserWindow)
+            : base(new ChromeWebDriver(string.Empty, isHiddenBrowserWindow), timeoutMinutes)
         {
         }
 
