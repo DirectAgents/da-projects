@@ -418,6 +418,7 @@
     <Compile Include="Commands\DA\DaSynchYamStats.cs" />
     <Compile Include="Commands\DA\DASynchYAMStats_Outdated.cs" />
     <Compile Include="Commands\Selenium\SyncAmazonPdaCommand.cs" />
+    <Compile Include="Commands\Selenium\SyncAmazonVcdCommand.cs" />
     <Compile Include="Common\StatsTypeAgg.cs" />
     <Compile Include="Commands\EOMSynchCPCCommand.cs" />
     <Compile Include="Commands\DA\DASeed.cs" />
@@ -468,6 +469,36 @@
     <Compile Include="Etl\AmazonSelenium\PDA\Extractors\AmazonPdaDailyRequestExtractor.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Extractors\AmazonPdaExtractor.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Models\AmazonPdaCampaignSummary.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\AmazonVcdExtractor.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Configuration\Models\AccountInfo.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\AmazonVcdLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\Constants\VendorCentralDataLoadingConstants.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\MetricTypesLoader\BaseVendoritemLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\MetricTypesLoader\BrandsSummaryLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\MetricTypesLoader\CategoriesSummaryLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\MetricTypesLoader\ParentProductSummaryLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\MetricTypesLoader\ProductsSummaryLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\MetricTypesLoader\SubcategoriesSummaryLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\Brand.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\Category.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\ParentProduct.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\Product.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\ShippingItem.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\Subcategory.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Configuration\Models\VcdExecutionProfileConfiguration.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\VcdReportData.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Configuration\VcdAccountsDataProvider.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Configuration\VcdCommandConfigurationManager.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Configuration\VcdExecutionProfileManger.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Synchers\VcdAnalyticTablesSyncher.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\VcdExtractionHelpers\ReportDataComposer\VcdReportComposer.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\VcdExtractionHelpers\ReportParsing\ParsingConverters\BaseProductRowMap.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\VcdExtractionHelpers\ReportParsing\ParsingConverters\DecimalAmountReportConverter.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\VcdExtractionHelpers\ReportParsing\ParsingConverters\IntNumberReportConverter.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\VcdExtractionHelpers\ReportParsing\ParsingConverters\OrderedRevenueProductsRowMap.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\VcdExtractionHelpers\ReportParsing\ParsingConverters\ShippedCogsProductsRowMap.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\VcdExtractionHelpers\ReportParsing\ParsingConverters\ShippedRevenueProductsRowMap.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\VcdExtractionHelpers\ReportParsing\VcdReportParser.cs" />
     <Compile Include="Etl\Apple\Exceptions\AppleFailedEtlException.cs" />
     <Compile Include="Etl\Amazon\Exceptions\FailedStatsLoadingException.cs" />
     <Compile Include="Etl\CakeMarketing\DALoaders\DAAffiliatesLoader.cs" />
@@ -852,6 +883,12 @@
     </None>
     <None Include="CakeMarketingApi\CakeMarketingApi.cd" />
     <None Include="CakeMarketingApi\Entities\Entities.cd" />
+    <None Include="Etl\AmazonSelenium\VCD\Configuration\VcdExecutionProfiles\Profile_1.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Etl\AmazonSelenium\VCD\Configuration\VcdExecutionProfiles\Profile_2.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Etl\Etl.cd" />
     <None Include="packages.config" />
     <Compile Include="Reports\SearchReportRuntimeTextTemplate.partial.cs" />
@@ -962,5 +999,19 @@
     <Analyzer Include="..\..\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Content Include="Etl\AmazonSelenium\VCD\SQL\CreateVcdAnalyticTable.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Etl\AmazonSelenium\VCD\SQL\SelectAnalyticalTableVcd.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Etl\AmazonSelenium\VCD\SQL\SyncVcdAnalyticTable.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Etl\AmazonSelenium\VCD\SQL\SyncVcdAnalyticTableAllAccounts.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

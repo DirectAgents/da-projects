@@ -12,10 +12,9 @@ using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
-using Quartz.Impl.AdoJobStore;
+using SeleniumDataBrowser.Models;
 using SeleniumDataBrowser.PDA;
 using SeleniumDataBrowser.PDA.Helpers;
-using SeleniumDataBrowser.PDA.Models;
 using SeleniumDataBrowser.PDA.PageActions;
 using Platform = DirectAgents.Domain.Entities.CPProg.Platform;
 

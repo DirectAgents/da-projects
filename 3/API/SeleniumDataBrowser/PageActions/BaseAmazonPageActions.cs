@@ -56,7 +56,7 @@ namespace SeleniumDataBrowser.PageActions
             }
         }
 
-        private void LoginWithPassword(string password)
+        public void LoginWithPassword(string password)
         {
             EnterPassword(password);
             ClickElement(BaseAmazonPageObjects.RememberMeCheckBox);

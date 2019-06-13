@@ -1,0 +1,15 @@
+﻿{
+  "SignInUrl": "https://advertising.amazon.com/sign-in",
+  "LoginEmail": "amazonaccess@directagents.com ",
+  "LoginPassword": "",
+  "AccountIds": [ 1445, 1452 ],
+  "CookiesDirectory": "VcdCookies2",
+  "StartDate": "",
+  "EndDate": "",
+  "DayIntervalsToProcess": [ 2, 60 ],
+  "ReportDownloadingStartedDelayInSeconds": 10,
+  "MinDelayBetweenReportDownloadingInSeconds": 30,
+  "ReportDownloadingAttemptCount": 10,
+  "MaxDelayBetweenReportDownloadingInSeconds": 100,
+  "ExtractDailyDataAttemptCount": 5
+}

@@ -12,7 +12,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Configuration
         private const string CookiesDirectoryNameConfigurationKey = "PDA_CookiesDirectoryName";
         private const string EMailConfigurationKey = "PDA_EMail";
         private const string EMailPasswordConfigurationKey = "PDA_EMailPassword";
-        private const string WaitPageTimeoutConfigurationKey = "PDA_WaitPageTimeoutInMinutes";
+        private const string WaitPageTimeoutConfigurationKey = "SeleniumWaitPageTimeoutInMinutes";
         private const string MaxRetryAttemptsConfigurationKey = "PDA_MaxRetryAttempts";
         private const string PauseBetweenAttemptsConfigurationKey = "PDA_PauseBetweenAttemptsInSeconds";
 

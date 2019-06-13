@@ -2,7 +2,7 @@
 using System.Linq;
 using OpenQA.Selenium;
 using SeleniumDataBrowser.Helpers;
-using SeleniumDataBrowser.PDA.Models;
+using SeleniumDataBrowser.Models;
 using SeleniumDataBrowser.PDA.PageActions;
 
 namespace SeleniumDataBrowser.PDA.Helpers

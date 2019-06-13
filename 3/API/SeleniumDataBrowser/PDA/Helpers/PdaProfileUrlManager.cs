@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
-using SeleniumDataBrowser.PDA.Models;
+using SeleniumDataBrowser.Models;
 using SeleniumDataBrowser.PDA.PageActions;
 using Polly;
 

@@ -5,7 +5,6 @@ namespace SeleniumDataBrowser.PDA.PageActions
 {
     internal class AmazonPdaPageObjects : BaseAmazonPageObjects
     {
-        public static By ForgotPassLink = By.LinkText("Forgot your password?");
         public static By FilterByButton = By.XPath(".//button[contains(text(),'Filter by')]");
         // Campaign profiles menu
         public static By CurrentProfileButton = By.CssSelector("#brandDropDown");

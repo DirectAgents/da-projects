@@ -20,7 +20,7 @@ namespace SeleniumDataBrowser.PageActions
 
         protected readonly TimeSpan Timeout;
 
-        private readonly IWebDriver Driver;
+        protected readonly IWebDriver Driver;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BasePageActions"/> class.
@@ -92,6 +92,11 @@ namespace SeleniumDataBrowser.PageActions
             {
                 throw new Exception($"Failed to check if element [{byElement}] is present: {e.Message}", e);
             }
+        }
+
+        public string GetCurrentWindowUrl()
+        {
+            return Driver.Url;
         }
 
         protected void SendKeys(By byElement, string keys)

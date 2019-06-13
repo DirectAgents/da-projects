@@ -2,7 +2,7 @@
 using SeleniumDataBrowser.Helpers;
 using OpenQA.Selenium;
 
-namespace SeleniumDataBrowser.PDA.Models
+namespace SeleniumDataBrowser.Models
 {
     /// <summary>
     /// Class for settings of authorization on the Amazon Advertising Portal.
@@ -20,6 +20,11 @@ namespace SeleniumDataBrowser.PDA.Models
         /// Gets or sets the password for the login.
         /// </summary>
         public string Password { get; set; }
+
+        /// <summary>
+        /// Gets or sets the URL for sign in.
+        /// </summary>
+        public string SignInUrl { get; set; }
 
         /// <summary>
         /// Gets or sets browser cookies after successful authorization on the Portal.

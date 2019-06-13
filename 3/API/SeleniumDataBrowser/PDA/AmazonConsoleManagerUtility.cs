@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading;
 using System.Web;
 using SeleniumDataBrowser.Helpers;
+using SeleniumDataBrowser.Models;
 using SeleniumDataBrowser.PDA.Helpers;
 using SeleniumDataBrowser.PDA.Models;
 using SeleniumDataBrowser.PDA.PageActions;
