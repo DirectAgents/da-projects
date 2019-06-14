@@ -1,7 +1,7 @@
 ﻿namespace FacebookAPI.Constants
 {
     /// <summary>
-    /// Facebook Entities Statuses
+    /// Facebook Entities Statuses.
     /// </summary>
     internal class EffectiveStatuses
     {
