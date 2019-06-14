@@ -23,8 +23,8 @@ namespace FacebookAPI
         private const int MaxRetries = 20;
         private const int SecondsToWaitIfLimitReached = 61;
 
-        private int asyncJobWaitingRetriesNumber = 25;
-        private int asyncJobFailureRetriesNumber = 5;
+        private int asyncJobWaitingRetriesNumber = 25; // Will be updated from configuration. 25-default value.
+        private int asyncJobFailureRetriesNumber = 5; // Will be updated from configuration. 25-default value.
 
         private static readonly Dictionary<PlatformFilter, string> PlatformFilterNames = new Dictionary<PlatformFilter, string>
         {
@@ -254,10 +254,10 @@ namespace FacebookAPI
             LogInfo(asyncJobRequest.logMessage);
             var initialRunId = asyncJobRequest.GetRunId();
             var finalRunId = WaitAsyncJobRequestCompletionWithRetries(asyncJobRequest);
-            return ReadAndParseJobRequestResults(asyncJobRequest, finalRunId, converter);
+            return ReadJobRequestResults(asyncJobRequest, finalRunId, converter);
         }
 
-        private IEnumerable<FBSummary> ReadAndParseJobRequestResults(FacebookJobRequest asyncJobRequest, string runId, FacebookSummaryConverter converter)
+        private IEnumerable<FBSummary> ReadJobRequestResults(FacebookJobRequest asyncJobRequest, string runId, FacebookSummaryConverter converter)
         {
             bool moreData = false;
             var afterVal = ""; // later, used for paging
