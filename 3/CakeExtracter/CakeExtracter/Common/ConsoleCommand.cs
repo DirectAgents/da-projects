@@ -46,11 +46,6 @@ namespace CakeExtracter.Common
         protected bool IsAutoShutDownMechanismEnabled { get; set; } = true;
 
         /// <summary>
-        /// Gets or sets the retry commands.
-        /// </summary>
-        protected ConcurrentQueue<CommandWithSchedule> RetryCommands { get; set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ConsoleCommand"/> class.
         /// The constructor sets base command arguments names and provides a description for them.
         /// </summary>

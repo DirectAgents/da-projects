@@ -1,9 +1,6 @@
 ﻿using System.ComponentModel.Composition;
 using CakeExtracter.Common;
-using CakeExtracter.Common.Email;
-using CakeExtracter.Common.JobExecutionManagement.JobExecution;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
 
 namespace CakeExtracter.Commands.Core
 {
@@ -37,10 +34,7 @@ namespace CakeExtracter.Commands.Core
         /// </returns>
         public override int Execute(string[] remainingArguments)
         {
-            IJobExecutionNotificationService jobExecutionNotificationService = new JobExecutionNotificationService(
-                new JobExecutionItemRepository(),
-                new JobRequestRepository(),
-                new EmailNotificationsService());
+            IJobExecutionNotificationService jobExecutionNotificationService = DIKernel.Get<IJobExecutionNotificationService>();
 
             // First Level of notifications(Warning). Notifies about errors occurred in job execution. Relaunch mechanism can fix errors.
             jobExecutionNotificationService.NotifyAboutErrorsInJobExecution();

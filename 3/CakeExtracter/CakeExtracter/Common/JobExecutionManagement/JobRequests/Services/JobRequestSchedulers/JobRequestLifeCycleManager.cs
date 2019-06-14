@@ -120,23 +120,33 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         {
             if (command.NoNeedToCreateRepeatRequests)
             {
-                request.Status = JobRequestStatus.Failed;
-                requestRepository.UpdateItem(request);
-                jobRetryRequests.ForEach(x => LogNotScheduledCommand(x.CommandName, x.CommandExecutionArguments));
+                ProcessRequestsCompletionWithoutRetriesCreation(request, jobRetryRequests);
             }
             else
             {
-                var retryRequestEqualWithParent = TryGetRequestEqualWithParent(request, jobRetryRequests);
-                if (retryRequestEqualWithParent == null)
-                {
-                    request.Status = JobRequestStatus.PendingRetries;
-                    requestRepository.UpdateItem(request);
-                    ScheduleRetryRequests(jobRetryRequests);
-                }
-                else
-                {
-                    RescheduleRequest(request, retryRequestEqualWithParent.ScheduledTime);
-                }
+                ProcessRequestCompletionWithRetriesCreation(request, jobRetryRequests);
+            }
+        }
+
+        private void ProcessRequestsCompletionWithoutRetriesCreation(JobRequest request, List<JobRequest> jobRetryRequests)
+        {
+            request.Status = JobRequestStatus.Failed;
+            requestRepository.UpdateItem(request);
+            jobRetryRequests.ForEach(x => LogNotScheduledCommand(x.CommandName, x.CommandExecutionArguments));
+        }
+
+        private void ProcessRequestCompletionWithRetriesCreation(JobRequest request, List<JobRequest> jobRetryRequests)
+        {
+            var retryRequestEqualWithParent = TryGetRequestEqualWithParent(request, jobRetryRequests);
+            if (retryRequestEqualWithParent == null)
+            {
+                request.Status = JobRequestStatus.PendingRetries;
+                requestRepository.UpdateItem(request);
+                ScheduleRetryRequests(jobRetryRequests);
+            }
+            else
+            {
+                RescheduleRequest(request, retryRequestEqualWithParent.ScheduledTime);
             }
         }
 

@@ -32,7 +32,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         public string CommandName => currentCommand.Command;
 
         private readonly IJobExecutionItemService jobExecutionItemService;
-        private readonly IJobRequestLifeCycleManager jobExecutionLifeCycleManager;
+        private readonly IJobRequestLifeCycleManager jobRequestLifeCycleManager;
 
         private ConsoleCommand currentCommand;
         private JobRequest currentJobRequest;
@@ -44,7 +44,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         private CommandExecutionContext(ConsoleCommand command)
         {
             jobExecutionItemService = DIKernel.Get<IJobExecutionItemService>();
-            jobExecutionLifeCycleManager = DIKernel.Get<IJobRequestLifeCycleManager>();
+            jobRequestLifeCycleManager = DIKernel.Get<IJobRequestLifeCycleManager>();
             retryRequestsHolder = new RetryRequestsHolder(command);
             InitCurrentJobRequest(command);
         }
@@ -63,7 +63,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         /// </summary>
         public void StartRequestExecution()
         {
-            jobExecutionLifeCycleManager.SetJobRequestAsProcessing(currentJobRequest);
+            jobRequestLifeCycleManager.SetJobRequestAsProcessing(currentJobRequest);
             currentJobRequestExecution = jobExecutionItemService.CreateJobExecutionItem(currentJobRequest);
         }
 
@@ -79,7 +79,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
             }
 
             jobExecutionItemService.SetJobExecutionItemFinishedState(currentJobRequestExecution);
-            jobExecutionLifeCycleManager.ProcessCompletedRequest(currentCommand, currentJobRequest, retryRequestsHolder);
+            jobRequestLifeCycleManager.ProcessCompletedRequest(currentCommand, currentJobRequest, retryRequestsHolder);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         public void SetAsFailedRequestExecution()
         {
             jobExecutionItemService.SetJobExecutionItemFailedState(currentJobRequestExecution);
-            jobExecutionLifeCycleManager.ProcessFailedRequest(currentJobRequest, currentCommand);
+            jobRequestLifeCycleManager.ProcessFailedRequest(currentJobRequest, currentCommand);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         {
             if (currentJobRequest.Status == JobRequestStatus.Processing)
             {
-                jobExecutionLifeCycleManager.ProcessAbortedRequest(currentJobRequest);
+                jobRequestLifeCycleManager.ProcessAbortedRequest(currentJobRequest);
             }
         }
 
@@ -183,7 +183,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         private void InitCurrentJobRequest(ConsoleCommand command)
         {
             currentCommand = command;
-            currentJobRequest = jobExecutionLifeCycleManager.GetJobRequest(currentCommand);
+            currentJobRequest = jobRequestLifeCycleManager.GetJobRequest(currentCommand);
         }
     }
 }
