@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants\AsyncJobStatuses.cs" />
     <Compile Include="Constants\EffectiveStatuses.cs" />
     <Compile Include="Converters\AdInsigthsFacebookSummaryConverter.cs" />
     <Compile Include="Converters\AdSetInsigthsFacebookSummaryConverter.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="FacebookInsightsDataProvider.cs" />
     <Compile Include="FacebookUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\ConfigurationUtils.cs" />
     <Compile Include="Utils\FacebookRequestUtils.cs" />
   </ItemGroup>
   <ItemGroup>
