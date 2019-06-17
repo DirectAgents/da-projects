@@ -57,8 +57,12 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
             return products;
         }
 
-        private List<Product> ParseProductsFromReport<T>(string reportCsvText, AccountInfo accountInfo, DateTime date,
-            string reportType) where T : CsvClassMap<Product>
+        private List<Product> ParseProductsFromReport<T>(
+            string reportCsvText,
+            AccountInfo accountInfo,
+            DateTime date,
+            string reportType)
+            where T : CsvClassMap<Product>
         {
             try
             {
@@ -75,9 +79,10 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
             }
             catch (Exception ex)
             {
-                Logger.Error(accountInfo.Account.Id, new Exception("Error occured while parsing report", ex));
+                var exception = new Exception("Error occured while parsing report", ex);
+                Logger.Warn(accountInfo.Account.Id, $"{exception.Message}: {ex.Message}");
                 SaveUnsuccessfullyParesedReport(reportCsvText, date, reportType, accountInfo.Account.Id);
-                throw ex;
+                throw exception;
             }
         }
 
