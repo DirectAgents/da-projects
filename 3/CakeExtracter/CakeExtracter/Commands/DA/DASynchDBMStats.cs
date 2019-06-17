@@ -117,8 +117,8 @@ namespace CakeExtracter.Commands.DA
         private void DoETLs(DateRange dateRange, IEnumerable<ExtAccount> accounts)
         {
             Logger.Info("DBM ETL. DateRange {0}.", dateRange);
-            DoETLs_Creative(dateRange, accounts);
             DoETLs_LineItem(dateRange, accounts);
+            DoETLs_Creative(dateRange, accounts);
         }
 
         private void DoETLs_Creative(DateRange dateRange, IEnumerable<ExtAccount> accounts)
