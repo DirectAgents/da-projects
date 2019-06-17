@@ -1,4 +1,4 @@
-﻿namespace Adform.Entities.ReportEntities
+﻿namespace Adform.Entities.ReportEntities.ReportParameters
 {
     /// <summary>
     /// The class represents an entity for setting required parameters of an Adform metric.
@@ -6,13 +6,13 @@
     public class MetricMetadata
     {
         /// <summary>
-        /// Metric name.
+        /// Gets or sets metric name.
         /// </summary>
-        public string metric { get; set; }
+        public string Metric { get; set; }
 
         /// <summary>
-        /// Additional filtering possibilities for individual metric.
+        /// Gets or sets additional filtering possibilities for individual metric.
         /// </summary>
-        public dynamic specs { get; set; }
+        public dynamic Specs { get; set; }
     }
 }

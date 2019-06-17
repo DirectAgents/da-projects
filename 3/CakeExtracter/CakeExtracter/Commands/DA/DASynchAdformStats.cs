@@ -145,6 +145,7 @@ namespace CakeExtracter.Commands
         {
             var adformUtility = new AdformUtility(
                 message => Logger.Info(account.Id, message),
+                message => Logger.Warn(account.Id, message),
                 exc => Logger.Error(account.Id, exc));
             adformUtility.SetWhichAlt(account.ExternalId);
             adformUtility.TrackingId = trackingIdsOfAccounts.ContainsKey(account.ExternalId)
