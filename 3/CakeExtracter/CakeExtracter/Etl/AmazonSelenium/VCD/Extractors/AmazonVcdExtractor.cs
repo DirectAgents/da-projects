@@ -46,7 +46,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
             {
                 CommandExecutionContext.Current.SetJobExecutionStateInHistory($"Date - {date.ToString()}", accountInfo.Account.Id);
                 Logger.Info(accountInfo.Account.Id, $"Amazon VCD, ETL for {date} started. Account {accountInfo.Account.Name} - {accountInfo.Account.Id}");
-                var data = TryExtractDailyData(date);
+                var data = TryExtractData(date, "daily reports", ExtractDailyData);
                 Add(data);
             }
             catch (Exception e)
@@ -54,19 +54,6 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
                 var exception = new Exception($"Error occurred while extracting data for {accountInfo.Account.Name} ({accountInfo.Account.Id}) account on {date} date.", e);
                 Logger.Error(accountInfo.Account.Id, exception);
             }
-        }
-
-        private VcdReportData TryExtractDailyData(DateTime date)
-        {
-            var maxRetryAttempts = VcdExecutionProfileManger.Current.ProfileConfiguration.ExtractDailyDataAttemptCount;
-            var data = Policy
-                .Handle<Exception>()
-                .Retry(maxRetryAttempts, (exception, retryCount, context) =>
-                    Logger.Warn(
-                        accountInfo.Account.Id,
-                        $"Could not extract for {date} started. Account {accountInfo.Account.Name} - {accountInfo.Account.Id}. Try extracting data again (number of retrying - {retryCount}, max attempts - {maxRetryAttempts})"))
-                .Execute(() => ExtractDailyData(date));
-            return data;
         }
 
         private VcdReportData ExtractDailyData(DateTime reportDay)
@@ -77,21 +64,6 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
             var composedData = reportComposer.ComposeReportData(shippedRevenueReportData, shippedCogsReportData, orderedRevenueReportData);
             composedData.Date = reportDay;
             return composedData;
-        }
-
-        private static string DownloadReport(Func<string> downloadingAction)
-        {
-            try
-            {
-                var reportTextContent = downloadingAction();
-                return reportTextContent;
-            }
-            catch (Exception ex)
-            {
-                Logger.Info("Report downloading failed");
-                Logger.Error(ex);
-                throw ex;
-            }
         }
 
         private List<Product> GetShippedRevenueReportData(DateTime reportDay)
@@ -121,13 +93,55 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
                 reportParser.ParseOrderedRevenueReportData);
         }
 
-        private List<Product> GetReportData(string reportName, DateTime reportDay, Func<string> downloadReportFunc, Func<string, AccountInfo, DateTime, List<Product>> parseReportFunc)
+        private List<Product> GetReportData(
+            string reportName,
+            DateTime reportDay,
+            Func<string> downloadReportFunc,
+            Func<string, AccountInfo, DateTime, List<Product>> parseReportFunc)
         {
             Logger.Info($"Amazon VCD, Downloading {reportName} report.");
-            var reportTextContent = DownloadReport(downloadReportFunc);
-            var reportProducts = parseReportFunc(reportTextContent, accountInfo, reportDay);
+            var reportProducts = TryExtractData(reportDay, reportName, date =>
+            {
+                var reportTextContent = DownloadReport(downloadReportFunc);
+                return parseReportFunc(reportTextContent, accountInfo, reportDay);
+            });
             Logger.Info($"Amazon VCD, {reportName} report downloaded. {reportProducts.Count} products");
             return reportProducts;
+        }
+
+        private T TryExtractData<T>(DateTime date, string dataName, Func<DateTime, T> extractDataFunc)
+        {
+            var maxRetryAttempts = VcdExecutionProfileManger.Current.ProfileConfiguration.ExtractDailyDataAttemptCount;
+            var data = Policy
+                .Handle<Exception>()
+                .Retry(
+                    maxRetryAttempts,
+                    (exception, retryCount, context) => LogFailedReports(date, retryCount, maxRetryAttempts, dataName))
+                .Execute(() => extractDataFunc(date));
+            return data;
+        }
+
+        private void LogFailedReports(DateTime date, int retryCount, int maxRetryAttempts, string dataName)
+        {
+            var message = $"Could not extract {dataName} for {date} started. " +
+                          $"Account {accountInfo.Account.Name} - {accountInfo.Account.Id}. " +
+                          $"Try extracting data again (number of retrying - {retryCount}, max attempts - {maxRetryAttempts})";
+            Logger.Warn(accountInfo.Account.Id, message);
+        }
+
+        private string DownloadReport(Func<string> downloadingAction)
+        {
+            try
+            {
+                var reportTextContent = downloadingAction();
+                return reportTextContent;
+            }
+            catch (Exception ex)
+            {
+                Logger.Info("Report downloading failed");
+                Logger.Error(ex);
+                throw;
+            }
         }
     }
 }
