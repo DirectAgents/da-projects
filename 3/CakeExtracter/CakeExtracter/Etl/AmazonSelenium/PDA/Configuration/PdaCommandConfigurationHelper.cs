@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Configuration;
+using CakeExtracter.Etl.AmazonSelenium.Configuration;
 using CakeExtracter.Helpers;
 
 namespace CakeExtracter.Etl.AmazonSelenium.PDA.Configuration
 {
+    /// <inheritdoc />
     /// <summary>
-    /// Configuration manager for PDA settings.
+    /// PDA configuration helper. Prepare config values for using in application.
     /// </summary>
-    internal static class PdaConfigurationHelper
+    internal class PdaCommandConfigurationHelper : SeleniumCommandConfigurationHelper
     {
         private const string CookiesDirectoryNameConfigurationKey = "PDA_CookiesDirectoryName";
         private const string EMailConfigurationKey = "PDA_EMail";
         private const string EMailPasswordConfigurationKey = "PDA_EMailPassword";
-        private const string WaitPageTimeoutConfigurationKey = "SeleniumWaitPageTimeoutInMinutes";
         private const string MaxRetryAttemptsConfigurationKey = "PDA_MaxRetryAttempts";
         private const string PauseBetweenAttemptsConfigurationKey = "PDA_PauseBetweenAttemptsInSeconds";
 
@@ -41,15 +42,6 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Configuration
         public static string GetEMailPassword()
         {
             return ConfigurationManager.AppSettings[EMailPasswordConfigurationKey];
-        }
-
-        /// <summary>
-        /// Gets the number minutes of timeout for waiting page elements from the config application setting.
-        /// </summary>
-        /// <returns>Number minutes of timeout for waiting page elements.</returns>
-        public static int GetWaitPageTimeout()
-        {
-            return ConfigurationHelper.GetIntConfigurationValue(WaitPageTimeoutConfigurationKey);
         }
 
         /// <summary>

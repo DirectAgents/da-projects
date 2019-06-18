@@ -22,10 +22,10 @@ namespace CakeExtracter.Commands.Selenium
     [Export(typeof(ConsoleCommand))]
     public class SyncAmazonVcdCommand : ConsoleCommand
     {
-        private VcdCommandConfigurationManager configurationManager;
         private VcdAccountsDataProvider accountsDataProvider;
         private AuthorizationModel authorizationModel;
         private AmazonVcdPageActions pageActionsManager;
+        private AmazonVcdLoginHelper loginProcessManager;
 
         public int ProfileNumber { get; set; }
 
@@ -43,51 +43,24 @@ namespace CakeExtracter.Commands.Selenium
 
         public override int Execute(string[] remainingArguments)
         {
-            VcdExecutionProfileManger.Current.SetExecutionProfileNumber(ProfileNumber);
-
-            const string WaitPageTimeoutConfigurationKey = "SeleniumWaitPageTimeoutInMinutes";
-            var waitPageTimeoutInMinutes = ConfigurationHelper.GetIntConfigurationValue(WaitPageTimeoutConfigurationKey);
-            pageActionsManager = new AmazonVcdPageActions(waitPageTimeoutInMinutes);
-            SetLogActionsForPageActionsManager();
-
-            configurationManager = new VcdCommandConfigurationManager();
-            InitializeAuthorizationModel();
-
-            LoginProcess();
-
-            AmazonVcdLoader.PrepareLoader();
+            InitializeCommand();
 
             RunEtls();
 
             return 0;
         }
 
-        private void SetLogActionsForPageActionsManager(int accountId = 0)
+        private void InitializeCommand()
         {
-            if (accountId == 0)
-            {
-                pageActionsManager.LogInfo = x => Logger.Info(x);
-                pageActionsManager.LogError = x => Logger.Error(new Exception(x));
-                pageActionsManager.LogWarning = x => Logger.Warn(x);
-            }
-            else
-            {
-                pageActionsManager.LogInfo = x => Logger.Info(accountId, x);
-                pageActionsManager.LogError = x => Logger.Error(accountId, new Exception(x));
-                pageActionsManager.LogWarning = x => Logger.Warn(accountId, x);
-            }
-        }
-
-        private void LoginProcess()
-        {
-            var loginProcessManager = new AmazonVcdLoginHelper(authorizationModel, pageActionsManager, x => Logger.Info(x));
-            loginProcessManager.LoginToAmazonPortal();
+            InitializeFields();
+            LoginProcess();
+            InitializeLoader();
         }
 
         private void RunEtls()
         {
             pageActionsManager.RefreshSalesDiagnosticPage(authorizationModel);
-            var dateRanges = configurationManager.GetDateRangesToProcess();
+            var dateRanges = VcdCommandConfigurationHelper.GetDateRangesToProcess();
 
             var userInfoExtractor = new UserInfoExtracter();
             var pageUserInfo = userInfoExtractor.ExtractUserInfo(pageActionsManager);
@@ -111,23 +84,26 @@ namespace CakeExtracter.Commands.Selenium
         private void DoEtlForAccount(AccountInfo accountInfo, DateRange dateRange)
         {
             Logger.Info(accountInfo.Account.Id, $"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) started.");
-
             SetLogActionsForPageActionsManager(accountInfo.Account.Id);
 
             pageActionsManager.SelectAccountOnPage(accountInfo.Account.Name);
 
-            var vcdAccountInfo = new VcdAccountInfo
-            {
-                AccountId = accountInfo.Account.Id,
-                AccountName = accountInfo.Account.Name,
-                McId = accountInfo.McId,
-                VendorGroupId = accountInfo.VendorGroupId,
-            };
+            var reportDownloader = GetReportDownloader(accountInfo);
+            var extractor = new AmazonVcdExtractor(accountInfo, dateRange, reportDownloader);
+            var loader = new AmazonVcdLoader(accountInfo.Account);
+            CommandHelper.DoEtl(extractor, loader);
 
+            Logger.Info(accountInfo.Account.Id, $"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) finished.");
+        }
+
+        private VcdReportDownloader GetReportDownloader(AccountInfo accountInfo)
+        {
             var reportDownloadingStartedDelayInSeconds = VcdExecutionProfileManger.Current.ProfileConfiguration.ReportDownloadingStartedDelayInSeconds;
             var minDelayBetweenReportDownloadingInSeconds = VcdExecutionProfileManger.Current.ProfileConfiguration.MinDelayBetweenReportDownloadingInSeconds;
             var maxDelayBetweenReportDownloadingInSeconds = VcdExecutionProfileManger.Current.ProfileConfiguration.MaxDelayBetweenReportDownloadingInSeconds;
             var reportDownloadingAttemptCount = VcdExecutionProfileManger.Current.ProfileConfiguration.ReportDownloadingAttemptCount;
+
+            var vcdAccountInfo = GetVcdAccountInformation(accountInfo);
 
             var reportDownloader = new VcdReportDownloader(
                 vcdAccountInfo,
@@ -139,11 +115,18 @@ namespace CakeExtracter.Commands.Selenium
                 minDelayBetweenReportDownloadingInSeconds,
                 maxDelayBetweenReportDownloadingInSeconds,
                 reportDownloadingAttemptCount);
+            return reportDownloader;
+        }
 
-            var extractor = new AmazonVcdExtractor(accountInfo, dateRange, reportDownloader);
-            var loader = new AmazonVcdLoader(accountInfo.Account);
-            CommandHelper.DoEtl(extractor, loader);
-            Logger.Info(accountInfo.Account.Id, $"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) finished.");
+        private VcdAccountInfo GetVcdAccountInformation(AccountInfo accountInfo)
+        {
+            return new VcdAccountInfo
+            {
+                AccountId = accountInfo.Account.Id,
+                AccountName = accountInfo.Account.Name,
+                McId = accountInfo.McId,
+                VendorGroupId = accountInfo.VendorGroupId,
+            };
         }
 
         private void SyncAccountDataToAnalyticTable(int accountId)
@@ -161,6 +144,22 @@ namespace CakeExtracter.Commands.Selenium
             }
         }
 
+        private void InitializeFields()
+        {
+            VcdExecutionProfileManger.Current.SetExecutionProfileNumber(ProfileNumber);
+
+            InitializePageActionsManager();
+            InitializeAuthorizationModel();
+            InitializeLoginManager();
+        }
+
+        private void InitializePageActionsManager()
+        {
+            var waitPageTimeoutInMinutes = VcdCommandConfigurationHelper.GetWaitPageTimeout();
+            pageActionsManager = new AmazonVcdPageActions(waitPageTimeoutInMinutes);
+            SetLogActionsForPageActionsManager();
+        }
+
         private void InitializeAuthorizationModel()
         {
             authorizationModel = new AuthorizationModel
@@ -170,6 +169,37 @@ namespace CakeExtracter.Commands.Selenium
                 SignInUrl = VcdExecutionProfileManger.Current.ProfileConfiguration.SignInUrl,
                 CookiesDir = VcdExecutionProfileManger.Current.ProfileConfiguration.CookiesDirectory,
             };
+        }
+
+        private void InitializeLoginManager()
+        {
+            loginProcessManager = new AmazonVcdLoginHelper(authorizationModel, pageActionsManager, x => Logger.Info(x));
+        }
+
+        private void InitializeLoader()
+        {
+            AmazonVcdLoader.PrepareLoader();
+        }
+
+        private void SetLogActionsForPageActionsManager(int accountId = 0)
+        {
+            if (accountId == 0)
+            {
+                pageActionsManager.LogInfo = x => Logger.Info(x);
+                pageActionsManager.LogError = x => Logger.Error(new Exception(x));
+                pageActionsManager.LogWarning = x => Logger.Warn(x);
+            }
+            else
+            {
+                pageActionsManager.LogInfo = x => Logger.Info(accountId, x);
+                pageActionsManager.LogError = x => Logger.Error(accountId, new Exception(x));
+                pageActionsManager.LogWarning = x => Logger.Warn(accountId, x);
+            }
+        }
+
+        private void LoginProcess()
+        {
+            loginProcessManager.LoginToAmazonPortal();
         }
     }
 }

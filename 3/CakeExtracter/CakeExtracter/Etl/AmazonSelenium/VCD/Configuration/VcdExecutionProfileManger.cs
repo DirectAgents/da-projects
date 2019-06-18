@@ -16,6 +16,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Configuration
         private VcdExecutionProfileConfiguration profileConfiguration;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="VcdExecutionProfileManger"/> class.
         /// Hidden singleton constructor.
         /// </summary>
         private VcdExecutionProfileManger()
@@ -28,7 +29,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Configuration
         public static VcdExecutionProfileManger Current = new VcdExecutionProfileManger();
 
         /// <summary>
-        /// Point for accessing profile configuration.
+        /// Gets a point for accessing profile configuration.
         /// </summary>
         public VcdExecutionProfileConfiguration ProfileConfiguration
         {
@@ -45,18 +46,17 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Configuration
         /// <summary>
         /// Defines execution profile number. Extracts configuration for execution profile.
         /// </summary>
-        /// <param name="profileNumber"></param>
+        /// <param name="profileNumber">Number of profile.</param>
         public void SetExecutionProfileNumber(int? profileNumber)
         {
             if (!profileNumber.HasValue)
             {
                 const int defaultExecutionProfileNumber = 1;
-                CakeExtracter.Logger.Warn(
-                    $"Execution profile number not specified or specified incorrectly. {defaultExecutionProfileNumber} will be used as profile number");
+                Logger.Warn($"Execution profile number not specified or specified incorrectly. {defaultExecutionProfileNumber} will be used as profile number");
                 profileNumber = defaultExecutionProfileNumber;
             }
 
-            executionProfileNumber = (int) profileNumber;
+            executionProfileNumber = (int)profileNumber;
             try
             {
                 profileConfiguration = ExtractExecutionProfileConfigurationByNumber(executionProfileNumber);

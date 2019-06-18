@@ -165,8 +165,8 @@ namespace CakeExtracter.Commands.Selenium
             InitializePageActionsManager();
             InitializeLoginProcessManager();
 
-            maxRetryAttempts = PdaConfigurationHelper.GetMaxRetryAttempts();
-            pauseBetweenAttempts = PdaConfigurationHelper.GetPauseBetweenAttempts();
+            maxRetryAttempts = PdaCommandConfigurationHelper.GetMaxRetryAttempts();
+            pauseBetweenAttempts = PdaCommandConfigurationHelper.GetPauseBetweenAttempts();
             IntervalBetweenUnsuccessfulAndNewRequestInMinutes = ConfigurationHelper.GetIntConfigurationValue(
                     "PDAIntervalBetweenRequestsInMinutes",
                     DefaultIntervalBetweenRequestsInMinutes);
@@ -176,11 +176,11 @@ namespace CakeExtracter.Commands.Selenium
         {
             try
             {
-                var cookieDirectoryName = PdaConfigurationHelper.GetCookiesDirectoryName();
+                var cookieDirectoryName = PdaCommandConfigurationHelper.GetCookiesDirectoryName();
                 authorizationModel = new AuthorizationModel
                 {
-                    Login = PdaConfigurationHelper.GetEMail(),
-                    Password = PdaConfigurationHelper.GetEMailPassword(),
+                    Login = PdaCommandConfigurationHelper.GetEMail(),
+                    Password = PdaCommandConfigurationHelper.GetEMailPassword(),
                     CookiesDir = cookieDirectoryName,
                 };
             }
@@ -194,7 +194,7 @@ namespace CakeExtracter.Commands.Selenium
         {
             try
             {
-                var timeoutInMinutes = PdaConfigurationHelper.GetWaitPageTimeout();
+                var timeoutInMinutes = PdaCommandConfigurationHelper.GetWaitPageTimeout();
                 pageActionsManager = new AmazonPdaPageActions(timeoutInMinutes, IsHidingBrowserWindow);
                 SetLogActionsForPageActionsManager();
             }
