@@ -27,9 +27,7 @@ namespace SeleniumDataBrowser.PDA
         private readonly AuthorizationModel authorizationModel;
         private readonly PdaProfileUrlManager profileUrlManager;
         private readonly Dictionary<string, string> cookies;
-        private readonly Action<string> logInfo;
-        private readonly Action<string> logError;
-        private readonly Action<string> logWarning;
+        private readonly SeleniumLogger logger;
         private readonly int maxRetryAttempts;
         private readonly TimeSpan pauseBetweenAttempts;
 
@@ -52,19 +50,14 @@ namespace SeleniumDataBrowser.PDA
             PdaProfileUrlManager profileUrlManager,
             int maxRetryAttempts,
             TimeSpan pauseBetweenAttempts,
-            Action<string> logInfo,
-            Action<string> logError,
-            Action<string> logWarning)
+            SeleniumLogger logger)
         {
             this.accountName = accountName;
             this.authorizationModel = authorizationModel;
             this.profileUrlManager = profileUrlManager;
             this.maxRetryAttempts = maxRetryAttempts;
             this.pauseBetweenAttempts = pauseBetweenAttempts;
-
-            this.logInfo = logInfo;
-            this.logError = logError;
-            this.logWarning = logWarning;
+            this.logger = logger;
 
             this.cookies = pageActionManager.GetAllCookies().ToDictionary(x => x.Name, x => x.Value);
         }
@@ -91,12 +84,6 @@ namespace SeleniumDataBrowser.PDA
                 var convertedData = AmazonCmApiHelper.ConvertDynamicCampaignInfoToModel(campaignData);
                 resultData.Add(convertedData);
             }
-        }
-
-        private static void Log(string message, Action<string> logAction)
-        {
-            var updatedMessage = $"{LoggerPrefix} {message}";
-            logAction(updatedMessage);
         }
 
         private static string GetProfileEntityId(string url)
@@ -128,21 +115,6 @@ namespace SeleniumDataBrowser.PDA
             return profileUrl;
         }
 
-        private void LogError(string message)
-        {
-            Log(message, logError);
-        }
-
-        private void LogInfo(string message)
-        {
-            Log(message, logInfo);
-        }
-
-        private void LogWarning(string message)
-        {
-            Log(message, logWarning);
-        }
-
         private IEnumerable<AmazonCmApiCampaignSummary> GetCampaignsSummariesForAllDates(
             IEnumerable<DateTime> extractionDates,
             Dictionary<string, string> queryParams,
@@ -157,9 +129,9 @@ namespace SeleniumDataBrowser.PDA
                     var data = GetCampaignsSummariesForDate(date, queryParams, parameters);
                     resultData.AddRange(data);
                 }
-                catch (Exception e)
+                catch (Exception exception)
                 {
-                    LogError($"Failed: {e.Message}");
+                    logger.LogError(exception);
                 }
             }
             return resultData;
@@ -170,7 +142,7 @@ namespace SeleniumDataBrowser.PDA
             Dictionary<string, string> queryParams,
             AmazonCmApiParams parameters)
         {
-            LogInfo($"Retrieve campaigns info from API for {date.ToShortDateString()} date.");
+            logger.LogInfo($"Retrieve campaigns info from API for {date.ToShortDateString()} date.");
             AmazonCmApiHelper.SetCampaignApiSpecificInitParams(parameters, date, PageSize);
             try
             {
@@ -207,10 +179,7 @@ namespace SeleniumDataBrowser.PDA
                     maxRetryAttempts,
                     i => pauseBetweenAttempts,
                     (exception, timeSpan, retryCount, context) =>
-                    {
-                        var message = $"Failed to process request. Waiting {timeSpan}";
-                        LoggerHelper.LogWaiting(message, retryCount, logInfo);
-                    })
+                        logger.LogWaiting("Failed to process request. Waiting {0} ...", timeSpan, retryCount))
                 .Execute(() => ProcessRequest<dynamic>(queryParams, body));
             return response.Data;
         }
@@ -228,14 +197,13 @@ namespace SeleniumDataBrowser.PDA
             var message = string.IsNullOrWhiteSpace(response.Content)
                 ? response.ErrorMessage
                 : response.Content;
-            LogWarning(message);
+            logger.LogWarning(message);
             return response;
         }
 
         private void WaitBeforeRequest(DateTime date)
         {
-            var message = $"Waiting {pauseBetweenAttempts} before requesting a campaign info (for {date.ToShortDateString()})";
-            LoggerHelper.LogWaiting(message, null, logInfo);
+            logger.LogWaiting($"Requesting a campaign info (for {date.ToShortDateString()})", pauseBetweenAttempts, null);
             Thread.Sleep(pauseBetweenAttempts);
         }
     }

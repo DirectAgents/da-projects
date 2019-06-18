@@ -3,6 +3,7 @@ using System.Linq;
 using OpenQA.Selenium;
 using SeleniumDataBrowser.PageActions;
 using SeleniumDataBrowser.Drivers;
+using SeleniumDataBrowser.Helpers;
 using SeleniumDataBrowser.Models;
 using SeleniumDataBrowser.VCD.Helpers;
 
@@ -20,8 +21,8 @@ namespace SeleniumDataBrowser.VCD.PageActions
         /// <summary>
         /// Initializes a new instance of the <see cref="AmazonVcdPageActions"/> class.
         /// </summary>
-        public AmazonVcdPageActions(int waitPageTimeoutInMinutes)
-            : base(new ChromeWebDriver(string.Empty, false), waitPageTimeoutInMinutes)
+        public AmazonVcdPageActions(int waitPageTimeoutInMinutes, SeleniumLogger logger)
+            : base(new ChromeWebDriver(string.Empty, false), waitPageTimeoutInMinutes, logger)
         {
         }
 
@@ -61,7 +62,7 @@ namespace SeleniumDataBrowser.VCD.PageActions
         /// <param name="authorizationModel">The authorization model.</param>
         public void RefreshSalesDiagnosticPage(AuthorizationModel authorizationModel)
         {
-            LogInfo("Sales diagnostic page refreshing");
+            Logger.LogInfo("Sales diagnostic page refreshing");
             NavigateToSalesDiagnosticPage();
             if (!AmazonVcdLoginHelper.NeedResetPassword(this))
             {
@@ -87,7 +88,7 @@ namespace SeleniumDataBrowser.VCD.PageActions
             }
             catch (Exception e)
             {
-                LogWarning($"Could not open a page for {accountName} account: {e.Message}");
+                Logger.LogWarning($"Could not open a page for {accountName} account: {e.Message}");
             }
         }
     }

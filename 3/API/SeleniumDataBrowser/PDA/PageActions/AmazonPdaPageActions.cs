@@ -2,6 +2,7 @@
 using System.Linq;
 using SeleniumDataBrowser.PageActions;
 using SeleniumDataBrowser.Drivers;
+using SeleniumDataBrowser.Helpers;
 
 namespace SeleniumDataBrowser.PDA.PageActions
 {
@@ -19,8 +20,8 @@ namespace SeleniumDataBrowser.PDA.PageActions
         /// </summary>
         /// <param name="timeoutMinutes">Number of minutes for waiting of elements.</param>
         /// <param name="isHiddenBrowserWindow">Include hiding the browser window.</param>
-        public AmazonPdaPageActions(int timeoutMinutes, bool isHiddenBrowserWindow)
-            : base(new ChromeWebDriver(string.Empty, isHiddenBrowserWindow), timeoutMinutes)
+        public AmazonPdaPageActions(int timeoutMinutes, bool isHiddenBrowserWindow, SeleniumLogger logger)
+            : base(new ChromeWebDriver(string.Empty, isHiddenBrowserWindow), timeoutMinutes, logger)
         {
         }
 

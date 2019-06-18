@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenQA.Selenium;
+using SeleniumDataBrowser.Helpers;
 
 namespace SeleniumDataBrowser.PageActions
 {
@@ -14,8 +15,8 @@ namespace SeleniumDataBrowser.PageActions
         /// </summary>
         /// <param name="driver">Selenium web driver.</param>
         /// <param name="timeoutMinutes">Number of minutes for waiting of elements.</param>
-        public BaseAmazonPageActions(IWebDriver driver, int timeoutMinutes)
-            : base(driver, timeoutMinutes)
+        public BaseAmazonPageActions(IWebDriver driver, int timeoutMinutes, SeleniumLogger logger)
+            : base(driver, timeoutMinutes, logger)
         {
         }
 
@@ -26,7 +27,7 @@ namespace SeleniumDataBrowser.PageActions
         /// <param name="password">Password of login.</param>
         public void LoginProcess(string email, string password)
         {
-            LogInfo($"Login with e-mail [{email}]...");
+            Logger.LogInfo($"Login with e-mail [{email}]...");
             try
             {
                 LoginWithEmailAndPassword(email, password);
@@ -44,7 +45,7 @@ namespace SeleniumDataBrowser.PageActions
         /// <param name="waitElement">Web element that the method will wait for after logging in.</param>
         public void LoginWithPasswordAndWaiting(string password, By waitElement)
         {
-            LogInfo("Need to repeat the password...");
+            Logger.LogInfo("Need to repeat the password...");
             try
             {
                 LoginWithPassword(password);
@@ -78,7 +79,7 @@ namespace SeleniumDataBrowser.PageActions
             {
                 return;
             }
-            LogError("Password is incorrect");
+            Logger.LogError(new Exception("Password is incorrect"));
         }
 
         private void WaitEnterCharactersIfNeeded(string password)
@@ -87,7 +88,7 @@ namespace SeleniumDataBrowser.PageActions
             {
                 return;
             }
-            LogWarning("Waiting enter the characters...");
+            Logger.LogWarning("Waiting enter the characters...");
             EnterPassword(password);
             WaitLoading(BaseAmazonPageObjects.AuthWarningMessageBox, Timeout);
         }
@@ -119,7 +120,7 @@ namespace SeleniumDataBrowser.PageActions
 
         private void WaitSecurityCode()
         {
-            LogWarning("Waiting the code...");
+            Logger.LogWarning("Waiting the code...");
             WaitLoading(BaseAmazonPageObjects.CodeInput, Timeout);
         }
     }

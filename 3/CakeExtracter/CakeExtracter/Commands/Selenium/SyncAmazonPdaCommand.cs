@@ -12,6 +12,7 @@ using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
+using SeleniumDataBrowser.Helpers;
 using SeleniumDataBrowser.Models;
 using SeleniumDataBrowser.PDA;
 using SeleniumDataBrowser.PDA.Helpers;
@@ -195,20 +196,13 @@ namespace CakeExtracter.Commands.Selenium
             try
             {
                 var timeoutInMinutes = PdaCommandConfigurationHelper.GetWaitPageTimeout();
-                pageActionsManager = new AmazonPdaPageActions(timeoutInMinutes, IsHidingBrowserWindow);
-                SetLogActionsForPageActionsManager();
+                var logger = GetLoggerForPageActionsManager();
+                pageActionsManager = new AmazonPdaPageActions(timeoutInMinutes, IsHidingBrowserWindow, logger);
             }
             catch (Exception e)
             {
                 throw new Exception("Failed to initialize page actions manager.", e);
             }
-        }
-
-        private void SetLogActionsForPageActionsManager()
-        {
-            pageActionsManager.LogInfo = x => Logger.Info(x);
-            pageActionsManager.LogError = x => Logger.Error(new Exception(x));
-            pageActionsManager.LogWarning = x => Logger.Warn(x);
         }
 
         private void InitializeLoginProcessManager()
@@ -300,17 +294,15 @@ namespace CakeExtracter.Commands.Selenium
         {
             try
             {
-                var amazonPdaUtility = new AmazonConsoleManagerUtility(
+                var logger = GetLoggerWithAccountId(account.Id);
+                return new AmazonConsoleManagerUtility(
                     account.Name,
                     authorizationModel,
                     pageActionsManager,
                     profileUrlManager,
                     maxRetryAttempts,
                     pauseBetweenAttempts,
-                    x => Logger.Info(account.Id, x),
-                    x => Logger.Error(account.Id, new Exception(x)),
-                    x => Logger.Warn(account.Id, x));
-                return amazonPdaUtility;
+                    logger);
             }
             catch (Exception e)
             {
@@ -396,6 +388,26 @@ namespace CakeExtracter.Commands.Selenium
             }
             var account = repository.GetAccount(AccountId.Value);
             return new[] { account };
+        }
+
+        private SeleniumLogger GetLoggerForPageActionsManager(int accountId = 0)
+        {
+            return accountId == 0
+                ? GetLoggerWithoutAccountId()
+                : GetLoggerWithAccountId(accountId);
+        }
+
+        private SeleniumLogger GetLoggerWithoutAccountId()
+        {
+            return new SeleniumLogger(x => Logger.Info(x), Logger.Error, x => Logger.Warn(x));
+        }
+
+        private SeleniumLogger GetLoggerWithAccountId(int accountId)
+        {
+            return new SeleniumLogger(
+                x => Logger.Info(accountId, x),
+                exc => Logger.Error(accountId, exc),
+                x => Logger.Warn(accountId, x));
         }
     }
 }

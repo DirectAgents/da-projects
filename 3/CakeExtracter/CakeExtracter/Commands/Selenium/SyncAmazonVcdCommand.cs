@@ -10,6 +10,7 @@ using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Loaders;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Synchers;
 using CakeExtracter.Helpers;
+using SeleniumDataBrowser.Helpers;
 using SeleniumDataBrowser.VCD.PageActions;
 using SeleniumDataBrowser.Models;
 using SeleniumDataBrowser.VCD.Helpers;
@@ -84,7 +85,7 @@ namespace CakeExtracter.Commands.Selenium
         private void DoEtlForAccount(AccountInfo accountInfo, DateRange dateRange)
         {
             Logger.Info(accountInfo.Account.Id, $"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) started.");
-            SetLogActionsForPageActionsManager(accountInfo.Account.Id);
+            pageActionsManager.Logger = GetLoggerForPageActionsManager(accountInfo.Account.Id);
 
             pageActionsManager.SelectAccountOnPage(accountInfo.Account.Name);
 
@@ -156,8 +157,8 @@ namespace CakeExtracter.Commands.Selenium
         private void InitializePageActionsManager()
         {
             var waitPageTimeoutInMinutes = VcdCommandConfigurationHelper.GetWaitPageTimeout();
-            pageActionsManager = new AmazonVcdPageActions(waitPageTimeoutInMinutes);
-            SetLogActionsForPageActionsManager();
+            var logger = GetLoggerForPageActionsManager();
+            pageActionsManager = new AmazonVcdPageActions(waitPageTimeoutInMinutes, logger);
         }
 
         private void InitializeAuthorizationModel()
@@ -181,20 +182,24 @@ namespace CakeExtracter.Commands.Selenium
             AmazonVcdLoader.PrepareLoader();
         }
 
-        private void SetLogActionsForPageActionsManager(int accountId = 0)
+        private SeleniumLogger GetLoggerForPageActionsManager(int accountId = 0)
         {
-            if (accountId == 0)
-            {
-                pageActionsManager.LogInfo = x => Logger.Info(x);
-                pageActionsManager.LogError = x => Logger.Error(new Exception(x));
-                pageActionsManager.LogWarning = x => Logger.Warn(x);
-            }
-            else
-            {
-                pageActionsManager.LogInfo = x => Logger.Info(accountId, x);
-                pageActionsManager.LogError = x => Logger.Error(accountId, new Exception(x));
-                pageActionsManager.LogWarning = x => Logger.Warn(accountId, x);
-            }
+            return accountId == 0
+                ? GetLoggerWithoutAccountId()
+                : GetLoggerWithAccountId(accountId);
+        }
+
+        private SeleniumLogger GetLoggerWithoutAccountId()
+        {
+            return new SeleniumLogger(x => Logger.Info(x), Logger.Error, x => Logger.Warn(x));
+        }
+
+        private SeleniumLogger GetLoggerWithAccountId(int accountId)
+        {
+            return new SeleniumLogger(
+                x => Logger.Info(accountId, x),
+                exc => Logger.Error(accountId, exc),
+                x => Logger.Warn(accountId, x));
         }
 
         private void LoginProcess()

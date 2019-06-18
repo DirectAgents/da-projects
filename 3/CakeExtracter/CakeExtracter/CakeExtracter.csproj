@@ -462,6 +462,7 @@
     <Compile Include="Common\SqlScriptsExecutor.cs" />
     <Compile Include="Common\StorageCollection.cs" />
     <Compile Include="Common\TextUtils.cs" />
+    <Compile Include="Etl\AmazonSelenium\Configuration\SeleniumCommandConfigurationHelper.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Configuration\PdaCommandConfigurationHelper.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Enums\AmazonCmApiMetrics.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Enums\AmazonReportMetrics.cs" />

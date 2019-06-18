@@ -66,6 +66,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\SeleniumLogger.cs" />
     <Compile Include="PageActions\BaseAmazonPageObjects.cs" />
     <Compile Include="PDA\AmazonConsoleManagerUtility.cs" />
     <Compile Include="Drivers\ChromeWebDriver.cs" />

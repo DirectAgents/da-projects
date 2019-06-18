@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
+using SeleniumDataBrowser.Helpers;
 
 namespace SeleniumDataBrowser.PageActions
 {
@@ -12,11 +13,7 @@ namespace SeleniumDataBrowser.PageActions
     /// </summary>
     public class BasePageActions
     {
-        public Action<string> LogInfo;
-
-        public Action<string> LogError;
-
-        public Action<string> LogWarning;
+        public SeleniumLogger Logger;
 
         protected readonly TimeSpan Timeout;
 
@@ -27,10 +24,11 @@ namespace SeleniumDataBrowser.PageActions
         /// </summary>
         /// <param name="driver">Selenium web driver.</param>
         /// <param name="timeoutMinutes">Number of minutes for waiting of elements.</param>
-        public BasePageActions(IWebDriver driver, int timeoutMinutes)
+        public BasePageActions(IWebDriver driver, int timeoutMinutes, SeleniumLogger logger)
         {
             Driver = driver;
             Timeout = TimeSpan.FromMinutes(timeoutMinutes);
+            Logger = logger;
         }
 
         /// <summary>
@@ -58,14 +56,14 @@ namespace SeleniumDataBrowser.PageActions
             }
             catch (Exception e)
             {
-                LogWarning(e.Message);
+                Logger.LogWarning(e.Message);
                 return false;
             }
         }
 
         public void NavigateToUrl(string url, By waitingElement)
         {
-            LogInfo($"Go to URL [{url}]...");
+            Logger.LogInfo($"Go to URL [{url}]...");
             NavigateToUrl(url, waitingElement, Timeout);
         }
 
