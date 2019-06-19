@@ -31,14 +31,20 @@ namespace CakeExtracter.Commands.Test
 
         public void Test3()
         {
-            var adformUtility = new AdformUtility(message => Logger.Info(message), Logger.Error);
+            var adformUtility = new AdformUtility(
+                message => Logger.Info(message),
+                message => Logger.Warn(message),
+                Logger.Error);
             adformUtility.GetDimensions();
             adformUtility.GetMetrics();
         }
 
         public void Test2()
         {
-            var adformUtility = new AdformUtility(message => Logger.Info(message), Logger.Error);
+            var adformUtility = new AdformUtility(
+                message => Logger.Info(message),
+                message => Logger.Warn(message),
+                Logger.Error);
             var settings = new ReportSettings
             {
                 StartDate = new DateTime(2017, 4, 20),
