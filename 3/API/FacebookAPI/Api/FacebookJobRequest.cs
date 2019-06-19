@@ -1,6 +1,6 @@
-﻿using Facebook;
-using System;
+﻿using System;
 using System.Threading;
+using Facebook;
 
 namespace FacebookAPI.Api
 {
@@ -22,13 +22,13 @@ namespace FacebookAPI.Api
         /// <summary>
         /// Gets the job request identifier.
         /// </summary>
-        /// <param name="waitMillisecs">The wait millisecs.</param>
-        /// <returns></returns>
+        /// <param name="waitMillisecs">The wait milliseconds.</param>
+        /// <returns>Asynch job initialization.</returns>
         public string GetRunId(int waitMillisecs = 0)
         {
             if (string.IsNullOrWhiteSpace(runId))
             {
-                dynamic retObj = fbClient.Post(path, parms); // initial async call
+                dynamic retObj = fbClient.Post(path, parms); // initial asynch call
                 runId = retObj.report_run_id;
                 Thread.Sleep(waitMillisecs);
             }
@@ -36,13 +36,12 @@ namespace FacebookAPI.Api
         }
 
         /// <summary>
-        /// Gets the job request identifier with retry.
+        /// Resets Run id if exists. Gets the job request identifier with retry.
         /// </summary>
         /// <param name="logInfo">The log information.</param>
         /// <param name="logError">The log error.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception"></exception>
-        public string GetRunId_withRetry(Action<string> logInfo, Action<string> logError)
+        /// <returns> Updated run Id.</returns>
+        public string ResetAndGetRunId_withRetry(Action<string> logInfo, Action<string> logError)
         {
             int tryNumber = 0;
             runId = null;
@@ -63,7 +62,7 @@ namespace FacebookAPI.Api
                     tryNumber++;
                     if (tryNumber < MaxRetries)
                     {
-                        logInfo(String.Format("Waiting {0} seconds before trying again.", secondsToWait));
+                        logInfo(string.Format("Waiting {0} seconds before trying again.", secondsToWait));
                         Thread.Sleep(secondsToWait * 1000);
                     }
                 }
