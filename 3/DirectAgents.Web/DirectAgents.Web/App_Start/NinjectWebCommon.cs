@@ -14,6 +14,7 @@ namespace DirectAgents.Web.App_Start
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
     using Ninject;
     using Ninject.Web.Common;
+    using Ninject.Web.Common.WebHost;
     using DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook;
     using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
     using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
