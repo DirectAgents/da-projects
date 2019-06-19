@@ -31,15 +31,13 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         private readonly AmazonVcdPageActions pageActions;
         private readonly AuthorizationModel authorizationModel;
         private readonly VcdAccountInfo accountInfo;
-        private readonly Action<string> logInfo;
-        private readonly Action<string> logWarning;
+        private readonly SeleniumLogger logger;
 
         public VcdReportDownloader(
             VcdAccountInfo accountInfo,
             AmazonVcdPageActions pageActions,
             AuthorizationModel authorizationModel,
-            Action<string> logInfo,
-            Action<string> logWarning,
+            SeleniumLogger logger,
             int reportDownloadingStartedDelayInSeconds,
             int minDelayBetweenReportDownloadingInSeconds,
             int maxDelayBetweenReportDownloadingInSeconds,
@@ -48,8 +46,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             this.accountInfo = accountInfo;
             this.pageActions = pageActions;
             this.authorizationModel = authorizationModel;
-            this.logInfo = logInfo;
-            this.logWarning = logWarning;
+            this.logger = logger;
             this.reportDownloadingStartedDelayInSeconds = reportDownloadingStartedDelayInSeconds;
             this.minDelayBetweenReportDownloadingInSeconds = minDelayBetweenReportDownloadingInSeconds;
             this.maxDelayBetweenReportDownloadingInSeconds = maxDelayBetweenReportDownloadingInSeconds;
@@ -58,19 +55,19 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
 
         public string DownloadShippedRevenueCsvReport(DateTime reportDay)
         {
-            logInfo("Amazon VCD, Attempt to download shipped revenue report.");
+            logger.LogInfo("Amazon VCD, Attempt to download shipped revenue report.");
             return DownloadReportAsCsvText(reportDay, RequestBodyConstants.ShippedRevenueReportLevel, RequestBodyConstants.ShippedRevenueSalesView);
         }
 
         public string DownloadShippedCogsCsvReport(DateTime reportDay)
         {
-            logInfo("Amazon VCD, Attempt to download shipped cogs report.");
+            logger.LogInfo("Amazon VCD, Attempt to download shipped cogs report.");
             return DownloadReportAsCsvText(reportDay, RequestBodyConstants.ShippedCogsLevel, RequestBodyConstants.ShippedCogsSalesView);
         }
 
         public string DownloadOrderedRevenueCsvReport(DateTime reportDay)
         {
-            logInfo("Amazon VCD, Attempt to download ordered revenue report.");
+            logger.LogInfo("Amazon VCD, Attempt to download ordered revenue report.");
             return DownloadReportAsCsvText(reportDay, RequestBodyConstants.OrderedRevenueLevel, RequestBodyConstants.OrderedRevenueView);
         }
 
@@ -88,8 +85,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
                     {
                         failed = true;
                         ProcessFailedResponse(exception.Result);
-                        var message = $"Waiting {timeSpan} for ({reportDay}, {reportLevel}, {accountInfo.AccountName}) before report generating";
-                        LoggerHelper.LogWaiting(message, retryCount, logInfo);
+                        logger.LogWaiting($"Report generating for ({reportDay}, {reportLevel}, {accountInfo.AccountName})", timeSpan, retryCount);
                     })
                 .Execute(() =>
                 {
@@ -110,8 +106,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         private void WaitBeforeReportGenerating(DateTime reportDay, string reportLevel)
         {
             var timeSpan = GetTimeSpanForWaiting();
-            var message = $"Waiting {timeSpan} for ({reportDay}, {reportLevel}, {accountInfo.AccountName}) before report generating";
-            LoggerHelper.LogWaiting(message, null, logInfo);
+            logger.LogWaiting($"Report generating for ({reportDay}, {reportLevel}, {accountInfo.AccountName})", timeSpan, null);
             Thread.Sleep(timeSpan);
         }
 
@@ -128,19 +123,19 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         private string ProcessSuccessfulResponse(IRestResponse response)
         {
             var textReport = System.Text.Encoding.UTF8.GetString(response.RawBytes, 0, response.RawBytes.Length);
-            logInfo($"Amazon VCD, Report downloading finished successfully. Size: {textReport.Length} characters.");
+            logger.LogInfo($"Amazon VCD, Report downloading finished successfully. Size: {textReport.Length} characters.");
             return textReport;
         }
 
         private void ProcessFailedResponse(IRestResponse response)
         {
-            logWarning($"Report downloading attempt failed, Status code: {response.StatusDescription}, content: {response.Content}");
+            logger.LogWarning($"Report downloading attempt failed, Status code: {response.StatusDescription}, content: {response.Content}");
             if (response.StatusCode == (HttpStatusCode)429)
             {
                 return;
             }
             pageActions.RefreshSalesDiagnosticPage(authorizationModel);
-            logInfo("Amazon VCD, The portal page has been refreshed.");
+            logger.LogInfo("Amazon VCD, The portal page has been refreshed.");
         }
 
         private bool IsSuccessfulResponse(IRestResponse response)
@@ -198,8 +193,10 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
 
         private List<ReportParameter> GetReportParameters(DateTime reportDay, string reportLevel)
         {
-            var reportParameters = RequestBodyConstants.GetReportParameters(GetReportParameterFilterDate(reportDay),
-                GetReportParameterFilterDate(reportDay), reportLevel);
+            var reportParameters = RequestBodyConstants.GetReportParameters(
+                GetReportParameterFilterDate(reportDay),
+                GetReportParameterFilterDate(reportDay),
+                reportLevel);
             return reportParameters;
         }
 

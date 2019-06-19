@@ -5,7 +5,6 @@ using CakeExtracter.Etl.AmazonSelenium.VCD.Configuration.Models;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
 using SeleniumDataBrowser.VCD.Helpers.UserInfoExtracting.Models;
-using SeleniumDataBrowser.VCD.PageActions;
 
 namespace CakeExtracter.Etl.AmazonSelenium.VCD.Configuration
 {

@@ -13,16 +13,16 @@ namespace SeleniumDataBrowser.VCD.Helpers
 
         private readonly AuthorizationModel authorizationModel;
         private readonly AmazonVcdPageActions pageActionManager;
-        private readonly Action<string> logInfo;
+        private readonly SeleniumLogger logger;
 
         public AmazonVcdLoginHelper(
             AuthorizationModel authorizationModel,
             AmazonVcdPageActions pageActionManager,
-            Action<string> logInfo)
+            SeleniumLogger logger)
         {
             this.authorizationModel = authorizationModel;
             this.pageActionManager = pageActionManager;
-            this.logInfo = logInfo;
+            this.logger = logger;
         }
 
         public void LoginToAmazonPortal()
@@ -44,7 +44,7 @@ namespace SeleniumDataBrowser.VCD.Helpers
         {
             authorizationModel.Cookies = CookieManager.GetCookiesFromFiles(authorizationModel.CookiesDir);
             var cookiesExist = authorizationModel.Cookies.Any();
-            logInfo($"Login into the portal{(cookiesExist ? string.Empty : " without")} using cookies.");
+            logger.LogInfo($"Login into the portal{(cookiesExist ? string.Empty : " without")} using cookies.");
             if (cookiesExist)
             {
                 LoginWithCookie(authorizationModel, pageManager);

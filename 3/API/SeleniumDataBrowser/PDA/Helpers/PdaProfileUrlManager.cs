@@ -4,6 +4,7 @@ using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 using SeleniumDataBrowser.Models;
 using SeleniumDataBrowser.PDA.PageActions;
 using Polly;
+using SeleniumDataBrowser.Helpers;
 
 namespace SeleniumDataBrowser.PDA.Helpers
 {
@@ -24,7 +25,7 @@ namespace SeleniumDataBrowser.PDA.Helpers
         private readonly PdaLoginHelper loginProcessManager;
         private readonly int maxRetryAttempts;
         private readonly TimeSpan pauseBetweenAttempts;
-        private readonly Action<string> logInfo;
+        private readonly SeleniumLogger logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PdaProfileUrlManager"/> class.
@@ -41,14 +42,14 @@ namespace SeleniumDataBrowser.PDA.Helpers
             PdaLoginHelper loginProcessManager,
             int maxRetryAttempts,
             TimeSpan pauseBetweenAttempts,
-            Action<string> logInfo)
+            SeleniumLogger logger)
         {
             this.authorizationModel = authorizationModel;
             this.pageActionManager = pageActionManager;
             this.loginProcessManager = loginProcessManager;
             this.maxRetryAttempts = maxRetryAttempts;
             this.pauseBetweenAttempts = pauseBetweenAttempts;
-            this.logInfo = logInfo;
+            this.logger = logger;
         }
 
         /// <summary>
@@ -59,8 +60,8 @@ namespace SeleniumDataBrowser.PDA.Helpers
             GoToPortalMainPage();
             AvailableProfileUrls = TryGetAvailableProfiles();
 
-            logInfo("The following profiles were found for the current account:");
-            AvailableProfileUrls.ForEach(x => logInfo($"{x.Key} - {x.Value}"));
+            logger.LogInfo("The following profiles were found for the current account:");
+            AvailableProfileUrls.ForEach(x => logger.LogInfo($"{x.Key} - {x.Value}"));
         }
 
         private void GoToPortalMainPage()

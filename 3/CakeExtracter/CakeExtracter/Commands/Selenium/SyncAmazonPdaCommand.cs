@@ -38,6 +38,8 @@ namespace CakeExtracter.Commands.Selenium
         private PdaProfileUrlManager profileUrlManager;
         private int maxRetryAttempts;
         private TimeSpan pauseBetweenAttempts;
+        private SeleniumLogger loggerWithAccountId;
+        private SeleniumLogger loggerWithoutAccountId;
 
         /// <summary>
         /// Gets or sets the command argument: Account ID in the database
@@ -162,6 +164,7 @@ namespace CakeExtracter.Commands.Selenium
 
         private void InitializeFields()
         {
+            InitializeLogger();
             InitializeAuthorizationModel();
             InitializePageActionsManager();
             InitializeLoginProcessManager();
@@ -196,8 +199,7 @@ namespace CakeExtracter.Commands.Selenium
             try
             {
                 var timeoutInMinutes = PdaCommandConfigurationHelper.GetWaitPageTimeout();
-                var logger = GetLoggerForPageActionsManager();
-                pageActionsManager = new AmazonPdaPageActions(timeoutInMinutes, IsHidingBrowserWindow, logger);
+                pageActionsManager = new AmazonPdaPageActions(timeoutInMinutes, IsHidingBrowserWindow, loggerWithoutAccountId);
             }
             catch (Exception e)
             {
@@ -209,11 +211,7 @@ namespace CakeExtracter.Commands.Selenium
         {
             try
             {
-                loginProcessManager = new PdaLoginHelper(
-                    authorizationModel,
-                    pageActionsManager,
-                    x => Logger.Info(x),
-                    x => Logger.Warn(x));
+                loginProcessManager = new PdaLoginHelper(authorizationModel, pageActionsManager, loggerWithoutAccountId);
             }
             catch (Exception e)
             {
@@ -243,7 +241,7 @@ namespace CakeExtracter.Commands.Selenium
                     loginProcessManager,
                     maxRetryAttempts,
                     pauseBetweenAttempts,
-                    x => Logger.Info(x));
+                    loggerWithoutAccountId);
                 profileUrlManager.SetAvailableProfileUrls();
             }
             catch (Exception e)
@@ -294,7 +292,7 @@ namespace CakeExtracter.Commands.Selenium
         {
             try
             {
-                var logger = GetLoggerWithAccountId(account.Id);
+                InitializeLogger(account.Id);
                 return new AmazonConsoleManagerUtility(
                     account.Name,
                     authorizationModel,
@@ -302,7 +300,7 @@ namespace CakeExtracter.Commands.Selenium
                     profileUrlManager,
                     maxRetryAttempts,
                     pauseBetweenAttempts,
-                    logger);
+                    loggerWithAccountId);
             }
             catch (Exception e)
             {
@@ -390,21 +388,26 @@ namespace CakeExtracter.Commands.Selenium
             return new[] { account };
         }
 
-        private SeleniumLogger GetLoggerForPageActionsManager(int accountId = 0)
+        private void InitializeLogger(int accountId = 0)
         {
-            return accountId == 0
-                ? GetLoggerWithoutAccountId()
-                : GetLoggerWithAccountId(accountId);
+            if (accountId == 0)
+            {
+                SetLoggerWithoutAccountId();
+            }
+            else
+            {
+                SetLoggerWithAccountId(accountId);
+            }
         }
 
-        private SeleniumLogger GetLoggerWithoutAccountId()
+        private void SetLoggerWithoutAccountId()
         {
-            return new SeleniumLogger(x => Logger.Info(x), Logger.Error, x => Logger.Warn(x));
+            loggerWithoutAccountId = new SeleniumLogger(x => Logger.Info(x), Logger.Error, x => Logger.Warn(x));
         }
 
-        private SeleniumLogger GetLoggerWithAccountId(int accountId)
+        private void SetLoggerWithAccountId(int accountId)
         {
-            return new SeleniumLogger(
+            loggerWithAccountId = new SeleniumLogger(
                 x => Logger.Info(accountId, x),
                 exc => Logger.Error(accountId, exc),
                 x => Logger.Warn(accountId, x));

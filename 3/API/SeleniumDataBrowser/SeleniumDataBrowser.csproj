@@ -72,7 +72,6 @@
     <Compile Include="Drivers\ChromeWebDriver.cs" />
     <Compile Include="Helpers\CookieManager.cs" />
     <Compile Include="Helpers\FileManager.cs" />
-    <Compile Include="Helpers\LoggerHelper.cs" />
     <Compile Include="Helpers\RestRequestHelper.cs" />
     <Compile Include="Helpers\TimeHelper.cs" />
     <Compile Include="PageActions\BaseAmazonPageActions.cs" />

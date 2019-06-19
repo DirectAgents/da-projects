@@ -16,8 +16,7 @@ namespace SeleniumDataBrowser.PDA.Helpers
 
         private readonly AuthorizationModel authorizationModel;
         private readonly AmazonPdaPageActions pageActionManager;
-        private readonly Action<string> logInfo;
-        private readonly Action<string> logWarn;
+        private readonly SeleniumLogger logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PdaLoginHelper"/> class.
@@ -29,13 +28,11 @@ namespace SeleniumDataBrowser.PDA.Helpers
         public PdaLoginHelper(
             AuthorizationModel authorizationModel,
             AmazonPdaPageActions pageActionManager,
-            Action<string> logInfo,
-            Action<string> logWarn)
+            SeleniumLogger logger)
         {
             this.authorizationModel = authorizationModel;
             this.pageActionManager = pageActionManager;
-            this.logInfo = logInfo;
-            this.logWarn = logWarn;
+            this.logger = logger;
         }
 
         /// <summary>
@@ -48,11 +45,11 @@ namespace SeleniumDataBrowser.PDA.Helpers
 
             if (cookiesExist)
             {
-                logInfo("Login into the portal using cookies.");
+                logger.LogInfo("Login into the portal using cookies.");
                 LoginWithCookie();
                 return;
             }
-            logWarn("Login into the portal without using cookies. Please choose 'Amazon DSP console (formerly Amazon Advertising Platform)' and enter an authorization code!");
+            logger.LogWarning("Login into the portal without using cookies. Please choose 'Amazon DSP console (formerly Amazon Advertising Platform)' and enter an authorization code!");
             LoginWithoutCookie();
         }
 

@@ -27,6 +27,8 @@ namespace CakeExtracter.Commands.Selenium
         private AuthorizationModel authorizationModel;
         private AmazonVcdPageActions pageActionsManager;
         private AmazonVcdLoginHelper loginProcessManager;
+        private SeleniumLogger loggerWithAccountId;
+        private SeleniumLogger loggerWithoutAccountId;
 
         public int ProfileNumber { get; set; }
 
@@ -85,7 +87,8 @@ namespace CakeExtracter.Commands.Selenium
         private void DoEtlForAccount(AccountInfo accountInfo, DateRange dateRange)
         {
             Logger.Info(accountInfo.Account.Id, $"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) started.");
-            pageActionsManager.Logger = GetLoggerForPageActionsManager(accountInfo.Account.Id);
+            InitializeLogger(accountInfo.Account.Id);
+            pageActionsManager.Logger = loggerWithAccountId;
 
             pageActionsManager.SelectAccountOnPage(accountInfo.Account.Name);
 
@@ -103,15 +106,13 @@ namespace CakeExtracter.Commands.Selenium
             var minDelayBetweenReportDownloadingInSeconds = VcdExecutionProfileManger.Current.ProfileConfiguration.MinDelayBetweenReportDownloadingInSeconds;
             var maxDelayBetweenReportDownloadingInSeconds = VcdExecutionProfileManger.Current.ProfileConfiguration.MaxDelayBetweenReportDownloadingInSeconds;
             var reportDownloadingAttemptCount = VcdExecutionProfileManger.Current.ProfileConfiguration.ReportDownloadingAttemptCount;
-
             var vcdAccountInfo = GetVcdAccountInformation(accountInfo);
 
             var reportDownloader = new VcdReportDownloader(
                 vcdAccountInfo,
                 pageActionsManager,
                 authorizationModel,
-                x => Logger.Info(vcdAccountInfo.AccountId, x),
-                x => Logger.Warn(vcdAccountInfo.AccountId, x),
+                loggerWithAccountId,
                 reportDownloadingStartedDelayInSeconds,
                 minDelayBetweenReportDownloadingInSeconds,
                 maxDelayBetweenReportDownloadingInSeconds,
@@ -149,6 +150,7 @@ namespace CakeExtracter.Commands.Selenium
         {
             VcdExecutionProfileManger.Current.SetExecutionProfileNumber(ProfileNumber);
 
+            InitializeLogger();
             InitializePageActionsManager();
             InitializeAuthorizationModel();
             InitializeLoginManager();
@@ -157,8 +159,7 @@ namespace CakeExtracter.Commands.Selenium
         private void InitializePageActionsManager()
         {
             var waitPageTimeoutInMinutes = VcdCommandConfigurationHelper.GetWaitPageTimeout();
-            var logger = GetLoggerForPageActionsManager();
-            pageActionsManager = new AmazonVcdPageActions(waitPageTimeoutInMinutes, logger);
+            pageActionsManager = new AmazonVcdPageActions(waitPageTimeoutInMinutes, loggerWithoutAccountId);
         }
 
         private void InitializeAuthorizationModel()
@@ -174,7 +175,7 @@ namespace CakeExtracter.Commands.Selenium
 
         private void InitializeLoginManager()
         {
-            loginProcessManager = new AmazonVcdLoginHelper(authorizationModel, pageActionsManager, x => Logger.Info(x));
+            loginProcessManager = new AmazonVcdLoginHelper(authorizationModel, pageActionsManager, loggerWithoutAccountId);
         }
 
         private void InitializeLoader()
@@ -182,21 +183,26 @@ namespace CakeExtracter.Commands.Selenium
             AmazonVcdLoader.PrepareLoader();
         }
 
-        private SeleniumLogger GetLoggerForPageActionsManager(int accountId = 0)
+        private void InitializeLogger(int accountId = 0)
         {
-            return accountId == 0
-                ? GetLoggerWithoutAccountId()
-                : GetLoggerWithAccountId(accountId);
+            if (accountId == 0)
+            {
+                SetLoggerWithoutAccountId();
+            }
+            else
+            {
+                SetLoggerWithAccountId(accountId);
+            }
         }
 
-        private SeleniumLogger GetLoggerWithoutAccountId()
+        private void SetLoggerWithoutAccountId()
         {
-            return new SeleniumLogger(x => Logger.Info(x), Logger.Error, x => Logger.Warn(x));
+            loggerWithoutAccountId = new SeleniumLogger(x => Logger.Info(x), Logger.Error, x => Logger.Warn(x));
         }
 
-        private SeleniumLogger GetLoggerWithAccountId(int accountId)
+        private void SetLoggerWithAccountId(int accountId)
         {
-            return new SeleniumLogger(
+            loggerWithAccountId = new SeleniumLogger(
                 x => Logger.Info(accountId, x),
                 exc => Logger.Error(accountId, exc),
                 x => Logger.Warn(accountId, x));
