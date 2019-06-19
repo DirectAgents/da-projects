@@ -3,9 +3,9 @@
 namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers.Interfaces
 {
     /// <summary>
-    /// Service for work with job request items.
+    /// Job Request Life Cycle Manager.
     /// </summary>
-    public interface IJobExecutionRequestScheduler
+    public interface IJobRequestLifeCycleManager
     {
         /// <summary>
         /// Returns a saved job request object for a command.
@@ -21,29 +21,29 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         void SetJobRequestAsProcessing(JobRequest request);
 
         /// <summary>
-        /// Schedules a new command that should become scheduled job requests.
-        /// </summary>
-        /// <param name="command">The command to launch.</param>
-        void ScheduleCommandLaunch(ConsoleCommand command);
-
-        /// <summary>
         /// Reschedules the job request.
         /// </summary>
         /// <param name="request">The job request.</param>
         /// <param name="sourceCommand">The source command of the request.</param>
-        void RescheduleRequest(JobRequest request, ConsoleCommand sourceCommand);
+        void ProcessFailedRequest(JobRequest request, ConsoleCommand sourceCommand);
 
         /// <summary>
         /// Creates job requests for scheduled commands based on the current command and job request.
         /// </summary>
-        /// <param name="sourceCommand">The source command.</param>
-        /// <param name="sourceRequest">The source job request.</param>
-        void CreateRequestsForScheduledCommands(ConsoleCommand sourceCommand, JobRequest sourceRequest);
+        /// <param name="command">The command.</param>
+        /// <param name="request">The request.</param>
+        /// <param name="retryRequestsHolder">The retry requests holder.</param>
+        void ProcessCompletedRequest(ConsoleCommand command, JobRequest request, RetryRequestsHolder retryRequestsHolder);
 
         /// <summary>
         /// Ends the job request.
         /// </summary>
         /// <param name="request">The job request.</param>
-        void EndRequest(JobRequest request);
+        void ProcessAbortedRequest(JobRequest request);
+
+        /// <summary>
+        /// Updates the status of retry pending jobs. Checks all retry pending jobs and it's retries jobs and actualize it's status.
+        /// </summary>
+        void ActualizeStatusOfRetryPendingJobs();
     }
 }

@@ -1,7 +1,7 @@
-﻿using CakeExtracter.Common.JobExecutionManagement.JobExecution.Models;
-using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.Common.JobExecutionManagement.JobExecution.Models;
+using Newtonsoft.Json;
 
 namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Utils
 {
@@ -16,7 +16,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Utils
         /// <param name="sourceMessagesText">The source messages text.</param>
         /// <param name="message">The message.</param>
         /// <param name="accountId">The account identifier.</param>
-        /// <returns></returns>
+        /// <returns>Result JSON message.</returns>
         public static string AddAccountMessageToLogData(string sourceMessagesText, string message, int accountId)
         {
             var messagesObject = GetJobExecutionLogDataFromMessageText(sourceMessagesText);
@@ -31,7 +31,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Utils
         /// <param name="sourceMessagesText">The source messages text.</param>
         /// <param name="message">The message.</param>
         /// <param name="accountId">The account identifier.</param>
-        /// <returns></returns>
+        /// <returns>Result JSON message.</returns>
         public static string SetSingleAccountMessageInLogData(string sourceMessagesText, string message, int accountId)
         {
             var messagesObject = GetJobExecutionLogDataFromMessageText(sourceMessagesText);
@@ -45,7 +45,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Utils
         /// </summary>
         /// <param name="sourceMessagesText">The source messages text.</param>
         /// <param name="message">The message.</param>
-        /// <returns></returns>
+        /// <returns>Result JSON message.</returns>
         public static string AddCommonMessageToLogData(string sourceMessagesText, string message)
         {
             var messagesObject = GetJobExecutionLogDataFromMessageText(sourceMessagesText);
@@ -58,7 +58,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Utils
         /// </summary>
         /// <param name="sourceMessagesText">The source messages text.</param>
         /// <param name="message">The message.</param>
-        /// <returns></returns>
+        /// <returns>Result JSON message.</returns>
         public static string SetSingleCommonMessageInLogData(string sourceMessagesText, string message)
         {
             var messagesObject = GetJobExecutionLogDataFromMessageText(sourceMessagesText);
@@ -66,14 +66,20 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Utils
             return JsonConvert.SerializeObject(messagesObject);
         }
 
-        private static JobExecutionLogData GetJobExecutionLogDataFromMessageText(string sourceMessagesText)
+        /// <summary>
+        /// Gets the job execution log data from message text.
+        /// </summary>
+        /// <param name="sourceMessagesText">The source messages text.</param>
+        /// <returns>Log data model</returns>
+        public static JobExecutionLogData GetJobExecutionLogDataFromMessageText(string sourceMessagesText)
         {
-            return string.IsNullOrEmpty(sourceMessagesText) ?
-                new JobExecutionLogData()
+            return string.IsNullOrEmpty(sourceMessagesText)
+                ? new JobExecutionLogData()
                 {
                     AccountsData = new List<AccountLogData>(),
-                    CommonMessages = new List<string>() 
-                }: JsonConvert.DeserializeObject<JobExecutionLogData>(sourceMessagesText);
+                    CommonMessages = new List<string>(),
+                }
+                : JsonConvert.DeserializeObject<JobExecutionLogData>(sourceMessagesText);
         }
 
         private static AccountLogData EnsureAccountLogData(JobExecutionLogData logData, int accountId)
@@ -84,7 +90,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Utils
                 accountLogData = new AccountLogData
                 {
                     AccountId = accountId,
-                    Messages = new List<string>()
+                    Messages = new List<string>(),
                 };
                 logData.AccountsData.Add(accountLogData);
             }

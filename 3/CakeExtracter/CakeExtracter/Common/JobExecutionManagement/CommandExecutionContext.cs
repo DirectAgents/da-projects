@@ -1,7 +1,8 @@
 ﻿using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers.Interfaces;
-using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
+using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
 
 namespace CakeExtracter.Common.JobExecutionManagement
 {
@@ -31,18 +32,20 @@ namespace CakeExtracter.Common.JobExecutionManagement
         public string CommandName => currentCommand.Command;
 
         private readonly IJobExecutionItemService jobExecutionItemService;
-        private readonly IJobExecutionRequestScheduler jobExecutionRequestScheduler;
+        private readonly IJobRequestLifeCycleManager jobRequestLifeCycleManager;
 
         private ConsoleCommand currentCommand;
         private JobRequest currentJobRequest;
         private JobRequestExecution currentJobRequestExecution;
+        private RetryRequestsHolder retryRequestsHolder;
 
         private bool isFailedExecution;
 
         private CommandExecutionContext(ConsoleCommand command)
         {
             jobExecutionItemService = DIKernel.Get<IJobExecutionItemService>();
-            jobExecutionRequestScheduler = DIKernel.Get<IJobExecutionRequestScheduler>();
+            jobRequestLifeCycleManager = DIKernel.Get<IJobRequestLifeCycleManager>();
+            retryRequestsHolder = new RetryRequestsHolder(command);
             InitCurrentJobRequest(command);
         }
 
@@ -60,7 +63,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         /// </summary>
         public void StartRequestExecution()
         {
-            jobExecutionRequestScheduler.SetJobRequestAsProcessing(currentJobRequest);
+            jobRequestLifeCycleManager.SetJobRequestAsProcessing(currentJobRequest);
             currentJobRequestExecution = jobExecutionItemService.CreateJobExecutionItem(currentJobRequest);
         }
 
@@ -76,7 +79,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
             }
 
             jobExecutionItemService.SetJobExecutionItemFinishedState(currentJobRequestExecution);
-            jobExecutionRequestScheduler.CreateRequestsForScheduledCommands(currentCommand, currentJobRequest);
+            jobRequestLifeCycleManager.ProcessCompletedRequest(currentCommand, currentJobRequest, retryRequestsHolder);
         }
 
         /// <summary>
@@ -85,7 +88,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         public void SetAsFailedRequestExecution()
         {
             jobExecutionItemService.SetJobExecutionItemFailedState(currentJobRequestExecution);
-            jobExecutionRequestScheduler.RescheduleRequest(currentJobRequest, currentCommand);
+            jobRequestLifeCycleManager.ProcessFailedRequest(currentJobRequest, currentCommand);
         }
 
         /// <summary>
@@ -94,7 +97,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         public void SetAsAbortedByTimeoutRequestExecution()
         {
             jobExecutionItemService.SetJobExecutionItemAbortedByTimeoutState(currentJobRequestExecution);
-            jobExecutionRequestScheduler.EndRequest(currentJobRequest);
+            CloseContext();
         }
 
         /// <summary>
@@ -102,7 +105,10 @@ namespace CakeExtracter.Common.JobExecutionManagement
         /// </summary>
         public void CloseContext()
         {
-            jobExecutionRequestScheduler.EndRequest(currentJobRequest);
+            if (currentJobRequest.Status == JobRequestStatus.Processing)
+            {
+                jobRequestLifeCycleManager.ProcessAbortedRequest(currentJobRequest);
+            }
         }
 
         /// <summary>
@@ -111,7 +117,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         /// <param name="command">The command for a new job request.</param>
         public void ScheduleCommandLaunch(ConsoleCommand command)
         {
-            jobExecutionRequestScheduler.ScheduleCommandLaunch(command);
+            retryRequestsHolder.EnqueueRetryRequestCommand(command);
         }
 
         /// <summary>
@@ -177,7 +183,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         private void InitCurrentJobRequest(ConsoleCommand command)
         {
             currentCommand = command;
-            currentJobRequest = jobExecutionRequestScheduler.GetJobRequest(currentCommand);
+            currentJobRequest = jobRequestLifeCycleManager.GetJobRequest(currentCommand);
         }
     }
 }
