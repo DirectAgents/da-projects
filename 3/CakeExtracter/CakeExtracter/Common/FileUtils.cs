@@ -15,7 +15,9 @@ namespace CakeExtracter.Common
         /// <returns>File text content.</returns>
         public static string GetFileContentByRelativePath(string relativePath)
         {
-            string fullFilePath = Path.GetFullPath(relativePath);
+            var assembly = Assembly.GetExecutingAssembly();
+            var assemblyDir = Path.GetDirectoryName(assembly.Location);
+            string fullFilePath = Path.Combine(assemblyDir, relativePath);
             return File.ReadAllText(fullFilePath);
         }
     }

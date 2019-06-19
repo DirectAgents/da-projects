@@ -50,7 +50,7 @@ namespace CakeExtracter.Common.Email
 
         private string PrepareEmailTextContent<T>(T model, string templateName)
         {
-            var templateRelativePath = $".\\Email\\{templateName}.html";
+            var templateRelativePath = $"Email\\{templateName}.html";
             var templateFileContent = FileUtils.GetFileContentByRelativePath(templateRelativePath);
             var result = Engine.Razor.RunCompile(templateFileContent, templateName, null, model);
             return result;
