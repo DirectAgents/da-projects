@@ -1,9 +1,12 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
+using CakeExtracter.Etl.AmazonSelenium.Configuration;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Configuration;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Configuration.Models;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors;
@@ -15,6 +18,7 @@ using SeleniumDataBrowser.VCD.PageActions;
 using SeleniumDataBrowser.Models;
 using SeleniumDataBrowser.VCD.Helpers;
 using SeleniumDataBrowser.VCD.Helpers.ReportDownloading;
+using SeleniumDataBrowser.VCD.Helpers.UserInfoExtracting.Models;
 using SeleniumDataBrowser.VCD.Helpers.UserInfoExtracting;
 using SeleniumDataBrowser.VCD.Models;
 
@@ -39,7 +43,6 @@ namespace CakeExtracter.Commands.Selenium
 
         public SyncAmazonVcdCommand()
         {
-            NoNeedToCreateRepeatRequests = true;
             IsCommand("SyncAmazonVcdCommand", "Sync VCD Stats");
             HasOption<int>("p|profileNumber=", "Profile Number", c => ProfileNumber = c);
             HasOption<bool>("h|hideWindow=", "Include hiding the browser window", c => IsHidingBrowserWindow = c);
@@ -60,51 +63,113 @@ namespace CakeExtracter.Commands.Selenium
             return 0;
         }
 
+        /// <inheritdoc />
+        public override IEnumerable<CommandWithSchedule> GetUniqueBroadCommands(IEnumerable<CommandWithSchedule> commands)
+        {
+            var broadCommands = new List<CommandWithSchedule>();
+            var commandsGroupedByProfile = commands.GroupBy(x => (x.Command as SyncAmazonVcdCommand)?.ProfileNumber);
+            foreach (var commandsGroup in commandsGroupedByProfile)
+            {
+                //var profileBroadCommands = GetUniqueBroadProfileCommands(commandsGroup);
+                broadCommands.AddRange(commandsGroup);
+            }
+            return broadCommands;
+        }
+
         private void InitializeCommand()
         {
-            InitializeFields();
-            LoginProcess();
-            InitializeLoader();
+            try
+            {
+                InitializeFields();
+                LoginProcess();
+                InitializeLoader();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to initialize VCD command.", e);
+            }
         }
 
         private void RunEtls()
         {
             pageActionsManager.RefreshSalesDiagnosticPage(authorizationModel);
+
             var dateRanges = VcdCommandConfigurationHelper.GetDateRangesToProcess();
-
-            var userInfoExtractor = new UserInfoExtracter();
-            var pageUserInfo = userInfoExtractor.ExtractUserInfo(pageActionsManager);
-
-            accountsDataProvider = new VcdAccountsDataProvider(pageUserInfo);
-
-            var accountsData = accountsDataProvider.GetAccountsDataToProcess();
+            var accountsData = GetAccountsData();
             dateRanges.ForEach(d => RunForDateRange(d, accountsData));
+        }
+
+        private List<AccountInfo> GetAccountsData()
+        {
+            accountsDataProvider = GetAccountsDataProvider();
+            var accountsData = accountsDataProvider.GetAccountsDataToProcess();
+            accountsData.ForEach(accountData => CommandExecutionContext.Current.SetJobExecutionStateInHistory("Not started", accountData.Account.Id));
+            return accountsData;
+        }
+
+        private VcdAccountsDataProvider GetAccountsDataProvider()
+        {
+            var pageUserInfo = GetPageUserInfo();
+            return new VcdAccountsDataProvider(pageUserInfo);
+        }
+
+        private PageUserInfo GetPageUserInfo()
+        {
+            var userInfoExtractor = new UserInfoExtracter();
+            return userInfoExtractor.ExtractUserInfo(pageActionsManager);
         }
 
         private void RunForDateRange(DateRange dateRange, List<AccountInfo> accountsData)
         {
-            Logger.Info($"\nAmazon VCD ETL. DateRange {dateRange}.");
+            Logger.Info($"Amazon VCD ETL. DateRange {dateRange}.");
             foreach (var accountData in accountsData)
             {
-                DoEtlForAccount(accountData, dateRange);
-                SyncAccountDataToAnalyticTable(accountData.Account.Id);
+                try
+                {
+                    DoEtlForAccount(accountData, dateRange);
+                    SyncAccountDataToAnalyticTable(accountData.Account.Id);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(accountData.Account.Id, ex);
+                }
             }
         }
 
         private void DoEtlForAccount(AccountInfo accountInfo, DateRange dateRange)
         {
             Logger.Info(accountInfo.Account.Id, $"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) started.");
-            InitializeLogger(accountInfo.Account.Id);
-            pageActionsManager.Logger = loggerWithAccountId;
 
-            pageActionsManager.SelectAccountOnPage(accountInfo.Account.Name);
+            AccountPagePreparation(accountInfo);
 
             var reportDownloader = GetReportDownloader(accountInfo);
             var extractor = new AmazonVcdExtractor(accountInfo, dateRange, reportDownloader);
             var loader = new AmazonVcdLoader(accountInfo.Account);
+            InitEtlEvents(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
 
             Logger.Info(accountInfo.Account.Id, $"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) finished.");
+        }
+
+        private void AccountPagePreparation(AccountInfo accountInfo)
+        {
+            PreparePageActionsManagerLogger(accountInfo.Account.Id);
+
+            pageActionsManager.SelectAccountOnPage(accountInfo.Account.Name);
+        }
+
+        private void PreparePageActionsManagerLogger(int accountId)
+        {
+            InitializeLogger(accountId);
+            pageActionsManager.Logger = loggerWithAccountId;
+        }
+
+        private void InitEtlEvents(AmazonVcdExtractor extractor, AmazonVcdLoader loader)
+        {
+            extractor.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewCommandLaunch<SyncAmazonVcdCommand>(command => { });
+            loader.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewCommandLaunch<SyncAmazonVcdCommand>(command => { });
         }
 
         private VcdReportDownloader GetReportDownloader(AccountInfo accountInfo)
@@ -142,52 +207,92 @@ namespace CakeExtracter.Commands.Selenium
         {
             try
             {
-                CommandExecutionContext.Current.SetJobExecutionStateInHistory($"Sync analytic table data.", accountId);
+                CommandExecutionContext.Current.SetJobExecutionStateInHistory("Sync analytic table data.", accountId);
                 Logger.Info(accountId, "Sync analytic table data.");
-                var vcdTablesSyncher = new VcdAnalyticTablesSyncher();
+                var syncScriptPath = VcdCommandConfigurationHelper.GetSyncScriptPath();
+                var vcdTablesSyncher = new VcdAnalyticTablesSyncher(syncScriptPath);
                 vcdTablesSyncher.SyncData(accountId);
             }
             catch (Exception ex)
             {
-                Logger.Error(accountId, new Exception("Error occurred while sync VCD data to analytic table", ex));
+                var exception = new Exception("Error occurred while sync VCD data to analytic table", ex);
+                Logger.Error(accountId, exception);
+                throw exception;
             }
         }
 
         private void InitializeFields()
         {
-            VcdExecutionProfileManger.Current.SetExecutionProfileNumber(ProfileNumber);
-
+            SetExecutionProfile();
             InitializeLogger();
             InitializePageActionsManager();
             InitializeAuthorizationModel();
             InitializeLoginManager();
         }
 
+        private void LoginProcess()
+        {
+            try
+            {
+                loginProcessManager.LoginToAmazonPortal();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to login to Amazon Advertiser Portal.", e);
+            }
+        }
+
+        private void InitializeLoader()
+        {
+            try
+            {
+                AmazonVcdLoader.PrepareLoader();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to prepare VCD loader.", e);
+            }
+        }
+
+        private void SetExecutionProfile()
+        {
+            VcdExecutionProfileManger.Current.SetExecutionProfileNumber(ProfileNumber);
+        }
+
         private void InitializePageActionsManager()
         {
-            var waitPageTimeoutInMinutes = VcdCommandConfigurationHelper.GetWaitPageTimeout();
-            pageActionsManager = new AmazonVcdPageActions(waitPageTimeoutInMinutes, loggerWithoutAccountId);
+            try
+            {
+                var waitPageTimeoutInMinutes = SeleniumCommandConfigurationHelper.GetWaitPageTimeout();
+                pageActionsManager = new AmazonVcdPageActions(waitPageTimeoutInMinutes, loggerWithoutAccountId, IsHidingBrowserWindow);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to initialize page actions manager.", e);
+            }
         }
 
         private void InitializeAuthorizationModel()
         {
-            authorizationModel = new AuthorizationModel
+            try
             {
-                Login = VcdExecutionProfileManger.Current.ProfileConfiguration.LoginEmail,
-                Password = VcdExecutionProfileManger.Current.ProfileConfiguration.LoginPassword,
-                SignInUrl = VcdExecutionProfileManger.Current.ProfileConfiguration.SignInUrl,
-                CookiesDir = VcdExecutionProfileManger.Current.ProfileConfiguration.CookiesDirectory,
-            };
+                authorizationModel = new AuthorizationModel
+                {
+                    Login = VcdExecutionProfileManger.Current.ProfileConfiguration.LoginEmail,
+                    Password = VcdExecutionProfileManger.Current.ProfileConfiguration.LoginPassword,
+                    SignInUrl = VcdExecutionProfileManger.Current.ProfileConfiguration.SignInUrl,
+                    CookiesDir = VcdExecutionProfileManger.Current.ProfileConfiguration.CookiesDirectory,
+                };
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to initialize authorization settings.", e);
+            }
         }
 
         private void InitializeLoginManager()
         {
             loginProcessManager = new AmazonVcdLoginHelper(authorizationModel, pageActionsManager, loggerWithoutAccountId);
-        }
-
-        private void InitializeLoader()
-        {
-            AmazonVcdLoader.PrepareLoader();
         }
 
         private void InitializeLogger(int accountId = 0)
@@ -215,9 +320,23 @@ namespace CakeExtracter.Commands.Selenium
                 x => Logger.Warn(accountId, x));
         }
 
-        private void LoginProcess()
+        private List<CommandWithSchedule> GetUniqueBroadProfileCommands(IEnumerable<CommandWithSchedule> commandsWithSchedule)
         {
-            loginProcessManager.LoginToAmazonPortal();
+            var profileCommands = new List<Tuple<SyncAmazonVcdCommand, CommandWithSchedule>>();
+            foreach (var commandWithSchedule in commandsWithSchedule)
+            {
+                var command = (SyncAmazonVcdCommand)commandWithSchedule.Command;
+                profileCommands.Add(new Tuple<SyncAmazonVcdCommand, CommandWithSchedule>(command, commandWithSchedule));
+            }
+
+            var broadCommands = profileCommands.Select(GetCommand).Distinct().ToList();
+            return broadCommands;
+        }
+
+        private CommandWithSchedule GetCommand(Tuple<SyncAmazonVcdCommand, CommandWithSchedule> setting)
+        {
+            setting.Item2.Command = setting.Item1;
+            return setting.Item2;
         }
     }
 }

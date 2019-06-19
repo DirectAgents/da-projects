@@ -203,7 +203,7 @@ namespace SeleniumDataBrowser.PDA
 
         private void WaitBeforeRequest(DateTime date)
         {
-            logger.LogWaiting($"Requesting a campaign info (for {date.ToShortDateString()})", pauseBetweenAttempts, null);
+            logger.LogWaiting($"Requesting a campaign info for {date.ToShortDateString()}. " + "Waiting {0} ...", pauseBetweenAttempts, null);
             Thread.Sleep(pauseBetweenAttempts);
         }
     }

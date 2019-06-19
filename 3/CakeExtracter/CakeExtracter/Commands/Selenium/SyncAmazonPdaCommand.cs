@@ -6,6 +6,7 @@ using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Exceptions;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Etl;
+using CakeExtracter.Etl.AmazonSelenium.Configuration;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Configuration;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Extractors;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
@@ -198,7 +199,7 @@ namespace CakeExtracter.Commands.Selenium
         {
             try
             {
-                var timeoutInMinutes = PdaCommandConfigurationHelper.GetWaitPageTimeout();
+                var timeoutInMinutes = SeleniumCommandConfigurationHelper.GetWaitPageTimeout();
                 pageActionsManager = new AmazonPdaPageActions(timeoutInMinutes, IsHidingBrowserWindow, loggerWithoutAccountId);
             }
             catch (Exception e)
@@ -252,10 +253,12 @@ namespace CakeExtracter.Commands.Selenium
 
         private void RunEtls()
         {
-            var statsType = new StatsTypeAgg(StatsType);
             var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info("Amazon ETL (PDA Campaigns). DateRange: {0}.", dateRange);
+
+            var statsType = new StatsTypeAgg(StatsType);
             var accounts = GetAccounts();
+
             foreach (var account in accounts)
             {
                 DoEtls(account, dateRange, statsType);

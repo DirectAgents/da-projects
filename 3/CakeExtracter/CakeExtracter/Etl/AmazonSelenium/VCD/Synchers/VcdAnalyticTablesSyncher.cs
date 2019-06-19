@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using CakeExtracter.Common;
 using CakeExtracter.Common.Constants;
 using Polly;
@@ -11,15 +10,18 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Synchers
     /// </summary>
     public class VcdAnalyticTablesSyncher
     {
-        private SqlScriptsExecutor sqlScriptExecutor;
-
         private const string AmazonAmsDbConnectionStringConfigName = "ClientPortalProgContext";
 
+        private readonly SqlScriptsExecutor sqlScriptExecutor;
+        private readonly string scriptPath;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="AmazonAmsAnalyticSyncher"/> class.
+        /// Initializes a new instance of the <see cref="VcdAnalyticTablesSyncher"/> class.
         /// </summary>
-        public VcdAnalyticTablesSyncher()
+        /// <param name="scriptPath">Path to sync script.</param>
+        public VcdAnalyticTablesSyncher(string scriptPath)
         {
+            this.scriptPath = scriptPath;
             sqlScriptExecutor = new SqlScriptsExecutor(AmazonAmsDbConnectionStringConfigName);
         }
 
@@ -33,13 +35,10 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Synchers
             Policy
                 .Handle<Exception>()
                 .Retry(AnlyticTablesSyncConstants.maxRetryAttempts, (exception, retryCount, context) =>
-                    Logger.Warn(accountId,
-                        $"Sync analytic table failed. Waiting {AnlyticTablesSyncConstants.secondsToWait} seconds before trying again."))
+                    Logger.Warn(accountId, $"Sync analytic table failed. Waiting {AnlyticTablesSyncConstants.secondsToWait} seconds before trying again."))
                 .Execute(() =>
                 {
-                    const string syncScriptPathConfigName = "VcdSyncScriptPath";
-                    var scriptPath = ConfigurationManager.AppSettings[syncScriptPathConfigName];
-                    sqlScriptExecutor.ExecuteScriptWithParams(scriptPath, new string[] { accountId.ToString() });
+                    sqlScriptExecutor.ExecuteScriptWithParams(scriptPath, new[] { accountId.ToString() });
                 });
             Logger.Info(accountId, "Finished sync VCD analytic table with normal tables.");
         }

@@ -85,7 +85,10 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
                     {
                         failed = true;
                         ProcessFailedResponse(exception.Result);
-                        logger.LogWaiting($"Report generating for ({reportDay}, {reportLevel}, {accountInfo.AccountName})", timeSpan, retryCount);
+                        logger.LogWaiting(
+                            $"Report generating for {reportDay}, {reportLevel}, {accountInfo.AccountName}. " + "Waiting {0} ...",
+                            timeSpan,
+                            retryCount);
                     })
                 .Execute(() =>
                 {
@@ -106,7 +109,10 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         private void WaitBeforeReportGenerating(DateTime reportDay, string reportLevel)
         {
             var timeSpan = GetTimeSpanForWaiting();
-            logger.LogWaiting($"Report generating for ({reportDay}, {reportLevel}, {accountInfo.AccountName})", timeSpan, null);
+            logger.LogWaiting(
+                $"Report generating for {reportDay}, {reportLevel}, {accountInfo.AccountName}. " + "Waiting {0} ...",
+                timeSpan,
+                null);
             Thread.Sleep(timeSpan);
         }
 

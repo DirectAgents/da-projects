@@ -53,6 +53,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
             {
                 var exception = new Exception($"Error occurred while extracting data for {accountInfo.Account.Name} ({accountInfo.Account.Id}) account on {date} date.", e);
                 Logger.Error(accountInfo.Account.Id, exception);
+                throw exception;
             }
         }
 
