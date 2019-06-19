@@ -13,8 +13,6 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Configuration
     /// </summary>
     internal class VcdCommandConfigurationHelper : SeleniumCommandConfigurationHelper
     {
-        private const string WaitPageTimeoutConfigurationKey = "SeleniumWaitPageTimeoutInMinutes";
-
         /// <summary>
         /// Gets the date ranges to process.
         /// If start date and end date specified only one date range with these start date and end date should be returned.

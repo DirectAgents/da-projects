@@ -21,8 +21,8 @@ namespace SeleniumDataBrowser.VCD.PageActions
         /// <summary>
         /// Initializes a new instance of the <see cref="AmazonVcdPageActions"/> class.
         /// </summary>
-        public AmazonVcdPageActions(int waitPageTimeoutInMinutes, SeleniumLogger logger)
-            : base(new ChromeWebDriver(string.Empty, false), waitPageTimeoutInMinutes, logger)
+        public AmazonVcdPageActions(int waitPageTimeoutInMinutes, SeleniumLogger logger, bool isHidingBrowserWindow)
+            : base(new ChromeWebDriver(string.Empty, isHidingBrowserWindow), waitPageTimeoutInMinutes, logger)
         {
         }
 

@@ -32,16 +32,23 @@ namespace CakeExtracter.Commands.Selenium
 
         public int ProfileNumber { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to hide the browser window (default = false).
+        /// </summary>
+        public bool IsHidingBrowserWindow { get; set; }
+
         public SyncAmazonVcdCommand()
         {
             NoNeedToCreateRepeatRequests = true;
             IsCommand("SyncAmazonVcdCommand", "Sync VCD Stats");
             HasOption<int>("p|profileNumber=", "Profile Number", c => ProfileNumber = c);
+            HasOption<bool>("h|hideWindow=", "Include hiding the browser window", c => IsHidingBrowserWindow = c);
         }
 
         public override void ResetProperties()
         {
             ProfileNumber = 0;
+            IsHidingBrowserWindow = false;
         }
 
         public override int Execute(string[] remainingArguments)
