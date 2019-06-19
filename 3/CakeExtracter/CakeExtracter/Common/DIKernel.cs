@@ -24,6 +24,15 @@ namespace CakeExtracter.Common
         }
 
         /// <summary>
+        /// Initializes the DI kernel by an existing kernel.
+        /// </summary>
+        /// <param name="sourceKernel">Existing kernel.</param>
+        public static void SetKernel(IKernel sourceKernel)
+        {
+            kernel = sourceKernel;
+        }
+
+        /// <summary>
         /// Returns the implementation of the binding of the requested type.
         /// </summary>
         /// <typeparam name="T">The requested type for binding.</typeparam>
