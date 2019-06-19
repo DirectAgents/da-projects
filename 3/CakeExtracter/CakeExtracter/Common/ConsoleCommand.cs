@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 using CakeExtracter.Common.JobExecutionManagement;
@@ -12,12 +13,12 @@ namespace CakeExtracter.Common
     public abstract class ConsoleCommand : ManyConsole.ConsoleCommand, ICloneable
     {
         /// <summary>
-        /// The request identifier argument name
+        /// The request identifier argument name.
         /// </summary>
         public const string RequestIdArgumentName = "jobRequestId";
 
         /// <summary>
-        /// The no need to create repeat requests argument name
+        /// The no need to create repeat requests argument name.
         /// </summary>
         public const string NoNeedToCreateRepeatRequestsArgumentName = "noRepeatedRequests";
 
@@ -141,14 +142,6 @@ namespace CakeExtracter.Common
             }
         }
 
-        private void CleanUpExecutionContext()
-        {
-            if (IsAutoShutDownMechanismEnabled)
-            {
-                CommandAutoStopWatcher.Current.Dispose();
-            }
-        }
-
         /// <summary>
         /// Creates a new object that is a copy of the current instance.
         /// </summary>
@@ -171,6 +164,14 @@ namespace CakeExtracter.Common
             var command = (T)Clone();
             changeCurrentCommand(command);
             CommandExecutionContext.Current.ScheduleCommandLaunch(command);
+        }
+
+        private void CleanUpExecutionContext()
+        {
+            if (IsAutoShutDownMechanismEnabled)
+            {
+                CommandAutoStopWatcher.Current.Dispose();
+            }
         }
 
         private int ExecuteJobWithContext(string[] remainingArguments)

@@ -11,7 +11,7 @@ namespace CakeExtracter.Bootstrappers
         /// <inheritdoc />
         public void Run()
         {
-            DIKernel.SetKernel<DependencyInjectionModule>();
+            DIKernel.SetKernel(new DependencyInjectionModule());
         }
     }
 }
