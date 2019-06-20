@@ -11,9 +11,9 @@
         public int[] Client { get; set; }
 
         /// <summary>
-        /// Gets or sets tracking ID.
+        /// Gets or sets tracking IDs.
         /// </summary>
-        public string Tracking { get; set; }
+        public string[] Tracking { get; set; }
 
         /// <summary>
         /// Gets or sets report dates.

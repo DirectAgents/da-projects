@@ -73,9 +73,9 @@ namespace Adform.Utilities
         }
 
         /// <summary>
-        /// Gets or sets tracking identifier for report settings.
+        /// Gets or sets tracking identifiers for report settings.
         /// </summary>
-        public string TrackingId { get; set; }
+        public string[] TrackingIds { get; set; }
 
         private int WhichAlt { get; set; } // default: 0
 
