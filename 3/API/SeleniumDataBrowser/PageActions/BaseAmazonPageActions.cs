@@ -51,7 +51,7 @@ namespace SeleniumDataBrowser.PageActions
             try
             {
                 LoginWithPassword(password);
-                WaitElementClickable(waitElement, Timeout);
+                WaitElementClickable(waitElement);
             }
             catch (Exception e)
             {
@@ -121,7 +121,7 @@ namespace SeleniumDataBrowser.PageActions
                 return;
             }
 
-            WaitElementClickable(BaseAmazonPageObjects.CodeInput, Timeout);
+            WaitElementClickable(BaseAmazonPageObjects.CodeInput);
             ClickElement(BaseAmazonPageObjects.DontAskCodeCheckBox);
             ClickElement(BaseAmazonPageObjects.CodeInput);
             WaitSecurityCode();
