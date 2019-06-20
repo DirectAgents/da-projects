@@ -13,6 +13,9 @@ namespace SeleniumDataBrowser.PageActions
     /// </summary>
     public class BasePageActions
     {
+        /// <summary>
+        /// Logger for logging actions. Can be modified externally.
+        /// </summary>
         public SeleniumLogger Logger;
 
         protected readonly TimeSpan Timeout;
@@ -24,6 +27,7 @@ namespace SeleniumDataBrowser.PageActions
         /// </summary>
         /// <param name="driver">Selenium web driver.</param>
         /// <param name="timeoutMinutes">Number of minutes for waiting of elements.</param>
+        /// <param name="logger">Selenium logger.</param>
         public BasePageActions(IWebDriver driver, int timeoutMinutes, SeleniumLogger logger)
         {
             Driver = driver;
@@ -163,11 +167,11 @@ namespace SeleniumDataBrowser.PageActions
             }
         }
 
-        protected void WaitElementClickable(By element, TimeSpan waitCount)
+        protected void WaitElementClickable(By element)
         {
             try
             {
-                var wait = new WebDriverWait(Driver, waitCount);
+                var wait = new WebDriverWait(Driver, Timeout);
                 wait.Until(driver => IsElementClickable(element));
             }
             catch (Exception e)
@@ -208,7 +212,7 @@ namespace SeleniumDataBrowser.PageActions
             {
                 var navigation = Driver.Navigate();
                 navigation.GoToUrl(url);
-                WaitElementClickable(waitingElement, timeout);
+                WaitElementClickable(waitingElement);
             }
             catch (Exception e)
             {

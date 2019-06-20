@@ -7,6 +7,9 @@ using SeleniumDataBrowser.VCD.PageActions;
 
 namespace SeleniumDataBrowser.VCD.Helpers
 {
+    /// <summary>
+    /// Helper for VCD login process.
+    /// </summary>
     public class AmazonVcdLoginHelper
     {
         private const string SignInPageUrl = "https://www.amazon.com/ap/signin";
@@ -15,6 +18,12 @@ namespace SeleniumDataBrowser.VCD.Helpers
         private readonly AmazonVcdPageActions pageActionManager;
         private readonly SeleniumLogger logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AmazonVcdLoginHelper"/> class.
+        /// </summary>
+        /// <param name="authorizationModel">Authorization settings.</param>
+        /// <param name="pageActionManager">Manager of page actions.</param>
+        /// <param name="logger">Selenium data browser logger.</param>
         public AmazonVcdLoginHelper(
             AuthorizationModel authorizationModel,
             AmazonVcdPageActions pageActionManager,
@@ -25,6 +34,30 @@ namespace SeleniumDataBrowser.VCD.Helpers
             this.logger = logger;
         }
 
+        /// <summary>
+        /// Specifies whether a password should be repeat.
+        /// </summary>
+        /// <param name="pageActions">Manager of page actions.</param>
+        /// <returns>True / False.</returns>
+        public static bool NeedRepeatPassword(BaseAmazonPageActions pageActions)
+        {
+            var currentUrl = pageActions.GetCurrentWindowUrl();
+            return currentUrl.Contains(SignInPageUrl) && pageActions.IsElementPresent(BaseAmazonPageObjects.LoginPassInput);
+        }
+
+        /// <summary>
+        /// Repeats login with password.
+        /// </summary>
+        /// <param name="pageActions">Manager of page actions.</param>
+        /// <param name="authModel">Authorization settings.</param>
+        public static void RepeatPassword(BaseAmazonPageActions pageActions, AuthorizationModel authModel)
+        {
+            pageActions.LoginWithPassword(authModel.Password);
+        }
+
+        /// <summary>
+        /// Login to the Amazon Advertiser Portal and saving cookies.
+        /// </summary>
         public void LoginToAmazonPortal()
         {
             pageActionManager.NavigateToSalesDiagnosticPage();
@@ -38,6 +71,23 @@ namespace SeleniumDataBrowser.VCD.Helpers
         {
             var currentUrl = pageManager.GetCurrentWindowUrl();
             return currentUrl.IndexOf(authorizationModel.SignInUrl, StringComparison.Ordinal) <= 0;
+        }
+
+        private static void LoginWithoutCookie(AuthorizationModel authModel, BaseAmazonPageActions pageManager)
+        {
+            pageManager.NavigateToUrl(authModel.SignInUrl, BaseAmazonPageObjects.ForgotPassLink);
+            pageManager.LoginProcess(authModel.Login, authModel.Password);
+            var cookies = pageManager.GetAllCookies();
+            CookieManager.SaveCookiesToFiles(cookies, authModel.CookiesDir);
+        }
+
+        private static void LoginWithCookie(AuthorizationModel authModel, BaseAmazonPageActions pageManager)
+        {
+            pageManager.NavigateToUrl(authModel.SignInUrl);
+            foreach (var cookie in authModel.Cookies)
+            {
+                pageManager.SetCookie(cookie);
+            }
         }
 
         private void Login(AuthorizationModel authorizationModel, AmazonVcdPageActions pageManager)
@@ -56,32 +106,5 @@ namespace SeleniumDataBrowser.VCD.Helpers
             pageManager.RefreshSalesDiagnosticPage(authorizationModel);
         }
 
-        private static void LoginWithoutCookie(AuthorizationModel authModel, BaseAmazonPageActions pageManager)
-        {
-            pageManager.NavigateToUrl(authModel.SignInUrl, BaseAmazonPageObjects.ForgotPassLink);
-            pageManager.LoginProcess(authModel.Login, authModel.Password);
-            var cookies = pageManager.GetAllCookies();
-            CookieManager.SaveCookiesToFiles(cookies, authModel.CookiesDir);
-        }
-
-        public static bool NeedResetPassword(BaseAmazonPageActions pageActions)
-        {
-            var currentUrl = pageActions.GetCurrentWindowUrl();
-            return currentUrl.Contains(SignInPageUrl) && pageActions.IsElementPresent(BaseAmazonPageObjects.LoginPassInput);
-        }
-
-        public static void ResetPassword(BaseAmazonPageActions pageActions, AuthorizationModel authModel)
-        {
-            pageActions.LoginWithPassword(authModel.Password);
-        }
-
-        private static void LoginWithCookie(AuthorizationModel authModel, BaseAmazonPageActions pageManager)
-        {
-            pageManager.NavigateToUrl(authModel.SignInUrl);
-            foreach (var cookie in authModel.Cookies)
-            {
-                pageManager.SetCookie(cookie);
-            }
-        }
     }
 }

@@ -16,6 +16,9 @@ using SeleniumDataBrowser.VCD.PageActions;
 
 namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
 {
+    /// <summary>
+    /// Downloader of Vendor Central reports.
+    /// </summary>
     public class VcdReportDownloader
     {
         private const string AmazonBaseUrl = "https://ara.amazon.com";
@@ -53,18 +56,33 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             this.reportDownloadingAttemptCount = reportDownloadingAttemptCount;
         }
 
+        /// <summary>
+        /// Downloads the CSV Shipped Revenue report.
+        /// </summary>
+        /// <param name="reportDay">Day for report.</param>
+        /// <returns>Text of report content.</returns>
         public string DownloadShippedRevenueCsvReport(DateTime reportDay)
         {
             logger.LogInfo("Amazon VCD, Attempt to download shipped revenue report.");
             return DownloadReportAsCsvText(reportDay, RequestBodyConstants.ShippedRevenueReportLevel, RequestBodyConstants.ShippedRevenueSalesView);
         }
 
+        /// <summary>
+        /// Downloads the CSV Shipped COGS report.
+        /// </summary>
+        /// <param name="reportDay">Day for report.</param>
+        /// <returns>Text of report content.</returns>
         public string DownloadShippedCogsCsvReport(DateTime reportDay)
         {
             logger.LogInfo("Amazon VCD, Attempt to download shipped cogs report.");
             return DownloadReportAsCsvText(reportDay, RequestBodyConstants.ShippedCogsLevel, RequestBodyConstants.ShippedCogsSalesView);
         }
 
+        /// <summary>
+        /// Downloads the CSV Ordered Revenue report.
+        /// </summary>
+        /// <param name="reportDay">Day for report.</param>
+        /// <returns>Text of report content.</returns>
         public string DownloadOrderedRevenueCsvReport(DateTime reportDay)
         {
             logger.LogInfo("Amazon VCD, Attempt to download ordered revenue report.");

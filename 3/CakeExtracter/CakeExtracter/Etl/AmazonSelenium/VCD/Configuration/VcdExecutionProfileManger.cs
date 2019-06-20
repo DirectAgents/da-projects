@@ -11,6 +11,11 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Configuration
     /// </summary>
     public class VcdExecutionProfileManger
     {
+        /// <summary>
+        /// Access point for singleton object.
+        /// </summary>
+        public static VcdExecutionProfileManger Current = new VcdExecutionProfileManger();
+
         private int executionProfileNumber;
 
         private VcdExecutionProfileConfiguration profileConfiguration;
@@ -22,11 +27,6 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Configuration
         private VcdExecutionProfileManger()
         {
         }
-
-        /// <summary>
-        /// Access point for singleton object.
-        /// </summary>
-        public static VcdExecutionProfileManger Current = new VcdExecutionProfileManger();
 
         /// <summary>
         /// Gets a point for accessing profile configuration.

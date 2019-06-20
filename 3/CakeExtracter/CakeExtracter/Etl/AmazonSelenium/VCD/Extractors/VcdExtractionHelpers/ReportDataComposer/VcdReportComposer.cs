@@ -2,7 +2,7 @@
 using System.Linq;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Models;
 
-namespace CakeExtracter.Etl.AmazonSelenium.VCD.VcdExtractionHelpers.ReportDataComposer
+namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportDataComposer
 {
     internal class VcdReportComposer
     {
@@ -18,11 +18,11 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.VcdExtractionHelpers.ReportDataCo
                 Categories = GetCategoriesFromProducts(mergedProducts),
                 Subcategories = GetSubcategoriesFromProducts(mergedProducts),
                 Brands = GetBrandsFromProducts(mergedProducts),
-                ParentProducts = GetParentProductsFromProducts(mergedProducts)
+                ParentProducts = GetParentProductsFromProducts(mergedProducts),
             };
         }
 
-        // Replace all duplicated products with one product for each duplication group. 
+        // Replace all duplicated products with one product for each duplication group.
         // Summ metrics values of all items in duplication group
         private List<Product> ProcessDuplicatedProducts(List<Product> products)
         {
@@ -94,7 +94,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.VcdExtractionHelpers.ReportDataCo
         {
             var item = new Brand
             {
-                Name = name
+                Name = name,
             };
             item.SetMetrics(products);
             return item;
@@ -106,7 +106,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.VcdExtractionHelpers.ReportDataCo
             var item = new Category
             {
                 Name = name,
-                Brand = GetBrandName(firstProduct)
+                Brand = GetBrandName(firstProduct),
             };
             item.SetMetrics(products);
             return item;
@@ -119,7 +119,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.VcdExtractionHelpers.ReportDataCo
             {
                 Name = name,
                 Category = GetCategoryName(firstProduct),
-                Brand = GetBrandName(firstProduct)
+                Brand = GetBrandName(firstProduct),
             };
             item.SetMetrics(products);
             return item;
@@ -133,7 +133,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.VcdExtractionHelpers.ReportDataCo
                 Asin = asin,
                 Category = GetCategoryName(firstProduct),
                 Subcategory = GetSubcategoryName(firstProduct),
-                Brand = GetBrandName(firstProduct)
+                Brand = GetBrandName(firstProduct),
             };
             item.SetMetrics(products);
             return item;
@@ -156,7 +156,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.VcdExtractionHelpers.ReportDataCo
                 Binding = firstProduct.Binding,
                 Color = firstProduct.Color,
                 ModelStyleNumber = firstProduct.ModelStyleNumber,
-                ReleaseDate = firstProduct.ReleaseDate
+                ReleaseDate = firstProduct.ReleaseDate,
             };
             item.SetMetrics(products);
             return item;

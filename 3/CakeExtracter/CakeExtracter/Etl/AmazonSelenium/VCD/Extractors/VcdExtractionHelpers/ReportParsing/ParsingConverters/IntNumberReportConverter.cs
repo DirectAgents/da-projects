@@ -1,7 +1,7 @@
-﻿using CsvHelper.TypeConversion;
-using System.Globalization;
+﻿using System.Globalization;
+using CsvHelper.TypeConversion;
 
-namespace CakeExtracter.Etl.AmazonSelenium.VCD.VcdExtractionHelpers.ReportParsing.ParsingConverters
+namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing.ParsingConverters
 {
     internal sealed class IntNumberReportConverter : StringConverter
     {

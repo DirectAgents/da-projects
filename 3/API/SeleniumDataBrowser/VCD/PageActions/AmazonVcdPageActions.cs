@@ -64,11 +64,11 @@ namespace SeleniumDataBrowser.VCD.PageActions
         {
             Logger.LogInfo("Sales diagnostic page refreshing");
             NavigateToSalesDiagnosticPage();
-            if (!AmazonVcdLoginHelper.NeedResetPassword(this))
+            if (!AmazonVcdLoginHelper.NeedRepeatPassword(this))
             {
                 return;
             }
-            AmazonVcdLoginHelper.ResetPassword(this, authorizationModel);
+            AmazonVcdLoginHelper.RepeatPassword(this, authorizationModel);
             NavigateToSalesDiagnosticPage();
         }
 
@@ -84,7 +84,7 @@ namespace SeleniumDataBrowser.VCD.PageActions
                 var accountItems = Driver.FindElements(AmazonVcdPageObjects.AccountsDropdownItem);
                 var accountItem = accountItems.FirstOrDefault(x => x.Text == TypeOfAccounts + accountName);
                 accountItem.Click();
-                WaitElementClickable(AmazonVcdPageObjects.AccountsDropdownButton, Timeout);
+                WaitElementClickable(AmazonVcdPageObjects.AccountsDropdownButton);
             }
             catch (Exception e)
             {

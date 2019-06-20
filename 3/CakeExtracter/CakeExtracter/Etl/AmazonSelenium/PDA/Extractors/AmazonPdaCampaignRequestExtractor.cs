@@ -40,8 +40,12 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
         /// </summary>
         protected override void Extract()
         {
-            Logger.Info(accountId, "Extracting CampaignSummaries (PDA) using HTTP requests from Amazon Platform for ({0}) from {1:d} to {2:d}",
-                clientId, dateRange.FromDate, dateRange.ToDate);
+            Logger.Info(
+                accountId,
+                "Extracting CampaignSummaries (PDA) using HTTP requests from Amazon Platform for ({0}) from {1:d} to {2:d}",
+                clientId,
+                dateRange.FromDate,
+                dateRange.ToDate);
             try
             {
                 var sums = ExtractSummaries();
@@ -71,7 +75,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
         private IEnumerable<StrategySummary> TransformSummaries(IEnumerable<AmazonPdaCampaignSummary> dailyStats)
         {
             var notEmptyStats = dailyStats.Where(x => !x.AllZeros());
-            var summaries = notEmptyStats.GroupBy(x => new {x.Id, x.Date}).Select(x => CreateSummary(x, x.Key.Date));
+            var summaries = notEmptyStats.GroupBy(x => new { x.Id, x.Date }).Select(x => CreateSummary(x, x.Key.Date));
             return summaries.ToList();
         }
 
@@ -83,7 +87,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
                 StrategyEid = campaign.Id,
                 StrategyName = campaign.Name,
                 StrategyTargetingType = campaign.TargetingType,
-                StrategyType = campaign.Type
+                StrategyType = campaign.Type,
             };
             SetStats(sum, campaignSummaries, date);
             return sum;

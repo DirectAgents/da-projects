@@ -16,7 +16,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
 
         public static Dictionary<string, string> GetRequestQueryParameters(string tokenValue, string vendorGroupId, string mcId)
         {
-            return new Dictionary<string, string>()
+            return new Dictionary<string, string>
             {
                 {tokenQueryParameter, tokenValue },
                 {vendorGroupIdParameter, vendorGroupId },

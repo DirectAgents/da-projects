@@ -5,6 +5,9 @@ using SeleniumDataBrowser.Helpers;
 
 namespace SeleniumDataBrowser.PDA.Helpers
 {
+    /// <summary>
+    /// Helper for Amazon Product Display Ads utility.
+    /// </summary>
     internal class AmazonCmApiHelper
     {
         public const string AmazonAdvertisingPortalUrl = "https://advertising.amazon.com";
@@ -26,7 +29,7 @@ namespace SeleniumDataBrowser.PDA.Helpers
         private const string AcosField = "ACOS";
 
         private const string CurrencyValue = "millicents";
-        private const decimal CurrencyCoefficient = 100000; //We need data that is received in millicents, recalculated into USD
+        private const decimal CurrencyCoefficient = 100000; // We need data that is received in millicent, recalculated into USD
 
         private static readonly Filter CampaignStateFilter = new Filter
         {
@@ -58,14 +61,14 @@ namespace SeleniumDataBrowser.PDA.Helpers
         {
             var parameters = new Dictionary<string, string>
             {
-                {EntityIdArgName, accountEntityId}
+                { EntityIdArgName, accountEntityId },
             };
             return parameters;
         }
 
         public static AmazonCmApiParams GetBasePdaCampaignsApiParams(bool getFullMetrics)
         {
-            var fields = getFullMetrics ? CampaignFieldsForRequest : new[] {OrdersField};
+            var fields = getFullMetrics ? CampaignFieldsForRequest : new[] { OrdersField };
             var parameters = new AmazonCmApiParams
             {
                 period = "CUSTOM",
@@ -104,12 +107,12 @@ namespace SeleniumDataBrowser.PDA.Helpers
                 Id = data["id"],
                 Name = data["name"],
                 TargetingType = data["targetingType"],
-                UnitsSold = (int) data["unitsSold"],
-                DetailPageViews = (int) data["detailPageViews"],
-                Impressions = (int) data["impressions"],
-                Clicks = (int) data["clicks"],
+                UnitsSold = (int)data["unitsSold"],
+                DetailPageViews = (int)data["detailPageViews"],
+                Impressions = (int)data["impressions"],
+                Clicks = (int)data["clicks"],
                 Cost = data["spend"][CurrencyValue] / CurrencyCoefficient,
-                Orders = (int) data["orders"],
+                Orders = (int)data["orders"],
                 AttributedSales14D = data["sales"][CurrencyValue] / CurrencyCoefficient,
             };
             return campaignInfo;

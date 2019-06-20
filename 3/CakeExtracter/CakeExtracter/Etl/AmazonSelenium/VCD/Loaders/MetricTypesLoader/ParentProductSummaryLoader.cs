@@ -14,8 +14,11 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
         private readonly List<VendorSubcategory> subcategories;
         private readonly List<VendorBrand> brands;
 
-        public ParentProductSummaryLoader(List<VendorCategory> categories, List<VendorSubcategory> subcategories,
-           List<VendorBrand> brands, Dictionary<string, int> metricTypes)
+        public ParentProductSummaryLoader(
+            List<VendorCategory> categories,
+            List<VendorSubcategory> subcategories,
+            List<VendorBrand> brands,
+            Dictionary<string, int> metricTypes)
             : base(metricTypes)
         {
             this.categories = categories;
@@ -44,8 +47,9 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
         private void SetCategoryIdIfExists(VendorParentProduct product, ParentProduct reportEntity)
         {
             if (string.IsNullOrEmpty(reportEntity.Category))
+            {
                 return;
-
+            }
             var categoryEntity = categories.FirstOrDefault(cat => cat.Name == reportEntity.Category);
             if (categoryEntity != null)
             {
@@ -56,8 +60,9 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
         private void SetSubcategoryIdIfExists(VendorParentProduct product, ParentProduct reportEntity)
         {
             if (string.IsNullOrEmpty(reportEntity.Subcategory))
+            {
                 return;
-
+            }
             var subcategoryEntity = subcategories.FirstOrDefault(subCat => subCat.Name == reportEntity.Subcategory);
             if (subcategoryEntity != null)
             {
@@ -68,8 +73,9 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
         private void SetBrandIdIfExists(VendorParentProduct product, ParentProduct reportEntity)
         {
             if (string.IsNullOrEmpty(reportEntity.Brand))
+            {
                 return;
-
+            }
             var brandEntity = brands.FirstOrDefault(brand => brand.Name == reportEntity.Brand);
             if (brandEntity != null)
             {

@@ -24,6 +24,10 @@ using SeleniumDataBrowser.VCD.Models;
 
 namespace CakeExtracter.Commands.Selenium
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// The class represents a command that is used to retrieve statistics of Amazon Vendor Central statistics.
+    /// </summary>
     [Export(typeof(ConsoleCommand))]
     public class SyncAmazonVcdCommand : ConsoleCommand
     {
@@ -34,6 +38,9 @@ namespace CakeExtracter.Commands.Selenium
         private SeleniumLogger loggerWithAccountId;
         private SeleniumLogger loggerWithoutAccountId;
 
+        /// <summary>
+        /// Gets or sets the command argument: a number of execution profile (default = 1).
+        /// </summary>
         public int ProfileNumber { get; set; }
 
         /// <summary>
@@ -41,19 +48,34 @@ namespace CakeExtracter.Commands.Selenium
         /// </summary>
         public bool IsHidingBrowserWindow { get; set; }
 
+        /// <inheritdoc cref="ConsoleCommand" />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SyncAmazonVcdCommand" /> class.
+        /// </summary>
         public SyncAmazonVcdCommand()
         {
-            IsCommand("SyncAmazonVcdCommand", "Sync VCD Stats");
-            HasOption<int>("p|profileNumber=", "Profile Number", c => ProfileNumber = c);
+            IsCommand("SyncAmazonVcdCommand", "Sync Vendor Central Stats");
+            HasOption<int>("p|profileNumber=", "Execution profile number", c => ProfileNumber = c);
             HasOption<bool>("h|hideWindow=", "Include hiding the browser window", c => IsHidingBrowserWindow = c);
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// The method resets command arguments to defaults.
+        /// </summary>
         public override void ResetProperties()
         {
             ProfileNumber = 0;
             IsHidingBrowserWindow = false;
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// The method runs the current command and extract and save statistics of Amazon Vendor Central statistics.
+        /// based on the command arguments.
+        /// </summary>
+        /// <param name="remainingArguments"></param>
+        /// <returns>Execution code.</returns>
         public override int Execute(string[] remainingArguments)
         {
             InitializeCommand();
@@ -324,25 +346,6 @@ namespace CakeExtracter.Commands.Selenium
                 x => Logger.Info(accountId, x),
                 exc => Logger.Error(accountId, exc),
                 x => Logger.Warn(accountId, x));
-        }
-
-        private List<CommandWithSchedule> GetUniqueBroadProfileCommands(IEnumerable<CommandWithSchedule> commandsWithSchedule)
-        {
-            var profileCommands = new List<Tuple<SyncAmazonVcdCommand, CommandWithSchedule>>();
-            foreach (var commandWithSchedule in commandsWithSchedule)
-            {
-                var command = (SyncAmazonVcdCommand)commandWithSchedule.Command;
-                profileCommands.Add(new Tuple<SyncAmazonVcdCommand, CommandWithSchedule>(command, commandWithSchedule));
-            }
-
-            var broadCommands = profileCommands.Select(GetCommand).Distinct().ToList();
-            return broadCommands;
-        }
-
-        private CommandWithSchedule GetCommand(Tuple<SyncAmazonVcdCommand, CommandWithSchedule> setting)
-        {
-            setting.Item2.Command = setting.Item1;
-            return setting.Item2;
         }
     }
 }

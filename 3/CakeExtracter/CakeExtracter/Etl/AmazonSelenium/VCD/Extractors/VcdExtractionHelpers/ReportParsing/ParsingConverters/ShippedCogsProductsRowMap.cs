@@ -1,4 +1,4 @@
-﻿namespace CakeExtracter.Etl.AmazonSelenium.VCD.VcdExtractionHelpers.ReportParsing.ParsingConverters
+﻿namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing.ParsingConverters
 {
     internal sealed class ShippedCogsProductsRowMap : BaseProductRowMap
     {

@@ -21,7 +21,6 @@ namespace SeleniumDataBrowser.PDA
     public class AmazonConsoleManagerUtility
     {
         private const int PageSize = 100;
-        private const string LoggerPrefix = "[AmazonConsoleManagerUtility]";
 
         private readonly string accountName;
         private readonly AuthorizationModel authorizationModel;
@@ -40,9 +39,7 @@ namespace SeleniumDataBrowser.PDA
         /// <param name="profileUrlManager">Profile URLs manager.</param>
         /// <param name="maxRetryAttempts">Max number of retry attempts.</param>
         /// <param name="pauseBetweenAttempts">Time interval for pause between attempts.</param>
-        /// <param name="logInfo">Action for logging (info level).</param>
-        /// <param name="logError">Action for logging (error level).</param>
-        /// <param name="logWarning">Action for logging (warning level).</param>
+        /// <param name="logger">Selenium logger.</param>
         public AmazonConsoleManagerUtility(
             string accountName,
             AuthorizationModel authorizationModel,

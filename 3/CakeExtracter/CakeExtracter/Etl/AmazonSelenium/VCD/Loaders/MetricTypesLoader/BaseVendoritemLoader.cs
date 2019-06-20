@@ -50,8 +50,11 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
             }
         }
 
-        public void UpdateAccountSummaryMetricsDataForDate(List<TReportEntity> reportShippingEntities,
-            List<TDbEntity> accountRelatedVendorEntities, DateTime date, ExtAccount account)
+        public void UpdateAccountSummaryMetricsDataForDate(
+            List<TReportEntity> reportShippingEntities,
+            List<TDbEntity> accountRelatedVendorEntities,
+            DateTime date,
+            ExtAccount account)
         {
             using (var dbContext = new ClientPortalProgContext())
             {
@@ -60,10 +63,13 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
                 var existingAccountDailySummaries = allVendorSummariesDbSet.Where(csm => csm.Date == date).ToList()
                     .Where(csm => accountRelatedVendorEntityIds.Contains(csm.EntityId)).ToList();
                 var actualAccountDailySummaries =
-                    GetActualDailySummariesFromReportEntities(reportShippingEntities, accountRelatedVendorEntities,
-                        account, date);
-                MergeDailySummariesAndUpdateInDataBase(allVendorSummariesDbSet, dbContext,
-                    existingAccountDailySummaries, actualAccountDailySummaries, account);
+                    GetActualDailySummariesFromReportEntities(reportShippingEntities, accountRelatedVendorEntities, account, date);
+                MergeDailySummariesAndUpdateInDataBase(
+                    allVendorSummariesDbSet,
+                    dbContext,
+                    existingAccountDailySummaries,
+                    actualAccountDailySummaries,
+                    account);
             }
         }
 
@@ -75,31 +81,24 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
 
         protected abstract TDbEntity MapReportEntityToDbEntity(TReportEntity reportEntity, ExtAccount extAccount);
 
-        private List<TSummaryMetricEntity> GetSummaryMetricEntities(TReportEntity reportEntity, TDbEntity dbEntity,
-            DateTime date)
+        private List<TSummaryMetricEntity> GetSummaryMetricEntities(TReportEntity reportEntity, TDbEntity dbEntity, DateTime date)
         {
             var metricEntities = new List<TSummaryMetricEntity>
             {
-                InitMetricValue(dbEntity.Id, date, reportEntity.ShippedUnits,
-                    metricTypes[VendorCentralDataLoadingConstants.ShippedUnitsMetricName]),
-                InitMetricValue(dbEntity.Id, date, reportEntity.OrderedUnits,
-                    metricTypes[VendorCentralDataLoadingConstants.OrderedUnitsMetricName]),
-                InitMetricValue(dbEntity.Id, date, reportEntity.ShippedRevenue,
-                    metricTypes[VendorCentralDataLoadingConstants.ShippedRevenueMetricName]),
-                InitMetricValue(dbEntity.Id, date, reportEntity.CustomerReturns,
-                    metricTypes[VendorCentralDataLoadingConstants.CustomerReturnsMetricName]),
-                InitMetricValue(dbEntity.Id, date, reportEntity.FreeReplacements,
-                    metricTypes[VendorCentralDataLoadingConstants.FreeReplacementMetricName]),
-                InitMetricValue(dbEntity.Id, date, reportEntity.ShippedCogs,
-                    metricTypes[VendorCentralDataLoadingConstants.ShippedCogsMetricName]),
-                InitMetricValue(dbEntity.Id, date, reportEntity.OrderedRevenue,
-                    metricTypes[VendorCentralDataLoadingConstants.OrderedRevenueMetricName])
+                InitMetricValue(dbEntity.Id, date, reportEntity.ShippedUnits, metricTypes[VendorCentralDataLoadingConstants.ShippedUnitsMetricName]),
+                InitMetricValue(dbEntity.Id, date, reportEntity.OrderedUnits, metricTypes[VendorCentralDataLoadingConstants.OrderedUnitsMetricName]),
+                InitMetricValue(dbEntity.Id, date, reportEntity.ShippedRevenue, metricTypes[VendorCentralDataLoadingConstants.ShippedRevenueMetricName]),
+                InitMetricValue(dbEntity.Id, date, reportEntity.CustomerReturns, metricTypes[VendorCentralDataLoadingConstants.CustomerReturnsMetricName]),
+                InitMetricValue(dbEntity.Id, date, reportEntity.FreeReplacements, metricTypes[VendorCentralDataLoadingConstants.FreeReplacementMetricName]),
+                InitMetricValue(dbEntity.Id, date, reportEntity.ShippedCogs, metricTypes[VendorCentralDataLoadingConstants.ShippedCogsMetricName]),
+                InitMetricValue(dbEntity.Id, date, reportEntity.OrderedRevenue, metricTypes[VendorCentralDataLoadingConstants.OrderedRevenueMetricName]),
             };
             metricEntities.RemoveAll(item => item == null);
             return metricEntities;
         }
 
-        private void MergeDailySummariesAndUpdateInDataBase(DbSet<TSummaryMetricEntity> allVendorSummariesDbSet,
+        private void MergeDailySummariesAndUpdateInDataBase(
+            DbSet<TSummaryMetricEntity> allVendorSummariesDbSet,
             DbContext dbContext,
             List<TSummaryMetricEntity> existingAccountDailySummaries,
             List<TSummaryMetricEntity> actualAccountDailySummaries,
@@ -133,12 +132,17 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
             dbContext.SaveChanges();
             allVendorSummariesDbSet.AddRange(dailySummariesToInsert);
             dbContext.SaveChanges();
-            Logger.Info(account.Id, "Amazon VCD, Inserted {0}, Deleted {1}", dailySummariesToInsert.Count,
+            Logger.Info(
+                account.Id,
+                "Amazon VCD, Inserted {0}, Deleted {1}",
+                dailySummariesToInsert.Count,
                 dailySummariesToBeRemoved.Count);
         }
 
         private List<TSummaryMetricEntity> GetActualDailySummariesFromReportEntities(
-            List<TReportEntity> reportShippingEntities, List<TDbEntity> dbVendorEntities, ExtAccount account,
+            List<TReportEntity> reportShippingEntities,
+            List<TDbEntity> dbVendorEntities,
+            ExtAccount account,
             DateTime date)
         {
             var actualAccountDailySummaries = reportShippingEntities.SelectMany(reportEntity =>
@@ -158,7 +162,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
                     EntityId = entityId,
                     MetricTypeId = metricTypeId,
                     Date = date,
-                    Value = value
+                    Value = value,
                 };
             }
             return null;

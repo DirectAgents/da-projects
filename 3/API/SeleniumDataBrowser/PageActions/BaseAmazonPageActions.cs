@@ -10,11 +10,13 @@ namespace SeleniumDataBrowser.PageActions
     /// </summary>
     public class BaseAmazonPageActions : BasePageActions
     {
+        /// <inheritdoc cref="BasePageActions"/> />
         /// <summary>
-        /// Initializes a new instance of the <see cref="BaseAmazonPageActions"/> class.
+        /// Initializes a new instance of the <see cref="BaseAmazonPageActions" /> class.
         /// </summary>
         /// <param name="driver">Selenium web driver.</param>
         /// <param name="timeoutMinutes">Number of minutes for waiting of elements.</param>
+        /// <param name="logger">Logger for selenium command.</param>
         public BaseAmazonPageActions(IWebDriver driver, int timeoutMinutes, SeleniumLogger logger)
             : base(driver, timeoutMinutes, logger)
         {
@@ -57,6 +59,13 @@ namespace SeleniumDataBrowser.PageActions
             }
         }
 
+        /// <summary>
+        /// Login process: the method enters the password,
+        /// waits entering characters (if needed),
+        /// checks the password is correct,
+        /// waits entering the security code (is needs).
+        /// </summary>
+        /// <param name="password">Password to be entered.</param>
         public void LoginWithPassword(string password)
         {
             EnterPassword(password);

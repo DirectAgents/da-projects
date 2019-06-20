@@ -19,6 +19,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Configuration
         /// <summary>
         /// Initializes a new instance of the <see cref="VcdAccountsDataProvider"/> class.
         /// </summary>
+        /// <param name="pageUserInfo">Information about page user.</param>
         public VcdAccountsDataProvider(PageUserInfo pageUserInfo)
         {
             this.pageUserInfo = pageUserInfo;
@@ -60,7 +61,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Configuration
             }
             catch (Exception ex)
             {
-                Logger.Error(new Exception("Error occurred while fetching accounts information." ,ex));
+                Logger.Error(new Exception("Error occurred while fetching accounts information.", ex));
                 throw ex;
             }
         }

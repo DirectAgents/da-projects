@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using OpenQA.Selenium;
 using SeleniumDataBrowser.Helpers;
 using SeleniumDataBrowser.Models;
@@ -8,7 +7,7 @@ using SeleniumDataBrowser.PDA.PageActions;
 namespace SeleniumDataBrowser.PDA.Helpers
 {
     /// <summary>
-    /// Class for manage login process.
+    /// Helper for PDA login process.
     /// </summary>
     public class PdaLoginHelper
     {
@@ -23,8 +22,7 @@ namespace SeleniumDataBrowser.PDA.Helpers
         /// </summary>
         /// <param name="authorizationModel">Authorization settings.</param>
         /// <param name="pageActionManager">Page actions manager.</param>
-        /// <param name="logInfo">Action for logging (info level).</param>
-        /// <param name="logWarn">Action for logging (error level).</param>
+        /// <param name="logger">Selenium data browser logger.</param>
         public PdaLoginHelper(
             AuthorizationModel authorizationModel,
             AmazonPdaPageActions pageActionManager,

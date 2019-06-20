@@ -4,23 +4,32 @@ using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Configuration;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Configuration.Models;
+using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportDataComposer;
+using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Models;
-using CakeExtracter.Etl.AmazonSelenium.VCD.VcdExtractionHelpers.ReportDataComposer;
-using CakeExtracter.Etl.AmazonSelenium.VCD.VcdExtractionHelpers.ReportParsing;
 using Polly;
 using SeleniumDataBrowser.VCD.Helpers.ReportDownloading;
 
 namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
 {
+    /// <summary>
+    /// Extractor for Amazon Vendor Central statistics.
+    /// </summary>
     internal class AmazonVcdExtractor : Extracter<VcdReportData>
     {
-        private VcdReportDownloader reportDownloader;
-        private VcdReportCSVParser reportParser;
-        private VcdReportComposer reportComposer;
+        private readonly VcdReportDownloader reportDownloader;
+        private readonly VcdReportCSVParser reportParser;
+        private readonly VcdReportComposer reportComposer;
 
-        private AccountInfo accountInfo;
-        private DateRange dateRange;
+        private readonly AccountInfo accountInfo;
+        private readonly DateRange dateRange;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AmazonVcdExtractor"/> class.
+        /// </summary>
+        /// <param name="accountInfo">Information about the current account.</param>
+        /// <param name="dateRange">Date range for extracting.</param>
+        /// <param name="reportDownloader">Downloader of reports.</param>
         public AmazonVcdExtractor(AccountInfo accountInfo, DateRange dateRange, VcdReportDownloader reportDownloader)
         {
             this.accountInfo = accountInfo;
@@ -31,6 +40,10 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
             reportComposer = new VcdReportComposer();
         }
 
+        /// <inheritdoc/>
+        /// <summary>
+        /// Extracts Vendor Central statistics.
+        /// </summary>
         protected override void Extract()
         {
             foreach (var date in dateRange.Dates)

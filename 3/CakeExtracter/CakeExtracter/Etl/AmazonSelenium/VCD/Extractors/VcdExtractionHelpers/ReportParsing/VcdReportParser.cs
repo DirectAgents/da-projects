@@ -4,13 +4,13 @@ using System.IO;
 using System.Linq;
 using Amazon.Helpers;
 using CakeExtracter.Common;
+using CakeExtracter.Etl.AmazonSelenium.VCD.Configuration.Models;
+using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing.ParsingConverters;
+using CakeExtracter.Etl.AmazonSelenium.VCD.Models;
 using CsvHelper;
 using CsvHelper.Configuration;
-using CakeExtracter.Etl.AmazonSelenium.VCD.Configuration.Models;
-using CakeExtracter.Etl.AmazonSelenium.VCD.Models;
-using CakeExtracter.Etl.AmazonSelenium.VCD.VcdExtractionHelpers.ReportParsing.ParsingConverters;
 
-namespace CakeExtracter.Etl.AmazonSelenium.VCD.VcdExtractionHelpers.ReportParsing
+namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing
 {
     /// <summary>
     /// Parser for vcd reports.
@@ -89,7 +89,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.VcdExtractionHelpers.ReportParsin
         {
             try
             {
-                var logFileName = $"vcd_{accountId}_{date.ToString("MMddyyyy")}_{reportType}.csv";
+                var logFileName = $"vcd_{accountId}_{date:MMddyyyy}_{reportType}.csv";
                 FileManager.SaveToFileInExecutionFolder(logFileName, reportContent);
                 Logger.Info(accountId, $"Report content was saved to {logFileName} file.");
             }

@@ -14,8 +14,11 @@ namespace SeleniumDataBrowser.Helpers
             return response;
         }
 
-        public static RestRequest CreateRestRequest(string relativePath, Dictionary<string, string> cookies,
-            Dictionary<string, string> queryParams = null, object body = null)
+        public static RestRequest CreateRestRequest(
+            string relativePath,
+            Dictionary<string, string> cookies,
+            Dictionary<string, string> queryParams = null,
+            object body = null)
         {
             var request = CreateSimpleRequestObject(relativePath);
             SetCookies(request, cookies);
@@ -28,7 +31,7 @@ namespace SeleniumDataBrowser.Helpers
         {
             var request = new RestRequest(resourceUri)
             {
-                OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; }
+                OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; },
             };
             return request;
         }

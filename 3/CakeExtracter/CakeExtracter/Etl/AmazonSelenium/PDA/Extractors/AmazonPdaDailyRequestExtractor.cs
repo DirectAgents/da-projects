@@ -31,8 +31,12 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
         /// </summary>
         protected override void Extract()
         {
-            Logger.Info(accountId, "Extracting DailySummaries (PDA) using HTTP requests from Amazon Platform for ({0}) from {1:d} to {2:d}",
-                clientId, dateRange.FromDate, dateRange.ToDate);
+            Logger.Info(
+                accountId,
+                "Extracting DailySummaries (PDA) using HTTP requests from Amazon Platform for ({0}) from {1:d} to {2:d}",
+                clientId,
+                dateRange.FromDate,
+                dateRange.ToDate);
             try
             {
                 var sums = ExtractSummaries();

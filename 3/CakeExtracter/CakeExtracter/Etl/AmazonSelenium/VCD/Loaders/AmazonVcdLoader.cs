@@ -10,12 +10,14 @@ using DirectAgents.Domain.Entities.CPProg.Vendor;
 
 namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders
 {
+    /// <summary>
+    /// Loader for Amazon Vendor Central statistics.
+    /// </summary>
     internal class AmazonVcdLoader : Loader<VcdReportData>
     {
         private const int LoaderBatchSize = 1;
 
         private static readonly Dictionary<string, int> MetricTypes;
-
         private readonly ExtAccount extAccount;
 
         static AmazonVcdLoader()
@@ -23,24 +25,36 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders
             MetricTypes = new Dictionary<string, int>();
         }
 
-        public static void PrepareLoader()
-        {
-            EnsureMetricTypes();
-        }
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AmazonVcdLoader"/> class.
+        /// </summary>
+        /// <param name="extAccount">Current account.</param>
         public AmazonVcdLoader(ExtAccount extAccount)
         {
             this.extAccount = extAccount;
             BatchSize = LoaderBatchSize;
         }
 
+        /// <summary>
+        /// Preparing loader.
+        /// </summary>
+        public static void PrepareLoader()
+        {
+            EnsureMetricTypes();
+        }
+
+        /// <summary>
+        /// Loads Amazon Vendor Central statistics.
+        /// </summary>
+        /// <param name="items">List of Amazon Vendor Central stats.</param>
+        /// <returns>Count of loading items.</returns>
         protected override int Load(List<VcdReportData> items)
         {
             foreach (var item in items)
             {
                 try
                 {
-                    LoadDailyData(item, extAccount);
+                    LoadDailyData(item);
                 }
                 catch (Exception e)
                 {
@@ -68,17 +82,17 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders
             }
         }
 
-        private void LoadDailyData(VcdReportData reportData, ExtAccount extAccount)
+        private void LoadDailyData(VcdReportData reportData)
         {
             var date = reportData.Date;
-            var dbBrands = LoadBrandsData(reportData.Brands, date, extAccount);
-            var dbCategories = LoadCategoriesData(reportData.Categories, date, extAccount, dbBrands);
-            var dbSubcategories = LoadSubcategoriesData(reportData.Subcategories, date, extAccount, dbCategories, dbBrands);
-            var dbParentProducts = LoadParentProductsData(reportData.ParentProducts, date, extAccount, dbBrands, dbCategories, dbSubcategories);
-            var dbProducts = LoadProductsData(reportData.Products, date, extAccount, dbBrands, dbCategories, dbSubcategories, dbParentProducts);
+            var dbBrands = LoadBrandsData(reportData.Brands, date);
+            var dbCategories = LoadCategoriesData(reportData.Categories, date, dbBrands);
+            var dbSubcategories = LoadSubcategoriesData(reportData.Subcategories, date, dbCategories, dbBrands);
+            var dbParentProducts = LoadParentProductsData(reportData.ParentProducts, date, dbBrands, dbCategories, dbSubcategories);
+            var dbProducts = LoadProductsData(reportData.Products, date, dbBrands, dbCategories, dbSubcategories, dbParentProducts);
         }
 
-        private List<VendorBrand> LoadBrandsData(List<Brand> brands, DateTime date, ExtAccount extAccount)
+        private List<VendorBrand> LoadBrandsData(List<Brand> brands, DateTime date)
         {
             var brandsSummaryLoader = new BrandsSummaryLoader(MetricTypes);
             var dbBrands = brandsSummaryLoader.EnsureVendorEntitiesInDataBase(brands, extAccount);
@@ -87,8 +101,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders
             return dbBrands;
         }
 
-        private List<VendorCategory> LoadCategoriesData(List<Category> categories, DateTime date, ExtAccount extAccount,
-            List<VendorBrand> brands)
+        private List<VendorCategory> LoadCategoriesData(List<Category> categories, DateTime date, List<VendorBrand> brands)
         {
             var categorySummaryLoader = new CategoriesSummaryLoader(MetricTypes, brands);
             var dbCategories = categorySummaryLoader.EnsureVendorEntitiesInDataBase(categories, extAccount);
@@ -97,8 +110,11 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders
             return dbCategories;
         }
 
-        private List<VendorSubcategory> LoadSubcategoriesData(List<Subcategory> subcategories, DateTime date,
-            ExtAccount extAccount, List<VendorCategory> dbCategories, List<VendorBrand> brands)
+        private List<VendorSubcategory> LoadSubcategoriesData(
+            List<Subcategory> subcategories,
+            DateTime date,
+            List<VendorCategory> dbCategories,
+            List<VendorBrand> brands)
         {
             var subcategorySummaryLoader = new SubcategoriesSummaryLoader(MetricTypes, dbCategories, brands);
             var dbSubcategories = subcategorySummaryLoader.EnsureVendorEntitiesInDataBase(subcategories, extAccount);
@@ -107,8 +123,11 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders
             return dbSubcategories;
         }
 
-        private List<VendorParentProduct> LoadParentProductsData(List<ParentProduct> parentProducts, DateTime date,
-            ExtAccount extAccount, List<VendorBrand> brands, List<VendorCategory> dbCategories,
+        private List<VendorParentProduct> LoadParentProductsData(
+            List<ParentProduct> parentProducts,
+            DateTime date,
+            List<VendorBrand> brands,
+            List<VendorCategory> dbCategories,
             List<VendorSubcategory> dbSubcategories)
         {
             var parentProductSummaryLoader = new ParentProductSummaryLoader(dbCategories, dbSubcategories, brands, MetricTypes);
@@ -118,8 +137,12 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders
             return dbParentProducts;
         }
 
-        private List<VendorProduct> LoadProductsData(List<Product> products, DateTime date,
-            ExtAccount extAccount, List<VendorBrand> dbBrands, List<VendorCategory> dbCategories, List<VendorSubcategory> dbSubcategories,
+        private List<VendorProduct> LoadProductsData(
+            List<Product> products,
+            DateTime date,
+            List<VendorBrand> dbBrands,
+            List<VendorCategory> dbCategories,
+            List<VendorSubcategory> dbSubcategories,
             List<VendorParentProduct> dbParentProducts)
         {
             var productSummaryLoader = new ProductsSummaryLoader(dbCategories, dbSubcategories, dbBrands, dbParentProducts, MetricTypes);

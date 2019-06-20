@@ -12,14 +12,13 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
         private readonly List<VendorCategory> categories;
         private readonly List<VendorBrand> brands;
 
-        public SubcategoriesSummaryLoader(Dictionary<string, int> metricTypes, List<VendorCategory> categories,
-             List<VendorBrand> brands)
+        public SubcategoriesSummaryLoader(Dictionary<string, int> metricTypes, List<VendorCategory> categories, List<VendorBrand> brands)
             : base(metricTypes)
         {
             this.categories = categories;
             this.brands = brands;
         }
-        
+
         protected override VendorSubcategory MapReportEntityToDbEntity(Subcategory reportEntity, ExtAccount extAccount)
         {
             var vendorSubcategory = new VendorSubcategory
@@ -35,8 +34,9 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
         private void SetCategoryIdIfExists(VendorSubcategory subcategory, Subcategory reportEntity)
         {
             if (string.IsNullOrEmpty(reportEntity.Category))
+            {
                 return;
-
+            }
             var categoryEntity = categories.FirstOrDefault(cat => cat.Name == reportEntity.Category);
             if (categoryEntity != null)
             {
@@ -47,8 +47,9 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
         private void SetBrandIdIfExists(VendorSubcategory subcategory, Subcategory reportEntity)
         {
             if (string.IsNullOrEmpty(reportEntity.Brand))
+            {
                 return;
-
+            }
             var brandEntity = brands.FirstOrDefault(brand => brand.Name == reportEntity.Brand);
             if (brandEntity != null)
             {

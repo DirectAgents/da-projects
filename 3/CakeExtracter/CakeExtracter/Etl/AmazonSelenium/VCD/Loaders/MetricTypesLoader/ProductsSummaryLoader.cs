@@ -16,8 +16,12 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
         private readonly List<VendorBrand> brands;
         private readonly List<VendorParentProduct> parentProducts;
 
-        public ProductsSummaryLoader(List<VendorCategory> categories, List<VendorSubcategory> subcategories,
-           List<VendorBrand> brands, List<VendorParentProduct> parentProducts, Dictionary<string, int> metricTypes)
+        public ProductsSummaryLoader(
+            List<VendorCategory> categories,
+            List<VendorSubcategory> subcategories,
+            List<VendorBrand> brands,
+            List<VendorParentProduct> parentProducts,
+            Dictionary<string, int> metricTypes)
             : base(metricTypes)
         {
             this.categories = categories;
@@ -30,7 +34,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
         {
             return db => db.Name == reportEntity.Name && db.AccountId == extAccount.Id && db.Asin == reportEntity.Asin;
         }
-        
+
         protected override VendorProduct MapReportEntityToDbEntity(Product reportEntity, ExtAccount extAccount)
         {
             var vendorProduct = new VendorProduct
@@ -45,8 +49,9 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
                 Ean = reportEntity.Ean,
                 Upc = reportEntity.Upc,
                 ModelStyleNumber = reportEntity.ModelStyleNumber,
-                ReleaseDate = reportEntity.ReleaseDate < SqlDateTime.MinValue.Value ?
-                    SqlDateTime.MinValue.Value : reportEntity.ReleaseDate
+                ReleaseDate = reportEntity.ReleaseDate < SqlDateTime.MinValue.Value
+                    ? SqlDateTime.MinValue.Value
+                    : reportEntity.ReleaseDate,
             };
             SetCategoryIdIfExists(vendorProduct, reportEntity);
             SetSubcategoryIdIfExists(vendorProduct, reportEntity);
@@ -58,8 +63,9 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
         private void SetCategoryIdIfExists(VendorProduct product, Product reportEntity)
         {
             if (string.IsNullOrEmpty(reportEntity.Category))
+            {
                 return;
-
+            }
             var categoryEntity = categories.FirstOrDefault(cat => cat.Name == reportEntity.Category);
             if (categoryEntity != null)
             {
@@ -70,8 +76,9 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
         private void SetSubcategoryIdIfExists(VendorProduct product, Product reportEntity)
         {
             if (string.IsNullOrEmpty(reportEntity.Subcategory))
+            {
                 return;
-
+            }
             var subcategoryEntity = subcategories.FirstOrDefault(subCat => subCat.Name == reportEntity.Subcategory);
             if (subcategoryEntity != null)
             {
@@ -82,8 +89,9 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
         private void SetBrandIdIfExists(VendorProduct product, Product reportEntity)
         {
             if (string.IsNullOrEmpty(reportEntity.Brand))
+            {
                 return;
-
+            }
             var brandEntity = brands.FirstOrDefault(brand => brand.Name == reportEntity.Brand);
             if (brandEntity != null)
             {
@@ -94,8 +102,9 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
         private void SetParentProductIdIfExists(VendorProduct product, Product reportEntity)
         {
             if (string.IsNullOrEmpty(reportEntity.ParentAsin))
+            {
                 return;
-
+            }
             var parentProductEntity = parentProducts.FirstOrDefault(pp => pp.Asin == reportEntity.ParentAsin);
             if (parentProductEntity != null)
             {

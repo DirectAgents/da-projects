@@ -35,7 +35,7 @@ namespace SeleniumDataBrowser.PDA.Helpers
         /// <param name="loginProcessManager">Manager of login process.</param>
         /// <param name="maxRetryAttempts">Max number of retry attempts.</param>
         /// <param name="pauseBetweenAttempts">Time interval for pause between attempts.</param>
-        /// <param name="logInfo">Action for logging (info level).</param>
+        /// <param name="logger">Selenium data browser logger.</param>
         public PdaProfileUrlManager(
             AuthorizationModel authorizationModel,
             AmazonPdaPageActions pageActionManager,

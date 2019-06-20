@@ -31,9 +31,9 @@ namespace SeleniumDataBrowser.PDA.PageActions
         /// <returns>Dictionary of profile URLs which available in profile menu on the page.</returns>
         public Dictionary<string, string> GetAvailableProfileUrls()
         {
-            WaitElementClickable(AmazonPdaPageObjects.CurrentProfileButton, Timeout);
+            WaitElementClickable(AmazonPdaPageObjects.CurrentProfileButton);
             MoveToElementAndClick(AmazonPdaPageObjects.CurrentProfileButton);
-            WaitElementClickable(AmazonPdaPageObjects.ProfilesMenu, Timeout);
+            WaitElementClickable(AmazonPdaPageObjects.ProfilesMenu);
             var menuContainers = GetChildrenElements(AmazonPdaPageObjects.ProfilesMenu, AmazonPdaPageObjects.ProfilesMenuItemContainer);
             var menuItems = menuContainers.Select(x => GetChildElement(x, AmazonPdaPageObjects.ProfilesMenuItem));
             return menuItems.ToDictionary(x => x.Text.Trim(), x => x.GetAttribute(HrefAttribute));
