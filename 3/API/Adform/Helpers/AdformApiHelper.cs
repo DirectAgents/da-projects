@@ -46,7 +46,7 @@ namespace Adform.Helpers
             var filter = new ReportFilter
             {
                 Client = new[] {settings.ClientId},
-                Tracking = settings.TrackingId,
+                Tracking = settings.TrackingIds,
                 Date = new Dates
                 {
                     From = settings.StartDate.ToString(DateFormat),
