@@ -31,7 +31,6 @@ namespace CakeExtracter.Commands.Selenium
     public class SyncAmazonPdaCommand : ConsoleCommand
     {
         private const int DefaultDaysAgo = 41;
-        private const int DefaultIntervalBetweenRequestsInMinutes = 60;
 
         private AuthorizationModel authorizationModel;
         private AmazonPdaPageActions pageActionsManager;
@@ -165,16 +164,19 @@ namespace CakeExtracter.Commands.Selenium
 
         private void InitializeFields()
         {
+            SetFieldsFromConfig();
             InitializeLogger();
             InitializeAuthorizationModel();
             InitializePageActionsManager();
             InitializeLoginProcessManager();
+        }
 
+        private void SetFieldsFromConfig()
+        {
             maxRetryAttempts = PdaCommandConfigurationHelper.GetMaxRetryAttempts();
             pauseBetweenAttempts = PdaCommandConfigurationHelper.GetPauseBetweenAttempts();
-            IntervalBetweenUnsuccessfulAndNewRequestInMinutes = ConfigurationHelper.GetIntConfigurationValue(
-                    "PDAIntervalBetweenRequestsInMinutes",
-                    DefaultIntervalBetweenRequestsInMinutes);
+            IntervalBetweenUnsuccessfulAndNewRequestInMinutes =
+                PdaCommandConfigurationHelper.GetIntervalBetweenUnsuccessfulAndNewRequest();
         }
 
         private void InitializeAuthorizationModel()

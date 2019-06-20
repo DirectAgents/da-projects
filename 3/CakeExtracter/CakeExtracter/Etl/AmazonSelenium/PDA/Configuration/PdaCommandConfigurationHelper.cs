@@ -16,6 +16,9 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Configuration
         private const string EMailPasswordConfigurationKey = "PDA_EMailPassword";
         private const string MaxRetryAttemptsConfigurationKey = "PDA_MaxRetryAttempts";
         private const string PauseBetweenAttemptsConfigurationKey = "PDA_PauseBetweenAttemptsInSeconds";
+        private const string IntervalBetweenUnsuccessfulAndNewRequestsConfigurationKey = "PDA_IntervalBetweenUnsuccessfulAndNewRequestsInMinutes";
+
+        private const int DefaultIntervalBetweenUnsuccessfulAndNewRequestsInMinutes = 60;
 
         /// <summary>
         /// Gets the name of cookie directory from the config application setting.
@@ -60,6 +63,18 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Configuration
         public static TimeSpan GetPauseBetweenAttempts()
         {
             return TimeSpan.FromSeconds(ConfigurationHelper.GetIntConfigurationValue(PauseBetweenAttemptsConfigurationKey));
+        }
+
+        /// <summary>
+        /// Gets the number minutes of interval between unsuccessful and new job execution requests
+        /// from the config application setting.
+        /// </summary>
+        /// <returns>Number minutes of interval between unsuccessful and new job execution requests.</returns>
+        public static int GetIntervalBetweenUnsuccessfulAndNewRequest()
+        {
+            return ConfigurationHelper.GetIntConfigurationValue(
+                IntervalBetweenUnsuccessfulAndNewRequestsConfigurationKey,
+                DefaultIntervalBetweenUnsuccessfulAndNewRequestsInMinutes);
         }
     }
 }

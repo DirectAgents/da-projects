@@ -70,7 +70,6 @@ namespace CakeExtracter.Commands.Selenium
             var commandsGroupedByProfile = commands.GroupBy(x => (x.Command as SyncAmazonVcdCommand)?.ProfileNumber);
             foreach (var commandsGroup in commandsGroupedByProfile)
             {
-                //var profileBroadCommands = GetUniqueBroadProfileCommands(commandsGroup);
                 broadCommands.AddRange(commandsGroup);
             }
             return broadCommands;
@@ -223,11 +222,18 @@ namespace CakeExtracter.Commands.Selenium
 
         private void InitializeFields()
         {
+            SetFieldsFromConfig();
             SetExecutionProfile();
             InitializeLogger();
             InitializePageActionsManager();
             InitializeAuthorizationModel();
             InitializeLoginManager();
+        }
+
+        private void SetFieldsFromConfig()
+        {
+            IntervalBetweenUnsuccessfulAndNewRequestInMinutes =
+                VcdCommandConfigurationHelper.GetIntervalBetweenUnsuccessfulAndNewRequest();
         }
 
         private void LoginProcess()

@@ -17,6 +17,9 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Configuration
     {
         private const string SyncScriptPathConfigurationKey = "VCD_SyncScriptPath";
         private const string SyncScriptNameConfigurationKey = "VCD_SyncScriptName";
+        private const string IntervalBetweenUnsuccessfulAndNewRequestsConfigurationKey = "VCD_IntervalBetweenUnsuccessfulAndNewRequestsInMinutes";
+
+        private const int DefaultIntervalBetweenUnsuccessfulAndNewRequestsInMinutes = 30;
 
         /// <summary>
         /// Gets the date ranges to process.
@@ -32,11 +35,27 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Configuration
                     CommandHelper.GetDateRange(default(DateTime), default(DateTime), interval, 0));
         }
 
+        /// <summary>
+        /// Gets the full path to sync SQL script.
+        /// </summary>
+        /// <returns>Full path to sync SQL script.</returns>
         public static string GetSyncScriptPath()
         {
             var path = ConfigurationManager.AppSettings[SyncScriptPathConfigurationKey];
             var name = ConfigurationManager.AppSettings[SyncScriptNameConfigurationKey];
             return FileManager.GetAssemblyRelativePath(FileManager.CombinePath(path, name));
+        }
+
+        /// <summary>
+        /// Gets the number minutes of interval between unsuccessful and new job execution requests
+        /// from the config application setting.
+        /// </summary>
+        /// <returns>Number minutes of interval between unsuccessful and new job execution requests.</returns>
+        public static int GetIntervalBetweenUnsuccessfulAndNewRequest()
+        {
+            return ConfigurationHelper.GetIntConfigurationValue(
+                IntervalBetweenUnsuccessfulAndNewRequestsConfigurationKey,
+                DefaultIntervalBetweenUnsuccessfulAndNewRequestsInMinutes);
         }
     }
 }
