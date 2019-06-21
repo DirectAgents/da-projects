@@ -36,6 +36,17 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         private readonly VcdAccountInfo accountInfo;
         private readonly SeleniumLogger logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VcdReportDownloader"/> class.
+        /// </summary>
+        /// <param name="accountInfo">Information about the current account.</param>
+        /// <param name="pageActions">Manager of page actions.</param>
+        /// <param name="authorizationModel">Authorization settings.</param>
+        /// <param name="logger">Selenium data browser logger.</param>
+        /// <param name="reportDownloadingStartedDelayInSeconds">Number of seconds delay before first attempt downloading reports.</param>
+        /// <param name="minDelayBetweenReportDownloadingInSeconds">Number of seconds minimum delay between attempts downloading reports.</param>
+        /// <param name="maxDelayBetweenReportDownloadingInSeconds">Number of seconds maximum delay between attempts downloading reports.</param>
+        /// <param name="reportDownloadingAttemptCount">Count of attempts downloading reports.</param>
         public VcdReportDownloader(
             VcdAccountInfo accountInfo,
             AmazonVcdPageActions pageActions,

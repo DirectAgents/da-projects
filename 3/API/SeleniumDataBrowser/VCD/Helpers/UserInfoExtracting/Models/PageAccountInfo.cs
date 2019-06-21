@@ -12,6 +12,6 @@
         public int primaryBusinessGroupId { get; set; }
         public string retailSubscriptionLevel { get; set; }
         public string status { get; set; }
-        public int mcId { get; set; }
+        public long mcId { get; set; }
     }
 }

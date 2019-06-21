@@ -37,7 +37,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Configuration.Models
         /// <value>
         /// The mc identifier.
         /// </value>
-        public int McId
+        public long McId
         {
             get;
             set;

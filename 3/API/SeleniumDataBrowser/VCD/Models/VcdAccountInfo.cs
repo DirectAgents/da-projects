@@ -8,6 +8,6 @@
 
         public int VendorGroupId { get; set; }
 
-        public int McId { get; set; }
+        public long McId { get; set; }
     }
 }
