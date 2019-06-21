@@ -97,7 +97,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
             LoggerHelper.LogWaiting(message, null, x => Logger.Info(accountInfo.Account.Id, x));
             Thread.Sleep(timeSpan);
         }
-        
+
         private string ProcessResponse(IRestResponse response, AccountInfo accountInfo)
         {
             if (IsSuccessfulResponse(response))
@@ -138,7 +138,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
             return new ReportDownloadingRequestPageData
             {
                 Token = token,
-                Cookies = cookies
+                Cookies = cookies,
             };
         }
 
@@ -149,8 +149,10 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
             var requestBodyObject = PrepareRequestBody(requestId, reportDay, reportLevel, salesViewName);
             var requestHeaders = GetHeadersDictionary(requestId);
             var requestBodyJson = JsonConvert.SerializeObject(requestBodyObject);
-            var requestQueryParams = RequestQueryConstants.GetRequestQueryParameters(pageRequestData.Token,
-                accountInfo.VendorGroupId.ToString(), accountInfo.McId.ToString());
+            var requestQueryParams = RequestQueryConstants.GetRequestQueryParameters(
+                pageRequestData.Token,
+                accountInfo.VendorGroupId.ToString(),
+                accountInfo.McId.ToString());
             var request = RestRequestHelper.CreateRestRequest(AmazonCsvDownloadReportUrl, pageRequestData.Cookies, requestQueryParams);
             request.AddParameter(RequestBodyConstants.RequestBodyFormat, requestBodyJson, ParameterType.RequestBody);
             requestHeaders.ForEach(x => request.AddHeader(x.Key, x.Value));
@@ -175,15 +177,17 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
                     requestId = requestId,
                     reportId = RequestBodyConstants.ReportId,
                     reportParameters = reportParameters,
-                    visibleFilters = visibleFilters
+                    visibleFilters = visibleFilters,
                 }
             };
         }
 
         private List<ReportParameter> GetReportParameters(DateTime reportDay, string reportLevel)
         {
-            var reportParameters = RequestBodyConstants.GetReportParameters(GetReportParameterFilterDate(reportDay),
-                GetReportParameterFilterDate(reportDay), reportLevel);
+            var reportParameters = RequestBodyConstants.GetReportParameters(
+                GetReportParameterFilterDate(reportDay),
+                GetReportParameterFilterDate(reportDay),
+                reportLevel);
             return reportParameters;
         }
 

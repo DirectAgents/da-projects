@@ -8,12 +8,12 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Models
     public class CommandWithSchedule
     {
         /// <summary>
-        /// The command.
+        /// Gets or sets the command.
         /// </summary>
         public ConsoleCommand Command { get; set; }
 
         /// <summary>
-        /// The scheduled time.
+        /// Gets or sets the scheduled time.
         /// </summary>
         public DateTime ScheduledTime { get; set; }
     }

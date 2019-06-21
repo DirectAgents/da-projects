@@ -3,6 +3,8 @@
     ViewBag.Title = "Cake Advertisers";
     var today = DateTime.Today;
     var monthStart = new DateTime(today.Year, today.Month, 1);
+    var lastMonthStart = monthStart.AddMonths(-1).ToShortDateString();
+    var lastMonthEnd = monthStart.AddDays(-1).ToShortDateString();
     var formatNum = Request.QueryString["commas"] != null ? "#,##0.###" : "0.###";
     bool super = Request.QueryString["super"] == "1";
 }
@@ -42,8 +44,9 @@
     {
         var adv = gauge.Advertiser;
         bool isTotal = adv.AdvertiserId == 0;
+        var showStatsUrl = Url.Action("ShowStats", new { id = adv.AdvertiserId }) + "?start=" + lastMonthStart + "&end=" + lastMonthEnd;
         <tr @(isTotal ? "style=font-weight:bold" : "")>
-            <td>@adv.AdvertiserId</td>
+            <td><a href="@showStatsUrl">@adv.AdvertiserId</a></td>
             <td>@adv.AdvertiserName</td>
             <td style="text-align:center">@Html.ActionLink(gauge.NumOffers.ToString(), "Index", "Offers", new { advId = isTotal ? null : (int?)adv.AdvertiserId }, null)</td>
             <td style="text-align:right">@gauge.CampSums.NumConvs.ToString(formatNum)</td>

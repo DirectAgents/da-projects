@@ -6,7 +6,7 @@
   "CookiesDirectory": "VcdCookies2",
   "StartDate": "",
   "EndDate": "",
-  "DayIntervalsToProcess": [ 2, 60 ],
+  "DayIntervalsToProcess": [ 60 ],
   "ReportDownloadingStartedDelayInSeconds": 10,
   "MinDelayBetweenReportDownloadingInSeconds": 30,
   "ReportDownloadingAttemptCount": 10,

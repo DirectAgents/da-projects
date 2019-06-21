@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
+using System.Linq;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 using Z.EntityFramework.Extensions;
 
 namespace CakeExtracter.Tests.JobTests.Amazon.TestImplementations
 {
-    public class TestJobRequestRepository : IBaseRepository<JobRequest>
+    public class TestJobRequestRepository : IJobRequestsRepository
     {
-        public List<JobRequest> ScheduledRequests = new List<JobRequest>();
+        public ConcurrentBag<JobRequest> ScheduledRequests = new ConcurrentBag<JobRequest>();
 
         public string EntityName { get; }
 
@@ -24,7 +26,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.TestImplementations
 
         public List<JobRequest> GetItems(Func<JobRequest, bool> predicate)
         {
-            return new List<JobRequest>();
+            return ScheduledRequests.Where(predicate).ToList();
         }
 
         public List<JobRequest> GetItemsWithIncludes(Func<JobRequest, bool> predicate, string includeProperty)
@@ -38,7 +40,10 @@ namespace CakeExtracter.Tests.JobTests.Amazon.TestImplementations
 
         public void AddItems(IEnumerable<JobRequest> items)
         {
-            ScheduledRequests.AddRange(items);
+            foreach (var jobRequest in items)
+            {
+                ScheduledRequests.Add(jobRequest);
+            }
         }
 
         public void UpdateItem(JobRequest itemToUpdate)
@@ -62,6 +67,11 @@ namespace CakeExtracter.Tests.JobTests.Amazon.TestImplementations
         public bool MergeItems(IEnumerable<JobRequest> itemsToMerge, Action<EntityBulkOperation<JobRequest>> entityBulkOptionsAction)
         {
             return true;
+        }
+
+        public List<JobRequest> GetAllChildrenRequests(JobRequest jobRequest)
+        {
+            return new List<JobRequest>();
         }
     }
 }

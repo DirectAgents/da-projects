@@ -1,25 +1,32 @@
+using System;
+using System.Web;
+using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement.JobExecution;
+using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers.Interfaces;
+using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
+using DirectAgents.Domain.Abstract;
+using DirectAgents.Domain.Concrete;
+using DirectAgents.Domain.Entities.Administration.JobExecution;
+using DirectAgents.Domain.SpecialPlatformProviders.Contracts;
+using DirectAgents.Domain.SpecialPlatformProviders.Implementation;
+using DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook;
+using DirectAgents.Web.Areas.Admin.Grids.JobHistory;
+using Microsoft.Web.Infrastructure.DynamicModuleHelper;
+using Ninject;
+using Ninject.Web.Common;
+using Ninject.Web.Common.WebHost;
+using CakeExtracter.Common.Email;
+
+[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(DirectAgents.Web.App_Start.NinjectWebCommon), "Start")]
+[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(DirectAgents.Web.App_Start.NinjectWebCommon), "Stop")]
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(DirectAgents.Web.App_Start.NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(DirectAgents.Web.App_Start.NinjectWebCommon), "Stop")]
 
 namespace DirectAgents.Web.App_Start
 {
-    using System;
-    using System.Web;
-    using CakeExtracter.Common.JobExecutionManagement.JobExecution;
-    using DirectAgents.Domain.Abstract;
-    using DirectAgents.Domain.Concrete;
-    using DirectAgents.Web.Areas.Admin.Grids.JobHistory;
-    using DirectAgents.Domain.SpecialPlatformProviders.Contracts;
-    using DirectAgents.Domain.SpecialPlatformProviders.Implementation;
-    using Microsoft.Web.Infrastructure.DynamicModuleHelper;
-    using Ninject;
-    using Ninject.Web.Common;
-    using DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook;
-    using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
-    using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
-    using DirectAgents.Domain.Entities.Administration.JobExecution;
-    using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
-
     public static class NinjectWebCommon 
     {
         private static readonly Bootstrapper bootstrapper = new Bootstrapper();
@@ -27,13 +34,15 @@ namespace DirectAgents.Web.App_Start
         /// <summary>
         /// Starts the application
         /// </summary>
-        public static void Start() 
+        public static void Start()
         {
             DynamicModuleUtility.RegisterModule(typeof(OnePerRequestHttpModule));
             DynamicModuleUtility.RegisterModule(typeof(NinjectHttpModule));
-            bootstrapper.Initialize(CreateKernel);
+            var kernel = CreateKernel();
+            bootstrapper.Initialize(() => kernel);
+            DIKernel.SetKernel(kernel);
         }
-        
+
         /// <summary>
         /// Stops the application.
         /// </summary>
@@ -41,7 +50,7 @@ namespace DirectAgents.Web.App_Start
         {
             bootstrapper.ShutDown();
         }
-        
+
         /// <summary>
         /// Creates the kernel that will manage your application.
         /// </summary>
@@ -65,7 +74,7 @@ namespace DirectAgents.Web.App_Start
         }
 
         /// <summary>
-        /// Load your modules or register your services here!
+        /// Load your modules or register your services here.
         /// </summary>
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
@@ -87,9 +96,12 @@ namespace DirectAgents.Web.App_Start
             kernel.Bind<IPlatformAccountRepository>().To<PlatformAccountRepository>();
 
             kernel.Bind<IJobHistoryDataProvider>().To<JobHistoryDataProvider>();
-            kernel.Bind<IBaseRepository<JobRequest>>().To<JobRequestRepository>();
+            kernel.Bind<IJobRequestsRepository>().To<JobRequestRepository>();
             kernel.Bind<IBaseRepository<JobRequestExecution>>().To<JobExecutionItemRepository>();
             kernel.Bind<IJobExecutionItemService>().To<JobExecutionItemService>();
+            kernel.Bind<IJobRequestLifeCycleManager>().To<JobRequestLifeCycleManager>();
+            kernel.Bind<IJobExecutionNotificationService>().To<JobExecutionNotificationService>();
+            kernel.Bind<IEmailNotificationsService>().To<EmailNotificationsService>();
             kernel.Bind<ClientPortal.Data.Contracts.IClientPortalRepository>().To<ClientPortal.Data.Services.ClientPortalRepository>();
 
             kernel.Bind<SpecialPlatformProvider>().To<DspProvider>();

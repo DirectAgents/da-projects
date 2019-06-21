@@ -57,6 +57,8 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <Optimize>false</Optimize>
+    <CodeAnalysisRuleSet>..\..\DirectAgents.Web\build\stylecop\StyleCopRuleSet.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <Prefer32Bit>false</Prefer32Bit>
@@ -173,6 +175,9 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\DirectAgents.Web\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\..\DirectAgents.Web\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
+    </Reference>
     <Reference Include="Polly, Version=6.0.0.0, Culture=neutral, PublicKeyToken=c8a3ffc3f8f825cc, processorArchitecture=MSIL">
       <HintPath>..\..\DirectAgents.Web\packages\Polly.6.1.2\lib\netstandard2.0\Polly.dll</HintPath>
     </Reference>
@@ -180,9 +185,15 @@
     <Reference Include="Quartz">
       <HintPath>..\..\DirectAgents.Web\packages\Quartz.2.1.2\lib\net40\Quartz.dll</HintPath>
     </Reference>
+    <Reference Include="RazorEngine, Version=3.10.0.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <HintPath>..\..\DirectAgents.Web\packages\RazorEngine.3.10.0\lib\net45\RazorEngine.dll</HintPath>
+    </Reference>
     <Reference Include="RestSharp, Version=106.3.1.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
       <HintPath>..\..\DirectAgents.Web\packages\RestSharp.106.3.1\lib\net452\RestSharp.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="SendGrid, Version=9.11.0.0, Culture=neutral, PublicKeyToken=4f047e93159395ca, processorArchitecture=MSIL">
+      <HintPath>..\..\DirectAgents.Web\packages\Sendgrid.9.11.0\lib\net452\SendGrid.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Private>True</Private>
@@ -303,6 +314,9 @@
     <Reference Include="System.Web.Extensions">
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\DirectAgents.Web\packages\Microsoft.AspNet.Razor.3.0.0\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Services">
       <Private>True</Private>
     </Reference>
@@ -333,6 +347,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrappers\AutoMapperBootstrapper.cs" />
+    <Compile Include="Bootstrappers\DependencyInjectionBootstrapper.cs" />
+    <Compile Include="Bootstrappers\DependencyInjectionModules\DependencyInjectionModule.cs" />
     <Compile Include="Bootstrappers\EntityFrameworkBootstrapper.cs" />
     <Compile Include="Bootstrappers\IBootstrapper.cs" />
     <Compile Include="Bootstrappers\LoggingBootstrapper.cs" />
@@ -400,6 +416,7 @@
     <Compile Include="CakeMarketingApi\Entities\SubIdSummary.cs" />
     <Compile Include="CakeMarketingApi\Entities\Tag.cs" />
     <Compile Include="CakeMarketingApi\Entities\Vertical.cs" />
+    <Compile Include="Commands\Core\FailedJobsNotifierCommand.cs" />
     <Compile Include="Commands\DA\DAMonthlyMaintenance.cs" />
     <Compile Include="Commands\DA\DASyncAmazonDspStats.cs" />
     <Compile Include="Commands\DA\DASynchAdformStats.cs" />
@@ -413,18 +430,29 @@
     <Compile Include="Commands\DA\DASynchCriteoStats.cs" />
     <Compile Include="Commands\DA\DASynchDBMStats.cs" />
     <Compile Include="Commands\DA\DASynchDBMStats2.cs" />
-    <Compile Include="Commands\DA\DASynchFacebookMigration.cs" />
     <Compile Include="Commands\DA\DASynchKochavaStats.cs" />
     <Compile Include="Commands\DA\DaSynchYamStats.cs" />
     <Compile Include="Commands\DA\DASynchYAMStats_Outdated.cs" />
     <Compile Include="Commands\Selenium\SyncAmazonPdaCommand.cs" />
     <Compile Include="Commands\Selenium\SyncAmazonVcdCommand.cs" />
+    <Compile Include="Common\CommandAutoStopWatcher.cs" />
+    <Compile Include="Common\Email\EmailNotificationsService.cs" />
+    <Compile Include="Common\Email\IEmailNotificationsService.cs" />
+    <Compile Include="Common\FileUtils.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Constants\EmailConfigConstants.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Models\ErrorInJobNotificationModel.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Models\FailedJobNotificationModel.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Services\IJobExecutionNotificationService.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Services\JobExecutionNotificationService.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Repositories\IJobRequestsRepository.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Services\RetryRequestsHolder.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\CommandSchedulingUtils.cs" />
     <Compile Include="Common\StatsTypeAgg.cs" />
     <Compile Include="Commands\EOMSynchCPCCommand.cs" />
     <Compile Include="Commands\DA\DASeed.cs" />
     <Compile Include="Commands\DA\DASynchAdrollAds.cs" />
     <Compile Include="Commands\RT\RTSynchTest.cs" />
-    <Compile Include="Commands\ScheduledRequestsLauncherCommand.cs" />
+    <Compile Include="Commands\Core\ScheduledRequestsLauncherCommand.cs" />
     <Compile Include="Commands\Search\CopySearchDailySummariesCommand.cs" />
     <Compile Include="Commands\Search\SynchSearchDailySummariesAppleCommand.cs" />
     <Compile Include="Commands\Test\TestABCommand.cs" />
@@ -454,14 +482,15 @@
     <Compile Include="Common\JobExecutionManagement\JobRequests\Services\JobRequestLaunchers\JobExecutionRequestLauncher.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Models\CommandWithSchedule.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Repositories\JobRequestRepository.cs" />
-    <Compile Include="Common\JobExecutionManagement\JobRequests\Services\JobRequestSchedulers\Interfaces\IJobExecutionRequestScheduler.cs" />
-    <Compile Include="Common\JobExecutionManagement\JobRequests\Services\JobRequestSchedulers\JobExecutionRequestScheduler.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Services\JobRequestSchedulers\Interfaces\IJobRequestLifeCycleManager.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Services\JobRequestSchedulers\JobRequestLifeCycleManager.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\CommandArgumentsConverter.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\JobRequestsLogger.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\ProcessManager.cs" />
     <Compile Include="Common\SqlScriptsExecutor.cs" />
     <Compile Include="Common\StorageCollection.cs" />
     <Compile Include="Common\TextUtils.cs" />
+    <Compile Include="Common\DIKernel.cs" />
     <Compile Include="Etl\AmazonSelenium\Configuration\SeleniumCommandConfigurationHelper.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Configuration\PdaCommandConfigurationHelper.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Enums\AmazonCmApiMetrics.cs" />
@@ -594,10 +623,6 @@
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdSummaryLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookCampaignSummaryLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookDailySummaryLoader.cs" />
-    <Compile Include="Etl\SocialMarketing\MigrationExtracters\FacebookDailyMigrationExtractor.cs" />
-    <Compile Include="Etl\SocialMarketing\MigrationExtracters\FacebookCampaignMigrationExtractor.cs" />
-    <Compile Include="Etl\SocialMarketing\MigrationExtracters\FacebookAdMigrationExtractor.cs" />
-    <Compile Include="Etl\SocialMarketing\MigrationExtracters\FacebookAdsetMigrationExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformAdSetSummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformDailySummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformApiBaseExtractor.cs" />
@@ -683,7 +708,6 @@
     <Compile Include="Commands\Test\TestExcelCommand.cs" />
     <Compile Include="Commands\Test\TestLCCommand.cs" />
     <Compile Include="Common\CopyPropertiesUtility.cs" />
-    <Compile Include="Common\EmailUtility.cs" />
     <Compile Include="Common\EntityFrameworkExtensions.cs" />
     <Compile Include="Common\LinqExtensions.cs" />
     <Compile Include="Common\LogElapsedTime.cs" />
@@ -705,7 +729,6 @@
     <Compile Include="Common\DateRange.cs" />
     <Compile Include="Commands\SynchDailySummariesCommand.cs" />
     <Compile Include="Commands\Search\SynchSearchDailySummariesXmlCommand.cs" />
-    <Compile Include="Common\SqlUtility.cs" />
     <Compile Include="Common\XmlExtensions.cs" />
     <Compile Include="DataWarehouse.cs" />
     <Compile Include="Bootstrappers\EnterpriseLibraryBootstrapper.cs" />

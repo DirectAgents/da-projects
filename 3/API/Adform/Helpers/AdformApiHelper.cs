@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using Adform.Entities;
-using Adform.Entities.ReportEntities;
+using Adform.Entities.ReportEntities.ReportParameters;
 using Adform.Enums;
 
 namespace Adform.Helpers
@@ -33,7 +32,7 @@ namespace Adform.Helpers
             {Dimension.LineItem, "lineItem"},
             {Dimension.Banner, "banner"},
             {Dimension.Media, "media"},
-            {Dimension.AdInteractionType, "adInteractionType"} // Click, Impression, etc.
+            {Dimension.AdInteractionType, "adInteractionType"}, // Click, Impression, etc.
         };
 
         private static readonly string[] BasicMetrics = {CostMetric, ImpressionsMetric, ClicksMetric};
@@ -42,25 +41,19 @@ namespace Adform.Helpers
 
         private static readonly string[] ConversionTypes = {ConversionTypeAll, ConversionType1, ConversionType2, ConversionType3};
 
-        public static ExpandoObject GetFilters(ReportSettings settings)
+        public static ReportFilter GetFilters(ReportSettings settings)
         {
-            dynamic filter = new ExpandoObject();
-            filter.client = new[] {settings.ClientId};
-            if (settings.TrackingId != null)
+            var filter = new ReportFilter
             {
-                filter.tracking = settings.TrackingId;
-            }
-
-            filter.date = new Dates
-            {
-                from = settings.StartDate.ToString(DateFormat),
-                to = settings.EndDate.ToString(DateFormat)
+                Client = new[] {settings.ClientId},
+                Tracking = settings.TrackingIds,
+                Date = new Dates
+                {
+                    From = settings.StartDate.ToString(DateFormat),
+                    To = settings.EndDate.ToString(DateFormat),
+                },
+                Media = new Media {Name = new[] {RtbName}},
             };
-            if (settings.RtbOnly)
-            {
-                filter.media = new {name = new[] {RtbName}};
-            }
-
             return filter;
         }
 
@@ -96,7 +89,7 @@ namespace Adform.Helpers
         {
             return new MetricMetadata
             {
-                metric = metricName
+                Metric = metricName
             };
         }
 
@@ -104,8 +97,8 @@ namespace Adform.Helpers
         {
             return ConversionTypes.Select(convType => new MetricMetadata
             {
-                metric = metricName,
-                specs = new
+                Metric = metricName,
+                Specs = new
                 {
                     conversionType = convType
                 }

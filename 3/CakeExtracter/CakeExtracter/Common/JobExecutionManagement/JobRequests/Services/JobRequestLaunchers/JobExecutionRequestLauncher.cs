@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestLaunchers.Interfaces;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
@@ -13,13 +14,13 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
     /// <inheritdoc />
     internal class JobExecutionRequestLauncher : IJobExecutionRequestLauncher
     {
-        private readonly IBaseRepository<JobRequest> requestRepository;
+        private readonly IJobRequestsRepository requestRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="JobExecutionRequestLauncher"/> class.
         /// </summary>
         /// <param name="requestRepository">Job request repository</param>
-        public JobExecutionRequestLauncher(IBaseRepository<JobRequest> requestRepository)
+        public JobExecutionRequestLauncher(IJobRequestsRepository requestRepository)
         {
             this.requestRepository = requestRepository;
         }

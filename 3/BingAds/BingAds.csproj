@@ -74,14 +74,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BingAuth.cs" />
-    <Compile Include="BingUtility.cs" />
+    <Compile Include="Utilities\BingAuth.cs" />
+    <Compile Include="Utilities\BingUtility.cs" />
+    <Compile Include="Helpers\BingReportRequestsHelper.cs" />
+    <Compile Include="Helpers\ClientCredentialsProvider.cs" />
+    <Compile Include="Models\ClientCredentialsInfo.cs" />
     <Compile Include="Service References\Reporting\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service References\CampaignManagement\Reference.cs">
       <AutoGen>True</AutoGen>
