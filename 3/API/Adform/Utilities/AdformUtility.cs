@@ -467,6 +467,8 @@ namespace Adform.Utilities
 
         private string PollingOperation(string operationLocationPath)
         {
+            WaitingBeforeFirstPoolingOperationStatus();
+
             var response = Policy
                 .Handle<Exception>()
                 .OrResult<IRestResponse<PollingOperationResponse>>(resp =>
@@ -489,6 +491,12 @@ namespace Adform.Utilities
             }
 
             return response.Data.Location;
+        }
+
+        private void WaitingBeforeFirstPoolingOperationStatus()
+        {
+            logger.LogInfo($"Waiting {pauseBetweenPollingAttemptsSeconds} before first pooling operation status...");
+            Thread.Sleep(pauseBetweenPollingAttemptsSeconds);
         }
 
         private static bool IsResponseWithStatus<T>(IRestResponse<T> response, string status)
