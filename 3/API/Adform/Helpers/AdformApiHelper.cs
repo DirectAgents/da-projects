@@ -35,25 +35,21 @@ namespace Adform.Helpers
             {Dimension.AdInteractionType, "adInteractionType"}, // Click, Impression, etc.
         };
 
-        private static readonly string[] BasicMetrics = {CostMetric, ImpressionsMetric, ClicksMetric};
+        private static readonly string[] BasicMetrics = { CostMetric, ImpressionsMetric, ClicksMetric };
 
-        private static readonly string[] ConversionMetrics = {ConversionsMetric, SalesMetric };
+        private static readonly string[] ConversionMetrics = { ConversionsMetric, SalesMetric };
 
-        private static readonly string[] ConversionTypes = {ConversionTypeAll, ConversionType1, ConversionType2, ConversionType3};
+        private static readonly string[] ConversionTypes = { ConversionTypeAll, ConversionType1, ConversionType2, ConversionType3 };
 
         public static ReportFilter GetFilters(ReportSettings settings)
         {
-            var filter = new ReportFilter
-            {
-                Client = new[] {settings.ClientId},
-                Tracking = settings.TrackingIds,
-                Date = new Dates
+            var filter = settings.TrackingIds.Any(x => !string.IsNullOrEmpty(x))
+                ? new ReportFilterWithTracking
                 {
-                    From = settings.StartDate.ToString(DateFormat),
-                    To = settings.EndDate.ToString(DateFormat),
-                },
-                Media = new Media {Name = new[] {RtbName}},
-            };
+                    Tracking = settings.TrackingIds,
+                }
+                : new ReportFilter();
+            InitializeReportFilter(filter, settings);
             return filter;
         }
 
@@ -77,7 +73,7 @@ namespace Adform.Helpers
 
         public static string[] GetDimensions(ReportSettings settings)
         {
-            var defaultDimensions = new[] {Dimension.Date};
+            var defaultDimensions = new[] { Dimension.Date };
             var dimensions = settings.Dimensions == null
                 ? defaultDimensions
                 : settings.Dimensions.Concat(defaultDimensions);
@@ -89,8 +85,19 @@ namespace Adform.Helpers
         {
             return new MetricMetadata
             {
-                Metric = metricName
+                Metric = metricName,
             };
+        }
+
+        private static void InitializeReportFilter(ReportFilter filter, ReportSettings settings)
+        {
+            filter.Client = new[] { settings.ClientId };
+            filter.Date = new Dates
+            {
+                From = settings.StartDate.ToString(DateFormat),
+                To = settings.EndDate.ToString(DateFormat),
+            };
+            filter.Media = new Media { Name = new[] { RtbName } };
         }
 
         private static IEnumerable<MetricMetadata> GetConversionMetrics(string metricName)
@@ -100,8 +107,8 @@ namespace Adform.Helpers
                 Metric = metricName,
                 Specs = new
                 {
-                    conversionType = convType
-                }
+                    conversionType = convType,
+                },
             });
         }
     }
