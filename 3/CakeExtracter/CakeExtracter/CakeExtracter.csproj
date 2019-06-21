@@ -907,12 +907,6 @@
     </None>
     <None Include="CakeMarketingApi\CakeMarketingApi.cd" />
     <None Include="CakeMarketingApi\Entities\Entities.cd" />
-    <None Include="Etl\AmazonSelenium\VCD\Configuration\VcdExecutionProfiles\Profile_1.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Etl\AmazonSelenium\VCD\Configuration\VcdExecutionProfiles\Profile_2.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Etl\Etl.cd" />
     <None Include="packages.config" />
     <Compile Include="Reports\SearchReportRuntimeTextTemplate.partial.cs" />
@@ -1023,19 +1017,5 @@
     <Analyzer Include="..\..\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <Content Include="Etl\AmazonSelenium\VCD\SQL\CreateVcdAnalyticTable.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Etl\AmazonSelenium\VCD\SQL\SelectAnalyticalTableVcd.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Etl\AmazonSelenium\VCD\SQL\SyncVcdAnalyticTable.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Etl\AmazonSelenium\VCD\SQL\SyncVcdAnalyticTableAllAccounts.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
