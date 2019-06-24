@@ -52,7 +52,10 @@ namespace Adform.Entities.ReportEntities.ReportParameters
             var datesStr = $"{Filter.Date.From}/{Filter.Date.To}";
             var clientsStr = string.Join(", ", Filter.Client);
             var mediaStr = string.Join(", ", Filter.Media.Name);
-            var filtersStr = $"dates - {datesStr}, clients - {clientsStr}, media - {mediaStr}, tracking - {Filter.Tracking}";
+            var trackingStr = Filter is ReportFilterWithTracking trackingFilter
+                ? $", tracking - {string.Join(", ", trackingFilter.Tracking)}"
+                : string.Empty;
+            var filtersStr = $"dates - {datesStr}, clients - {clientsStr}, media - {mediaStr}{trackingStr}";
             return $"dimensions: {dimensionsStr}; metrics: {metricsStr}; filters: {filtersStr}";
         }
     }
