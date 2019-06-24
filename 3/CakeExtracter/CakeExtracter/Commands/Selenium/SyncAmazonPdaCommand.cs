@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Exceptions;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Etl;
@@ -260,6 +261,7 @@ namespace CakeExtracter.Commands.Selenium
 
             var statsType = new StatsTypeAgg(StatsType);
             var accounts = GetAccounts();
+            SetInfoAboutAllAccountsInHistory(accounts);
 
             foreach (var account in accounts)
             {
@@ -318,7 +320,9 @@ namespace CakeExtracter.Commands.Selenium
             var extractor = new AmazonPdaDailyRequestExtractor(account, dateRange, amazonPdaUtility);
             var loader = new AmazonPdaDailySummaryLoader(account.Id);
             InitEtlEvents<DailySummary, AmazonPdaDailyRequestExtractor, AmazonPdaDailySummaryLoader>(extractor, loader);
+            CommandExecutionContext.Current?.SetJobExecutionStateInHistory($"{extractor.SummariesDisplayName} - Started", account.Id);
             CommandHelper.DoEtl(extractor, loader);
+            CommandExecutionContext.Current?.SetJobExecutionStateInHistory($"{extractor.SummariesDisplayName} - Finished", account.Id);
         }
 
         private void DoEtlStrategyFromRequests(ExtAccount account, DateRange dateRange, AmazonConsoleManagerUtility amazonPdaUtility)
@@ -326,7 +330,9 @@ namespace CakeExtracter.Commands.Selenium
             var extractor = new AmazonPdaCampaignRequestExtractor(account, dateRange, amazonPdaUtility);
             var loader = new AmazonCampaignSummaryLoader(account.Id);
             InitEtlEvents<StrategySummary, AmazonPdaCampaignRequestExtractor, AmazonCampaignSummaryLoader>(extractor, loader);
+            CommandExecutionContext.Current?.SetJobExecutionStateInHistory($"{extractor.SummariesDisplayName} - Started", account.Id);
             CommandHelper.DoEtl(extractor, loader);
+            CommandExecutionContext.Current?.SetJobExecutionStateInHistory($"{extractor.SummariesDisplayName} - Finished", account.Id);
         }
 
         private void InitEtlEvents<TSummary, TExtractor, TLoader>(TExtractor extractor, TLoader loader)
@@ -416,6 +422,17 @@ namespace CakeExtracter.Commands.Selenium
                 x => Logger.Info(accountId, x),
                 exc => Logger.Error(accountId, exc),
                 x => Logger.Warn(accountId, x));
+        }
+
+        private void SetInfoAboutAllAccountsInHistory(IEnumerable<ExtAccount> accounts)
+        {
+            const string firstAccountState = "Not started";
+
+            var extAccounts = accounts.ToList();
+            foreach (var account in extAccounts)
+            {
+                CommandExecutionContext.Current.SetJobExecutionStateInHistory(firstAccountState, account.Id);
+            }
         }
     }
 }

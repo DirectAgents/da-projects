@@ -22,6 +22,11 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
     {
         private readonly AmazonConsoleManagerUtility amazonPdaUtility;
 
+        /// <summary>
+        /// Gets the display name for showing job execution state on history.
+        /// </summary>
+        public virtual string SummariesDisplayName { get; } = "Pda Summaries";
+
         /// <inheritdoc cref="BaseAmazonExtractor{T}"/>
         /// <summary>
         /// Initializes a new instance of the <see cref="AmazonPdaExtractor{T}"/> class.

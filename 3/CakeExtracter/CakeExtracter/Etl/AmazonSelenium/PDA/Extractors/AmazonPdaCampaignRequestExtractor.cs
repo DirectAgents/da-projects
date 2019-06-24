@@ -25,6 +25,9 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
             AmazonApiHelper.GetCampaignTypeName(CampaignType.ProductDisplay),
         };
 
+        /// <inheritdoc/>
+        public override string SummariesDisplayName { get; } = "Pda Campaign Summaries";
+
         /// <inheritdoc cref="AmazonPdaExtractor{T}"/>
         /// <summary>
         /// Initializes a new instance of the <see cref="AmazonPdaCampaignRequestExtractor"/> class.

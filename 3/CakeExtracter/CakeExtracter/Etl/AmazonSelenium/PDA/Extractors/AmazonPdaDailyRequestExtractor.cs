@@ -16,6 +16,9 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
     /// </summary>
     internal class AmazonPdaDailyRequestExtractor : AmazonPdaExtractor<DailySummary>
     {
+        /// <inheritdoc/>
+        public override string SummariesDisplayName { get; } = "Pda Daily Summaries";
+
         /// <inheritdoc cref="AmazonPdaExtractor{T}"/>
         /// <summary>
         /// Initializes a new instance of the <see cref="AmazonPdaDailyRequestExtractor"/> class.
