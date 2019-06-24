@@ -16,11 +16,20 @@ namespace CakeExtracter.Common
         /// Initializes the DI kernel by a configuration.
         /// </summary>
         /// <typeparam name="T">Type of the Ninject module, which describes the bindings between abstractions and implementations.</typeparam>
-        public static void SetKernel<T>()
-            where T : NinjectModule, new()
+        /// <param name="module">The module.</param>
+        public static void SetKernel<T>(T module)
+            where T : NinjectModule
         {
-            var module = new T();
             kernel = new StandardKernel(module);
+        }
+
+        /// <summary>
+        /// Initializes the DI kernel by an existing kernel.
+        /// </summary>
+        /// <param name="sourceKernel">Existing kernel.</param>
+        public static void SetKernel(IKernel sourceKernel)
+        {
+            kernel = sourceKernel;
         }
 
         /// <summary>

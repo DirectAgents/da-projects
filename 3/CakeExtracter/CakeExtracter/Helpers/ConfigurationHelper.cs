@@ -5,19 +5,33 @@ using System.Linq;
 
 namespace CakeExtracter.Helpers
 {
+    /// <summary>
+    /// Configuration extractor helper.
+    /// </summary>
     public class ConfigurationHelper
     {
         private const char Separator = ',';
 
         private static readonly char[] ConfigurationValuesSeparators = { Separator };
 
-        public static List<string> ExtractEnumerableFromConfig(string configValueName)
+        /// <summary>
+        /// Extracts the enumerable from configuration.
+        /// </summary>
+        /// <param name="configKey">The configuration key.</param>
+        /// <returns>Configuration values collection.</returns>
+        public static List<string> ExtractEnumerableFromConfig(string configKey)
         {
-            var configValue = ConfigurationManager.AppSettings[configValueName] ?? string.Empty;
+            var configValue = ConfigurationManager.AppSettings[configKey] ?? string.Empty;
             var values = ExtractEnumerableFromConfigValue(configValue);
             return values.ToList();
         }
 
+        /// <summary>
+        /// Extracts the dictionary from configuration value.
+        /// </summary>
+        /// <param name="configKeysName">Name of the configuration keys.</param>
+        /// <param name="configValuesName">Name of the configuration values.</param>
+        /// <returns>Dictionary configuration value.</returns>
         public static Dictionary<string, string> ExtractDictionaryFromConfigValue(string configKeysName, string configValuesName)
         {
             var keys = ExtractEnumerableFromConfig(configKeysName);
@@ -31,6 +45,12 @@ namespace CakeExtracter.Helpers
             return dictionary;
         }
 
+        /// <summary>
+        /// Extracts the numbers from configuration value.
+        /// </summary>
+        /// <param name="configValue">The configuration value.</param>
+        /// <returns>Number value from configuration.</returns>
+        /// <exception cref="System.Exception">The configuration value \"{configValue}\" is invalid: {e}</exception>
         public static List<int> ExtractNumbersFromConfigValue(string configValue)
         {
             var values = ExtractEnumerableFromConfigValue(configValue);
@@ -45,6 +65,11 @@ namespace CakeExtracter.Helpers
             }
         }
 
+        /// <summary>
+        /// Gets the value with leading and trailing separator.
+        /// </summary>
+        /// <param name="configValueName">Name of the configuration value.</param>
+        /// <returns>Processed values.</returns>
         public static string GetValueWithLeadingAndTrailingSeparator(string configValueName)
         {
             var value = ConfigurationManager.AppSettings[configValueName];
@@ -70,7 +95,7 @@ namespace CakeExtracter.Helpers
 
         private static IEnumerable<string> ExtractEnumerableFromConfigValue(string configValue)
         {
-            return configValue.Split(ConfigurationValuesSeparators);
+            return configValue.Split(ConfigurationValuesSeparators, StringSplitOptions.RemoveEmptyEntries);
         }
 
         private static string GetSeparatorOrEmptyString(char symbol)

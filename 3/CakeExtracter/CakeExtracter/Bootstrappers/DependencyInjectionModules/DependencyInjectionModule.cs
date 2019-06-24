@@ -1,4 +1,5 @@
-﻿using CakeExtracter.Common.JobExecutionManagement.JobExecution;
+﻿using CakeExtracter.Common.Email;
+using CakeExtracter.Common.JobExecutionManagement.JobExecution;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers;
@@ -49,14 +50,16 @@ namespace CakeExtracter.Bootstrappers
         private void BindServices()
         {
             Bind<IJobExecutionItemService>().To<JobExecutionItemService>().InSingletonScope();
-            Bind<IJobExecutionRequestScheduler>().To<JobExecutionRequestScheduler>().InSingletonScope();
+            Bind<IJobRequestLifeCycleManager>().To<JobRequestLifeCycleManager>().InSingletonScope();
+            Bind<IJobExecutionNotificationService>().To<JobExecutionNotificationService>().InSingletonScope();
+            Bind<IEmailNotificationsService>().To<EmailNotificationsService>().InSingletonScope();
         }
 
         private void BindRepositories()
         {
             Bind<IPlatformAccountRepository>().To<PlatformAccountRepository>().InSingletonScope();
             Bind<IBaseRepository<JobRequestExecution>>().To<JobExecutionItemRepository>().InSingletonScope();
-            Bind<IBaseRepository<JobRequest>>().To<JobRequestRepository>().InSingletonScope();
+            Bind<IJobRequestsRepository>().To<JobRequestRepository>().InSingletonScope();
         }
     }
 }

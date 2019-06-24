@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using CakeExtracter.CakeMarketingApi;
 using CakeExtracter.Commands;
 using DirectAgents.Domain.Abstract;
+using DirectAgents.Web.Areas.Cake.Models;
 
 namespace DirectAgents.Web.Areas.Cake.Controllers
 {
@@ -78,5 +79,46 @@ namespace DirectAgents.Web.Areas.Cake.Controllers
             DASynchCakeEventConversions.RunStatic(advertiserId: id, startDate: startDate, endDate: today);
             return RedirectToAction("IndexGauge");
         }
+
+        public ActionResult ShowStats(int id, DateTime? start, DateTime? end)
+        {
+            var adv = daRepo.GetAdvertiser(id);
+            if (adv == null)
+                return HttpNotFound();
+
+            var today = DateTime.Today;
+            start = start ?? new DateTime(today.Year, today.Month, 1);
+            end = end ?? today;
+
+            var campSums = adv.Offers.AsQueryable().SelectMany(o => o.Camps).SelectMany(c => c.CampSums)
+                .Where(cs => cs.Date >= start.Value && cs.Date <= end.Value);
+            var model = new AdvertiserStatsVM
+            {
+                Advertiser = adv,
+                Start = start.Value,
+                End = end.Value,
+                NumOffers = adv.Offers.Count(),
+                Convs = campSums.Sum(cs => (decimal?)cs.Conversions) ?? 0,
+                Paid = campSums.Sum(cs => (decimal?)cs.Paid) ?? 0,
+            };
+            return View(model);
+        }
+
+        public ActionResult ClearCampSumsCustom(int id, DateTime start, DateTime end)
+        {
+            var campSums = daRepo.GetCampSums(advertiserId: id, startDate: start, endDate: end);
+            daRepo.DeleteCampSums(campSums);
+
+            var url = Url.Action("ShowStats", new { id = id }) + "?start=" + start.ToShortDateString() + "&end=" + end.ToShortDateString();
+            return Redirect(url);
+        }
+        public ActionResult LoadCampSumsCustom(int id, DateTime start, DateTime end)
+        {
+            DASynchCampSums.RunStatic(advertiserIds: id.ToString(), startDate: start, endDate: end);
+
+            var url = Url.Action("ShowStats", new { id = id }) + "?start=" + start.ToShortDateString() + "&end=" + end.ToShortDateString();
+            return Redirect(url);
+        }
+
     }
 }

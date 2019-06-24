@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers.Interfaces;
 using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors;
@@ -112,13 +113,13 @@ namespace CakeExtracter.Tests.JobTests.Amazon.TestImplementations.DIModules.Base
         private void BindServices()
         {
             Bind<IJobExecutionItemService>().To<JobExecutionItemService>();
-            Bind<IJobExecutionRequestScheduler>().To<JobExecutionRequestScheduler>();
+            Bind<IJobRequestLifeCycleManager>().To<JobRequestLifeCycleManager>();
         }
 
         private void BindRepositories()
         {
             Bind<IBaseRepository<JobRequestExecution>>().To<TestJobExecutionItemRepository>();
-            Bind<IBaseRepository<JobRequest>>().To<TestJobRequestRepository>().InSingletonScope();
+            Bind<IJobRequestsRepository>().To<TestJobRequestRepository>().InSingletonScope();
         }
 
         private T GetMockObjectWithParameterizedConstructor<T>(IContext context, Action<Mock<T>> setupMockAction)

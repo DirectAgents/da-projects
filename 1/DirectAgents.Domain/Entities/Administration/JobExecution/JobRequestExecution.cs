@@ -73,6 +73,14 @@ namespace DirectAgents.Domain.Entities.Administration.JobExecution
         public string CurrentState { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether [error email sent].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [error email sent]; otherwise, <c>false</c>.
+        /// </value>
+        public bool ErrorEmailSent { get; set; }
+
+        /// <summary>
         /// Gets or sets the job request. <see cref="JobRequest"/>.
         /// </summary>
         /// <value>

@@ -1,0 +1,38 @@
+﻿<h1>Error Occurred while job execution. </h1>
+
+<div><b>Command name: </b>@Model.JobRequest.CommandName</div>
+<div><b>Command arguments: </b>@Model.JobRequest.CommandExecutionArguments</div>
+<div><b>Command execution start time: </b>@Model.ExecutionStartTime</div>
+
+@if (@Model.Errors.CommonMessages.Count  > 0)
+{
+<h3>Common Errors:</h3>
+}
+
+@foreach (var message in @Model.Errors.CommonMessages)
+{
+<p style='color: red'>@message</p>
+}
+
+@if (@Model.Errors.AccountsData.Count  > 0)
+{
+<h3>Account Errors:</h3>
+}
+
+
+@foreach (var accountData in @Model.Errors.AccountsData)
+{
+<div>
+    <b>@accountData.AccountId</b>
+    @foreach (var message in @accountData.Messages)
+    {
+    <p style='color: red'>@message</p>
+    }
+</div>
+}
+
+
+<div>
+    This notification doesn't mean that fetched data is incorrect. Data can be fixed by the retry mechanism that will be started after job completion.
+    See more on the <a href="http://dagents.eastus.cloudapp.azure.com/Admin/JobsExecution">Job Execution history page</a>. If retry mechanism will not help you receive Job Failure Notification.
+</div>
