@@ -3,9 +3,9 @@
 namespace SeleniumDataBrowser.PageActions
 {
     /// <summary>
-    /// Base class for elements of Amazon portal pages.
+    /// Class for elements of Amazon portal login pages (two-factor authentication).
     /// </summary>
-    internal class BaseAmazonPageObjects
+    internal class AmazonLoginPageObjects
     {
         /// <summary>
         /// Field for login e-mail.

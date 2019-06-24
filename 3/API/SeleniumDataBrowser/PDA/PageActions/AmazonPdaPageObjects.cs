@@ -7,7 +7,7 @@ namespace SeleniumDataBrowser.PDA.PageActions
     /// <summary>
     /// Class for elements of Amazon portal pages for PDA.
     /// </summary>
-    internal class AmazonPdaPageObjects : BaseAmazonPageObjects
+    internal class AmazonPdaPageObjects : AmazonLoginPageObjects
     {
         /// <summary>
         /// Button "Filter by".

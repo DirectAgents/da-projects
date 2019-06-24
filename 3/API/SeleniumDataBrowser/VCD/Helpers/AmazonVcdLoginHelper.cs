@@ -44,7 +44,7 @@ namespace SeleniumDataBrowser.VCD.Helpers
             var currentUrl = pageActions.GetCurrentWindowUrl();
             var isCurrentUrlContainSignInUrl = currentUrl.Contains(SignInPageUrl);
             var isPasswordTextBoxExistOnCurrentPage =
-                pageActions.IsElementPresent(BaseAmazonPageObjects.LoginPassInput);
+                pageActions.IsElementPresent(AmazonLoginPageObjects.LoginPassInput);
             return isCurrentUrlContainSignInUrl && isPasswordTextBoxExistOnCurrentPage;
         }
 
@@ -78,7 +78,7 @@ namespace SeleniumDataBrowser.VCD.Helpers
 
         private static void LoginWithoutCookie(AuthorizationModel authModel, BaseAmazonPageActions pageManager)
         {
-            pageManager.NavigateToUrl(authModel.SignInUrl, BaseAmazonPageObjects.ForgotPassLink);
+            pageManager.NavigateToUrl(authModel.SignInUrl, AmazonLoginPageObjects.ForgotPassLink);
             pageManager.LoginProcess(authModel.Login, authModel.Password);
             var cookies = pageManager.GetAllCookies();
             CookieManager.SaveCookiesToFiles(cookies, authModel.CookiesDir);

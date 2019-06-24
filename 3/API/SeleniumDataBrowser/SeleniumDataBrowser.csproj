@@ -67,7 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\SeleniumLogger.cs" />
-    <Compile Include="PageActions\BaseAmazonPageObjects.cs" />
+    <Compile Include="PageActions\AmazonLoginPageObjects.cs" />
     <Compile Include="PDA\AmazonConsoleManagerUtility.cs" />
     <Compile Include="Drivers\ChromeWebDriver.cs" />
     <Compile Include="Helpers\CookieManager.cs" />

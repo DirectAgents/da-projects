@@ -7,7 +7,7 @@ namespace SeleniumDataBrowser.VCD.PageActions
     /// <summary>
     /// Class for elements of Amazon portal pages for PDA.
     /// </summary>
-    internal class AmazonVcdPageObjects : BaseAmazonPageObjects
+    internal class AmazonVcdPageObjects : AmazonLoginPageObjects
     {
         /// <summary>
         /// Button for open accounts menu.

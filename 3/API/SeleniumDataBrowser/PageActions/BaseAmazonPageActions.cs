@@ -69,8 +69,8 @@ namespace SeleniumDataBrowser.PageActions
         public void LoginWithPassword(string password)
         {
             EnterPassword(password);
-            ClickElement(BaseAmazonPageObjects.RememberMeCheckBox);
-            ClickElement(BaseAmazonPageObjects.LoginButton);
+            ClickElement(AmazonLoginPageObjects.RememberMeCheckBox);
+            ClickElement(AmazonLoginPageObjects.LoginButton);
             WaitEnterCharactersIfNeeded(password);
             IsPasswordCorrect();
             WaitSecurityCodeIfNecessary();
@@ -84,7 +84,7 @@ namespace SeleniumDataBrowser.PageActions
 
         private void IsPasswordCorrect()
         {
-            if (!IsElementPresent(BaseAmazonPageObjects.IncorrectPasswordSpan))
+            if (!IsElementPresent(AmazonLoginPageObjects.IncorrectPasswordSpan))
             {
                 return;
             }
@@ -93,19 +93,19 @@ namespace SeleniumDataBrowser.PageActions
 
         private void WaitEnterCharactersIfNeeded(string password)
         {
-            if (!IsElementPresent(BaseAmazonPageObjects.AuthWarningMessageBox))
+            if (!IsElementPresent(AmazonLoginPageObjects.AuthWarningMessageBox))
             {
                 return;
             }
             Logger.LogWarning("Waiting enter the characters...");
             EnterPassword(password);
-            WaitLoading(BaseAmazonPageObjects.AuthWarningMessageBox, Timeout);
+            WaitLoading(AmazonLoginPageObjects.AuthWarningMessageBox, Timeout);
         }
 
         private void EnterEmail(string email)
         {
-            ClickElement(BaseAmazonPageObjects.LoginEmailInput);
-            SendKeys(BaseAmazonPageObjects.LoginEmailInput, email);
+            ClickElement(AmazonLoginPageObjects.LoginEmailInput);
+            SendKeys(AmazonLoginPageObjects.LoginEmailInput, email);
         }
 
         private void EnterPassword(string password)
@@ -114,27 +114,27 @@ namespace SeleniumDataBrowser.PageActions
             {
                 throw new Exception("Password is empty!");
             }
-            ClickElement(BaseAmazonPageObjects.LoginPassInput);
-            SendKeys(BaseAmazonPageObjects.LoginPassInput, password);
+            ClickElement(AmazonLoginPageObjects.LoginPassInput);
+            SendKeys(AmazonLoginPageObjects.LoginPassInput, password);
         }
 
         private void WaitSecurityCodeIfNecessary()
         {
-            if (!IsElementPresent(BaseAmazonPageObjects.CodeInput))
+            if (!IsElementPresent(AmazonLoginPageObjects.CodeInput))
             {
                 return;
             }
 
-            WaitElementClickable(BaseAmazonPageObjects.CodeInput);
-            ClickElement(BaseAmazonPageObjects.DontAskCodeCheckBox);
-            ClickElement(BaseAmazonPageObjects.CodeInput);
+            WaitElementClickable(AmazonLoginPageObjects.CodeInput);
+            ClickElement(AmazonLoginPageObjects.DontAskCodeCheckBox);
+            ClickElement(AmazonLoginPageObjects.CodeInput);
             WaitSecurityCode();
         }
 
         private void WaitSecurityCode()
         {
             Logger.LogWarning("Waiting the code...");
-            WaitLoading(BaseAmazonPageObjects.CodeInput, Timeout);
+            WaitLoading(AmazonLoginPageObjects.CodeInput, Timeout);
         }
     }
 }
