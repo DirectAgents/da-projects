@@ -113,13 +113,13 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
             Func<string> downloadReportFunc,
             Func<string, AccountInfo, DateTime, List<Product>> parseReportFunc)
         {
-            Logger.Info($"Amazon VCD, Downloading {reportName} report.");
+            Logger.Info(accountInfo.Account.Id, $"Amazon VCD, Downloading {reportName} report.");
             var reportProducts = TryExtractData(reportDay, reportName, date =>
             {
                 var reportTextContent = DownloadReport(downloadReportFunc);
                 return parseReportFunc(reportTextContent, accountInfo, reportDay);
             });
-            Logger.Info($"Amazon VCD, {reportName} report downloaded. {reportProducts.Count} products");
+            Logger.Info(accountInfo.Account.Id, $"Amazon VCD, {reportName} report downloaded. {reportProducts.Count} products");
             return reportProducts;
         }
 
@@ -152,8 +152,8 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
             }
             catch (Exception ex)
             {
-                Logger.Info("Report downloading failed");
-                Logger.Error(ex);
+                Logger.Info(accountInfo.Account.Id, "Report downloading failed");
+                Logger.Error(accountInfo.Account.Id, ex);
                 throw;
             }
         }
