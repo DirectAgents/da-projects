@@ -122,10 +122,18 @@ namespace CakeExtracter.Commands.Selenium
 
         private List<AccountInfo> GetAccountsData()
         {
-            accountsDataProvider = GetAccountsDataProvider();
-            var accountsData = accountsDataProvider.GetAccountsDataToProcess();
-            accountsData.ForEach(accountData => CommandExecutionContext.Current.SetJobExecutionStateInHistory("Not started", accountData.Account.Id));
-            return accountsData;
+            try
+            {
+                accountsDataProvider = GetAccountsDataProvider();
+                var accountsData = accountsDataProvider.GetAccountsDataToProcess();
+                accountsData.ForEach(accountData =>
+                    CommandExecutionContext.Current.SetJobExecutionStateInHistory("Not started", accountData.Account.Id));
+                return accountsData;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to get accounts data.", e);
+            }
         }
 
         private VcdAccountsDataProvider GetAccountsDataProvider()

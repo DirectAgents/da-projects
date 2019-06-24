@@ -110,6 +110,10 @@ namespace SeleniumDataBrowser.PageActions
 
         private void EnterPassword(string password)
         {
+            if (string.IsNullOrEmpty(password))
+            {
+                throw new Exception("Password is empty!");
+            }
             ClickElement(BaseAmazonPageObjects.LoginPassInput);
             SendKeys(BaseAmazonPageObjects.LoginPassInput, password);
         }

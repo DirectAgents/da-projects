@@ -42,7 +42,10 @@ namespace SeleniumDataBrowser.VCD.Helpers
         public static bool NeedRepeatPassword(BaseAmazonPageActions pageActions)
         {
             var currentUrl = pageActions.GetCurrentWindowUrl();
-            return currentUrl.Contains(SignInPageUrl) && pageActions.IsElementPresent(BaseAmazonPageObjects.LoginPassInput);
+            var isCurrentUrlContainSignInUrl = currentUrl.Contains(SignInPageUrl);
+            var isPasswordTextBoxExistOnCurrentPage =
+                pageActions.IsElementPresent(BaseAmazonPageObjects.LoginPassInput);
+            return isCurrentUrlContainSignInUrl && isPasswordTextBoxExistOnCurrentPage;
         }
 
         /// <summary>
