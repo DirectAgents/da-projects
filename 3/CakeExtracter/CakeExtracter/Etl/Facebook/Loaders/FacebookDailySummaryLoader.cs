@@ -1,18 +1,18 @@
-﻿using CakeExtracter.Common;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using CakeExtracter.Common;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg.Facebook.Daily;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace CakeExtracter.Etl.SocialMarketing.LoadersDAV2
+namespace CakeExtracter.Etl.Facebook.Loaders
 {
     /// <summary>
     /// Facebook Daily summary loader
     /// </summary>
     /// <seealso cref="CakeExtracter.Etl.Loader{DirectAgents.Domain.Entities.CPProg.Facebook.Daily.FbDailySummary}" />
-    public class FacebookDailySummaryLoaderV2 : Loader<FbDailySummary>
+    public class FacebookDailySummaryLoader : Loader<FbDailySummary>
     {
         private readonly DateRange dateRange;
 
@@ -21,11 +21,11 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDAV2
         private List<FbDailySummary> latestSummaries = new List<FbDailySummary>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FacebookDailySummaryLoaderV2"/> class.
+        /// Initializes a new instance of the <see cref="FacebookDailySummaryLoader"/> class.
         /// </summary>
         /// <param name="accountId">The account identifier.</param>
         /// <param name="dateRange">The date range.</param>
-        public FacebookDailySummaryLoaderV2(int accountId, DateRange dateRange)
+        public FacebookDailySummaryLoader(int accountId, DateRange dateRange)
             : base(accountId)
         {
             this.dateRange = dateRange;

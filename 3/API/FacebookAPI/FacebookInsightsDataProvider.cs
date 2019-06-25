@@ -44,10 +44,10 @@ namespace FacebookAPI
             {ConversionActionType.Default, "offsite_conversion"},
         };
 
-        private static readonly Dictionary<Attribution, string> AttributionPostfixNames = new Dictionary<Attribution, string>
+        private static readonly Dictionary<AttributionWindowType, string> AttributionPostfixNames = new Dictionary<AttributionWindowType, string>
         {
-            {Attribution.Click, "click"},
-            {Attribution.View, "view"}
+            {AttributionWindowType.Click, "click"},
+            {AttributionWindowType.View, "view"}
         };
 
         public int? DaysPerCall_Override = null;
@@ -59,8 +59,8 @@ namespace FacebookAPI
         private string campaignFilterValue;
         private string conversionActionType = ActionTypeNames[ConversionActionType.Default];
         private string platformFilter = PlatformFilterNames[PlatformFilter.All];
-        private string clickAttribution = GetAttributionName(Attribution.Click, AttributionWindow.Days28);
-        private string viewAttribution = GetAttributionName(Attribution.View, AttributionWindow.Day1);
+        private string clickAttribution = GetAttributionName(AttributionWindowType.Click, AttributionWindowValue.Days28);
+        private string viewAttribution = GetAttributionName(AttributionWindowType.View, AttributionWindowValue.Day1);
 
         public FacebookInsightsDataProvider(Action<string> logInfo, Action<string> logError)
             : base(logInfo, logError)
@@ -91,17 +91,17 @@ namespace FacebookAPI
             }
         }
 
-        public void SetClickAttributionWindow(AttributionWindow window)
+        public void SetClickAttributionWindow(AttributionWindowValue window)
         {
-            clickAttribution = GetAttributionName(Attribution.Click, window);
+            clickAttribution = GetAttributionName(AttributionWindowType.Click, window);
         }
 
-        public void SetViewAttributionWindow(AttributionWindow window)
+        public void SetViewAttributionWindow(AttributionWindowValue window)
         {
-            viewAttribution = GetAttributionName(Attribution.View, window);
+            viewAttribution = GetAttributionName(AttributionWindowType.View, window);
         }
 
-        private static string GetAttributionName(Attribution attribution, AttributionWindow window)
+        private static string GetAttributionName(AttributionWindowType attribution, AttributionWindowValue window)
         {
             return $"{(int)window}d_{AttributionPostfixNames[attribution]}";
         }

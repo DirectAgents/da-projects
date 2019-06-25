@@ -1,10 +1,10 @@
-﻿using CakeExtracter.Helpers;
+﻿using System.Collections.Generic;
+using System.Linq;
+using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg.Facebook;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace CakeExtracter.Etl.SocialMarketing.LoadersDA.EntitiesLoaders
+namespace CakeExtracter.Etl.Facebook.Loaders.EntitiesLoaders
 {
     /// <summary>
     /// Facebook action types loader.

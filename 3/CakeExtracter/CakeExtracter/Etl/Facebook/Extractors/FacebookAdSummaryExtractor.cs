@@ -9,25 +9,26 @@ using DirectAgents.Domain.Entities.CPProg.Facebook.AdSet;
 using DirectAgents.Domain.Entities.CPProg.Facebook.Campaign;
 using FacebookAPI;
 using FacebookAPI.Entities;
+using FacebookAPI.Entities.AdDataEntities;
 
-namespace CakeExtracter.Etl.SocialMarketing.Extractors.V2
+namespace CakeExtracter.Etl.Facebook.Extractors
 {
     /// <summary>
     /// Facebook ads summary extractor.
     /// </summary>
-    /// <seealso cref="CakeExtracter.Etl.SocialMarketing.Extracters.FacebookApiExtractor{DirectAgents.Domain.Entities.CPProg.Facebook.Ad.FbAdSummary}" />
-    public class FacebookAdSummaryExtractorV2 : FacebookApiExtractorV2<FbAdSummary>
+    /// <seealso cref="SocialMarketing.Extracters.FacebookApiExtractor{FbAdSummary}" />
+    public class FacebookAdSummaryExtractor : FacebookApiExtractor<FbAdSummary>
     {
         private readonly List<AdCreativeData> allAdsMetadata;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FacebookAdSummaryExtractorV2"/> class.
+        /// Initializes a new instance of the <see cref="FacebookAdSummaryExtractor"/> class.
         /// </summary>
         /// <param name="dateRange">The date range.</param>
         /// <param name="account">The account.</param>
         /// <param name="fbUtility">The fb utility.</param>
         /// <param name="allAdsMetadata">All ads metadata.</param>
-        public FacebookAdSummaryExtractorV2(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility,
+        public FacebookAdSummaryExtractor(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility,
             List<AdCreativeData> allAdsMetadata) : base(fbUtility, dateRange, account)
         {
             this.allAdsMetadata = allAdsMetadata;
