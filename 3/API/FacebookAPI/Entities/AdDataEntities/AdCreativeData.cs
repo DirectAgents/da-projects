@@ -1,6 +1,4 @@
-﻿using FacebookAPI.Entities.AdDataEntities;
-
-namespace FacebookAPI.Entities
+﻿namespace FacebookAPI.Entities.AdDataEntities
 {
     /// <summary>
     /// Ad Creative data entity

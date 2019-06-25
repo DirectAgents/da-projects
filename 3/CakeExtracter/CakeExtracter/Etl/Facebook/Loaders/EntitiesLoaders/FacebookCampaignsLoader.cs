@@ -1,9 +1,9 @@
-﻿using CakeExtracter.Helpers;
-using DirectAgents.Domain.Entities.CPProg.Facebook.Campaign;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.Helpers;
+using DirectAgents.Domain.Entities.CPProg.Facebook.Campaign;
 
-namespace CakeExtracter.Etl.SocialMarketing.EntitiesLoaders
+namespace CakeExtracter.Etl.Facebook.Loaders.EntitiesLoaders
 {
     /// <summary>
     /// Facebook Campaigns Loader

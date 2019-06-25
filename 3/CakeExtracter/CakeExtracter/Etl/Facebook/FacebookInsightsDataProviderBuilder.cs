@@ -5,7 +5,7 @@ using DirectAgents.Domain.Entities.CPProg;
 using FacebookAPI;
 using FacebookAPI.Enums;
 
-namespace CakeExtracter.Etl.SocialMarketing
+namespace CakeExtracter.Etl.Facebook
 {
     /// <summary>
     /// Facebook InsightsData Provider Builder.

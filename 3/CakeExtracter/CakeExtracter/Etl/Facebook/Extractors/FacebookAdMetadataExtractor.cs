@@ -4,25 +4,26 @@ using System.Collections.Generic;
 using DirectAgents.Domain.Entities.CPProg;
 using FacebookAPI;
 using FacebookAPI.Entities;
+using FacebookAPI.Entities.AdDataEntities;
 
-namespace CakeExtracter.Etl.SocialMarketing.Extractors.V2
+namespace CakeExtracter.Etl.Facebook.Extractors
 {
     /// <summary>
     /// Facebook ad metadata extractor.
     /// Ad creative data can't be extracted together with ads insights stats. 
     /// Separate call to facebook graph api needed to extract creative's stats.
     /// </summary>
-    public class FacebookAdMetadataExtractorV2
+    public class FacebookAdMetadataExtractor
     {
         private static ConcurrentDictionary<string, object> extIdLocksDictionary = new ConcurrentDictionary<string, object>();
         private static ConcurrentDictionary<string, List<AdCreativeData>> creativesDataDictionary = new ConcurrentDictionary<string, List<AdCreativeData>>();
         private readonly FacebookAdMetadataProvider adMetadataProvider;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FacebookAdMetadataExtractorV2"/> class.
+        /// Initializes a new instance of the <see cref="FacebookAdMetadataExtractor"/> class.
         /// </summary>
         /// <param name="adMetadataProvider">The ad metadata provider.</param>
-        public FacebookAdMetadataExtractorV2(FacebookAdMetadataProvider adMetadataProvider)
+        public FacebookAdMetadataExtractor(FacebookAdMetadataProvider adMetadataProvider)
         {
             this.adMetadataProvider = adMetadataProvider;
         }
