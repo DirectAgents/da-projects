@@ -28,7 +28,7 @@ namespace CakeExtracter.Etl.SocialMarketing
             {"FB_ConversionsAsVideoPlays", ConversionActionType.VideoPlay},
         };
 
-        private readonly Dictionary<AttributionWindowType, Dictionary<string, AttributionWindowValue>> configNamesForAccountsOfWindow =
+        private readonly Dictionary<AttributionWindowType, Dictionary<string, AttributionWindowValue>> attributionWindowConfigurationMappings =
            new Dictionary<AttributionWindowType, Dictionary<string, AttributionWindowValue>>
        {
             {
@@ -123,12 +123,12 @@ namespace CakeExtracter.Etl.SocialMarketing
         private AttributionWindowValue GetAttributionWindow(ExtAccount account, AttributionWindowType attributionWindowType)
         {
             AttributionWindowValue windowValue = 0;
-            foreach (var configName in configNamesForAccountsOfWindow[attributionWindowType])
+            foreach (var configMapping in attributionWindowConfigurationMappings[attributionWindowType])
             {
-                var accounts = ConfigurationHelper.ExtractEnumerableFromConfig(configName.Key);
-                if (accounts.Contains(account.ExternalId))
+                var accounts = ConfigurationHelper.ExtractEnumerableFromConfig(configMapping.Key);
+                if (accounts.Contains(account.Id.ToString()))
                 {
-                    windowValue = configName.Value;
+                    windowValue = configMapping.Value;
                 }
             }
             return windowValue;

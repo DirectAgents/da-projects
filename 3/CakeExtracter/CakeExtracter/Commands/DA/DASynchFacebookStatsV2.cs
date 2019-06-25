@@ -29,12 +29,19 @@ namespace CakeExtracter.Commands
         private FacebookInsightsDataProviderBuilder insightsDataProviderBuilder;
 
         public int? AccountId { get; set; }
+
         public int? CampaignId { get; set; }
+
         public DateTime? StartDate { get; set; }
+
         public DateTime? EndDate { get; set; }
+
         public int? DaysAgoToStart { get; set; }
+
         public string StatsType { get; set; }
+
         public bool DisabledOnly { get; set; }
+
         public int? MinAccountId { get; set; }
 
         public override void ResetProperties()
