@@ -40,21 +40,21 @@ namespace CakeExtracter.Commands
             {"FB_ConversionsAsVideoPlays", ConversionActionType.VideoPlay}
         };
 
-        private readonly Dictionary<Attribution, Dictionary<string, AttributionWindow>> configNamesForAccountsOfWindow =
-            new Dictionary<Attribution, Dictionary<string, AttributionWindow>>
+        private readonly Dictionary<AttributionWindowType, Dictionary<string, AttributionWindowValue>> configNamesForAccountsOfWindow =
+            new Dictionary<AttributionWindowType, Dictionary<string, AttributionWindowValue>>
         {
             {
-                Attribution.Click, new Dictionary<string, AttributionWindow>
+                AttributionWindowType.Click, new Dictionary<string, AttributionWindowValue>
                 {
-                    {"FB_7d_click", AttributionWindow.Days7},
-                    {"FB_28d_click", AttributionWindow.Days28}
+                    {"FB_7d_click", AttributionWindowValue.Days7},
+                    {"FB_28d_click", AttributionWindowValue.Days28}
                 }
             },
             {
-                Attribution.View, new Dictionary<string, AttributionWindow>
+                AttributionWindowType.View, new Dictionary<string, AttributionWindowValue>
                 {
-                    {"FB_7d_view", AttributionWindow.Days7},
-                    {"FB_28d_view", AttributionWindow.Days28}
+                    {"FB_7d_view", AttributionWindowValue.Days7},
+                    {"FB_28d_view", AttributionWindowValue.Days28}
                 }
             }
         };
@@ -279,7 +279,7 @@ namespace CakeExtracter.Commands
 
         private void SetUtilityClickAttributionWindows(FacebookUtility fbUtility, string accountId)
         {
-            var window = GetWindow(accountId, Attribution.Click, ClickWindow);
+            var window = GetWindow(accountId, AttributionWindowType.Click, ClickWindow);
             if (window != 0)
             {
                 fbUtility.SetClickAttributionWindow(window);
@@ -288,19 +288,19 @@ namespace CakeExtracter.Commands
 
         private void SetUtilityViewAttributionWindows(FacebookUtility fbUtility, string accountId)
         {
-            var window = GetWindow(accountId, Attribution.View, ViewWindow);
+            var window = GetWindow(accountId, AttributionWindowType.View, ViewWindow);
             if (window != 0)
             {
                 fbUtility.SetViewAttributionWindow(window);
             }
         }
 
-        private AttributionWindow GetWindow(string accountId, Attribution attribution, int? sourceWindow)
+        private AttributionWindowValue GetWindow(string accountId, AttributionWindowType attribution, int? sourceWindow)
         {
-            AttributionWindow window = 0;
+            AttributionWindowValue window = 0;
             try
             {
-                window = (AttributionWindow)Enum.ToObject(typeof(AttributionWindow), sourceWindow);
+                window = (AttributionWindowValue)Enum.ToObject(typeof(AttributionWindowValue), sourceWindow);
             }
             catch (Exception)
             {

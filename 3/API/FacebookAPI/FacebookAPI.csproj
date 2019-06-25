@@ -65,8 +65,8 @@
     <Compile Include="Entities\AdDataEntities\Creative.cs" />
     <Compile Include="Entities\FBAdPreview.cs" />
     <Compile Include="Entities\FBSummary.cs" />
-    <Compile Include="Enums\Attribution.cs" />
-    <Compile Include="Enums\AttributionWindow.cs" />
+    <Compile Include="Enums\AttributionWindowType.cs" />
+    <Compile Include="Enums\AttributionWindowValue.cs" />
     <Compile Include="Enums\ConversionActionType.cs" />
     <Compile Include="Enums\PlatformFilter.cs" />
     <Compile Include="FacebookAdMetadataProvider.cs" />
