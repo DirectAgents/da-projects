@@ -73,7 +73,7 @@ namespace CakeExtracter.Commands
 
         public DASynchFacebookStats()
         {
-            IsCommand("daSynchFacebookStatsV2", "synch Facebook stats");
+            IsCommand("daSynchFacebookStats", "synch Facebook stats");
             HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
             HasOption<int>("c|campaignId=", "Campaign Id (optional)", c => CampaignId = c);
             HasOption("s|startDate=", "Start Date (default is 'daysAgo')", c => StartDate = DateTime.Parse(c));
