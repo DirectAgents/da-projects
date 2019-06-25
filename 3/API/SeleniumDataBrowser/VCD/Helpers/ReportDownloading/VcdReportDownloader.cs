@@ -31,7 +31,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         private readonly int maxDelayBetweenReportDownloadingInSeconds;
         private readonly int reportDownloadingAttemptCount;
 
-        private readonly AmazonVcdPageActions pageActions;
+        private readonly AmazonVcdActionsWithPagesManager pageActions;
         private readonly AuthorizationModel authorizationModel;
         private readonly VcdAccountInfo accountInfo;
         private readonly SeleniumLogger logger;
@@ -49,7 +49,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         /// <param name="reportDownloadingAttemptCount">Count of attempts downloading reports.</param>
         public VcdReportDownloader(
             VcdAccountInfo accountInfo,
-            AmazonVcdPageActions pageActions,
+            AmazonVcdActionsWithPagesManager pageActions,
             AuthorizationModel authorizationModel,
             SeleniumLogger logger,
             int reportDownloadingStartedDelayInSeconds,

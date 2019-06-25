@@ -4,20 +4,20 @@ using SeleniumDataBrowser.Helpers;
 
 namespace SeleniumDataBrowser.PageActions
 {
-    /// <inheritdoc cref="BasePageActions"/>
+    /// <inheritdoc cref="ActionsWithPagesManager"/>
     /// <summary>
-    /// Class for managing page actions of Amazon portals.
+    /// Class for managing actions for login process with web-pages of Amazon portals.
     /// </summary>
-    public class BaseAmazonPageActions : BasePageActions
+    public class AmazonLoginActionsWithPagesManager : ActionsWithPagesManager
     {
-        /// <inheritdoc cref="BasePageActions"/> />
+        /// <inheritdoc cref="ActionsWithPagesManager"/> />
         /// <summary>
-        /// Initializes a new instance of the <see cref="BaseAmazonPageActions" /> class.
+        /// Initializes a new instance of the <see cref="AmazonLoginActionsWithPagesManager" /> class.
         /// </summary>
         /// <param name="driver">Selenium web driver.</param>
         /// <param name="timeoutMinutes">Number of minutes for waiting of elements.</param>
         /// <param name="logger">Logger for selenium command.</param>
-        public BaseAmazonPageActions(IWebDriver driver, int timeoutMinutes, SeleniumLogger logger)
+        public AmazonLoginActionsWithPagesManager(IWebDriver driver, int timeoutMinutes, SeleniumLogger logger)
             : base(driver, timeoutMinutes, logger)
         {
         }
@@ -99,7 +99,7 @@ namespace SeleniumDataBrowser.PageActions
             }
             Logger.LogWarning("Waiting enter the characters...");
             EnterPassword(password);
-            WaitLoading(AmazonLoginPageObjects.AuthWarningMessageBox, Timeout);
+            WaitLoading(AmazonLoginPageObjects.AuthWarningMessageBox);
         }
 
         private void EnterEmail(string email)
@@ -134,7 +134,7 @@ namespace SeleniumDataBrowser.PageActions
         private void WaitSecurityCode()
         {
             Logger.LogWarning("Waiting the code...");
-            WaitLoading(AmazonLoginPageObjects.CodeInput, Timeout);
+            WaitLoading(AmazonLoginPageObjects.CodeInput);
         }
     }
 }

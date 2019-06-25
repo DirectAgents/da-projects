@@ -6,21 +6,22 @@ using SeleniumDataBrowser.Helpers;
 
 namespace SeleniumDataBrowser.PDA.PageActions
 {
-    /// <inheritdoc cref="BaseAmazonPageActions"/>
+    /// <inheritdoc cref="AmazonLoginActionsWithPagesManager"/>
     /// <summary>
-    /// Class for page actions of Amazon Advertiser Portal for Product Display Ads.
+    /// Class for managing actions with web-pages of Amazon Advertiser Portal for Product Display Ads.
     /// </summary>
-    public class AmazonPdaPageActions : BaseAmazonPageActions
+    public class AmazonPdaActionsWithPagesManager : AmazonLoginActionsWithPagesManager
     {
         private const string HrefAttribute = "href";
 
-        /// <inheritdoc cref="BaseAmazonPageActions"/>
+        /// <inheritdoc cref="AmazonLoginActionsWithPagesManager"/>
         /// <summary>
-        /// Initializes a new instance of the <see cref="AmazonPdaPageActions" /> class.
+        /// Initializes a new instance of the <see cref="AmazonPdaActionsWithPagesManager" /> class.
         /// </summary>
         /// <param name="timeoutMinutes">Number of minutes for waiting of elements.</param>
         /// <param name="isHiddenBrowserWindow">Include hiding the browser window.</param>
-        public AmazonPdaPageActions(int timeoutMinutes, bool isHiddenBrowserWindow, SeleniumLogger logger)
+        /// /// <param name="logger">Selenium data browser logger.</param>
+        public AmazonPdaActionsWithPagesManager(int timeoutMinutes, bool isHiddenBrowserWindow, SeleniumLogger logger)
             : base(new ChromeWebDriver(string.Empty, isHiddenBrowserWindow), timeoutMinutes, logger)
         {
         }

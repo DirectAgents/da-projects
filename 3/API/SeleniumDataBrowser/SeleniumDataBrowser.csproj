@@ -74,8 +74,8 @@
     <Compile Include="Helpers\FileManager.cs" />
     <Compile Include="Helpers\RestRequestHelper.cs" />
     <Compile Include="Helpers\TimeHelper.cs" />
-    <Compile Include="PageActions\BaseAmazonPageActions.cs" />
-    <Compile Include="PageActions\BasePageActions.cs" />
+    <Compile Include="PageActions\AmazonLoginActionsWithPagesManager.cs" />
+    <Compile Include="PageActions\ActionsWithPagesManager.cs" />
     <Compile Include="PDA\Exceptions\AccountDoesNotHaveProfileException.cs" />
     <Compile Include="PDA\Helpers\AmazonCmApiHelper.cs" />
     <Compile Include="PDA\Helpers\PdaLoginHelper.cs" />
@@ -84,7 +84,7 @@
     <Compile Include="PDA\Models\AmazonCmApiCampaignSummary.cs" />
     <Compile Include="PDA\Models\AmazonCmApiParams.cs" />
     <Compile Include="PDA\Models\Filter.cs" />
-    <Compile Include="PDA\PageActions\AmazonPdaPageActions.cs" />
+    <Compile Include="PDA\PageActions\AmazonPdaActionsWithPagesManager.cs" />
     <Compile Include="PDA\PageActions\AmazonPdaPageObjects.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VCD\Helpers\AmazonVcdLoginHelper.cs" />
@@ -98,7 +98,7 @@
     <Compile Include="VCD\Helpers\UserInfoExtracting\Models\PageAccountInfo.cs" />
     <Compile Include="VCD\Helpers\UserInfoExtracting\UserInfoExtracter.cs" />
     <Compile Include="VCD\Models\VcdAccountInfo.cs" />
-    <Compile Include="VCD\PageActions\AmazonVcdPageActions.cs" />
+    <Compile Include="VCD\PageActions\AmazonVcdActionsWithPagesManager.cs" />
     <Compile Include="VCD\PageActions\AmazonVcdPageObjects.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -33,7 +33,7 @@ namespace CakeExtracter.Commands.Selenium
     {
         private VcdAccountsDataProvider accountsDataProvider;
         private AuthorizationModel authorizationModel;
-        private AmazonVcdPageActions pageActionsManager;
+        private AmazonVcdActionsWithPagesManager pageActionsManager;
         private AmazonVcdLoginHelper loginProcessManager;
         private SeleniumLogger loggerWithAccountId;
         private SeleniumLogger loggerWithoutAccountId;
@@ -300,7 +300,7 @@ namespace CakeExtracter.Commands.Selenium
             try
             {
                 var waitPageTimeoutInMinutes = SeleniumCommandConfigurationHelper.GetWaitPageTimeout();
-                pageActionsManager = new AmazonVcdPageActions(waitPageTimeoutInMinutes, loggerWithoutAccountId, IsHidingBrowserWindow);
+                pageActionsManager = new AmazonVcdActionsWithPagesManager(waitPageTimeoutInMinutes, IsHidingBrowserWindow, loggerWithoutAccountId);
             }
             catch (Exception e)
             {

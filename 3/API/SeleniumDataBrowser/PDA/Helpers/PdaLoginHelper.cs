@@ -2,6 +2,7 @@
 using OpenQA.Selenium;
 using SeleniumDataBrowser.Helpers;
 using SeleniumDataBrowser.Models;
+using SeleniumDataBrowser.PageActions;
 using SeleniumDataBrowser.PDA.PageActions;
 
 namespace SeleniumDataBrowser.PDA.Helpers
@@ -14,22 +15,22 @@ namespace SeleniumDataBrowser.PDA.Helpers
         private const string SignInPageUrl = "https://advertising.amazon.com/sign-in";
 
         private readonly AuthorizationModel authorizationModel;
-        private readonly AmazonPdaPageActions pageActionManager;
+        private readonly AmazonPdaActionsWithPagesManager pageActionsManager;
         private readonly SeleniumLogger logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PdaLoginHelper"/> class.
         /// </summary>
         /// <param name="authorizationModel">Authorization settings.</param>
-        /// <param name="pageActionManager">Page actions manager.</param>
+        /// <param name="pageActionsManager">Page actions manager.</param>
         /// <param name="logger">Selenium data browser logger.</param>
         public PdaLoginHelper(
             AuthorizationModel authorizationModel,
-            AmazonPdaPageActions pageActionManager,
+            AmazonPdaActionsWithPagesManager pageActionsManager,
             SeleniumLogger logger)
         {
             this.authorizationModel = authorizationModel;
-            this.pageActionManager = pageActionManager;
+            this.pageActionsManager = pageActionsManager;
             this.logger = logger;
         }
 
@@ -58,23 +59,23 @@ namespace SeleniumDataBrowser.PDA.Helpers
         /// <param name="waitElement">Web element that the method will wait for after logging in.</param>
         public void RepeatPasswordForLogin(string password, By waitElement = null)
         {
-            pageActionManager.LoginWithPasswordAndWaiting(password, waitElement);
+            pageActionsManager.LoginWithPasswordAndWaiting(password, waitElement);
         }
 
         private void LoginWithoutCookie()
         {
-            pageActionManager.NavigateToUrl(SignInPageUrl, AmazonPdaPageObjects.ForgotPassLink);
-            pageActionManager.LoginProcess(authorizationModel.Login, authorizationModel.Password);
-            var cookies = pageActionManager.GetAllCookies();
+            pageActionsManager.NavigateToUrl(SignInPageUrl, AmazonLoginPageObjects.ForgotPassLink);
+            pageActionsManager.LoginProcess(authorizationModel.Login, authorizationModel.Password);
+            var cookies = pageActionsManager.GetAllCookies();
             CookieManager.SaveCookiesToFiles(cookies, authorizationModel.CookiesDir);
         }
 
         private void LoginWithCookie()
         {
-            pageActionManager.NavigateToUrl(SignInPageUrl);
+            pageActionsManager.NavigateToUrl(SignInPageUrl);
             foreach (var cookie in authorizationModel.Cookies)
             {
-                pageActionManager.SetCookie(cookie);
+                pageActionsManager.SetCookie(cookie);
             }
         }
     }

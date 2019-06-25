@@ -9,26 +9,32 @@ using SeleniumDataBrowser.Helpers;
 namespace SeleniumDataBrowser.PageActions
 {
     /// <summary>
-    /// Basic class for managing page actions.
+    /// Basic class for managing actions with web-pages.
     /// </summary>
-    public class BasePageActions
+    public class ActionsWithPagesManager
     {
         /// <summary>
         /// Logger for logging actions. Can be modified externally.
         /// </summary>
         public SeleniumLogger Logger;
 
-        protected readonly TimeSpan Timeout;
-
+        /// <summary>
+        /// Selenium web-driver.
+        /// </summary>
         protected readonly IWebDriver Driver;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BasePageActions"/> class.
+        /// Timeout that web driver will wait for web-elements (configurable).
+        /// </summary>
+        protected readonly TimeSpan Timeout;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ActionsWithPagesManager"/> class.
         /// </summary>
         /// <param name="driver">Selenium web driver.</param>
         /// <param name="timeoutMinutes">Number of minutes for waiting of elements.</param>
         /// <param name="logger">Selenium logger.</param>
-        public BasePageActions(IWebDriver driver, int timeoutMinutes, SeleniumLogger logger)
+        public ActionsWithPagesManager(IWebDriver driver, int timeoutMinutes, SeleniumLogger logger)
         {
             Driver = driver;
             Timeout = TimeSpan.FromMinutes(timeoutMinutes);
@@ -36,41 +42,66 @@ namespace SeleniumDataBrowser.PageActions
         }
 
         /// <summary>
-        /// Finalizes an instance of the <see cref="BasePageActions"/> class.
+        /// Finalizes an instance of the <see cref="ActionsWithPagesManager"/> class.
         /// For closing the web driver.
         /// </summary>
-        ~BasePageActions()
+        ~ActionsWithPagesManager()
         {
             CloseWebDriver();
         }
 
+        /// <summary>
+        /// Gets the collection of cookies that web-driver uses.
+        /// </summary>
+        /// <returns>Collection of current cookies.</returns>
         public IEnumerable<Cookie> GetAllCookies()
         {
             var options = Driver.Manage();
             return options.Cookies.AllCookies;
         }
 
-        public bool SetCookie(Cookie cookie)
+        /// <summary>
+        /// Sets cookies to web-driver.
+        /// </summary>
+        /// <param name="cookie">Cookies that needs to set.</param>
+        public void SetCookie(Cookie cookie)
         {
             try
             {
                 var options = Driver.Manage();
                 options.Cookies.AddCookie(cookie);
-                return true;
             }
             catch (Exception e)
             {
                 Logger.LogWarning(e.Message);
-                return false;
             }
         }
 
+        /// <summary>
+        /// Navigates to a web-page by the specified URL
+        /// and waits for the specified web-element until it becomes clickable.
+        /// </summary>
+        /// <param name="url">URL of the web-page.</param>
+        /// <param name="waitingElement">Web-element.</param>
         public void NavigateToUrl(string url, By waitingElement)
         {
             Logger.LogInfo($"Go to URL [{url}]...");
-            NavigateToUrl(url, waitingElement, Timeout);
+            try
+            {
+                var navigation = Driver.Navigate();
+                navigation.GoToUrl(url);
+                WaitElementClickable(waitingElement);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Could not navigate to URL [{url}]: {e.Message}", e);
+            }
         }
 
+        /// <summary>
+        /// Navigates to a web-page by specified URL.
+        /// </summary>
+        /// <param name="url">URL of the web-page.</param>
         public void NavigateToUrl(string url)
         {
             try
@@ -84,6 +115,11 @@ namespace SeleniumDataBrowser.PageActions
             }
         }
 
+        /// <summary>
+        /// Indicates whether specified web-element is present.
+        /// </summary>
+        /// <param name="byElement">Web-element.</param>
+        /// <returns>True / False.</returns>
         public bool IsElementPresent(By byElement)
         {
             try
@@ -96,11 +132,20 @@ namespace SeleniumDataBrowser.PageActions
             }
         }
 
+        /// <summary>
+        /// Gets the current URL from web-driver.
+        /// </summary>
+        /// <returns>URL.</returns>
         public string GetCurrentWindowUrl()
         {
             return Driver.Url;
         }
 
+        /// <summary>
+        /// Enters the specified characters in the specified web-element.
+        /// </summary>
+        /// <param name="byElement">Web-element.</param>
+        /// <param name="keys">Characters.</param>
         protected void SendKeys(By byElement, string keys)
         {
             try
@@ -114,6 +159,12 @@ namespace SeleniumDataBrowser.PageActions
             }
         }
 
+        /// <summary>
+        /// Gets a collection of children web-element from the parent web-element.
+        /// </summary>
+        /// <param name="parentElem">Way to find the parent web-element.</param>
+        /// <param name="childElem">Way to find children web-elements.</param>
+        /// <returns>Child web-element.</returns>
         protected ReadOnlyCollection<IWebElement> GetChildrenElements(By parentElem, By childElem)
         {
             try
@@ -128,6 +179,12 @@ namespace SeleniumDataBrowser.PageActions
             }
         }
 
+        /// <summary>
+        /// Gets the child web-element from the parent web-element.
+        /// </summary>
+        /// <param name="parentElem">Parent web-element.</param>
+        /// <param name="childElem">Way to find a child web-element.</param>
+        /// <returns>Child web-element.</returns>
         protected IWebElement GetChildElement(IWebElement parentElem, By childElem)
         {
             try
@@ -140,6 +197,10 @@ namespace SeleniumDataBrowser.PageActions
             }
         }
 
+        /// <summary>
+        /// Clicks on the specified web-element.
+        /// </summary>
+        /// <param name="byElement">Web-element.</param>
         protected void ClickElement(By byElement)
         {
             try
@@ -153,6 +214,10 @@ namespace SeleniumDataBrowser.PageActions
             }
         }
 
+        /// <summary>
+        /// Moves to the specified web-element and clicks on it.
+        /// </summary>
+        /// <param name="byElement">Web-element.</param>
         protected void MoveToElementAndClick(By byElement)
         {
             try
@@ -167,6 +232,10 @@ namespace SeleniumDataBrowser.PageActions
             }
         }
 
+        /// <summary>
+        /// Waits for the specified web-element until it becomes clickable.
+        /// </summary>
+        /// <param name="element">Web-element.</param>
         protected void WaitElementClickable(By element)
         {
             try
@@ -180,11 +249,16 @@ namespace SeleniumDataBrowser.PageActions
             }
         }
 
-        protected void WaitLoading(By loaderElement, TimeSpan waitCount, bool isElementExistInDOM = false)
+        /// <summary>
+        /// Waits until the specified loader web-element becomes present or visible.
+        /// </summary>
+        /// <param name="loaderElement">Loader web-element.</param>
+        /// <param name="isElementExistInDOM">Indicates whether the web-element will be present or visible.</param>
+        protected void WaitLoading(By loaderElement, bool isElementExistInDOM = false)
         {
             try
             {
-                var wait = new WebDriverWait(Driver, waitCount);
+                var wait = new WebDriverWait(Driver, Timeout);
                 wait.Until(driver => IsElementPresent(loaderElement));
                 if (isElementExistInDOM)
                 {
@@ -206,20 +280,6 @@ namespace SeleniumDataBrowser.PageActions
             Driver.Quit();
         }
 
-        private void NavigateToUrl(string url, By waitingElement, TimeSpan timeout)
-        {
-            try
-            {
-                var navigation = Driver.Navigate();
-                navigation.GoToUrl(url);
-                WaitElementClickable(waitingElement);
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"Could not navigate to URL [{url}]: {e.Message}", e);
-            }
-        }
-
         private bool IsElementVisible(By byElement)
         {
             try
@@ -227,7 +287,7 @@ namespace SeleniumDataBrowser.PageActions
                 var element = Driver.FindElement(byElement);
                 return element.Displayed;
             }
-            catch (NoSuchElementException exc)
+            catch (NoSuchElementException)
             {
                 return false;
             }
@@ -245,7 +305,7 @@ namespace SeleniumDataBrowser.PageActions
                 var element = Driver.FindElement(byElement);
                 return element.Displayed && element.Enabled;
             }
-            catch (NoSuchElementException exc)
+            catch (NoSuchElementException)
             {
                 return false;
             }

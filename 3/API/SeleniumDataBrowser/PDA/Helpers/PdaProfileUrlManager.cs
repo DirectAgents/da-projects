@@ -5,6 +5,7 @@ using SeleniumDataBrowser.Models;
 using SeleniumDataBrowser.PDA.PageActions;
 using Polly;
 using SeleniumDataBrowser.Helpers;
+using SeleniumDataBrowser.PageActions;
 
 namespace SeleniumDataBrowser.PDA.Helpers
 {
@@ -21,7 +22,7 @@ namespace SeleniumDataBrowser.PDA.Helpers
         public Dictionary<string, string> AvailableProfileUrls;
 
         private readonly AuthorizationModel authorizationModel;
-        private readonly AmazonPdaPageActions pageActionManager;
+        private readonly AmazonPdaActionsWithPagesManager pageActionsManager;
         private readonly PdaLoginHelper loginProcessManager;
         private readonly int maxRetryAttempts;
         private readonly TimeSpan pauseBetweenAttempts;
@@ -31,21 +32,21 @@ namespace SeleniumDataBrowser.PDA.Helpers
         /// Initializes a new instance of the <see cref="PdaProfileUrlManager"/> class.
         /// </summary>
         /// <param name="authorizationModel">Authorization settings.</param>
-        /// <param name="pageActionManager">Manager of page actions.</param>
+        /// <param name="pageActionsManager">Manager of page actions.</param>
         /// <param name="loginProcessManager">Manager of login process.</param>
         /// <param name="maxRetryAttempts">Max number of retry attempts.</param>
         /// <param name="pauseBetweenAttempts">Time interval for pause between attempts.</param>
         /// <param name="logger">Selenium data browser logger.</param>
         public PdaProfileUrlManager(
             AuthorizationModel authorizationModel,
-            AmazonPdaPageActions pageActionManager,
+            AmazonPdaActionsWithPagesManager pageActionsManager,
             PdaLoginHelper loginProcessManager,
             int maxRetryAttempts,
             TimeSpan pauseBetweenAttempts,
             SeleniumLogger logger)
         {
             this.authorizationModel = authorizationModel;
-            this.pageActionManager = pageActionManager;
+            this.pageActionsManager = pageActionsManager;
             this.loginProcessManager = loginProcessManager;
             this.maxRetryAttempts = maxRetryAttempts;
             this.pauseBetweenAttempts = pauseBetweenAttempts;
@@ -66,10 +67,10 @@ namespace SeleniumDataBrowser.PDA.Helpers
 
         private void GoToPortalMainPage()
         {
-            pageActionManager.NavigateToUrl(CampaignPageUrl, AmazonPdaPageObjects.FilterByButton);
+            pageActionsManager.NavigateToUrl(CampaignPageUrl, AmazonPdaPageObjects.FilterByButton);
 
-            if (!pageActionManager.IsElementPresent(AmazonPdaPageObjects.FilterByButton)
-                && pageActionManager.IsElementPresent(AmazonPdaPageObjects.LoginPassInput))
+            if (!pageActionsManager.IsElementPresent(AmazonPdaPageObjects.FilterByButton)
+                && pageActionsManager.IsElementPresent(AmazonLoginPageObjects.LoginPassInput))
             {
                 // need to repeat the password
                 loginProcessManager.RepeatPasswordForLogin(authorizationModel.Password, AmazonPdaPageObjects.FilterByButton);
@@ -81,7 +82,7 @@ namespace SeleniumDataBrowser.PDA.Helpers
             return Policy
                 .Handle<Exception>()
                 .WaitAndRetry(maxRetryAttempts, i => pauseBetweenAttempts)
-                .Execute(pageActionManager.GetAvailableProfileUrls);
+                .Execute(pageActionsManager.GetAvailableProfileUrls);
         }
     }
 }

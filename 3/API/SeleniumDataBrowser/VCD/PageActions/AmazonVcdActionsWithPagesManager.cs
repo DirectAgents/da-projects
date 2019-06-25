@@ -9,19 +9,23 @@ using SeleniumDataBrowser.VCD.Helpers;
 
 namespace SeleniumDataBrowser.VCD.PageActions
 {
+    /// <inheritdoc cref="AmazonLoginActionsWithPagesManager"/>
     /// <summary>
-    /// Selenium VCD page action manager.
+    /// Class for managing actions with web-pages of Amazon Vendor Central Portal.
     /// </summary>
-    /// <seealso cref="BaseAmazonPageActions" />
-    public class AmazonVcdPageActions : BaseAmazonPageActions
+    public class AmazonVcdActionsWithPagesManager : AmazonLoginActionsWithPagesManager
     {
         private const string SalesDiagnosticPageUrl = "https://ara.amazon.com/analytics/dashboard/salesDiagnostic";
         private const string TypeOfAccounts = "premium";
 
+        /// <inheritdoc cref="AmazonLoginActionsWithPagesManager"/>
         /// <summary>
-        /// Initializes a new instance of the <see cref="AmazonVcdPageActions"/> class.
+        /// Initializes a new instance of the <see cref="AmazonVcdActionsWithPagesManager" /> class.
         /// </summary>
-        public AmazonVcdPageActions(int waitPageTimeoutInMinutes, SeleniumLogger logger, bool isHidingBrowserWindow)
+        /// <param name="waitPageTimeoutInMinutes">Number of minutes the web-driver will wait for web-elements.</param>
+        /// <param name="isHidingBrowserWindow">Indicates whether to hide the browser window.</param>
+        /// <param name="logger">Selenium data browser logger.</param>
+        public AmazonVcdActionsWithPagesManager(int waitPageTimeoutInMinutes, bool isHidingBrowserWindow, SeleniumLogger logger)
             : base(new ChromeWebDriver(string.Empty, isHidingBrowserWindow), waitPageTimeoutInMinutes, logger)
         {
         }
@@ -73,9 +77,9 @@ namespace SeleniumDataBrowser.VCD.PageActions
         }
 
         /// <summary>
-        /// Selects the account on page from account dromdown on top right side of page.
+        /// Selects the account on page from account dropdown on top right side of page.
         /// </summary>
-        /// <param name="account">The account.</param>
+        /// <param name="accountName">Name of the account.</param>
         public void SelectAccountOnPage(string accountName)
         {
             try

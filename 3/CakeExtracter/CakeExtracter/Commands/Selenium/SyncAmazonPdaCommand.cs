@@ -34,7 +34,7 @@ namespace CakeExtracter.Commands.Selenium
         private const int DefaultDaysAgo = 41;
 
         private AuthorizationModel authorizationModel;
-        private AmazonPdaPageActions pageActionsManager;
+        private AmazonPdaActionsWithPagesManager pageActionsManager;
         private PdaLoginHelper loginProcessManager;
         private PdaProfileUrlManager profileUrlManager;
         private int maxRetryAttempts;
@@ -203,7 +203,7 @@ namespace CakeExtracter.Commands.Selenium
             try
             {
                 var timeoutInMinutes = SeleniumCommandConfigurationHelper.GetWaitPageTimeout();
-                pageActionsManager = new AmazonPdaPageActions(timeoutInMinutes, IsHidingBrowserWindow, loggerWithoutAccountId);
+                pageActionsManager = new AmazonPdaActionsWithPagesManager(timeoutInMinutes, IsHidingBrowserWindow, loggerWithoutAccountId);
             }
             catch (Exception e)
             {

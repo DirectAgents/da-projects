@@ -15,7 +15,7 @@ namespace SeleniumDataBrowser.VCD.Helpers
         private const string SignInPageUrl = "https://www.amazon.com/ap/signin";
 
         private readonly AuthorizationModel authorizationModel;
-        private readonly AmazonVcdPageActions pageActionManager;
+        private readonly AmazonVcdActionsWithPagesManager pageActionManager;
         private readonly SeleniumLogger logger;
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace SeleniumDataBrowser.VCD.Helpers
         /// <param name="logger">Selenium data browser logger.</param>
         public AmazonVcdLoginHelper(
             AuthorizationModel authorizationModel,
-            AmazonVcdPageActions pageActionManager,
+            AmazonVcdActionsWithPagesManager pageActionManager,
             SeleniumLogger logger)
         {
             this.authorizationModel = authorizationModel;
@@ -39,7 +39,7 @@ namespace SeleniumDataBrowser.VCD.Helpers
         /// </summary>
         /// <param name="pageActions">Manager of page actions.</param>
         /// <returns>True / False.</returns>
-        public static bool NeedRepeatPassword(BaseAmazonPageActions pageActions)
+        public static bool NeedRepeatPassword(AmazonLoginActionsWithPagesManager pageActions)
         {
             var currentUrl = pageActions.GetCurrentWindowUrl();
             var isCurrentUrlContainSignInUrl = currentUrl.Contains(SignInPageUrl);
@@ -53,7 +53,7 @@ namespace SeleniumDataBrowser.VCD.Helpers
         /// </summary>
         /// <param name="pageActions">Manager of page actions.</param>
         /// <param name="authModel">Authorization settings.</param>
-        public static void RepeatPassword(BaseAmazonPageActions pageActions, AuthorizationModel authModel)
+        public static void RepeatPassword(AmazonLoginActionsWithPagesManager pageActions, AuthorizationModel authModel)
         {
             pageActions.LoginWithPassword(authModel.Password);
         }
@@ -70,13 +70,13 @@ namespace SeleniumDataBrowser.VCD.Helpers
             }
         }
 
-        private static bool IsLoginProcessNeeded(AuthorizationModel authorizationModel, AmazonVcdPageActions pageManager)
+        private static bool IsLoginProcessNeeded(AuthorizationModel authorizationModel, AmazonVcdActionsWithPagesManager pageManager)
         {
             var currentUrl = pageManager.GetCurrentWindowUrl();
             return currentUrl.IndexOf(authorizationModel.SignInUrl, StringComparison.Ordinal) <= 0;
         }
 
-        private static void LoginWithoutCookie(AuthorizationModel authModel, BaseAmazonPageActions pageManager)
+        private static void LoginWithoutCookie(AuthorizationModel authModel, AmazonLoginActionsWithPagesManager pageManager)
         {
             pageManager.NavigateToUrl(authModel.SignInUrl, AmazonLoginPageObjects.ForgotPassLink);
             pageManager.LoginProcess(authModel.Login, authModel.Password);
@@ -84,7 +84,7 @@ namespace SeleniumDataBrowser.VCD.Helpers
             CookieManager.SaveCookiesToFiles(cookies, authModel.CookiesDir);
         }
 
-        private static void LoginWithCookie(AuthorizationModel authModel, BaseAmazonPageActions pageManager)
+        private static void LoginWithCookie(AuthorizationModel authModel, AmazonLoginActionsWithPagesManager pageManager)
         {
             pageManager.NavigateToUrl(authModel.SignInUrl);
             foreach (var cookie in authModel.Cookies)
@@ -93,7 +93,7 @@ namespace SeleniumDataBrowser.VCD.Helpers
             }
         }
 
-        private void Login(AuthorizationModel authorizationModel, AmazonVcdPageActions pageManager)
+        private void Login(AuthorizationModel authorizationModel, AmazonVcdActionsWithPagesManager pageManager)
         {
             authorizationModel.Cookies = CookieManager.GetCookiesFromFiles(authorizationModel.CookiesDir);
             var cookiesExist = authorizationModel.Cookies.Any();

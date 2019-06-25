@@ -12,6 +12,7 @@ using SeleniumDataBrowser.PDA.PageActions;
 using SeleniumDataBrowser.PDA.Exceptions;
 using Polly;
 using RestSharp;
+using SeleniumDataBrowser.PageActions;
 
 namespace SeleniumDataBrowser.PDA
 {
@@ -35,7 +36,7 @@ namespace SeleniumDataBrowser.PDA
         /// </summary>
         /// <param name="accountName">Name of current account.</param>
         /// <param name="authorizationModel">Authorization settings.</param>
-        /// <param name="pageActionManager">Page actions manager.</param>
+        /// <param name="pageActionsManager">Page actions manager.</param>
         /// <param name="profileUrlManager">Profile URLs manager.</param>
         /// <param name="maxRetryAttempts">Max number of retry attempts.</param>
         /// <param name="pauseBetweenAttempts">Time interval for pause between attempts.</param>
@@ -43,7 +44,7 @@ namespace SeleniumDataBrowser.PDA
         public AmazonConsoleManagerUtility(
             string accountName,
             AuthorizationModel authorizationModel,
-            AmazonPdaPageActions pageActionManager,
+            ActionsWithPagesManager pageActionsManager,
             PdaProfileUrlManager profileUrlManager,
             int maxRetryAttempts,
             TimeSpan pauseBetweenAttempts,
@@ -56,7 +57,7 @@ namespace SeleniumDataBrowser.PDA
             this.pauseBetweenAttempts = pauseBetweenAttempts;
             this.logger = logger;
 
-            this.cookies = pageActionManager.GetAllCookies().ToDictionary(x => x.Name, x => x.Value);
+            cookies = pageActionsManager.GetAllCookies().ToDictionary(x => x.Name, x => x.Value);
         }
 
         /// <summary>

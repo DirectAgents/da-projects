@@ -8,7 +8,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.UserInfoExtracting
     {
         //in current implementation account inf like msId and vendor group is configurable values.
         //in future this data can be extracted from page usin selenium or from database
-        public PageUserInfo ExtractUserInfo(AmazonVcdPageActions pageActions)
+        public PageUserInfo ExtractUserInfo(AmazonVcdActionsWithPagesManager pageActions)
         {
             var userInfoJson = pageActions.GetUserInfoJson();
             return JsonConvert.DeserializeObject<PageUserInfo>(userInfoJson);
