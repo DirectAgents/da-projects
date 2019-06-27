@@ -116,7 +116,8 @@ namespace CakeExtracter.Commands.Selenium
             var commandsGroupedByProfile = commands.GroupBy(x => (x.Command as SyncAmazonVcdCommand)?.ProfileNumber);
             foreach (var commandsGroup in commandsGroupedByProfile)
             {
-                broadCommands.AddRange(commandsGroup);
+                var profileLevelBroadCommands = GetUniqueBroadProfileLevelCommands(commandsGroup);
+                broadCommands.AddRange(profileLevelBroadCommands);
             }
             return broadCommands;
         }
@@ -378,6 +379,38 @@ namespace CakeExtracter.Commands.Selenium
                 x => Logger.Info(accountId, x),
                 exc => Logger.Error(accountId, exc),
                 x => Logger.Warn(accountId, x));
+        }
+
+        private IEnumerable<CommandWithSchedule> GetUniqueBroadProfileLevelCommands(IEnumerable<CommandWithSchedule> commandsWithSchedule)
+        {
+            var profileLevelCommands = new List<Tuple<SyncAmazonVcdCommand, DateRange, CommandWithSchedule>>();
+            foreach (var commandWithSchedule in commandsWithSchedule)
+            {
+                var command = (SyncAmazonVcdCommand)commandWithSchedule.Command;
+                var commandDateRange = CommandHelper.GetDateRange(command.StartDate, command.EndDate, command.DaysAgoToStart, DefaultDaysAgo);
+                var crossCommands = profileLevelCommands.Where(x => commandDateRange.IsCrossDateRange(x.Item2)).ToList();
+                foreach (var crossCommand in crossCommands)
+                {
+                    commandDateRange = commandDateRange.MergeDateRange(crossCommand.Item2);
+                    commandWithSchedule.ScheduledTime =
+                        crossCommand.Item3.ScheduledTime > commandWithSchedule.ScheduledTime
+                            ? crossCommand.Item3.ScheduledTime
+                            : commandWithSchedule.ScheduledTime;
+                    profileLevelCommands.Remove(crossCommand);
+                }
+                profileLevelCommands.Add(new Tuple<SyncAmazonVcdCommand, DateRange, CommandWithSchedule>(command, commandDateRange, commandWithSchedule));
+            }
+            var broadCommands = profileLevelCommands.Select(GetCommandWithCorrectDateRange).ToList();
+            return broadCommands;
+        }
+
+        private CommandWithSchedule GetCommandWithCorrectDateRange(Tuple<SyncAmazonVcdCommand, DateRange, CommandWithSchedule> setting)
+        {
+            setting.Item1.StartDate = setting.Item2.FromDate;
+            setting.Item1.EndDate = setting.Item2.ToDate;
+            setting.Item1.DaysAgoToStart = null;
+            setting.Item3.Command = setting.Item1;
+            return setting.Item3;
         }
     }
 }

@@ -20,7 +20,6 @@ using CakeExtracter.Logging.TimeWatchers;
 using CakeExtracter.Logging.TimeWatchers.Amazon;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Entities.CPProg;
-using Ninject.Parameters;
 
 namespace CakeExtracter.Commands
 {
