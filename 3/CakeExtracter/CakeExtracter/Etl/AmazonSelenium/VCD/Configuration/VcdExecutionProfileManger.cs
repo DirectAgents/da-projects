@@ -69,7 +69,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Configuration
 
         private VcdExecutionProfileConfiguration ExtractExecutionProfileConfigurationByNumber(int profileNumber)
         {
-            var profileConfigFilePath = FileManager.GetAssemblyRelativePath($"VcdExecutionProfiles\\Profile_{profileNumber}.json");
+            var profileConfigFilePath = PathToFileDirectoryHelper.GetAssemblyRelativePath($"VcdExecutionProfiles\\Profile_{profileNumber}.json");
             var configFileContentJson = File.ReadAllText(profileConfigFilePath);
             var executionProfileConfiguration = JsonConvert.DeserializeObject<VcdExecutionProfileConfiguration>(configFileContentJson);
             return executionProfileConfiguration;

@@ -5,7 +5,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.Configuration
     /// <summary>
     /// Selenium commands configuration helper. Prepare config values for using in application.
     /// </summary>
-    internal class SeleniumCommandConfigurationHelper
+    internal class SeleniumCommandConfigurationManager
     {
         private const string WaitPageTimeoutConfigurationKey = "SeleniumWaitPageTimeoutInMinutes";
 

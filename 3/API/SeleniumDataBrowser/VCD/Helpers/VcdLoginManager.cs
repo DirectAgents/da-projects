@@ -10,7 +10,7 @@ namespace SeleniumDataBrowser.VCD.Helpers
     /// <summary>
     /// Helper for VCD login process.
     /// </summary>
-    public class AmazonVcdLoginHelper
+    public class VcdLoginManager
     {
         private const string SignInPageUrl = "https://www.amazon.com/ap/signin";
 
@@ -19,12 +19,12 @@ namespace SeleniumDataBrowser.VCD.Helpers
         private readonly SeleniumLogger logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AmazonVcdLoginHelper"/> class.
+        /// Initializes a new instance of the <see cref="VcdLoginManager"/> class.
         /// </summary>
         /// <param name="authorizationModel">Authorization settings.</param>
         /// <param name="pageActionManager">Manager of page actions.</param>
         /// <param name="logger">Selenium data browser logger.</param>
-        public AmazonVcdLoginHelper(
+        public VcdLoginManager(
             AuthorizationModel authorizationModel,
             AmazonVcdActionsWithPagesManager pageActionManager,
             SeleniumLogger logger)
@@ -82,7 +82,7 @@ namespace SeleniumDataBrowser.VCD.Helpers
             pageActionManager.NavigateToUrl(authorizationModel.SignInUrl, AmazonLoginPageObjects.ForgotPassLink);
             pageActionManager.LoginProcess(authorizationModel.Login, authorizationModel.Password);
             var cookies = pageActionManager.GetAllCookies();
-            CookieManager.SaveCookiesToFiles(cookies, authorizationModel.CookiesDir);
+            SeleniumCookieHelper.SaveCookiesToFiles(cookies, authorizationModel.CookiesDir);
         }
 
         private void LoginWithCookie()
@@ -96,7 +96,7 @@ namespace SeleniumDataBrowser.VCD.Helpers
 
         private void Login()
         {
-            authorizationModel.Cookies = CookieManager.GetCookiesFromFiles(authorizationModel.CookiesDir);
+            authorizationModel.Cookies = SeleniumCookieHelper.GetCookiesFromFiles(authorizationModel.CookiesDir);
             var cookiesExist = authorizationModel.Cookies.Any();
             logger.LogInfo($"Login into the portal{(cookiesExist ? string.Empty : " without")} using cookies.");
             if (cookiesExist)

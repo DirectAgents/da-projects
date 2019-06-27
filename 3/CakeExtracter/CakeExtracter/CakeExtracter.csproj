@@ -491,8 +491,8 @@
     <Compile Include="Common\StorageCollection.cs" />
     <Compile Include="Common\TextUtils.cs" />
     <Compile Include="Common\DIKernel.cs" />
-    <Compile Include="Etl\AmazonSelenium\Configuration\SeleniumCommandConfigurationHelper.cs" />
-    <Compile Include="Etl\AmazonSelenium\PDA\Configuration\PdaCommandConfigurationHelper.cs" />
+    <Compile Include="Etl\AmazonSelenium\Configuration\SeleniumCommandConfigurationManager.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Configuration\PdaCommandConfigurationManager.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Enums\AmazonCmApiMetrics.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Enums\AmazonReportMetrics.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Extractors\AmazonPdaCampaignRequestExtractor.cs" />
@@ -518,7 +518,7 @@
     <Compile Include="Etl\AmazonSelenium\VCD\Configuration\Models\VcdExecutionProfileConfiguration.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Models\VcdReportData.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Configuration\VcdAccountsDataProvider.cs" />
-    <Compile Include="Etl\AmazonSelenium\VCD\Configuration\VcdCommandConfigurationHelper.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Configuration\VcdCommandConfigurationManager.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Configuration\VcdExecutionProfileManger.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Synchers\VcdAnalyticTablesSyncher.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportDataComposer\VcdReportComposer.cs" />

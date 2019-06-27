@@ -10,7 +10,7 @@ namespace SeleniumDataBrowser.Helpers
     /// <summary>
     /// Selenium helper for working with browser cookies.
     /// </summary>
-    public class CookieManager
+    public class SeleniumCookieHelper
     {
         private const string CookieFileNameTemplate = "Cookie_{0}.json";
 
@@ -26,7 +26,7 @@ namespace SeleniumDataBrowser.Helpers
             foreach (var cookie in cookies)
             {
                 var cookieFileName = string.Format(CookieFileNameTemplate, startNumberCookieFile++);
-                var cookieFilePath = FileManager.CombinePath(directoryName, cookieFileName);
+                var cookieFilePath = PathToFileDirectoryHelper.CombinePath(directoryName, cookieFileName);
                 SaveCookieToFile(cookie, cookieFilePath);
             }
         }

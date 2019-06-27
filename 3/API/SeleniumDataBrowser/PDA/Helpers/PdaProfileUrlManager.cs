@@ -23,7 +23,7 @@ namespace SeleniumDataBrowser.PDA.Helpers
 
         private readonly AuthorizationModel authorizationModel;
         private readonly AmazonPdaActionsWithPagesManager pageActionsManager;
-        private readonly PdaLoginHelper loginProcessManager;
+        private readonly PdaLoginManager loginProcessManager;
         private readonly int maxRetryAttempts;
         private readonly TimeSpan pauseBetweenAttempts;
         private readonly SeleniumLogger logger;
@@ -40,7 +40,7 @@ namespace SeleniumDataBrowser.PDA.Helpers
         public PdaProfileUrlManager(
             AuthorizationModel authorizationModel,
             AmazonPdaActionsWithPagesManager pageActionsManager,
-            PdaLoginHelper loginProcessManager,
+            PdaLoginManager loginProcessManager,
             int maxRetryAttempts,
             TimeSpan pauseBetweenAttempts,
             SeleniumLogger logger)

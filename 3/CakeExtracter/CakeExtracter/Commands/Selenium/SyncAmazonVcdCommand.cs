@@ -34,7 +34,7 @@ namespace CakeExtracter.Commands.Selenium
         private VcdAccountsDataProvider accountsDataProvider;
         private AuthorizationModel authorizationModel;
         private AmazonVcdActionsWithPagesManager pageActionsManager;
-        private AmazonVcdLoginHelper loginProcessManager;
+        private VcdLoginManager loginProcessManager;
         private SeleniumLogger loggerWithAccountId;
         private SeleniumLogger loggerWithoutAccountId;
 
@@ -112,7 +112,7 @@ namespace CakeExtracter.Commands.Selenium
         private void RunEtls()
         {
             pageActionsManager.RefreshSalesDiagnosticPage(authorizationModel);
-            var dateRanges = VcdCommandConfigurationHelper.GetDateRangesToProcess();
+            var dateRanges = VcdCommandConfigurationManager.GetDateRangesToProcess();
             var accountsData = GetAccountsData();
             dateRanges.ForEach(d => RunForDateRange(d, accountsData));
         }
@@ -233,7 +233,7 @@ namespace CakeExtracter.Commands.Selenium
             {
                 CommandExecutionContext.Current.SetJobExecutionStateInHistory("Sync analytic table data.", accountId);
                 Logger.Info(accountId, "Sync analytic table data.");
-                var syncScriptPath = VcdCommandConfigurationHelper.GetSyncScriptPath();
+                var syncScriptPath = VcdCommandConfigurationManager.GetSyncScriptPath();
                 var vcdTablesSyncher = new VcdAnalyticTablesSyncher(syncScriptPath);
                 vcdTablesSyncher.SyncData(accountId);
             }
@@ -258,7 +258,7 @@ namespace CakeExtracter.Commands.Selenium
         private void SetFieldsFromConfig()
         {
             IntervalBetweenUnsuccessfulAndNewRequestInMinutes =
-                VcdCommandConfigurationHelper.GetIntervalBetweenUnsuccessfulAndNewRequest();
+                VcdCommandConfigurationManager.GetIntervalBetweenUnsuccessfulAndNewRequest();
         }
 
         private void LoginProcess()
@@ -294,7 +294,7 @@ namespace CakeExtracter.Commands.Selenium
         {
             try
             {
-                var waitPageTimeoutInMinutes = SeleniumCommandConfigurationHelper.GetWaitPageTimeout();
+                var waitPageTimeoutInMinutes = SeleniumCommandConfigurationManager.GetWaitPageTimeout();
                 pageActionsManager = new AmazonVcdActionsWithPagesManager(
                     waitPageTimeoutInMinutes, IsHidingBrowserWindow, loggerWithoutAccountId);
             }
@@ -324,7 +324,7 @@ namespace CakeExtracter.Commands.Selenium
 
         private void InitializeLoginManager()
         {
-            loginProcessManager = new AmazonVcdLoginHelper(
+            loginProcessManager = new VcdLoginManager(
                 authorizationModel, pageActionsManager, loggerWithoutAccountId);
         }
 

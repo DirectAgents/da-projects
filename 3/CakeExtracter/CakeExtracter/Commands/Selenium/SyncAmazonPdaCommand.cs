@@ -35,7 +35,7 @@ namespace CakeExtracter.Commands.Selenium
 
         private AuthorizationModel authorizationModel;
         private AmazonPdaActionsWithPagesManager pageActionsManager;
-        private PdaLoginHelper loginProcessManager;
+        private PdaLoginManager loginProcessManager;
         private PdaProfileUrlManager profileUrlManager;
         private int maxRetryAttempts;
         private TimeSpan pauseBetweenAttempts;
@@ -163,21 +163,21 @@ namespace CakeExtracter.Commands.Selenium
 
         private void SetFieldsFromConfig()
         {
-            maxRetryAttempts = PdaCommandConfigurationHelper.GetMaxRetryAttempts();
-            pauseBetweenAttempts = PdaCommandConfigurationHelper.GetPauseBetweenAttempts();
+            maxRetryAttempts = PdaCommandConfigurationManager.GetMaxRetryAttempts();
+            pauseBetweenAttempts = PdaCommandConfigurationManager.GetPauseBetweenAttempts();
             IntervalBetweenUnsuccessfulAndNewRequestInMinutes =
-                PdaCommandConfigurationHelper.GetIntervalBetweenUnsuccessfulAndNewRequest();
+                PdaCommandConfigurationManager.GetIntervalBetweenUnsuccessfulAndNewRequest();
         }
 
         private void InitializeAuthorizationModel()
         {
             try
             {
-                var cookieDirectoryName = PdaCommandConfigurationHelper.GetCookiesDirectoryName();
+                var cookieDirectoryName = PdaCommandConfigurationManager.GetCookiesDirectoryName();
                 authorizationModel = new AuthorizationModel
                 {
-                    Login = PdaCommandConfigurationHelper.GetEMail(),
-                    Password = PdaCommandConfigurationHelper.GetEMailPassword(),
+                    Login = PdaCommandConfigurationManager.GetEMail(),
+                    Password = PdaCommandConfigurationManager.GetEMailPassword(),
                     CookiesDir = cookieDirectoryName,
                 };
             }
@@ -191,7 +191,7 @@ namespace CakeExtracter.Commands.Selenium
         {
             try
             {
-                var timeoutInMinutes = SeleniumCommandConfigurationHelper.GetWaitPageTimeout();
+                var timeoutInMinutes = SeleniumCommandConfigurationManager.GetWaitPageTimeout();
                 pageActionsManager = new AmazonPdaActionsWithPagesManager(
                     timeoutInMinutes,
                     IsHidingBrowserWindow,
@@ -207,7 +207,7 @@ namespace CakeExtracter.Commands.Selenium
         {
             try
             {
-                loginProcessManager = new PdaLoginHelper(authorizationModel, pageActionsManager, loggerWithoutAccountId);
+                loginProcessManager = new PdaLoginManager(authorizationModel, pageActionsManager, loggerWithoutAccountId);
             }
             catch (Exception e)
             {

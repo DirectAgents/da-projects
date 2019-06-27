@@ -36,11 +36,11 @@ namespace SeleniumDataBrowser.Models
         /// </summary>
         public string CookiesDir
         {
-            get => FileManager.GetAssemblyRelativePath(cookiesDir);
+            get => PathToFileDirectoryHelper.GetAssemblyRelativePath(cookiesDir);
             set
             {
-                cookiesDir = FileManager.GetAssemblyRelativePath(value);
-                FileManager.CreateDirectoryIfNotExist(cookiesDir);
+                cookiesDir = PathToFileDirectoryHelper.GetAssemblyRelativePath(value);
+                PathToFileDirectoryHelper.CreateDirectoryIfNotExist(cookiesDir);
             }
         }
     }

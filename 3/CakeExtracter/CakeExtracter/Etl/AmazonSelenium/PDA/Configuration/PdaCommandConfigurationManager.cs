@@ -9,7 +9,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Configuration
     /// <summary>
     /// PDA configuration helper. Prepare config values for using in application.
     /// </summary>
-    internal class PdaCommandConfigurationHelper : SeleniumCommandConfigurationHelper
+    internal class PdaCommandConfigurationManager : SeleniumCommandConfigurationManager
     {
         private const string CookiesDirectoryNameConfigurationKey = "PDA_CookiesDirectoryName";
         private const string EMailConfigurationKey = "PDA_EMail";

@@ -69,11 +69,11 @@ namespace SeleniumDataBrowser.VCD.PageActions
         {
             Logger.LogInfo("Sales diagnostic page refreshing");
             NavigateToSalesDiagnosticPage();
-            if (!AmazonVcdLoginHelper.NeedRepeatPassword(this))
+            if (!VcdLoginManager.NeedRepeatPassword(this))
             {
                 return;
             }
-            AmazonVcdLoginHelper.RepeatPassword(this, authorizationModel);
+            VcdLoginManager.RepeatPassword(this, authorizationModel);
             NavigateToSalesDiagnosticPage();
         }
 

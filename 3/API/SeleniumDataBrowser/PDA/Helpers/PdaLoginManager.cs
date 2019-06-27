@@ -10,7 +10,7 @@ namespace SeleniumDataBrowser.PDA.Helpers
     /// <summary>
     /// Helper for PDA login process.
     /// </summary>
-    public class PdaLoginHelper
+    public class PdaLoginManager
     {
         private const string SignInPageUrl = "https://advertising.amazon.com/sign-in";
 
@@ -19,12 +19,12 @@ namespace SeleniumDataBrowser.PDA.Helpers
         private readonly SeleniumLogger logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PdaLoginHelper"/> class.
+        /// Initializes a new instance of the <see cref="PdaLoginManager"/> class.
         /// </summary>
         /// <param name="authorizationModel">Authorization settings.</param>
         /// <param name="pageActionsManager">Page actions manager.</param>
         /// <param name="logger">Selenium data browser logger.</param>
-        public PdaLoginHelper(
+        public PdaLoginManager(
             AuthorizationModel authorizationModel,
             AmazonPdaActionsWithPagesManager pageActionsManager,
             SeleniumLogger logger)
@@ -39,7 +39,7 @@ namespace SeleniumDataBrowser.PDA.Helpers
         /// </summary>
         public void LoginToPortal()
         {
-            authorizationModel.Cookies = CookieManager.GetCookiesFromFiles(authorizationModel.CookiesDir);
+            authorizationModel.Cookies = SeleniumCookieHelper.GetCookiesFromFiles(authorizationModel.CookiesDir);
             var cookiesExist = authorizationModel.Cookies.Any();
             if (cookiesExist)
             {
@@ -68,7 +68,7 @@ namespace SeleniumDataBrowser.PDA.Helpers
             pageActionsManager.NavigateToUrl(SignInPageUrl, AmazonLoginPageObjects.ForgotPassLink);
             pageActionsManager.LoginProcess(authorizationModel.Login, authorizationModel.Password);
             var cookies = pageActionsManager.GetAllCookies();
-            CookieManager.SaveCookiesToFiles(cookies, authorizationModel.CookiesDir);
+            SeleniumCookieHelper.SaveCookiesToFiles(cookies, authorizationModel.CookiesDir);
         }
 
         private void LoginWithCookie()

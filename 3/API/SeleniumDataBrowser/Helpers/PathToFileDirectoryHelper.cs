@@ -7,7 +7,7 @@ namespace SeleniumDataBrowser.Helpers
     /// <summary>
     /// Class to help work with directory and files.
     /// </summary>
-    public static class FileManager
+    public static class PathToFileDirectoryHelper
     {
         /// <summary>
         /// Gets the relative path to the current execution assembly.

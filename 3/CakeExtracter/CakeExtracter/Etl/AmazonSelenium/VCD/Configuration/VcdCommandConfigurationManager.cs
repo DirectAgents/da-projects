@@ -13,7 +13,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Configuration
     /// <summary>
     /// Vcd configuration helper. Prepare config values for using in application.
     /// </summary>
-    internal class VcdCommandConfigurationHelper : SeleniumCommandConfigurationHelper
+    internal class VcdCommandConfigurationManager : SeleniumCommandConfigurationManager
     {
         private const string SyncScriptPathConfigurationKey = "VCD_SyncScriptPath";
         private const string SyncScriptNameConfigurationKey = "VCD_SyncScriptName";
@@ -43,7 +43,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Configuration
         {
             var path = ConfigurationManager.AppSettings[SyncScriptPathConfigurationKey];
             var name = ConfigurationManager.AppSettings[SyncScriptNameConfigurationKey];
-            return FileManager.GetAssemblyRelativePath(FileManager.CombinePath(path, name));
+            return PathToFileDirectoryHelper.GetAssemblyRelativePath(PathToFileDirectoryHelper.CombinePath(path, name));
         }
 
         /// <summary>
