@@ -13,7 +13,6 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
             {
                 return 0;
             }
-
             var count = int.Parse(text, NumberStyles.AllowThousands | NumberStyles.AllowLeadingSign);
             return count;
         }

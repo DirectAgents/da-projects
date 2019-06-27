@@ -30,7 +30,6 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         private readonly int minDelayBetweenReportDownloadingInSeconds;
         private readonly int maxDelayBetweenReportDownloadingInSeconds;
         private readonly int reportDownloadingAttemptCount;
-
         private readonly AmazonVcdActionsWithPagesManager pageActions;
         private readonly AuthorizationModel authorizationModel;
         private readonly VcdAccountInfo accountInfo;
@@ -75,7 +74,8 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         public string DownloadShippedRevenueCsvReport(DateTime reportDay)
         {
             logger.LogInfo("Amazon VCD, Attempt to download shipped revenue report.");
-            return DownloadReportAsCsvText(reportDay, RequestBodyConstants.ShippedRevenueReportLevel, RequestBodyConstants.ShippedRevenueSalesView);
+            return DownloadReportAsCsvText(
+                reportDay, RequestBodyConstants.ShippedRevenueReportLevel, RequestBodyConstants.ShippedRevenueSalesView);
         }
 
         /// <summary>
@@ -86,7 +86,8 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         public string DownloadShippedCogsCsvReport(DateTime reportDay)
         {
             logger.LogInfo("Amazon VCD, Attempt to download shipped cogs report.");
-            return DownloadReportAsCsvText(reportDay, RequestBodyConstants.ShippedCogsLevel, RequestBodyConstants.ShippedCogsSalesView);
+            return DownloadReportAsCsvText(
+                reportDay, RequestBodyConstants.ShippedCogsLevel, RequestBodyConstants.ShippedCogsSalesView);
         }
 
         /// <summary>
@@ -97,7 +98,8 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         public string DownloadOrderedRevenueCsvReport(DateTime reportDay)
         {
             logger.LogInfo("Amazon VCD, Attempt to download ordered revenue report.");
-            return DownloadReportAsCsvText(reportDay, RequestBodyConstants.OrderedRevenueLevel, RequestBodyConstants.OrderedRevenueView);
+            return DownloadReportAsCsvText(
+                reportDay, RequestBodyConstants.OrderedRevenueLevel, RequestBodyConstants.OrderedRevenueView);
         }
 
         private string DownloadReportAsCsvText(DateTime reportDay, string reportLevel, string salesViewName)
@@ -181,12 +183,19 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         private ReportDownloadingRequestPageData GetPageDataForReportRequest()
         {
             var token = pageActions.GetAccessToken();
-            var cookies = pageActions.GetAllCookies().ToDictionary(x => x.Name, x => x.Value);
+            var cookies = GetCookies();
             return new ReportDownloadingRequestPageData
             {
                 Token = token,
                 Cookies = cookies,
             };
+        }
+
+        private Dictionary<string, string> GetCookies()
+        {
+            var collectionOfCookies = pageActions.GetAllCookies();
+            var cookies = collectionOfCookies.ToDictionary(x => x.Name, x => x.Value);
+            return cookies;
         }
 
         private RestRequest GenerateDownloadingReportRequest(DateTime reportDay, string reportLevel, string salesViewName)
@@ -196,8 +205,12 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             var requestBodyObject = PrepareRequestBody(requestId, reportDay, reportLevel, salesViewName);
             var requestHeaders = GetHeadersDictionary(requestId);
             var requestBodyJson = JsonConvert.SerializeObject(requestBodyObject);
-            var requestQueryParams = RequestQueryConstants.GetRequestQueryParameters(pageRequestData.Token, accountInfo.VendorGroupId.ToString(), accountInfo.McId.ToString());
-            var request = RestRequestHelper.CreateRestRequest(AmazonCsvDownloadReportUrl, pageRequestData.Cookies, requestQueryParams);
+            var requestQueryParams = RequestQueryConstants.GetRequestQueryParameters(
+                pageRequestData.Token,
+                accountInfo.VendorGroupId.ToString(),
+                accountInfo.McId.ToString());
+            var request = RestRequestHelper.CreateRestRequest(
+                AmazonCsvDownloadReportUrl, pageRequestData.Cookies, requestQueryParams);
             request.AddParameter(RequestBodyConstants.RequestBodyFormat, requestBodyJson, ParameterType.RequestBody);
             requestHeaders.ForEach(x => request.AddHeader(x.Key, x.Value));
             return request;
@@ -212,7 +225,8 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
 
         private DownloadReportRequestBody PrepareRequestBody(string requestId, DateTime reportDay, string reportLevel, string salesViewName)
         {
-            var visibleFilters = RequestBodyConstants.GetInitialVisibleFilters(GetBodyVisibleFilterDateRange(reportDay), salesViewName);
+            var visibleFilters = RequestBodyConstants.GetInitialVisibleFilters(
+                GetBodyVisibleFilterDateRange(reportDay), salesViewName);
             var reportParameters = GetReportParameters(reportDay, reportLevel);
             return new DownloadReportRequestBody
             {

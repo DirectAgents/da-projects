@@ -9,6 +9,5 @@
         public string @operator { get; set; }
 
         public string[] values { get; set; }
-
     }
 }

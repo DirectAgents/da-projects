@@ -25,7 +25,6 @@ namespace SeleniumDataBrowser.Drivers
             chromeOptions.AddUserProfilePreference("download.default_directory", downloadDir);
             chromeOptions.AddUserProfilePreference("intl.accept_languages", "nl");
             chromeOptions.AddUserProfilePreference("disable-popup-blocking", "true");
-
             if (isHiddenBrowserWindow)
             {
                 chromeOptions.AddArgument("headless");

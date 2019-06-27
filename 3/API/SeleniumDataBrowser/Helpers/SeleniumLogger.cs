@@ -97,7 +97,9 @@ namespace SeleniumDataBrowser.Helpers
 
         private string GetAttemptMessage(string info, int retryNumber, string baseMessage = null)
         {
-            var details = baseMessage == null ? string.Empty : $": {baseMessage}";
+            var details = baseMessage == null
+                ? string.Empty
+                : $": {baseMessage}";
             return $"{info} (attempt - {retryNumber}){details}";
         }
 

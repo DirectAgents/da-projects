@@ -34,7 +34,6 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
             {
                 return;
             }
-
             var brandEntity = brands.FirstOrDefault(brand => brand.Name == reportEntity.Brand);
             if (brandEntity != null)
             {

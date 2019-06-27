@@ -124,7 +124,6 @@ namespace SeleniumDataBrowser.PageActions
             {
                 return;
             }
-
             WaitElementClickable(AmazonLoginPageObjects.CodeInput);
             ClickElement(AmazonLoginPageObjects.DontAskCodeCheckBox);
             ClickElement(AmazonLoginPageObjects.CodeInput);

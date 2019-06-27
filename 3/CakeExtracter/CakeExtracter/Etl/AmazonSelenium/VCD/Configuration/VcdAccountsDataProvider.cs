@@ -29,14 +29,12 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Configuration
         /// <summary>
         /// Gets the accounts data to process. Combined data from database and sales diagnostic page.
         /// </summary>
-        /// <param name="extractor">The extractor.</param>
         /// <returns>Account info collection.</returns>
         public List<AccountInfo> GetAccountsDataToProcess()
         {
             try
             {
                 var dbAccounts = GetDbAccountsToProcess();
-
                 var accountsInfo = new List<AccountInfo>();
                 dbAccounts.ForEach(dbAccount =>
                 {
@@ -55,14 +53,14 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Configuration
                         Logger.Warn($"{dbAccount.Name} account was not found on page");
                     }
                 });
-
                 Logger.Info("{0} accounts will be processed", string.Join(",", accountsInfo.Select(a => a.Account.Name)));
                 return accountsInfo;
             }
             catch (Exception ex)
             {
-                Logger.Error(new Exception("Error occurred while fetching accounts information.", ex));
-                throw ex;
+                var exception = new Exception("Error occurred while fetching accounts information.", ex);
+                Logger.Error(exception);
+                throw exception;
             }
         }
 

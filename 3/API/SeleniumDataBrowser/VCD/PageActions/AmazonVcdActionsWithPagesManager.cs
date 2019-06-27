@@ -25,7 +25,8 @@ namespace SeleniumDataBrowser.VCD.PageActions
         /// <param name="waitPageTimeoutInMinutes">Number of minutes the web-driver will wait for web-elements.</param>
         /// <param name="isHidingBrowserWindow">Indicates whether to hide the browser window.</param>
         /// <param name="logger">Selenium data browser logger.</param>
-        public AmazonVcdActionsWithPagesManager(int waitPageTimeoutInMinutes, bool isHidingBrowserWindow, SeleniumLogger logger)
+        public AmazonVcdActionsWithPagesManager(
+            int waitPageTimeoutInMinutes, bool isHidingBrowserWindow, SeleniumLogger logger)
             : base(new ChromeWebDriver(string.Empty, isHidingBrowserWindow), waitPageTimeoutInMinutes, logger)
         {
         }
@@ -36,8 +37,8 @@ namespace SeleniumDataBrowser.VCD.PageActions
         /// <returns>Access token string.</returns>
         public string GetAccessToken()
         {
-            IJavaScriptExecutor js = Driver as IJavaScriptExecutor;
-            var token = js.ExecuteScript("return window.token") as string;
+            var js = Driver as IJavaScriptExecutor;
+            var token = js?.ExecuteScript("return window.token") as string;
             return token;
         }
 
@@ -47,8 +48,8 @@ namespace SeleniumDataBrowser.VCD.PageActions
         /// <returns>User information json string from page.</returns>
         public string GetUserInfoJson()
         {
-            IJavaScriptExecutor js = Driver as IJavaScriptExecutor;
-            var userInfoJson = js.ExecuteScript("return JSON.stringify(window.userInfo)") as string;
+            var js = Driver as IJavaScriptExecutor;
+            var userInfoJson = js?.ExecuteScript("return JSON.stringify(window.userInfo)") as string;
             return userInfoJson;
         }
 
@@ -87,7 +88,7 @@ namespace SeleniumDataBrowser.VCD.PageActions
                 ClickElement(AmazonVcdPageObjects.AccountsDropdownButton);
                 var accountItems = Driver.FindElements(AmazonVcdPageObjects.AccountsDropdownItem);
                 var accountItem = accountItems.FirstOrDefault(x => x.Text == TypeOfAccounts + accountName);
-                accountItem.Click();
+                accountItem?.Click();
                 WaitElementClickable(AmazonVcdPageObjects.AccountsDropdownButton);
             }
             catch (Exception e)

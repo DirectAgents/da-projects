@@ -17,7 +17,6 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Configuration
         private const string MaxRetryAttemptsConfigurationKey = "PDA_MaxRetryAttempts";
         private const string PauseBetweenAttemptsConfigurationKey = "PDA_PauseBetweenAttemptsInSeconds";
         private const string IntervalBetweenUnsuccessfulAndNewRequestsConfigurationKey = "PDA_IntervalBetweenUnsuccessfulAndNewRequestsInMinutes";
-
         private const int DefaultIntervalBetweenUnsuccessfulAndNewRequestsInMinutes = 60;
 
         /// <summary>
@@ -62,7 +61,9 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Configuration
         /// <returns>Number seconds of pause between attempts.</returns>
         public static TimeSpan GetPauseBetweenAttempts()
         {
-            return TimeSpan.FromSeconds(ConfigurationHelper.GetIntConfigurationValue(PauseBetweenAttemptsConfigurationKey));
+            var numberOfSecondsForPauseBetweenAttempts = ConfigurationHelper.GetIntConfigurationValue(
+                PauseBetweenAttemptsConfigurationKey);
+            return TimeSpan.FromSeconds(numberOfSecondsForPauseBetweenAttempts);
         }
 
         /// <summary>

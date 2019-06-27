@@ -4,14 +4,28 @@ using CakeExtracter.Etl.AmazonSelenium.VCD.Models;
 
 namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportDataComposer
 {
+    /// <summary>
+    /// Composer for product data of reports (Shipped Revenue, Shipped COGS, Ordered Revenue).
+    /// </summary>
     internal class VcdReportComposer
     {
-        public VcdReportData ComposeReportData(List<Product> shippedRevenueProducts, List<Product> shippedCogsProducts, List<Product> orderedRevenueProducts)
+        /// <summary>
+        /// Composes separated data of reports to common data.
+        /// </summary>
+        /// <param name="shippedRevenueProducts">Data of report Shipped Revenue.</param>
+        /// <param name="shippedCogsProducts">Data of report Shipped COGS.</param>
+        /// <param name="orderedRevenueProducts">Data of report Ordered Revenue.</param>
+        /// <returns>Common VCD report data.</returns>
+        public VcdReportData ComposeReportData(
+            List<Product> shippedRevenueProducts,
+            List<Product> shippedCogsProducts,
+            List<Product> orderedRevenueProducts)
         {
             shippedRevenueProducts = ProcessDuplicatedProducts(shippedRevenueProducts);
             shippedCogsProducts = ProcessDuplicatedProducts(shippedCogsProducts);
             orderedRevenueProducts = ProcessDuplicatedProducts(orderedRevenueProducts);
-            var mergedProducts = MergeShippedRevenueAndShippedCogsProductsData(shippedRevenueProducts, shippedCogsProducts, orderedRevenueProducts);
+            var mergedProducts = MergeShippedRevenueAndShippedCogsProductsData(
+                shippedRevenueProducts, shippedCogsProducts, orderedRevenueProducts);
             return new VcdReportData
             {
                 Products = mergedProducts,
@@ -26,7 +40,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
         // Summ metrics values of all items in duplication group
         private List<Product> ProcessDuplicatedProducts(List<Product> products)
         {
-            var duplicatedAsins = products.GroupBy(p => p.Asin).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
+            var duplicatedAsins = GetDuplicatedAsins(products);
             duplicatedAsins.ForEach(asin =>
             {
                 var productsWithDuplicatedAsin = products.Where(p => p.Asin == asin);
@@ -37,8 +51,16 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
             return products;
         }
 
-        private List<Product> MergeShippedRevenueAndShippedCogsProductsData(List<Product> shippedRevenueProducts,
-            List<Product> shippedCogsProducts, List<Product> orderedRevenueProducts)
+        private List<string> GetDuplicatedAsins(IEnumerable<Product> products)
+        {
+            var productGroupsByAsin = products.GroupBy(p => p.Asin);
+            var productsWithDuplicatedAsins = productGroupsByAsin.Where(g => g.Count() > 1);
+            var duplicatedAsins = productsWithDuplicatedAsins.Select(y => y.Key).ToList();
+            return duplicatedAsins;
+        }
+
+        private List<Product> MergeShippedRevenueAndShippedCogsProductsData(
+            List<Product> shippedRevenueProducts, List<Product> shippedCogsProducts, List<Product> orderedRevenueProducts)
         {
             shippedRevenueProducts.ForEach(shippedRevProduct =>
             {
@@ -55,7 +77,6 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
             {
                 return;
             }
-
             product.ShippedCogs = correspondingShippedCogProduct.ShippedCogs;
             product.CustomerReturns = correspondingShippedCogProduct.CustomerReturns;
             product.FreeReplacements = correspondingShippedCogProduct.FreeReplacements;
@@ -164,22 +185,30 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
 
         private string GetBrandName(Product product)
         {
-            return product == null ? null : GetName(product.Brand);
+            return product == null
+                ? null
+                : GetName(product.Brand);
         }
 
         private string GetCategoryName(Product product)
         {
-            return product == null ? null : GetName(product.Category);
+            return product == null
+                ? null
+                : GetName(product.Category);
         }
 
         private string GetSubcategoryName(Product product)
         {
-            return product == null ? null : GetName(product.Subcategory);
+            return product == null
+                ? null
+                : GetName(product.Subcategory);
         }
 
         private string GetName(string sourceName)
         {
-            return !string.IsNullOrEmpty(sourceName) ? sourceName : null;
+            return !string.IsNullOrEmpty(sourceName)
+                ? sourceName
+                : null;
         }
     }
 }

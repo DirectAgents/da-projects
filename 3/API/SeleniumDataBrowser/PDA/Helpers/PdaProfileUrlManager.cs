@@ -60,7 +60,6 @@ namespace SeleniumDataBrowser.PDA.Helpers
         {
             GoToPortalMainPage();
             AvailableProfileUrls = TryGetAvailableProfiles();
-
             logger.LogInfo("The following profiles were found for the current account:");
             AvailableProfileUrls.ForEach(x => logger.LogInfo($"{x.Key} - {x.Value}"));
         }
@@ -68,12 +67,13 @@ namespace SeleniumDataBrowser.PDA.Helpers
         private void GoToPortalMainPage()
         {
             pageActionsManager.NavigateToUrl(CampaignPageUrl, AmazonPdaPageObjects.FilterByButton);
-
             if (!pageActionsManager.IsElementPresent(AmazonPdaPageObjects.FilterByButton)
                 && pageActionsManager.IsElementPresent(AmazonLoginPageObjects.LoginPassInput))
             {
                 // need to repeat the password
-                loginProcessManager.RepeatPasswordForLogin(authorizationModel.Password, AmazonPdaPageObjects.FilterByButton);
+                loginProcessManager.RepeatPasswordForLogin(
+                    authorizationModel.Password,
+                    AmazonPdaPageObjects.FilterByButton);
             }
         }
 

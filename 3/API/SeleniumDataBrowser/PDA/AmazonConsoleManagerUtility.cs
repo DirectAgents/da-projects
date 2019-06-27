@@ -8,7 +8,6 @@ using SeleniumDataBrowser.Helpers;
 using SeleniumDataBrowser.Models;
 using SeleniumDataBrowser.PDA.Helpers;
 using SeleniumDataBrowser.PDA.Models;
-using SeleniumDataBrowser.PDA.PageActions;
 using SeleniumDataBrowser.PDA.Exceptions;
 using Polly;
 using RestSharp;
@@ -56,8 +55,8 @@ namespace SeleniumDataBrowser.PDA
             this.maxRetryAttempts = maxRetryAttempts;
             this.pauseBetweenAttempts = pauseBetweenAttempts;
             this.logger = logger;
-
-            cookies = pageActionsManager.GetAllCookies().ToDictionary(x => x.Name, x => x.Value);
+            var collectionOfCookies = pageActionsManager.GetAllCookies();
+            cookies = collectionOfCookies.ToDictionary(x => x.Name, x => x.Value);
         }
 
         /// <summary>
@@ -136,9 +135,7 @@ namespace SeleniumDataBrowser.PDA
         }
 
         private IEnumerable<AmazonCmApiCampaignSummary> GetCampaignsSummariesForDate(
-            DateTime date,
-            Dictionary<string, string> queryParams,
-            AmazonCmApiParams parameters)
+            DateTime date, Dictionary<string, string> queryParams, AmazonCmApiParams parameters)
         {
             logger.LogInfo($"Retrieve campaigns info from API for {date.ToShortDateString()} date.");
             AmazonCmApiHelper.SetCampaignApiSpecificInitParams(parameters, date, PageSize);
@@ -154,7 +151,8 @@ namespace SeleniumDataBrowser.PDA
             }
         }
 
-        private List<AmazonCmApiCampaignSummary> GetApiPdaCampaignsSummaries(Dictionary<string, string> queryParams, AmazonCmApiParams parameters)
+        private List<AmazonCmApiCampaignSummary> GetApiPdaCampaignsSummaries(
+            Dictionary<string, string> queryParams, AmazonCmApiParams parameters)
         {
             var resultData = new List<AmazonCmApiCampaignSummary>();
             var data = TryProcessRequest(queryParams, parameters);
@@ -187,7 +185,6 @@ namespace SeleniumDataBrowser.PDA
         {
             var request = RestRequestHelper.CreateRestRequest(AmazonCmApiHelper.CampaignsApiRelativePath, cookies, queryParams, body);
             var response = RestRequestHelper.SendPostRequest<T>(AmazonCmApiHelper.AmazonAdvertisingPortalUrl, request);
-
             if (response.IsSuccessful)
             {
                 return response;
@@ -201,7 +198,8 @@ namespace SeleniumDataBrowser.PDA
 
         private void WaitBeforeRequest(DateTime date)
         {
-            logger.LogWaiting($"Requesting a campaign info for {date.ToShortDateString()}. " + "Waiting {0} ...", pauseBetweenAttempts, null);
+            logger.LogWaiting(
+                $"Requesting a campaign info for {date.ToShortDateString()}. " + "Waiting {0} ...", pauseBetweenAttempts, null);
             Thread.Sleep(pauseBetweenAttempts);
         }
     }

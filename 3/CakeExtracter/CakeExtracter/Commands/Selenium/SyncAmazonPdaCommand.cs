@@ -124,9 +124,7 @@ namespace CakeExtracter.Commands.Selenium
         public override int Execute(string[] remainingArguments)
         {
             InitializeCommand();
-
             RunEtls();
-
             return 0;
         }
 
@@ -145,7 +143,6 @@ namespace CakeExtracter.Commands.Selenium
                 var accountLevelBroadCommands = GetUniqueBroadAccountLevelCommands(commandsGroup);
                 broadCommands.AddRange(accountLevelBroadCommands);
             }
-
             return broadCommands;
         }
 
@@ -203,7 +200,10 @@ namespace CakeExtracter.Commands.Selenium
             try
             {
                 var timeoutInMinutes = SeleniumCommandConfigurationHelper.GetWaitPageTimeout();
-                pageActionsManager = new AmazonPdaActionsWithPagesManager(timeoutInMinutes, IsHidingBrowserWindow, loggerWithoutAccountId);
+                pageActionsManager = new AmazonPdaActionsWithPagesManager(
+                    timeoutInMinutes,
+                    IsHidingBrowserWindow,
+                    loggerWithoutAccountId);
             }
             catch (Exception e)
             {
@@ -258,11 +258,9 @@ namespace CakeExtracter.Commands.Selenium
         {
             var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info("Amazon ETL (PDA Campaigns). DateRange: {0}.", dateRange);
-
             var statsType = new StatsTypeAgg(StatsType);
-            var accounts = GetAccounts();
+            var accounts = GetAccounts().ToList();
             SetInfoAboutAllAccountsInHistory(accounts);
-
             foreach (var account in accounts)
             {
                 DoEtls(account, dateRange, statsType);
@@ -272,8 +270,7 @@ namespace CakeExtracter.Commands.Selenium
 
         private void DoEtls(ExtAccount account, DateRange dateRange, StatsTypeAgg statsType)
         {
-            Logger.Info(account.Id, "Commencing ETL for Amazon account ({0}) {1}", account.Id, account.Name);
-
+            Logger.Info(account.Id, $"Commencing ETL for Amazon account ({account.Id}) {account.Name}");
             var amazonPdaUtility = CreateAmazonPdaUtility(account);
             try
             {
@@ -281,7 +278,6 @@ namespace CakeExtracter.Commands.Selenium
                 {
                     DoEtlDailyFromRequests(account, dateRange, amazonPdaUtility);
                 }
-
                 if (statsType.Strategy)
                 {
                     DoEtlStrategyFromRequests(account, dateRange, amazonPdaUtility);
@@ -291,8 +287,7 @@ namespace CakeExtracter.Commands.Selenium
             {
                 Logger.Error(account.Id, ex);
             }
-
-            Logger.Info(account.Id, "Finished ETL for Amazon account ({0}) {1}", account.Id, account.Name);
+            Logger.Info(account.Id, $"Finished ETL for Amazon account ({account.Id}) {account.Name}");
         }
 
         private AmazonConsoleManagerUtility CreateAmazonPdaUtility(ExtAccount account)
@@ -370,10 +365,9 @@ namespace CakeExtracter.Commands.Selenium
                             : commandWithSchedule.ScheduledTime;
                     accountLevelCommands.Remove(crossCommand);
                 }
-
-                accountLevelCommands.Add(new Tuple<SyncAmazonPdaCommand, DateRange, CommandWithSchedule>(command, commandDateRange, commandWithSchedule));
+                accountLevelCommands.Add(
+                    new Tuple<SyncAmazonPdaCommand, DateRange, CommandWithSchedule>(command, commandDateRange, commandWithSchedule));
             }
-
             var broadCommands = accountLevelCommands.Select(GetCommandWithCorrectDateRange).ToList();
             return broadCommands;
         }
@@ -413,7 +407,10 @@ namespace CakeExtracter.Commands.Selenium
 
         private void SetLoggerWithoutAccountId()
         {
-            loggerWithoutAccountId = new SeleniumLogger(x => Logger.Info(x), Logger.Error, x => Logger.Warn(x));
+            loggerWithoutAccountId = new SeleniumLogger(
+                x => Logger.Info(x),
+                Logger.Error,
+                x => Logger.Warn(x));
         }
 
         private void SetLoggerWithAccountId(int accountId)
@@ -427,7 +424,6 @@ namespace CakeExtracter.Commands.Selenium
         private void SetInfoAboutAllAccountsInHistory(IEnumerable<ExtAccount> accounts)
         {
             const string firstAccountState = "Not started";
-
             var extAccounts = accounts.ToList();
             foreach (var account in extAccounts)
             {

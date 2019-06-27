@@ -13,7 +13,6 @@ namespace SeleniumDataBrowser.PDA.Helpers
         public const string AmazonAdvertisingPortalUrl = "https://advertising.amazon.com";
         public const string CampaignsApiRelativePath = "/cm/api/campaigns";
         public const string EntityIdArgName = "entityId";
-
         private const string CampaignNameField = "CAMPAIGN_NAME";
         private const string ImpressionsField = "IMPRESSIONS";
         private const string ClicksField = "CLICKS";
@@ -27,7 +26,6 @@ namespace SeleniumDataBrowser.PDA.Helpers
         private const string CtrField = "CTR";
         private const string CpcField = "CPC";
         private const string AcosField = "ACOS";
-
         private const string CurrencyValue = "millicents";
         private const decimal CurrencyCoefficient = 100000; // We need data that is received in millicent, recalculated into USD
 
@@ -49,7 +47,7 @@ namespace SeleniumDataBrowser.PDA.Helpers
 
         private static readonly string[] CampaignFieldsForRequest =
         {
-            CampaignNameField, ImpressionsField, ClicksField, SpendField, SalesField, OrdersField
+            CampaignNameField, ImpressionsField, ClicksField, SpendField, SalesField, OrdersField,
         };
 
         private static readonly Filter[] CampaignPdaFilters =
@@ -68,7 +66,9 @@ namespace SeleniumDataBrowser.PDA.Helpers
 
         public static AmazonCmApiParams GetBasePdaCampaignsApiParams(bool getFullMetrics)
         {
-            var fields = getFullMetrics ? CampaignFieldsForRequest : new[] { OrdersField };
+            var fields = getFullMetrics
+                ? CampaignFieldsForRequest
+                : new[] { OrdersField };
             var parameters = new AmazonCmApiParams
             {
                 period = "CUSTOM",
@@ -97,7 +97,7 @@ namespace SeleniumDataBrowser.PDA.Helpers
 
         public static int GetNumberOfRecords(dynamic data)
         {
-            return (int) data["summary"]["numberOfRecords"];
+            return (int)data["summary"]["numberOfRecords"];
         }
 
         public static AmazonCmApiCampaignSummary ConvertDynamicCampaignInfoToModel(dynamic data)

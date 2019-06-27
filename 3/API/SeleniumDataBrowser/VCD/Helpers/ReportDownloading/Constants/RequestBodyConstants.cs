@@ -23,7 +23,8 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
 
         public const string OrderedRevenueView = "Ordered Revenue";
 
-        public static Dictionary<string, List<string>> GetInitialVisibleFilters(string reportDates, string salesViewName)
+        public static Dictionary<string, List<string>> GetInitialVisibleFilters(
+            string reportDates, string salesViewName)
         {
             return new Dictionary<string, List<string>>
             {
@@ -38,14 +39,16 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
                 { "Viewing", new List<string> { reportDates } },
                 { "View by", new List<string> { "ASIN" } },
                 { "Add", new List<string>
-                {
-                    "Subcategory", "Category", "Parent ASIN", "EAN", "UPC", "Brand", "Apparel Size",
-                    "Apparel Size Width", "Binding", "Color", "Model / Style Number", "Release Date",
-                } },
+                    {
+                        "Subcategory", "Category", "Parent ASIN", "EAN", "UPC", "Brand", "Apparel Size",
+                        "Apparel Size Width", "Binding", "Color", "Model / Style Number", "Release Date",
+                    }
+                },
             };
         }
 
-        public static List<ReportParameter> GetReportParameters(string startDate, string endDate, string reportLevel)
+        public static List<ReportParameter> GetReportParameters(
+            string startDate, string endDate, string reportLevel)
         {
             var isFullSetOfMetrics = reportLevel == ShippedRevenueReportLevel;
             return new List<ReportParameter>

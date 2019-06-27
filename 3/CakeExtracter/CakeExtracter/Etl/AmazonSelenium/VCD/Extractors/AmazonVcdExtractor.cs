@@ -20,7 +20,6 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
         private readonly VcdReportDownloader reportDownloader;
         private readonly VcdReportCSVParser reportParser;
         private readonly VcdReportComposer reportComposer;
-
         private readonly AccountInfo accountInfo;
         private readonly DateRange dateRange;
 
@@ -35,7 +34,6 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
             this.accountInfo = accountInfo;
             this.dateRange = dateRange;
             this.reportDownloader = reportDownloader;
-
             reportParser = new VcdReportCSVParser();
             reportComposer = new VcdReportComposer();
         }
@@ -58,7 +56,9 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
             try
             {
                 CommandExecutionContext.Current.SetJobExecutionStateInHistory($"Date - {date.ToString()}", accountInfo.Account.Id);
-                Logger.Info(accountInfo.Account.Id, $"Amazon VCD, ETL for {date} started. Account {accountInfo.Account.Name} - {accountInfo.Account.Id}");
+                Logger.Info(
+                    accountInfo.Account.Id,
+                    $"Amazon VCD, ETL for {date} started. Account {accountInfo.Account.Name} - {accountInfo.Account.Id}");
                 var data = TryExtractData(date, "daily reports", ExtractDailyData);
                 Add(data);
             }
@@ -75,7 +75,8 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
             var shippedRevenueReportData = GetShippedRevenueReportData(reportDay);
             var shippedCogsReportData = GetShippingCogsReportData(reportDay);
             var orderedRevenueReportData = GetOrderedRevenueReportData(reportDay);
-            var composedData = reportComposer.ComposeReportData(shippedRevenueReportData, shippedCogsReportData, orderedRevenueReportData);
+            var composedData = reportComposer.ComposeReportData(
+                shippedRevenueReportData, shippedCogsReportData, orderedRevenueReportData);
             composedData.Date = reportDay;
             return composedData;
         }

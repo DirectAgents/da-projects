@@ -32,7 +32,10 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
         /// <summary>
         /// Initializes a new instance of the <see cref="AmazonPdaCampaignRequestExtractor"/> class.
         /// </summary>
-        public AmazonPdaCampaignRequestExtractor(ExtAccount account, DateRange dateRange, AmazonConsoleManagerUtility amazonPdaUtility)
+        public AmazonPdaCampaignRequestExtractor(
+            ExtAccount account,
+            DateRange dateRange,
+            AmazonConsoleManagerUtility amazonPdaUtility)
             : base(account, dateRange, amazonPdaUtility)
         {
         }
@@ -62,8 +65,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
             }
             catch (Exception e)
             {
-                var exception = new Exception("Could not extract CampaignSummaries (PDA).", e);
-                throw exception;
+                throw new Exception("Could not extract CampaignSummaries (PDA).", e);
             }
             End();
         }
@@ -78,12 +80,14 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
         private IEnumerable<StrategySummary> TransformSummaries(IEnumerable<AmazonPdaCampaignSummary> dailyStats)
         {
             var notEmptyStats = dailyStats.Where(x => !x.AllZeros());
-            var summaries = notEmptyStats.GroupBy(x => new { x.Id, x.Date }).Select(x => CreateSummary(x, x.Key.Date));
+            var statsGroupsByIdAndDate = notEmptyStats.GroupBy(x => new { x.Id, x.Date });
+            var summaries = statsGroupsByIdAndDate.Select(x => CreateSummary(x, x.Key.Date));
             return summaries.ToList();
         }
 
-        private StrategySummary CreateSummary(IEnumerable<AmazonPdaCampaignSummary> campaignSummaries, DateTime date)
+        private StrategySummary CreateSummary(IEnumerable<AmazonPdaCampaignSummary> summaries, DateTime date)
         {
+            var campaignSummaries = summaries.ToList();
             var campaign = campaignSummaries.First();
             var sum = new StrategySummary
             {
@@ -96,19 +100,24 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
             return sum;
         }
 
-        private void SetStats(StrategySummary sum, IEnumerable<AmazonPdaCampaignSummary> campaignSummaries, DateTime date)
+        private void SetStats(StrategySummary sum, IEnumerable<AmazonPdaCampaignSummary> summaries, DateTime date)
         {
+            var campaignSummaries = summaries.ToList();
             SetCPProgStats(sum, campaignSummaries, date);
             var reportMetrics = GetReportMetrics(campaignSummaries, date);
             sum.InitialMetrics = sum.InitialMetrics.Concat(reportMetrics).ToList();
         }
 
-        private IEnumerable<SummaryMetric> GetReportMetrics(IEnumerable<AmazonPdaCampaignSummary> campaignSummaries, DateTime date)
+        private IEnumerable<SummaryMetric> GetReportMetrics(IEnumerable<AmazonPdaCampaignSummary> summaries, DateTime date)
         {
+            var campaignSummaries = summaries.ToList();
             var metrics = new List<SummaryMetric>();
-            AddMetric(metrics, AmazonReportMetrics.DetailPageViews, date, campaignSummaries.Sum(x => x.DetailPageViews));
-            AddMetric(metrics, AmazonReportMetrics.UnitsSold, date, campaignSummaries.Sum(x => x.UnitsSold));
-            AddMetric(metrics, AmazonCmApiMetrics.Orders, date, campaignSummaries.Sum(x => x.Orders));
+            var detailPageViewsSum = campaignSummaries.Sum(x => x.DetailPageViews);
+            var unitsSoldSum = campaignSummaries.Sum(x => x.UnitsSold);
+            var ordersSum = campaignSummaries.Sum(x => x.Orders);
+            AddMetric(metrics, AmazonReportMetrics.DetailPageViews, date, detailPageViewsSum);
+            AddMetric(metrics, AmazonReportMetrics.UnitsSold, date, unitsSoldSum);
+            AddMetric(metrics, AmazonCmApiMetrics.Orders, date, ordersSum);
             return metrics;
         }
 
@@ -124,8 +133,9 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
 
         private void RemoveOldData(DateTime fromDate, DateTime toDate)
         {
-            Logger.Info(accountId, $"The cleaning of StrategySummaries for account ({accountId}) has begun - from {fromDate} to {toDate}.");
-
+            Logger.Info(
+                accountId,
+                $"The cleaning of StrategySummaries for account ({accountId}) has begun - from {fromDate} to {toDate}.");
             SafeContextWrapper.TryMakeTransaction(
                 (ClientPortalProgContext db) =>
             {
@@ -140,8 +150,9 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
                     x.Strategy.AccountId == accountId &&
                     campaignTypesFromApi.Contains(x.Strategy.Type.Name)).DeleteFromQuery();
             }, "DeleteFromQuery");
-
-            Logger.Info(accountId, $"The cleaning of StrategySummaries for account ({accountId}) is over - from {fromDate} to {toDate}.");
+            Logger.Info(
+                accountId,
+                $"The cleaning of StrategySummaries for account ({accountId}) is over - from {fromDate} to {toDate}.");
         }
     }
 }

@@ -34,8 +34,11 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
         /// <param name="account">Account for which stats will be extracted.</param>
         /// <param name="dateRange">Range of dates for which stats will be extracted.</param>
         /// <param name="amazonPdaUtility">Amazon PDA utility.</param>
-        protected AmazonPdaExtractor(ExtAccount account, DateRange dateRange, AmazonConsoleManagerUtility amazonPdaUtility)
-        : base(null, dateRange, account)
+        protected AmazonPdaExtractor(
+            ExtAccount account,
+            DateRange dateRange,
+            AmazonConsoleManagerUtility amazonPdaUtility)
+            : base(null, dateRange, account)
         {
             this.amazonPdaUtility = amazonPdaUtility;
         }
@@ -46,7 +49,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
         /// <returns>Summaries of PDA campaigns.</returns>
         public IEnumerable<AmazonPdaCampaignSummary> ExtractPdaCampaignSummaries()
         {
-            var apiCampaignSummaries = amazonPdaUtility.GetPdaCampaignsSummaries(dateRange.Dates);
+            var apiCampaignSummaries = amazonPdaUtility.GetPdaCampaignsSummaries(dateRange.Dates).ToList();
             AssignCampaignType(apiCampaignSummaries);
             var items = TransformSummaries(apiCampaignSummaries);
             return items;

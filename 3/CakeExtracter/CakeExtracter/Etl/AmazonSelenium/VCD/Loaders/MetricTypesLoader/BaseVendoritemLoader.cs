@@ -39,12 +39,10 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
                         correspondingDbEntity = MapReportEntityToDbEntity(reportEntity, account);
                         itemsToBeAdded.Add(correspondingDbEntity);
                     }
-
                     allItemsFromReport.Add(correspondingDbEntity);
                 });
                 dbContext.Set<TDbEntity>().AddRange(itemsToBeAdded);
                 dbContext.SaveChanges();
-
                 var allItems = accountRelatedVendorEntities.Concat(itemsToBeAdded).ToList();
                 return allItems;
             }
@@ -63,7 +61,8 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
                 var existingAccountDailySummaries = allVendorSummariesDbSet.Where(csm => csm.Date == date).ToList()
                     .Where(csm => accountRelatedVendorEntityIds.Contains(csm.EntityId)).ToList();
                 var actualAccountDailySummaries =
-                    GetActualDailySummariesFromReportEntities(reportShippingEntities, accountRelatedVendorEntities, account, date);
+                    GetActualDailySummariesFromReportEntities(
+                        reportShippingEntities, accountRelatedVendorEntities, account, date);
                 MergeDailySummariesAndUpdateInDataBase(
                     allVendorSummariesDbSet,
                     dbContext,
@@ -73,8 +72,8 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
             }
         }
 
-        protected virtual Func<TDbEntity, bool> GetEntityMappingPredicate(TReportEntity reportEntity,
-            ExtAccount extAccount)
+        protected virtual Func<TDbEntity, bool> GetEntityMappingPredicate(
+            TReportEntity reportEntity, ExtAccount extAccount)
         {
             return dbEntity => dbEntity.Name == reportEntity.Name && dbEntity.AccountId == extAccount.Id;
         }
@@ -145,11 +144,12 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
             ExtAccount account,
             DateTime date)
         {
-            var actualAccountDailySummaries = reportShippingEntities.SelectMany(reportEntity =>
-            {
-                var dbEntity = dbVendorEntities.FirstOrDefault(GetEntityMappingPredicate(reportEntity, account));
-                return GetSummaryMetricEntities(reportEntity, dbEntity, date);
-            }).ToList();
+            var actualAccountDailySummaries = reportShippingEntities
+                .SelectMany(reportEntity =>
+                {
+                    var dbEntity = dbVendorEntities.FirstOrDefault(GetEntityMappingPredicate(reportEntity, account));
+                    return GetSummaryMetricEntities(reportEntity, dbEntity, date);
+                }).ToList();
             return actualAccountDailySummaries;
         }
 

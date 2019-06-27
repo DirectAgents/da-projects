@@ -12,14 +12,16 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
         private readonly List<VendorCategory> categories;
         private readonly List<VendorBrand> brands;
 
-        public SubcategoriesSummaryLoader(Dictionary<string, int> metricTypes, List<VendorCategory> categories, List<VendorBrand> brands)
+        public SubcategoriesSummaryLoader(
+            Dictionary<string, int> metricTypes, List<VendorCategory> categories, List<VendorBrand> brands)
             : base(metricTypes)
         {
             this.categories = categories;
             this.brands = brands;
         }
 
-        protected override VendorSubcategory MapReportEntityToDbEntity(Subcategory reportEntity, ExtAccount extAccount)
+        protected override VendorSubcategory MapReportEntityToDbEntity(
+            Subcategory reportEntity, ExtAccount extAccount)
         {
             var vendorSubcategory = new VendorSubcategory
             {

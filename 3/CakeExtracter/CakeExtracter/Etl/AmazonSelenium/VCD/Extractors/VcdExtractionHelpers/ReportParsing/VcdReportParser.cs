@@ -23,10 +23,11 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
         /// <param name="reportCsvText">The report CSV text.</param>
         /// <param name="accountInfo">The account information.</param>
         /// <param name="date">The date.</param>
-        /// <returns>Collection of productes with filled shipped revenue data.</returns>
+        /// <returns>Collection of products with filled shipped revenue data.</returns>
         public List<Product> ParseShippedRevenueReportData(string reportCsvText, AccountInfo accountInfo, DateTime date)
         {
-            var products = ParseProductsFromReport<ShippedRevenueProductRowMap>(reportCsvText, accountInfo, date, "shippedRev");
+            var products = ParseProductsFromReport<ShippedRevenueProductRowMap>(
+                reportCsvText, accountInfo, date, "shippedRev");
             return products;
         }
 
@@ -36,10 +37,11 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
         /// <param name="reportCsvText">The report CSV text.</param>
         /// <param name="accountInfo">The account information.</param>
         /// <param name="date">The date.</param>
-        /// <returns>Collection of productes with filled shipped cogs data.</returns>
+        /// <returns>Collection of products with filled shipped cogs data.</returns>
         public List<Product> ParseShippedCogsReportData(string reportCsvText, AccountInfo accountInfo, DateTime date)
         {
-            var products = ParseProductsFromReport<ShippedCogsProductsRowMap>(reportCsvText, accountInfo, date, "shippedCogs");
+            var products = ParseProductsFromReport<ShippedCogsProductsRowMap>(
+                reportCsvText, accountInfo, date, "shippedCogs");
             return products;
         }
 
@@ -49,10 +51,11 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
         /// <param name="reportCsvText">The report CSV text.</param>
         /// <param name="accountInfo">The account information.</param>
         /// <param name="date">The date.</param>
-        /// <returns>Collection of productes with filled ordered revenue data.</returns>
+        /// <returns>Collection of products with filled ordered revenue data.</returns>
         public List<Product> ParseOrderedRevenueReportData(string reportCsvText, AccountInfo accountInfo, DateTime date)
         {
-            var products = ParseProductsFromReport<OrderedRevenueProductsRowMap>(reportCsvText, accountInfo, date, "orderedRev");
+            var products = ParseProductsFromReport<OrderedRevenueProductsRowMap>(
+                reportCsvText, accountInfo, date, "orderedRev");
             return products;
         }
 
@@ -80,12 +83,12 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
             {
                 var exception = new Exception("Error occured while parsing report", ex);
                 Logger.Warn(accountInfo.Account.Id, $"{exception.Message}: {ex.Message}");
-                SaveUnsuccessfullyParesedReport(reportCsvText, date, reportType, accountInfo.Account.Id);
+                SaveUnsuccessfullyParseredReport(reportCsvText, date, reportType, accountInfo.Account.Id);
                 throw exception;
             }
         }
 
-        private void SaveUnsuccessfullyParesedReport(string reportContent, DateTime date, string reportType, int accountId)
+        private void SaveUnsuccessfullyParseredReport(string reportContent, DateTime date, string reportType, int accountId)
         {
             try
             {

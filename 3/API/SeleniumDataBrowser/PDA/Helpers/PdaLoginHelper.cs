@@ -41,14 +41,15 @@ namespace SeleniumDataBrowser.PDA.Helpers
         {
             authorizationModel.Cookies = CookieManager.GetCookiesFromFiles(authorizationModel.CookiesDir);
             var cookiesExist = authorizationModel.Cookies.Any();
-
             if (cookiesExist)
             {
                 logger.LogInfo("Login into the portal using cookies.");
                 LoginWithCookie();
                 return;
             }
-            logger.LogWarning("Login into the portal without using cookies. Please choose 'Amazon DSP console (formerly Amazon Advertising Platform)' and enter an authorization code!");
+            logger.LogWarning(
+                "Login into the portal without using cookies." +
+                "Please choose 'Amazon DSP console (formerly Amazon Advertising Platform)' and enter an authorization code!");
             LoginWithoutCookie();
         }
 

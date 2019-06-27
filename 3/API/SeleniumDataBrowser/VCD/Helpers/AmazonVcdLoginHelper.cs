@@ -53,7 +53,8 @@ namespace SeleniumDataBrowser.VCD.Helpers
         /// </summary>
         /// <param name="pageActions">Manager of page actions.</param>
         /// <param name="authModel">Authorization settings.</param>
-        public static void RepeatPassword(AmazonLoginActionsWithPagesManager pageActions, AuthorizationModel authModel)
+        public static void RepeatPassword(
+            AmazonLoginActionsWithPagesManager pageActions, AuthorizationModel authModel)
         {
             pageActions.LoginWithPassword(authModel.Password);
         }
@@ -70,7 +71,7 @@ namespace SeleniumDataBrowser.VCD.Helpers
             }
         }
 
-        private static bool IsLoginProcessNeeded(AuthorizationModel authorizationModel, AmazonVcdActionsWithPagesManager pageManager)
+        private static bool IsLoginProcessNeeded(AuthorizationModel authorizationModel, ActionsWithPagesManager pageManager)
         {
             var currentUrl = pageManager.GetCurrentWindowUrl();
             return currentUrl.IndexOf(authorizationModel.SignInUrl, StringComparison.Ordinal) <= 0;
@@ -93,7 +94,7 @@ namespace SeleniumDataBrowser.VCD.Helpers
             }
         }
 
-        private void Login(AuthorizationModel authorizationModel, AmazonVcdActionsWithPagesManager pageManager)
+        private void Login(AmazonVcdActionsWithPagesManager pageManager)
         {
             authorizationModel.Cookies = CookieManager.GetCookiesFromFiles(authorizationModel.CookiesDir);
             var cookiesExist = authorizationModel.Cookies.Any();
@@ -104,11 +105,12 @@ namespace SeleniumDataBrowser.VCD.Helpers
             }
             else
             {
-                logger.LogWarning("Login into the portal without using cookies. Please choose 'Amazon DSP console (formerly Amazon Advertising Platform)' and enter an authorization code!");
+                logger.LogWarning(
+                    "Login into the portal without using cookies." +
+                           "Please choose 'Amazon DSP console (formerly Amazon Advertising Platform)' and enter an authorization code!");
                 LoginWithoutCookie(authorizationModel, pageManager);
             }
             pageManager.RefreshSalesDiagnosticPage(authorizationModel);
         }
-
     }
 }

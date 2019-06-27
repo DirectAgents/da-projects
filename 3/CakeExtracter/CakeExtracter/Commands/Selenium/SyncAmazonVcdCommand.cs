@@ -79,9 +79,7 @@ namespace CakeExtracter.Commands.Selenium
         public override int Execute(string[] remainingArguments)
         {
             InitializeCommand();
-
             RunEtls();
-
             return 0;
         }
 
@@ -114,7 +112,6 @@ namespace CakeExtracter.Commands.Selenium
         private void RunEtls()
         {
             pageActionsManager.RefreshSalesDiagnosticPage(authorizationModel);
-
             var dateRanges = VcdCommandConfigurationHelper.GetDateRangesToProcess();
             var accountsData = GetAccountsData();
             dateRanges.ForEach(d => RunForDateRange(d, accountsData));
@@ -168,22 +165,18 @@ namespace CakeExtracter.Commands.Selenium
         private void DoEtlForAccount(AccountInfo accountInfo, DateRange dateRange)
         {
             Logger.Info(accountInfo.Account.Id, $"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) started.");
-
             AccountPagePreparation(accountInfo);
-
             var reportDownloader = GetReportDownloader(accountInfo);
             var extractor = new AmazonVcdExtractor(accountInfo, dateRange, reportDownloader);
             var loader = new AmazonVcdLoader(accountInfo.Account);
             InitEtlEvents(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
-
             Logger.Info(accountInfo.Account.Id, $"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) finished.");
         }
 
         private void AccountPagePreparation(AccountInfo accountInfo)
         {
             PreparePageActionsManagerLogger(accountInfo.Account.Id);
-
             pageActionsManager.SelectAccountOnPage(accountInfo.Account.Name);
         }
 
@@ -203,13 +196,16 @@ namespace CakeExtracter.Commands.Selenium
 
         private VcdReportDownloader GetReportDownloader(AccountInfo accountInfo)
         {
-            var reportDownloadingStartedDelayInSeconds = VcdExecutionProfileManger.Current.ProfileConfiguration.ReportDownloadingStartedDelayInSeconds;
-            var minDelayBetweenReportDownloadingInSeconds = VcdExecutionProfileManger.Current.ProfileConfiguration.MinDelayBetweenReportDownloadingInSeconds;
-            var maxDelayBetweenReportDownloadingInSeconds = VcdExecutionProfileManger.Current.ProfileConfiguration.MaxDelayBetweenReportDownloadingInSeconds;
-            var reportDownloadingAttemptCount = VcdExecutionProfileManger.Current.ProfileConfiguration.ReportDownloadingAttemptCount;
+            var reportDownloadingStartedDelayInSeconds =
+                VcdExecutionProfileManger.Current.ProfileConfiguration.ReportDownloadingStartedDelayInSeconds;
+            var minDelayBetweenReportDownloadingInSeconds =
+                VcdExecutionProfileManger.Current.ProfileConfiguration.MinDelayBetweenReportDownloadingInSeconds;
+            var maxDelayBetweenReportDownloadingInSeconds =
+                VcdExecutionProfileManger.Current.ProfileConfiguration.MaxDelayBetweenReportDownloadingInSeconds;
+            var reportDownloadingAttemptCount =
+                VcdExecutionProfileManger.Current.ProfileConfiguration.ReportDownloadingAttemptCount;
             var vcdAccountInfo = GetVcdAccountInformation(accountInfo);
-
-            var reportDownloader = new VcdReportDownloader(
+            return new VcdReportDownloader(
                 vcdAccountInfo,
                 pageActionsManager,
                 authorizationModel,
@@ -218,7 +214,6 @@ namespace CakeExtracter.Commands.Selenium
                 minDelayBetweenReportDownloadingInSeconds,
                 maxDelayBetweenReportDownloadingInSeconds,
                 reportDownloadingAttemptCount);
-            return reportDownloader;
         }
 
         private VcdAccountInfo GetVcdAccountInformation(AccountInfo accountInfo)
@@ -300,7 +295,8 @@ namespace CakeExtracter.Commands.Selenium
             try
             {
                 var waitPageTimeoutInMinutes = SeleniumCommandConfigurationHelper.GetWaitPageTimeout();
-                pageActionsManager = new AmazonVcdActionsWithPagesManager(waitPageTimeoutInMinutes, IsHidingBrowserWindow, loggerWithoutAccountId);
+                pageActionsManager = new AmazonVcdActionsWithPagesManager(
+                    waitPageTimeoutInMinutes, IsHidingBrowserWindow, loggerWithoutAccountId);
             }
             catch (Exception e)
             {
@@ -328,7 +324,8 @@ namespace CakeExtracter.Commands.Selenium
 
         private void InitializeLoginManager()
         {
-            loginProcessManager = new AmazonVcdLoginHelper(authorizationModel, pageActionsManager, loggerWithoutAccountId);
+            loginProcessManager = new AmazonVcdLoginHelper(
+                authorizationModel, pageActionsManager, loggerWithoutAccountId);
         }
 
         private void InitializeLogger(int accountId = 0)
@@ -345,7 +342,8 @@ namespace CakeExtracter.Commands.Selenium
 
         private void SetLoggerWithoutAccountId()
         {
-            loggerWithoutAccountId = new SeleniumLogger(x => Logger.Info(x), Logger.Error, x => Logger.Warn(x));
+            loggerWithoutAccountId = new SeleniumLogger(
+                x => Logger.Info(x), Logger.Error, x => Logger.Warn(x));
         }
 
         private void SetLoggerWithAccountId(int accountId)
