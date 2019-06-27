@@ -65,52 +65,52 @@ namespace SeleniumDataBrowser.VCD.Helpers
         public void LoginToAmazonPortal()
         {
             pageActionManager.NavigateToSalesDiagnosticPage();
-            if (IsLoginProcessNeeded(authorizationModel, pageActionManager))
+            if (IsLoginProcessNeeded())
             {
-                Login(authorizationModel, pageActionManager);
+                Login();
             }
         }
 
-        private static bool IsLoginProcessNeeded(AuthorizationModel authorizationModel, ActionsWithPagesManager pageManager)
+        private bool IsLoginProcessNeeded()
         {
-            var currentUrl = pageManager.GetCurrentWindowUrl();
+            var currentUrl = pageActionManager.GetCurrentWindowUrl();
             return currentUrl.IndexOf(authorizationModel.SignInUrl, StringComparison.Ordinal) <= 0;
         }
 
-        private static void LoginWithoutCookie(AuthorizationModel authModel, AmazonLoginActionsWithPagesManager pageManager)
+        private void LoginWithoutCookie()
         {
-            pageManager.NavigateToUrl(authModel.SignInUrl, AmazonLoginPageObjects.ForgotPassLink);
-            pageManager.LoginProcess(authModel.Login, authModel.Password);
-            var cookies = pageManager.GetAllCookies();
-            CookieManager.SaveCookiesToFiles(cookies, authModel.CookiesDir);
+            pageActionManager.NavigateToUrl(authorizationModel.SignInUrl, AmazonLoginPageObjects.ForgotPassLink);
+            pageActionManager.LoginProcess(authorizationModel.Login, authorizationModel.Password);
+            var cookies = pageActionManager.GetAllCookies();
+            CookieManager.SaveCookiesToFiles(cookies, authorizationModel.CookiesDir);
         }
 
-        private static void LoginWithCookie(AuthorizationModel authModel, AmazonLoginActionsWithPagesManager pageManager)
+        private void LoginWithCookie()
         {
-            pageManager.NavigateToUrl(authModel.SignInUrl);
-            foreach (var cookie in authModel.Cookies)
+            pageActionManager.NavigateToUrl(authorizationModel.SignInUrl);
+            foreach (var cookie in authorizationModel.Cookies)
             {
-                pageManager.SetCookie(cookie);
+                pageActionManager.SetCookie(cookie);
             }
         }
 
-        private void Login(AmazonVcdActionsWithPagesManager pageManager)
+        private void Login()
         {
             authorizationModel.Cookies = CookieManager.GetCookiesFromFiles(authorizationModel.CookiesDir);
             var cookiesExist = authorizationModel.Cookies.Any();
             logger.LogInfo($"Login into the portal{(cookiesExist ? string.Empty : " without")} using cookies.");
             if (cookiesExist)
             {
-                LoginWithCookie(authorizationModel, pageManager);
+                LoginWithCookie();
             }
             else
             {
                 logger.LogWarning(
                     "Login into the portal without using cookies." +
                            "Please choose 'Amazon DSP console (formerly Amazon Advertising Platform)' and enter an authorization code!");
-                LoginWithoutCookie(authorizationModel, pageManager);
+                LoginWithoutCookie();
             }
-            pageManager.RefreshSalesDiagnosticPage(authorizationModel);
+            pageActionManager.RefreshSalesDiagnosticPage(authorizationModel);
         }
     }
 }

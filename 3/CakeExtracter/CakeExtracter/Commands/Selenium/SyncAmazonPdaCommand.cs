@@ -72,12 +72,6 @@ namespace CakeExtracter.Commands.Selenium
         public string StatsType { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to enable extracting stats
-        /// for only disabled accounts (default = false).
-        /// </summary>
-        public bool DisabledOnly { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether to hide the browser window (default = false).
         /// </summary>
         public bool IsHidingBrowserWindow { get; set; }
@@ -94,7 +88,6 @@ namespace CakeExtracter.Commands.Selenium
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
             HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default = {DefaultDaysAgo})", c => DaysAgoToStart = c);
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
-            HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
             HasOption<bool>("h|hideWindow=", "Include hiding the browser window", c => IsHidingBrowserWindow = c);
         }
 
@@ -109,7 +102,6 @@ namespace CakeExtracter.Commands.Selenium
             EndDate = null;
             DaysAgoToStart = null;
             StatsType = null;
-            DisabledOnly = false;
             IsHidingBrowserWindow = false;
         }
 
@@ -386,7 +378,7 @@ namespace CakeExtracter.Commands.Selenium
             var repository = new PlatformAccountRepository();
             if (!AccountId.HasValue)
             {
-                var accounts = repository.GetAccountsWithFilledExternalIdByPlatformCode(Platform.Code_Amazon, DisabledOnly);
+                var accounts = repository.GetAccountsWithFilledExternalIdByPlatformCode(Platform.Code_Amazon, false);
                 return accounts;
             }
             var account = repository.GetAccount(AccountId.Value);
