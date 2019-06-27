@@ -193,12 +193,19 @@ namespace CakeExtracter.Commands.Selenium
         {
             Logger.Info(accountInfo.Account.Id, $"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) started.");
             AccountPagePreparation(accountInfo);
-            var reportDownloader = GetReportDownloader(accountInfo);
-            var extractor = new AmazonVcdExtractor(accountInfo, dateRange, reportDownloader);
+            var extractor = GetDailyDataExtractor(accountInfo, dateRange);
             var loader = new AmazonVcdLoader(accountInfo.Account);
             InitEtlEvents(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
             Logger.Info(accountInfo.Account.Id, $"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) finished.");
+        }
+
+        private AmazonVcdExtractor GetDailyDataExtractor(AccountInfo accountInfo, DateRange dateRange)
+        {
+            var reportDownloader = GetReportDownloader(accountInfo);
+            var maxRetryAttemptsForExtractData = VcdCommandConfigurationManager.GetExtractDailyDataAttemptCount();
+            var extractor = new AmazonVcdExtractor(accountInfo, dateRange, reportDownloader, maxRetryAttemptsForExtractData);
+            return extractor;
         }
 
         private void AccountPagePreparation(AccountInfo accountInfo)
@@ -224,13 +231,13 @@ namespace CakeExtracter.Commands.Selenium
         private VcdReportDownloader GetReportDownloader(AccountInfo accountInfo)
         {
             var reportDownloadingStartedDelayInSeconds =
-                VcdExecutionProfileManger.Current.ProfileConfiguration.ReportDownloadingStartedDelayInSeconds;
+                VcdCommandConfigurationManager.GetReportDownloadingStartedDelay();
             var minDelayBetweenReportDownloadingInSeconds =
-                VcdExecutionProfileManger.Current.ProfileConfiguration.MinDelayBetweenReportDownloadingInSeconds;
+                VcdCommandConfigurationManager.GetMinDelayBetweenReportDownloading();
             var maxDelayBetweenReportDownloadingInSeconds =
-                VcdExecutionProfileManger.Current.ProfileConfiguration.MaxDelayBetweenReportDownloadingInSeconds;
+                VcdCommandConfigurationManager.GetMaxDelayBetweenReportDownloading();
             var reportDownloadingAttemptCount =
-                VcdExecutionProfileManger.Current.ProfileConfiguration.ReportDownloadingAttemptCount;
+                VcdCommandConfigurationManager.GetReportDownloadingAttemptCount();
             var vcdAccountInfo = GetVcdAccountInformation(accountInfo);
             return new VcdReportDownloader(
                 vcdAccountInfo,

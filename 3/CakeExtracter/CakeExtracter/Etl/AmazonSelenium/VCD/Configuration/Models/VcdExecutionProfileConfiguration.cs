@@ -16,15 +16,5 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Configuration.Models
         public List<int> AccountIds { get; set; }
 
         public string CookiesDirectory { get; set; }
-
-        public int ReportDownloadingStartedDelayInSeconds { get; set; }
-
-        public int MinDelayBetweenReportDownloadingInSeconds { get; set; }
-
-        public int ReportDownloadingAttemptCount { get; set; }
-
-        public int MaxDelayBetweenReportDownloadingInSeconds { get; set; }
-
-        public int ExtractDailyDataAttemptCount { get; set; }
     }
 }

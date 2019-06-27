@@ -22,6 +22,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
         private readonly VcdReportComposer reportComposer;
         private readonly AccountInfo accountInfo;
         private readonly DateRange dateRange;
+        private readonly int maxRetryAttemptsForExtractData;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AmazonVcdExtractor"/> class.
@@ -29,11 +30,17 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
         /// <param name="accountInfo">Information about the current account.</param>
         /// <param name="dateRange">Date range for extracting.</param>
         /// <param name="reportDownloader">Downloader of reports.</param>
-        public AmazonVcdExtractor(AccountInfo accountInfo, DateRange dateRange, VcdReportDownloader reportDownloader)
+        /// <param name="maxRetryAttemptsForExtractData">Count of maximum attempts for extracting daily data.</param>
+        public AmazonVcdExtractor(
+            AccountInfo accountInfo,
+            DateRange dateRange,
+            VcdReportDownloader reportDownloader,
+            int maxRetryAttemptsForExtractData)
         {
             this.accountInfo = accountInfo;
             this.dateRange = dateRange;
             this.reportDownloader = reportDownloader;
+            this.maxRetryAttemptsForExtractData = maxRetryAttemptsForExtractData;
             reportParser = new VcdReportCSVParser();
             reportComposer = new VcdReportComposer();
         }
@@ -126,12 +133,10 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
 
         private T TryExtractData<T>(DateTime date, string dataName, Func<DateTime, T> extractDataFunc)
         {
-            var maxRetryAttempts = VcdExecutionProfileManger.Current.ProfileConfiguration.ExtractDailyDataAttemptCount;
             var data = Policy
                 .Handle<Exception>()
-                .Retry(
-                    maxRetryAttempts,
-                    (exception, retryCount, context) => LogFailedReports(date, retryCount, maxRetryAttempts, dataName))
+                .Retry(maxRetryAttemptsForExtractData, (exception, retryCount, context) =>
+                        LogFailedReports(date, retryCount, maxRetryAttemptsForExtractData, dataName))
                 .Execute(() => extractDataFunc(date));
             return data;
         }
