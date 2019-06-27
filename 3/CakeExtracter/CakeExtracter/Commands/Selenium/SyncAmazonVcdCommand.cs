@@ -31,6 +31,8 @@ namespace CakeExtracter.Commands.Selenium
     [Export(typeof(ConsoleCommand))]
     public class SyncAmazonVcdCommand : ConsoleCommand
     {
+        private const int DefaultDaysAgo = 60;
+
         private VcdAccountsDataProvider accountsDataProvider;
         private AuthorizationModel authorizationModel;
         private AmazonVcdActionsWithPagesManager pageActionsManager;
@@ -42,6 +44,24 @@ namespace CakeExtracter.Commands.Selenium
         /// Gets or sets the command argument: a number of execution profile (default = 1).
         /// </summary>
         public int ProfileNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets the command argument: Start date
+        /// from which statistics will be extracted (default is 'daysAgo').
+        /// </summary>
+        public DateTime? StartDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the command argument: End date
+        /// to which statistics will be extracted (default is yesterday).
+        /// </summary>
+        public DateTime? EndDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the command argument: The number of days ago to calculate the start date
+        /// from which statistics will be retrieved, used if StartDate not specified (default = 31).
+        /// </summary>
+        public int? DaysAgoToStart { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to hide the browser window (default = false).
@@ -56,6 +76,9 @@ namespace CakeExtracter.Commands.Selenium
         {
             IsCommand("SyncAmazonVcdCommand", "Sync Vendor Central Stats");
             HasOption<int>("p|profileNumber=", "Execution profile number", c => ProfileNumber = c);
+            HasOption("s|startDate=", "Start Date (default is 'daysAgo')", c => StartDate = DateTime.Parse(c));
+            HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
+            HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default = {DefaultDaysAgo})", c => DaysAgoToStart = c);
             HasOption<bool>("h|hideWindow=", "Include hiding the browser window", c => IsHidingBrowserWindow = c);
         }
 
@@ -66,6 +89,9 @@ namespace CakeExtracter.Commands.Selenium
         public override void ResetProperties()
         {
             ProfileNumber = 0;
+            StartDate = null;
+            EndDate = null;
+            DaysAgoToStart = null;
             IsHidingBrowserWindow = false;
         }
 
@@ -112,9 +138,8 @@ namespace CakeExtracter.Commands.Selenium
         private void RunEtls()
         {
             pageActionsManager.RefreshSalesDiagnosticPage(authorizationModel);
-            var dateRanges = VcdCommandConfigurationManager.GetDateRangesToProcess();
             var accountsData = GetAccountsData();
-            dateRanges.ForEach(d => RunForDateRange(d, accountsData));
+            RunForAccounts(accountsData);
         }
 
         private List<AccountInfo> GetAccountsData()
@@ -145,8 +170,9 @@ namespace CakeExtracter.Commands.Selenium
             return userInfoExtractor.ExtractUserInfo(pageActionsManager);
         }
 
-        private void RunForDateRange(DateRange dateRange, List<AccountInfo> accountsData)
+        private void RunForAccounts(IEnumerable<AccountInfo> accountsData)
         {
+            var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info($"Amazon VCD ETL. DateRange {dateRange}.");
             foreach (var accountData in accountsData)
             {

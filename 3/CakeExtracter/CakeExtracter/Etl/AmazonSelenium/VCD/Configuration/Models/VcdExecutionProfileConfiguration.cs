@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace CakeExtracter.Etl.AmazonSelenium.VCD.Configuration.Models
 {
@@ -17,12 +16,6 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Configuration.Models
         public List<int> AccountIds { get; set; }
 
         public string CookiesDirectory { get; set; }
-
-        public DateTime? StartDate { get; set; }
-
-        public DateTime? EndDate { get; set; }
-
-        public List<int> DayIntervalsToProcess { get; set; }
 
         public int ReportDownloadingStartedDelayInSeconds { get; set; }
 
