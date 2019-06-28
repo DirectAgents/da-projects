@@ -499,6 +499,7 @@
     <Compile Include="Etl\AmazonSelenium\PDA\Extractors\AmazonPdaDailyRequestExtractor.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Extractors\AmazonPdaExtractor.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Models\AmazonPdaCampaignSummary.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\PdaDataProviderBuilder.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\AmazonVcdExtractor.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Configuration\Models\AccountInfo.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Loaders\AmazonVcdLoader.cs" />

@@ -56,11 +56,10 @@ namespace SeleniumDataBrowser.PDA.Helpers
         /// <summary>
         /// To repeat the password, the method enters only the password and waits for the page to load.
         /// </summary>
-        /// <param name="password">Password to be entered.</param>
         /// <param name="waitElement">Web element that the method will wait for after logging in.</param>
-        public void RepeatPasswordForLogin(string password, By waitElement = null)
+        public void RepeatPasswordForLogin(By waitElement = null)
         {
-            pageActionsManager.LoginWithPasswordAndWaiting(password, waitElement);
+            pageActionsManager.LoginWithPasswordAndWaiting(authorizationModel.Password, waitElement);
         }
 
         private void LoginWithoutCookie()

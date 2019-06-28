@@ -11,7 +11,7 @@ using SeleniumDataBrowser.PDA.Models;
 using SeleniumDataBrowser.PDA.Exceptions;
 using Polly;
 using RestSharp;
-using SeleniumDataBrowser.PageActions;
+using Cookie = OpenQA.Selenium.Cookie;
 
 namespace SeleniumDataBrowser.PDA
 {
@@ -24,39 +24,36 @@ namespace SeleniumDataBrowser.PDA
 
         private readonly string accountName;
         private readonly AuthorizationModel authorizationModel;
-        private readonly PdaProfileUrlManager profileUrlManager;
-        private readonly Dictionary<string, string> cookies;
+        private readonly Dictionary<string, string> availableProfileUrls;
         private readonly SeleniumLogger logger;
         private readonly int maxRetryAttempts;
         private readonly TimeSpan pauseBetweenAttempts;
+
+        private Dictionary<string, string> cookies;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AmazonConsoleManagerUtility"/> class.
         /// </summary>
         /// <param name="accountName">Name of current account.</param>
         /// <param name="authorizationModel">Authorization settings.</param>
-        /// <param name="pageActionsManager">Page actions manager.</param>
-        /// <param name="profileUrlManager">Profile URLs manager.</param>
+        /// <param name="availableProfileUrls">URLs of available campaign profiles.</param>
         /// <param name="maxRetryAttempts">Max number of retry attempts.</param>
         /// <param name="pauseBetweenAttempts">Time interval for pause between attempts.</param>
         /// <param name="logger">Selenium logger.</param>
         public AmazonConsoleManagerUtility(
             string accountName,
             AuthorizationModel authorizationModel,
-            ActionsWithPagesManager pageActionsManager,
-            PdaProfileUrlManager profileUrlManager,
+            Dictionary<string, string> availableProfileUrls,
             int maxRetryAttempts,
             TimeSpan pauseBetweenAttempts,
             SeleniumLogger logger)
         {
             this.accountName = accountName;
             this.authorizationModel = authorizationModel;
-            this.profileUrlManager = profileUrlManager;
+            this.availableProfileUrls = availableProfileUrls;
             this.maxRetryAttempts = maxRetryAttempts;
             this.pauseBetweenAttempts = pauseBetweenAttempts;
             this.logger = logger;
-            var collectionOfCookies = pageActionsManager.GetAllCookies();
-            cookies = collectionOfCookies.ToDictionary(x => x.Name, x => x.Value);
         }
 
         /// <summary>
@@ -71,6 +68,15 @@ namespace SeleniumDataBrowser.PDA
             var parameters = AmazonCmApiHelper.GetBasePdaCampaignsApiParams(true);
             var apiCampaignSummaries = GetCampaignsSummariesForAllDates(extractionDates, queryParams, parameters);
             return apiCampaignSummaries;
+        }
+
+        /// <summary>
+        /// Sets the specified collection of cookies for the PDA utility.
+        /// </summary>
+        /// <param name="collectionOfCookies">Collection of cookies.</param>
+        public void SetCookiesForUtility(IEnumerable<Cookie> collectionOfCookies)
+        {
+            cookies = collectionOfCookies.ToDictionary(x => x.Name, x => x.Value);
         }
 
         private static void AddDynamicCampaignDataToResultData(List<AmazonCmApiCampaignSummary> resultData, dynamic data)
@@ -101,7 +107,7 @@ namespace SeleniumDataBrowser.PDA
         private string GetAvailableProfileUrl()
         {
             var profileName = accountName.Trim();
-            var availableProfileUrl = profileUrlManager.AvailableProfileUrls.FirstOrDefault(x =>
+            var availableProfileUrl = availableProfileUrls.FirstOrDefault(x =>
                 string.Equals(x.Key, profileName, StringComparison.OrdinalIgnoreCase));
             var profileUrl = availableProfileUrl.Value;
             if (string.IsNullOrEmpty(profileUrl))

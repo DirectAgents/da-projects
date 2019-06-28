@@ -20,7 +20,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
     internal abstract class AmazonPdaExtractor<T> : BaseAmazonExtractor<T>
         where T : DatedStatsSummary
     {
-        private readonly AmazonConsoleManagerUtility amazonPdaUtility;
+        private readonly PdaDataProvider pdaDataProvider;
 
         /// <summary>
         /// Gets the display name for showing job execution state on history.
@@ -33,14 +33,14 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
         /// </summary>
         /// <param name="account">Account for which stats will be extracted.</param>
         /// <param name="dateRange">Range of dates for which stats will be extracted.</param>
-        /// <param name="amazonPdaUtility">Amazon PDA utility.</param>
+        /// <param name="pdaDataProvider">Amazon PDA data provider.</param>
         protected AmazonPdaExtractor(
             ExtAccount account,
             DateRange dateRange,
-            AmazonConsoleManagerUtility amazonPdaUtility)
+            PdaDataProvider pdaDataProvider)
             : base(null, dateRange, account)
         {
-            this.amazonPdaUtility = amazonPdaUtility;
+            this.pdaDataProvider = pdaDataProvider;
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
         /// <returns>Summaries of PDA campaigns.</returns>
         public IEnumerable<AmazonPdaCampaignSummary> ExtractPdaCampaignSummaries()
         {
-            var apiCampaignSummaries = amazonPdaUtility.GetPdaCampaignsSummaries(dateRange.Dates).ToList();
+            var apiCampaignSummaries = pdaDataProvider.GetPdaCampaignsSummaries(dateRange.Dates).ToList();
             AssignCampaignType(apiCampaignSummaries);
             var items = TransformSummaries(apiCampaignSummaries);
             return items;

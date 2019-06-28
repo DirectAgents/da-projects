@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
-using SeleniumDataBrowser.Models;
 using SeleniumDataBrowser.PDA.PageActions;
-using Polly;
-using SeleniumDataBrowser.Helpers;
 using SeleniumDataBrowser.PageActions;
+using Polly;
 
 namespace SeleniumDataBrowser.PDA.Helpers
 {
@@ -16,52 +13,39 @@ namespace SeleniumDataBrowser.PDA.Helpers
     {
         private const string CampaignPageUrl = "https://advertising.amazon.com/cm/campaigns";
 
-        /// <summary>
-        /// URLs of profiles which available on the portal.
-        /// </summary>
-        public Dictionary<string, string> AvailableProfileUrls;
-
-        private readonly AuthorizationModel authorizationModel;
         private readonly AmazonPdaActionsWithPagesManager pageActionsManager;
         private readonly PdaLoginManager loginProcessManager;
         private readonly int maxRetryAttempts;
         private readonly TimeSpan pauseBetweenAttempts;
-        private readonly SeleniumLogger logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PdaProfileUrlManager"/> class.
         /// </summary>
-        /// <param name="authorizationModel">Authorization settings.</param>
         /// <param name="pageActionsManager">Manager of page actions.</param>
         /// <param name="loginProcessManager">Manager of login process.</param>
         /// <param name="maxRetryAttempts">Max number of retry attempts.</param>
         /// <param name="pauseBetweenAttempts">Time interval for pause between attempts.</param>
-        /// <param name="logger">Selenium data browser logger.</param>
         public PdaProfileUrlManager(
-            AuthorizationModel authorizationModel,
             AmazonPdaActionsWithPagesManager pageActionsManager,
             PdaLoginManager loginProcessManager,
             int maxRetryAttempts,
-            TimeSpan pauseBetweenAttempts,
-            SeleniumLogger logger)
+            TimeSpan pauseBetweenAttempts)
         {
-            this.authorizationModel = authorizationModel;
             this.pageActionsManager = pageActionsManager;
             this.loginProcessManager = loginProcessManager;
             this.maxRetryAttempts = maxRetryAttempts;
             this.pauseBetweenAttempts = pauseBetweenAttempts;
-            this.logger = logger;
         }
 
         /// <summary>
-        /// The method sets the URLs for the available campaign profiles on main page of portal.
+        /// Gets the URLs for the available campaign profiles on main page of the portal.
         /// </summary>
-        public void SetAvailableProfileUrls()
+        /// <returns>Dictionary of available profile URLs.</returns>
+        public Dictionary<string, string> GetAvailableProfileUrls()
         {
             GoToPortalMainPage();
-            AvailableProfileUrls = TryGetAvailableProfiles();
-            logger.LogInfo("The following profiles were found for the current account:");
-            AvailableProfileUrls.ForEach(x => logger.LogInfo($"{x.Key} - {x.Value}"));
+            var availableProfileUrls = TryGetAvailableProfiles();
+            return availableProfileUrls;
         }
 
         private void GoToPortalMainPage()
@@ -71,9 +55,7 @@ namespace SeleniumDataBrowser.PDA.Helpers
                 && pageActionsManager.IsElementPresent(AmazonLoginPageObjects.LoginPassInput))
             {
                 // need to repeat the password
-                loginProcessManager.RepeatPasswordForLogin(
-                    authorizationModel.Password,
-                    AmazonPdaPageObjects.FilterByButton);
+                loginProcessManager.RepeatPasswordForLogin(AmazonPdaPageObjects.FilterByButton);
             }
         }
 

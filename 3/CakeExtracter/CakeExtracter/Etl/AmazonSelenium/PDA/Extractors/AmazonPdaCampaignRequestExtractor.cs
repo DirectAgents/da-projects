@@ -35,8 +35,8 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
         public AmazonPdaCampaignRequestExtractor(
             ExtAccount account,
             DateRange dateRange,
-            AmazonConsoleManagerUtility amazonPdaUtility)
-            : base(account, dateRange, amazonPdaUtility)
+            PdaDataProvider pdaDataProvider)
+            : base(account, dateRange, pdaDataProvider)
         {
         }
 

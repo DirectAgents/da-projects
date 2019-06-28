@@ -7,7 +7,7 @@ using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Exceptions;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Etl;
-using CakeExtracter.Etl.AmazonSelenium.Configuration;
+using CakeExtracter.Etl.AmazonSelenium.PDA;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Configuration;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Extractors;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
@@ -15,10 +15,7 @@ using CakeExtracter.Helpers;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
 using SeleniumDataBrowser.Helpers;
-using SeleniumDataBrowser.Models;
 using SeleniumDataBrowser.PDA;
-using SeleniumDataBrowser.PDA.Helpers;
-using SeleniumDataBrowser.PDA.PageActions;
 using Platform = DirectAgents.Domain.Entities.CPProg.Platform;
 
 namespace CakeExtracter.Commands.Selenium
@@ -33,14 +30,7 @@ namespace CakeExtracter.Commands.Selenium
     {
         private const int DefaultDaysAgo = 41;
 
-        private AuthorizationModel authorizationModel;
-        private AmazonPdaActionsWithPagesManager pageActionsManager;
-        private PdaLoginManager loginProcessManager;
-        private PdaProfileUrlManager profileUrlManager;
-        private int maxRetryAttempts;
-        private TimeSpan pauseBetweenAttempts;
-        private SeleniumLogger loggerWithAccountId;
-        private SeleniumLogger loggerWithoutAccountId;
+        private PdaDataProviderBuilder pdaDataProviderBuilder;
 
         /// <summary>
         /// Gets or sets the command argument: Account ID in the database
@@ -115,8 +105,19 @@ namespace CakeExtracter.Commands.Selenium
         /// <returns>Execution code.</returns>
         public override int Execute(string[] remainingArguments)
         {
-            InitializeCommand();
-            RunEtls();
+            IntervalBetweenUnsuccessfulAndNewRequestInMinutes =
+                PdaCommandConfigurationManager.GetIntervalBetweenUnsuccessfulAndNewRequest();
+            var pdaDataProvider = BuildPdaDataProvider();
+            var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
+            Logger.Info("Amazon ETL (PDA Campaigns). DateRange: {0}.", dateRange);
+            var statsType = new StatsTypeAgg(StatsType);
+            var accounts = GetAccounts().ToList();
+            SetInfoAboutAllAccountsInHistory(accounts);
+            foreach (var account in accounts)
+            {
+                DoEtls(account, dateRange, statsType, pdaDataProvider);
+            }
+            Logger.Info("Amazon ETL (PDA Campaigns) has been finished.");
             return 0;
         }
 
@@ -138,141 +139,35 @@ namespace CakeExtracter.Commands.Selenium
             return broadCommands;
         }
 
-        private void InitializeCommand()
+        private PdaDataProvider BuildPdaDataProvider()
         {
             try
             {
-                InitializeFields();
-                LoginToPortal();
-                SetAvailableProfileUrls();
+                var loggerWithoutAccountId = GetLoggerWithoutAccountId();
+                pdaDataProviderBuilder = new PdaDataProviderBuilder(IsHidingBrowserWindow);
+                var pdaDataProvider = pdaDataProviderBuilder.BuildDataProvider(loggerWithoutAccountId);
+                return pdaDataProvider;
             }
             catch (Exception e)
             {
-                throw new Exception("Failed to initialize PDA command.", e);
+                throw new Exception("Failed to build PDA data provider.", e);
             }
         }
 
-        private void InitializeFields()
-        {
-            SetFieldsFromConfig();
-            InitializeLogger();
-            InitializeAuthorizationModel();
-            InitializePageActionsManager();
-            InitializeLoginProcessManager();
-        }
-
-        private void SetFieldsFromConfig()
-        {
-            maxRetryAttempts = PdaCommandConfigurationManager.GetMaxRetryAttempts();
-            pauseBetweenAttempts = PdaCommandConfigurationManager.GetPauseBetweenAttempts();
-            IntervalBetweenUnsuccessfulAndNewRequestInMinutes =
-                PdaCommandConfigurationManager.GetIntervalBetweenUnsuccessfulAndNewRequest();
-        }
-
-        private void InitializeAuthorizationModel()
-        {
-            try
-            {
-                var cookieDirectoryName = PdaCommandConfigurationManager.GetCookiesDirectoryName();
-                authorizationModel = new AuthorizationModel
-                {
-                    Login = PdaCommandConfigurationManager.GetEMail(),
-                    Password = PdaCommandConfigurationManager.GetEMailPassword(),
-                    CookiesDir = cookieDirectoryName,
-                };
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Failed to initialize authorization settings.", e);
-            }
-        }
-
-        private void InitializePageActionsManager()
-        {
-            try
-            {
-                var timeoutInMinutes = SeleniumCommandConfigurationManager.GetWaitPageTimeout();
-                pageActionsManager = new AmazonPdaActionsWithPagesManager(
-                    timeoutInMinutes,
-                    IsHidingBrowserWindow,
-                    loggerWithoutAccountId);
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Failed to initialize page actions manager.", e);
-            }
-        }
-
-        private void InitializeLoginProcessManager()
-        {
-            try
-            {
-                loginProcessManager = new PdaLoginManager(authorizationModel, pageActionsManager, loggerWithoutAccountId);
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Failed to initialize login process manager.", e);
-            }
-        }
-
-        private void LoginToPortal()
-        {
-            try
-            {
-                loginProcessManager.LoginToPortal();
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Failed to login to Amazon Advertiser Portal.", e);
-            }
-        }
-
-        private void SetAvailableProfileUrls()
-        {
-            try
-            {
-                profileUrlManager = new PdaProfileUrlManager(
-                    authorizationModel,
-                    pageActionsManager,
-                    loginProcessManager,
-                    maxRetryAttempts,
-                    pauseBetweenAttempts,
-                    loggerWithoutAccountId);
-                profileUrlManager.SetAvailableProfileUrls();
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Failed to set available profile URLs.", e);
-            }
-        }
-
-        private void RunEtls()
-        {
-            var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
-            Logger.Info("Amazon ETL (PDA Campaigns). DateRange: {0}.", dateRange);
-            var statsType = new StatsTypeAgg(StatsType);
-            var accounts = GetAccounts().ToList();
-            SetInfoAboutAllAccountsInHistory(accounts);
-            foreach (var account in accounts)
-            {
-                DoEtls(account, dateRange, statsType);
-            }
-            Logger.Info("Amazon ETL (PDA Campaigns) has been finished.");
-        }
-
-        private void DoEtls(ExtAccount account, DateRange dateRange, StatsTypeAgg statsType)
+        private void DoEtls(ExtAccount account, DateRange dateRange, StatsTypeAgg statsType, PdaDataProvider pdaDataProvider)
         {
             Logger.Info(account.Id, $"Commencing ETL for Amazon account ({account.Id}) {account.Name}");
-            var amazonPdaUtility = CreateAmazonPdaUtility(account);
+            var loggerWithAccountId = GetLoggerWithAccountId(account.Id);
+            pdaDataProviderBuilder.InitializeAmazonPdaUtility(account.Name, loggerWithAccountId);
             try
             {
                 if (statsType.Daily)
                 {
-                    DoEtlDailyFromRequests(account, dateRange, amazonPdaUtility);
+                    DoEtlDailyFromRequests(account, dateRange, pdaDataProvider);
                 }
                 if (statsType.Strategy)
                 {
-                    DoEtlStrategyFromRequests(account, dateRange, amazonPdaUtility);
+                    DoEtlStrategyFromRequests(account, dateRange, pdaDataProvider);
                 }
             }
             catch (Exception ex)
@@ -282,29 +177,9 @@ namespace CakeExtracter.Commands.Selenium
             Logger.Info(account.Id, $"Finished ETL for Amazon account ({account.Id}) {account.Name}");
         }
 
-        private AmazonConsoleManagerUtility CreateAmazonPdaUtility(ExtAccount account)
+        private void DoEtlDailyFromRequests(ExtAccount account, DateRange dateRange, PdaDataProvider pdaDataProvider)
         {
-            try
-            {
-                InitializeLogger(account.Id);
-                return new AmazonConsoleManagerUtility(
-                    account.Name,
-                    authorizationModel,
-                    pageActionsManager,
-                    profileUrlManager,
-                    maxRetryAttempts,
-                    pauseBetweenAttempts,
-                    loggerWithAccountId);
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Failed to create Amazon PDA Utility.", e);
-            }
-        }
-
-        private void DoEtlDailyFromRequests(ExtAccount account, DateRange dateRange, AmazonConsoleManagerUtility amazonPdaUtility)
-        {
-            var extractor = new AmazonPdaDailyRequestExtractor(account, dateRange, amazonPdaUtility);
+            var extractor = new AmazonPdaDailyRequestExtractor(account, dateRange, pdaDataProvider);
             var loader = new AmazonPdaDailySummaryLoader(account.Id);
             InitEtlEvents<DailySummary, AmazonPdaDailyRequestExtractor, AmazonPdaDailySummaryLoader>(extractor, loader);
             CommandExecutionContext.Current?.SetJobExecutionStateInHistory($"{extractor.SummariesDisplayName} - Started", account.Id);
@@ -312,9 +187,9 @@ namespace CakeExtracter.Commands.Selenium
             CommandExecutionContext.Current?.SetJobExecutionStateInHistory($"{extractor.SummariesDisplayName} - Finished", account.Id);
         }
 
-        private void DoEtlStrategyFromRequests(ExtAccount account, DateRange dateRange, AmazonConsoleManagerUtility amazonPdaUtility)
+        private void DoEtlStrategyFromRequests(ExtAccount account, DateRange dateRange, PdaDataProvider pdaDataProvider)
         {
-            var extractor = new AmazonPdaCampaignRequestExtractor(account, dateRange, amazonPdaUtility);
+            var extractor = new AmazonPdaCampaignRequestExtractor(account, dateRange, pdaDataProvider);
             var loader = new AmazonCampaignSummaryLoader(account.Id);
             InitEtlEvents<StrategySummary, AmazonPdaCampaignRequestExtractor, AmazonCampaignSummaryLoader>(extractor, loader);
             CommandExecutionContext.Current?.SetJobExecutionStateInHistory($"{extractor.SummariesDisplayName} - Started", account.Id);
@@ -385,29 +260,17 @@ namespace CakeExtracter.Commands.Selenium
             return new[] { account };
         }
 
-        private void InitializeLogger(int accountId = 0)
+        private SeleniumLogger GetLoggerWithoutAccountId()
         {
-            if (accountId == 0)
-            {
-                SetLoggerWithoutAccountId();
-            }
-            else
-            {
-                SetLoggerWithAccountId(accountId);
-            }
-        }
-
-        private void SetLoggerWithoutAccountId()
-        {
-            loggerWithoutAccountId = new SeleniumLogger(
+            return new SeleniumLogger(
                 x => Logger.Info(x),
                 Logger.Error,
                 x => Logger.Warn(x));
         }
 
-        private void SetLoggerWithAccountId(int accountId)
+        private SeleniumLogger GetLoggerWithAccountId(int accountId)
         {
-            loggerWithAccountId = new SeleniumLogger(
+            return new SeleniumLogger(
                 x => Logger.Info(accountId, x),
                 exc => Logger.Error(accountId, exc),
                 x => Logger.Warn(accountId, x));
