@@ -48,15 +48,21 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         {
             if (command.NoNeedToCreateRepeatRequests)
             {
-                request.Status = JobRequestStatus.Failed;
-                requestRepository.UpdateItem(request);
-                LogNotScheduledCommand(command.Command, CommandArgumentsConverter.GetCommandArgumentsAsLine(command));
+                ProcessNotRescheduledFailedRequest(request, command);
             }
             else
             {
                 var scheduledTime = CommandSchedulingUtils.GetCommandRetryScheduledTime(command);
                 RescheduleRequest(request, scheduledTime);
             }
+        }
+
+        /// <inheritdoc />
+        public void ProcessNotRescheduledFailedRequest(JobRequest request, ConsoleCommand command)
+        {
+            request.Status = JobRequestStatus.Failed;
+            requestRepository.UpdateItem(request);
+            LogNotScheduledCommand(command.Command, CommandArgumentsConverter.GetCommandArgumentsAsLine(command));
         }
 
         /// <inheritdoc />

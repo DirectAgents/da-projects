@@ -21,11 +21,18 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         void SetJobRequestAsProcessing(JobRequest request);
 
         /// <summary>
-        /// Reschedules the job request.
+        /// Reschedules the job request if needed.
         /// </summary>
         /// <param name="request">The job request.</param>
         /// <param name="sourceCommand">The source command of the request.</param>
         void ProcessFailedRequest(JobRequest request, ConsoleCommand sourceCommand);
+
+        /// <summary>
+        /// Sets a status of the job request to Failed and does not reschedule the job request.
+        /// </summary>
+        /// <param name="request">The job request.</param>
+        /// <param name="sourceCommand">The source command of the request.</param>
+        void ProcessNotRescheduledFailedRequest(JobRequest request, ConsoleCommand sourceCommand);
 
         /// <summary>
         /// Creates job requests for scheduled commands based on the current command and job request.

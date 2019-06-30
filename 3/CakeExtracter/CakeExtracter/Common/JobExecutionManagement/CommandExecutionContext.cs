@@ -97,8 +97,11 @@ namespace CakeExtracter.Common.JobExecutionManagement
         /// </summary>
         public void SetAsAbortedByTimeoutRequestExecution()
         {
-            jobExecutionItemService.SetJobExecutionItemAbortedByTimeoutState(currentJobRequestExecution);
-            CloseContext();
+            if (currentJobRequestExecution != null)
+            {
+                jobExecutionItemService.SetJobExecutionItemAbortedByTimeoutState(currentJobRequestExecution);
+            }
+            jobRequestLifeCycleManager.ProcessNotRescheduledFailedRequest(currentJobRequest, currentCommand);
         }
 
         /// <summary>
