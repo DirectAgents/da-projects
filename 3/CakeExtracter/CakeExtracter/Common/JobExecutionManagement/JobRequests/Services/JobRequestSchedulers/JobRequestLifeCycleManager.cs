@@ -70,7 +70,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         /// <inheritdoc />
         public void ProcessCompletedRequest(ConsoleCommand command, JobRequest request, RetryRequestsHolder retryRequestsHolder)
         {
-            List<JobRequest> jobRetryRequests = GetUniqueJobRetryRequests(request, retryRequestsHolder);
+            var jobRetryRequests = GetUniqueJobRetryRequests(request, retryRequestsHolder);
             if (jobRetryRequests.Count > 0)
             {
                 ProcessRequestWithRetriesCompletion(command, request, jobRetryRequests);

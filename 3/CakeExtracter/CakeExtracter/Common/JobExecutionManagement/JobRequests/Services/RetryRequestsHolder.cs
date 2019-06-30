@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils;
 
@@ -11,8 +12,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services
     public class RetryRequestsHolder
     {
         private readonly ConcurrentQueue<CommandWithSchedule> commandsToSchedule;
-
-        private ConsoleCommand parentCommand;
+        private readonly ConsoleCommand parentCommand;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RetryRequestsHolder" /> class.
@@ -45,6 +45,15 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services
         public IEnumerable<CommandWithSchedule> GetUniqueBroadCommands()
         {
             return parentCommand.GetUniqueBroadCommands(commandsToSchedule);
+        }
+
+        /// <summary>
+        /// Indicates whether there are any scheduled commands.
+        /// </summary>
+        /// <returns>True if commands exist, false if not.</returns>
+        public bool AreThereAnyScheduledCommands()
+        {
+            return commandsToSchedule.Any();
         }
     }
 }

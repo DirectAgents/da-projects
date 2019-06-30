@@ -33,13 +33,14 @@ namespace CakeExtracter.Common.JobExecutionManagement
 
         private readonly IJobExecutionItemService jobExecutionItemService;
         private readonly IJobRequestLifeCycleManager jobRequestLifeCycleManager;
+        private readonly RetryRequestsHolder retryRequestsHolder;
 
         private ConsoleCommand currentCommand;
         private JobRequest currentJobRequest;
         private JobRequestExecution currentJobRequestExecution;
-        private RetryRequestsHolder retryRequestsHolder;
 
         private bool isFailedExecution;
+        private bool isExecutionWithErrors;
 
         private CommandExecutionContext(ConsoleCommand command)
         {
@@ -72,7 +73,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         /// </summary>
         public void CompleteRequestExecution()
         {
-            if (isFailedExecution)
+            if (isFailedExecution || (isExecutionWithErrors && !retryRequestsHolder.AreThereAnyScheduledCommands()))
             {
                 SetAsFailedRequestExecution();
                 return;
@@ -127,6 +128,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         /// <param name="accountId">Account Id.</param>
         public void LogErrorInHistory(string message, int? accountId = null)
         {
+            isExecutionWithErrors = true;
             if (currentJobRequestExecution != null)
             {
                 jobExecutionItemService.AddErrorToJobExecutionItem(currentJobRequestExecution, message, accountId);
