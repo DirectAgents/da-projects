@@ -321,7 +321,7 @@ namespace CakeExtracter.Commands.Selenium
 
         private void SetExecutionProfile()
         {
-            VcdExecutionProfileManger.Current.SetExecutionProfileNumber(ProfileNumber);
+            VcdExecutionProfileManager.Current.SetExecutionProfileNumber(ProfileNumber);
         }
 
         private void InitializePageActionsManager()
@@ -344,10 +344,10 @@ namespace CakeExtracter.Commands.Selenium
             {
                 authorizationModel = new AuthorizationModel
                 {
-                    Login = VcdExecutionProfileManger.Current.ProfileConfiguration.LoginEmail,
-                    Password = VcdExecutionProfileManger.Current.ProfileConfiguration.LoginPassword,
-                    SignInUrl = VcdExecutionProfileManger.Current.ProfileConfiguration.SignInUrl,
-                    CookiesDir = VcdExecutionProfileManger.Current.ProfileConfiguration.CookiesDirectory,
+                    Login = VcdExecutionProfileManager.Current.ProfileConfiguration.LoginEmail,
+                    Password = VcdExecutionProfileManager.Current.ProfileConfiguration.LoginPassword,
+                    SignInUrl = VcdExecutionProfileManager.Current.ProfileConfiguration.SignInUrl,
+                    CookiesDir = VcdExecutionProfileManager.Current.ProfileConfiguration.CookiesDirectory,
                 };
             }
             catch (Exception e)

@@ -520,7 +520,7 @@
     <Compile Include="Etl\AmazonSelenium\VCD\Models\VcdReportData.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Configuration\VcdAccountsDataProvider.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Configuration\VcdCommandConfigurationManager.cs" />
-    <Compile Include="Etl\AmazonSelenium\VCD\Configuration\VcdExecutionProfileManger.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Configuration\VcdExecutionProfileManager.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Synchers\VcdAnalyticTablesSyncher.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportDataComposer\VcdReportComposer.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\BaseProductRowMap.cs" />
