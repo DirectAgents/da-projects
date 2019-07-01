@@ -9,22 +9,22 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Configuration
     /// <summary>
     /// Profile management singleton object. Encapsulate logic about execution profile management and it's configuration.
     /// </summary>
-    public class VcdExecutionProfileManger
+    public class VcdExecutionProfileManager
     {
         /// <summary>
         /// Access point for singleton object.
         /// </summary>
-        public static VcdExecutionProfileManger Current = new VcdExecutionProfileManger();
+        public static VcdExecutionProfileManager Current = new VcdExecutionProfileManager();
 
         private int executionProfileNumber;
 
         private VcdExecutionProfileConfiguration profileConfiguration;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="VcdExecutionProfileManger"/> class.
+        /// Initializes a new instance of the <see cref="VcdExecutionProfileManager"/> class.
         /// Hidden singleton constructor.
         /// </summary>
-        private VcdExecutionProfileManger()
+        private VcdExecutionProfileManager()
         {
         }
 
@@ -69,9 +69,10 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Configuration
 
         private VcdExecutionProfileConfiguration ExtractExecutionProfileConfigurationByNumber(int profileNumber)
         {
-            var profileConfigFilePath = PathToFileDirectoryHelper.GetAssemblyRelativePath($"VcdExecutionProfiles\\Profile_{profileNumber}.json");
-            var configFileContentJson = File.ReadAllText(profileConfigFilePath);
-            var executionProfileConfiguration = JsonConvert.DeserializeObject<VcdExecutionProfileConfiguration>(configFileContentJson);
+            var relativePathToProfileFile = $"VcdExecutionProfiles\\Profile_{profileNumber}.json";
+            var fullPathToProfileFile = PathToFileDirectoryHelper.GetAssemblyRelativePath(relativePathToProfileFile);
+            var profileFileContentJson = File.ReadAllText(fullPathToProfileFile);
+            var executionProfileConfiguration = JsonConvert.DeserializeObject<VcdExecutionProfileConfiguration>(profileFileContentJson);
             return executionProfileConfiguration;
         }
     }

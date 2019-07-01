@@ -66,9 +66,9 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Configuration
 
         private List<ExtAccount> GetDbAccountsToProcess()
         {
-            return VcdExecutionProfileManger.Current.ProfileConfiguration.AccountIds.Count == 0
+            return VcdExecutionProfileManager.Current.ProfileConfiguration.AccountIds.Count == 0
                 ? accountsRepository.GetAccountsByPlatformCode(Platform.Code_AraAmazon).ToList()
-                : accountsRepository.GetAccountsWithIds(VcdExecutionProfileManger.Current.ProfileConfiguration.AccountIds).ToList();
+                : accountsRepository.GetAccountsWithIds(VcdExecutionProfileManager.Current.ProfileConfiguration.AccountIds).ToList();
         }
     }
 }
