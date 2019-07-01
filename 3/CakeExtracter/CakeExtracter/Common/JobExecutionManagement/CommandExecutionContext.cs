@@ -39,7 +39,10 @@ namespace CakeExtracter.Common.JobExecutionManagement
         private JobRequest currentJobRequest;
         private JobRequestExecution currentJobRequestExecution;
 
+        // The flag indicates that the status of a running job request should be set to a failure state when it ends.
         private bool isFailedExecution;
+
+        // The flag indicates that there are errors in the running job request.
         private bool isExecutionWithErrors;
 
         private CommandExecutionContext(ConsoleCommand command)
