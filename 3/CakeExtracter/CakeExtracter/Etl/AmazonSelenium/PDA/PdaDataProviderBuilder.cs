@@ -17,6 +17,8 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA
     {
         private readonly bool isHidingBrowserWindow;
         private readonly AuthorizationModel authorizationModel;
+        private readonly int maxRetryAttempts;
+        private readonly TimeSpan pauseBetweenAttempts;
 
         private PdaDataProvider pdaDataProvider;
         private Dictionary<string, string> availableProfileUrls;
@@ -29,6 +31,8 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA
         {
             this.isHidingBrowserWindow = isHidingBrowserWindow;
             authorizationModel = GetAuthorizationModel();
+            maxRetryAttempts = PdaCommandConfigurationManager.GetMaxRetryAttempts();
+            pauseBetweenAttempts = PdaCommandConfigurationManager.GetPauseBetweenAttempts();
         }
 
         /// <summary>
@@ -41,10 +45,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA
             var pageActionsManager = GetPageActionsManager(loggerWithoutAccountId);
             var loginProcessManager = GetLoginProcessManager(pageActionsManager, loggerWithoutAccountId);
             var pdaProfileUrlManager = new PdaProfileUrlManager(
-                pageActionsManager,
-                loginProcessManager,
-                PdaCommandConfigurationManager.GetMaxRetryAttempts(),
-                PdaCommandConfigurationManager.GetPauseBetweenAttempts());
+                pageActionsManager, loginProcessManager, maxRetryAttempts, pauseBetweenAttempts);
             pdaDataProvider = PdaDataProvider.GetPdaDataProviderInstance(loginProcessManager, pdaProfileUrlManager);
             pdaDataProvider.LoginToPortal();
             pdaDataProvider.SetCookiesForDataProvider(pageActionsManager);
@@ -65,8 +66,8 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA
                     accountName,
                     authorizationModel,
                     availableProfileUrls,
-                    PdaCommandConfigurationManager.GetMaxRetryAttempts(),
-                    PdaCommandConfigurationManager.GetPauseBetweenAttempts(),
+                    maxRetryAttempts,
+                    pauseBetweenAttempts,
                     loggerWithAccountId);
                 pdaDataProvider.SetAmazonPdaUtilityCurrentForDataProvider(amazonPdaUtility);
             }
@@ -90,11 +91,13 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA
         {
             try
             {
+                var emailLogin = PdaCommandConfigurationManager.GetEMail();
+                var emailPassword = PdaCommandConfigurationManager.GetEMailPassword();
                 var cookieDirectoryName = PdaCommandConfigurationManager.GetCookiesDirectoryName();
                 return new AuthorizationModel
                 {
-                    Login = PdaCommandConfigurationManager.GetEMail(),
-                    Password = PdaCommandConfigurationManager.GetEMailPassword(),
+                    Login = emailLogin,
+                    Password = emailPassword,
                     CookiesDir = cookieDirectoryName,
                 };
             }
