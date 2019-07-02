@@ -106,7 +106,7 @@ namespace SeleniumDataBrowser.VCD.Helpers
             else
             {
                 logger.LogWarning(
-                    "Login into the portal without using cookies." +
+                    "Login into the portal without using cookies. " +
                            "Please choose 'Amazon DSP console (formerly Amazon Advertising Platform)' and enter an authorization code!");
                 LoginWithoutCookie();
             }
