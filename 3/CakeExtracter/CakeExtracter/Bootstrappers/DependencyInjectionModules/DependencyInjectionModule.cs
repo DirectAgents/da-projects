@@ -2,6 +2,8 @@
 using CakeExtracter.Common.JobExecutionManagement.JobExecution;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestLaunchers;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestLaunchers.Interfaces;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers.Interfaces;
 using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors;
@@ -51,6 +53,7 @@ namespace CakeExtracter.Bootstrappers
         {
             Bind<IJobExecutionItemService>().To<JobExecutionItemService>().InSingletonScope();
             Bind<IJobRequestLifeCycleManager>().To<JobRequestLifeCycleManager>().InSingletonScope();
+            Bind<IJobExecutionRequestLauncher>().To<JobExecutionRequestLauncher>().InSingletonScope();
             Bind<IJobExecutionNotificationService>().To<JobExecutionNotificationService>().InSingletonScope();
             Bind<IEmailNotificationsService>().To<EmailNotificationsService>().InSingletonScope();
         }

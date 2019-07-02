@@ -4,7 +4,6 @@ using System.Linq;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestLaunchers.Interfaces;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils;
-using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
@@ -12,7 +11,7 @@ using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestLaunchers
 {
     /// <inheritdoc />
-    internal class JobExecutionRequestLauncher : IJobExecutionRequestLauncher
+    public class JobExecutionRequestLauncher : IJobExecutionRequestLauncher
     {
         private readonly IJobRequestsRepository requestRepository;
 
