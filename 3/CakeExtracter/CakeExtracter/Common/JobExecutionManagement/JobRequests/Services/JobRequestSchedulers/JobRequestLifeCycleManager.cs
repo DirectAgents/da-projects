@@ -98,7 +98,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
                 {
                     jobRequest.Status = actualStatus;
                     requestRepository.UpdateItem(jobRequest);
-                    Logger.Info($"Retry rending job with id {jobRequest.Id} status updated to {jobRequest.Status}");
+                    Logger.Info($"Retry pending job with id {jobRequest.Id} status updated to {jobRequest.Status}");
                 }
             });
         }
@@ -110,11 +110,13 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
             {
                 return JobRequestStatus.Completed;
             }
-            if (childrenRequests.Any(childReq => childReq.Status == JobRequestStatus.Processing || childReq.Status == JobRequestStatus.PendingRetries || childReq.Status == JobRequestStatus.Scheduled))
-            {
-                return JobRequestStatus.PendingRetries;
-            }
-            return JobRequestStatus.Failed;
+
+            return childrenRequests.Any(childReq =>
+                childReq.Status == JobRequestStatus.Processing
+                || childReq.Status == JobRequestStatus.PendingRetries
+                || childReq.Status == JobRequestStatus.Scheduled)
+                ? JobRequestStatus.PendingRetries
+                : JobRequestStatus.Failed;
         }
 
         private List<JobRequest> GetRetryPendingsJobRequests()

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 using CakeExtracter.Common.JobExecutionManagement;
@@ -181,7 +180,7 @@ namespace CakeExtracter.Common
             try
             {
                 var retCode = Execute(remainingArguments);
-                CommandExecutionContext.Current.CompleteRequestExecution();
+                CommandExecutionContext.Current.EndRequestExecution();
                 return retCode;
             }
             catch (Exception ex)

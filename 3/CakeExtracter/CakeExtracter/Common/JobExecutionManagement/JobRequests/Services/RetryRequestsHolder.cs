@@ -46,14 +46,5 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services
         {
             return parentCommand.GetUniqueBroadCommands(commandsToSchedule);
         }
-
-        /// <summary>
-        /// Indicates whether there are any scheduled commands.
-        /// </summary>
-        /// <returns>True if commands exist, false if not.</returns>
-        public bool AreThereAnyScheduledCommands()
-        {
-            return commandsToSchedule.Any();
-        }
     }
 }

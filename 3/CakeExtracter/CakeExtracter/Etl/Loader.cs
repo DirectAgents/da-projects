@@ -72,14 +72,7 @@ namespace CakeExtracter.Etl
             {
                 var exception = new FailedEtlException(null, null, accountId, e);
                 LogExceptionInLoader(exception);
-                if (ProcessEtlFailedWithoutInformation == null)
-                {
-                    CommandExecutionContext.Current.MarkCurrentExecutionAsFailed();
-                }
-                else
-                {
-                    ProcessEtlFailedWithoutInformation.Invoke(exception);
-                }
+                ProcessEtlFailedWithoutInformation?.Invoke(exception);
             }
         }
 

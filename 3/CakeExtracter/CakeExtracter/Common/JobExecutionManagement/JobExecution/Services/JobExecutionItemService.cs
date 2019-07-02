@@ -181,6 +181,13 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
             }
         }
 
+        /// <inheritdoc />
+        public void SetJobExecutionAbortedState(JobRequestExecution execution)
+        {
+            execution.Status = JobExecutionStatus.Aborted;
+            jobExecutionHistoryRepository.UpdateItem(execution);
+        }
+
         private void SetRelatedJobHistoryItemsAbortedStatus(List<JobRequestExecution> jobHistoryItems)
         {
             jobHistoryItems.ForEach(jobItem =>
