@@ -108,16 +108,7 @@ namespace CakeExtracter.Commands.Selenium
             IntervalBetweenUnsuccessfulAndNewRequestInMinutes =
                 PdaCommandConfigurationManager.GetIntervalBetweenUnsuccessfulAndNewRequest();
             var pdaDataProvider = BuildPdaDataProvider();
-            var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
-            Logger.Info("Amazon ETL (PDA Campaigns). DateRange: {0}.", dateRange);
-            var statsType = new StatsTypeAgg(StatsType);
-            var accounts = GetAccounts().ToList();
-            SetInfoAboutAllAccountsInHistory(accounts);
-            foreach (var account in accounts)
-            {
-                DoEtls(account, dateRange, statsType, pdaDataProvider);
-            }
-            Logger.Info("Amazon ETL (PDA Campaigns) has been finished.");
+            RunEtls(pdaDataProvider);
             return 0;
         }
 
@@ -154,11 +145,24 @@ namespace CakeExtracter.Commands.Selenium
             }
         }
 
+        private void RunEtls(PdaDataProvider pdaDataProvider)
+        {
+            var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
+            Logger.Info($"Amazon ETL (PDA Campaigns). DateRange: {dateRange}.");
+            var statsType = new StatsTypeAgg(StatsType);
+            var accounts = GetAccounts();
+            SetInfoAboutAllAccountsInHistory(accounts);
+            foreach (var account in accounts)
+            {
+                DoEtls(account, dateRange, statsType, pdaDataProvider);
+            }
+            Logger.Info("Amazon ETL (PDA Campaigns) has been finished.");
+        }
+
         private void DoEtls(ExtAccount account, DateRange dateRange, StatsTypeAgg statsType, PdaDataProvider pdaDataProvider)
         {
             Logger.Info(account.Id, $"Commencing ETL for Amazon account ({account.Id}) {account.Name}");
-            var loggerWithAccountId = GetLoggerWithAccountId(account.Id);
-            pdaDataProviderBuilder.InitializeAmazonPdaUtility(account.Name, loggerWithAccountId);
+            ConfigureDataProviderForCurrentAccount(account);
             try
             {
                 if (statsType.Daily)
@@ -175,6 +179,12 @@ namespace CakeExtracter.Commands.Selenium
                 Logger.Error(account.Id, ex);
             }
             Logger.Info(account.Id, $"Finished ETL for Amazon account ({account.Id}) {account.Name}");
+        }
+
+        private void ConfigureDataProviderForCurrentAccount(ExtAccount account)
+        {
+            var loggerWithAccountId = GetLoggerWithAccountId(account.Id);
+            pdaDataProviderBuilder.InitializeAmazonPdaUtility(account.Name, loggerWithAccountId);
         }
 
         private void DoEtlDailyFromRequests(ExtAccount account, DateRange dateRange, PdaDataProvider pdaDataProvider)
@@ -248,16 +258,16 @@ namespace CakeExtracter.Commands.Selenium
             return setting.Item3;
         }
 
-        private IEnumerable<ExtAccount> GetAccounts()
+        private List<ExtAccount> GetAccounts()
         {
             var repository = new PlatformAccountRepository();
             if (!AccountId.HasValue)
             {
                 var accounts = repository.GetAccountsWithFilledExternalIdByPlatformCode(Platform.Code_Amazon, false);
-                return accounts;
+                return accounts.ToList();
             }
             var account = repository.GetAccount(AccountId.Value);
-            return new[] { account };
+            return new List<ExtAccount> { account };
         }
 
         private SeleniumLogger GetLoggerWithoutAccountId()
@@ -279,8 +289,7 @@ namespace CakeExtracter.Commands.Selenium
         private void SetInfoAboutAllAccountsInHistory(IEnumerable<ExtAccount> accounts)
         {
             const string firstAccountState = "Not started";
-            var extAccounts = accounts.ToList();
-            foreach (var account in extAccounts)
+            foreach (var account in accounts)
             {
                 CommandExecutionContext.Current.SetJobExecutionStateInHistory(firstAccountState, account.Id);
             }

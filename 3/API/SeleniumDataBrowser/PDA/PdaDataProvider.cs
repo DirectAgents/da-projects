@@ -28,11 +28,11 @@ namespace SeleniumDataBrowser.PDA
         }
 
         /// <summary>
-        /// Gets single instance (new or current) of PDA data provider.
+        /// Gets single instance (new or current) of the PDA data provider.
         /// </summary>
         /// <param name="loginProcessManager">Manager of login process.</param>
         /// <param name="pdaProfileUrlManager">Manager of profile URLs.</param>
-        /// <returns>Instance (new or current) of PDA data provider.</returns>
+        /// <returns>Instance (new or current) of the PDA data provider.</returns>
         public static PdaDataProvider GetPdaDataProviderInstance(
             PdaLoginManager loginProcessManager, PdaProfileUrlManager pdaProfileUrlManager)
         {
@@ -44,7 +44,7 @@ namespace SeleniumDataBrowser.PDA
         }
 
         /// <summary>
-        /// Sets the specified amazon PDA utility current for the PDA data provider.
+        /// Sets the specified amazon PDA utility current for the PDA data provider instance.
         /// </summary>
         /// <param name="amazonPdaUtility">Amazon PDA utility.</param>
         public void SetAmazonPdaUtilityCurrentForDataProvider(

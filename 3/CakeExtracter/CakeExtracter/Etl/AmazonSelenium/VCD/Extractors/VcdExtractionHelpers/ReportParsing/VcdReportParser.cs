@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using Amazon.Helpers;
 using CakeExtracter.Common;
-using CakeExtracter.Etl.AmazonSelenium.VCD.Configuration.Models;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing.ParsingConverters;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Models;
 using CsvHelper;
@@ -17,17 +16,27 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
     /// </summary>
     internal class VcdReportCSVParser
     {
+        private readonly int accountId;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VcdReportCSVParser"/> class.
+        /// </summary>
+        /// <param name="accountId">Internal account ID.</param>
+        public VcdReportCSVParser(int accountId)
+        {
+            this.accountId = accountId;
+        }
+
         /// <summary>
         /// Parses the shipped revenue report data.
         /// </summary>
         /// <param name="reportCsvText">The report CSV text.</param>
-        /// <param name="accountInfo">The account information.</param>
         /// <param name="date">The date.</param>
         /// <returns>Collection of products with filled shipped revenue data.</returns>
-        public List<Product> ParseShippedRevenueReportData(string reportCsvText, AccountInfo accountInfo, DateTime date)
+        public List<Product> ParseShippedRevenueReportData(string reportCsvText, DateTime date)
         {
             var products = ParseProductsFromReport<ShippedRevenueProductRowMap>(
-                reportCsvText, accountInfo, date, "shippedRev");
+                reportCsvText, date, "shippedRev");
             return products;
         }
 
@@ -35,13 +44,12 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
         /// Parses the shipped cogs report data.
         /// </summary>
         /// <param name="reportCsvText">The report CSV text.</param>
-        /// <param name="accountInfo">The account information.</param>
         /// <param name="date">The date.</param>
         /// <returns>Collection of products with filled shipped cogs data.</returns>
-        public List<Product> ParseShippedCogsReportData(string reportCsvText, AccountInfo accountInfo, DateTime date)
+        public List<Product> ParseShippedCogsReportData(string reportCsvText, DateTime date)
         {
             var products = ParseProductsFromReport<ShippedCogsProductsRowMap>(
-                reportCsvText, accountInfo, date, "shippedCogs");
+                reportCsvText, date, "shippedCogs");
             return products;
         }
 
@@ -49,26 +57,21 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
         /// Parses the ordered revenue report data.
         /// </summary>
         /// <param name="reportCsvText">The report CSV text.</param>
-        /// <param name="accountInfo">The account information.</param>
         /// <param name="date">The date.</param>
         /// <returns>Collection of products with filled ordered revenue data.</returns>
-        public List<Product> ParseOrderedRevenueReportData(string reportCsvText, AccountInfo accountInfo, DateTime date)
+        public List<Product> ParseOrderedRevenueReportData(string reportCsvText, DateTime date)
         {
             var products = ParseProductsFromReport<OrderedRevenueProductsRowMap>(
-                reportCsvText, accountInfo, date, "orderedRev");
+                reportCsvText, date, "orderedRev");
             return products;
         }
 
-        private List<Product> ParseProductsFromReport<T>(
-            string reportCsvText,
-            AccountInfo accountInfo,
-            DateTime date,
-            string reportType)
+        private List<Product> ParseProductsFromReport<T>(string reportCsvText, DateTime date, string reportType)
             where T : CsvClassMap<Product>
         {
             try
             {
-                Logger.Info(accountInfo.Account.Id, "Started parsing csv report");
+                Logger.Info(accountId, "Started parsing csv report");
                 reportCsvText = TextUtils.RemoveFirstLine(reportCsvText);
                 using (TextReader sr = new StringReader(reportCsvText))
                 {
@@ -82,13 +85,13 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
             catch (Exception ex)
             {
                 var exception = new Exception("Error occured while parsing report", ex);
-                Logger.Warn(accountInfo.Account.Id, $"{exception.Message}: {ex.Message}");
-                SaveUnsuccessfullyParseredReport(reportCsvText, date, reportType, accountInfo.Account.Id);
+                Logger.Warn(accountId, $"{exception.Message}: {ex.Message}");
+                SaveUnsuccessfullyParseredReport(reportCsvText, date, reportType);
                 throw exception;
             }
         }
 
-        private void SaveUnsuccessfullyParseredReport(string reportContent, DateTime date, string reportType, int accountId)
+        private void SaveUnsuccessfullyParseredReport(string reportContent, DateTime date, string reportType)
         {
             try
             {

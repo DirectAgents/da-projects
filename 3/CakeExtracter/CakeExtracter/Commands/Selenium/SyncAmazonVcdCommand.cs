@@ -2,25 +2,18 @@
 using System.ComponentModel.Composition;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
-using CakeExtracter.Etl.AmazonSelenium.Configuration;
+using CakeExtracter.Etl.AmazonSelenium.VCD;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Configuration;
-using CakeExtracter.Etl.AmazonSelenium.VCD.Configuration.Models;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Loaders;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Synchers;
 using CakeExtracter.Helpers;
+using DirectAgents.Domain.Entities.CPProg;
 using SeleniumDataBrowser.Helpers;
-using SeleniumDataBrowser.VCD.PageActions;
-using SeleniumDataBrowser.Models;
-using SeleniumDataBrowser.VCD.Helpers;
-using SeleniumDataBrowser.VCD.Helpers.ReportDownloading;
-using SeleniumDataBrowser.VCD.Helpers.UserInfoExtracting.Models;
-using SeleniumDataBrowser.VCD.Helpers.UserInfoExtracting;
-using SeleniumDataBrowser.VCD.Models;
+using SeleniumDataBrowser.VCD;
 
 namespace CakeExtracter.Commands.Selenium
 {
@@ -33,12 +26,7 @@ namespace CakeExtracter.Commands.Selenium
     {
         private const int DefaultDaysAgo = 60;
 
-        private VcdAccountsDataProvider accountsDataProvider;
-        private AuthorizationModel authorizationModel;
-        private AmazonVcdActionsWithPagesManager pageActionsManager;
-        private VcdLoginManager loginProcessManager;
-        private SeleniumLogger loggerWithAccountId;
-        private SeleniumLogger loggerWithoutAccountId;
+        private VcdDataProviderBuilder vcdDataProviderBuilder;
 
         /// <summary>
         /// Gets or sets the command argument: a number of execution profile (default = 1).
@@ -104,8 +92,10 @@ namespace CakeExtracter.Commands.Selenium
         /// <returns>Execution code.</returns>
         public override int Execute(string[] remainingArguments)
         {
-            InitializeCommand();
-            RunEtls();
+            IntervalBetweenUnsuccessfulAndNewRequestInMinutes =
+                VcdCommandConfigurationManager.GetIntervalBetweenUnsuccessfulAndNewRequest();
+            var vcdDataProvider = BuildVcdDataProvider();
+            RunEtls(vcdDataProvider);
             return 0;
         }
 
@@ -122,102 +112,77 @@ namespace CakeExtracter.Commands.Selenium
             return broadCommands;
         }
 
-        private void InitializeCommand()
+        private VcdDataProvider BuildVcdDataProvider()
         {
             try
             {
-                InitializeFields();
-                LoginProcess();
-                InitializeLoader();
+                var loggerWithoutAccountId = GetLoggerWithoutAccountId();
+                vcdDataProviderBuilder = new VcdDataProviderBuilder(ProfileNumber, IsHidingBrowserWindow);
+                var vcdDataProvider = vcdDataProviderBuilder.BuildDataProvider(loggerWithoutAccountId);
+                return vcdDataProvider;
             }
             catch (Exception e)
             {
-                throw new Exception("Failed to initialize VCD command.", e);
+                throw new Exception("Failed to build VCD data provider.", e);
             }
         }
 
-        private void RunEtls()
+        private void RunEtls(VcdDataProvider vcdDataProvider)
         {
-            pageActionsManager.RefreshSalesDiagnosticPage(authorizationModel);
-            var accountsData = GetAccountsData();
-            RunForAccounts(accountsData);
+            var accounts = vcdDataProviderBuilder.GetAccounts();
+            SetInfoAboutAllAccountsInHistory(accounts);
+            RunForAccounts(accounts, vcdDataProvider);
         }
 
-        private List<AccountInfo> GetAccountsData()
+        private void SetInfoAboutAllAccountsInHistory(IEnumerable<ExtAccount> accounts)
         {
-            try
+            const string firstAccountState = "Not started";
+            foreach (var account in accounts)
             {
-                accountsDataProvider = GetAccountsDataProvider();
-                var accountsData = accountsDataProvider.GetAccountsDataToProcess();
-                accountsData.ForEach(accountData =>
-                    CommandExecutionContext.Current.SetJobExecutionStateInHistory("Not started", accountData.Account.Id));
-                return accountsData;
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Failed to get accounts data.", e);
+                CommandExecutionContext.Current.SetJobExecutionStateInHistory(firstAccountState, account.Id);
             }
         }
 
-        private VcdAccountsDataProvider GetAccountsDataProvider()
-        {
-            var pageUserInfo = GetPageUserInfo();
-            return new VcdAccountsDataProvider(pageUserInfo);
-        }
-
-        private PageUserInfo GetPageUserInfo()
-        {
-            var userInfoExtractor = new UserInfoExtracter();
-            return userInfoExtractor.ExtractUserInfo(pageActionsManager);
-        }
-
-        private void RunForAccounts(IEnumerable<AccountInfo> accountsData)
+        private void RunForAccounts(IEnumerable<ExtAccount> accounts, VcdDataProvider vcdDataProvider)
         {
             var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info($"Amazon VCD ETL. DateRange {dateRange}.");
-            foreach (var accountData in accountsData)
+            foreach (var account in accounts)
             {
                 try
                 {
-                    DoEtlForAccount(accountData, dateRange);
-                    SyncAccountDataToAnalyticTable(accountData.Account.Id);
+                    DoEtlForAccount(account, dateRange, vcdDataProvider);
+                    SyncAccountDataToAnalyticTable(account.Id);
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error(accountData.Account.Id, ex);
+                    Logger.Error(account.Id, ex);
                 }
             }
         }
 
-        private void DoEtlForAccount(AccountInfo accountInfo, DateRange dateRange)
+        private void DoEtlForAccount(ExtAccount account, DateRange dateRange, VcdDataProvider vcdDataProvider)
         {
-            Logger.Info(accountInfo.Account.Id, $"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) started.");
-            AccountPagePreparation(accountInfo);
-            var extractor = GetDailyDataExtractor(accountInfo, dateRange);
-            var loader = new AmazonVcdLoader(accountInfo.Account);
+            Logger.Info(account.Id, $"Amazon VCD, ETL for account {account.Name} ({account.Id}) started.");
+            ConfigureDataProviderForCurrentAccount(account);
+            var extractor = GetDailyDataExtractor(account, dateRange, vcdDataProvider);
+            var loader = new AmazonVcdLoader(account);
             InitEtlEvents(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
-            Logger.Info(accountInfo.Account.Id, $"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) finished.");
+            Logger.Info(account.Id, $"Amazon VCD, ETL for account {account.Name} ({account.Id}) finished.");
         }
 
-        private AmazonVcdExtractor GetDailyDataExtractor(AccountInfo accountInfo, DateRange dateRange)
+        private void ConfigureDataProviderForCurrentAccount(ExtAccount account)
         {
-            var reportDownloader = GetReportDownloader(accountInfo);
+            var loggerWithAccountId = GetLoggerWithAccountId(account.Id);
+            vcdDataProviderBuilder.InitializeReportDownloader(account, loggerWithAccountId);
+        }
+
+        private AmazonVcdExtractor GetDailyDataExtractor(ExtAccount account, DateRange dateRange, VcdDataProvider vcdDataProvider)
+        {
             var maxRetryAttemptsForExtractData = VcdCommandConfigurationManager.GetExtractDailyDataAttemptCount();
-            var extractor = new AmazonVcdExtractor(accountInfo, dateRange, reportDownloader, maxRetryAttemptsForExtractData);
+            var extractor = new AmazonVcdExtractor(account, dateRange, vcdDataProvider, maxRetryAttemptsForExtractData);
             return extractor;
-        }
-
-        private void AccountPagePreparation(AccountInfo accountInfo)
-        {
-            PreparePageActionsManagerLogger(accountInfo.Account.Id);
-            pageActionsManager.SelectAccountOnPage(accountInfo.Account.Name);
-        }
-
-        private void PreparePageActionsManagerLogger(int accountId)
-        {
-            InitializeLogger(accountId);
-            pageActionsManager.Logger = loggerWithAccountId;
         }
 
         private void InitEtlEvents(AmazonVcdExtractor extractor, AmazonVcdLoader loader)
@@ -226,39 +191,6 @@ namespace CakeExtracter.Commands.Selenium
                 ScheduleNewCommandLaunch<SyncAmazonVcdCommand>(command => { });
             loader.ProcessEtlFailedWithoutInformation += exception =>
                 ScheduleNewCommandLaunch<SyncAmazonVcdCommand>(command => { });
-        }
-
-        private VcdReportDownloader GetReportDownloader(AccountInfo accountInfo)
-        {
-            var reportDownloadingStartedDelayInSeconds =
-                VcdCommandConfigurationManager.GetReportDownloadingStartedDelay();
-            var minDelayBetweenReportDownloadingInSeconds =
-                VcdCommandConfigurationManager.GetMinDelayBetweenReportDownloading();
-            var maxDelayBetweenReportDownloadingInSeconds =
-                VcdCommandConfigurationManager.GetMaxDelayBetweenReportDownloading();
-            var reportDownloadingAttemptCount =
-                VcdCommandConfigurationManager.GetReportDownloadingAttemptCount();
-            var vcdAccountInfo = GetVcdAccountInformation(accountInfo);
-            return new VcdReportDownloader(
-                vcdAccountInfo,
-                pageActionsManager,
-                authorizationModel,
-                loggerWithAccountId,
-                reportDownloadingStartedDelayInSeconds,
-                minDelayBetweenReportDownloadingInSeconds,
-                maxDelayBetweenReportDownloadingInSeconds,
-                reportDownloadingAttemptCount);
-        }
-
-        private VcdAccountInfo GetVcdAccountInformation(AccountInfo accountInfo)
-        {
-            return new VcdAccountInfo
-            {
-                AccountId = accountInfo.Account.Id,
-                AccountName = accountInfo.Account.Name,
-                McId = accountInfo.McId,
-                VendorGroupId = accountInfo.VendorGroupId,
-            };
         }
 
         private void SyncAccountDataToAnalyticTable(int accountId)
@@ -279,110 +211,15 @@ namespace CakeExtracter.Commands.Selenium
             }
         }
 
-        private void InitializeFields()
+        private SeleniumLogger GetLoggerWithoutAccountId()
         {
-            SetFieldsFromConfig();
-            SetExecutionProfile();
-            InitializeLogger();
-            InitializePageActionsManager();
-            InitializeAuthorizationModel();
-            InitializeLoginManager();
-        }
-
-        private void SetFieldsFromConfig()
-        {
-            IntervalBetweenUnsuccessfulAndNewRequestInMinutes =
-                VcdCommandConfigurationManager.GetIntervalBetweenUnsuccessfulAndNewRequest();
-        }
-
-        private void LoginProcess()
-        {
-            try
-            {
-                loginProcessManager.LoginToAmazonPortal();
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Failed to login to Amazon Advertiser Portal.", e);
-            }
-        }
-
-        private void InitializeLoader()
-        {
-            try
-            {
-                AmazonVcdLoader.PrepareLoader();
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Failed to prepare VCD loader.", e);
-            }
-        }
-
-        private void SetExecutionProfile()
-        {
-            VcdExecutionProfileManager.Current.SetExecutionProfileNumber(ProfileNumber);
-        }
-
-        private void InitializePageActionsManager()
-        {
-            try
-            {
-                var waitPageTimeoutInMinutes = SeleniumCommandConfigurationManager.GetWaitPageTimeout();
-                pageActionsManager = new AmazonVcdActionsWithPagesManager(
-                    waitPageTimeoutInMinutes, IsHidingBrowserWindow, loggerWithoutAccountId);
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Failed to initialize page actions manager.", e);
-            }
-        }
-
-        private void InitializeAuthorizationModel()
-        {
-            try
-            {
-                authorizationModel = new AuthorizationModel
-                {
-                    Login = VcdExecutionProfileManager.Current.ProfileConfiguration.LoginEmail,
-                    Password = VcdExecutionProfileManager.Current.ProfileConfiguration.LoginPassword,
-                    SignInUrl = VcdExecutionProfileManager.Current.ProfileConfiguration.SignInUrl,
-                    CookiesDir = VcdExecutionProfileManager.Current.ProfileConfiguration.CookiesDirectory,
-                };
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Failed to initialize authorization settings.", e);
-            }
-        }
-
-        private void InitializeLoginManager()
-        {
-            loginProcessManager = new VcdLoginManager(
-                authorizationModel, pageActionsManager, loggerWithoutAccountId);
-        }
-
-        private void InitializeLogger(int accountId = 0)
-        {
-            if (accountId == 0)
-            {
-                SetLoggerWithoutAccountId();
-            }
-            else
-            {
-                SetLoggerWithAccountId(accountId);
-            }
-        }
-
-        private void SetLoggerWithoutAccountId()
-        {
-            loggerWithoutAccountId = new SeleniumLogger(
+            return new SeleniumLogger(
                 x => Logger.Info(x), Logger.Error, x => Logger.Warn(x));
         }
 
-        private void SetLoggerWithAccountId(int accountId)
+        private SeleniumLogger GetLoggerWithAccountId(int accountId)
         {
-            loggerWithAccountId = new SeleniumLogger(
+            return new SeleniumLogger(
                 x => Logger.Info(accountId, x),
                 exc => Logger.Error(accountId, exc),
                 x => Logger.Warn(accountId, x));

@@ -11,15 +11,14 @@ using SeleniumDataBrowser.PDA.PageActions;
 namespace CakeExtracter.Etl.AmazonSelenium.PDA
 {
     /// <summary>
-    /// Builder of PDA Data Provider.
+    /// Builder of the PDA Data Provider.
     /// </summary>
     internal class PdaDataProviderBuilder
     {
         private readonly bool isHidingBrowserWindow;
-        private readonly AuthorizationModel authorizationModel;
         private readonly int maxRetryAttempts;
         private readonly TimeSpan pauseBetweenAttempts;
-
+        private AuthorizationModel authorizationModel;
         private PdaDataProvider pdaDataProvider;
         private Dictionary<string, string> availableProfileUrls;
 
@@ -30,7 +29,6 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA
         public PdaDataProviderBuilder(bool isHidingBrowserWindow)
         {
             this.isHidingBrowserWindow = isHidingBrowserWindow;
-            authorizationModel = GetAuthorizationModel();
             maxRetryAttempts = PdaCommandConfigurationManager.GetMaxRetryAttempts();
             pauseBetweenAttempts = PdaCommandConfigurationManager.GetPauseBetweenAttempts();
         }
@@ -42,10 +40,10 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA
         /// <returns>Instance of the PDA Data Provider.</returns>
         public PdaDataProvider BuildDataProvider(SeleniumLogger loggerWithoutAccountId)
         {
+            authorizationModel = GetAuthorizationModel();
             var pageActionsManager = GetPageActionsManager(loggerWithoutAccountId);
             var loginProcessManager = GetLoginProcessManager(pageActionsManager, loggerWithoutAccountId);
-            var pdaProfileUrlManager = new PdaProfileUrlManager(
-                pageActionsManager, loginProcessManager, maxRetryAttempts, pauseBetweenAttempts);
+            var pdaProfileUrlManager = GetProfileUrlManager(pageActionsManager, loginProcessManager);
             pdaDataProvider = PdaDataProvider.GetPdaDataProviderInstance(loginProcessManager, pdaProfileUrlManager);
             pdaDataProvider.LoginToPortal();
             pdaDataProvider.SetCookiesForDataProvider(pageActionsManager);
@@ -54,7 +52,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA
         }
 
         /// <summary>
-        /// Creates the Amazon PDA Utility for the current account and sets it for the PDA Data Provider.
+        /// Creates the Amazon PDA Utility for the current account and sets it for the PDA data provider instance.
         /// </summary>
         /// <param name="accountName">Name of account.</param>
         /// <param name="loggerWithAccountId">Logger with info about account ID.</param>
@@ -133,6 +131,19 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA
             catch (Exception e)
             {
                 throw new Exception("Failed to initialize login process manager.", e);
+            }
+        }
+
+        private PdaProfileUrlManager GetProfileUrlManager(
+            AmazonPdaActionsWithPagesManager pageActionsManager, PdaLoginManager loginProcessManager)
+        {
+            try
+            {
+                return new PdaProfileUrlManager(pageActionsManager, loginProcessManager, maxRetryAttempts, pauseBetweenAttempts);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to initialize profile URL manager.", e);
             }
         }
     }

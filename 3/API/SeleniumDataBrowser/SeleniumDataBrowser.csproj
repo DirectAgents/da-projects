@@ -101,6 +101,7 @@
     <Compile Include="VCD\Models\VcdAccountInfo.cs" />
     <Compile Include="VCD\PageActions\AmazonVcdActionsWithPagesManager.cs" />
     <Compile Include="VCD\PageActions\AmazonVcdPageObjects.cs" />
+    <Compile Include="VCD\VcdDataProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -501,7 +501,6 @@
     <Compile Include="Etl\AmazonSelenium\PDA\Models\AmazonPdaCampaignSummary.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\PdaDataProviderBuilder.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\AmazonVcdExtractor.cs" />
-    <Compile Include="Etl\AmazonSelenium\VCD\Configuration\Models\AccountInfo.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Loaders\AmazonVcdLoader.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Loaders\Constants\VendorCentralDataLoadingConstants.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Loaders\MetricTypesLoader\BaseVendoritemLoader.cs" />
@@ -518,7 +517,7 @@
     <Compile Include="Etl\AmazonSelenium\VCD\Models\Subcategory.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Configuration\Models\VcdExecutionProfileConfiguration.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Models\VcdReportData.cs" />
-    <Compile Include="Etl\AmazonSelenium\VCD\Configuration\VcdAccountsDataProvider.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Configuration\VcdAccountsManager.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Configuration\VcdCommandConfigurationManager.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Configuration\VcdExecutionProfileManager.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Synchers\VcdAnalyticTablesSyncher.cs" />
@@ -530,6 +529,7 @@
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\ShippedCogsProductsRowMap.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\ShippedRevenueProductsRowMap.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\VcdReportParser.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\VcdDataProviderBuilder.cs" />
     <Compile Include="Etl\Apple\Exceptions\AppleFailedEtlException.cs" />
     <Compile Include="Etl\Amazon\Exceptions\FailedStatsLoadingException.cs" />
     <Compile Include="Etl\CakeMarketing\DALoaders\DAAffiliatesLoader.cs" />

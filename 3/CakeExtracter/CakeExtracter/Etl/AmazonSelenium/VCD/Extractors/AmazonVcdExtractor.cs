@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement;
-using CakeExtracter.Etl.AmazonSelenium.VCD.Configuration;
-using CakeExtracter.Etl.AmazonSelenium.VCD.Configuration.Models;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportDataComposer;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Models;
+using DirectAgents.Domain.Entities.CPProg;
 using Polly;
-using SeleniumDataBrowser.VCD.Helpers.ReportDownloading;
+using SeleniumDataBrowser.VCD;
 
 namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
 {
@@ -17,31 +16,31 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
     /// </summary>
     internal class AmazonVcdExtractor : Extracter<VcdReportData>
     {
-        private readonly VcdReportDownloader reportDownloader;
+        private readonly VcdDataProvider vcdDataProvider;
         private readonly VcdReportCSVParser reportParser;
         private readonly VcdReportComposer reportComposer;
-        private readonly AccountInfo accountInfo;
+        private readonly ExtAccount account;
         private readonly DateRange dateRange;
         private readonly int maxRetryAttemptsForExtractData;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AmazonVcdExtractor"/> class.
         /// </summary>
-        /// <param name="accountInfo">Information about the current account.</param>
+        /// <param name="account">Current account.</param>
         /// <param name="dateRange">Date range for extracting.</param>
-        /// <param name="reportDownloader">Downloader of reports.</param>
+        /// <param name="vcdDataProvider">VCD data provider instance.</param>
         /// <param name="maxRetryAttemptsForExtractData">Count of maximum attempts for extracting daily data.</param>
         public AmazonVcdExtractor(
-            AccountInfo accountInfo,
+            ExtAccount account,
             DateRange dateRange,
-            VcdReportDownloader reportDownloader,
+            VcdDataProvider vcdDataProvider,
             int maxRetryAttemptsForExtractData)
         {
-            this.accountInfo = accountInfo;
+            this.account = account;
             this.dateRange = dateRange;
-            this.reportDownloader = reportDownloader;
+            this.vcdDataProvider = vcdDataProvider;
             this.maxRetryAttemptsForExtractData = maxRetryAttemptsForExtractData;
-            reportParser = new VcdReportCSVParser();
+            reportParser = new VcdReportCSVParser(account.Id);
             reportComposer = new VcdReportComposer();
         }
 
@@ -62,17 +61,15 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
         {
             try
             {
-                CommandExecutionContext.Current.SetJobExecutionStateInHistory($"Date - {date.ToString()}", accountInfo.Account.Id);
-                Logger.Info(
-                    accountInfo.Account.Id,
-                    $"Amazon VCD, ETL for {date} started. Account {accountInfo.Account.Name} - {accountInfo.Account.Id}");
+                CommandExecutionContext.Current.SetJobExecutionStateInHistory($"Date - {date.ToString()}", account.Id);
+                Logger.Info(account.Id, $"Amazon VCD, ETL for {date} started. Account {account.Name} - {account.Id}");
                 var data = TryExtractData(date, "daily reports", ExtractDailyData);
                 Add(data);
             }
             catch (Exception e)
             {
-                var exception = new Exception($"Error occurred while extracting data for {accountInfo.Account.Name} ({accountInfo.Account.Id}) account on {date} date.", e);
-                Logger.Error(accountInfo.Account.Id, exception);
+                var exception = new Exception($"Error occurred while extracting data for {account.Name} ({account.Id}) account on {date} date.", e);
+                Logger.Error(account.Id, exception);
                 throw exception;
             }
         }
@@ -93,7 +90,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
             return GetReportData(
                 "Shipped Revenue",
                 reportDay,
-                () => reportDownloader.DownloadShippedRevenueCsvReport(reportDay),
+                () => vcdDataProvider.DownloadShippedRevenueCsvReport(reportDay),
                 reportParser.ParseShippedRevenueReportData);
         }
 
@@ -102,7 +99,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
             return GetReportData(
                 "Shipped COGS",
                 reportDay,
-                () => reportDownloader.DownloadShippedCogsCsvReport(reportDay),
+                () => vcdDataProvider.DownloadShippedCogsCsvReport(reportDay),
                 reportParser.ParseShippedCogsReportData);
         }
 
@@ -111,7 +108,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
             return GetReportData(
                 "Ordered Revenue",
                 reportDay,
-                () => reportDownloader.DownloadOrderedRevenueCsvReport(reportDay),
+                () => vcdDataProvider.DownloadOrderedRevenueCsvReport(reportDay),
                 reportParser.ParseOrderedRevenueReportData);
         }
 
@@ -119,15 +116,15 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
             string reportName,
             DateTime reportDay,
             Func<string> downloadReportFunc,
-            Func<string, AccountInfo, DateTime, List<Product>> parseReportFunc)
+            Func<string, DateTime, List<Product>> parseReportFunc)
         {
-            Logger.Info(accountInfo.Account.Id, $"Amazon VCD, Downloading {reportName} report.");
+            Logger.Info(account.Id, $"Amazon VCD, Downloading {reportName} report.");
             var reportProducts = TryExtractData(reportDay, reportName, date =>
             {
                 var reportTextContent = DownloadReport(downloadReportFunc);
-                return parseReportFunc(reportTextContent, accountInfo, reportDay);
+                return parseReportFunc(reportTextContent, reportDay);
             });
-            Logger.Info(accountInfo.Account.Id, $"Amazon VCD, {reportName} report downloaded. {reportProducts.Count} products");
+            Logger.Info(account.Id, $"Amazon VCD, {reportName} report downloaded. {reportProducts.Count} products");
             return reportProducts;
         }
 
@@ -144,9 +141,9 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
         private void LogFailedReports(DateTime date, int retryCount, int maxRetryAttempts, string dataName)
         {
             var message = $"Could not extract {dataName} for {date} started. " +
-                          $"Account {accountInfo.Account.Name} - {accountInfo.Account.Id}. " +
+                          $"Account {account.Name} - {account.Id}. " +
                           $"Try extracting data again (number of retrying - {retryCount}, max attempts - {maxRetryAttempts})";
-            Logger.Warn(accountInfo.Account.Id, message);
+            Logger.Warn(account.Id, message);
         }
 
         private string DownloadReport(Func<string> downloadingAction)
@@ -158,8 +155,8 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
             }
             catch (Exception ex)
             {
-                Logger.Info(accountInfo.Account.Id, "Report downloading failed");
-                Logger.Error(accountInfo.Account.Id, ex);
+                Logger.Info(account.Id, "Report downloading failed");
+                Logger.Error(account.Id, ex);
                 throw;
             }
         }
