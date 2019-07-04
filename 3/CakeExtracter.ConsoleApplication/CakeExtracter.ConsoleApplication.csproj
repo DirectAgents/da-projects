@@ -180,6 +180,12 @@
     <None Include="Properties\PublishProfiles\dagents_vm_staging.pubxml" />
     <None Include="Properties\PublishProfiles\dagents_vm_prod.pubxml" />
     <None Include="Properties\webjob-publish-settings.json" />
+    <None Include="VcdExecutionProfiles\Profile_1.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="VcdExecutionProfiles\Profile_2.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CakeExtracter\CakeExtracter\CakeExtracter.csproj">
@@ -227,6 +233,18 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="SQL\AMS\SyncAsinAnalyticTable.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\VCD\CreateVcdAnalyticTable.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\VCD\SelectAnalyticalTableVcd.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\VCD\SyncVcdAnalyticTable.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\VCD\SyncVcdAnalyticTableAllAccounts.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
