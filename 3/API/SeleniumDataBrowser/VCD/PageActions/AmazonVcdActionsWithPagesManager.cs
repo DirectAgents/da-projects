@@ -89,7 +89,6 @@ namespace SeleniumDataBrowser.VCD.PageActions
                 var accountItems = Driver.FindElements(AmazonVcdPageObjects.AccountsDropdownItem);
                 var accountItem = accountItems.FirstOrDefault(x => x.Text == TypeOfAccounts + accountName);
                 accountItem?.Click();
-                WaitElementClickable(AmazonVcdPageObjects.AccountsDropdownButton);
             }
             catch (Exception e)
             {
