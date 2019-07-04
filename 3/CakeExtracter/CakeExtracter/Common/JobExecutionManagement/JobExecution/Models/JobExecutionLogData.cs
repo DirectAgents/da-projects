@@ -2,10 +2,19 @@
 
 namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Models
 {
+    /// <summary>
+    /// Job Execution Log Data Model.
+    /// </summary>
     public class JobExecutionLogData
     {
-        public List<string> CommonMessages;
+        /// <summary>
+        /// Gets or sets the common messages.
+        /// </summary>
+        public List<string> CommonMessages { get; set; }
 
-        public List<AccountLogData> AccountsData;
+        /// <summary>
+        /// Gets or sets the accounts data.
+        /// </summary>
+        public List<AccountLogData> AccountsData { get; set; }
     }
 }

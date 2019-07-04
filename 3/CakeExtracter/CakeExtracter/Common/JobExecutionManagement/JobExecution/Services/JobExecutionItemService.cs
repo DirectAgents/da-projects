@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Utils;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
@@ -17,7 +18,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
     {
         private readonly IBaseRepository<JobRequestExecution> jobExecutionHistoryRepository;
 
-        private readonly IBaseRepository<JobRequest> jobRequestsRepository;
+        private readonly IJobRequestsRepository jobRequestsRepository;
 
         private readonly object executionItemHistoryLockObject = new object();
 
@@ -26,7 +27,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
         /// </summary>
         /// <param name="jobExecutionHistoryRepository">The job execution history repository.</param>
         /// <param name="jobRequestsRepository">The job requests repository.</param>
-        public JobExecutionItemService(IBaseRepository<JobRequestExecution> jobExecutionHistoryRepository, IBaseRepository<JobRequest> jobRequestsRepository)
+        public JobExecutionItemService(IBaseRepository<JobRequestExecution> jobExecutionHistoryRepository, IJobRequestsRepository jobRequestsRepository)
         {
             this.jobExecutionHistoryRepository = jobExecutionHistoryRepository;
             this.jobRequestsRepository = jobRequestsRepository;

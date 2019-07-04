@@ -34,7 +34,7 @@ namespace CakeExtracter.Etl
             BatchSize = batchSize;
         }
 
-       public Thread Start(Extracter<T> source)
+        public Thread Start(Extracter<T> source)
         {
             extractor = source;
             var thread = new Thread(DoLoad);
@@ -57,7 +57,7 @@ namespace CakeExtracter.Etl
                     ExtractedCount = extractor.Added;
 
                     Logger.Info(accountId, "Extracted: {0} Loaded: {1} Queue: {2} Done: {3}", ExtractedCount,
-                        LoadedCount,extractor.Count, extractor.Done);
+                        LoadedCount, extractor.Count, extractor.Done);
                 }
 
                 if (LoadedCount != ExtractedCount)
