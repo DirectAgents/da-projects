@@ -54,6 +54,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeExtracter.Tests", "Cake
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommissionJunction", "CommissionJunction\CommissionJunction.csproj", "{0038B6B4-357A-4721-99BC-7659AD00DD3A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9143936B-AC4B-41B5-8F87-03AE047A5D53}"
+	ProjectSection(SolutionItems) = preProject
+		CodeAnalysis\.editorconfig = CodeAnalysis\.editorconfig
+		CodeAnalysis\codeanalysis.ruleset = CodeAnalysis\codeanalysis.ruleset
+		CodeAnalysis\stylecop.json = CodeAnalysis\stylecop.json
+	EndProjectSection
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeleniumDataBrowser", "..\API\SeleniumDataBrowser\SeleniumDataBrowser.csproj", "{09800C2E-2D96-495B-9F32-B461B38D015B}"
 EndProject
 Global
@@ -170,7 +177,7 @@ Global
 		{09800C2E-2D96-495B-9F32-B461B38D015B} = {9CADCD2F-2E1D-4D0D-BA87-D9A94D3F8CB7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {6B7C6F6C-1C50-4207-B5CC-52B64CEFF119}
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Logging.6.0.1304.0\lib\NET45
+		SolutionGuid = {6B7C6F6C-1C50-4207-B5CC-52B64CEFF119}
 	EndGlobalSection
 EndGlobal
