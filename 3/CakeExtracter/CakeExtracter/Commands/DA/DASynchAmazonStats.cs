@@ -20,7 +20,6 @@ using CakeExtracter.Logging.TimeWatchers;
 using CakeExtracter.Logging.TimeWatchers.Amazon;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Entities.CPProg;
-using Ninject.Parameters;
 
 namespace CakeExtracter.Commands
 {
@@ -39,8 +38,6 @@ namespace CakeExtracter.Commands
 
         public virtual string StatsType { get; set; }
 
-        public virtual bool DisabledOnly { get; set; }
-
         public virtual bool KeepAmazonReports { get; set; }
 
         public DASynchAmazonStats()
@@ -51,7 +48,6 @@ namespace CakeExtracter.Commands
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
             HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default = {DefaultDaysAgo})", c => DaysAgoToStart = c);
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
-            HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
             HasOption<bool>("k|keepAmazonReports=", "Store received Amazon reports in a separate folder (default = false)", c => KeepAmazonReports = c);
         }
 
@@ -75,7 +71,6 @@ namespace CakeExtracter.Commands
             EndDate = null;
             DaysAgoToStart = null;
             StatsType = null;
-            DisabledOnly = false;
             KeepAmazonReports = false;
         }
 
@@ -145,7 +140,7 @@ namespace CakeExtracter.Commands
             var accountRepository = DIKernel.Get<IPlatformAccountRepository>();
             if (!AccountId.HasValue)
             {
-                var accounts = accountRepository.GetAccountsWithFilledExternalIdByPlatformCode(Platform.Code_Amazon, DisabledOnly);
+                var accounts = accountRepository.GetAccountsWithFilledExternalIdByPlatformCode(Platform.Code_Amazon, false);
                 return accounts;
             }
 

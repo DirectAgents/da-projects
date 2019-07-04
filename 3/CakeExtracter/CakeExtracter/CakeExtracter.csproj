@@ -26,7 +26,8 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NuGetPackageImportStamp>914f3a7f</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup>
     <CodeAnalysisRuleSet>$(SolutionDir)\build\stylecop\StyleCopRuleSet.ruleset</CodeAnalysisRuleSet>
@@ -432,6 +433,8 @@
     <Compile Include="Commands\DA\DASynchKochavaStats.cs" />
     <Compile Include="Commands\DA\DaSynchYamStats.cs" />
     <Compile Include="Commands\DA\DASynchYAMStats_Outdated.cs" />
+    <Compile Include="Commands\Selenium\SyncAmazonPdaCommand.cs" />
+    <Compile Include="Commands\Selenium\SyncAmazonVcdCommand.cs" />
     <Compile Include="Common\CommandAutoStopWatcher.cs" />
     <Compile Include="Common\Email\EmailNotificationsService.cs" />
     <Compile Include="Common\Email\IEmailNotificationsService.cs" />
@@ -488,6 +491,45 @@
     <Compile Include="Common\StorageCollection.cs" />
     <Compile Include="Common\TextUtils.cs" />
     <Compile Include="Common\DIKernel.cs" />
+    <Compile Include="Etl\AmazonSelenium\Configuration\SeleniumCommandConfigurationManager.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Configuration\PdaCommandConfigurationManager.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Enums\AmazonCmApiMetrics.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Enums\AmazonReportMetrics.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Extractors\AmazonPdaCampaignRequestExtractor.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Extractors\AmazonPdaDailyRequestExtractor.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Extractors\AmazonPdaExtractor.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Models\AmazonPdaCampaignSummary.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\PdaDataProviderBuilder.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\AmazonVcdExtractor.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\AmazonVcdLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\Constants\VendorCentralDataLoadingConstants.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\MetricTypesLoader\BaseVendoritemLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\MetricTypesLoader\BrandsSummaryLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\MetricTypesLoader\CategoriesSummaryLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\MetricTypesLoader\ParentProductSummaryLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\MetricTypesLoader\ProductsSummaryLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\MetricTypesLoader\SubcategoriesSummaryLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\Brand.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\Category.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\ParentProduct.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\Product.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\ShippingItem.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\Subcategory.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Configuration\Models\VcdExecutionProfileConfiguration.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\VcdReportData.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Configuration\VcdAccountsManager.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Configuration\VcdCommandConfigurationManager.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Configuration\VcdExecutionProfileManager.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Synchers\VcdAnalyticTablesSyncher.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportDataComposer\VcdReportComposer.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\BaseProductRowMap.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\DecimalAmountReportConverter.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\IntNumberReportConverter.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\OrderedRevenueProductsRowMap.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\ShippedCogsProductsRowMap.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\ShippedRevenueProductsRowMap.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\VcdReportParser.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\VcdDataProviderBuilder.cs" />
     <Compile Include="Etl\Apple\Exceptions\AppleFailedEtlException.cs" />
     <Compile Include="Etl\Amazon\Exceptions\FailedStatsLoadingException.cs" />
     <Compile Include="Etl\CakeMarketing\DALoaders\DAAffiliatesLoader.cs" />
@@ -922,6 +964,10 @@
     <ProjectReference Include="..\..\API\FacebookAPI\FacebookAPI.csproj">
       <Project>{3358a07a-a5a0-4933-9680-03d4308b278c}</Project>
       <Name>FacebookAPI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\API\SeleniumDataBrowser\SeleniumDataBrowser.csproj">
+      <Project>{09800c2e-2d96-495b-9f32-b461b38d015b}</Project>
+      <Name>SeleniumDataBrowser</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\API\Yahoo\Yahoo.csproj">
       <Project>{b5c95cb8-dbe8-4d94-9a6d-6c2ed3535a26}</Project>
