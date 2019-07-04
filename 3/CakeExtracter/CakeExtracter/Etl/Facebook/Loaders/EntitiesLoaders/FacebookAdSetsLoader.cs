@@ -1,14 +1,14 @@
-﻿using CakeExtracter.Helpers;
-using DirectAgents.Domain.Entities.CPProg.Facebook.AdSet;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.Helpers;
+using DirectAgents.Domain.Entities.CPProg.Facebook.AdSet;
 
-namespace CakeExtracter.Etl.SocialMarketing.EntitiesLoaders
+namespace CakeExtracter.Etl.Facebook.Loaders.EntitiesLoaders
 {
     /// <summary>
     /// Facebook adsets entities loader.
     /// </summary>
-    /// <seealso cref="CakeExtracter.Etl.SocialMarketing.EntitiesLoaders.BaseFacebookEntityLoader{DirectAgents.Domain.Entities.CPProg.Facebook.AdSet.FbAdSet}" />
+    /// <seealso cref="BaseFacebookEntityLoader{T}.Domain.Entities.CPProg.Facebook.AdSet.FbAdSet}" />
     public class FacebookAdSetsLoader : BaseFacebookEntityLoader<FbAdSet>
     {
         private readonly FacebookCampaignsLoader campaignsLoader;

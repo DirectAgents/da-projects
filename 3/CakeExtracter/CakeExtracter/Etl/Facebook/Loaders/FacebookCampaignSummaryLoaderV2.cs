@@ -1,13 +1,13 @@
-﻿using CakeExtracter.Common;
-using CakeExtracter.Etl.SocialMarketing.EntitiesLoaders;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using CakeExtracter.Common;
+using CakeExtracter.Etl.Facebook.Loaders.EntitiesLoaders;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg.Facebook.Campaign;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace CakeExtracter.Etl.SocialMarketing.LoadersDAV2
+namespace CakeExtracter.Etl.Facebook.Loaders
 {
     /// <summary>
     /// Facebook Campaigns Summary Loader

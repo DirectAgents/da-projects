@@ -10,6 +10,7 @@ namespace CakeExtracter.Etl.DBM.Extractors.Parsers.ParsingConverters
         public DbmLineItemReportEntityRowMap()
         {
             Map(m => m.Date);
+            Map(m => m.Country);
             Map(m => m.AdvertiserId).Name("Advertiser ID");
             Map(m => m.AdvertiserName).Name("Advertiser");
             Map(m => m.AdvertiserCurrencyCode).Name("Advertiser Currency");

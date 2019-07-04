@@ -1,10 +1,9 @@
-﻿using CakeExtracter.Etl.SocialMarketing.EntitiesLoaders;
+﻿using System.Collections.Generic;
+using System.Linq;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Entities.CPProg.Facebook.Ad;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace CakeExtracter.Etl.SocialMarketing.EntitiesStorage
+namespace CakeExtracter.Etl.Facebook.Loaders.EntitiesLoaders
 {
     /// <summary>
     /// Insure existence of facebook ads, creatives, and validate it's metadata.
