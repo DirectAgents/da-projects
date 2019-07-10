@@ -37,8 +37,8 @@ namespace CakeExtracter.Commands.Test
 
         public override int Execute(string[] remainingArguments)
         {
-            //ListProfiles();
-            SetCampaignTypeInStrategy();
+            ListProfiles();
+            //SetCampaignTypeInStrategy();
             Console.ReadKey();
             return 0;
         }
@@ -47,6 +47,11 @@ namespace CakeExtracter.Commands.Test
         {
             SetUtilityTokens();
             var amazonUtil = new AmazonUtility();
+            var numberOfAlt = 0;
+            Console.Write(@"Please specify the number of profile : ");
+            var inputString = Console.ReadLine();
+            numberOfAlt = Convert.ToInt32(inputString);
+            amazonUtil.WhichAlt = numberOfAlt;
             var profiles = amazonUtil.GetProfiles();
             profiles.ForEach(PrintProfileInfo);
             SaveUtilityTokens();
