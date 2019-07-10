@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Reflection;
 
 namespace Amazon.Helpers
 {
@@ -36,6 +37,29 @@ namespace Amazon.Helpers
         {
             var path = GetBaseDirectoryFilePath(fileName);
             File.WriteAllText(path, fileContent);
+        }
+
+        /// <summary>
+        /// Gets the relative path to the current execution assembly.
+        /// </summary>
+        /// <param name="itemName">Name of the file or directory that will be combined with the relative path.</param>
+        /// <returns>Relative path to the current execution assembly.</returns>
+        public static string GetAssemblyRelativePath(string itemName)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var assemblyDir = Path.GetDirectoryName(assembly.Location);
+            return CombinePath(assemblyDir, itemName);
+        }
+
+        /// <summary>
+        /// Combines the specified file name with the specified path to the directory.
+        /// </summary>
+        /// <param name="dirPath">Path to the directory.</param>
+        /// <param name="fileName">File name.</param>
+        /// <returns>Full path to the specified file name.</returns>
+        public static string CombinePath(string dirPath, string fileName)
+        {
+            return Path.Combine(dirPath, fileName);
         }
 
         private static string ReadJsonFromDecompressedStream(Stream sourceStream, string compressedFilePath, string decompressedFilePath)
