@@ -56,8 +56,9 @@ namespace CakeExtracter.Etl.DBM.Extractors.Parsers.ParsingConverters
 
         private static void SetMetricsForSummary(DbmBaseSummaryEntity summary, DbmBaseReportRow row)
         {
+            const string nullCountryValue = "Unknown";
             summary.Date = row.Date;
-            summary.Country = row.Country;
+            summary.Country = row.Country ?? nullCountryValue;
             summary.Revenue = row.Revenue;
             summary.Impressions = row.Impressions;
             summary.Clicks = row.Clicks;
