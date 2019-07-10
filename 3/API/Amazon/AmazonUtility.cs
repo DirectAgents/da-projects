@@ -59,7 +59,6 @@ namespace Amazon
 
         private string amazonClientId;
         private string amazonClientSecret;
-        private string amazonApiEndpointUrl;
         private string amazonAuthorizeUrl;
         private string amazonTokenUrl;
         private string amazonClientUrl;
@@ -69,7 +68,7 @@ namespace Amazon
         public bool KeepReports { get; set; }
         public string ReportPrefix { get; set; }
 
-        private string ApiEndpointUrl { get; set; }
+        private APIEndpointURLs ApiEndpointUrl { get; set; }
         private string AuthorizeUrl { get; set; }
         private string TokenUrl { get; set; }
         private string ClientUrl { get; set; }
@@ -263,7 +262,6 @@ namespace Amazon
 
             amazonClientId = GetConfigurationValue("AmazonClientId");
             amazonClientSecret = GetConfigurationValue("AmazonClientSecret");
-            amazonApiEndpointUrl = GetConfigurationValue("AmazonAPIEndpointUrl");
             amazonAuthorizeUrl = GetConfigurationValue("AmazonAuthorizeUrl");
             amazonTokenUrl = GetConfigurationValue("AmazonTokenUrl");
             amazonClientUrl = GetConfigurationValue("AmazonClientUrl");
@@ -298,7 +296,7 @@ namespace Amazon
 
         private void ResetCredentials()
         {
-            ApiEndpointUrl = amazonApiEndpointUrl;
+            ApiEndpointUrl = GetAPIEndpointURL();
             AuthorizeUrl = amazonAuthorizeUrl;
             TokenUrl = amazonTokenUrl;
             ClientUrl = amazonClientUrl;
@@ -343,6 +341,16 @@ namespace Amazon
                     break;
                 }
             }
+        }
+
+        /// <summary>
+        /// Sets the URL of regional API endpoint for Amazon utility instance by the country code that specified in the account name.
+        /// </summary>
+        /// <param name="accountName">Name of account.</param>
+        public void SetAPIEndpointUrl(string accountName)
+        {
+            var accountCountryCode = GetCountryCodeFromAccountName(accountName);
+            ApiEndpointUrl = GetAPIEndpointURL(accountCountryCode);
         }
 
         public virtual List<AmazonProfile> GetProfiles()
@@ -646,7 +654,7 @@ namespace Amazon
             where T : new()
         {
             IRestResponse<T> response;
-            var restClient = new RestClient(amazonApiEndpointUrl);
+            var restClient = new RestClient(ApiEndpointUrl.Value);
             lock (RequestLock)
             {
                 response = ProcessRequest<T>(restClient, restRequest, isPostMethod);
@@ -804,6 +812,31 @@ namespace Amazon
         {
             var waitTime = waitTimeSeconds * ((retryNumber - 1) / 3 + 1);
             return TimeSpan.FromSeconds(waitTime);
+        }
+
+        private APIEndpointURLs GetAPIEndpointURL(string accountCountryCode = null)
+        {
+            return string.IsNullOrEmpty(accountCountryCode)
+                ? APIEndpointURLs.NorthAmerica
+                : AmazonApiHelper.GetAppropriateAPIEndpointByCountryCode(accountCountryCode);
+        }
+
+        private string GetCountryCodeFromAccountName(string accountName)
+        {
+            if (!IsAccountNameContainsCountryCode(accountName))
+            {
+                return null;
+            }
+            var firstCountryCodeIndex = accountName.IndexOf('[') + 1;
+            var secondCountryCodeIndex = accountName.IndexOf(']');
+            var accountCountryCode = accountName.Substring(
+                firstCountryCodeIndex, secondCountryCodeIndex - firstCountryCodeIndex);
+            return accountCountryCode;
+        }
+
+        private bool IsAccountNameContainsCountryCode(string accountName)
+        {
+            return accountName.Contains('[') && accountName.Contains(']');
         }
     }
 }
