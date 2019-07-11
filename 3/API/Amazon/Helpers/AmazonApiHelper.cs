@@ -220,15 +220,15 @@ namespace Amazon.Helpers
         private static readonly Dictionary<string, string> DependentCountryCodeApiEndpointUrls =
             new Dictionary<string, string>
             {
-                { "US", APIEndpointURL.NorthAmerica },
-                { "CA", APIEndpointURL.NorthAmerica },
-                { "JP", APIEndpointURL.FarEast },
-                { "AU", APIEndpointURL.FarEast },
-                { "FR", APIEndpointURL.Europe },
-                { "DE", APIEndpointURL.Europe },
-                { "IT", APIEndpointURL.Europe },
-                { "ES", APIEndpointURL.Europe },
-                { "UK", APIEndpointURL.Europe },
+                { "US", ApiEndpointUrl.NorthAmerica },
+                { "CA", ApiEndpointUrl.NorthAmerica },
+                { "JP", ApiEndpointUrl.FarEast },
+                { "AU", ApiEndpointUrl.FarEast },
+                { "FR", ApiEndpointUrl.Europe },
+                { "DE", ApiEndpointUrl.Europe },
+                { "IT", ApiEndpointUrl.Europe },
+                { "ES", ApiEndpointUrl.Europe },
+                { "UK", ApiEndpointUrl.Europe },
             };
 
         public static string GetCampaignTypeName(CampaignType type)
@@ -288,7 +288,7 @@ namespace Amazon.Helpers
         public static string GetAppropriateApiEndpointUrlByCountryCode(string countryCode)
         {
             DependentCountryCodeApiEndpointUrls.TryGetValue(countryCode, out var apiEndpointUrl);
-            return apiEndpointUrl ?? APIEndpointURL.NorthAmerica;
+            return apiEndpointUrl ?? ApiEndpointUrl.NorthAmerica;
         }
 
         private static string GetBaseEntitiesPath(EntitesType entitiesType, CampaignType campaignType)

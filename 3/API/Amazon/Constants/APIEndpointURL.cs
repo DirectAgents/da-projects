@@ -4,7 +4,7 @@
     /// Enums for regional URLs of API endpoints.
     /// <see cref="https://advertising.amazon.com/API/docs/v2/guides/supported_features#API-Endpoints"/>.
     /// </summary>
-    public class APIEndpointURL
+    public static class ApiEndpointUrl
     {
         /// <summary>
         /// Gets the API endpoint URL for North America (NA). Covers US and CA marketplaces.

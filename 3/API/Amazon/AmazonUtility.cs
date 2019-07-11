@@ -68,7 +68,7 @@ namespace Amazon
         public bool KeepReports { get; set; }
         public string ReportPrefix { get; set; }
 
-        private string ApiEndpointUrl { get; set; }
+        private string CurrentApiEndpointUrl { get; set; }
         private string AuthorizeUrl { get; set; }
         private string TokenUrl { get; set; }
         private string ClientUrl { get; set; }
@@ -296,7 +296,7 @@ namespace Amazon
 
         private void ResetCredentials()
         {
-            ApiEndpointUrl = GetApiEndpointUrl();
+            CurrentApiEndpointUrl = GetApiEndpointUrl();
             AuthorizeUrl = amazonAuthorizeUrl;
             TokenUrl = amazonTokenUrl;
             ClientUrl = amazonClientUrl;
@@ -350,7 +350,7 @@ namespace Amazon
         public void SetApiEndpointUrl(string accountName)
         {
             var accountCountryCode = GetCountryCodeFromAccountName(accountName);
-            ApiEndpointUrl = GetApiEndpointUrl(accountCountryCode);
+            CurrentApiEndpointUrl = GetApiEndpointUrl(accountCountryCode);
         }
 
         public virtual List<AmazonProfile> GetProfiles()
@@ -654,7 +654,7 @@ namespace Amazon
             where T : new()
         {
             IRestResponse<T> response;
-            var restClient = new RestClient(ApiEndpointUrl);
+            var restClient = new RestClient(CurrentApiEndpointUrl);
             lock (RequestLock)
             {
                 response = ProcessRequest<T>(restClient, restRequest, isPostMethod);
@@ -817,7 +817,7 @@ namespace Amazon
         private string GetApiEndpointUrl(string accountCountryCode = null)
         {
             return string.IsNullOrEmpty(accountCountryCode)
-                ? APIEndpointURL.NorthAmerica
+                ? ApiEndpointUrl.NorthAmerica
                 : AmazonApiHelper.GetAppropriateApiEndpointUrlByCountryCode(accountCountryCode);
         }
 
