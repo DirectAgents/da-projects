@@ -1,7 +1,8 @@
-﻿using Amazon.Entities.HelperEntities;
-using Amazon.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Amazon.Constants;
+using Amazon.Entities.HelperEntities;
+using Amazon.Enums;
 
 namespace Amazon.Helpers
 {
@@ -216,18 +217,18 @@ namespace Amazon.Helpers
                 }
             };
 
-        private static readonly Dictionary<string, APIEndpointURLs> DependentCountryCodeAPIEndpoints =
-            new Dictionary<string, APIEndpointURLs>
+        private static readonly Dictionary<string, string> DependentCountryCodeApiEndpointUrls =
+            new Dictionary<string, string>
             {
-                { "US", APIEndpointURLs.NorthAmerica },
-                { "CA", APIEndpointURLs.NorthAmerica },
-                { "JP", APIEndpointURLs.FarEast },
-                { "AU", APIEndpointURLs.FarEast },
-                { "FR", APIEndpointURLs.Europe },
-                { "DE", APIEndpointURLs.Europe },
-                { "IT", APIEndpointURLs.Europe },
-                { "ES", APIEndpointURLs.Europe },
-                { "UK", APIEndpointURLs.Europe },
+                { "US", ApiEndpointUrl.NorthAmerica },
+                { "CA", ApiEndpointUrl.NorthAmerica },
+                { "JP", ApiEndpointUrl.FarEast },
+                { "AU", ApiEndpointUrl.FarEast },
+                { "FR", ApiEndpointUrl.Europe },
+                { "DE", ApiEndpointUrl.Europe },
+                { "IT", ApiEndpointUrl.Europe },
+                { "ES", ApiEndpointUrl.Europe },
+                { "UK", ApiEndpointUrl.Europe },
             };
 
         public static string GetCampaignTypeName(CampaignType type)
@@ -284,10 +285,10 @@ namespace Amazon.Helpers
         /// </summary>
         /// <param name="countryCode">Code of country.</param>
         /// <returns>URL of the API endpoint.</returns>
-        public static APIEndpointURLs GetAppropriateAPIEndpointByCountryCode(string countryCode)
+        public static string GetAppropriateApiEndpointUrlByCountryCode(string countryCode)
         {
-            DependentCountryCodeAPIEndpoints.TryGetValue(countryCode, out var apiEndpoint);
-            return apiEndpoint ?? APIEndpointURLs.NorthAmerica;
+            DependentCountryCodeApiEndpointUrls.TryGetValue(countryCode, out var apiEndpointUrl);
+            return apiEndpointUrl ?? ApiEndpointUrl.NorthAmerica;
         }
 
         private static string GetBaseEntitiesPath(EntitesType entitiesType, CampaignType campaignType)

@@ -181,7 +181,7 @@ namespace CakeExtracter.Commands
         {
             var amazonUtility = new AmazonUtility(m => Logger.Info(account.Id, m), m => Logger.Warn(account.Id, m));
             amazonUtility.SetWhichAlt(account.ExternalId);
-            amazonUtility.SetAPIEndpointUrl(account.Name);
+            amazonUtility.SetApiEndpointUrl(account.Name);
             if (!KeepAmazonReports)
             {
                 return amazonUtility;
