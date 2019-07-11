@@ -68,7 +68,7 @@ namespace Amazon
         public bool KeepReports { get; set; }
         public string ReportPrefix { get; set; }
 
-        private APIEndpointURLs ApiEndpointUrl { get; set; }
+        private string ApiEndpointUrl { get; set; }
         private string AuthorizeUrl { get; set; }
         private string TokenUrl { get; set; }
         private string ClientUrl { get; set; }
@@ -296,7 +296,7 @@ namespace Amazon
 
         private void ResetCredentials()
         {
-            ApiEndpointUrl = GetAPIEndpointURL();
+            ApiEndpointUrl = GetApiEndpointUrl();
             AuthorizeUrl = amazonAuthorizeUrl;
             TokenUrl = amazonTokenUrl;
             ClientUrl = amazonClientUrl;
@@ -347,10 +347,10 @@ namespace Amazon
         /// Sets the URL of regional API endpoint for Amazon utility instance by the country code that specified in the account name.
         /// </summary>
         /// <param name="accountName">Name of account.</param>
-        public void SetAPIEndpointUrl(string accountName)
+        public void SetApiEndpointUrl(string accountName)
         {
             var accountCountryCode = GetCountryCodeFromAccountName(accountName);
-            ApiEndpointUrl = GetAPIEndpointURL(accountCountryCode);
+            ApiEndpointUrl = GetApiEndpointUrl(accountCountryCode);
         }
 
         public virtual List<AmazonProfile> GetProfiles()
@@ -654,7 +654,7 @@ namespace Amazon
             where T : new()
         {
             IRestResponse<T> response;
-            var restClient = new RestClient(ApiEndpointUrl.Value);
+            var restClient = new RestClient(ApiEndpointUrl);
             lock (RequestLock)
             {
                 response = ProcessRequest<T>(restClient, restRequest, isPostMethod);
@@ -814,11 +814,11 @@ namespace Amazon
             return TimeSpan.FromSeconds(waitTime);
         }
 
-        private APIEndpointURLs GetAPIEndpointURL(string accountCountryCode = null)
+        private string GetApiEndpointUrl(string accountCountryCode = null)
         {
             return string.IsNullOrEmpty(accountCountryCode)
-                ? APIEndpointURLs.NorthAmerica
-                : AmazonApiHelper.GetAppropriateAPIEndpointByCountryCode(accountCountryCode);
+                ? APIEndpointURL.NorthAmerica
+                : AmazonApiHelper.GetAppropriateApiEndpointUrlByCountryCode(accountCountryCode);
         }
 
         private string GetCountryCodeFromAccountName(string accountName)
