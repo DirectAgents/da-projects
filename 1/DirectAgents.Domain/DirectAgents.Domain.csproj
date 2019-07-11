@@ -98,10 +98,6 @@
     <Compile Include="Abstract\IDepartmentRepository.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MigrationsTD\201906171745591_Mig_DbmCountry.cs" />
-    <Compile Include="MigrationsTD\201906171745591_Mig_DbmCountry.Designer.cs">
-      <DependentUpon>201906171745591_Mig_DbmCountry.cs</DependentUpon>
-    </Compile>
     <Compile Include="MigrationsTD\201905311144009_Mig_ErrorEmailSentProperty.cs" />
     <Compile Include="MigrationsTD\201905311144009_Mig_ErrorEmailSentProperty.Designer.cs">
       <DependentUpon>201905311144009_Mig_ErrorEmailSentProperty.cs</DependentUpon>
@@ -109,6 +105,10 @@
     <Compile Include="MigrationsTD\201906051446061_Mig_JobFailedEmailSentProperty.cs" />
     <Compile Include="MigrationsTD\201906051446061_Mig_JobFailedEmailSentProperty.Designer.cs">
       <DependentUpon>201906051446061_Mig_JobFailedEmailSentProperty.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\201907111300498_Mig_DbmCountry.cs" />
+    <Compile Include="MigrationsTD\201907111300498_Mig_DbmCountry.Designer.cs">
+      <DependentUpon>201907111300498_Mig_DbmCountry.cs</DependentUpon>
     </Compile>
     <Compile Include="SpecialPlatformsDataProviders\Facebook\IFacebookWebPortalDataService.cs" />
     <Compile Include="Abstract\IMainRepository.cs" />
@@ -1121,14 +1121,14 @@
     <EmbeddedResource Include="MigrationsTD\201905161007112_Mig_YamTables.resx">
       <DependentUpon>201905161007112_Mig_YamTables.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MigrationsTD\201906171745591_Mig_DbmCountry.resx">
-      <DependentUpon>201906171745591_Mig_DbmCountry.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201905311144009_Mig_ErrorEmailSentProperty.resx">
       <DependentUpon>201905311144009_Mig_ErrorEmailSentProperty.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201906051446061_Mig_JobFailedEmailSentProperty.resx">
       <DependentUpon>201906051446061_Mig_JobFailedEmailSentProperty.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201907111300498_Mig_DbmCountry.resx">
+      <DependentUpon>201907111300498_Mig_DbmCountry.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>
