@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers.Interfaces;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestsLifeCycleManagers.Interfaces;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
 
-namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers
+namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestsLifeCycleManagers
 {
     /// <inheritdoc />
     /// <summary>

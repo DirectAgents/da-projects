@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using DirectAgents.Domain.Entities.Administration.JobExecution;
+﻿using DirectAgents.Domain.Entities.Administration.JobExecution;
 
-namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers.Interfaces
+namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestsLifeCycleManagers.Interfaces
 {
     /// <summary>
     /// Job Request Life Cycle Manager.

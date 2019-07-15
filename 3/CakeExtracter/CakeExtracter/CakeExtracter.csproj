@@ -486,8 +486,8 @@
     <Compile Include="Common\JobExecutionManagement\JobRequests\Services\JobRequestLaunchers\JobExecutionRequestLauncher.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Models\CommandWithSchedule.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Repositories\JobRequestRepository.cs" />
-    <Compile Include="Common\JobExecutionManagement\JobRequests\Services\JobRequestSchedulers\Interfaces\IJobRequestLifeCycleManager.cs" />
-    <Compile Include="Common\JobExecutionManagement\JobRequests\Services\JobRequestSchedulers\JobRequestLifeCycleManager.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Services\JobRequestsLifeCycleManagers\Interfaces\IJobRequestLifeCycleManager.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Services\JobRequestsLifeCycleManagers\JobRequestLifeCycleManager.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\CommandArgumentsConverter.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\JobRequestsLogger.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\ProcessManager.cs" />

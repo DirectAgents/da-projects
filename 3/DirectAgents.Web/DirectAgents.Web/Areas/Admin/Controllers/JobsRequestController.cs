@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using CakeExtracter.Common;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers.Interfaces;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestsLifeCycleManagers.Interfaces;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 

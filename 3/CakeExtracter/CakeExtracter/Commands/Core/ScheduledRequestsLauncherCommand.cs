@@ -4,7 +4,7 @@ using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestLaunchers;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestLaunchers.Interfaces;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestsLifeCycleManagers;
 
 namespace CakeExtracter.Commands.Core
 {
