@@ -1,23 +1,26 @@
 ﻿using System;
 using System.Configuration;
 using System.Threading;
-using CakeExtracter.Common.JobExecutionManagement;
+using CakeExtracter.Common.JobExecutionManagement.ProcessManagers.Interfaces;
 
-namespace CakeExtracter.Common
+namespace CakeExtracter.Common.JobExecutionManagement
 {
+    /// <inheritdoc />
     /// <summary>
     /// Command automated stop watcher(singleton).
     /// </summary>
     public sealed class CommandAutoStopWatcher : IDisposable
     {
-        private static CommandAutoStopWatcher current = null;
+        private static CommandAutoStopWatcher current;
 
+        private readonly IProcessManager processManager;
         private Timer watcherTimer;
 
         private static readonly object WatcherLock = new object();
 
         private CommandAutoStopWatcher()
         {
+            processManager = DIKernel.Get<IProcessManager>();
         }
 
         /// <summary>
@@ -32,11 +35,7 @@ namespace CakeExtracter.Common
             {
                 lock (WatcherLock)
                 {
-                    if (current == null)
-                    {
-                        current = new CommandAutoStopWatcher();
-                    }
-                    return current;
+                    return current ?? (current = new CommandAutoStopWatcher());
                 }
             }
         }
@@ -62,40 +61,40 @@ namespace CakeExtracter.Common
         {
             var valueFromConfigInHours = GetMaxExecutionTimeInHoursConfigValue();
             return valueFromConfigInHours != Timeout.Infinite
-                ? valueFromConfigInHours * 60 * 60 * 1000 // converting from hours to milliseconds
+                ? (int)TimeSpan.FromHours(valueFromConfigInHours).TotalMilliseconds
                 : Timeout.Infinite; // if -1 defined in configuration don't need convert to milliseconds
         }
 
         private int GetMaxExecutionTimeInHoursConfigValue()
         {
             const string commandMaxExecutionTimeConfigurationPrefix = "CommandMaxExecutionTimeInHours_";
-            if (ConfigurationManager.AppSettings[$"{commandMaxExecutionTimeConfigurationPrefix}{CommandExecutionContext.Current.CommandName}"] != null)
+            var maxExecutionTimeConfigName = $"{commandMaxExecutionTimeConfigurationPrefix}{CommandExecutionContext.Current.CommandName}";
+            var maxExecutionTimeConfigValue = ConfigurationManager.AppSettings[maxExecutionTimeConfigName];
+            if (maxExecutionTimeConfigValue != null)
             {
-                return int.TryParse(ConfigurationManager.AppSettings[$"{commandMaxExecutionTimeConfigurationPrefix}{CommandExecutionContext.Current.CommandName}"], out int result)
+                return int.TryParse(maxExecutionTimeConfigValue, out var result)
                     ? result
                     : Timeout.Infinite;
             }
-            else
-            {
-                return GetDefaultMaxExecutionTimeForAllCommands();
-            }
+
+            return GetDefaultMaxExecutionTimeForAllCommands();
         }
 
         private int GetDefaultMaxExecutionTimeForAllCommands()
         {
             const string defaultMaxExecutionTimeConfigurationKey = "CommandMaxExecutionTimeInHours_Default";
             const int defaultMaxExecutionTimeInHours = 10;
-            return int.TryParse(ConfigurationManager.AppSettings[defaultMaxExecutionTimeConfigurationKey], out int result)
+            return int.TryParse(ConfigurationManager.AppSettings[defaultMaxExecutionTimeConfigurationKey], out var result)
                    ? result
                    : defaultMaxExecutionTimeInHours;
         }
 
         private void ExecutionTimeoutCallback(object o)
         {
-            Logger.Error(new ApplicationException($"Execution timeout expired. Process will be automatically stopped"));
+            Logger.Error(new ApplicationException("Execution timeout expired. Process will be automatically stopped"));
             CommandExecutionContext.Current.SetAsAbortedByTimeoutRequestExecution();
             watcherTimer?.Dispose();
-            Environment.Exit(0);
+            processManager.EndCurrentProcess();
         }
     }
 }

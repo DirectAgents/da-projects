@@ -21,6 +21,8 @@ using Ninject.Web.Common.WebHost;
 using CakeExtracter.Common.Email;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestLaunchers;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestLaunchers.Interfaces;
+using CakeExtracter.Common.JobExecutionManagement.ProcessManagers;
+using CakeExtracter.Common.JobExecutionManagement.ProcessManagers.Interfaces;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(DirectAgents.Web.App_Start.NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(DirectAgents.Web.App_Start.NinjectWebCommon), "Stop")]
@@ -105,6 +107,7 @@ namespace DirectAgents.Web.App_Start
             kernel.Bind<IJobExecutionNotificationService>().To<JobExecutionNotificationService>();
             kernel.Bind<IJobExecutionRequestLauncher>().To<JobExecutionRequestLauncher>();
             kernel.Bind<IEmailNotificationsService>().To<EmailNotificationsService>();
+            kernel.Bind<IProcessManager>().To<ProcessManager>().InSingletonScope();
             kernel.Bind<ClientPortal.Data.Contracts.IClientPortalRepository>().To<ClientPortal.Data.Services.ClientPortalRepository>();
 
             kernel.Bind<SpecialPlatformProvider>().To<DspProvider>();
