@@ -11,22 +11,27 @@ using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
 {
     /// <summary>
-    /// Loader for DBM summaries of creative
+    /// Loader for DBM summaries of creative.
     /// </summary>
     public class DbmCreativeSummaryLoader
     {
         private readonly DbmCreativeLoader creativeLoader;
-        private readonly DateRange dateRange;
 
         private static readonly object lockObject = new object();
-        
-        public DbmCreativeSummaryLoader(DateRange dateRange) 
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbmCreativeSummaryLoader"/> class.
+        /// </summary>
+        public DbmCreativeSummaryLoader()
         {
             var advertiserLoader = new DbmAdvertiserLoader();
             creativeLoader = new DbmCreativeLoader(advertiserLoader);
-            this.dateRange = dateRange;
         }
 
+        /// <summary>
+        /// Loads DBM creative summaries to Db.
+        /// </summary>
+        /// <param name="summaries">List of DBM Creative summaries for loading.</param>
         public void Load(List<DbmCreativeSummary> summaries)
         {
             Logger.Info("Started loading creative summaries...");
@@ -49,10 +54,12 @@ namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
         private void LoadSummariesForAccount(IGrouping<int?, DbmCreativeSummary> summaryForAccount)
         {
             var accountId = Convert.ToInt32(summaryForAccount.Key);
+            var dateRange = GetDateRangeForLoadingSummaries(summaryForAccount);
+
             Logger.Info(accountId, "DBM ETL Creative. Account ID = {0}", accountId);
-            
-            DeleteOldSummariesFromDb(accountId);
-            LoadSummariesToDb(summaryForAccount);
+
+            DeleteOldSummariesFromDb(accountId, dateRange);
+            LoadSummariesToDb(accountId, summaryForAccount, dateRange);
 
             Logger.Info(accountId, "Finished DBM ETL Creative for account (ID = {0})", accountId);
         }
@@ -64,26 +71,35 @@ namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
             summaries.ForEach(summary => { summary.EntityId = summary.Creative.Id; });
         }
 
-        private void DeleteOldSummariesFromDb(int accountId)
+        private void DeleteOldSummariesFromDb(int accountId, DateRange summaryDateRange)
         {
-            Logger.Info(accountId, $"Started cleaning of creative summaries has begun - {dateRange.ToString()}");
-            SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
-            {
-                db.DbmCreativeSummaries.Where(x => (x.Date >= dateRange.FromDate && x.Date <= dateRange.ToDate)
-                && x.Creative.AccountId == accountId).DeleteFromQuery();
-            }, lockObject, "BulkDeleteByQuery");
-            Logger.Info(accountId, $"The cleaning of creative summaries is over - {dateRange.ToString()})");
+            Logger.Info(accountId, $"Started cleaning of creative summaries has begun - {summaryDateRange.ToString()}");
+            SafeContextWrapper.TryMakeTransactionWithLock(
+                (ClientPortalProgContext db) =>
+                {
+                    db.DbmCreativeSummaries
+                        .Where(x => (x.Date >= summaryDateRange.FromDate && x.Date <= summaryDateRange.ToDate) && x.Creative.AccountId == accountId)
+                        .DeleteFromQuery();
+                }, lockObject,
+                "BulkDeleteByQuery");
+            Logger.Info(accountId, $"The cleaning of creative summaries is over - {summaryDateRange.ToString()})");
         }
 
-        private void LoadSummariesToDb(IGrouping<int?, DbmCreativeSummary> summaryForAccount)
+        private void LoadSummariesToDb(int accountId, IGrouping<int?, DbmCreativeSummary> summaryForAccount, DateRange summaryDateRange)
         {
-            var accountId = Convert.ToInt32(summaryForAccount.Key);
-            Logger.Info(accountId, $"Started loading of creative summaries has begun - {dateRange.ToString()}");
-            SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) =>
-            {
-                db.BulkInsert(summaryForAccount);
-            }, lockObject, "BulkInsert");
-            Logger.Info(accountId, $"The loading of creative summaries is over - {dateRange.ToString()})");
+            Logger.Info(accountId, $"Started loading of creative summaries has begun - {summaryDateRange.ToString()}");
+            SafeContextWrapper.TryMakeTransactionWithLock(
+                (ClientPortalProgContext db) => { db.BulkInsert(summaryForAccount); },
+                lockObject,
+                "BulkInsert");
+            Logger.Info(accountId, $"The loading of creative summaries is over - {summaryDateRange.ToString()})");
+        }
+
+        private DateRange GetDateRangeForLoadingSummaries(IGrouping<int?, DbmCreativeSummary> summaryForAccount)
+        {
+            var startDate = summaryForAccount.Select(s => s.Date).Min();
+            var endDate = summaryForAccount.Select(s => s.Date).Max();
+            return new DateRange(startDate, endDate);
         }
     }
 }

@@ -8,15 +8,13 @@ using Amazon.Enums;
 using Amazon.Exceptions;
 using CakeExtracter.Commands;
 using CakeExtracter.Common;
-using CakeExtracter.Common.JobExecutionManagement;
-using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils;
-using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors;
-using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
 using CakeExtracter.Helpers;
 using CakeExtracter.Tests.Helpers;
-using CakeExtracter.Tests.JobTests.Amazon.TestImplementations;
+using CakeExtracter.Tests.JobTests.Amazon.TestImplementations.DIModules;
+using CakeExtracter.Tests.JobTests.Amazon.TestImplementations.DIModules.Base;
+using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
 using DirectAgents.Domain.Entities.CPProg;
 using Moq;
 using NUnit.Framework;
@@ -25,12 +23,9 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
 {
     [TestFixture(TestName = "Amazon relaunch mechanism tests.")]
     [Category("Jobs")]
-    [Description("Test proper behaviour of Amazon relaunch mechanism.")]
+    [Description("Test proper behavior of Amazon relaunch mechanism.")]
     public class AmazonRelaunchMechanismTests
     {
-        private TestJobExecutionItemRepository executionItemRepository;
-        private TestJobRequestRepository requestRepository;
-
         private readonly List<ExtAccount> testAccounts = new List<ExtAccount>
         {
             PredefinedTestObjectsStorage.TestAccount1,
@@ -47,27 +42,8 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
         [TestCase(null, null, null)]
         public void AmazonRelaunchMechanism_RelaunchCommandAfterExceptionInDailyExtractor(DateTime? fromDateTime, DateTime? toDateTime, int? daysAgo)
         {
+            DIKernel.SetKernel(new TestAmazonDailyExtractorFailedDiModule());
             var commandMock = CreateCommandMock(null, fromDateTime, toDateTime, daysAgo, StatsTypeAgg.DailyArg);
-            commandMock.Setup(m => m.CreateDailyExtractor(It.IsAny<DateRange>(), It.IsAny<ExtAccount>()))
-                .Returns<DateRange, ExtAccount>(
-                    (dateRange, account) =>
-                    {
-                        var extractorMock =
-                            new Mock<AmazonDatabaseKeywordsToDailySummaryExtracter>(dateRange, account.Id)
-                            {
-                                CallBase = true,
-                            };
-                        extractorMock.Setup(m => m.RemoveOldData(It.IsAny<DateRange>())).Verifiable();
-                        extractorMock.Setup(m => m.GetDailySummaryDataFromDataBase()).Throws<Exception>().Verifiable();
-                        return extractorMock.Object;
-                    });
-            commandMock.Setup(m => m.CreateDailyLoader(It.IsAny<ExtAccount>())).Returns(() =>
-            {
-                var loaderMock = new Mock<AmazonDailySummaryLoader>(It.IsAny<int>()) { CallBase = true };
-                loaderMock.Setup(m => m.LoadItems(It.IsAny<List<DailySummary>>())).Verifiable();
-                return loaderMock.Object;
-            });
-
             commandMock.Object.Run();
             AssertRelaunchIsValid(commandMock);
         }
@@ -81,27 +57,8 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
         [TestCase(null, null, null)]
         public void AmazonRelaunchMechanism_RelaunchCommandAfterExceptionInDailyCleaner(DateTime? fromDateTime, DateTime? toDateTime, int? daysAgo)
         {
+            DIKernel.SetKernel(new TestAmazonDailyCleanerFailedDiModule());
             var commandMock = CreateCommandMock(null, fromDateTime, toDateTime, daysAgo, StatsTypeAgg.DailyArg);
-            commandMock.Setup(m => m.CreateDailyExtractor(It.IsAny<DateRange>(), It.IsAny<ExtAccount>()))
-                .Returns<DateRange, ExtAccount>(
-                    (dateRange, account) =>
-                    {
-                        var extractorMock =
-                            new Mock<AmazonDatabaseKeywordsToDailySummaryExtracter>(dateRange, account.Id)
-                            {
-                                CallBase = true,
-                            };
-                        extractorMock.Setup(m => m.RemoveOldData(It.IsAny<DateRange>())).Throws<Exception>().Verifiable();
-                        extractorMock.Setup(m => m.GetDailySummaryDataFromDataBase()).Returns(new List<DailySummary> { new DailySummary() });
-                        return extractorMock.Object;
-                    });
-            commandMock.Setup(m => m.CreateDailyLoader(It.IsAny<ExtAccount>())).Returns(() =>
-            {
-                var loaderMock = new Mock<AmazonDailySummaryLoader>(It.IsAny<int>()) { CallBase = true };
-                loaderMock.Setup(m => m.LoadItems(It.IsAny<List<DailySummary>>())).Verifiable();
-                return loaderMock.Object;
-            });
-
             commandMock.Object.Run();
             AssertRelaunchIsValid(commandMock);
         }
@@ -115,29 +72,8 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
         [TestCase(null, null, null)]
         public void AmazonRelaunchMechanism_RelaunchCommandAfterExceptionInDailyLoader(DateTime? fromDateTime, DateTime? toDateTime, int? daysAgo)
         {
+            DIKernel.SetKernel(new TestAmazonDailyLoaderFailedDiModule());
             var commandMock = CreateCommandMock(null, fromDateTime, toDateTime, daysAgo, StatsTypeAgg.DailyArg);
-            commandMock.Setup(m => m.CreateDailyExtractor(It.IsAny<DateRange>(), It.IsAny<ExtAccount>()))
-                .Returns<DateRange, ExtAccount>(
-                    (dateRange, account) =>
-                    {
-                        var extractorMock =
-                            new Mock<AmazonDatabaseKeywordsToDailySummaryExtracter>(dateRange, account.Id)
-                            {
-                                CallBase = true,
-                            };
-                        extractorMock.Setup(m => m.RemoveOldData(It.IsAny<DateRange>())).Verifiable();
-                        extractorMock.Setup(m => m.GetDailySummaryDataFromDataBase()).Returns(new List<DailySummary> { new DailySummary() }).Verifiable();
-                        return extractorMock.Object;
-                    });
-            commandMock.Setup(m => m.CreateDailyLoader(It.IsAny<ExtAccount>()))
-                .Returns<ExtAccount>(
-                    account =>
-                    {
-                        var loaderMock = new Mock<AmazonDailySummaryLoader>(account.Id) {CallBase = true};
-                        loaderMock.Setup(m => m.LoadItems(It.IsAny<List<DailySummary>>())).Throws<Exception>().Verifiable();
-                        return loaderMock.Object;
-                    });
-
             commandMock.Object.Run();
             AssertRelaunchIsValid(commandMock);
         }
@@ -151,6 +87,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
         [TestCase(null, null, null)]
         public void AmazonRelaunchMechanism_RelaunchCommandAfterExceptionInCampaignsInfoReceivingOfKeywordExtractor(DateTime? fromDateTime, DateTime? toDateTime, int? daysAgo)
         {
+            DIKernel.SetKernel(new TestAmazonDependencyInjectionModule());
             var commandMock = CreateCommandMock(null, fromDateTime, toDateTime, daysAgo, StatsTypeAgg.KeywordArg);
             var utilityMock = new Mock<AmazonUtility>();
             var exception = new ExtractDataException(
@@ -161,25 +98,6 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
                 It.IsAny<string>());
             utilityMock.Setup(m => m.GetCampaigns(It.IsAny<CampaignType>(), It.IsAny<string>())).Throws(exception).Verifiable();
             commandMock.Setup(m => m.CreateUtility(It.IsAny<ExtAccount>())).Returns(utilityMock.Object);
-            commandMock.Setup(m => m.CreateKeywordExtractor(It.IsAny<DateRange>(), It.IsAny<ExtAccount>(), It.IsAny<AmazonUtility>()))
-                .Returns<DateRange, ExtAccount, AmazonUtility>(
-                    (dateRange, account, utility) =>
-                    {
-                        var extractorMock =
-                            new Mock<AmazonApiKeywordExtractor>(utility, dateRange, account, null, null)
-                            {
-                                CallBase = true,
-                            };
-                        extractorMock.Setup(m => m.RemoveOldData(It.IsAny<DateTime>())).Verifiable();
-                        return extractorMock.Object;
-                    });
-            commandMock.Setup(m => m.CreateKeywordLoader(It.IsAny<ExtAccount>())).Returns(() =>
-            {
-                var loaderMock = new Mock<AmazonKeywordSummaryLoader>(It.IsAny<int>()) { CallBase = true };
-                loaderMock.Setup(m => m.LoadItems(It.IsAny<List<KeywordSummary>>())).Verifiable();
-                return loaderMock.Object;
-            });
-
             commandMock.Object.Run();
             AssertRelaunchIsValid(commandMock);
         }
@@ -193,6 +111,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
         [TestCase(null, null, null)]
         public void AmazonRelaunchMechanism_RelaunchCommandAfterExceptionInCampaignsInfoReceivingOfAdExtractor(DateTime? fromDateTime, DateTime? toDateTime, int? daysAgo)
         {
+            DIKernel.SetKernel(new TestAmazonDependencyInjectionModule());
             var commandMock = CreateCommandMock(null, fromDateTime, toDateTime, daysAgo, StatsTypeAgg.CreativeArg);
             var utilityMock = new Mock<AmazonUtility>();
             var exception = new ExtractDataException(
@@ -203,25 +122,6 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
                 It.IsAny<string>());
             utilityMock.Setup(m => m.GetCampaigns(It.IsAny<CampaignType>(), It.IsAny<string>())).Throws(exception).Verifiable();
             commandMock.Setup(m => m.CreateUtility(It.IsAny<ExtAccount>())).Returns(utilityMock.Object);
-            commandMock.Setup(m => m.CreateCreativeExtractor(It.IsAny<DateRange>(), It.IsAny<ExtAccount>(), It.IsAny<AmazonUtility>()))
-                .Returns<DateRange, ExtAccount, AmazonUtility>(
-                    (dateRange, account, utility) =>
-                    {
-                        var extractorMock =
-                            new Mock<AmazonApiAdExtrator>(utility, dateRange, account, null, null)
-                            {
-                                CallBase = true,
-                            };
-                        extractorMock.Setup(m => m.RemoveOldData(It.IsAny<DateTime>())).Verifiable();
-                        return extractorMock.Object;
-                    });
-            commandMock.Setup(m => m.CreateCreativeLoader(It.IsAny<ExtAccount>())).Returns(() =>
-            {
-                var loaderMock = new Mock<AmazonAdSummaryLoader>(It.IsAny<int>()) { CallBase = true };
-                loaderMock.Setup(m => m.LoadItems(It.IsAny<List<TDadSummary>>())).Verifiable();
-                return loaderMock.Object;
-            });
-
             commandMock.Object.Run();
             AssertRelaunchIsValid(commandMock);
         }
@@ -235,6 +135,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
         [TestCase(null, null, null)]
         public void AmazonRelaunchMechanism_RelaunchCommandAfterExceptionInTargetKeywordReportReceiving(DateTime? fromDateTime, DateTime? toDateTime, int? daysAgo)
         {
+            DIKernel.SetKernel(new TestAmazonDependencyInjectionModule());
             var commandMock = CreateCommandMock(null, fromDateTime, toDateTime, daysAgo, StatsTypeAgg.KeywordArg);
             var utilityMock = new Mock<AmazonUtility>();
             var exception = new ExtractDataException(
@@ -248,25 +149,6 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
                 .Returns(new List<AmazonKeywordDailySummary>());
             utilityMock.Setup(m => m.ReportTargetKeywords(It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<bool>())).Throws(exception).Verifiable();
             commandMock.Setup(m => m.CreateUtility(It.IsAny<ExtAccount>())).Returns(utilityMock.Object);
-            commandMock.Setup(m => m.CreateKeywordExtractor(It.IsAny<DateRange>(), It.IsAny<ExtAccount>(), It.IsAny<AmazonUtility>()))
-                .Returns<DateRange, ExtAccount, AmazonUtility>(
-                    (dateRange, account, utility) =>
-                    {
-                        var extractorMock =
-                            new Mock<AmazonApiKeywordExtractor>(utility, dateRange, account, null, null)
-                            {
-                                CallBase = true,
-                            };
-                        extractorMock.Setup(m => m.RemoveOldData(It.IsAny<DateTime>())).Verifiable();
-                        return extractorMock.Object;
-                    });
-            commandMock.Setup(m => m.CreateKeywordLoader(It.IsAny<ExtAccount>())).Returns(() =>
-            {
-                var loaderMock = new Mock<AmazonKeywordSummaryLoader>(It.IsAny<int>()) { CallBase = true };
-                loaderMock.Setup(m => m.LoadItems(It.IsAny<List<KeywordSummary>>())).Verifiable();
-                return loaderMock.Object;
-            });
-
             commandMock.Object.Run();
             AssertRelaunchIsValid(commandMock, false);
         }
@@ -280,6 +162,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
         [TestCase(null, null, null)]
         public void AmazonRelaunchMechanism_RelaunchCommandAfterExceptionInKeywordReportReceiving(DateTime? fromDateTime, DateTime? toDateTime, int? daysAgo)
         {
+            DIKernel.SetKernel(new TestAmazonDependencyInjectionModule());
             var commandMock = CreateCommandMock(null, fromDateTime, toDateTime, daysAgo, StatsTypeAgg.KeywordArg);
             var utilityMock = new Mock<AmazonUtility>();
             var exception = new ExtractDataException(
@@ -294,25 +177,6 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
             utilityMock.Setup(m => m.ReportTargetKeywords(It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<bool>()))
                 .Returns(new List<AmazonTargetKeywordDailySummary>());
             commandMock.Setup(m => m.CreateUtility(It.IsAny<ExtAccount>())).Returns(utilityMock.Object);
-            commandMock.Setup(m => m.CreateKeywordExtractor(It.IsAny<DateRange>(), It.IsAny<ExtAccount>(), It.IsAny<AmazonUtility>()))
-                .Returns<DateRange, ExtAccount, AmazonUtility>(
-                    (dateRange, account, utility) =>
-                    {
-                        var extractorMock =
-                            new Mock<AmazonApiKeywordExtractor>(utility, dateRange, account, null, null)
-                            {
-                                CallBase = true,
-                            };
-                        extractorMock.Setup(m => m.RemoveOldData(It.IsAny<DateTime>())).Verifiable();
-                        return extractorMock.Object;
-                    });
-            commandMock.Setup(m => m.CreateKeywordLoader(It.IsAny<ExtAccount>())).Returns(() =>
-            {
-                var loaderMock = new Mock<AmazonKeywordSummaryLoader>(It.IsAny<int>()) { CallBase = true };
-                loaderMock.Setup(m => m.LoadItems(It.IsAny<List<KeywordSummary>>())).Verifiable();
-                return loaderMock.Object;
-            });
-
             commandMock.Object.Run();
             AssertRelaunchIsValid(commandMock, false);
         }
@@ -326,6 +190,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
         [TestCase(null, null, null)]
         public void AmazonRelaunchMechanism_RelaunchCommandAfterExceptionInKeywordCleaner(DateTime? fromDateTime, DateTime? toDateTime, int? daysAgo)
         {
+            DIKernel.SetKernel(new TestAmazonKeywordCleanerFailedDiModule());
             var commandMock = CreateCommandMock(null, fromDateTime, toDateTime, daysAgo, StatsTypeAgg.KeywordArg);
             var utilityMock = new Mock<AmazonUtility>();
             utilityMock.Setup(m => m.GetCampaigns(It.IsAny<CampaignType>(), It.IsAny<string>())).Returns(new List<AmazonCampaign>());
@@ -334,25 +199,6 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
             utilityMock.Setup(m => m.ReportTargetKeywords(It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<bool>()))
                 .Returns(new List<AmazonTargetKeywordDailySummary>());
             commandMock.Setup(m => m.CreateUtility(It.IsAny<ExtAccount>())).Returns(utilityMock.Object);
-            commandMock.Setup(m => m.CreateKeywordExtractor(It.IsAny<DateRange>(), It.IsAny<ExtAccount>(), It.IsAny<AmazonUtility>()))
-                .Returns<DateRange, ExtAccount, AmazonUtility>(
-                    (dateRange, account, utility) =>
-                    {
-                        var extractorMock =
-                            new Mock<AmazonApiKeywordExtractor>(utility, dateRange, account, null, null)
-                            {
-                                CallBase = true,
-                            };
-                        extractorMock.Setup(m => m.RemoveOldData(It.IsAny<DateTime>())).Throws<Exception>().Verifiable();
-                        return extractorMock.Object;
-                    });
-            commandMock.Setup(m => m.CreateKeywordLoader(It.IsAny<ExtAccount>())).Returns(() =>
-            {
-                var loaderMock = new Mock<AmazonKeywordSummaryLoader>(It.IsAny<int>()) { CallBase = true };
-                loaderMock.Setup(m => m.LoadItems(It.IsAny<List<KeywordSummary>>())).Verifiable();
-                return loaderMock.Object;
-            });
-
             commandMock.Object.Run();
             AssertRelaunchIsValid(commandMock, false);
         }
@@ -366,33 +212,15 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
         [TestCase(null, null, null)]
         public void AmazonRelaunchMechanism_RelaunchCommandAfterExceptionInKeywordLoader(DateTime? fromDateTime, DateTime? toDateTime, int? daysAgo)
         {
+            DIKernel.SetKernel(new TestAmazonKeywordLoaderFailedDiModule());
             var commandMock = CreateCommandMock(null, fromDateTime, toDateTime, daysAgo, StatsTypeAgg.KeywordArg);
             var utilityMock = new Mock<AmazonUtility>();
             utilityMock.Setup(m => m.GetCampaigns(It.IsAny<CampaignType>(), It.IsAny<string>())).Returns(new List<AmazonCampaign>());
             utilityMock.Setup(m => m.ReportKeywords(It.IsAny<CampaignType>(), It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<bool>()))
-                .Returns(new List<AmazonKeywordDailySummary> { new AmazonKeywordDailySummary{ Clicks = 1 } });
+                .Returns(new List<AmazonKeywordDailySummary> { new AmazonKeywordDailySummary { Clicks = 1 } });
             utilityMock.Setup(m => m.ReportTargetKeywords(It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<bool>()))
                 .Returns(new List<AmazonTargetKeywordDailySummary>());
             commandMock.Setup(m => m.CreateUtility(It.IsAny<ExtAccount>())).Returns(utilityMock.Object);
-            commandMock.Setup(m => m.CreateKeywordExtractor(It.IsAny<DateRange>(), It.IsAny<ExtAccount>(), It.IsAny<AmazonUtility>()))
-                .Returns<DateRange, ExtAccount, AmazonUtility>(
-                    (dateRange, account, utility) =>
-                    {
-                        var extractorMock =
-                            new Mock<AmazonApiKeywordExtractor>(utility, dateRange, account, null, null)
-                            {
-                                CallBase = true,
-                            };
-                        extractorMock.Setup(m => m.RemoveOldData(It.IsAny<DateTime>())).Verifiable();
-                        return extractorMock.Object;
-                    });
-            commandMock.Setup(m => m.CreateKeywordLoader(It.IsAny<ExtAccount>())).Returns<ExtAccount>(account =>
-            {
-                var loaderMock = new Mock<AmazonKeywordSummaryLoader>(account.Id) { CallBase = true };
-                loaderMock.Setup(m => m.LoadItems(It.IsAny<List<KeywordSummary>>())).Throws<Exception>().Verifiable();
-                return loaderMock.Object;
-            });
-
             commandMock.Object.Run();
             AssertRelaunchIsValid(commandMock);
         }
@@ -418,11 +246,12 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
 
         private void AssertRelaunchIsValid(List<string> expectedResult)
         {
-            Assert.AreEqual(requestRepository.ScheduledRequests.Count, expectedResult.Count);
-            Assert.IsTrue(expectedResult.TrueForAll(
-                res => requestRepository.ScheduledRequests.Any(
-                    x => string.Equals(x.CommandName, "DASynchAmazonStats", StringComparison.OrdinalIgnoreCase) &&
-                         string.Equals(x.CommandExecutionArguments, res, StringComparison.OrdinalIgnoreCase))));
+            var requestRepository = DIKernel.Get<IJobRequestsRepository>();
+            var scheduledRequests = requestRepository.GetItems(x => x.Status == JobRequestStatus.Scheduled);
+            Assert.AreEqual(expectedResult.Count, scheduledRequests.Count);
+            Assert.IsTrue(expectedResult.TrueForAll(res => scheduledRequests.Any(
+                x => string.Equals(x.CommandName, "DASynchAmazonStats", StringComparison.OrdinalIgnoreCase) &&
+                     string.Equals(x.CommandExecutionArguments, res, StringComparison.OrdinalIgnoreCase))));
         }
 
         private DASynchAmazonStats CopyCommandForAccountAndDateRange(DASynchAmazonStats sourceCommand, int accountId)
@@ -474,24 +303,16 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
                 StatsType = sourceCommand.StatsType,
                 KeepAmazonReports = sourceCommand.KeepAmazonReports,
                 IntervalBetweenUnsuccessfulAndNewRequestInMinutes = sourceCommand.IntervalBetweenUnsuccessfulAndNewRequestInMinutes,
-                DisabledOnly = sourceCommand.DisabledOnly,
                 NoNeedToCreateRepeatRequests = sourceCommand.NoNeedToCreateRepeatRequests,
             };
         }
 
         private Mock<DASynchAmazonStats> CreateCommandMock(int? accountId, DateTime? fromDateTime, DateTime? toDateTime, int? daysAgo, string statsType)
         {
-            InitializeRepositories();
             var commandMock = new Mock<DASynchAmazonStats> { CallBase = true };
             SetupCommandMockProperties(commandMock, accountId, fromDateTime, toDateTime, daysAgo, statsType);
             SetupCommandMockBaseMethods(commandMock);
             return commandMock;
-        }
-
-        private void InitializeRepositories()
-        {
-            executionItemRepository = new TestJobExecutionItemRepository();
-            requestRepository = new TestJobRequestRepository();
         }
 
         private void SetupCommandMockProperties(
@@ -512,20 +333,11 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
         private void SetupCommandMockBaseMethods(Mock<DASynchAmazonStats> commandMock)
         {
             commandMock.Setup(m => m.Clone()).Returns(() => CopyCommand(commandMock.Object));
-            commandMock.Setup(m => m.ResetCommandExecutionContext())
-                .Callback(() => ResetCommandExecutionContext(commandMock.Object));
             commandMock.Setup(m => m.GetAccounts()).Returns(testAccounts);
             commandMock.Setup(m => m.SynchAsinAnalyticTables(It.IsAny<int>()));
             commandMock.Setup(m => m.GetTokens()).Returns(new string[0]);
             commandMock.Setup(m => m.SaveTokens(It.IsAny<string[]>())).Verifiable();
             commandMock.Setup(m => m.CreateUtility(It.IsAny<ExtAccount>())).Returns(new AmazonUtility());
-        }
-
-        private void ResetCommandExecutionContext(ConsoleCommand currentCommand)
-        {
-            var jobExecutionItemService = new JobExecutionItemService(executionItemRepository, requestRepository);
-            var jobExecutionRequestService = new JobExecutionRequestScheduler(requestRepository);
-            CommandExecutionContext.ResetContext(currentCommand, jobExecutionItemService, jobExecutionRequestService);
         }
     }
 }

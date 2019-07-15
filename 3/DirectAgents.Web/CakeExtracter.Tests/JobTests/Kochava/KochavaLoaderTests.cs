@@ -12,7 +12,7 @@ namespace CakeExtracter.Tests.JobTests.Kochava
 {
     [TestFixture(TestName = "Kochava loader tests.")]
     [Category("Jobs")]
-    [Description("Test proper behaviour of Kochava Loader.")]
+    [Description("Test proper behavior of Kochava Loader.")]
     public class KochavaLoaderTests
     {
         private Mock<KochavaConfigurationProvider> configurationProviderMock;
@@ -54,7 +54,7 @@ namespace CakeExtracter.Tests.JobTests.Kochava
                 It.Is<DateTime>(p => p == DateTime.Now.Date)));
         }
 
-        [Test(Description = "Filles account ids in items for insert.")]
+        [Test(Description = "Fills account ids in items for insert.")]
         public void KochavaLoader_FillAccountIdsInItemsForInsert()
         {
             var kochavaLoader = new KochavaLoader(configurationProviderMock.Object, dbServiceMock.Object);

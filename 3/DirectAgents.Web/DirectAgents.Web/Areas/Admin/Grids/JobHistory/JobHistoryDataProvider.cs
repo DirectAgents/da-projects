@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using CakeExtracter.Commands.Core;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Web.Areas.Admin.Grids.DataProviders;
@@ -16,7 +17,8 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
     {
         private readonly List<string> historyItemJobsBlackList = new List<string>
         {
-            "ScheduledRequestsLauncherCommand",
+            FailedJobsNotifierCommand.CommandName,
+            ScheduledRequestsLauncherCommand.CommandName,
         };
 
         /// <summary>

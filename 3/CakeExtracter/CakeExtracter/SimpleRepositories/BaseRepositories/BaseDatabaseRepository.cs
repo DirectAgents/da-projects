@@ -5,7 +5,6 @@ using System.Linq;
 using CakeExtracter.Helpers;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using Z.EntityFramework.Extensions;
-using System.Data.Entity;
 
 namespace CakeExtracter.SimpleRepositories.BaseRepositories
 {

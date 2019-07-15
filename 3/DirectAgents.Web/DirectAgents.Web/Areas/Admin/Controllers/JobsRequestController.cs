@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers.Interfaces;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils;
-using CakeExtractor.SeleniumApplication.Commands;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 
 namespace DirectAgents.Web.Areas.Admin.Controllers
@@ -17,16 +15,16 @@ namespace DirectAgents.Web.Areas.Admin.Controllers
     /// <seealso cref="Controller" />
     public class JobsRequestController : Controller
     {
-        private readonly IJobExecutionRequestScheduler requestScheduler;
+        private readonly IJobRequestLifeCycleManager requestManager;
 
         /// <inheritdoc />
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:DirectAgents.Web.Areas.Admin.Controllers.JobsRequestController" /> class.
+        /// Initializes a new instance of the <see cref="JobsRequestController"/> class.
         /// </summary>
-        /// <param name="requestScheduler">Job request scheduler service.</param>
-        public JobsRequestController(IJobExecutionRequestScheduler requestScheduler)
+        /// <param name="requestManager">Job request scheduler service.</param>
+        public JobsRequestController(IJobRequestLifeCycleManager requestManager)
         {
-            this.requestScheduler = requestScheduler;
+            this.requestManager = requestManager;
         }
 
         /// <summary>
@@ -36,7 +34,7 @@ namespace DirectAgents.Web.Areas.Admin.Controllers
         /// <returns>Action result.</returns>
         public ActionResult Launch()
         {
-            var existingCommands = GetAllExistingCommand();
+            var existingCommands = CommandVerificationUtil.AllExistingCommands;
             var orderedCommands = existingCommands.OrderBy(x => x.Command).ToList();
             return View(orderedCommands);
         }
@@ -68,17 +66,14 @@ namespace DirectAgents.Web.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult ScheduleJobRequest(JobRequest jobRequest)
         {
-            if (!jobRequest.ScheduledTime.HasValue)
-            {
-                jobRequest.ScheduledTime = DateTime.Now;
-            }
-
             try
             {
-                var existingCommands = GetAllExistingCommand();
-                requestScheduler.VerifyJobRequest(existingCommands, jobRequest);
-                requestScheduler.ScheduleJobRequest(jobRequest);
-                return Json(new {success = true});
+                if (!jobRequest.ScheduledTime.HasValue)
+                {
+                    jobRequest.ScheduledTime = DateTime.Now;
+                }
+                requestManager.ScheduleJobRequest(jobRequest);
+                return Json(new { success = true });
             }
             catch (Exception ex)
             {
@@ -96,7 +91,7 @@ namespace DirectAgents.Web.Areas.Admin.Controllers
         {
             try
             {
-                requestScheduler.SetJobRequestsAsAborted(ids);
+                requestManager.SetJobRequestsAsAborted(ids);
                 return Json(new { success = true });
             }
             catch (Exception ex)
@@ -105,20 +100,9 @@ namespace DirectAgents.Web.Areas.Admin.Controllers
             }
         }
 
-        private List<ManyConsole.ConsoleCommand> GetAllExistingCommand()
-        {
-            var consoleCommands =
-                ManyConsole.ConsoleCommandDispatcher.FindCommandsInSameAssemblyAs(typeof(ConsoleCommand));
-            var seleniumCommands =
-                ManyConsole.ConsoleCommandDispatcher.FindCommandsInSameAssemblyAs(typeof(SyncAmazonPdaCommand));
-            var existingCommands = consoleCommands.Concat(seleniumCommands);
-            return existingCommands.ToList();
-        }
-
         private object GetCommandInfo(string commandName)
         {
-            var existingCommands = GetAllExistingCommand();
-            var command = existingCommands.Find(x => x.Command == commandName);
+            var command = CommandVerificationUtil.GetCommandByName(commandName);
             var arguments = CommandArgumentsConverter.GetCommandArguments(command);
             var argumentsLine = command is ConsoleCommand customCommand
                 ? CommandArgumentsConverter.GetExampleCommandArgumentsAsLine(customCommand)

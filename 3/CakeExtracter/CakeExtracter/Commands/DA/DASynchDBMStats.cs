@@ -10,53 +10,59 @@ using CakeExtracter.Helpers;
 using DBM;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
+
 namespace CakeExtracter.Commands.DA
 {
-    ///The class represents a command that is used to retrieve statistics from the Google DBM portal
+    /// <inheritdoc />
+    /// <summary>
+    /// The class represents a command that is used to retrieve statistics from the Google DBM portal.
+    /// </summary>
     [Export(typeof(ConsoleCommand))]
     public class DASynchDBMStats : ConsoleCommand
     {
         private const int DefaultDaysAgo = 14;
 
         /// <summary>
-        /// Command argument: Account ID in the database for which the command will be executed (default = all)
+        /// Gets or sets the command argument: Account ID in the database for which the command will be executed (default = all).
         /// </summary>
         public int? AccountId { get; set; }
 
         /// <summary>
-        /// Command argument: Start date from which statistics will be extracted (default is 'daysAgo')
+        /// Gets or sets the command argument: Start date from which statistics will be extracted (default is 'daysAgo').
         /// </summary>
         public DateTime? StartDate { get; set; }
 
         /// <summary>
-        /// Command argument: End date to which statistics will be extracted (default is yesterday)
+        /// Gets or sets the command argument: End date to which statistics will be extracted (default is yesterday).
         /// </summary>
         public DateTime? EndDate { get; set; }
 
         /// <summary>
-        /// Command argument: The number of days ago to calculate the start date from which statistics will be retrieved,
-        /// used if StartDate not specified (default = 14)
+        /// Gets or sets the command argument: The number of days ago to calculate the start date from which statistics will be retrieved,
+        /// used if StartDate not specified (default = 14).
         /// </summary>
         public int? DaysAgoToStart { get; set; }
 
         /// <summary>
-        /// Command argument: Store all reports from DBM portal in a separate folder
+        /// Gets or sets a value indicating whether command argument: Store all reports from DBM portal in a separate folder.
         /// </summary>
         public bool KeepReports { get; set; }
-        
+
         /// <summary>
-        /// List of creative report identifiers specified on the configuration file
+        /// Gets or sets a list of creative report identifiers specified on the configuration file.
         /// </summary>
         public List<int> CreativeReportIds { get; set; }
+
         /// <summary>
-        /// List of line item report identifiers specified on the configuration file
+        /// Gets or sets a list of line item report identifiers specified on the configuration file.
         /// </summary>
         public List<int> LineItemReportIds { get; set; }
 
         private DBMUtility DbmUtility { get; set; }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ConsoleCommand"/> />
         /// <summary>
+        /// Initializes a new instance of the <see cref="DASynchDBMStats"/> class.
         /// The constructor sets a command name and command arguments names, provides a description for them.
         /// </summary>
         public DASynchDBMStats()
@@ -74,7 +80,7 @@ namespace CakeExtracter.Commands.DA
         /// The method runs the current command and extract and save statistics from the DBM portal based on the command arguments.
         /// </summary>
         /// <param name="remainingArguments"></param>
-        /// <returns>Execution code</returns>
+        /// <returns>Execution code.</returns>
         public override int Execute(string[] remainingArguments)
         {
             SetConfigurationVariables();
@@ -90,7 +96,7 @@ namespace CakeExtracter.Commands.DA
 
         /// <inheritdoc />
         /// <summary>
-        /// The method resets command arguments to defaults
+        /// The method resets command arguments to defaults.
         /// </summary>
         public override void ResetProperties()
         {
@@ -117,8 +123,8 @@ namespace CakeExtracter.Commands.DA
         private void DoETLs(DateRange dateRange, IEnumerable<ExtAccount> accounts)
         {
             Logger.Info("DBM ETL. DateRange {0}.", dateRange);
-            DoETLs_Creative(dateRange, accounts);
             DoETLs_LineItem(dateRange, accounts);
+            DoETLs_Creative(dateRange, accounts);
         }
 
         private void DoETLs_Creative(DateRange dateRange, IEnumerable<ExtAccount> accounts)
@@ -138,7 +144,7 @@ namespace CakeExtracter.Commands.DA
                 var extractor = new DbmCreativeExtractor(DbmUtility, dateRange, accounts, creativeReportId, KeepReports);
                 var summaries = extractor.Extract();
 
-                var loader = new DbmCreativeSummaryLoader(dateRange);
+                var loader = new DbmCreativeSummaryLoader();
                 loader.Load(summaries);
             }
             catch (Exception e)
@@ -164,7 +170,7 @@ namespace CakeExtracter.Commands.DA
                 var extractor = new DbmLineItemExtractor(DbmUtility, dateRange, accounts, lineItemReportId, KeepReports);
                 var summaries = extractor.Extract();
 
-                var loader = new DbmLineItemSummaryLoader(dateRange);
+                var loader = new DbmLineItemSummaryLoader();
                 loader.Load(summaries);
             }
             catch (Exception e)
@@ -172,7 +178,7 @@ namespace CakeExtracter.Commands.DA
                 Logger.Warn($"Could not process a report [report ID: {lineItemReportId}]: {e.Message}");
             }
         }
-        
+
         private IEnumerable<ExtAccount> GetAccounts()
         {
             var repository = new PlatformAccountRepository();
@@ -185,8 +191,6 @@ namespace CakeExtracter.Commands.DA
             var account = repository.GetAccount(AccountId.Value);
             return new[] { account };
         }
-        
-        // --- setup ---
 
         private void SetupDbmUtility()
         {

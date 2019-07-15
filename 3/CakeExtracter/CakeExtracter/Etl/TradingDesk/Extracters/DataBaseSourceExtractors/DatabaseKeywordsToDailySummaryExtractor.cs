@@ -10,7 +10,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     /// <summary>
     /// Data extractor from keywords level to daily level based on database data.
     /// </summary>
-    /// <seealso cref="CakeExtracter.Etl.Extracter{DirectAgents.Domain.Entities.CPProg.DailySummary}" />
+    /// <seealso cref="Etl.Extracter{DailySummary}" />
     public class DatabaseKeywordsToDailySummaryExtractor : Extracter<DailySummary>
     {
         protected readonly DateRange dateRange;

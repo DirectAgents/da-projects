@@ -1,7 +1,8 @@
 ﻿using System;
-using CakeExtracter.Common.JobExecutionManagement;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
+using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 
 namespace CakeExtracter.Common
@@ -11,25 +12,41 @@ namespace CakeExtracter.Common
     /// </summary>
     public abstract class ConsoleCommand : ManyConsole.ConsoleCommand, ICloneable
     {
+        /// <summary>
+        /// The request identifier argument name.
+        /// </summary>
         public const string RequestIdArgumentName = "jobRequestId";
+
+        /// <summary>
+        /// The no need to create repeat requests argument name.
+        /// </summary>
         public const string NoNeedToCreateRepeatRequestsArgumentName = "noRepeatedRequests";
 
         /// <summary>
-        /// The interval between the unsuccessful and the new request in minutes for the child requests of this command.
+        /// Gets or sets the interval between the unsuccessful and the new request in minutes for the child requests of this command.
         /// </summary>
-        public int IntervalBetweenUnsuccessfulAndNewRequestInMinutes= 0;
+        public int IntervalBetweenUnsuccessfulAndNewRequestInMinutes { get; set; } = 0;
 
         /// <summary>
-        /// Command argument: The identifier for the job request that initiates this command run.
+        /// Gets or sets command argument: The identifier for the job request that initiates this command run.
         /// </summary>
         public int? RequestId { get; set; }
 
         /// <summary>
-        /// Command argument: The flag that indicates that there is no need to create repeated requests.
+        /// Gets or sets a value indicating whether command argument: The flag that indicates that there is no need to create repeated requests.
         /// </summary>
         public bool NoNeedToCreateRepeatRequests { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this instance is automatic shut down mechanism enabled.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is automatic shut down mechanism enabled; otherwise, <c>false</c>.
+        /// </value>
+        protected bool IsAutoShutDownMechanismEnabled { get; set; } = true;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConsoleCommand"/> class.
         /// The constructor sets base command arguments names and provides a description for them.
         /// </summary>
         protected ConsoleCommand()
@@ -38,11 +55,20 @@ namespace CakeExtracter.Common
             HasOption<bool>($"{NoNeedToCreateRepeatRequestsArgumentName}=", "No need to create repeated requests. (default = false)", c => NoNeedToCreateRepeatRequests = c);
         }
 
+        /// <summary>
+        /// Runs the command actions.
+        /// </summary>
+        /// <returns>Execution code.</returns>
         public int Run()
         {
             return Run(null);
         }
 
+        /// <summary>
+        /// Runs the command actions with the specified remaining arguments.
+        /// </summary>
+        /// <param name="remainingArguments">The remaining arguments.</param>
+        /// <returns><Execution code.</returns>
         public override int Run(string[] remainingArguments)
         {
             var commandName = GetType().Name;
@@ -56,20 +82,32 @@ namespace CakeExtracter.Common
         /// <summary>
         /// The method resets command arguments to defaults.
         /// </summary>
-        public abstract void ResetProperties();
+        public virtual void ResetProperties()
+        {
+        }
 
         /// <summary>
         /// The method runs the current command based on the command arguments.
         /// </summary>
-        /// <param name="remainingArguments"></param>
+        /// <param name="remainingArguments">The remaining arguments.</param>
         /// <returns>Execution code</returns>
         public abstract int Execute(string[] remainingArguments);
 
+        /// <summary>
+        /// Gets the argument properties.
+        /// </summary>
+        /// <returns>Collection of argument properties.</returns>
         public virtual IEnumerable<PropertyInfo> GetArgumentProperties()
         {
             return GetType().GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
         }
 
+        /// <summary>
+        /// Tries to set the property.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <param name="propertyValue">The property value.</param>
+        /// <returns>Flag indicating whether property set was successful.</returns>
         public virtual bool TrySetProperty(string propertyName, object propertyValue)
         {
             var property = GetType().GetProperty(propertyName);
@@ -92,11 +130,24 @@ namespace CakeExtracter.Common
             return commands;
         }
 
-        public virtual void ResetCommandExecutionContext()
+        /// <summary>
+        /// Resets the command execution context.
+        /// </summary>
+        public virtual void PrepareCommandExecutionContext()
         {
             CommandExecutionContext.ResetContext(this);
+            if (IsAutoShutDownMechanismEnabled)
+            {
+                CommandAutoStopWatcher.Current.SetupAutomatedShutDown();
+            }
         }
 
+        /// <summary>
+        /// Creates a new object that is a copy of the current instance.
+        /// </summary>
+        /// <returns>
+        /// A new object that is a copy of this instance.
+        /// </returns>
         public virtual object Clone()
         {
             return MemberwiseClone();
@@ -115,9 +166,17 @@ namespace CakeExtracter.Common
             CommandExecutionContext.Current.ScheduleCommandLaunch(command);
         }
 
+        private void CleanUpExecutionContext()
+        {
+            if (IsAutoShutDownMechanismEnabled)
+            {
+                CommandAutoStopWatcher.Current.Dispose();
+            }
+        }
+
         private int ExecuteJobWithContext(string[] remainingArguments)
         {
-            ResetCommandExecutionContext();
+            PrepareCommandExecutionContext();
             CommandExecutionContext.Current.StartRequestExecution();
             try
             {
@@ -128,8 +187,12 @@ namespace CakeExtracter.Common
             catch (Exception ex)
             {
                 Logger.Error(ex);
-                CommandExecutionContext.Current.FailedRequestExecution();
+                CommandExecutionContext.Current.SetAsFailedRequestExecution();
                 return 1;
+            }
+            finally
+            {
+                CleanUpExecutionContext();
             }
         }
     }

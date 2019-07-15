@@ -1,9 +1,8 @@
-﻿using CakeExtracter.Common.JobExecutionManagement.JobExecution;
-using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers;
+﻿using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers.Interfaces;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
+using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
 
 namespace CakeExtracter.Common.JobExecutionManagement
 {
@@ -24,29 +23,29 @@ namespace CakeExtracter.Common.JobExecutionManagement
             private set;
         }
 
+        /// <summary>
+        /// Gets the name of the currently running command.
+        /// </summary>
+        /// <value>
+        /// The name of the currently running command.
+        /// </value>
+        public string CommandName => currentCommand.Command;
+
         private readonly IJobExecutionItemService jobExecutionItemService;
-        private readonly IJobExecutionRequestScheduler jobExecutionRequestScheduler;
+        private readonly IJobRequestLifeCycleManager jobRequestLifeCycleManager;
+        private readonly RetryRequestsHolder retryRequestsHolder;
 
         private ConsoleCommand currentCommand;
         private JobRequest currentJobRequest;
         private JobRequestExecution currentJobRequestExecution;
 
+        private bool isFailedExecution;
+
         private CommandExecutionContext(ConsoleCommand command)
         {
-            var executionItemRepository = new JobExecutionItemRepository();
-            var requestRepository = new JobRequestRepository();
-            jobExecutionItemService = new JobExecutionItemService(executionItemRepository, requestRepository);
-            jobExecutionRequestScheduler = new JobExecutionRequestScheduler(requestRepository);
-            InitCurrentJobRequest(command);
-        }
-
-        private CommandExecutionContext(
-            ConsoleCommand command,
-            IJobExecutionItemService jobExecutionItemService,
-            IJobExecutionRequestScheduler jobExecutionRequestScheduler)
-        {
-            this.jobExecutionItemService = jobExecutionItemService;
-            this.jobExecutionRequestScheduler = jobExecutionRequestScheduler;
+            jobExecutionItemService = DIKernel.Get<IJobExecutionItemService>();
+            jobRequestLifeCycleManager = DIKernel.Get<IJobRequestLifeCycleManager>();
+            retryRequestsHolder = new RetryRequestsHolder(command);
             InitCurrentJobRequest(command);
         }
 
@@ -59,20 +58,12 @@ namespace CakeExtracter.Common.JobExecutionManagement
             Current = new CommandExecutionContext(command);
         }
 
-        public static void ResetContext(
-            ConsoleCommand command,
-            IJobExecutionItemService jobExecutionItemService,
-            IJobExecutionRequestScheduler jobExecutionRequestScheduler)
-        {
-            Current = new CommandExecutionContext(command, jobExecutionItemService, jobExecutionRequestScheduler);
-        }
-
         /// <summary>
         /// Updates all services according to the start of the main command.
         /// </summary>
         public void StartRequestExecution()
         {
-            jobExecutionRequestScheduler.SetJobRequestAsProcessing(currentJobRequest);
+            jobRequestLifeCycleManager.SetJobRequestAsProcessing(currentJobRequest);
             currentJobRequestExecution = jobExecutionItemService.CreateJobExecutionItem(currentJobRequest);
         }
 
@@ -81,17 +72,32 @@ namespace CakeExtracter.Common.JobExecutionManagement
         /// </summary>
         public void CompleteRequestExecution()
         {
+            if (isFailedExecution)
+            {
+                SetAsFailedRequestExecution();
+                return;
+            }
+
             jobExecutionItemService.SetJobExecutionItemFinishedState(currentJobRequestExecution);
-            jobExecutionRequestScheduler.CreateRequestsForScheduledCommands(currentCommand, currentJobRequest);
+            jobRequestLifeCycleManager.ProcessCompletedRequest(currentCommand, currentJobRequest, retryRequestsHolder);
         }
 
         /// <summary>
         /// Updates all services according to the failed end of the main command.
         /// </summary>
-        public void FailedRequestExecution()
+        public void SetAsFailedRequestExecution()
         {
             jobExecutionItemService.SetJobExecutionItemFailedState(currentJobRequestExecution);
-            jobExecutionRequestScheduler.RescheduleRequest(currentJobRequest, currentCommand);
+            jobRequestLifeCycleManager.ProcessFailedRequest(currentJobRequest, currentCommand);
+        }
+
+        /// <summary>
+        /// Sets as aborted by timeout request execution.
+        /// </summary>
+        public void SetAsAbortedByTimeoutRequestExecution()
+        {
+            jobExecutionItemService.SetJobExecutionItemAbortedByTimeoutState(currentJobRequestExecution);
+            CloseContext();
         }
 
         /// <summary>
@@ -99,7 +105,10 @@ namespace CakeExtracter.Common.JobExecutionManagement
         /// </summary>
         public void CloseContext()
         {
-            jobExecutionRequestScheduler.EndRequest(currentJobRequest);
+            if (currentJobRequest.Status == JobRequestStatus.Processing)
+            {
+                jobRequestLifeCycleManager.ProcessAbortedRequest(currentJobRequest);
+            }
         }
 
         /// <summary>
@@ -108,7 +117,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         /// <param name="command">The command for a new job request.</param>
         public void ScheduleCommandLaunch(ConsoleCommand command)
         {
-            jobExecutionRequestScheduler.ScheduleCommandLaunch(command);
+            retryRequestsHolder.EnqueueRetryRequestCommand(command);
         }
 
         /// <summary>
@@ -163,10 +172,18 @@ namespace CakeExtracter.Common.JobExecutionManagement
             }
         }
 
+        /// <summary>
+        /// Notes that the current execution has a Failed status, but does not update the execution status in the database at the moment.
+        /// </summary>
+        public void MarkCurrentExecutionAsFailed()
+        {
+            isFailedExecution = true;
+        }
+
         private void InitCurrentJobRequest(ConsoleCommand command)
         {
             currentCommand = command;
-            currentJobRequest = jobExecutionRequestScheduler.GetJobRequest(currentCommand);
+            currentJobRequest = jobRequestLifeCycleManager.GetJobRequest(currentCommand);
         }
     }
 }

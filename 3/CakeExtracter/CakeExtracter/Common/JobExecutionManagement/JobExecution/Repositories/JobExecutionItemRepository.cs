@@ -1,4 +1,5 @@
 ﻿using CakeExtracter.SimpleRepositories.BaseRepositories;
+using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 

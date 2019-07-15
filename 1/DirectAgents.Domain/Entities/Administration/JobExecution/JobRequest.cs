@@ -59,7 +59,7 @@ namespace DirectAgents.Domain.Entities.Administration.JobExecution
         public int AttemptNumber { get; set; }
 
         /// <summary>
-        /// Job request status. <see cref="JobRequestStatus"/>
+        /// Gets or sets job request status. <see cref="JobRequestStatus"/>.
         /// </summary>
         /// <value>
         /// The request status.
@@ -67,7 +67,15 @@ namespace DirectAgents.Domain.Entities.Administration.JobExecution
         public JobRequestStatus Status { get; set; }
 
         /// <summary>
-        /// Gets or sets the parent job request that caused this request. <see cref="JobRequest"/>
+        /// Gets or sets a value indicating whether [failure email sent].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [failure email sent]; otherwise, <c>false</c>.
+        /// </value>
+        public bool FailureEmailSent { get; set; }
+
+        /// <summary>
+        /// Gets or sets the parent job request that caused this request. <see cref="JobRequest"/>.
         /// </summary>
         /// <value>
         /// The parent job request.

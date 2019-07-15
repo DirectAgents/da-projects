@@ -1,0 +1,32 @@
+﻿@model DirectAgents.Web.Areas.Cake.Models.AdvertiserStatsVM
+@{
+    ViewBag.Title = "Cake Advertiser Stats";
+    var formatNum = Request.QueryString["commas"] != null ? "#,##0.###" : "0.###";
+}
+<h2>@ViewBag.Title</h2>
+
+Id: @Model.Advertiser.AdvertiserId<br />
+Name: @Model.Advertiser.AdvertiserName<br />
+Offers: @Model.NumOffers<br />
+<br />
+<b>CampSum Stats</b><br />
+@Model.Start.ToShortDateString() - @Model.End.ToShortDateString()<br />
+<br />
+Convs: @Model.Convs.ToString(formatNum)<br />
+Paid: @Model.Paid.ToString(formatNum)<br />
+<br />
+
+<div id="divCmds">
+    @Html.ActionLink("Clear CampSums", "ClearCampSumsCustom", new { id = Model.Advertiser.AdvertiserId, start = Model.Start.ToShortDateString(), end = Model.End.ToShortDateString() }, new { onclick = "DoClear()" }) |
+    @Html.ActionLink("Load CampSums", "LoadCampSumsCustom", new { id = Model.Advertiser.AdvertiserId, start = Model.Start.ToShortDateString(), end = Model.End.ToShortDateString() }, new { onclick = "DoLoad()" })
+</div>
+
+<script>
+    function DoClear() {
+        $('#divCmds').html('Clearing... Please wait').css('color', 'red');
+    }
+
+    function DoLoad() {
+        $('#divCmds').html('Loading... Please wait').css('color', 'red');
+    }
+</script>

@@ -9,5 +9,6 @@
         Completed = 1,
         Failed = 2,
         Aborted = 3,
+        AbortedByTimeout = 4,
     }
 }

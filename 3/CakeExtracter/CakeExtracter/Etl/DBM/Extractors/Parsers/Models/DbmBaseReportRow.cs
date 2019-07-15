@@ -6,6 +6,8 @@ namespace CakeExtracter.Etl.DBM.Extractors.Parsers.Models
     {
         public DateTime Date { get; set; }
 
+        public string Country { get; set; }
+
         public string AdvertiserId { get; set; }
 
         public string AdvertiserName { get; set; }
