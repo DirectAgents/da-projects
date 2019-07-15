@@ -17,7 +17,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils
             var location = GetApplicationEntryFileLocation();
             StartNewProcess(location, arguments);
         }
-        
+
         private static string GetApplicationEntryFileLocation()
         {
             var location = Assembly.GetEntryAssembly().Location;
@@ -30,7 +30,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils
             {
                 FileName = exeLocation,
                 Arguments = exeArguments,
-                WindowStyle = ProcessWindowStyle.Hidden
+                WindowStyle = ProcessWindowStyle.Hidden,
             };
             Process.Start(startInfo);
         }

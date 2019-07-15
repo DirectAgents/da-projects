@@ -1,6 +1,6 @@
 ﻿using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers.Interfaces;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestsLifeCycleManagers.Interfaces;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
 
@@ -33,11 +33,11 @@ namespace CakeExtracter.Common.JobExecutionManagement
 
         private readonly IJobExecutionItemService jobExecutionItemService;
         private readonly IJobRequestLifeCycleManager jobRequestLifeCycleManager;
+        private readonly RetryRequestsHolder retryRequestsHolder;
 
         private ConsoleCommand currentCommand;
         private JobRequest currentJobRequest;
         private JobRequestExecution currentJobRequestExecution;
-        private RetryRequestsHolder retryRequestsHolder;
 
         private bool isFailedExecution;
 

@@ -1,6 +1,6 @@
 ﻿using DirectAgents.Domain.Entities.Administration.JobExecution;
 
-namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers.Interfaces
+namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestsLifeCycleManagers.Interfaces
 {
     /// <summary>
     /// Job Request Life Cycle Manager.
@@ -19,6 +19,18 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         /// </summary>
         /// <param name="request">The job request.</param>
         void SetJobRequestAsProcessing(JobRequest request);
+
+        /// <summary>
+        /// Sets a status of the job requests to Aborted.
+        /// </summary>
+        /// <param name="ids">The job request ids.</param>
+        void SetJobRequestsAsAborted(int[] ids);
+
+        /// <summary>
+        /// Schedules a new job request if it is correct.
+        /// </summary>
+        /// <param name="jobRequest">The job request to launch.</param>
+        void ScheduleJobRequest(JobRequest jobRequest);
 
         /// <summary>
         /// Reschedules the job request.

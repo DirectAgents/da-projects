@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers.Interfaces;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestsLifeCycleManagers.Interfaces;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
 
-namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers
+namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestsLifeCycleManagers
 {
+    /// <inheritdoc />
     /// <summary>
     /// Job request life cycle manager.
     /// </summary>
-    /// <seealso cref="CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers.Interfaces.IJobRequestLifeCycleManager" />
+    /// <seealso cref="IJobRequestLifeCycleManager" />
     public class JobRequestLifeCycleManager : IJobRequestLifeCycleManager
     {
         private readonly IJobRequestsRepository requestRepository;
@@ -41,6 +42,21 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
             request.Status = JobRequestStatus.Processing;
             request.AttemptNumber++;
             requestRepository.UpdateItem(request);
+        }
+
+        /// <inheritdoc />
+        public void SetJobRequestsAsAborted(int[] ids)
+        {
+            var requests = requestRepository.GetItems(x => ids.Contains(x.Id));
+            requests.ForEach(x => x.Status = JobRequestStatus.Aborted);
+            requestRepository.UpdateItems(requests);
+        }
+
+        /// <inheritdoc />
+        public void ScheduleJobRequest(JobRequest jobRequest)
+        {
+            CommandVerificationUtil.VerifyJobRequest(jobRequest);
+            AddNotInheritedRequest(jobRequest);
         }
 
         /// <inheritdoc />
@@ -104,11 +120,13 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
             {
                 return JobRequestStatus.Completed;
             }
-            if (childrenRequests.Any(childReq => childReq.Status == JobRequestStatus.Processing || childReq.Status == JobRequestStatus.PendingRetries || childReq.Status == JobRequestStatus.Scheduled))
-            {
-                return JobRequestStatus.PendingRetries;
-            }
-            return JobRequestStatus.Failed;
+
+            return childrenRequests.Any(childReq =>
+                childReq.Status == JobRequestStatus.Processing ||
+                childReq.Status == JobRequestStatus.PendingRetries ||
+                childReq.Status == JobRequestStatus.Scheduled)
+                ? JobRequestStatus.PendingRetries
+                : JobRequestStatus.Failed;
         }
 
         private List<JobRequest> GetRetryPendingsJobRequests()
@@ -183,6 +201,13 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
             return request;
         }
 
+        private JobRequest AddNotInheritedRequest(JobRequest jobRequest)
+        {
+            SetJobRequestAsNewScheduled(jobRequest);
+            requestRepository.AddItem(jobRequest);
+            return jobRequest;
+        }
+
         private JobRequest CreateJobRequest(ConsoleCommand command, DateTime? scheduledTime, int? parentRequestId)
         {
             return new JobRequest
@@ -194,6 +219,12 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
                 Status = JobRequestStatus.Scheduled,
                 ParentJobRequestId = parentRequestId,
             };
+        }
+
+        private void SetJobRequestAsNewScheduled(JobRequest jobRequest)
+        {
+            jobRequest.AttemptNumber = 0;
+            jobRequest.Status = JobRequestStatus.Scheduled;
         }
 
         private void RescheduleRequest(JobRequest request, DateTime? scheduledTime)

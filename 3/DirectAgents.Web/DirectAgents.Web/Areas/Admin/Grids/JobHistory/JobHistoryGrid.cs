@@ -1,10 +1,10 @@
 ﻿using System.Web.Mvc;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
-using DirectAgents.Web.Areas.Admin.Grids.JobHistory;
+using DirectAgents.Web.Areas.Admin.Grids.DataProviders;
 using MVCGrid.Models;
 using MVCGrid.Web;
 
-namespace DirectAgents.Web.Areas.Admin.Grids
+namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
 {
     /// <summary>
     /// Job History Grid Configuration.
@@ -73,7 +73,7 @@ namespace DirectAgents.Web.Areas.Admin.Grids
                 .WithRetrieveDataMethod((context) =>
                 {
                     QueryOptions options = context.QueryOptions;
-                    var dataProvider = DependencyResolver.Current.GetService<IJobHistoryDataProvider>();
+                    var dataProvider = DependencyResolver.Current.GetService<IGridDataProvider<JobRequestExecution>>();
                     return dataProvider.GetQueryResult(options);
                 }));
         }
