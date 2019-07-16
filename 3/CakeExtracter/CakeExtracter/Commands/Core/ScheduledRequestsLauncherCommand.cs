@@ -1,10 +1,8 @@
 ﻿using System.ComponentModel.Composition;
 using System.Configuration;
 using CakeExtracter.Common;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestLaunchers;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestLaunchers.Interfaces;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestsLifeCycleManagers;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestsLifeCycleManagers.Interfaces;
 
 namespace CakeExtracter.Commands.Core
 {
@@ -44,28 +42,14 @@ namespace CakeExtracter.Commands.Core
         {
             var maxNumberOfJobRequests = int.Parse(ConfigurationManager.AppSettings["JEM_MaxNumberOfRequestsToRunWithUniqueArguments"]);
             var maxNumberOfRunningRequests = int.Parse(ConfigurationManager.AppSettings["JEM_MaxNumberOfRunningRequests"]);
-            var requestsLauncher = InitRequestsLauncher();
+            var requestsLauncher = DIKernel.Get<IJobExecutionRequestLauncher>();
             requestsLauncher.ExecuteScheduledInPastJobRequests(maxNumberOfJobRequests, maxNumberOfRunningRequests);
         }
 
         private void ActualizeJobRequestsStatuses()
         {
-            var jobRequestLifeCycleManager = InitJobRequestLifeCycleManager();
+            var jobRequestLifeCycleManager = DIKernel.Get<IJobRequestLifeCycleManager>();
             jobRequestLifeCycleManager.ActualizeStatusOfRetryPendingJobs();
-        }
-
-        private IJobExecutionRequestLauncher InitRequestsLauncher()
-        {
-            var requestRepository = new JobRequestRepository();
-            var requestsLauncher = new JobExecutionRequestLauncher(requestRepository);
-            return requestsLauncher;
-        }
-
-        private JobRequestLifeCycleManager InitJobRequestLifeCycleManager()
-        {
-            var requestRepository = new JobRequestRepository();
-            var requestsLifeCycleManager = new JobRequestLifeCycleManager(requestRepository);
-            return requestsLifeCycleManager;
         }
     }
 }

@@ -1,19 +1,14 @@
 ﻿using System;
-using System.Threading;
 using CakeExtracter.Common;
 
 namespace CakeExtracter.Tests.Core.CommandExecutionContextTests.TestCommand
 {
-    internal class CommonTestCommand : ConsoleCommand
+    internal class WithErrorsTestCommand : ConsoleCommand
     {
-        public CommonTestCommand()
-        {
-            IsAutoShutDownMechanismEnabled = false;
-        }
-
         public override int Execute(string[] remainingArguments)
         {
-            Thread.Sleep(TimeSpan.FromSeconds(2));
+            var exception = new Exception("Test error");
+            Logger.Error(exception);
             return 0;
         }
     }

@@ -1,4 +1,5 @@
-﻿using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
+﻿using System;
+using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestsLifeCycleManagers.Interfaces;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
@@ -39,7 +40,11 @@ namespace CakeExtracter.Common.JobExecutionManagement
         private JobRequest currentJobRequest;
         private JobRequestExecution currentJobRequestExecution;
 
-        private bool isFailedExecution;
+        // The flag indicates that there are errors in the running job execution.
+        private bool isExecutionWithErrors;
+
+        // The flag indicates whether there are any scheduled commands.
+        private bool areThereNewRequests;
 
         private CommandExecutionContext(ConsoleCommand command)
         {
@@ -68,18 +73,28 @@ namespace CakeExtracter.Common.JobExecutionManagement
         }
 
         /// <summary>
+        /// Adds a command to the commands that should become scheduled job requests.
+        /// </summary>
+        /// <param name="command">The command for a new job request.</param>
+        public void ScheduleCommandLaunch(ConsoleCommand command)
+        {
+            areThereNewRequests = true;
+            retryRequestsHolder.EnqueueRetryRequestCommand(command);
+        }
+
+        /// <summary>
         /// Updates all services according to the successful end of the main command.
         /// </summary>
-        public void CompleteRequestExecution()
+        public void EndRequestExecution()
         {
-            if (isFailedExecution)
+            if (isExecutionWithErrors)
             {
-                SetAsFailedRequestExecution();
-                return;
+                CompleteRequestExecutionWithErrors();
             }
-
-            jobExecutionItemService.SetJobExecutionItemFinishedState(currentJobRequestExecution);
-            jobRequestLifeCycleManager.ProcessCompletedRequest(currentCommand, currentJobRequest, retryRequestsHolder);
+            else
+            {
+                CompleteRequestExecutionWithoutErrors();
+            }
         }
 
         /// <summary>
@@ -96,8 +111,11 @@ namespace CakeExtracter.Common.JobExecutionManagement
         /// </summary>
         public void SetAsAbortedByTimeoutRequestExecution()
         {
-            jobExecutionItemService.SetJobExecutionItemAbortedByTimeoutState(currentJobRequestExecution);
-            CloseContext();
+            if (currentJobRequestExecution != null)
+            {
+                jobExecutionItemService.SetJobExecutionItemAbortedByTimeoutState(currentJobRequestExecution);
+            }
+            jobRequestLifeCycleManager.ProcessNotRescheduledFailedRequest(currentJobRequest, currentCommand);
         }
 
         /// <summary>
@@ -105,19 +123,24 @@ namespace CakeExtracter.Common.JobExecutionManagement
         /// </summary>
         public void CloseContext()
         {
+            if (currentJobRequestExecution.Status == JobExecutionStatus.Processing)
+            {
+                Logger.Warn("The current job execution has been aborted.");
+                jobExecutionItemService.SetJobExecutionAbortedState(currentJobRequestExecution);
+            }
             if (currentJobRequest.Status == JobRequestStatus.Processing)
             {
-                jobRequestLifeCycleManager.ProcessAbortedRequest(currentJobRequest);
+                if (currentJobRequestExecution.Status == JobExecutionStatus.Aborted)
+                {
+                    Logger.Warn("The running job request has been aborted.");
+                    jobRequestLifeCycleManager.ProcessAbortedRequest(currentJobRequest);
+                }
+                else
+                {
+                    Logger.Error(new Exception("The running job request is closing in the Processing state. The request will be processed as Failed."));
+                    jobRequestLifeCycleManager.ProcessFailedRequest(currentJobRequest, currentCommand);
+                }
             }
-        }
-
-        /// <summary>
-        /// Adds a command to the commands that should become scheduled job requests.
-        /// </summary>
-        /// <param name="command">The command for a new job request.</param>
-        public void ScheduleCommandLaunch(ConsoleCommand command)
-        {
-            retryRequestsHolder.EnqueueRetryRequestCommand(command);
         }
 
         /// <summary>
@@ -127,6 +150,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         /// <param name="accountId">Account Id.</param>
         public void LogErrorInHistory(string message, int? accountId = null)
         {
+            isExecutionWithErrors = true;
             if (currentJobRequestExecution != null)
             {
                 jobExecutionItemService.AddErrorToJobExecutionItem(currentJobRequestExecution, message, accountId);
@@ -172,18 +196,29 @@ namespace CakeExtracter.Common.JobExecutionManagement
             }
         }
 
-        /// <summary>
-        /// Notes that the current execution has a Failed status, but does not update the execution status in the database at the moment.
-        /// </summary>
-        public void MarkCurrentExecutionAsFailed()
-        {
-            isFailedExecution = true;
-        }
-
         private void InitCurrentJobRequest(ConsoleCommand command)
         {
             currentCommand = command;
             currentJobRequest = jobRequestLifeCycleManager.GetJobRequest(currentCommand);
+        }
+
+        private void CompleteRequestExecutionWithErrors()
+        {
+            jobExecutionItemService.SetJobExecutionItemFailedState(currentJobRequestExecution);
+            if (areThereNewRequests)
+            {
+                jobRequestLifeCycleManager.ProcessCompletedRequest(currentCommand, currentJobRequest, retryRequestsHolder);
+            }
+            else
+            {
+                jobRequestLifeCycleManager.ProcessFailedRequest(currentJobRequest, currentCommand);
+            }
+        }
+
+        private void CompleteRequestExecutionWithoutErrors()
+        {
+            jobExecutionItemService.SetJobExecutionItemFinishedState(currentJobRequestExecution);
+            jobRequestLifeCycleManager.ProcessCompletedRequest(currentCommand, currentJobRequest, retryRequestsHolder);
         }
     }
 }

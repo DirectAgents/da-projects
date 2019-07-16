@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
 using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 
@@ -181,8 +181,14 @@ namespace CakeExtracter.Common
             try
             {
                 var retCode = Execute(remainingArguments);
-                CommandExecutionContext.Current.CompleteRequestExecution();
+                CommandExecutionContext.Current.EndRequestExecution();
                 return retCode;
+            }
+            catch (ThreadAbortException ex)
+            {
+                Logger.Error(ex);
+                CommandExecutionContext.Current.CloseContext();
+                return 1;
             }
             catch (Exception ex)
             {

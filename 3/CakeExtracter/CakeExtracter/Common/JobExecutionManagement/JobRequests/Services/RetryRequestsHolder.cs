@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils;
 
@@ -11,8 +12,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services
     public class RetryRequestsHolder
     {
         private readonly ConcurrentQueue<CommandWithSchedule> commandsToSchedule;
-
-        private ConsoleCommand parentCommand;
+        private readonly ConsoleCommand parentCommand;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RetryRequestsHolder" /> class.

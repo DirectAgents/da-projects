@@ -91,9 +91,11 @@
     <Compile Include="Core\CommandExecutionContextTests\CommandExecutionContextTests.cs" />
     <Compile Include="Core\CommandExecutionContextTests\MockDIModules\TestExecutionContextDIModule.cs" />
     <Compile Include="Core\CommandExecutionContextTests\TestCommand\CommonTestCommand.cs" />
+    <Compile Include="Core\CommandExecutionContextTests\TestCommand\WithErrorsTestCommand.cs" />
     <Compile Include="Core\CommandExecutionContextTests\TestCommand\WithRetriesCreatedDifferWithParentTestCommand .cs" />
     <Compile Include="Core\CommandExecutionContextTests\TestCommand\WithRetriesCreatedEqualToParentTestCommand.cs" />
     <Compile Include="Core\CommandExecutionContextTests\TestCommand\FailingTestCommand.cs" />
+    <Compile Include="Core\CommandExecutionContextTests\TestCommand\WithTimerTestCommand.cs" />
     <Compile Include="JobTests\Amazon\RelaunchMechanism\AmazonRelaunchMechanismTests.cs" />
     <Compile Include="JobTests\Amazon\TestImplementations\DIModules\Base\TestAmazonDependencyInjectionModule.cs" />
     <Compile Include="JobTests\Amazon\TestImplementations\DIModules\TestAmazonDailyCleanerFailedDiModule.cs" />
@@ -135,7 +137,7 @@
       <Name>Yahoo</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\CakeExtracter\CakeExtracter\CakeExtracter.csproj">
-      <Project>{3B6C5433-5392-4165-A7E4-4AA431A75BB3}</Project>
+      <Project>{3b6c5433-5392-4165-a7e4-4aa431a75bb3}</Project>
       <Name>CakeExtracter</Name>
     </ProjectReference>
   </ItemGroup>

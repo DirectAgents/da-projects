@@ -4,6 +4,7 @@ using System.Linq;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestLaunchers.Interfaces;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils;
+using CakeExtracter.Common.JobExecutionManagement.ProcessManagers.Interfaces;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
@@ -11,17 +12,20 @@ using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestLaunchers
 {
     /// <inheritdoc />
-    internal class JobExecutionRequestLauncher : IJobExecutionRequestLauncher
+    public class JobExecutionRequestLauncher : IJobExecutionRequestLauncher
     {
         private readonly IJobRequestsRepository requestRepository;
+        private readonly IProcessManager processManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="JobExecutionRequestLauncher"/> class.
         /// </summary>
-        /// <param name="requestRepository">Job request repository</param>
-        public JobExecutionRequestLauncher(IJobRequestsRepository requestRepository)
+        /// <param name="requestRepository">Job request repository.</param>
+        /// <param name="processManager">Process manager.</param>
+        public JobExecutionRequestLauncher(IJobRequestsRepository requestRepository, IProcessManager processManager)
         {
             this.requestRepository = requestRepository;
+            this.processManager = processManager;
         }
 
         /// <inheritdoc />
@@ -50,7 +54,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         {
             LogStateInfo("Run the job request", request);
             var arguments = CommandArgumentsConverter.GetJobArgumentsAsArgumentsForConsole(request);
-            ProcessManager.RestartApplicationInNewProcess(arguments);
+            processManager.RestartApplicationInNewProcess(arguments);
         }
 
         private List<JobRequest> GetScheduledValidJobRequests(int maxNumberOfJobRequests)

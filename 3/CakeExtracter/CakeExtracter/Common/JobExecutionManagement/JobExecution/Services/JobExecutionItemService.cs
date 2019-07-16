@@ -61,12 +61,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
         /// <param name="executionHistoryItem">The execution history item.</param>
         public void SetJobExecutionItemFailedState(JobRequestExecution executionHistoryItem)
         {
-            executionHistoryItem.Status = JobExecutionStatus.Failed;
-            executionHistoryItem.EndTime = DateTime.UtcNow;
-            lock (executionItemHistoryLockObject)
-            {
-                jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
-            }
+            CompleteExecutionItemWithStatus(executionHistoryItem, JobExecutionStatus.Failed);
         }
 
         /// <inheritdoc />
@@ -76,21 +71,23 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
         /// <param name="executionHistoryItem">The execution history item.</param>
         public void SetJobExecutionItemFinishedState(JobRequestExecution executionHistoryItem)
         {
-            executionHistoryItem.Status = JobExecutionStatus.Completed;
-            executionHistoryItem.EndTime = DateTime.UtcNow;
-            lock (executionItemHistoryLockObject)
-            {
-                jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
-            }
+            CompleteExecutionItemWithStatus(executionHistoryItem, JobExecutionStatus.Completed);
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Sets the state of the job execution item to aborted by timeout.
         /// </summary>
-        /// <param name="currentJobRequestExecution">The current job request execution.</param>
-        public void SetJobExecutionItemAbortedByTimeoutState(JobRequestExecution currentJobRequestExecution)
+        /// <param name="executionHistoryItem">The execution history item.</param>
+        public void SetJobExecutionItemAbortedByTimeoutState(JobRequestExecution executionHistoryItem)
         {
-            currentJobRequestExecution.Status = JobExecutionStatus.AbortedByTimeout;
+            CompleteExecutionItemWithStatus(executionHistoryItem, JobExecutionStatus.AbortedByTimeout);
+        }
+
+        /// <inheritdoc />
+        public void SetJobExecutionAbortedState(JobRequestExecution execution)
+        {
+            CompleteExecutionItemWithStatus(execution, JobExecutionStatus.Aborted);
         }
 
         /// <inheritdoc />
@@ -172,13 +169,14 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
         /// <param name="itemIds">The item ids.</param>
         public void SetJobExecutionItemsAbortedState(int[] itemIds)
         {
-            if (itemIds != null && itemIds.Length >= 1)
+            if (itemIds == null || itemIds.Length < 1)
             {
-                var jobHistoryItemsToUpdate = jobExecutionHistoryRepository.GetItemsWithIncludes(item => itemIds.Contains(item.Id), "JobRequest").ToList();
-                var relatedJobRequestsToUpdate = jobHistoryItemsToUpdate.Select(item => item.JobRequest).ToList();
-                SetRelatedJobHistoryItemsAbortedStatus(jobHistoryItemsToUpdate);
-                SetRelatedJobRequestsAbortedStatus(relatedJobRequestsToUpdate);
+                return;
             }
+            var jobHistoryItemsToUpdate = jobExecutionHistoryRepository.GetItemsWithIncludes(item => itemIds.Contains(item.Id), "JobRequest").ToList();
+            var relatedJobRequestsToUpdate = jobHistoryItemsToUpdate.Select(item => item.JobRequest).ToList();
+            SetRelatedJobHistoryItemsAbortedStatus(jobHistoryItemsToUpdate);
+            SetRelatedJobRequestsAbortedStatus(relatedJobRequestsToUpdate);
         }
 
         private void SetRelatedJobHistoryItemsAbortedStatus(List<JobRequestExecution> jobHistoryItems)
@@ -186,6 +184,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
             jobHistoryItems.ForEach(jobItem =>
             {
                 jobItem.Status = JobExecutionStatus.Aborted;
+                jobItem.EndTime = DateTime.UtcNow;
             });
             jobExecutionHistoryRepository.UpdateItems(jobHistoryItems);
         }
@@ -197,6 +196,16 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
                 jobItem.Status = JobRequestStatus.Aborted;
             });
             jobRequestsRepository.UpdateItems(jobItems);
+        }
+
+        private void CompleteExecutionItemWithStatus(JobRequestExecution executionHistoryItem, JobExecutionStatus status)
+        {
+            executionHistoryItem.Status = status;
+            executionHistoryItem.EndTime = DateTime.UtcNow;
+            lock (executionItemHistoryLockObject)
+            {
+                jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
+            }
         }
     }
 }

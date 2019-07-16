@@ -34,7 +34,7 @@ namespace CakeExtracter.Commands.Core
         /// </returns>
         public override int Execute(string[] remainingArguments)
         {
-            IJobExecutionNotificationService jobExecutionNotificationService = DIKernel.Get<IJobExecutionNotificationService>();
+            var jobExecutionNotificationService = DIKernel.Get<IJobExecutionNotificationService>();
 
             // First Level of notifications(Warning). Notifies about errors occurred in job execution. Relaunch mechanism can fix errors.
             jobExecutionNotificationService.NotifyAboutErrorsInJobExecution();

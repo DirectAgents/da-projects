@@ -438,7 +438,7 @@
     <Compile Include="Commands\DA\DASynchYAMStats_Outdated.cs" />
     <Compile Include="Commands\Selenium\SyncAmazonPdaCommand.cs" />
     <Compile Include="Commands\Selenium\SyncAmazonVcdCommand.cs" />
-    <Compile Include="Common\CommandAutoStopWatcher.cs" />
+    <Compile Include="Common\JobExecutionManagement\CommandAutoStopWatcher.cs" />
     <Compile Include="Common\Email\EmailNotificationsService.cs" />
     <Compile Include="Common\Email\IEmailNotificationsService.cs" />
     <Compile Include="Common\FileUtils.cs" />
@@ -451,6 +451,7 @@
     <Compile Include="Common\JobExecutionManagement\JobRequests\Services\RetryRequestsHolder.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\CommandSchedulingUtils.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\CommandVerificationUtil.cs" />
+    <Compile Include="Common\JobExecutionManagement\ProcessManagers\Interfaces\IProcessManager.cs" />
     <Compile Include="Common\StatsTypeAgg.cs" />
     <Compile Include="Commands\EOMSynchCPCCommand.cs" />
     <Compile Include="Commands\DA\DASeed.cs" />
@@ -469,7 +470,6 @@
     <Compile Include="Common\Extractors\ArchiveExctractors\Contract\IArchiveExtractor.cs" />
     <Compile Include="Common\Extractors\ArchiveExctractors\GzipArchiveExtractor.cs" />
     <Compile Include="Common\Extractors\ArchiveExctractors\ZipArchiveExtractor.cs" />
-    <Compile Include="Common\CommandLineUtils.cs" />
     <Compile Include="Common\Compare.cs" />
     <Compile Include="Common\Extractors\CsvExtractors\Contracts\ICsvExtractor.cs" />
     <Compile Include="Common\Extractors\CsvExtractors\CsvAccountExtractor.cs" />
@@ -490,7 +490,7 @@
     <Compile Include="Common\JobExecutionManagement\JobRequests\Services\JobRequestsLifeCycleManagers\JobRequestLifeCycleManager.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\CommandArgumentsConverter.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\JobRequestsLogger.cs" />
-    <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\ProcessManager.cs" />
+    <Compile Include="Common\JobExecutionManagement\ProcessManagers\ProcessManager.cs" />
     <Compile Include="Common\SqlScriptsExecutor.cs" />
     <Compile Include="Common\StorageCollection.cs" />
     <Compile Include="Common\TextUtils.cs" />
@@ -725,7 +725,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Common\ConsoleCommand.cs" />
-    <Compile Include="Common\ConsoleCommandDispatcher.cs" />
     <Compile Include="Common\DateRange.cs" />
     <Compile Include="Commands\SynchDailySummariesCommand.cs" />
     <Compile Include="Commands\Search\SynchSearchDailySummariesXmlCommand.cs" />

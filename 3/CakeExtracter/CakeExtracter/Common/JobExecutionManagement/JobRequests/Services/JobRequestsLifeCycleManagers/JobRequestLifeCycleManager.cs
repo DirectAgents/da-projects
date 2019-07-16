@@ -64,15 +64,21 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         {
             if (command.NoNeedToCreateRepeatRequests)
             {
-                request.Status = JobRequestStatus.Failed;
-                requestRepository.UpdateItem(request);
-                LogNotScheduledCommand(command.Command, CommandArgumentsConverter.GetCommandArgumentsAsLine(command));
+                ProcessNotRescheduledFailedRequest(request, command);
             }
             else
             {
                 var scheduledTime = CommandSchedulingUtils.GetCommandRetryScheduledTime(command);
                 RescheduleRequest(request, scheduledTime);
             }
+        }
+
+        /// <inheritdoc />
+        public void ProcessNotRescheduledFailedRequest(JobRequest request, ConsoleCommand command)
+        {
+            request.Status = JobRequestStatus.Failed;
+            requestRepository.UpdateItem(request);
+            LogNotScheduledCommand(command.Command, CommandArgumentsConverter.GetCommandArgumentsAsLine(command));
         }
 
         /// <inheritdoc />
@@ -86,7 +92,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         /// <inheritdoc />
         public void ProcessCompletedRequest(ConsoleCommand command, JobRequest request, RetryRequestsHolder retryRequestsHolder)
         {
-            List<JobRequest> jobRetryRequests = GetUniqueJobRetryRequests(request, retryRequestsHolder);
+            var jobRetryRequests = GetUniqueJobRetryRequests(request, retryRequestsHolder);
             if (jobRetryRequests.Count > 0)
             {
                 ProcessRequestWithRetriesCompletion(command, request, jobRetryRequests);
@@ -108,7 +114,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
                 {
                     jobRequest.Status = actualStatus;
                     requestRepository.UpdateItem(jobRequest);
-                    Logger.Info($"Retry rending job with id {jobRequest.Id} status updated to {jobRequest.Status}");
+                    Logger.Info($"Retry pending job with id {jobRequest.Id} status updated to {jobRequest.Status}");
                 }
             });
         }
