@@ -78,7 +78,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                 BasicMetrics = true,
                 ConvMetrics = true,
                 RtbOnly = true,
-                TrackingId = AfUtility.TrackingId,
+                TrackingIds = AfUtility.TrackingIds,
                 Dimensions = new List<Dimension> { Dimension.AdInteractionType },
             };
         }

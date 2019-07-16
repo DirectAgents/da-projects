@@ -1,8 +1,9 @@
-﻿using CakeExtracter.Common;
+﻿using System;
+using System.Configuration;
+using Amazon.Helpers;
+using CakeExtracter.Common;
 using CakeExtracter.Common.Constants;
 using Polly;
-using System;
-using System.Configuration;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders.AnalyticTablesSync
 {
@@ -11,9 +12,9 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders.AnalyticTablesSy
     /// </summary>
     public class AmazonAmsAnalyticSyncher
     {
-        private SqlScriptsExecutor sqlScriptExecutor;
-
         private const string AmazonAmsDbConnectionStringConfigName = "ClientPortalProgContext";
+
+        private readonly SqlScriptsExecutor sqlScriptExecutor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AmazonAmsAnalyticSyncher"/> class.
@@ -33,14 +34,26 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders.AnalyticTablesSy
             Policy
                 .Handle<Exception>()
                 .Retry(AnlyticTablesSyncConstants.maxRetryAttempts, (exception, retryCount, context) =>
-                    Logger.Warn(accountId, String.Format("Sync analytic table failed. Waiting {0} seconds before trying again.", AnlyticTablesSyncConstants.secondsToWait)))
+                    Logger.Warn(accountId, $"Sync analytic table failed. Waiting {AnlyticTablesSyncConstants.secondsToWait} seconds before trying again."))
                 .Execute(() =>
                 {
-                    const string syncScriptPathConfigName = "AmazonAmsAsinSyncScriptPath";
-                    var scriptPath = ConfigurationManager.AppSettings[syncScriptPathConfigName];
-                    sqlScriptExecutor.ExecuteScriptWithParams(scriptPath, new string[] { accountId.ToString() });
+                    var syncScriptPath = GetSyncScriptPath();
+                    sqlScriptExecutor.ExecuteScriptWithParams(syncScriptPath, new[] { accountId.ToString() });
                 });
             Logger.Info(accountId, "Finished syncing asin analytic table with normal tables");
+        }
+
+        /// <summary>
+        /// Gets the full path to sync SQL script.
+        /// </summary>
+        /// <returns>Full path to sync SQL script.</returns>
+        private string GetSyncScriptPath()
+        {
+            const string syncScriptPathConfigurationKey = "AmazonAmsAsinSyncScriptPath";
+            const string syncScriptNameConfigurationKey = "AmazonAmsAsinSyncScriptName";
+            var path = ConfigurationManager.AppSettings[syncScriptPathConfigurationKey];
+            var name = ConfigurationManager.AppSettings[syncScriptNameConfigurationKey];
+            return FileManager.GetAssemblyRelativePath(FileManager.CombinePath(path, name));
         }
     }
 }

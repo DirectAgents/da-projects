@@ -73,9 +73,9 @@ namespace Adform.Utilities
         }
 
         /// <summary>
-        /// Gets or sets tracking identifier for report settings.
+        /// Gets or sets tracking identifiers for report settings.
         /// </summary>
-        public string TrackingId { get; set; }
+        public string[] TrackingIds { get; set; }
 
         private int WhichAlt { get; set; } // default: 0
 
@@ -467,6 +467,8 @@ namespace Adform.Utilities
 
         private string PollingOperation(string operationLocationPath)
         {
+            WaitingBeforeFirstPoolingOperationStatus();
+
             var response = Policy
                 .Handle<Exception>()
                 .OrResult<IRestResponse<PollingOperationResponse>>(resp =>
@@ -489,6 +491,12 @@ namespace Adform.Utilities
             }
 
             return response.Data.Location;
+        }
+
+        private void WaitingBeforeFirstPoolingOperationStatus()
+        {
+            logger.LogInfo($"Waiting {pauseBetweenPollingAttemptsSeconds} before first pooling operation status...");
+            Thread.Sleep(pauseBetweenPollingAttemptsSeconds);
         }
 
         private static bool IsResponseWithStatus<T>(IRestResponse<T> response, string status)

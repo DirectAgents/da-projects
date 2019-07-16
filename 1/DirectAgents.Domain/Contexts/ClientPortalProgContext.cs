@@ -438,11 +438,11 @@ namespace DirectAgents.Domain.Contexts
                 .WithRequired(s => s.Commission)
                 .WillCascadeOnDelete();
         }
-        
+
         private static void SetupDbmSummaryMetricModelValues<TSummaryMetrics>(DbModelBuilder modelBuilder, string entityColumnName)
             where TSummaryMetrics : DbmBaseSummaryEntity
         {
-            modelBuilder.Entity<TSummaryMetrics>().HasKey(summary => new {summary.EntityId, summary.Date});
+            modelBuilder.Entity<TSummaryMetrics>().HasKey(summary => new { summary.EntityId, summary.Date, summary.Country });
             modelBuilder.Entity<TSummaryMetrics>().Property(x => x.EntityId).HasColumnName(entityColumnName);
             modelBuilder.Entity<TSummaryMetrics>().Property(m => m.Revenue).HasPrecision(18, 6);
             modelBuilder.Entity<TSummaryMetrics>().Property(m => m.Impressions);

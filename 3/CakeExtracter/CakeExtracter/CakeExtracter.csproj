@@ -1,5 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <Import Project="..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.3\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props" Condition="Exists('..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.3\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" />
+  <Import Project="..\..\DirectAgents.Web\packages\Microsoft.NetFramework.Analyzers.2.9.3\build\Microsoft.NetFramework.Analyzers.props" Condition="Exists('..\..\DirectAgents.Web\packages\Microsoft.NetFramework.Analyzers.2.9.3\build\Microsoft.NetFramework.Analyzers.props')" />
+  <Import Project="..\..\DirectAgents.Web\packages\Microsoft.NetCore.Analyzers.2.9.3\build\Microsoft.NetCore.Analyzers.props" Condition="Exists('..\..\DirectAgents.Web\packages\Microsoft.NetCore.Analyzers.2.9.3\build\Microsoft.NetCore.Analyzers.props')" />
+  <Import Project="..\..\DirectAgents.Web\packages\Microsoft.CodeQuality.Analyzers.2.9.3\build\Microsoft.CodeQuality.Analyzers.props" Condition="Exists('..\..\DirectAgents.Web\packages\Microsoft.CodeQuality.Analyzers.2.9.3\build\Microsoft.CodeQuality.Analyzers.props')" />
+  <Import Project="..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.3\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props" Condition="Exists('..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.3\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" />
   <PropertyGroup>
     <ProjectGuid>{3B6C5433-5392-4165-A7E4-4AA431A75BB3}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -26,10 +31,6 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NuGetPackageImportStamp>914f3a7f</NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup>
-    <CodeAnalysisRuleSet>$(SolutionDir)\build\stylecop\StyleCopRuleSet.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -42,6 +43,9 @@
     <Optimize>False</Optimize>
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <CodeAnalysisRuleSet>$(SolutionDir)CodeAnalysis\codeanalysis.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -55,9 +59,9 @@
     <Prefer32Bit>false</Prefer32Bit>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <Optimize>false</Optimize>
-    <CodeAnalysisRuleSet>..\..\DirectAgents.Web\build\stylecop\StyleCopRuleSet.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>$(SolutionDir)CodeAnalysis\codeanalysis.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <Prefer32Bit>false</Prefer32Bit>
@@ -432,6 +436,8 @@
     <Compile Include="Commands\DA\DASynchKochavaStats.cs" />
     <Compile Include="Commands\DA\DaSynchYamStats.cs" />
     <Compile Include="Commands\DA\DASynchYAMStats_Outdated.cs" />
+    <Compile Include="Commands\Selenium\SyncAmazonPdaCommand.cs" />
+    <Compile Include="Commands\Selenium\SyncAmazonVcdCommand.cs" />
     <Compile Include="Common\CommandAutoStopWatcher.cs" />
     <Compile Include="Common\Email\EmailNotificationsService.cs" />
     <Compile Include="Common\Email\IEmailNotificationsService.cs" />
@@ -488,6 +494,45 @@
     <Compile Include="Common\StorageCollection.cs" />
     <Compile Include="Common\TextUtils.cs" />
     <Compile Include="Common\DIKernel.cs" />
+    <Compile Include="Etl\AmazonSelenium\Configuration\SeleniumCommandConfigurationManager.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Configuration\PdaCommandConfigurationManager.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Enums\AmazonCmApiMetrics.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Enums\AmazonReportMetrics.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Extractors\AmazonPdaCampaignRequestExtractor.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Extractors\AmazonPdaDailyRequestExtractor.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Extractors\AmazonPdaExtractor.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Models\AmazonPdaCampaignSummary.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\PdaDataProviderBuilder.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\AmazonVcdExtractor.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\AmazonVcdLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\Constants\VendorCentralDataLoadingConstants.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\MetricTypesLoader\BaseVendoritemLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\MetricTypesLoader\BrandsSummaryLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\MetricTypesLoader\CategoriesSummaryLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\MetricTypesLoader\ParentProductSummaryLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\MetricTypesLoader\ProductsSummaryLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\MetricTypesLoader\SubcategoriesSummaryLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\Brand.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\Category.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\ParentProduct.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\Product.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\ShippingItem.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\Subcategory.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Configuration\Models\VcdExecutionProfileConfiguration.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\VcdReportData.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Configuration\VcdAccountsManager.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Configuration\VcdCommandConfigurationManager.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Configuration\VcdExecutionProfileManager.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Synchers\VcdAnalyticTablesSyncher.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportDataComposer\VcdReportComposer.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\BaseProductRowMap.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\DecimalAmountReportConverter.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\IntNumberReportConverter.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\OrderedRevenueProductsRowMap.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\ShippedCogsProductsRowMap.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\ShippedRevenueProductsRowMap.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\VcdReportParser.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\VcdDataProviderBuilder.cs" />
     <Compile Include="Etl\Apple\Exceptions\AppleFailedEtlException.cs" />
     <Compile Include="Etl\Amazon\Exceptions\FailedStatsLoadingException.cs" />
     <Compile Include="Etl\CakeMarketing\DALoaders\DAAffiliatesLoader.cs" />
@@ -563,25 +608,21 @@
     <Compile Include="Etl\Apple\Loaders\AppleApiLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\BingConvSummaryLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\SearchDailySummaryLoaders.cs" />
-    <Compile Include="Etl\SocialMarketing\Extractors\FacebookApiExtracter.cs" />
-    <Compile Include="Etl\SocialMarketing\Extractors\V2\FacebookAdMetadataExtractorV2.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\LoadersDAV2\EntitiesLoaders\BaseFacebookEntityLoader.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\LoadersDAV2\EntitiesLoaders\FacebookActionTypeLoader.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\LoadersDAV2\EntitiesLoaders\FacebookCreativesLoader.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\LoadersDAV2\EntitiesLoaders\FacebookAdSetsLoader.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\LoadersDAV2\EntitiesLoaders\FacebookAdsLoader.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\LoadersDAV2\EntitiesLoaders\FacebookCampaignsLoader.cs" />
-    <Compile Include="Etl\SocialMarketing\Extractors\V2\FacebookAdSetSummaryExtractorV2.cs" />
-    <Compile Include="Etl\SocialMarketing\Extractors\V2\FacebookAdSummaryExtractorV2.cs" />
-    <Compile Include="Etl\SocialMarketing\Extractors\V2\FacebookCampaignSummaryExtractorV2.cs" />
-    <Compile Include="Etl\SocialMarketing\Extractors\V2\FacebookDailySummaryExtractorV2.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\LoadersDAV2\FacebookAdSetSummaryLoaderV2.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\LoadersDAV2\FacebookAdSummaryLoaderV2.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\LoadersDAV2\FacebookCampaignSummaryLoaderV2.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdSetSummaryLoader.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdSummaryLoader.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookCampaignSummaryLoader.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookDailySummaryLoader.cs" />
+    <Compile Include="Etl\Facebook\Extractors\FacebookAdMetadataExtractor.cs" />
+    <Compile Include="Etl\Facebook\FacebookInsightsDataProviderBuilder.cs" />
+    <Compile Include="Etl\Facebook\Loaders\EntitiesLoaders\BaseFacebookEntityLoader.cs" />
+    <Compile Include="Etl\Facebook\Loaders\EntitiesLoaders\FacebookActionTypeLoader.cs" />
+    <Compile Include="Etl\Facebook\Loaders\EntitiesLoaders\FacebookCreativesLoader.cs" />
+    <Compile Include="Etl\Facebook\Loaders\EntitiesLoaders\FacebookAdSetsLoader.cs" />
+    <Compile Include="Etl\Facebook\Loaders\EntitiesLoaders\FacebookAdsLoader.cs" />
+    <Compile Include="Etl\Facebook\Loaders\EntitiesLoaders\FacebookCampaignsLoader.cs" />
+    <Compile Include="Etl\Facebook\Extractors\FacebookAdSetSummaryExtractor.cs" />
+    <Compile Include="Etl\Facebook\Extractors\FacebookAdSummaryExtractor.cs" />
+    <Compile Include="Etl\Facebook\Extractors\FacebookCampaignSummaryExtractor.cs" />
+    <Compile Include="Etl\Facebook\Extractors\FacebookDailySummaryExtractor.cs" />
+    <Compile Include="Etl\Facebook\Loaders\FacebookAdSetSummaryLoaderV2.cs" />
+    <Compile Include="Etl\Facebook\Loaders\FacebookAdSummaryLoaderV2.cs" />
+    <Compile Include="Etl\Facebook\Loaders\FacebookCampaignSummaryLoaderV2.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformAdSetSummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformDailySummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformApiBaseExtractor.cs" />
@@ -632,7 +673,6 @@
     <Compile Include="Commands\DA\DASynchAdrollConvCsv.cs" />
     <Compile Include="Commands\DA\DASynchAdrollStats.cs" />
     <Compile Include="Commands\DA\DASynchAdvertisers.cs" />
-    <Compile Include="Commands\DA\DASynchFacebookStatsV2.cs" />
     <Compile Include="Commands\DA\DASynchFacebookStats.cs" />
     <Compile Include="Commands\DA\DASynchOfferBudgetStats2.cs" />
     <Compile Include="Commands\DA\DASynchOfferBudgetStats.cs" />
@@ -737,8 +777,8 @@
     <Compile Include="Etl\SearchMarketing\Loaders\CallDailySummaryLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\CriteoDailySummaryLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\CriteoDailySummaryLoader2.cs" />
-    <Compile Include="Etl\SocialMarketing\Extractors\V2\FacebookApiExtractorV2.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\LoadersDAV2\FacebookDailySummaryLoaderV2.cs" />
+    <Compile Include="Etl\Facebook\Extractors\FacebookApiExtractor.cs" />
+    <Compile Include="Etl\Facebook\Loaders\FacebookDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollApiExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollConvCsvExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollCsvExtracter.cs" />
@@ -858,6 +898,9 @@
     <Compile Include="Common\RetryUtility.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="$(SolutionDir)CodeAnalysis\stylecop.json">
+      <Link>stylecop.json</Link>
+    </None>
     <None Include="271266501f61f25ee49c19a3c5cf3bb9a769ba00-privatekey.p12">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -928,6 +971,10 @@
       <Project>{3358a07a-a5a0-4933-9680-03d4308b278c}</Project>
       <Name>FacebookAPI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\API\SeleniumDataBrowser\SeleniumDataBrowser.csproj">
+      <Project>{09800c2e-2d96-495b-9f32-b461b38d015b}</Project>
+      <Name>SeleniumDataBrowser</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\API\Yahoo\Yahoo.csproj">
       <Project>{b5c95cb8-dbe8-4d94-9a6d-6c2ed3535a26}</Project>
       <Name>Yahoo</Name>
@@ -968,9 +1015,27 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <Analyzer Include="..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.3\analyzers\dotnet\Microsoft.CodeAnalysis.VersionCheckAnalyzer.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\Microsoft.CodeQuality.Analyzers.2.9.3\analyzers\dotnet\cs\Humanizer.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\Microsoft.CodeQuality.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.CodeQuality.Analyzers.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\Microsoft.CodeQuality.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.CodeQuality.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\Microsoft.NetCore.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.NetCore.Analyzers.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\Microsoft.NetCore.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.NetCore.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\Microsoft.NetFramework.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\Microsoft.NetFramework.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
     <Analyzer Include="..\..\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\..\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.3\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.3\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props'))" />
+    <Error Condition="!Exists('..\..\DirectAgents.Web\packages\Microsoft.CodeQuality.Analyzers.2.9.3\build\Microsoft.CodeQuality.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\DirectAgents.Web\packages\Microsoft.CodeQuality.Analyzers.2.9.3\build\Microsoft.CodeQuality.Analyzers.props'))" />
+    <Error Condition="!Exists('..\..\DirectAgents.Web\packages\Microsoft.NetCore.Analyzers.2.9.3\build\Microsoft.NetCore.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\DirectAgents.Web\packages\Microsoft.NetCore.Analyzers.2.9.3\build\Microsoft.NetCore.Analyzers.props'))" />
+    <Error Condition="!Exists('..\..\DirectAgents.Web\packages\Microsoft.NetFramework.Analyzers.2.9.3\build\Microsoft.NetFramework.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\DirectAgents.Web\packages\Microsoft.NetFramework.Analyzers.2.9.3\build\Microsoft.NetFramework.Analyzers.props'))" />
+    <Error Condition="!Exists('..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.3\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.3\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
+  </Target>
 </Project>

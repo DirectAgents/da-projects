@@ -303,7 +303,6 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
                 StatsType = sourceCommand.StatsType,
                 KeepAmazonReports = sourceCommand.KeepAmazonReports,
                 IntervalBetweenUnsuccessfulAndNewRequestInMinutes = sourceCommand.IntervalBetweenUnsuccessfulAndNewRequestInMinutes,
-                DisabledOnly = sourceCommand.DisabledOnly,
                 NoNeedToCreateRepeatRequests = sourceCommand.NoNeedToCreateRepeatRequests,
             };
         }
