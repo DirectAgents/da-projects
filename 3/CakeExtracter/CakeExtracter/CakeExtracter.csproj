@@ -463,7 +463,6 @@
     <Compile Include="Common\Extractors\ArchiveExctractors\Contract\IArchiveExtractor.cs" />
     <Compile Include="Common\Extractors\ArchiveExctractors\GzipArchiveExtractor.cs" />
     <Compile Include="Common\Extractors\ArchiveExctractors\ZipArchiveExtractor.cs" />
-    <Compile Include="Common\CommandLineUtils.cs" />
     <Compile Include="Common\Compare.cs" />
     <Compile Include="Common\Extractors\CsvExtractors\Contracts\ICsvExtractor.cs" />
     <Compile Include="Common\Extractors\CsvExtractors\CsvAccountExtractor.cs" />
@@ -680,7 +679,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Common\ConsoleCommand.cs" />
-    <Compile Include="Common\ConsoleCommandDispatcher.cs" />
     <Compile Include="Common\DateRange.cs" />
     <Compile Include="Commands\SynchDailySummariesCommand.cs" />
     <Compile Include="Commands\Search\SynchSearchDailySummariesXmlCommand.cs" />

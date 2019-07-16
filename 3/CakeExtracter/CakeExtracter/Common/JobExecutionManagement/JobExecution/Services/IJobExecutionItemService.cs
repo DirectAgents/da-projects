@@ -41,8 +41,8 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
         /// <summary>
         /// Sets the state of the job execution item to aborted by timeout.
         /// </summary>
-        /// <param name="currentJobRequestExecution">The current job request execution.</param>
-        void SetJobExecutionItemAbortedByTimeoutState(JobRequestExecution currentJobRequestExecution);
+        /// <param name="execution">The job execution.</param>
+        void SetJobExecutionItemAbortedByTimeoutState(JobRequestExecution execution);
 
         /// <summary>
         /// Adds the warning to job execution item.
