@@ -3,7 +3,7 @@ using CakeExtracter.Common;
 
 namespace CakeExtracter.Tests.Core.CommandExecutionContextTests.TestCommand
 {
-    class FailingTestCommand : ConsoleCommand
+    internal class FailingTestCommand : ConsoleCommand
     {
         public override int Execute(string[] remainingArguments)
         {

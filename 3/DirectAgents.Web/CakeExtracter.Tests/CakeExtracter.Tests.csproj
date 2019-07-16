@@ -88,9 +88,11 @@
     <Compile Include="Core\CommandExecutionContextTests\CommandExecutionContextTests.cs" />
     <Compile Include="Core\CommandExecutionContextTests\MockDIModules\TestExecutionContextDIModule.cs" />
     <Compile Include="Core\CommandExecutionContextTests\TestCommand\CommonTestCommand.cs" />
+    <Compile Include="Core\CommandExecutionContextTests\TestCommand\WithErrorsTestCommand.cs" />
     <Compile Include="Core\CommandExecutionContextTests\TestCommand\WithRetriesCreatedDifferWithParentTestCommand .cs" />
     <Compile Include="Core\CommandExecutionContextTests\TestCommand\WithRetriesCreatedEqualToParentTestCommand.cs" />
     <Compile Include="Core\CommandExecutionContextTests\TestCommand\FailingTestCommand.cs" />
+    <Compile Include="Core\CommandExecutionContextTests\TestCommand\WithTimerTestCommand.cs" />
     <Compile Include="JobTests\Amazon\RelaunchMechanism\AmazonRelaunchMechanismTests.cs" />
     <Compile Include="JobTests\Amazon\TestImplementations\DIModules\Base\TestAmazonDependencyInjectionModule.cs" />
     <Compile Include="JobTests\Amazon\TestImplementations\DIModules\TestAmazonDailyCleanerFailedDiModule.cs" />
