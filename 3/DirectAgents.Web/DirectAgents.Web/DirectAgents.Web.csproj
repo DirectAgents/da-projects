@@ -968,10 +968,6 @@
       <Project>{3b6c5433-5392-4165-a7e4-4aa431a75bb3}</Project>
       <Name>CakeExtracter</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\CakeExtractor.SeleniumApplication\CakeExtractor.SeleniumApplication\CakeExtractor.SeleniumApplication.csproj">
-      <Project>{cc1c4e5c-f431-4f95-9f20-b57e7da1343b}</Project>
-      <Name>CakeExtractor.SeleniumApplication</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\ClientPortal.Data\ClientPortal.Data.csproj">
       <Project>{2e621b59-9455-4fa5-b9bd-6bdc418ffbfa}</Project>
       <Name>ClientPortal.Data</Name>
