@@ -20,7 +20,8 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         /// <summary>
         /// Initializes a new instance of the <see cref="JobExecutionRequestLauncher"/> class.
         /// </summary>
-        /// <param name="requestRepository">Job request repository</param>
+        /// <param name="requestRepository">Job request repository.</param>
+        /// <param name="processManager">Process manager.</param>
         public JobExecutionRequestLauncher(IJobRequestsRepository requestRepository, IProcessManager processManager)
         {
             this.requestRepository = requestRepository;

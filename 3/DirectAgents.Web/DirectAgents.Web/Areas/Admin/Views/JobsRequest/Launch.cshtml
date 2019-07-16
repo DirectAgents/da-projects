@@ -1,0 +1,52 @@
+﻿@using MVCGrid.Web
+
+<link href="~/Content/css/jobLaunch.css" rel="stylesheet" />
+<h2>Job Request Launch</h2>
+
+<div class="well">
+    <div class="form-inline container-fluid">
+        <div class="row">
+            <div class="form-group col-md-3">
+                <span class="filter-label">Command:</span>
+                <select class="form-control" id="commandSelect" onchange="setupCommandDescription()">
+                    @for (var i = 0; i < Model.Count; i++)
+                    {
+                        <option value="@Model[i].Command">@Model[i].Command</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group col-md-5">
+                <span class="filter-label">Arguments:</span>
+                <input type="text" id="argumentInput" class="form-control" placeholder="" />
+            </div>
+            <div class="form-group col-md-3">
+                <span class="filter-label">Time:</span>
+                <div class='input-group date' id='datetimepicker'>
+                    <input type='text' class="form-control" id="scheduledTimeInput" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+            <button type="button" class="btn btn-default col-md-1" onclick="scheduleRequest()">Schedule</button>
+        </div>
+        <div class="row center-block">
+            <h5 class="text-danger" id="errorText"></h5>
+        </div>
+        <div class="row">
+            <div class="panel panel-default command-panel">
+                <div class="panel-heading" id="commandNameText"></div>
+                <table class="table" id="commandDescriptionTable"></table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-inline container-fluid">
+    <div class="row">
+        <h4 class="col-md-10">Scheduled requests</h4>
+        <button type="button" class="btn btn-default abort col-md-2" onclick="setAbortedStatusToItems()">Abort Selected</button>
+    </div>
+</div>
+@Html.MVCGrid("JobRequests")
+
+<script src="~/Content/scripts/jobLaunch.js"></script>

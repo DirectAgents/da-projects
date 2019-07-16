@@ -1,7 +1,7 @@
 ﻿using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers.Interfaces;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestsLifeCycleManagers;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestsLifeCycleManagers.Interfaces;
 using CakeExtracter.Common.JobExecutionManagement.ProcessManagers;
 using CakeExtracter.Common.JobExecutionManagement.ProcessManagers.Interfaces;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;

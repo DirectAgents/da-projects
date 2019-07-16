@@ -5,7 +5,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils
     /// <summary>
     /// Command Scheduling Utils.
     /// </summary>
-    public static class CommandSchedulingUtils
+    internal static class CommandSchedulingUtils
     {
         /// <summary>
         /// Gets the command retry scheduled time.

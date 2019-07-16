@@ -1,7 +1,8 @@
-﻿using Amazon.Entities.HelperEntities;
-using Amazon.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Amazon.Constants;
+using Amazon.Entities.HelperEntities;
+using Amazon.Enums;
 
 namespace Amazon.Helpers
 {
@@ -216,6 +217,20 @@ namespace Amazon.Helpers
                 }
             };
 
+        private static readonly Dictionary<string, string> DependentCountryCodeApiEndpointUrls =
+            new Dictionary<string, string>
+            {
+                { "US", ApiEndpointUrl.NorthAmerica },
+                { "CA", ApiEndpointUrl.NorthAmerica },
+                { "JP", ApiEndpointUrl.FarEast },
+                { "AU", ApiEndpointUrl.FarEast },
+                { "FR", ApiEndpointUrl.Europe },
+                { "DE", ApiEndpointUrl.Europe },
+                { "IT", ApiEndpointUrl.Europe },
+                { "ES", ApiEndpointUrl.Europe },
+                { "UK", ApiEndpointUrl.Europe },
+            };
+
         public static string GetCampaignTypeName(CampaignType type)
         {
             return CampaignTypeReadableNames[type];
@@ -263,6 +278,17 @@ namespace Amazon.Helpers
                 stateFilter = TransformItemsForRequest(states)
             };
             return snapshotParams;
+        }
+
+        /// <summary>
+        /// Gets appropriate API endpoint URL by the specified country code.
+        /// </summary>
+        /// <param name="countryCode">Code of country.</param>
+        /// <returns>URL of the API endpoint.</returns>
+        public static string GetAppropriateApiEndpointUrlByCountryCode(string countryCode)
+        {
+            DependentCountryCodeApiEndpointUrls.TryGetValue(countryCode, out var apiEndpointUrl);
+            return apiEndpointUrl ?? ApiEndpointUrl.NorthAmerica;
         }
 
         private static string GetBaseEntitiesPath(EntitesType entitiesType, CampaignType campaignType)

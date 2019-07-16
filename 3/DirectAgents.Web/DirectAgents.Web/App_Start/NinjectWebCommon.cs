@@ -3,35 +3,35 @@ using System.Web;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers.Interfaces;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Concrete;
-using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Domain.SpecialPlatformProviders.Contracts;
 using DirectAgents.Domain.SpecialPlatformProviders.Implementation;
-using DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook;
-using DirectAgents.Web.Areas.Admin.Grids.JobHistory;
 using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using Ninject;
 using Ninject.Web.Common;
+using DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook;
+using DirectAgents.Domain.Entities.Administration.JobExecution;
 using Ninject.Web.Common.WebHost;
 using CakeExtracter.Common.Email;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Repositories;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestLaunchers;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestLaunchers.Interfaces;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestsLifeCycleManagers;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestsLifeCycleManagers.Interfaces;
 using CakeExtracter.Common.JobExecutionManagement.ProcessManagers;
 using CakeExtracter.Common.JobExecutionManagement.ProcessManagers.Interfaces;
+using DirectAgents.Web.Areas.Admin.Grids.DataProviders;
+using DirectAgents.Web.Areas.Admin.Grids.JobHistory;
+using DirectAgents.Web.Areas.Admin.Grids.JobRequest;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(DirectAgents.Web.App_Start.NinjectWebCommon), "Start")]
-[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(DirectAgents.Web.App_Start.NinjectWebCommon), "Stop")]
-[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(DirectAgents.Web.App_Start.NinjectWebCommon), "Start")]
-[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(DirectAgents.Web.App_Start.NinjectWebCommon), "Stop")]
+[assembly: WebActivatorEx.ApplicationShutdownMethod(typeof(DirectAgents.Web.App_Start.NinjectWebCommon), "Stop")]
 
 namespace DirectAgents.Web.App_Start
 {
-    public static class NinjectWebCommon 
+    public static class NinjectWebCommon
     {
         private static readonly Bootstrapper bootstrapper = new Bootstrapper();
 
@@ -99,7 +99,8 @@ namespace DirectAgents.Web.App_Start
             kernel.Bind<IFacebookWebPortalDataService>().To<FacebookWebPortalDataService>();
             kernel.Bind<IPlatformAccountRepository>().To<PlatformAccountRepository>();
 
-            kernel.Bind<IJobHistoryDataProvider>().To<JobHistoryDataProvider>();
+            kernel.Bind<IGridDataProvider<JobRequestExecution>>().To<JobHistoryDataProvider>();
+            kernel.Bind<IGridDataProvider<JobRequest>>().To<JobRequestsDataProvider>();
             kernel.Bind<IJobRequestsRepository>().To<JobRequestRepository>();
             kernel.Bind<IBaseRepository<JobRequestExecution>>().To<JobExecutionItemRepository>();
             kernel.Bind<IJobExecutionItemService>().To<JobExecutionItemService>();

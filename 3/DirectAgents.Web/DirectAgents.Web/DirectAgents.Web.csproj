@@ -1,5 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.3\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props" Condition="Exists('..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.3\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" />
+  <Import Project="..\packages\Microsoft.NetFramework.Analyzers.2.9.3\build\Microsoft.NetFramework.Analyzers.props" Condition="Exists('..\packages\Microsoft.NetFramework.Analyzers.2.9.3\build\Microsoft.NetFramework.Analyzers.props')" />
+  <Import Project="..\packages\Microsoft.NetCore.Analyzers.2.9.3\build\Microsoft.NetCore.Analyzers.props" Condition="Exists('..\packages\Microsoft.NetCore.Analyzers.2.9.3\build\Microsoft.NetCore.Analyzers.props')" />
+  <Import Project="..\packages\Microsoft.CodeQuality.Analyzers.2.9.3\build\Microsoft.CodeQuality.Analyzers.props" Condition="Exists('..\packages\Microsoft.CodeQuality.Analyzers.2.9.3\build\Microsoft.CodeQuality.Analyzers.props')" />
+  <Import Project="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.3\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props" Condition="Exists('..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.3\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -24,9 +29,6 @@
     <UseGlobalApplicationHostFile />
     <Use64BitIISExpress />
   </PropertyGroup>
-  <PropertyGroup>
-    <CodeAnalysisRuleSet>$(SolutionDir)\build\stylecop\StyleCopRuleSet.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -35,6 +37,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>$(SolutionDir)CodeAnalysis\codeanalysis.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -238,10 +243,14 @@
     <Compile Include="Areas\AB\Controllers\VendorsController.cs" />
     <Compile Include="Areas\AB\Models\DashboardVM.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
-    <Compile Include="Areas\Admin\Grids\JobHistory\IJobHistoryDataProvider.cs" />
+    <Compile Include="Areas\Admin\Controllers\JobsRequestController.cs" />
+    <Compile Include="Areas\Admin\Grids\DataProviders\IGridDataProvider.cs" />
     <Compile Include="Areas\Admin\Grids\JobHistory\JobHistoryDataProvider.cs" />
     <Compile Include="Areas\Admin\Grids\JobHistory\JobHistoryGrid.cs" />
     <Compile Include="Areas\Admin\Grids\JobHistory\JobHistoryQueryExtensions.cs" />
+    <Compile Include="Areas\Admin\Grids\JobRequest\JobRequestsDataProvider.cs" />
+    <Compile Include="Areas\Admin\Grids\JobRequest\JobRequestsGrid.cs" />
+    <Compile Include="Areas\Admin\Grids\JobRequest\JobRequestsQueryExtensions.cs" />
     <Compile Include="Areas\Cake\CakeAreaRegistration.cs" />
     <Compile Include="Areas\Cake\Controllers\AdvertisersController.cs" />
     <Compile Include="Areas\Cake\Controllers\CampsController.cs" />
@@ -321,6 +330,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="Areas\ProgAdmin\Views\Shared\_LayoutTD.cshtml" />
     <Content Include="Content\css\jobHistory.css" />
+    <Content Include="Content\css\jobLaunch.css" />
     <Content Include="Content\DA.css" />
     <Content Include="Content\kendo\2014.1.416\Black\editor.png" />
     <Content Include="Content\kendo\2014.1.416\Black\imagebrowser.png" />
@@ -490,6 +500,7 @@
     <Content Include="Content\kendo\2014.1.416\Uniform\sprite.png" />
     <Content Include="Content\kendo\2014.1.416\Uniform\sprite_2x.png" />
     <Content Include="Content\scripts\jobHistory.js" />
+    <Content Include="Content\scripts\jobLaunch.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="ReportViewerWebForm.aspx" />
@@ -938,6 +949,9 @@
     <Folder Include="Views\Test\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="$(SolutionDir)CodeAnalysis\stylecop.json">
+      <Link>stylecop.json</Link>
+    </None>
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
@@ -953,6 +967,10 @@
     <ProjectReference Include="..\..\CakeExtracter\CakeExtracter\CakeExtracter.csproj">
       <Project>{3b6c5433-5392-4165-a7e4-4aa431a75bb3}</Project>
       <Name>CakeExtracter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CakeExtractor.SeleniumApplication\CakeExtractor.SeleniumApplication\CakeExtractor.SeleniumApplication.csproj">
+      <Project>{cc1c4e5c-f431-4f95-9f20-b57e7da1343b}</Project>
+      <Name>CakeExtractor.SeleniumApplication</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\ClientPortal.Data\ClientPortal.Data.csproj">
       <Project>{2e621b59-9455-4fa5-b9bd-6bdc418ffbfa}</Project>
@@ -1206,6 +1224,7 @@
     <Content Include="Areas\ProgAdmin\Views\Shared\DatePicker.cshtml" />
     <Content Include="Areas\ProgAdmin\Views\Facebook\ActionTotals.cshtml" />
     <Content Include="Areas\Cake\Views\Advertisers\ShowStats.cshtml" />
+    <Content Include="Areas\Admin\Views\JobsRequest\Launch.cshtml" />
     <None Include="Properties\PublishProfiles\dagents_vm_staging.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\DayOfWeek.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
@@ -1213,6 +1232,14 @@
     <Content Include="Areas\Admin\Views\JobsExecution\History.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.3\analyzers\dotnet\Microsoft.CodeAnalysis.VersionCheckAnalyzer.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.2.9.3\analyzers\dotnet\cs\Humanizer.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.CodeQuality.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.CodeQuality.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.NetCore.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.NetCore.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.NetCore.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.NetCore.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
@@ -1241,6 +1268,11 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.3\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.3\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeQuality.Analyzers.2.9.3\build\Microsoft.CodeQuality.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeQuality.Analyzers.2.9.3\build\Microsoft.CodeQuality.Analyzers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.NetCore.Analyzers.2.9.3\build\Microsoft.NetCore.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NetCore.Analyzers.2.9.3\build\Microsoft.NetCore.Analyzers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.NetFramework.Analyzers.2.9.3\build\Microsoft.NetFramework.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NetFramework.Analyzers.2.9.3\build\Microsoft.NetFramework.Analyzers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.3\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.3\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
   </Target>
   <PropertyGroup>
     <PostBuildEvent>

@@ -6,6 +6,8 @@ namespace DirectAgents.Domain.Entities.CPProg.DBM.SummaryMetrics
     {
         public DateTime Date { get; set; }
 
+        public string Country { get; set; }
+
         public int? EntityId { get; set; }
 
         public decimal Revenue { get; set; }
