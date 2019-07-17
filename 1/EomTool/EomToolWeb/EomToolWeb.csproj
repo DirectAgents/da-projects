@@ -63,7 +63,7 @@
     </Reference>
     <Reference Include="ManyConsole, Version=0.4.2.16, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\ManyConsole.dll</HintPath>
+      <HintPath>..\..\Solution\packages\ManyConsole.1.0.0.4\lib\ManyConsole.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Moq">
