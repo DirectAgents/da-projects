@@ -10,7 +10,7 @@
 }
 
 function setupDatePicker() {
-    $('#datetimepicker').datetimepicker({
+    $("#datetimepicker").datetimepicker({
         format: 'L'
     });
 }
@@ -24,7 +24,7 @@ function setAbortedStatusToItems() {
             type: "POST",
             data: JSON.stringify(ids),
             dataType: "json",
-            contentType: 'application/json; charset=utf-8',
+            contentType: "application/json; charset=utf-8",
             success: function () { location.reload(); },
             error: function (error) { console.error(error); }
         });

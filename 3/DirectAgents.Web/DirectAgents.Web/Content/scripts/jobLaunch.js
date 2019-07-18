@@ -13,7 +13,7 @@ function setupCommandDescription() {
             commandName: selectedCommand
         }),
         dataType: "json",
-        contentType: 'application/json; charset=utf-8',
+        contentType: "application/json; charset=utf-8",
         success: function (data) {
             printCommandInfo(data);
         },
@@ -41,7 +41,7 @@ function scheduleRequest() {
             location.reload();
         },
         error: function (error) {
-            $("#errorText").text(`Scheduling of the command failed: ${error.statusText}`);
+            $("#errorText").text("Scheduling of the command failed: " + error.statusText);
             console.error(error);
         }
     });
@@ -56,7 +56,7 @@ function setAbortedStatusToItems() {
             type: "POST",
             data: JSON.stringify(ids),
             dataType: "json",
-            contentType: 'application/json; charset=utf-8',
+            contentType: "application/json; charset=utf-8",
             success: function() {
                 location.reload();
             },
@@ -80,13 +80,14 @@ function getScheduledTime() {
 }
 
 function printCommandInfo(data) {
-    $("#commandNameText").text(`${data.Name}: ${data.Description}`);
-    $("#argumentInput").attr("placeholder", `Example:${data.ArgumentsExample}`);
+    $("#commandNameText").text(data.Name + ": " + data.Description);
+    $("#argumentInput").attr("placeholder", "Example: " + data.ArgumentsExample);
     var commandInfoDiv = $("#commandDescriptionTable");
     commandInfoDiv.empty();
     commandInfoDiv.append("<tr><th>Argument</th><th>Description</th></tr>");
-    for (let arg of data.Arguments) {
-        commandInfoDiv.append(`<tr><td>${arg.Prototype}</td><td>${arg.Description}</td></tr>`);
+    for (var i in data.Arguments) {
+        var htmlMarkup = "<tr><td>" + data.Arguments[i].Prototype + "</td><td>" + data.Arguments[i].Description + "</td></tr>";
+        commandInfoDiv.append(htmlMarkup);
     }
 }
 
