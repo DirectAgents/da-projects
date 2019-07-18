@@ -32,6 +32,7 @@ function setupCommandDescription() {
 }
 
 function scheduleRequest() {
+    $("#schedulingWaiting").show();
     var command = getSelectedCommand();
     var commandArguments = getCommandArguments();
     var schedule = getScheduledTimeInUTC();
@@ -49,6 +50,7 @@ function scheduleRequest() {
             location.reload();
         },
         error: function (error) {
+            $("#schedulingWaiting").hide();
             $("#errorText").text("Scheduling of the command failed: " + error.statusText);
             console.error(error);
         }
@@ -56,6 +58,7 @@ function scheduleRequest() {
 }
 
 function setAbortedStatusToItems() {
+    $("#abortingWaiting").show();
     var ids = $("input[type=checkbox]:checked").map(function () { return this.value; }).get();
     var result = confirm("Are you sure?");
     if (result) {
@@ -68,7 +71,8 @@ function setAbortedStatusToItems() {
             success: function() {
                 location.reload();
             },
-            error: function(error) {
+            error: function (error) {
+                $("#abortingWaiting").hide();
                 console.error(error);
             }
         });

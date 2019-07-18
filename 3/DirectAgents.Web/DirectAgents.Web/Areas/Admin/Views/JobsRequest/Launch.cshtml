@@ -35,6 +35,7 @@
         </div>
         <div class="row center-block">
             <h5 class="text-danger" id="errorText"></h5>
+            <h5 class="text-danger" id="schedulingWaiting" hidden><strong>Waiting...</strong></h5>
         </div>
         <div class="row">
             <div class="panel panel-default command-panel">
@@ -49,6 +50,7 @@
         <h4 class="col-md-10">Scheduled requests</h4>
         <button type="button" class="btn btn-default abort col-md-2" onclick="setAbortedStatusToItems()">Abort Selected</button>
     </div>
+    <h5 class="text-danger" id="abortingWaiting" hidden><strong>Waiting...</strong></h5>
 </div>
 @Html.MVCGrid("JobRequests")
 
