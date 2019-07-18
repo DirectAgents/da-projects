@@ -25,6 +25,7 @@ namespace DirectAgents.Web.Areas.Admin.Controllers
         public JobsRequestController(IJobRequestLifeCycleManager requestManager)
         {
             this.requestManager = requestManager;
+            ViewBag.ServerTimeZone = TimeZoneInfo.Local;
         }
 
         /// <summary>
@@ -61,7 +62,7 @@ namespace DirectAgents.Web.Areas.Admin.Controllers
         /// <summary>
         ///  Schedules a new command launch based on arguments.
         /// </summary>
-        /// <param name="jobRequest">Job request object with arguments.</param>
+        /// <param name="jobRequest">Job request object with arguments and with a scheduled time in UTC.</param>
         /// <returns>Action result.</returns>
         [HttpPost]
         public ActionResult ScheduleJobRequest(JobRequest jobRequest)
@@ -70,7 +71,7 @@ namespace DirectAgents.Web.Areas.Admin.Controllers
             {
                 if (!jobRequest.ScheduledTime.HasValue)
                 {
-                    jobRequest.ScheduledTime = DateTime.Now;
+                    jobRequest.ScheduledTime = DateTime.UtcNow;
                 }
                 requestManager.ScheduleJobRequest(jobRequest);
                 return Json(new { success = true });

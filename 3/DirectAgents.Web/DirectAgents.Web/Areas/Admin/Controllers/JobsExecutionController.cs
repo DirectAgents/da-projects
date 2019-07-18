@@ -20,6 +20,7 @@ namespace DirectAgents.Web.Areas.Admin.Controllers
         public JobsExecutionController(IJobExecutionItemService jobExecutionItemService)
         {
             this.jobExecutionItemService = jobExecutionItemService;
+            ViewBag.ServerTimeZone = TimeZoneInfo.Local;
         }
 
         /// <summary>
