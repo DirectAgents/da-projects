@@ -1,14 +1,6 @@
 ﻿function setupDatePicker() {
-    var now = new Date();
-    var nowServerTime = new Date(
-        now.getUTCFullYear(),
-        now.getUTCMonth(),
-        now.getUTCDate(),
-        now.getUTCHours() + getServerTimeUtcOffsetInHours(),
-        now.getUTCMinutes(),
-        now.getUTCSeconds());
     $("#datetimepicker").datetimepicker({
-        minDate: nowServerTime
+        minDate: getNowTimeInServerTimeZone()
     });
 }
 
@@ -35,7 +27,7 @@ function scheduleRequest() {
     $("#schedulingWaiting").show();
     var command = getSelectedCommand();
     var commandArguments = getCommandArguments();
-    var schedule = getScheduledTimeInUTC();
+    var schedule = $("#scheduledTimeInput")[0].value;
     $.ajax({
         url: "/JobsRequest/ScheduleJobRequest",
         type: "POST",
@@ -87,12 +79,16 @@ function getCommandArguments() {
     return $("#argumentInput")[0].value;
 }
 
-function getScheduledTimeInUTC() {
-    var scheduledTimeInServerTimeZoneAsText = $("#scheduledTimeInput")[0].value;
-    var scheduledTimeInServerTime = new Date(scheduledTimeInServerTimeZoneAsText);
-    var serverTimeUtcOffsetInHours = getServerTimeUtcOffsetInHours();
-    scheduledTimeInServerTime.setHours(scheduledTimeInServerTime.getHours() - serverTimeUtcOffsetInHours);
-    return scheduledTimeInServerTime;
+function getNowTimeInServerTimeZone() {
+    var now = new Date();
+    var nowServerTime = new Date(
+        now.getUTCFullYear(),
+        now.getUTCMonth(),
+        now.getUTCDate(),
+        now.getUTCHours() + getServerTimeUtcOffsetInHours(),
+        now.getUTCMinutes(),
+        now.getUTCSeconds());
+    return nowServerTime;
 }
 
 function getServerTimeUtcOffsetInHours() {

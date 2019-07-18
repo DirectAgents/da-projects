@@ -1,9 +1,13 @@
 ﻿@using MVCGrid.Web
+@{
+    var timeZoneUtcOffsetInHours = @ViewBag.ServerTimeZone.GetUtcOffset(DateTime.Now).Hours;
+    var timeZoneName = @ViewBag.ServerTimeZone.StandardName + " (UTC " + timeZoneUtcOffsetInHours.ToString("+0;-#") + "h)";
+}
 
 <link href="~/Content/css/jobHistory.css" rel="stylesheet" />
 
 <h2>Job Execution History</h2>
-<p>*Time zone on this page (server time zone) - @ViewBag.ServerTimeZone</p>
+<p>*Time zone on this page (server time zone) - @timeZoneName</p>
 
 <div class="well">
     <div class="form-inline">

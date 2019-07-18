@@ -18,7 +18,7 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobRequest
         public static IQueryable<Domain.Entities.Administration.JobExecution.JobRequest> ApplyStatusFilter(
             this IQueryable<Domain.Entities.Administration.JobExecution.JobRequest> source, QueryOptions options)
         {
-            var status = JobRequestStatus.Scheduled;
+            const JobRequestStatus status = JobRequestStatus.Scheduled;
             source = source.Where(x => x.Status == status);
             return source;
         }

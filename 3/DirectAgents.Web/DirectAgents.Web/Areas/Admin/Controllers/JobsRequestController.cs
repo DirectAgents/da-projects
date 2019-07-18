@@ -69,10 +69,6 @@ namespace DirectAgents.Web.Areas.Admin.Controllers
         {
             try
             {
-                if (!jobRequest.ScheduledTime.HasValue)
-                {
-                    jobRequest.ScheduledTime = DateTime.UtcNow;
-                }
                 requestManager.ScheduleJobRequest(jobRequest);
                 return Json(new { success = true });
             }
