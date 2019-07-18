@@ -24,5 +24,11 @@
         /// Gets or sets the type of account being called.
         /// </summary>
         public string Type { get; set; }
+
+        public override string ToString()
+        {
+            return $"MarketplaceStringId: {MarketplaceStringId};" +
+                   $"\nId: {Id}; Name: {Name}; Type: {Type}";
+        }
     }
 }

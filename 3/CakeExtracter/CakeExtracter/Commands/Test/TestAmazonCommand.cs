@@ -50,6 +50,7 @@ namespace CakeExtracter.Commands.Test
             var numberOfAlt = 0;
             Console.Write(@"Please specify the number of profile : ");
             var inputString = Console.ReadLine();
+            Console.WriteLine();
             numberOfAlt = Convert.ToInt32(inputString);
             amazonUtil.WhichAlt = numberOfAlt;
             var profiles = amazonUtil.GetProfiles();
@@ -148,9 +149,7 @@ namespace CakeExtracter.Commands.Test
 
         private void PrintProfileInfo(AmazonProfile profile)
         {
-            Console.WriteLine($"Profile ID: {profile.ProfileId}");
-            Console.WriteLine($"Account ID: {profile.AccountInfo.Id}");
-            Console.WriteLine($"Account Name: {profile.AccountInfo.Name}");
+            Console.WriteLine(profile);
             Console.WriteLine();
         }
 
