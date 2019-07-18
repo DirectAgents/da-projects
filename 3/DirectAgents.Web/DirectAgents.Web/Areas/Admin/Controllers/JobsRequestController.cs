@@ -62,7 +62,7 @@ namespace DirectAgents.Web.Areas.Admin.Controllers
         /// <summary>
         ///  Schedules a new command launch based on arguments.
         /// </summary>
-        /// <param name="jobRequest">Job request object with arguments and with a scheduled time in UTC.</param>
+        /// <param name="jobRequest">Job request object with arguments.</param>
         /// <returns>Action result.</returns>
         [HttpPost]
         public ActionResult ScheduleJobRequest(JobRequest jobRequest)
