@@ -31,7 +31,7 @@ namespace CakeExtracter.Commands.Selenium
         /// <summary>
         /// Gets or sets the command argument: a number of execution profile (default = 1).
         /// </summary>
-        public int ProfileNumber { get; set; }
+        public int? ProfileNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the command argument: Start date
@@ -76,7 +76,7 @@ namespace CakeExtracter.Commands.Selenium
         /// </summary>
         public override void ResetProperties()
         {
-            ProfileNumber = 0;
+            ProfileNumber = null;
             StartDate = null;
             EndDate = null;
             DaysAgoToStart = null;
