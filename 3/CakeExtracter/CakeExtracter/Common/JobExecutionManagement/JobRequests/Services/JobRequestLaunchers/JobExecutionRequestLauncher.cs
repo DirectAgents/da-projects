@@ -59,9 +59,9 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
 
         private List<JobRequest> GetScheduledValidJobRequests(int maxNumberOfJobRequests)
         {
-            var now = DateTime.Now;
-            var scheduledInPastRequests = requestRepository
-                .GetItems(x => x.Status == JobRequestStatus.Scheduled && x.ScheduledTime <= now);
+            var scheduledInPastRequests = requestRepository.GetItems(x =>
+                x.Status == JobRequestStatus.Scheduled &&
+                x.ScheduledTime <= CommandSchedulingUtils.MaxTimeForValidCommandLaunch);
             var failedRequests = FailOverdueRequests(scheduledInPastRequests, maxNumberOfJobRequests);
             var validRequests = scheduledInPastRequests.Except(failedRequests).ToList();
             return validRequests;

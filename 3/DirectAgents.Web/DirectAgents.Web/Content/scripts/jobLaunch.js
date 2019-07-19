@@ -1,6 +1,6 @@
 ﻿function setupDatePicker() {
-    $('#datetimepicker').datetimepicker({
-        minDate: Date.now()
+    $("#datetimepicker").datetimepicker({
+        minDate: getNowTimeInServerTimeZone()
     });
 }
 
@@ -13,7 +13,7 @@ function setupCommandDescription() {
             commandName: selectedCommand
         }),
         dataType: "json",
-        contentType: 'application/json; charset=utf-8',
+        contentType: "application/json; charset=utf-8",
         success: function (data) {
             printCommandInfo(data);
         },
@@ -24,9 +24,10 @@ function setupCommandDescription() {
 }
 
 function scheduleRequest() {
+    $("#schedulingWaiting").show();
     var command = getSelectedCommand();
     var commandArguments = getCommandArguments();
-    var schedule = getScheduledTime();
+    var schedule = $("#scheduledTimeInput")[0].value;
     $.ajax({
         url: "/JobsRequest/ScheduleJobRequest",
         type: "POST",
@@ -41,13 +42,15 @@ function scheduleRequest() {
             location.reload();
         },
         error: function (error) {
-            $("#errorText").text(`Scheduling of the command failed: ${error.statusText}`);
+            $("#schedulingWaiting").hide();
+            $("#errorText").text("Scheduling of the command failed: " + error.statusText);
             console.error(error);
         }
     });
 }
 
 function setAbortedStatusToItems() {
+    $("#abortingWaiting").show();
     var ids = $("input[type=checkbox]:checked").map(function () { return this.value; }).get();
     var result = confirm("Are you sure?");
     if (result) {
@@ -56,11 +59,12 @@ function setAbortedStatusToItems() {
             type: "POST",
             data: JSON.stringify(ids),
             dataType: "json",
-            contentType: 'application/json; charset=utf-8',
+            contentType: "application/json; charset=utf-8",
             success: function() {
                 location.reload();
             },
-            error: function(error) {
+            error: function (error) {
+                $("#abortingWaiting").hide();
                 console.error(error);
             }
         });
@@ -75,18 +79,32 @@ function getCommandArguments() {
     return $("#argumentInput")[0].value;
 }
 
-function getScheduledTime() {
-    return $("#scheduledTimeInput")[0].value;
+function getNowTimeInServerTimeZone() {
+    var now = new Date();
+    var nowServerTime = new Date(
+        now.getUTCFullYear(),
+        now.getUTCMonth(),
+        now.getUTCDate(),
+        now.getUTCHours() + getServerTimeUtcOffsetInHours(),
+        now.getUTCMinutes(),
+        now.getUTCSeconds());
+    return nowServerTime;
+}
+
+function getServerTimeUtcOffsetInHours() {
+    var serverTimeZoneUtcOffsetInHoursAsText = $("#serverTimeZoneUtcOffsetInHours").text();
+    return parseInt(serverTimeZoneUtcOffsetInHoursAsText);
 }
 
 function printCommandInfo(data) {
-    $("#commandNameText").text(`${data.Name}: ${data.Description}`);
-    $("#argumentInput").attr("placeholder", `Example:${data.ArgumentsExample}`);
+    $("#commandNameText").text(data.Name + ": " + data.Description);
+    $("#argumentInput").attr("placeholder", "Example: " + data.ArgumentsExample);
     var commandInfoDiv = $("#commandDescriptionTable");
     commandInfoDiv.empty();
     commandInfoDiv.append("<tr><th>Argument</th><th>Description</th></tr>");
-    for (let arg of data.Arguments) {
-        commandInfoDiv.append(`<tr><td>${arg.Prototype}</td><td>${arg.Description}</td></tr>`);
+    for (var i in data.Arguments) {
+        var htmlMarkup = "<tr><td>" + data.Arguments[i].Prototype + "</td><td>" + data.Arguments[i].Description + "</td></tr>";
+        commandInfoDiv.append(htmlMarkup);
     }
 }
 

@@ -55,6 +55,9 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         /// <inheritdoc />
         public void ScheduleJobRequest(JobRequest jobRequest)
         {
+            jobRequest.ScheduledTime = jobRequest.ScheduledTime.HasValue
+                ? CommandSchedulingUtils.GetTimeInCorrectTimeZone(jobRequest.ScheduledTime.Value)
+                : CommandSchedulingUtils.DefaultScheduledTime;
             CommandVerificationUtil.VerifyJobRequest(jobRequest);
             AddNotInheritedRequest(jobRequest);
         }

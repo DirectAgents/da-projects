@@ -25,6 +25,7 @@ namespace DirectAgents.Web.Areas.Admin.Controllers
         public JobsRequestController(IJobRequestLifeCycleManager requestManager)
         {
             this.requestManager = requestManager;
+            ViewBag.ServerTimeZone = TimeZoneInfo.Local;
         }
 
         /// <summary>
@@ -68,10 +69,6 @@ namespace DirectAgents.Web.Areas.Admin.Controllers
         {
             try
             {
-                if (!jobRequest.ScheduledTime.HasValue)
-                {
-                    jobRequest.ScheduledTime = DateTime.Now;
-                }
                 requestManager.ScheduleJobRequest(jobRequest);
                 return Json(new { success = true });
             }

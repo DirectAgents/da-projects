@@ -29,7 +29,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         /// <summary>
         /// Schedules a new job request if it is correct.
         /// </summary>
-        /// <param name="jobRequest">The job request to launch.</param>
+        /// <param name="jobRequest">The job request to launch with a scheduled time in local time.</param>
         void ScheduleJobRequest(JobRequest jobRequest);
 
         /// <summary>
