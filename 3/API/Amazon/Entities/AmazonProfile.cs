@@ -30,5 +30,12 @@
         /// Gets or sets the additional information about account.
         /// </summary>
         public AmazonAccountInfo AccountInfo { get; set; }
+
+        public override string ToString()
+        {
+            return $"ProfileId: {ProfileId};" +
+                   $"\nCountryCode: {CountryCode}; CurrencyCode: {CurrencyCode}; Timezone: {Timezone};" +
+                   $"\nAccountInfo: {AccountInfo}";
+        }
     }
 }

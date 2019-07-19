@@ -295,7 +295,7 @@ PRINT N'Creating [dbo].[SumKeys]...';
 
 GO
 CREATE AGGREGATE [dbo].[SumKeys](@value INT)
-    RETURNS NVARCHAR (4000)
+    RETURNS NVARCHAR (max)
     EXTERNAL NAME [SqlServerProjectForDADatabaseR3].[SumKeys];
 
 

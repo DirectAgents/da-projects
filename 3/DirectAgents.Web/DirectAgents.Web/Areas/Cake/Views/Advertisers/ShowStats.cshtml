@@ -9,24 +9,41 @@ Id: @Model.Advertiser.AdvertiserId<br />
 Name: @Model.Advertiser.AdvertiserName<br />
 Offers: @Model.NumOffers<br />
 <br />
-<b>CampSum Stats</b><br />
+<b>Date Range</b><br />
 @Model.Start.ToShortDateString() - @Model.End.ToShortDateString()<br />
 <br />
-Convs: @Model.Convs.ToString(formatNum)<br />
-Paid: @Model.Paid.ToString(formatNum)<br />
-<br />
+<b>CampSum Stats</b><br />
+Convs: @Model.CampSum_Convs.ToString(formatNum)<br />
+Paid: @Model.CampSum_Paid.ToString(formatNum)<br />
 
-<div id="divCmds">
-    @Html.ActionLink("Clear CampSums", "ClearCampSumsCustom", new { id = Model.Advertiser.AdvertiserId, start = Model.Start.ToShortDateString(), end = Model.End.ToShortDateString() }, new { onclick = "DoClear()" }) |
-    @Html.ActionLink("Load CampSums", "LoadCampSumsCustom", new { id = Model.Advertiser.AdvertiserId, start = Model.Start.ToShortDateString(), end = Model.End.ToShortDateString() }, new { onclick = "DoLoad()" })
+<div id="divCmds1">
+    @Html.ActionLink("Clear CampSums", "ClearCampSumsCustom", new { id = Model.Advertiser.AdvertiserId, start = Model.Start.ToShortDateString(), end = Model.End.ToShortDateString() }, new { onclick = "DoClear(1)" }) |
+    @Html.ActionLink("Load CampSums", "LoadCampSumsCustom", new { id = Model.Advertiser.AdvertiserId, start = Model.Start.ToShortDateString(), end = Model.End.ToShortDateString() }, new { onclick = "DoLoad(1)" })
+</div>
+
+<br />
+<b>EventConversion Stats</b><br />
+Count: @Model.EventConvs_Count<br />
+Earliest: @Model.EventConvs_Earliest<br />
+Latest: @Model.EventConvs_Latest<br />
+<div id="divCmds2">
+    @Html.ActionLink("Clear EventConvs", "ClearEventConvsCustom", new { id = Model.Advertiser.AdvertiserId, start = Model.Start.ToShortDateString(), end = Model.End.ToShortDateString() }, new { onclick = "DoClear(2)" }) |
+    @Html.ActionLink("Load EventConvs", "LoadEventConvsCustom", new { id = Model.Advertiser.AdvertiserId, start = Model.Start.ToShortDateString(), end = Model.End.ToShortDateString() }, new { onclick = "DoLoad(2)" })
 </div>
 
 <script>
-    function DoClear() {
-        $('#divCmds').html('Clearing... Please wait').css('color', 'red');
+    function DoClear(divNum) {
+        ClearCommandDivs();
+        $('#divCmds' + divNum).html('Clearing... Please wait').css('color', 'red');
     }
 
-    function DoLoad() {
-        $('#divCmds').html('Loading... Please wait').css('color', 'red');
+    function DoLoad(divNum) {
+        ClearCommandDivs();
+        $('#divCmds' + divNum).html('Loading... Please wait').css('color', 'red');
+    }
+
+    function ClearCommandDivs() {
+        $('#divCmds1').html('&nbsp;');
+        $('#divCmds2').html('&nbsp;');
     }
 </script>

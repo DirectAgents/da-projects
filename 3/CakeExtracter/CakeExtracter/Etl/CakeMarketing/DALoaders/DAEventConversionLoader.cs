@@ -94,6 +94,9 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
             var neededAffIds = items.Select(cs => cs.SourceAffiliate.SourceAffiliateId).Distinct();
             var missingAffIds = neededAffIds.Where(id => !existingAffIds.Contains(id));
 
+            //var affIdArray = missingAffIds.ToArray();
+            //var itemsInQuestion = items.Where(x => affIdArray.Contains(x.SourceAffiliate.SourceAffiliateId));
+
             // ?Could just use the SourceAffiliateId and SourceAffiliateName?
             // ?future: may be interested in other attributes?
             DACampSumLoader.DoAffiliatesEtl(missingAffIds);
