@@ -33,7 +33,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD
         /// </summary>
         /// <param name="currentProfileNumber">Number of the current execution profile.</param>
         /// <param name="isHidingBrowserWindow">Include hiding the browser window.</param>
-        public VcdDataProviderBuilder(int currentProfileNumber, bool isHidingBrowserWindow)
+        public VcdDataProviderBuilder(int? currentProfileNumber, bool isHidingBrowserWindow)
         {
             vcdAccountsInfo = new Dictionary<ExtAccount, VcdAccountInfo>();
             this.isHidingBrowserWindow = isHidingBrowserWindow;
@@ -79,7 +79,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD
             return vcdAccountsInfo.Keys.ToList();
         }
 
-        private void SetExecutionProfile(int currentProfileNumber)
+        private void SetExecutionProfile(int? currentProfileNumber)
         {
             VcdExecutionProfileManager.Current.SetExecutionProfileNumber(currentProfileNumber);
         }
