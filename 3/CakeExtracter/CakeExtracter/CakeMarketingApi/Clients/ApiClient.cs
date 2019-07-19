@@ -12,15 +12,13 @@ namespace CakeExtracter.CakeMarketingApi.Clients
         protected const string Domain = "login.directagents.com";
         protected readonly string BaseUrl;
 
-        private readonly int maxRetryAttempt =
-            ConfigurationHelper.GetIntConfigurationValue("CakeEventConversions_MaxRetryAttempts");
-
-        private readonly TimeSpan pauseBetweenAttempts =
-            TimeSpan.FromSeconds(ConfigurationHelper.GetIntConfigurationValue("CakeEventConversions_PauseBetweenAttemptsInSeconds"));
+        private int maxRetryAttempt;
+        private TimeSpan pauseBetweenAttempts;
 
         protected ApiClient(int version, string asmx, string operation)
         {
             BaseUrl = "https://" + Domain + "/api/" + version + "/" + asmx + ".asmx/" + operation;
+            SetConfigurationValues();
         }
 
         public T TryGetResponse<T>(ApiRequest apiRequest, IDeserializer deserializer = null)
@@ -28,11 +26,19 @@ namespace CakeExtracter.CakeMarketingApi.Clients
         {
             return Policy
                 .Handle<Exception>()
-                .WaitAndRetry(maxRetryAttempt,
+                .WaitAndRetry(
+                    maxRetryAttempt,
                     i => pauseBetweenAttempts,
                     (exception, timeSpan, retryCount, context) =>
                         Logger.Warn($"Failed. Will repeat request. Waiting {timeSpan}", retryCount))
                 .Execute(() => GetResponse<T>(apiRequest, deserializer));
+        }
+
+        private void SetConfigurationValues()
+        {
+            maxRetryAttempt = ConfigurationHelper.GetIntConfigurationValue("CakeEventConversions_MaxRetryAttempts");
+            var pauseBetweenAttemptsInSeconds = ConfigurationHelper.GetIntConfigurationValue("CakeEventConversions_PauseBetweenAttemptsInSeconds");
+            pauseBetweenAttempts = TimeSpan.FromSeconds(pauseBetweenAttemptsInSeconds);
         }
 
         private T GetResponse<T>(ApiRequest apiRequest, IDeserializer deserializer = null)
