@@ -29,18 +29,25 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Synchers
         /// Synchronizes normal tables data to analytical tables data for the vcd data.
         /// </summary>
         /// <param name="accountId">The account identifier.</param>
-        public void SyncData(int accountId)
+        /// <param name="dateRange">The date range of data for sync.</param>
+        public void SyncData(int accountId, DateRange dateRange)
         {
-            Logger.Info(accountId, "Started sync VCD analytic table with normal tables");
+            Logger.Info(accountId, $"Started sync VCD analytic table with normal tables for {dateRange.ToString()}");
             Policy
                 .Handle<Exception>()
                 .Retry(AnlyticTablesSyncConstants.maxRetryAttempts, (exception, retryCount, context) =>
                     Logger.Warn(accountId, $"Sync analytic table failed. Waiting {AnlyticTablesSyncConstants.secondsToWait} seconds before trying again."))
                 .Execute(() =>
                 {
-                    sqlScriptExecutor.ExecuteScriptWithParams(scriptPath, new[] { accountId.ToString() });
+                    var scriptParameters = GetScriptParameters(accountId, dateRange);
+                    sqlScriptExecutor.ExecuteScriptWithParams(scriptPath, scriptParameters);
                 });
             Logger.Info(accountId, "Finished sync VCD analytic table with normal tables.");
+        }
+
+        private string[] GetScriptParameters(int accountId, DateRange dateRange)
+        {
+            return new[] { accountId.ToString(), dateRange.FromDate.ToShortDateString(), dateRange.ToDate.ToShortDateString() };
         }
     }
 }

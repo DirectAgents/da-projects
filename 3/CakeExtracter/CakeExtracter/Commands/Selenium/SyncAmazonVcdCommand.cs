@@ -152,7 +152,7 @@ namespace CakeExtracter.Commands.Selenium
                 try
                 {
                     DoEtlForAccount(account, dateRange, vcdDataProvider);
-                    SyncAccountDataToAnalyticTable(account.Id);
+                    SyncAccountDataToAnalyticTable(account.Id, dateRange);
                 }
                 catch (Exception ex)
                 {
@@ -193,7 +193,7 @@ namespace CakeExtracter.Commands.Selenium
                 ScheduleNewCommandLaunch<SyncAmazonVcdCommand>(command => { });
         }
 
-        private void SyncAccountDataToAnalyticTable(int accountId)
+        private void SyncAccountDataToAnalyticTable(int accountId, DateRange dateRange)
         {
             try
             {
@@ -201,7 +201,7 @@ namespace CakeExtracter.Commands.Selenium
                 Logger.Info(accountId, "Sync analytic table data.");
                 var syncScriptPath = VcdCommandConfigurationManager.GetSyncScriptPath();
                 var vcdTablesSyncher = new VcdAnalyticTablesSyncher(syncScriptPath);
-                vcdTablesSyncher.SyncData(accountId);
+                vcdTablesSyncher.SyncData(accountId, dateRange);
             }
             catch (Exception ex)
             {
