@@ -15,7 +15,7 @@ namespace CakeExtracter.CakeMarketingApi.Clients
 
         public ConversionReportResponse Conversions(ConversionsRequest request)
         {
-            var result = Execute<ConversionReportResponse>(request, new ConversionsDeserializer());
+            var result = TryGetResponse<ConversionReportResponse>(request, new ConversionsDeserializer());
             return result;
         }
     }

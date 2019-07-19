@@ -1,4 +1,6 @@
 ﻿using System;
+using CakeExtracter.Helpers;
+using Polly;
 using RestSharp;
 using RestSharp.Deserializers;
 
@@ -10,12 +12,37 @@ namespace CakeExtracter.CakeMarketingApi.Clients
         protected const string Domain = "login.directagents.com";
         protected readonly string BaseUrl;
 
+        private int maxRetryAttempt;
+        private TimeSpan pauseBetweenAttempts;
+
         protected ApiClient(int version, string asmx, string operation)
         {
             BaseUrl = "https://" + Domain + "/api/" + version + "/" + asmx + ".asmx/" + operation;
+            SetConfigurationValues();
         }
 
-        public T Execute<T>(ApiRequest apiRequest, IDeserializer deserializer = null) where T : new()
+        public T TryGetResponse<T>(ApiRequest apiRequest, IDeserializer deserializer = null)
+            where T : new()
+        {
+            return Policy
+                .Handle<Exception>()
+                .WaitAndRetry(
+                    maxRetryAttempt,
+                    i => pauseBetweenAttempts,
+                    (exception, timeSpan, retryCount, context) =>
+                        Logger.Warn($"Failed. Will repeat request. Waiting {timeSpan}", retryCount))
+                .Execute(() => GetResponse<T>(apiRequest, deserializer));
+        }
+
+        private void SetConfigurationValues()
+        {
+            maxRetryAttempt = ConfigurationHelper.GetIntConfigurationValue("CakeEventConversions_MaxRetryAttempts");
+            var pauseBetweenAttemptsInSeconds = ConfigurationHelper.GetIntConfigurationValue("CakeEventConversions_PauseBetweenAttemptsInSeconds");
+            pauseBetweenAttempts = TimeSpan.FromSeconds(pauseBetweenAttemptsInSeconds);
+        }
+
+        private T GetResponse<T>(ApiRequest apiRequest, IDeserializer deserializer = null)
+            where T : new()
         {
             var restRequest = new RestRequest();
             //restRequest.Timeout = 300000; // testing!

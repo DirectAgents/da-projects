@@ -23,6 +23,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
                         dateRange.FromDate, dateRange.ToDate, advertiserId, offerId);
             foreach (var date in dateRange.Dates)
             {
+                Logger.Info($"Extracting EventConversions for {date.ToShortDateString()}.");
                 var singleDate = new DateRange(date, date.AddDays(1));
                 var eventConvs = CakeMarketingUtility.EventConversions(singleDate, advertiserId, offerId);
                 Add(eventConvs);

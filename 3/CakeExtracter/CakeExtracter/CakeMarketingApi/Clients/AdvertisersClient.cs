@@ -11,7 +11,7 @@ namespace CakeExtracter.CakeMarketingApi.Clients
 
         public AdvertiserExportResponse Advertisers(AdvertisersRequest request)
         {
-            var result = Execute<AdvertiserExportResponse>(request);
+            var result = TryGetResponse<AdvertiserExportResponse>(request);
             return result;
         }
     }

@@ -10,7 +10,7 @@ namespace CakeExtracter.CakeMarketingApi.Clients
 
         public AffiliateExportResponse Affiliates(AffiliatesRequest request)
         {
-            var result = Execute<AffiliateExportResponse>(request);
+            var result = TryGetResponse<AffiliateExportResponse>(request);
             return result;
         }
     }

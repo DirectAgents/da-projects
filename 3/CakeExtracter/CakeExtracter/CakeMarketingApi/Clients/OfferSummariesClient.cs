@@ -12,7 +12,7 @@ namespace CakeExtracter.CakeMarketingApi.Clients
 
         public OfferSummaryReportResponse OfferSummaries(OfferSummariesRequest request)
         {
-            var result = Execute<OfferSummaryReportResponse>(request);
+            var result = TryGetResponse<OfferSummaryReportResponse>(request);
             return result;
         }
     }
