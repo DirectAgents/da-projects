@@ -13,7 +13,11 @@ namespace DirectAgents.Web.Areas.Cake.Models
         public DateTime End { get; set; }
 
         public int NumOffers { get; set; }
-        public decimal Convs { get; set; }
-        public decimal Paid { get; set; }
+        public decimal CampSum_Convs { get; set; }
+        public decimal CampSum_Paid { get; set; }
+
+        public int EventConvs_Count { get; set; }
+        public DateTime? EventConvs_Earliest { get; set; }
+        public DateTime? EventConvs_Latest { get; set; }
     }
 }

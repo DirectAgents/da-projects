@@ -40,6 +40,7 @@ namespace DirectAgents.Web.Areas.Cake.Controllers
             daRepo.DeleteCampSums(campSums);
             return RedirectToAction("IndexGauge");
         }
+
         public ActionResult LoadCampSums(int id, bool justToday = false)
         {
             var today = DateTime.Today;
@@ -56,6 +57,7 @@ namespace DirectAgents.Web.Areas.Cake.Controllers
             daRepo.DeleteAffSubSummaries(affSubSums);
             return RedirectToAction("IndexGauge");
         }
+
         public ActionResult LoadAffSubSums(int id, bool justToday = false)
         {
             var today = DateTime.Today;
@@ -72,6 +74,7 @@ namespace DirectAgents.Web.Areas.Cake.Controllers
             daRepo.DeleteEventConversions(eventConvs);
             return RedirectToAction("IndexGauge");
         }
+
         public ActionResult LoadConvs(int id, bool justToday = false)
         {
             var today = DateTime.Today;
@@ -92,15 +95,23 @@ namespace DirectAgents.Web.Areas.Cake.Controllers
 
             var campSums = adv.Offers.AsQueryable().SelectMany(o => o.Camps).SelectMany(c => c.CampSums)
                 .Where(cs => cs.Date >= start.Value && cs.Date <= end.Value);
+            var eventConvs = daRepo.GetEventConversions(advertiserId: id, startDate: start, endDate: end);
+
             var model = new AdvertiserStatsVM
             {
                 Advertiser = adv,
                 Start = start.Value,
                 End = end.Value,
                 NumOffers = adv.Offers.Count(),
-                Convs = campSums.Sum(cs => (decimal?)cs.Conversions) ?? 0,
-                Paid = campSums.Sum(cs => (decimal?)cs.Paid) ?? 0,
+                CampSum_Convs = campSums.Sum(cs => (decimal?)cs.Conversions) ?? 0,
+                CampSum_Paid = campSums.Sum(cs => (decimal?)cs.Paid) ?? 0,
+                EventConvs_Count = eventConvs.Count(),
             };
+            if (model.EventConvs_Count > 0)
+            {
+                model.EventConvs_Earliest = eventConvs.Select(x => x.ConvDate).Min();
+                model.EventConvs_Latest = eventConvs.Select(x => x.ConvDate).Max();
+            }
             return View(model);
         }
 
@@ -109,16 +120,35 @@ namespace DirectAgents.Web.Areas.Cake.Controllers
             var campSums = daRepo.GetCampSums(advertiserId: id, startDate: start, endDate: end);
             daRepo.DeleteCampSums(campSums);
 
-            var url = Url.Action("ShowStats", new { id = id }) + "?start=" + start.ToShortDateString() + "&end=" + end.ToShortDateString();
-            return Redirect(url);
+            return Redirect(ShowStatsUrl(id, start, end));
         }
+
         public ActionResult LoadCampSumsCustom(int id, DateTime start, DateTime end)
         {
             DASynchCampSums.RunStatic(advertiserIds: id.ToString(), startDate: start, endDate: end);
 
-            var url = Url.Action("ShowStats", new { id = id }) + "?start=" + start.ToShortDateString() + "&end=" + end.ToShortDateString();
-            return Redirect(url);
+            return Redirect(ShowStatsUrl(id, start, end));
         }
 
+        public ActionResult ClearEventConvsCustom(int id, DateTime start, DateTime end)
+        {
+            var eventConvs = daRepo.GetEventConversions(advertiserId: id, startDate: start, endDate: end);
+            daRepo.DeleteEventConversions(eventConvs);
+
+            return Redirect(ShowStatsUrl(id, start, end));
+        }
+
+        public ActionResult LoadEventConvsCustom(int id, DateTime start, DateTime end)
+        {
+            DASynchCakeEventConversions.RunStatic(advertiserId: id, startDate: start, endDate: end);
+
+            return Redirect(ShowStatsUrl(id, start, end));
+        }
+
+        private string ShowStatsUrl(int id, DateTime start, DateTime end)
+        {
+            var url = Url.Action("ShowStats", new { id = id }) + "?start=" + start.ToShortDateString() + "&end=" + end.ToShortDateString();
+            return url;
+        }
     }
 }
