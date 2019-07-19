@@ -12,7 +12,7 @@ namespace CakeExtracter.CakeMarketingApi.Clients
 
         public SubIdSummaryResponse SubIdSummaries(SubIdSummariesRequest request)
         {
-            var result = Execute<SubIdSummaryResponse>(request);
+            var result = TryGetResponse<SubIdSummaryResponse>(request);
             return result;
         }
 

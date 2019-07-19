@@ -11,7 +11,7 @@ namespace CakeExtracter.CakeMarketingApi.Clients
 
         public CampaignSummaryResponse CampaignSummaries(CampaignSummariesRequest request)
         {
-            var result = Execute<CampaignSummaryResponse>(request);
+            var result = TryGetResponse<CampaignSummaryResponse>(request);
             return result;
         }
     }

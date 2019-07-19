@@ -11,7 +11,7 @@ namespace CakeExtracter.CakeMarketingApi.Clients
 
         public CreativeExportResponse Creatives(CreativesRequest request)
         {
-            var result = Execute<CreativeExportResponse>(request);
+            var result = TryGetResponse<CreativeExportResponse>(request);
             return result;
         }
     }

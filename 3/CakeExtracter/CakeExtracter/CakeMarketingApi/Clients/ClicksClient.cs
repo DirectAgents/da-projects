@@ -11,7 +11,7 @@ namespace CakeExtracter.CakeMarketingApi.Clients
 
         public ClickReportResponse Clicks(ClicksRequest request)
         {
-            var result = Execute<ClickReportResponse>(request);
+            var result = TryGetResponse<ClickReportResponse>(request);
             return result;
         }
     }
