@@ -6,7 +6,7 @@ using RestSharp.Deserializers;
 
 namespace CakeExtracter.CakeMarketingApi.Clients
 {
-    abstract public class ApiClient
+    public abstract class ApiClient
     {
         protected const string ApiKey = "FCjdYAcwQE";
         protected const string Domain = "login.directagents.com";
@@ -17,7 +17,7 @@ namespace CakeExtracter.CakeMarketingApi.Clients
 
         protected ApiClient(int version, string asmx, string operation)
         {
-            BaseUrl = "https://" + Domain + "/api/" + version + "/" + asmx + ".asmx/" + operation;
+            BaseUrl = $"https://{Domain}/api/{version}/{asmx}.asmx/{operation}";
             SetConfigurationValues();
         }
 
@@ -45,27 +45,21 @@ namespace CakeExtracter.CakeMarketingApi.Clients
             where T : new()
         {
             var restRequest = new RestRequest();
-            //restRequest.Timeout = 300000; // testing!
-
             restRequest.AddParameter("api_key", ApiKey);
-       
             apiRequest.AddParameters(restRequest);
 
             var restClient = new RestClient { BaseUrl = new Uri(BaseUrl) };
-
             if (deserializer != null)
             {
                 restClient.AddHandler("text/xml", deserializer);
             }
 
             var response = restClient.ExecuteAsGet<T>(restRequest, "GET");
-
             if (response.ErrorException != null)
             {
-                Logger.Error(response.ErrorException);
+                Logger.Warn(response.ErrorException.Message);
                 throw new ApplicationException("Error retrieving response.", response.ErrorException);
             }
-
             return response.Data;
         }
     }
