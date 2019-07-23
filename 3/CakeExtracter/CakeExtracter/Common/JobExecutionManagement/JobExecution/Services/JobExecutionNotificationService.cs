@@ -84,7 +84,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
             return jobRequestExecutionRepository.GetItemsWithIncludes(
                     item => item.ErrorEmailSent == false &&
                     item.Errors != null &&
-                    item.JobRequest.CommandName != FailedJobsNotifierCommand.CommandName, "JobRequest");
+                    item.JobRequest.CommandName != FailedJobsNotifierCommand.CommandName, nameof(JobRequestExecution.JobRequest));
         }
 
         private List<JobRequest> GetFailedParentJobsForNotifying()
