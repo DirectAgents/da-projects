@@ -128,11 +128,13 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
 
         private ErrorInJobNotificationModel PrepareErrorInJobNotificationModel(JobRequestExecution jobToNotify)
         {
+            var localExecutionStartTime = jobToNotify.StartTime?.ToLocalTime();
             return new ErrorInJobNotificationModel
             {
                 JobRequest = jobToNotify.JobRequest,
                 JobRequestExecution = jobToNotify,
-                ExecutionStartTime = jobToNotify.StartTime?.ToLocalTime().ToString(),
+                ExecutionStartTime = localExecutionStartTime?.ToString(),
+                ExecutionStartDate = localExecutionStartTime?.ToShortDateString(),
                 Errors = ExecutionLoggingUtils.GetJobExecutionLogDataFromMessageText(jobToNotify.Errors),
             };
         }

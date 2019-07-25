@@ -37,7 +37,7 @@ namespace CakeExtracter.Common.Email
 
         private SendGridMessage InitMessage<T>(string[] to, string[] copy, T model, string bodyTemplateName, string subjectTemplateName)
         {
-            var msg = new SendGridMessage()
+            var msg = new SendGridMessage
             {
                 From = new EmailAddress(GetEmailFromAddress()),
                 Subject = PrepareEmailTextContent(model, subjectTemplateName),
@@ -50,7 +50,7 @@ namespace CakeExtracter.Common.Email
 
         private string PrepareEmailTextContent<T>(T model, string templateName)
         {
-            var templateRelativePath = $"Email\\{templateName}.html";
+            var templateRelativePath = $"Email\\{templateName}.cshtml";
             var templateFileContent = FileUtils.GetFileContentByRelativePath(templateRelativePath);
             var result = Engine.Razor.RunCompile(templateFileContent, templateName, null, model);
             return result;
