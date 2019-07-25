@@ -50,7 +50,15 @@ namespace CakeExtracter.Tests.JobTests.Amazon.TestImplementations
         {
         }
 
+        public void UpdateItem(JobRequest itemToUpdate, params string[] ignoredPropertiesNames)
+        {
+        }
+
         public void UpdateItems(IEnumerable<JobRequest> itemsToUpdate)
+        {
+        }
+
+        public void UpdateItems(IEnumerable<JobRequest> itemsToUpdate, Action<EntityBulkOperation<JobRequest>> entityBulkOptionsAction)
         {
         }
 
