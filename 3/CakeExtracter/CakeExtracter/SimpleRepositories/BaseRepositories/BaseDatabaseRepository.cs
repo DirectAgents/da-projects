@@ -144,7 +144,7 @@ namespace CakeExtracter.SimpleRepositories.BaseRepositories
             SafeContextWrapper.TryMakeTransactionWithLock<TContext>(
                 dbContext => UpdateItems(dbContext, itemsToUpdate, entityBulkOptionsAction),
                 Locker,
-                $"Updating {typeof(T).Name} database items with ignored properties");
+                $"Updating {typeof(T).Name} database items.");
         }
 
         private T GetItem(TContext dbContext, params object[] keys)
