@@ -19,6 +19,7 @@ using Ninject;
 using Ninject.Web.Common;
 using Ninject.Web.Common.WebHost;
 using CakeExtracter.Common.Email;
+using CakeExtracter.Common.JobExecutionManagement.JobExecution.Repositories;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(DirectAgents.Web.App_Start.NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(DirectAgents.Web.App_Start.NinjectWebCommon), "Stop")]

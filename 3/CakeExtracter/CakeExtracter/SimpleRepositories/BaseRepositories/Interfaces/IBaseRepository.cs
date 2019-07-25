@@ -64,10 +64,24 @@ namespace CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces
         void UpdateItem(T itemToUpdate);
 
         /// <summary>
+        /// Updates a repository entity.
+        /// </summary>
+        /// <param name="itemToUpdate">The repository entity that was updated.</param>
+        /// <param name="ignoredPropertiesNames">The names of ignored properties.</param>
+        void UpdateItem(T itemToUpdate, params string[] ignoredPropertiesNames);
+
+        /// <summary>
         /// Updates repository entities.
         /// </summary>
         /// <param name="itemsToUpdate">The repository entities that was updated.</param>
         void UpdateItems(IEnumerable<T> itemsToUpdate);
+
+        /// <summary>
+        /// Updates repository entities.
+        /// </summary>
+        /// <param name="itemsToUpdate">The repository entities that was updated.</param>
+        /// <param name="entityBulkOptionsAction">The entity bulk options action.</param>
+        void UpdateItems(IEnumerable<T> itemsToUpdate, Action<EntityBulkOperation<T>> entityBulkOptionsAction);
 
         /// <summary>
         /// Merges the items. Uses Third party EF extensions library.

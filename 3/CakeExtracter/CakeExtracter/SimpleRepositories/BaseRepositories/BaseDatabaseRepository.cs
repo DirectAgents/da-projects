@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using CakeExtracter.Helpers;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
+using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 using Z.EntityFramework.Extensions;
 
 namespace CakeExtracter.SimpleRepositories.BaseRepositories
@@ -43,7 +44,8 @@ namespace CakeExtracter.SimpleRepositories.BaseRepositories
         public virtual bool MergeItems(IEnumerable<T> itemsToMerge, Action<EntityBulkOperation<T>> entityBulkOptionsAction)
         {
             return SafeContextWrapper.TryMakeTransactionWithLock<TContext>(
-                dbContext => MergeItems(dbContext, itemsToMerge, entityBulkOptionsAction), Locker,
+                dbContext => MergeItems(dbContext, itemsToMerge, entityBulkOptionsAction),
+                Locker,
                 $"Merging {typeof(T).Name} database items");
         }
 
@@ -51,7 +53,9 @@ namespace CakeExtracter.SimpleRepositories.BaseRepositories
         public T GetItem(int id)
         {
             T item = null;
-            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => item = GetItem(dbContext, id), Locker,
+            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(
+                dbContext => item = GetItem(dbContext, id),
+                Locker,
                 $"Getting {typeof(T).Name} database item");
             return item;
         }
@@ -60,7 +64,9 @@ namespace CakeExtracter.SimpleRepositories.BaseRepositories
         public T GetFirstItem(Func<T, bool> predicate)
         {
             T item = null;
-            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => item = GetFirstItem(dbContext, predicate), Locker,
+            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(
+                dbContext => item = GetFirstItem(dbContext, predicate),
+                Locker,
                 $"Getting first {typeof(T).Name} database item");
             return item;
         }
@@ -69,7 +75,9 @@ namespace CakeExtracter.SimpleRepositories.BaseRepositories
         public List<T> GetItems(Func<T, bool> predicate)
         {
             List<T> items = null;
-            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => items = GetItems(dbContext, predicate), Locker,
+            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(
+                dbContext => items = GetItems(dbContext, predicate),
+                Locker,
                 $"Getting {typeof(T).Name} database items");
             return items;
         }
@@ -78,7 +86,9 @@ namespace CakeExtracter.SimpleRepositories.BaseRepositories
         public List<T> GetItemsWithIncludes(Func<T, bool> predicate, string includeProperty)
         {
             List<T> items = null;
-            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => items = GetItemsWithInclude(dbContext, predicate, includeProperty), Locker,
+            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(
+                dbContext => items = GetItemsWithInclude(dbContext, predicate, includeProperty),
+                Locker,
                 $"Getting {typeof(T).Name} database items with includes");
             return items;
         }
@@ -86,29 +96,55 @@ namespace CakeExtracter.SimpleRepositories.BaseRepositories
         /// <inheritdoc />
         public void AddItem(T item)
         {
-            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => AddItem(dbContext, item), Locker,
+            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(
+                dbContext => AddItem(dbContext, item),
+                Locker,
                 $"Inserting {typeof(T).Name} database item.");
         }
 
         /// <inheritdoc />
         public void AddItems(IEnumerable<T> items)
         {
-            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => AddItems(dbContext, items), Locker,
+            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(
+                dbContext => AddItems(dbContext, items),
+                Locker,
                 $"Inserting {typeof(T).Name} database items.");
         }
 
         /// <inheritdoc />
         public void UpdateItem(T itemToUpdate)
         {
-            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => UpdateItem(dbContext, itemToUpdate), Locker,
+            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(
+                dbContext => UpdateItem(dbContext, itemToUpdate, null),
+                Locker,
                 $"Updating {typeof(T).Name} database item");
+        }
+
+        /// <inheritdoc />
+        public void UpdateItem(T itemToUpdate, params string[] ignoredPropertiesNames)
+        {
+            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(
+                dbContext => UpdateItem(dbContext, itemToUpdate, ignoredPropertiesNames),
+                Locker,
+                $"Updating {typeof(T).Name} database item with ignored properties");
         }
 
         /// <inheritdoc />
         public void UpdateItems(IEnumerable<T> itemsToUpdate)
         {
-            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => UpdateItems(dbContext, itemsToUpdate), Locker,
+            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(
+                dbContext => UpdateItems(dbContext, itemsToUpdate, null),
+                Locker,
                 $"Updating {typeof(T).Name} database items");
+        }
+
+        /// <inheritdoc />
+        public void UpdateItems(IEnumerable<T> itemsToUpdate, Action<EntityBulkOperation<T>> entityBulkOptionsAction)
+        {
+            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(
+                dbContext => UpdateItems(dbContext, itemsToUpdate, entityBulkOptionsAction),
+                Locker,
+                $"Updating {typeof(T).Name} database items with ignored properties");
         }
 
         private T GetItem(TContext dbContext, params object[] keys)
@@ -142,20 +178,34 @@ namespace CakeExtracter.SimpleRepositories.BaseRepositories
             dbContext.BulkInsert(items);
         }
 
-        private void UpdateItem(TContext dbContext, T itemToUpdate)
+        private void UpdateItem(TContext dbContext, T itemToUpdate, IEnumerable<string> ignoredPropertiesNames)
         {
             var itemKeys = GetKeys(itemToUpdate);
             var dbItem = GetItem(dbContext, itemKeys);
             dbContext.Entry(dbItem).CurrentValues.SetValues(itemToUpdate);
+            ignoredPropertiesNames?.ForEach(propName =>
+                dbContext.Entry(dbItem).Property(propName).IsModified = false);
             dbContext.SaveChanges();
         }
 
-        private void UpdateItems(TContext dbContext, IEnumerable<T> itemsToUpdate)
+        private void UpdateItems(
+            TContext dbContext,
+            IEnumerable<T> itemsToUpdate,
+            Action<EntityBulkOperation<T>> entityBulkOptionsAction)
         {
-            dbContext.BulkUpdate(itemsToUpdate);
+            if (entityBulkOptionsAction == null)
+            {
+                dbContext.BulkUpdate(itemsToUpdate);
+            }
+            else
+            {
+                dbContext.BulkUpdate(itemsToUpdate, entityBulkOptionsAction);
+            }
         }
 
-        private void MergeItems(TContext dbContext, IEnumerable<T> itemsToMerge,
+        private void MergeItems(
+            TContext dbContext,
+            IEnumerable<T> itemsToMerge,
             Action<EntityBulkOperation<T>> entityBulkOptionsAction)
         {
             if (entityBulkOptionsAction == null)

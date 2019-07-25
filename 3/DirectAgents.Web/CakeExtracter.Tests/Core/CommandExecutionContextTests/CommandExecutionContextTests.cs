@@ -127,7 +127,7 @@ namespace CakeExtracter.Tests.Core.CommandExecutionContextTests
             jobRequestsRepositoryMock.Verify(
                 mock => mock.UpdateItem(It.Is<JobRequest>(jr => jr.Status == JobRequestStatus.Completed)), Times.AtLeastOnce);
             jobRequestExecutionRepositoryMock.Verify(
-                mock => mock.UpdateItem(It.Is<JobRequestExecution>(j => j.Status == JobExecutionStatus.Completed)), Times.AtLeastOnce);
+                mock => mock.UpdateItem(It.Is<JobRequestExecution>(j => j.Status == JobExecutionStatus.Completed), It.IsAny<string[]>()), Times.AtLeastOnce);
         }
 
         [Test(Description = "Failing command. NoNeedToCreateRepeatRequests = true. Job Execution item set to Failed, Job Request item set to Failed.")]
@@ -149,7 +149,7 @@ namespace CakeExtracter.Tests.Core.CommandExecutionContextTests
             jobRequestsRepositoryMock.Verify(
                 mock => mock.UpdateItem(It.Is<JobRequest>(jr => jr.Status == JobRequestStatus.Failed)), Times.AtLeastOnce);
             jobRequestExecutionRepositoryMock.Verify(
-                mock => mock.UpdateItem(It.Is<JobRequestExecution>(j => j.Status == JobExecutionStatus.Failed)), Times.AtLeastOnce);
+                mock => mock.UpdateItem(It.Is<JobRequestExecution>(j => j.Status == JobExecutionStatus.Failed), It.IsAny<string[]>()), Times.AtLeastOnce);
         }
 
         [Test(Description = "Failing command. NoNeedToCreateRepeatRequests = false. Job Execution item set to Failed, Job Request item set Scheduled.")]
@@ -171,7 +171,7 @@ namespace CakeExtracter.Tests.Core.CommandExecutionContextTests
             jobRequestsRepositoryMock.Verify(
                 mock => mock.UpdateItem(It.Is<JobRequest>(jr => jr.Status == JobRequestStatus.Scheduled)), Times.AtLeastOnce);
             jobRequestExecutionRepositoryMock.Verify(
-                mock => mock.UpdateItem(It.Is<JobRequestExecution>(j => j.Status == JobExecutionStatus.Failed)), Times.AtLeastOnce);
+                mock => mock.UpdateItem(It.Is<JobRequestExecution>(j => j.Status == JobExecutionStatus.Failed), It.IsAny<string[]>()), Times.AtLeastOnce);
         }
 
         [Test(Description = "Command with retries differ with parent. NoNeedToCreateRepeatRequests = false. Job execution item to Completed. Job request item to PendingRetries. Retries created.")]
@@ -197,7 +197,7 @@ namespace CakeExtracter.Tests.Core.CommandExecutionContextTests
             jobRequestsRepositoryMock.Verify(
                 mock => mock.UpdateItem(It.Is<JobRequest>(jr => jr.Status == JobRequestStatus.PendingRetries)), Times.AtLeastOnce);
             jobRequestExecutionRepositoryMock.Verify(
-                mock => mock.UpdateItem(It.Is<JobRequestExecution>(j => j.Status == JobExecutionStatus.Completed)), Times.AtLeastOnce);
+                mock => mock.UpdateItem(It.Is<JobRequestExecution>(j => j.Status == JobExecutionStatus.Completed), It.IsAny<string[]>()), Times.AtLeastOnce);
         }
 
         [Test(Description = "Command with unique retries. NoNeedToCreateRepeatRequests = true. Job Execution item to Completed. Job request item to Failed. Don't creates Retries.")]
@@ -223,7 +223,7 @@ namespace CakeExtracter.Tests.Core.CommandExecutionContextTests
             jobRequestsRepositoryMock.Verify(
                 mock => mock.UpdateItem(It.Is<JobRequest>(jr => jr.Status == JobRequestStatus.Failed)), Times.AtLeastOnce);
             jobRequestExecutionRepositoryMock.Verify(
-                mock => mock.UpdateItem(It.Is<JobRequestExecution>(j => j.Status == JobExecutionStatus.Completed)), Times.AtLeastOnce);
+                mock => mock.UpdateItem(It.Is<JobRequestExecution>(j => j.Status == JobExecutionStatus.Completed), It.IsAny<string[]>()), Times.AtLeastOnce);
         }
 
         [Test(Description = "Command with retries equal to parent.NoNeedToCreateRepeatRequests = false. Job execution item to Completed. Job request item to Failed. Don't creates Retries.")]
@@ -247,7 +247,7 @@ namespace CakeExtracter.Tests.Core.CommandExecutionContextTests
             jobRequestsRepositoryMock.Verify(
                 mock => mock.UpdateItem(It.Is<JobRequest>(jr => jr.Status == JobRequestStatus.Scheduled)), Times.AtLeastOnce);
             jobRequestExecutionRepositoryMock.Verify(
-                mock => mock.UpdateItem(It.Is<JobRequestExecution>(j => j.Status == JobExecutionStatus.Completed)), Times.AtLeastOnce);
+                mock => mock.UpdateItem(It.Is<JobRequestExecution>(j => j.Status == JobExecutionStatus.Completed), It.IsAny<string[]>()), Times.AtLeastOnce);
         }
 
         [Test(Description = "Command with retries equal to parent created  NoNeedToCreateRepeatRequests = true execution sets job execution item to Completed and job request item to Failed state and don't creates Retries.")]
@@ -271,7 +271,7 @@ namespace CakeExtracter.Tests.Core.CommandExecutionContextTests
             jobRequestsRepositoryMock.Verify(
                 mock => mock.UpdateItem(It.Is<JobRequest>(jr => jr.Status == JobRequestStatus.Failed)), Times.AtLeastOnce);
             jobRequestExecutionRepositoryMock.Verify(
-                mock => mock.UpdateItem(It.Is<JobRequestExecution>(j => j.Status == JobExecutionStatus.Completed)), Times.AtLeastOnce);
+                mock => mock.UpdateItem(It.Is<JobRequestExecution>(j => j.Status == JobExecutionStatus.Completed), It.IsAny<string[]>()), Times.AtLeastOnce);
         }
     }
 }

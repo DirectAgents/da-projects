@@ -1,5 +1,6 @@
 ﻿using CakeExtracter.Common.Email;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution;
+using CakeExtracter.Common.JobExecutionManagement.JobExecution.Repositories;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers;

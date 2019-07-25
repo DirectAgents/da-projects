@@ -65,7 +65,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
             executionHistoryItem.EndTime = DateTime.UtcNow;
             lock (executionItemHistoryLockObject)
             {
-                jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
+                UpdateExecutionItem(executionHistoryItem);
             }
         }
 
@@ -80,7 +80,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
             executionHistoryItem.EndTime = DateTime.UtcNow;
             lock (executionItemHistoryLockObject)
             {
-                jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
+                UpdateExecutionItem(executionHistoryItem);
             }
         }
 
@@ -107,7 +107,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
                 executionHistoryItem.Errors = accountId.HasValue
                     ? ExecutionLoggingUtils.AddAccountMessageToLogData(executionHistoryItem.Errors, message, accountId.Value)
                     : ExecutionLoggingUtils.AddCommonMessageToLogData(executionHistoryItem.Errors, message);
-                jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
+                UpdateExecutionItem(executionHistoryItem);
             }
         }
 
@@ -125,7 +125,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
                 executionHistoryItem.Warnings = accountId.HasValue
                     ? ExecutionLoggingUtils.AddAccountMessageToLogData(executionHistoryItem.Warnings, message, accountId.Value)
                     : ExecutionLoggingUtils.AddCommonMessageToLogData(executionHistoryItem.Warnings, message);
-                jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
+                UpdateExecutionItem(executionHistoryItem);
             }
         }
 
@@ -143,7 +143,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
                 executionHistoryItem.CurrentState = accountId.HasValue
                     ? ExecutionLoggingUtils.SetSingleAccountMessageInLogData(executionHistoryItem.CurrentState, message, accountId.Value)
                     : ExecutionLoggingUtils.SetSingleCommonMessageInLogData(executionHistoryItem.CurrentState, message);
-                jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
+                UpdateExecutionItem(executionHistoryItem);
             }
         }
 
@@ -162,7 +162,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
                 executionHistoryItem.CurrentState = accountId.HasValue
                     ? ExecutionLoggingUtils.AddAccountMessageToLogData(executionHistoryItem.CurrentState, messageWithTimeStamp, accountId.Value)
                     : ExecutionLoggingUtils.AddCommonMessageToLogData(executionHistoryItem.CurrentState, messageWithTimeStamp);
-                jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
+                UpdateExecutionItem(executionHistoryItem);
             }
         }
 
@@ -172,13 +172,17 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
         /// <param name="itemIds">The item ids.</param>
         public void SetJobExecutionItemsAbortedState(int[] itemIds)
         {
-            if (itemIds != null && itemIds.Length >= 1)
+            if (itemIds == null || itemIds.Length < 1)
             {
-                var jobHistoryItemsToUpdate = jobExecutionHistoryRepository.GetItemsWithIncludes(item => itemIds.Contains(item.Id), "JobRequest").ToList();
-                var relatedJobRequestsToUpdate = jobHistoryItemsToUpdate.Select(item => item.JobRequest).ToList();
-                SetRelatedJobHistoryItemsAbortedStatus(jobHistoryItemsToUpdate);
-                SetRelatedJobRequestsAbortedStatus(relatedJobRequestsToUpdate);
+                return;
             }
+
+            var jobHistoryItemsToUpdate = jobExecutionHistoryRepository
+                .GetItemsWithIncludes(item => itemIds.Contains(item.Id), nameof(JobRequestExecution.JobRequest))
+                .ToList();
+            var relatedJobRequestsToUpdate = jobHistoryItemsToUpdate.Select(item => item.JobRequest).ToList();
+            SetRelatedJobHistoryItemsAbortedStatus(jobHistoryItemsToUpdate);
+            SetRelatedJobRequestsAbortedStatus(relatedJobRequestsToUpdate);
         }
 
         private void SetRelatedJobHistoryItemsAbortedStatus(List<JobRequestExecution> jobHistoryItems)
@@ -187,7 +191,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
             {
                 jobItem.Status = JobExecutionStatus.Aborted;
             });
-            jobExecutionHistoryRepository.UpdateItems(jobHistoryItems);
+            UpdateExecutionItems(jobHistoryItems);
         }
 
         private void SetRelatedJobRequestsAbortedStatus(List<JobRequest> jobItems)
@@ -197,6 +201,19 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
                 jobItem.Status = JobRequestStatus.Aborted;
             });
             jobRequestsRepository.UpdateItems(jobItems);
+        }
+
+        private void UpdateExecutionItem(JobRequestExecution jobExecutionItem)
+        {
+            jobExecutionHistoryRepository.UpdateItem(jobExecutionItem, nameof(JobRequestExecution.ErrorEmailSent));
+        }
+
+        private void UpdateExecutionItems(List<JobRequestExecution> jobExecutionItems)
+        {
+            jobExecutionHistoryRepository.UpdateItems(jobExecutionItems, options =>
+            {
+                options.IgnoreOnUpdateExpression = execution => execution.ErrorEmailSent;
+            });
         }
     }
 }

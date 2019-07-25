@@ -23,7 +23,16 @@ namespace CakeExtracter.Tests.JobTests.Amazon.TestImplementations
         {
         }
 
+        public void UpdateItem(JobRequestExecution itemToUpdate, params string[] ignoredPropertiesNames)
+        {
+        }
+
         public void UpdateItems(IEnumerable<JobRequestExecution> itemsToUpdate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateItems(IEnumerable<JobRequestExecution> itemsToUpdate, Action<EntityBulkOperation<JobRequestExecution>> entityBulkOptionsAction)
         {
             throw new NotImplementedException();
         }
