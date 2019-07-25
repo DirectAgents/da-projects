@@ -23,7 +23,9 @@ namespace CommissionJunction.Utilities
     {
         private const string GraphQlApiUrl = "https://commissions.api.cj.com/query";
         private const string DateFormat = "yyyy-MM-ddTHH:mm:ssZ"; // The API expects ISO 8601 datetime
-        private const int MaxDaysNumberForSingleReport = 31;
+
+        // 31 days according to the documentation, but the API has problems with returning the complete data set for this interval. Change if fixed.
+        private const int MaxDaysNumberForSingleReport = 1;
         private const int MaxConcurrentConnectionsNumber = 120;
 
         private const string AuthorizationHeader = "Authorization";
