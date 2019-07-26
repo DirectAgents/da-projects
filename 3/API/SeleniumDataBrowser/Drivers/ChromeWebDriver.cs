@@ -8,7 +8,7 @@ namespace SeleniumDataBrowser.Drivers
     /// </summary>
     internal class ChromeWebDriver : ChromeDriver
     {
-        /// <inheritdoc cref="ChromeDriver"/>/>
+        /// <inheritdoc cref="ChromeDriver"/>
         /// <summary>
         /// Initializes a new instance of the <see cref="ChromeWebDriver" /> class.
         /// </summary>
