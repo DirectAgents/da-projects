@@ -8,25 +8,24 @@ using SeleniumDataBrowser.Helpers;
 
 namespace SeleniumDataBrowser.PageActions
 {
+    /// <inheritdoc />
     /// <summary>
     /// Basic class for managing actions with web-pages.
     /// </summary>
-    public class ActionsWithPagesManager
+    public class ActionsWithPagesManager : IDisposable
     {
-        /// <summary>
-        /// Logger for logging actions. Can be modified externally.
-        /// </summary>
-        public SeleniumLogger Logger;
+        // Timeout that web driver will wait for web-elements (configurable).
+        private readonly TimeSpan timeout;
 
         /// <summary>
-        /// Selenium web-driver.
+        /// Gets or sets logger for logging actions. Can be modified externally.
         /// </summary>
-        protected readonly IWebDriver Driver;
+        public SeleniumLogger Logger { get; set; }
 
         /// <summary>
-        /// Timeout that web driver will wait for web-elements (configurable).
+        /// Gets or sets Selenium web-driver.
         /// </summary>
-        protected readonly TimeSpan Timeout;
+        protected IWebDriver Driver { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActionsWithPagesManager"/> class.
@@ -37,7 +36,7 @@ namespace SeleniumDataBrowser.PageActions
         public ActionsWithPagesManager(IWebDriver driver, int timeoutMinutes, SeleniumLogger logger)
         {
             Driver = driver;
-            Timeout = TimeSpan.FromMinutes(timeoutMinutes);
+            timeout = TimeSpan.FromMinutes(timeoutMinutes);
             Logger = logger;
         }
 
@@ -47,7 +46,14 @@ namespace SeleniumDataBrowser.PageActions
         /// </summary>
         ~ActionsWithPagesManager()
         {
-            CloseWebDriver();
+            Dispose(false);
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -240,7 +246,7 @@ namespace SeleniumDataBrowser.PageActions
         {
             try
             {
-                var wait = new WebDriverWait(Driver, Timeout);
+                var wait = new WebDriverWait(Driver, timeout);
                 wait.Until(driver => IsElementClickable(element));
             }
             catch (Exception e)
@@ -258,7 +264,7 @@ namespace SeleniumDataBrowser.PageActions
         {
             try
             {
-                var wait = new WebDriverWait(Driver, Timeout);
+                var wait = new WebDriverWait(Driver, timeout);
                 wait.Until(driver => IsElementPresent(loaderElement));
                 if (isElementExistInDOM)
                 {
@@ -273,11 +279,6 @@ namespace SeleniumDataBrowser.PageActions
             {
                 throw new Exception($"Could not wait the loader [{loaderElement}]: {e.Message}", e);
             }
-        }
-
-        private void CloseWebDriver()
-        {
-            Driver.Quit();
         }
 
         private bool IsElementVisible(By byElement)
@@ -309,6 +310,20 @@ namespace SeleniumDataBrowser.PageActions
             {
                 return false;
             }
+        }
+
+        private void Dispose(bool disposing)
+        {
+            ReleaseUnmanagedResources();
+            if (disposing)
+            {
+                Driver?.Dispose();
+            }
+        }
+
+        private void ReleaseUnmanagedResources()
+        {
+            Driver?.Quit();
         }
     }
 }
