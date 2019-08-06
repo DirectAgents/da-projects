@@ -1,18 +1,17 @@
-﻿using Amazon;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Amazon;
 using Amazon.Entities;
 using Amazon.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors
+namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
 {
     /// <summary>
     /// Amazon campaign metadata extractor
     /// </summary>
     public class AmazonCampaignMetadataExtractor
     {
-        protected readonly AmazonUtility amazonUtility;
+        protected readonly AmazonUtility AmazonUtility;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AmazonCampaignMetadataExtractor"/> class.
@@ -20,7 +19,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         /// <param name="amazonUtility">The amazon utility.</param>
         public AmazonCampaignMetadataExtractor(AmazonUtility amazonUtility)
         {
-            this.amazonUtility = amazonUtility;
+            AmazonUtility = amazonUtility;
         }
 
         /// <summary>
@@ -37,8 +36,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
 
         private IEnumerable<AmazonCampaign> LoadCampaignsFromAmazonApi(string accountExternalId)
         {
-            var spCampaigns = amazonUtility.GetCampaigns(CampaignType.SponsoredProducts, accountExternalId);
-            var sbCampaigns = amazonUtility.GetCampaigns(CampaignType.SponsoredBrands, accountExternalId);
+            var spCampaigns = AmazonUtility.GetCampaigns(CampaignType.SponsoredProducts, accountExternalId);
+            var sbCampaigns = AmazonUtility.GetCampaigns(CampaignType.SponsoredBrands, accountExternalId);
             var campaigns = spCampaigns.Concat(sbCampaigns);
             return campaigns.ToList();
         }

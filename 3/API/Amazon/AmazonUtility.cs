@@ -388,7 +388,23 @@ namespace Amazon
             return GetReportInfoManyTimes<AmazonTargetKeywordDailySummary>(EntitesType.TargetKeywords, campaignType, param, profileId);
         }
 
-        /// Only for Sponsored Product
+        // Only for Sponsored Product
+        public virtual List<AmazonSearchTermDailySummary> ReportSearchTerms(DateTime date, string profileId, bool includeCampaignName)
+        {
+            const CampaignType campaignType = CampaignType.SponsoredProducts;
+            var param = AmazonApiHelper.CreateReportParams(EntitesType.SearchTerm, campaignType, date, includeCampaignName);
+            return GetReportInfoManyTimes<AmazonSearchTermDailySummary>(EntitesType.SearchTerm, campaignType, param, profileId);
+        }
+
+        // Only for Sponsored Product
+        public virtual List<AmazonTargetSearchTermDailySummary> ReportTargetSearchTerms(DateTime date, string profileId, bool includeCampaignName)
+        {
+            const CampaignType campaignType = CampaignType.SponsoredProducts;
+            var param = AmazonApiHelper.CreateReportParams(EntitesType.TargetSearchTerm, campaignType, date, includeCampaignName);
+            return GetReportInfoManyTimes<AmazonTargetSearchTermDailySummary>(EntitesType.TargetSearchTerm, campaignType, param, profileId);
+        }
+
+        // Only for Sponsored Product
         public List<AmazonAsinSummaries> ReportAsins(DateTime date, string profileId)
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;

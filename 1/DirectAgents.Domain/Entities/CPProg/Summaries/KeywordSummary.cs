@@ -8,6 +8,7 @@ namespace DirectAgents.Domain.Entities.CPProg
     public class KeywordSummary : DatedStatsSummaryWithRev
     {
         public int KeywordId { get; set; }
+
         public virtual Keyword Keyword { get; set; }
 
         public virtual List<KeywordSummaryMetric> Metrics { get; set; }

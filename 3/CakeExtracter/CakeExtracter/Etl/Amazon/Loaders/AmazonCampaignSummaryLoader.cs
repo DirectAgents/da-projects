@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CakeExtracter.Etl.Amazon.Exceptions;
 using CakeExtracter.Helpers;
 using CakeExtracter.Logging.TimeWatchers;
+using CakeExtracter.Logging.TimeWatchers.Amazon;
 using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
@@ -31,7 +32,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
         /// <value>
         /// The name of the level.
         /// </value>
-        protected override string LevelName => AmazonJobLevels.strategy;
+        protected override string LevelName => AmazonJobLevels.Strategy;
 
         /// <summary>
         /// Gets the locker object for multithreading operations.

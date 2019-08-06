@@ -64,7 +64,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
                 () => { EnsureRelatedItems(items); },
                 accountId,
                 LevelName,
-                AmazonJobOperations.ensureRelatedEntities);
+                AmazonJobOperations.EnsureRelatedEntities);
             UpsertSummaryItems(items);
             var summaryMetricItems = GetSummaryMetricsToInsert(items);
             UpsertSummaryMetricItems(summaryMetricItems);
@@ -125,7 +125,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
                 {
                     summaryMetricsItemsLoader.UpsertSummaryMetrics(items);
                 });
-            }, accountId, LevelName, AmazonJobOperations.loadSummaryMetricItemsData);
+            }, accountId, LevelName, AmazonJobOperations.LoadSummaryMetricItemsData);
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
             {
                 SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) => db.BulkInsert(items), LockerObject, "BulkInsert");
-            }, accountId, LevelName, AmazonJobOperations.loadSummaryItemsData);
+            }, accountId, LevelName, AmazonJobOperations.LoadSummaryItemsData);
         }
 
         private List<SummaryMetric> GetSummaryMetricsToInsert(List<TSummaryLevelEntity> summaries)

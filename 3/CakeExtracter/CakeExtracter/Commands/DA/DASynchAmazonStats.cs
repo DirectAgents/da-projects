@@ -11,12 +11,11 @@ using CakeExtracter.Common.JobExecutionManagement.JobRequests.Exceptions;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Etl;
 using CakeExtracter.Etl.Amazon.Exceptions;
+using CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors;
 using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors;
-using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders.AnalyticTablesSync;
 using CakeExtracter.Helpers;
-using CakeExtracter.Logging.TimeWatchers;
 using CakeExtracter.Logging.TimeWatchers.Amazon;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Entities.CPProg;
@@ -103,6 +102,11 @@ namespace CakeExtracter.Commands
                     {
                         DoETL_DailyFromKeywordsDatabaseData(dateRange, account); // need to update keywords stats first
                     }
+
+                    if (statsType.SearchTerm && !statsType.All)
+                    {
+                        DoETL_SearchTerm(dateRange, account, amazonUtility); // need to update keywords stats first
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -169,7 +173,7 @@ namespace CakeExtracter.Commands
                     {
                         var amazonAmsSyncher = new AmazonAmsAnalyticSyncher();
                         amazonAmsSyncher.SyncAsinLevelForAccount(accountId);
-                    }, accountId, AmazonJobLevels.creative, AmazonJobOperations.syncToAnalyticTables);
+                    }, accountId, AmazonJobLevels.Creative, AmazonJobOperations.SyncToAnalyticTables);
             }
             catch (Exception ex)
             {
@@ -197,18 +201,18 @@ namespace CakeExtracter.Commands
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
                 () =>
                 {
-                    var extractor = DIKernel.Get<AmazonDatabaseKeywordsToDailySummaryExtracter>(("dateRange", dateRange), ("accountId", account.Id));
+                    var extractor = DIKernel.Get<AmazonDatabaseKeywordsToDailySummaryExtractor>(("dateRange", dateRange), ("accountId", account.Id));
                     var loader = DIKernel.Get<BaseAmazonLevelLoader<DailySummary, DailySummaryMetric>>(("accountId", account.Id));
                     extractor.ProcessFailedExtraction += exception =>
                         ScheduleNewCommandLaunch<DASynchAmazonStats>(command =>
                             UpdateCommandParameters(command, exception));
-                    InitCommonEtlEvents<DailySummary, DailySummaryMetric, AmazonDatabaseKeywordsToDailySummaryExtracter,
+                    InitCommonEtlEvents<DailySummary, DailySummaryMetric, AmazonDatabaseKeywordsToDailySummaryExtractor,
                         BaseAmazonLevelLoader<DailySummary, DailySummaryMetric>>(extractor, loader);
                     CommandHelper.DoEtl(extractor, loader);
                 },
                 account.Id,
-                AmazonJobLevels.account,
-                AmazonJobOperations.total);
+                AmazonJobLevels.Account,
+                AmazonJobOperations.Total);
         }
 
         private void DoETL_Creative(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
@@ -216,21 +220,21 @@ namespace CakeExtracter.Commands
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
                 () =>
                 {
-                    var extractor = DIKernel.Get<AmazonApiAdExtrator>(
+                    var extractor = DIKernel.Get<AmazonApiAdExtractor>(
                         ("amazonUtility", amazonUtility),
                         ("dateRange", dateRange),
                         ("account", account),
                         ("campaignFilter", account.Filter),
                         ("campaignFilterOut", null));
                     var loader = DIKernel.Get<BaseAmazonLevelLoader<TDadSummary, TDadSummaryMetric>>(("accountId", account.Id));
-                    InitEtlEvents<TDadSummary, TDadSummaryMetric, AmazonApiAdExtrator, BaseAmazonLevelLoader<TDadSummary, TDadSummaryMetric>>(
+                    InitEtlEvents<TDadSummary, TDadSummaryMetric, AmazonApiAdExtractor, BaseAmazonLevelLoader<TDadSummary, TDadSummaryMetric>>(
                         extractor, loader);
                     CommandHelper.DoEtl(extractor, loader);
-                    SynchAsinAnalyticTables(account.Id);
+                    //SynchAsinAnalyticTables(account.Id);
                 },
                 account.Id,
-                AmazonJobLevels.creative,
-                AmazonJobOperations.total);
+                AmazonJobLevels.Creative,
+                AmazonJobOperations.Total);
         }
 
         private void DoETL_Keyword(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
@@ -249,8 +253,29 @@ namespace CakeExtracter.Commands
                     CommandHelper.DoEtl(extractor, loader);
                 },
                 account.Id,
-                AmazonJobLevels.keyword,
-                AmazonJobOperations.total);
+                AmazonJobLevels.Keyword,
+                AmazonJobOperations.Total);
+        }
+
+        private void DoETL_SearchTerm(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
+        {
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
+                () =>
+                {
+                    var extractor = DIKernel.Get<AmazonApiSearchTermExtractor>(
+                        ("amazonUtility", amazonUtility),
+                        ("dateRange", dateRange),
+                        ("account", account),
+                        ("campaignFilter", account.Filter),
+                        ("campaignFilterOut", null));
+                    var loader = DIKernel.Get<BaseAmazonLevelLoader<SearchTermSummary, SearchTermSummaryMetric>>(("accountId", account.Id));
+                    InitEtlEvents<SearchTermSummary, SearchTermSummaryMetric, AmazonApiSearchTermExtractor,
+                        BaseAmazonLevelLoader<SearchTermSummary, SearchTermSummaryMetric>>(extractor, loader);
+                    CommandHelper.DoEtl(extractor, loader);
+                },
+                account.Id,
+                AmazonJobLevels.SearchTerm,
+                AmazonJobOperations.Total);
         }
 
         private void InitEtlEvents<TSummary, TSummaryMetric, TExtractor, TLoader>(TExtractor extractor, TLoader loader)
@@ -293,6 +318,7 @@ namespace CakeExtracter.Commands
                 Keyword = exception.ByKeyword,
                 Daily = exception.ByDaily,
                 Strategy = exception.ByCampaign,
+                SearchTerm = exception.BySearchTerm,
             };
             command.StatsType = statsType.GetStatsTypeString();
         }

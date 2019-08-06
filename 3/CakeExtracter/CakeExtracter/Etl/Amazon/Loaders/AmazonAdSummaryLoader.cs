@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CakeExtracter.Etl.Amazon.Exceptions;
 using CakeExtracter.Helpers;
 using CakeExtracter.Logging.TimeWatchers;
+using CakeExtracter.Logging.TimeWatchers.Amazon;
 using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
@@ -21,7 +22,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
             summaryItemsLoader = new TDadSummaryLoader(accountId);
         }
 
-        protected override string LevelName => AmazonJobLevels.creative;
+        protected override string LevelName => AmazonJobLevels.Creative;
 
         protected override object LockerObject => SafeContextWrapper.AdLocker;
 
