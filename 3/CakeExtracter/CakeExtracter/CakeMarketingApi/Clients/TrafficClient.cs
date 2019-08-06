@@ -11,7 +11,7 @@ namespace CakeExtracter.CakeMarketingApi.Clients
 
         public ArrayOfTraffic Traffic(TrafficRequest request)
         {
-            var result = Execute<ArrayOfTraffic>(request);
+            var result = TryGetResponse<ArrayOfTraffic>(request);
             return result;
         }
     }

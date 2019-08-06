@@ -205,16 +205,19 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Email\JobErrorOccuredBody.html">
+    <Content Include="..\DirectAgents.Web\packages\Selenium.Chrome.WebDriver.75.0.0\driver\chromedriver.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Email\JobErrorOccuredSubject.html">
+    <Content Include="Email\JobErrorOccuredBody.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Email\JobFailedBody.html">
+    <Content Include="Email\JobErrorOccuredSubject.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Email\JobFailedSubject.html">
+    <Content Include="Email\JobFailedBody.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Email\JobFailedSubject.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="SQL\AMS\CreateAsinAnalyticTable.sql">

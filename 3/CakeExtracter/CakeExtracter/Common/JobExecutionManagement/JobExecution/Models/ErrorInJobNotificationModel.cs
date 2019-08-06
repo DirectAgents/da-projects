@@ -32,6 +32,14 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Models
         public string ExecutionStartTime { get; set; }
 
         /// <summary>
+        /// Gets or sets the execution start date.
+        /// </summary>
+        /// <value>
+        /// The execution start date.
+        /// </value>
+        public string ExecutionStartDate { get; set; }
+
+        /// <summary>
         /// Gets or sets the errors.
         /// </summary>
         /// <value>

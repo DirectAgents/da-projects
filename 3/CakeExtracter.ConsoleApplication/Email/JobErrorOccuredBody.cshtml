@@ -1,4 +1,8 @@
-﻿<h1>Error Occurred while job execution. </h1>
+﻿@{
+    var pageLink = "http://dagents.eastus.cloudapp.azure.com/Admin/JobsExecution?starttime=" + @Model.ExecutionStartDate + "&commandname=" + @Model.JobRequest.CommandName;
+}
+
+<h1>Error Occurred while job execution. </h1>
 
 <div><b>Command name: </b>@Model.JobRequest.CommandName</div>
 <div><b>Command arguments: </b>@Model.JobRequest.CommandExecutionArguments</div>
@@ -34,5 +38,5 @@
 
 <div>
     This notification doesn't mean that fetched data is incorrect. Data can be fixed by the retry mechanism that will be started after job completion.
-    See more on the <a href="http://dagents.eastus.cloudapp.azure.com/Admin/JobsExecution">Job Execution history page</a>. If retry mechanism will not help you receive Job Failure Notification.
+    See more on the <a href="@pageLink">Job Execution history page</a>. If retry mechanism will not help you receive Job Failure Notification.
 </div>

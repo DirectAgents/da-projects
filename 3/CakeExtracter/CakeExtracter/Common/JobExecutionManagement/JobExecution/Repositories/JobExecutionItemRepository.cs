@@ -6,7 +6,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Repositories
 {
     /// <inheritdoc />
     /// <summary>
-    /// Job Execution Item Repository
+    /// Job Execution Item Repository.
     /// </summary>
     /// <seealso cref="T:CakeExtracter.SimpleRepositories.BaseRepositories.BaseDatabaseRepository`2" />
     public class JobExecutionItemRepository : BaseDatabaseRepository<JobRequestExecution, ClientPortalProgContext>
