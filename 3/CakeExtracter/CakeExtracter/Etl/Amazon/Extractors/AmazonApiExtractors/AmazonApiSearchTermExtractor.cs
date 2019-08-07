@@ -15,12 +15,16 @@ using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
 {
+    /// <summary>
+    /// API extractor for the Search term level.
+    /// </summary>
     internal class AmazonApiSearchTermExtractor : BaseAmazonExtractor<SearchTermSummary>
     {
         private readonly AmazonCampaignMetadataExtractor campaignMetadataExtractor;
 
+        /// <inheritdoc cref="BaseAmazonExtractor{SearchTermSummary}"/>
         /// <summary>
-        /// Initializes a new instance of the <see cref="AmazonApiSearchTermExtractor"/> class.
+        /// Initializes a new instance of the <see cref="AmazonApiSearchTermExtractor" /> class.
         /// </summary>
         /// <param name="amazonUtility">The amazon utility.</param>
         /// <param name="dateRange">Extraction date range.</param>
@@ -38,6 +42,10 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
             campaignMetadataExtractor = new AmazonCampaignMetadataExtractor(amazonUtility);
         }
 
+        /// <summary>
+        /// Removing old data before insert fresh data.
+        /// </summary>
+        /// <param name="date">Date for removing.</param>
         public virtual void RemoveOldData(DateTime date)
         {
             Logger.Info(accountId, "The cleaning of SearchTermSummaries for account ({0}) has begun - {1}.", accountId, date);
@@ -59,6 +67,10 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
             Logger.Info(accountId, "The cleaning of SearchTermSummaries for account ({0}) is over - {1}.", accountId, date);
         }
 
+        /// <inheritdoc/>
+        /// <summary>
+        /// Extracting data of the Search term level from API.
+        /// </summary>
         protected override void Extract()
         {
             Logger.Info(

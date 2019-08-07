@@ -16,8 +16,9 @@ namespace CakeExtracter.Etl.Amazon.Loaders
     {
         private readonly SearchTermSummaryLoader summaryLoader;
 
+        /// <inheritdoc cref="BaseAmazonLevelLoader{SearchTermSummary, SearchTermSummaryMetric}"/>
         /// <summary>
-        /// Initializes a new instance of the <see cref="AmazonSearchTermSummaryLoader"/> class.
+        /// Initializes a new instance of the <see cref="AmazonSearchTermSummaryLoader" /> class.
         /// </summary>
         /// <param name="accountId">The account identifier.</param>
         public AmazonSearchTermSummaryLoader(int accountId)
@@ -26,6 +27,7 @@ namespace CakeExtracter.Etl.Amazon.Loaders
             summaryLoader = new SearchTermSummaryLoader(accountId);
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Gets the name of amazon job information level.
         /// </summary>
@@ -34,6 +36,7 @@ namespace CakeExtracter.Etl.Amazon.Loaders
         /// </value>
         protected override string LevelName => AmazonJobLevels.SearchTerm;
 
+        /// <inheritdoc />
         /// <summary>
         /// Gets the locker object for multithreading operations.
         /// </summary>
@@ -42,6 +45,7 @@ namespace CakeExtracter.Etl.Amazon.Loaders
         /// </value>
         protected override object LockerObject => SafeContextWrapper.SearchTermLocker;
 
+        /// <inheritdoc />
         /// <summary>
         /// Ensures the related items.
         /// </summary>
@@ -56,6 +60,7 @@ namespace CakeExtracter.Etl.Amazon.Loaders
             summaryLoader.AssignSearchTermIdToItems(searchTermItems);
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Sets the summary metric entity identifier.
         /// </summary>
@@ -66,6 +71,12 @@ namespace CakeExtracter.Etl.Amazon.Loaders
             summaryMetric.EntityId = summary.SearchTermId;
         }
 
+        /// <summary>
+        /// Gets exception with additional info about process for relaunch mechanism.
+        /// </summary>
+        /// <param name="e">Base exception.</param>
+        /// <param name="items">List of stats items.</param>
+        /// <returns>Exception with additional info about process for relaunch mechanism.</returns>
         protected override FailedStatsLoadingException GetFailedStatsLoadingException(Exception e, List<SearchTermSummary> items)
         {
             var exception = base.GetFailedStatsLoadingException(e, items);
