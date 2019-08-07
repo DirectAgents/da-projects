@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using CakeExtracter.Etl.Amazon.Exceptions;
+using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using CakeExtracter.Helpers;
 using CakeExtracter.Logging.TimeWatchers.Amazon;
 using DirectAgents.Domain.Entities.CPProg;
 
-namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
+namespace CakeExtracter.Etl.Amazon.Loaders
 {
     /// <inheritdoc />
     /// <summary>
     /// Summary loader for amazon Keyword level.
     /// </summary>
-    /// <seealso cref="T:CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders.BaseAmazonLevelLoader`2" />
     public class AmazonKeywordSummaryLoader : BaseAmazonLevelLoader<KeywordSummary, KeywordSummaryMetric>
     {
         private readonly KeywordSummaryLoader summaryLoader;
 
+        /// <inheritdoc cref="BaseAmazonLevelLoader{KeywordSummary, KeywordSummaryMetric}" />
         /// <summary>
         /// Initializes a new instance of the <see cref="AmazonKeywordSummaryLoader" /> class.
         /// </summary>

@@ -1,26 +1,25 @@
 ﻿using System;
-using CakeExtracter.Helpers;
-using CakeExtracter.Logging.TimeWatchers;
-using CakeExtracter.Logging.TimeWatchers.Amazon;
-using DirectAgents.Domain.Contexts;
-using DirectAgents.Domain.Entities.CPProg;
 using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Etl.Amazon.Exceptions;
+using CakeExtracter.Helpers;
+using CakeExtracter.Logging.TimeWatchers.Amazon;
+using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Entities.CPProg;
 
-namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
+namespace CakeExtracter.Etl.Amazon.Loaders
 {
     /// <summary>
     /// Base amazon level loader. Contains common for all amazon level loaders operations.
     /// </summary>
     /// <typeparam name="TSummaryLevelEntity">The type of the summary level entity.</typeparam>
     /// <typeparam name="TSummaryMetricLevelEntity">The type of the summary metric level entity.</typeparam>
-    /// <seealso cref="CakeExtracter.Etl.Loader{TSummaryLevelEntity}" />
+    /// <seealso cref="Etl.Loader{TSummaryLevelEntity}" />
     public abstract class BaseAmazonLevelLoader<TSummaryLevelEntity, TSummaryMetricLevelEntity> : Loader<TSummaryLevelEntity>
         where TSummaryLevelEntity : DatedStatsSummary
         where TSummaryMetricLevelEntity : SummaryMetric, new()
     {
-        private const int loadingBatchesSize = 500;
+        private const int LoadingBatchesSize = 500;
 
         private readonly AmazonSummaryMetricLoader<TSummaryMetricLevelEntity> summaryMetricsItemsLoader;
 
@@ -53,7 +52,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
         /// </summary>
         /// <param name="accountId">The account identifier.</param>
         protected BaseAmazonLevelLoader(int accountId)
-            : base(accountId, loadingBatchesSize)
+            : base(accountId, LoadingBatchesSize)
         {
             summaryMetricsItemsLoader = new AmazonSummaryMetricLoader<TSummaryMetricLevelEntity>();
         }
@@ -74,7 +73,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
         /// Loads the specified metrics and related summary metric items.
         /// </summary>
         /// <param name="items">The items.</param>
-        /// <returns></returns>
+        /// <returns>Count of items.</returns>
         protected override int Load(List<TSummaryLevelEntity> items)
         {
             try
@@ -119,13 +118,16 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
         /// <param name="items">The items.</param>
         protected void UpsertSummaryMetricItems(List<SummaryMetric> items)
         {
-            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
-            {
-                SafeContextWrapper.Lock(LockerObject, () =>
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
+                () =>
                 {
-                    summaryMetricsItemsLoader.UpsertSummaryMetrics(items);
-                });
-            }, accountId, LevelName, AmazonJobOperations.LoadSummaryMetricItemsData);
+                    SafeContextWrapper.Lock(
+                        LockerObject,
+                        () => { summaryMetricsItemsLoader.UpsertSummaryMetrics(items); });
+                },
+                accountId,
+                LevelName,
+                AmazonJobOperations.LoadSummaryMetricItemsData);
         }
 
         /// <summary>
@@ -134,10 +136,17 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
         /// <param name="items">The items.</param>
         protected void UpsertSummaryItems(List<TSummaryLevelEntity> items)
         {
-            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
-            {
-                SafeContextWrapper.TryMakeTransactionWithLock((ClientPortalProgContext db) => db.BulkInsert(items), LockerObject, "BulkInsert");
-            }, accountId, LevelName, AmazonJobOperations.LoadSummaryItemsData);
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
+                () =>
+                {
+                    SafeContextWrapper.TryMakeTransactionWithLock(
+                        (ClientPortalProgContext db) => db.BulkInsert(items),
+                        LockerObject,
+                        "BulkInsert");
+                },
+                accountId,
+                LevelName,
+                AmazonJobOperations.LoadSummaryItemsData);
         }
 
         private List<SummaryMetric> GetSummaryMetricsToInsert(List<TSummaryLevelEntity> summaries)

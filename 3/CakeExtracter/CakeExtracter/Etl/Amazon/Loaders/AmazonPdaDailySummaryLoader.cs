@@ -3,7 +3,7 @@ using CakeExtracter.Etl.TradingDesk.LoadersDA.Adders;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.Interfaces;
 using DirectAgents.Domain.Entities.CPProg;
 
-namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
+namespace CakeExtracter.Etl.Amazon.Loaders
 {
     public class AmazonPdaDailySummaryLoader : Loader<DailySummary>
     {

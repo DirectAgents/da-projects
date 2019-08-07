@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using CakeExtracter.Etl.Amazon.Exceptions;
+using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using CakeExtracter.Helpers;
-using CakeExtracter.Logging.TimeWatchers;
 using CakeExtracter.Logging.TimeWatchers.Amazon;
 using DirectAgents.Domain.Entities.CPProg;
 
-namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
+namespace CakeExtracter.Etl.Amazon.Loaders
 {
     /// <summary>
     /// Summary loader for amazon AD level.

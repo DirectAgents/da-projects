@@ -12,9 +12,9 @@ using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Etl;
 using CakeExtracter.Etl.Amazon.Exceptions;
 using CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors;
+using CakeExtracter.Etl.Amazon.Loaders;
+using CakeExtracter.Etl.Amazon.Loaders.AnalyticTablesSync;
 using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors;
-using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
-using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders.AnalyticTablesSync;
 using CakeExtracter.Helpers;
 using CakeExtracter.Logging.TimeWatchers.Amazon;
 using DirectAgents.Domain.Abstract;
@@ -230,7 +230,7 @@ namespace CakeExtracter.Commands
                     InitEtlEvents<TDadSummary, TDadSummaryMetric, AmazonApiAdExtractor, BaseAmazonLevelLoader<TDadSummary, TDadSummaryMetric>>(
                         extractor, loader);
                     CommandHelper.DoEtl(extractor, loader);
-                    //SynchAsinAnalyticTables(account.Id);
+                    SynchAsinAnalyticTables(account.Id);
                 },
                 account.Id,
                 AmazonJobLevels.Creative,
