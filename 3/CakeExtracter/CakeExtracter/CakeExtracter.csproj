@@ -533,6 +533,9 @@
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\ShippedRevenueProductsRowMap.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\VcdReportParser.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\VcdDataProviderBuilder.cs" />
+    <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonApiAdExtractor.cs" />
+    <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonApiSearchTermExtractor.cs" />
+    <Compile Include="Etl\Amazon\Loaders\AmazonSearchTermSummaryLoader.cs" />
     <Compile Include="Etl\Apple\Exceptions\AppleFailedEtlException.cs" />
     <Compile Include="Etl\Amazon\Exceptions\FailedStatsLoadingException.cs" />
     <Compile Include="Etl\CakeMarketing\DALoaders\DAAffiliatesLoader.cs" />
@@ -628,9 +631,8 @@
     <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformApiBaseExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformStrategySummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformTDadSummaryExtracter.cs" />
-    <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonApiAdExtractor.cs" />
     <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonCampaignMetadataExtractor.cs" />
-    <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonDatabaseKeywordsToDailySummaryExtracter.cs" />
+    <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonDatabaseKeywordsToDailySummaryExtractor.cs" />
     <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonApiKeywordExtractor.cs" />
     <Compile Include="Etl\Amazon\Extractors\BaseAmazonExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformTransformers.cs" />

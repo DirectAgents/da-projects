@@ -6,8 +6,8 @@ using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers.Interfaces;
-using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors;
-using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
+using CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors;
+using CakeExtracter.Etl.Amazon.Loaders;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Domain.Entities.CPProg;
@@ -39,7 +39,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.TestImplementations.DIModules.Base
         /// Specifies a setup on the mocked amazon daily extractor.
         /// </summary>
         /// <param name="extractorMock">Mock implementation of amazon daily extractor.</param>
-        protected virtual void SetupDailyExtractor(Mock<AmazonDatabaseKeywordsToDailySummaryExtracter> extractorMock)
+        protected virtual void SetupDailyExtractor(Mock<AmazonDatabaseKeywordsToDailySummaryExtractor> extractorMock)
         {
             extractorMock.Setup(m => m.RemoveOldData(It.IsAny<DateRange>())).Verifiable();
             extractorMock.Setup(m => m.GetDailySummaryDataFromDataBase()).Returns(new List<DailySummary> { new DailySummary() }).Verifiable();
@@ -49,7 +49,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.TestImplementations.DIModules.Base
         /// Specifies a setup on the mocked amazon ad extractor.
         /// </summary>
         /// <param name="extractorMock">Mock implementation of amazon ad extractor.</param>
-        protected virtual void SetupAdExtractor(Mock<AmazonApiAdExtrator> extractorMock)
+        protected virtual void SetupAdExtractor(Mock<AmazonApiAdExtractor> extractorMock)
         {
             extractorMock.Setup(m => m.RemoveOldData(It.IsAny<DateTime>())).Verifiable();
         }
@@ -92,10 +92,10 @@ namespace CakeExtracter.Tests.JobTests.Amazon.TestImplementations.DIModules.Base
 
         private void BindExtractors()
         {
-            Bind<AmazonDatabaseKeywordsToDailySummaryExtracter>().ToMethod(context =>
-                GetMockObjectWithParameterizedConstructor<AmazonDatabaseKeywordsToDailySummaryExtracter>(context, SetupDailyExtractor));
-            Bind<AmazonApiAdExtrator>().ToMethod(context =>
-                GetMockObjectWithParameterizedConstructor<AmazonApiAdExtrator>(context, SetupAdExtractor));
+            Bind<AmazonDatabaseKeywordsToDailySummaryExtractor>().ToMethod(context =>
+                GetMockObjectWithParameterizedConstructor<AmazonDatabaseKeywordsToDailySummaryExtractor>(context, SetupDailyExtractor));
+            Bind<AmazonApiAdExtractor>().ToMethod(context =>
+                GetMockObjectWithParameterizedConstructor<AmazonApiAdExtractor>(context, SetupAdExtractor));
             Bind<AmazonApiKeywordExtractor>().ToMethod(context =>
                 GetMockObjectWithParameterizedConstructor<AmazonApiKeywordExtractor>(context, SetupKeywordExtractor));
         }

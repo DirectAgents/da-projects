@@ -1,20 +1,15 @@
-﻿namespace CakeExtracter.Logging.TimeWatchers
+﻿namespace CakeExtracter.Logging.TimeWatchers.Amazon
 {
     /// <summary>
-    /// Amazon job levels constants
+    /// Amazon job levels constants.
     /// </summary>
-    public class AmazonJobLevels
+    public static class AmazonJobLevels
     {
-        public const string account = "Amazon Account";
-
-        public const string strategy = "Amazon Strategy";
-
-        public const string creative = "Amazon Creative";
-
-        public const string keyword = "Amazon Keyword";
-
-        public const string searchTerm = "Amazon SearchTerm";
-
-        public const string adSet = "Amazon AdSet";
+        public const string Account = "Amazon Account";
+        public const string Strategy = "Amazon Strategy";
+        public const string Creative = "Amazon Creative";
+        public const string Keyword = "Amazon Keyword";
+        public const string SearchTerm = "Amazon SearchTerm";
+        public const string AdSet = "Amazon AdSet";
     }
 }

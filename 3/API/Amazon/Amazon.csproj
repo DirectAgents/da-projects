@@ -88,7 +88,6 @@
     <Compile Include="Entities\HelperEntities\AmazonApiReportParams.cs" />
     <Compile Include="Entities\HelperEntities\AmazonApiSnapshotParams.cs" />
     <Compile Include="Entities\Summaries\AmazonAsinSummaries.cs" />
-    <Compile Include="Entities\Summaries\AmazonSummary.cs" />
     <Compile Include="Entities\HelperEntities\GetTokenResponse.cs" />
     <Compile Include="Entities\HelperEntities\PreparedDataResponses\PreparedDataRequestResponse.cs" />
     <Compile Include="Entities\HelperEntities\ReportData.cs" />
@@ -99,10 +98,12 @@
     <Compile Include="Entities\HelperEntities\DownloadInfoResponses\SnapshotResponseDownloadInfo.cs" />
     <Compile Include="Entities\Summaries\AmazonAdDailySummary.cs" />
     <Compile Include="Entities\Summaries\AmazonKeywordDailySummary.cs" />
+    <Compile Include="Entities\Summaries\AmazonSearchTermDailySummary.cs" />
     <Compile Include="Entities\Summaries\AmazonStatSummary.cs" />
     <Compile Include="Entities\Summaries\AmazonTargetKeywordDailySummary.cs" />
     <Compile Include="Constants\ReportGenerationStatus.cs" />
     <Compile Include="Constants\ApiEndpointUrl.cs" />
+    <Compile Include="Entities\Summaries\AmazonTargetSearchTermDailySummary.cs" />
     <Compile Include="Exceptions\ExtractDataException.cs" />
     <Compile Include="Exceptions\ReportGenerationTimedOutException.cs" />
     <Compile Include="Helpers\AmazonApiHelper.cs" />

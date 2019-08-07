@@ -1,5 +1,5 @@
 ﻿using System;
-using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors;
+using CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors;
 using CakeExtracter.Tests.JobTests.Amazon.TestImplementations.DIModules.Base;
 using Moq;
 

@@ -1,12 +1,12 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using System.Linq;
+using AutoMapper;
+using CakeExtracter.Common;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
-using System.Collections.Generic;
-using System.Linq;
-using CakeExtracter.Common;
 
-namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
+namespace CakeExtracter.Etl.Amazon.Loaders
 {
     /// <summary>
     /// Amazon job summary metrics loader

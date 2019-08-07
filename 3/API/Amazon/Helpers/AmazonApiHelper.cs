@@ -38,7 +38,7 @@ namespace Amazon.Helpers
             {
                 {CampaignType.SponsoredProducts, "sp"},
                 {CampaignType.SponsoredBrands, "hsa"},
-                {CampaignType.Empty, string.Empty}
+                {CampaignType.Empty, string.Empty},
             };
 
         private static readonly Dictionary<CampaignType, string> CampaignTypeReadableNames =
@@ -133,7 +133,7 @@ namespace Amazon.Helpers
                             {AttributedMetricDaysInterval.Days14, "attributedSales14dOtherSKU"},
                             {AttributedMetricDaysInterval.Days30, "attributedSales30dOtherSKU"},
                         }
-                    }
+                    },
                 };
 
         private static readonly IEnumerable<string> CommonMetrics = new[] {CostMetric, ImpressionsMetric, ClicksMetric};
@@ -174,14 +174,14 @@ namespace Amazon.Helpers
                         AttributedMetrics[AttributedMetricType.attributedUnitsOrdered][AttributedMetricDaysInterval.Days14],
                         AttributedMetrics[AttributedMetricType.attributedUnitsOrdered][AttributedMetricDaysInterval.Days30],
                     }
-                }
+                },
             };
 
         private static readonly Dictionary<EntitesType, IEnumerable<string>> DependentEntityTypeMetrics =
             new Dictionary<EntitesType, IEnumerable<string>>
             {
                 {
-                    EntitesType.Campaigns, new string[] {}
+                    EntitesType.Campaigns, Array.Empty<string>()
                 },
                 {
                     EntitesType.AdGroups, new[] {CampaignIdMetric, AdGroupNameMetric}
@@ -214,7 +214,7 @@ namespace Amazon.Helpers
                         AttributedMetrics[AttributedMetricType.attributedSalesOtherSKU][AttributedMetricDaysInterval.Days14],
                         AttributedMetrics[AttributedMetricType.attributedSalesOtherSKU][AttributedMetricDaysInterval.Days30],
                     }
-                }
+                },
             };
 
         private static readonly Dictionary<string, string> DependentCountryCodeApiEndpointUrls =
@@ -306,7 +306,7 @@ namespace Amazon.Helpers
             {
                 reportDate = date.ToString(DateFormat),
                 metrics = TransformItemsForRequest(metrics),
-                segment = GetSegmentQuery(entitiesType)
+                segment = GetSegmentQuery(entitiesType),
             };
             return reportParams;
         }

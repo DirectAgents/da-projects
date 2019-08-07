@@ -1,12 +1,11 @@
 ﻿using CakeExtracter.Common.Email;
-using CakeExtracter.Common.JobExecutionManagement.JobExecution;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Repositories;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers.Interfaces;
-using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors;
-using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
+using CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors;
+using CakeExtracter.Etl.Amazon.Loaders;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Concrete;
@@ -36,8 +35,8 @@ namespace CakeExtracter.Bootstrappers
 
         private void BindExtractors()
         {
-            Bind<AmazonDatabaseKeywordsToDailySummaryExtracter>().To<AmazonDatabaseKeywordsToDailySummaryExtracter>();
-            Bind<AmazonApiAdExtrator>().To<AmazonApiAdExtrator>();
+            Bind<AmazonDatabaseKeywordsToDailySummaryExtractor>().To<AmazonDatabaseKeywordsToDailySummaryExtractor>();
+            Bind<AmazonApiAdExtractor>().To<AmazonApiAdExtractor>();
             Bind<AmazonApiKeywordExtractor>().To<AmazonApiKeywordExtractor>();
         }
 
@@ -46,6 +45,7 @@ namespace CakeExtracter.Bootstrappers
             Bind<BaseAmazonLevelLoader<DailySummary, DailySummaryMetric>>().To<AmazonDailySummaryLoader>();
             Bind<BaseAmazonLevelLoader<TDadSummary, TDadSummaryMetric>>().To<AmazonAdSummaryLoader>();
             Bind<BaseAmazonLevelLoader<KeywordSummary, KeywordSummaryMetric>>().To<AmazonKeywordSummaryLoader>();
+            Bind<BaseAmazonLevelLoader<SearchTermSummary, SearchTermSummaryMetric>>().To<AmazonSearchTermSummaryLoader>();
         }
 
         private void BindServices()

@@ -25,14 +25,28 @@ namespace CakeExtracter.Etl.Amazon.Exceptions
         /// </summary>
         public bool ByKeyword { get; set; }
 
-        public FailedStatsLoadingException(DateTime? startDate, DateTime? endDate, int? accountId,
-            Exception innerException, bool byDaily = false, bool byAd = false, bool byKeyword = false, bool byCampaign = false)
+        /// <summary>
+        /// Flag for Search Term dimension.
+        /// </summary>
+        public bool BySearchTerm { get; set; }
+
+        public FailedStatsLoadingException(
+            DateTime? startDate,
+            DateTime? endDate,
+            int? accountId,
+            Exception innerException,
+            bool byDaily = false,
+            bool byAd = false,
+            bool byKeyword = false,
+            bool byCampaign = false,
+            bool bySearchTerm = false)
             : base(startDate, endDate, accountId, innerException)
         {
             ByDaily = byDaily;
             ByAd = byAd;
             ByKeyword = byKeyword;
             ByCampaign = byCampaign;
+            BySearchTerm = bySearchTerm;
         }
     }
 }
