@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using CakeExtracter.Helpers;
 using ClientPortal.Data.Contexts;
 
 namespace CakeExtracter.Etl.SearchMarketing.Loaders
@@ -24,7 +25,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
         protected override int Load(List<Dictionary<string, string>> items)
         {
-            Logger.Info("Loading {0} SearchDailySummaries..", items.Count);
+            Logger.Info($"Loading {items.Count} SearchDailySummaries for account (ID = {searchAccountId})..");
             SetCurrencyMultipliers(items, this.currencyMultipliers);
             AddUpdateDependentSearchAccounts(items, this.searchAccountId);
             AddUpdateDependentSearchCampaigns(items, this.searchAccountId);
@@ -60,92 +61,136 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
         private int UpsertSearchDailySummaries(List<Dictionary<string, string>> items)
         {
-            var addedCount = 0;
-            var updatedCount = 0;
-            var itemCount = 0;
-            //var networks = items.Select(i => i["network"]).Distinct();
-            //var devices = items.Select(i => i["device"]).Distinct();
-            //var clickTypes = items.Select(i => i["clickType"]).Distinct();
-            //var pla = items.Where(i => i["clickType"] == "Product listing ad").OrderBy(i => i["campaignID"]);
-            //var plac = items.Where(i => i["clickType"] == "Product Listing Ad - Coupon").OrderBy(i => i["campaignID"]);
+            var progress = new LoadingProgress();
             using (var db = new ClientPortalContext())
             {
-                var passedInAccount = db.SearchAccounts.Find(this.searchAccountId);
-
+                var searchAccount = db.SearchAccounts.Find(this.searchAccountId);
                 foreach (var item in items)
                 {
-                    var customerId = item["customerID"];
-                    var campaignId = int.Parse(item["campaignID"]);
-
-                    var searchAccount = passedInAccount;
-                    if (searchAccount.ExternalId != customerId)
-                        searchAccount = searchAccount.SearchProfile.SearchAccounts.Single(sa => sa.ExternalId == customerId && sa.Channel == GoogleChannel);
-
-                    var sds = new SearchDailySummary
-                    {   // the basic fields
-                        SearchCampaignId = searchAccount.SearchCampaigns.Single(c => c.ExternalId == campaignId).SearchCampaignId,
-                        Date = DateTime.Parse(item["day"].Replace('-', '/')),
-                        CurrencyId = (!item.Keys.Contains("currency") || item["currency"] == "USD") ? 1 : -1, // NOTE: non USD (if exists) -1 for now
-                        Network = Network_StringToLetter(item["network"])
-                    };
-
-                    if (clickAssistConvStats)
+                    try
                     {
-                        sds.Device = "A"; // mark for "all" devices
-                        sds.CassConvs = int.Parse(item["clickAssistedConv"]);
-                        sds.CassConVal = double.TryParse(item["clickAssistedConvValue"], out var cassConVal) ? cassConVal : 0.0;
+                        UpsertSearchDailySummary(item, searchAccount, db, progress);
                     }
-                    else
+                    catch (Exception)
                     {
-                        sds.Revenue = decimal.Parse(item["totalConvValue"]);
-                        sds.Cost = decimal.Parse(item["cost"]) / 1000000; // convert from microns to dollars
-                        var conversions = double.Parse(item["conversions"]);
-                        sds.Orders = Convert.ToInt32(conversions); // default rounding - nearest even # if .5
-                        sds.Clicks = int.Parse(item["clicks"]);
-                        sds.Impressions = int.Parse(item["impressions"]);
-                        sds.Device = Device_StringToLetter(item["device"]);
-                        sds.ViewThrus = int.Parse(item["viewThroughConv"]);
-
-                        if (searchAccount.RevPerOrder.HasValue)
-                            sds.Revenue = sds.Orders * searchAccount.RevPerOrder.Value;
+                        Logger.Warn($"Failed to load search daily summary for customer ID [{item["customerID"]}] ({item["day"]})");
+                        progress.SkippedCount++;
                     }
-
-                    // Adjust revenue and cost if there's a Currency Multiplier...
-                    if (!item.Keys.Contains("currency") || item["currency"] == "USD")
-                        sds.CurrencyId = 1; // USD or not specified
-                    else
+                    finally
                     {
-                        var code = item["currency"];
-                        var firstOfMonth = new DateTime(sds.Date.Year, sds.Date.Month, 1);
-                        if (!currencyMultipliers.ContainsKey(code) || !currencyMultipliers[code].ContainsKey(firstOfMonth))
-                            sds.CurrencyId = -1;
-                        else
-                        {
-                            sds.CurrencyId = 1;
-                            var toUSDmult = currencyMultipliers[code][firstOfMonth];
-                            sds.Revenue = sds.Revenue * toUSDmult;
-                            sds.Cost = sds.Cost * toUSDmult;
-                            //TODO? Do for CassConVal as well?
-                        }
+                        progress.ItemCount++;
                     }
-
-                    bool added;
-                    if (includeClickType)
-                        added = UpsertSearchDailySummary2(db, sds, item["clickType"]);
-                    else
-                        added = UpsertSearchDailySummary(db, sds);
-
-                    if (added)
-                        addedCount++;
-                    else
-                        updatedCount++;
-
-                    itemCount++;
                 }
-                Logger.Info("Saving {0} SearchDailySummaries ({1} updates, {2} additions)", itemCount, updatedCount, addedCount);
+                Logger.Info($"Saving {progress.ItemCount} SearchDailySummaries ({progress.UpdatedCount} updates, {progress.AddedCount} additions)");
                 db.SaveChanges();
             }
-            return itemCount;
+            return progress.ItemCount;
+        }
+
+        private void UpsertSearchDailySummary(
+            Dictionary<string, string> item,
+            SearchAccount searchAccount,
+            ClientPortalContext db,
+            LoadingProgress progress)
+        {
+            var customerId = item["customerID"];
+            var campaignId = int.Parse(item["campaignID"]);
+            if (searchAccount.ExternalId != customerId)
+            {
+                searchAccount = searchAccount.SearchProfile.SearchAccounts.Single(sa => sa.ExternalId == customerId && sa.Channel == GoogleChannel);
+            }
+            var searchDailySummary = CreateBaseSearchDailySummary(item, searchAccount, campaignId);
+            if (clickAssistConvStats)
+            {
+                SetFieldsForClickAssistConvSummary(searchDailySummary, item);
+            }
+            else
+            {
+                SetFieldsForSummary(searchDailySummary, item, searchAccount);
+            }
+            SetCurrencyForSummary(searchDailySummary, item);
+            var isAdded = includeClickType
+                ? UpsertSearchDailySummary(db, searchDailySummary, item["clickType"])
+                : UpsertSearchDailySummary(db, searchDailySummary);
+            if (isAdded)
+            {
+                progress.AddedCount++;
+            }
+            else
+            {
+                progress.UpdatedCount++;
+            }
+        }
+
+        private SearchDailySummary CreateBaseSearchDailySummary(
+            Dictionary<string, string> item,
+            SearchAccount searchAccount,
+            int campaignId)
+        {
+            var searchCampaignId = searchAccount.SearchCampaigns.Single(c => c.ExternalId == campaignId).SearchCampaignId;
+            var date = DateTime.Parse(item["day"].Replace('-', '/'));
+            var currencyId = (!item.Keys.Contains("currency") || item["currency"] == "USD") ? 1 : -1; // NOTE: non USD (if exists) -1 for now
+            var network = Network_StringToLetter(item["network"]);
+            return new SearchDailySummary
+            {   // the basic fields
+                SearchCampaignId = searchCampaignId,
+                Date = date,
+                CurrencyId = currencyId,
+                Network = network,
+            };
+        }
+
+        private void SetFieldsForClickAssistConvSummary(SearchDailySummary summary, Dictionary<string, string> item)
+        {
+            summary.Device = "A"; // mark for "all" devices
+            summary.CassConvs = int.Parse(item["clickAssistedConv"]);
+            summary.CassConVal = double.TryParse(item["clickAssistedConvValue"], out var cassConVal) ? cassConVal : 0.0;
+        }
+
+        private void SetFieldsForSummary(
+            SearchDailySummary summary,
+            Dictionary<string, string> item,
+            SearchAccount searchAccount)
+        {
+            summary.Revenue = decimal.Parse(item["totalConvValue"]);
+            summary.Cost = decimal.Parse(item["cost"]) / 1000000; // convert from microns to dollars
+            var conversions = double.Parse(item["conversions"]);
+            summary.Orders = Convert.ToInt32(conversions); // default rounding - nearest even # if .5
+            summary.Clicks = int.Parse(item["clicks"]);
+            summary.Impressions = int.Parse(item["impressions"]);
+            summary.Device = Device_StringToLetter(item["device"]);
+            summary.ViewThrus = int.Parse(item["viewThroughConv"]);
+
+            if (searchAccount.RevPerOrder.HasValue)
+            {
+                summary.Revenue = summary.Orders * searchAccount.RevPerOrder.Value;
+            }
+        }
+
+        private void SetCurrencyForSummary(SearchDailySummary summary, Dictionary<string, string> item)
+        {
+            // Adjust revenue and cost if there's a Currency Multiplier...
+            if (!item.Keys.Contains("currency") || item["currency"] == "USD")
+            {
+                summary.CurrencyId = 1; // USD or not specified
+            }
+            else
+            {
+                var code = item["currency"];
+                var firstOfMonth = new DateTime(summary.Date.Year, summary.Date.Month, 1);
+                if (!currencyMultipliers.ContainsKey(code) || !currencyMultipliers[code].ContainsKey(firstOfMonth))
+                {
+                    summary.CurrencyId = -1;
+                }
+                else
+                {
+                    summary.CurrencyId = 1;
+                    var toUSDmult = currencyMultipliers[code][firstOfMonth];
+                    summary.Revenue = summary.Revenue * toUSDmult;
+                    summary.Cost = summary.Cost * toUSDmult;
+                    //TODO? Do for CassConVal as well?
+                }
+            }
         }
 
         // return true if added; false if updated
@@ -171,7 +216,8 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                 return false;
             }
         }
-        private bool UpsertSearchDailySummary2(ClientPortalContext db, SearchDailySummary sds, string clickType)
+
+        private bool UpsertSearchDailySummary(ClientPortalContext db, SearchDailySummary sds, string clickType)
         {
             var clickTypeAbbrev = ClickType_StringToLetter(clickType);
             var sds2 = new SearchDailySummary2
@@ -293,40 +339,58 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
         public static void AddUpdateDependentSearchCampaigns(List<Dictionary<string, string>> items, int searchAccountId)
         {
+            var campaignTuples = items.Select(c => Tuple.Create(c["customerID"], c["campaign"], c["campaignID"])).Distinct();
             using (var db = new ClientPortalContext())
             {
-                var passedInAccount = db.SearchAccounts.Find(searchAccountId);
-                var campaignTuples = items.Select(c => Tuple.Create(c["customerID"], c["campaign"], c["campaignID"])).Distinct();
-
-                foreach (var tuple in campaignTuples)
+                var searchAccount = db.SearchAccounts.Find(searchAccountId);
+                foreach (var campaignTuple in campaignTuples)
                 {
-                    var customerId = tuple.Item1;
-                    var campaignName = tuple.Item2;
-                    var campaignId = int.Parse(tuple.Item3);
-
-                    var searchAccount = passedInAccount;
-                    if (searchAccount.ExternalId != customerId)
-                        searchAccount = searchAccount.SearchProfile.SearchAccounts.Single(sa => sa.ExternalId == customerId && sa.Channel == GoogleChannel);
-
-                    var existing = searchAccount.SearchCampaigns.SingleOrDefault(c => c.ExternalId == campaignId);
-
-                    if (existing == null)
+                    try
                     {
-                        searchAccount.SearchCampaigns.Add(new SearchCampaign
-                        {
-                            SearchCampaignName = campaignName,
-                            ExternalId = campaignId
-                        });
-                        Logger.Info("Saving new SearchCampaign: {0} ({1})", campaignName, campaignId);
-                        db.SaveChanges();
+                        AddUpdateDependentSearchCampaign(campaignTuple, searchAccount, db);
                     }
-                    else if(existing.SearchCampaignName != campaignName)
+                    catch (Exception)
                     {
-                        existing.SearchCampaignName = campaignName;
-                        Logger.Info("Saving updated SearchCampaign name: {0} ({1})", campaignName, campaignId);
-                        db.SaveChanges();
+                        Logger.Warn($"Failed to add or update search campaign: {campaignTuple}");
                     }
                 }
+            }
+        }
+
+        private static void AddUpdateDependentSearchCampaign(
+            Tuple<string, string, string> campaignTuple,
+            SearchAccount searchAccount,
+            ClientPortalContext db)
+        {
+            var customerId = campaignTuple.Item1;
+            var campaignName = campaignTuple.Item2;
+            //var campaignId = int.Parse(campaignTuple.Item3);
+            var tmpCampaignId = double.Parse(campaignTuple.Item3);
+            var campaignId = Convert.ToInt32(tmpCampaignId);
+            if (searchAccount?.ExternalId != customerId)
+            {
+                searchAccount = searchAccount?.SearchProfile.SearchAccounts.Single(sa =>
+                    sa.ExternalId == customerId && sa.Channel == GoogleChannel);
+            }
+
+            var existingCampaign =
+                searchAccount?.SearchCampaigns.SingleOrDefault(c => c.ExternalId == campaignId);
+            if (existingCampaign == null)
+            {
+                var campaign = new SearchCampaign
+                {
+                    SearchCampaignName = campaignName,
+                    ExternalId = campaignId,
+                };
+                searchAccount?.SearchCampaigns.Add(campaign);
+                Logger.Info("Saving new SearchCampaign: {0} ({1})", campaignName, campaignId);
+                db.SaveChanges();
+            }
+            else if (existingCampaign.SearchCampaignName != campaignName)
+            {
+                existingCampaign.SearchCampaignName = campaignName;
+                Logger.Info("Saving updated SearchCampaign name: {0} ({1})", campaignName, campaignId);
+                db.SaveChanges();
             }
         }
 
