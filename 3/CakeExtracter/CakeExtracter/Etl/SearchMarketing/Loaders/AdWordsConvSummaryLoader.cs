@@ -64,10 +64,11 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             LoadingProgress progress)
         {
             var customerId = item["customerID"];
-            var campaignId = int.Parse(item["campaignID"]);
-
+            var campaignId = item["campaignID"];
             if (searchAccount.ExternalId != customerId)
+            {
                 searchAccount = searchAccount.SearchProfile.SearchAccounts.Single(sa => sa.ExternalId == customerId && sa.Channel == AdWordsApiLoader.GoogleChannel);
+            }
             // The SearchAccount is guaranteed to be there, having run AddUpdateDependentSearchAccounts().
 
             string fieldConversions, fieldConVal;
@@ -91,7 +92,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                 Network = AdWordsApiLoader.Network_StringToLetter(item["network"]),
                 Device = AdWordsApiLoader.Device_StringToLetter(item["device"]),
                 Conversions = double.Parse(item[fieldConversions]),
-                ConVal = decimal.Parse(item[fieldConVal])
+                ConVal = decimal.Parse(item[fieldConVal]),
             };
 
             // Adjust ConVal if there's a Currency Multiplier...

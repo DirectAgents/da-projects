@@ -42,7 +42,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
                 foreach (var item in items)
                 {
-                    var campaignId = int.Parse(item["CampaignId"]);
+                    var campaignId = item["CampaignId"];
 
                     var searchAccount = passedInAccount;
                     if (hasAccountId)

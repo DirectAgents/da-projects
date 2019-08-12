@@ -27,7 +27,7 @@
         [StringLength(255)]
         public string Channel { get; set; }
 
-        public int? ExternalId { get; set; }
+        public string ExternalId { get; set; }
 
         public int? SearchAccountId { get; set; }
 

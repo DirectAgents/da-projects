@@ -374,7 +374,7 @@
           <Property Name="SearchCampaignName" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="AdvertiserId" Type="int" />
           <Property Name="Channel" Type="nvarchar" MaxLength="255" />
-          <Property Name="ExternalId" Type="int" />
+          <Property Name="ExternalId" Type="nvarchar" MaxLength="50" />
           <Property Name="SearchAccountId" Type="int" />
           <Property Name="AltSearchAccountId" Type="int" />
           <Property Name="LCcmpid" Type="nvarchar" MaxLength="100" />
@@ -1603,7 +1603,7 @@
           <Property Type="Int32" Name="AdvertiserId" />
           <Property Type="String" Name="Channel" MaxLength="255" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="SearchDailySummaries" Relationship="ClientPortalModel.FK_SearchDailySummary_SearchCampaign" FromRole="SearchCampaign" ToRole="SearchDailySummary" />
-          <Property Type="Int32" Name="ExternalId" />
+          <Property Type="String" Name="ExternalId" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_SearchCampaign_Advertiser" FromRole="SearchCampaign" ToRole="Advertiser" />
           <NavigationProperty Name="GoogleAnalyticsSummaries" Relationship="ClientPortalModel.FK_GoogleAnalyticsSummary_SearchCampaign" FromRole="SearchCampaign" ToRole="GoogleAnalyticsSummary" />
           <NavigationProperty Name="SearchDailySummaries2" Relationship="ClientPortalModel.FK_SearchDailySummary2_SearchCampaign" FromRole="SearchCampaign" ToRole="SearchDailySummary2" />

@@ -34,9 +34,10 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                 foreach (var row in rows)
                 {
                     SearchCampaign campaign = null;
-                    if (row.CampaignId.HasValue)
+                    if (!string.IsNullOrEmpty(row.CampaignId))
+                    {
                         campaign = db.SearchCampaigns.SingleOrDefault(c => c.ExternalId == row.CampaignId && c.AdvertiserId == this.advertiserId);
-
+                    }
                     if (campaign == null)
                     {   // try matching by campaign name
                         var channel = row.CampaignName.ToLower().StartsWith("bing") ? "bing" : row.Source;
@@ -113,12 +114,11 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                 {
                     var campaignId = tuple.Item1;
                     var campaignName = tuple.Item2;
-
                     var channel = campaignName.ToLower().StartsWith("bing") ? "bing" : tuple.Item3;
 
                     SearchCampaign existing = null;
 
-                    if (campaignId.HasValue)
+                    if (!string.IsNullOrEmpty(campaignId))
                     {
                         existing = db.SearchCampaigns.SingleOrDefault(c => c.ExternalId == campaignId && c.AdvertiserId == this.advertiserId && c.Channel == channel);
                     }

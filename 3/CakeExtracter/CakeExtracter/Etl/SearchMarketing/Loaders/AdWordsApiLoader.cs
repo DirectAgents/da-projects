@@ -94,7 +94,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             LoadingProgress progress)
         {
             var customerId = item["customerID"];
-            var campaignId = int.Parse(item["campaignID"]);
+            var campaignId = item["campaignID"];
             if (searchAccount.ExternalId != customerId)
             {
                 searchAccount = searchAccount.SearchProfile.SearchAccounts.Single(sa => sa.ExternalId == customerId && sa.Channel == GoogleChannel);
@@ -125,7 +125,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
         private SearchDailySummary CreateBaseSearchDailySummary(
             Dictionary<string, string> item,
             SearchAccount searchAccount,
-            int campaignId)
+            string campaignId)
         {
             var searchCampaignId = searchAccount.SearchCampaigns.Single(c => c.ExternalId == campaignId).SearchCampaignId;
             var date = DateTime.Parse(item["day"].Replace('-', '/'));
@@ -364,9 +364,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
         {
             var customerId = campaignTuple.Item1;
             var campaignName = campaignTuple.Item2;
-            //var campaignId = int.Parse(campaignTuple.Item3);
-            var tmpCampaignId = double.Parse(campaignTuple.Item3);
-            var campaignId = Convert.ToInt32(tmpCampaignId);
+            var campaignId = campaignTuple.Item3;
             if (searchAccount?.ExternalId != customerId)
             {
                 searchAccount = searchAccount?.SearchProfile.SearchAccounts.Single(sa =>

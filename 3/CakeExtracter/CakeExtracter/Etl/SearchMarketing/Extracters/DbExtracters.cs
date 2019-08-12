@@ -35,7 +35,9 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 var sds = db.SearchDailySummaries.Where(x => x.SearchCampaign.SearchAccountId == searchAccountId &&
                                                              x.Date >= dateRange.FromDate && x.Date <= dateRange.ToDate);
                 if (!includeNullSearchCampaignExternalIds)
-                    sds = sds.Where(x => x.SearchCampaign.ExternalId.HasValue);
+                {
+                    sds = sds.Where(x => !string.IsNullOrEmpty(x.SearchCampaign.ExternalId));
+                }
 
                 var sdsGroups = sds.GroupBy(x => x.SearchCampaign);
                 foreach (var sdsGroup in sdsGroups)

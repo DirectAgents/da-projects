@@ -76,7 +76,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 AnalyticsRow aRow = null;
                 try
                 {
-                    aRow = new AnalyticsRow()
+                    aRow = new AnalyticsRow
                     {
                         Date = DateTime.ParseExact(row[0], "yyyyMMdd", CultureInfo.InvariantCulture),
                         //CampaignId = int.Parse(row[1]), // note: any 'total/other' rows will be skipped because their CampaignId is "(not set)" and won't be int.Parsed
@@ -85,19 +85,25 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                         Transactions = int.Parse(row[4]),
                         Revenue = decimal.Parse(row[5])
                     };
-                    int campaignId;
-                    if (int.TryParse(row[1], out campaignId))
+                    var campaignId = row[1];
+                    if (long.TryParse(campaignId, out _))
+                    {
                         aRow.CampaignId = campaignId;
+                    }
                 }
                 catch (Exception) { }
 
                 // note: skip rows where transactions and revenue are both 0
                 if (aRow != null && (aRow.Transactions != 0 || aRow.Revenue != 0))
                 {
-                    if (aRow.CampaignId.HasValue)
+                    if (!string.IsNullOrEmpty(aRow.CampaignId))
+                    {
                         yield return aRow;
+                    }
                     else
+                    {
                         nonAdWordsRows.Add(aRow);
+                    }
                 }
             }
 
@@ -134,10 +140,15 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
     public class AnalyticsRow
     {
         public DateTime Date { get; set; }
-        public int? CampaignId { get; set; }
+
+        public string CampaignId { get; set; }
+
         public string CampaignName { get; set; }
+
         public string Source { get; set; }
+
         public int Transactions { get; set; }
+
         public decimal Revenue { get; set; }
     }
 }
