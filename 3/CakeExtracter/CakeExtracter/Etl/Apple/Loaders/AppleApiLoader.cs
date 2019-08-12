@@ -143,9 +143,10 @@ namespace CakeExtracter.Etl.Apple.Loaders
                     }
                     var metadata = statGroup.metadata;
 
-                    if (!int.TryParse(metadata.campaignId, out var campaignId))
+                    var campaignId = metadata.campaignId;
+                    if (!long.TryParse(campaignId, out _))
                     {
-                        Logger.Warn("campaignId ({0}) is not an int", campaignId);
+                        Logger.Warn($"CampaignId ({campaignId}) is not an int or long");
                         continue;
                     }
                     var existingCampaign = existingSearchAccount?.SearchCampaigns.SingleOrDefault(c => c.ExternalId == campaignId);

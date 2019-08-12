@@ -71,11 +71,11 @@ namespace CakeExtracter.Commands
             using (var toDb = new ClientPortalSearchContext())
             {
                 var existingSearchCampaigns = toDb.SearchCampaigns.Where(sc => sc.SearchAccountId == toAccountId && sc.ExternalId != null);
-                var existingExternalIds = existingSearchCampaigns.Select(x => x.ExternalId.Value).ToArray();
+                var existingExternalIds = existingSearchCampaigns.Select(x => x.ExternalId).ToArray();
 
                 foreach (var sc in searchCampaigns)
                 {
-                    if (!existingExternalIds.Contains(sc.ExternalId.Value))
+                    if (!existingExternalIds.Contains(sc.ExternalId))
                     {
                         var newSearchCampaign = new DirectAgents.Domain.Entities.CPSearch.SearchCampaign
                         {
@@ -83,7 +83,7 @@ namespace CakeExtracter.Commands
                             SearchCampaignName = sc.SearchCampaignName,
                             Channel = sc.Channel,
                             ExternalId = sc.ExternalId,
-                            LCcmpid = sc.LCcmpid
+                            LCcmpid = sc.LCcmpid,
                         };
                         toDb.SearchCampaigns.Add(newSearchCampaign);
                     }

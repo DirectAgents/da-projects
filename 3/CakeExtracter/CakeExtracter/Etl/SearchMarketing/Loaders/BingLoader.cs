@@ -48,7 +48,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                 foreach (var item in items)
                 {
                     //var campaignName = item["CampaignName"];
-                    var campaignId = int.Parse(item["CampaignId"]);
+                    var campaignId = item["CampaignId"];
 
                     var searchAccount = passedInAccount;
                     if (hasAccountId)
@@ -184,7 +184,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     infos = items.Select(c => new CampaignInfo { CampaignName = c["CampaignName"], CampaignId = c["CampaignId"] }).Distinct();
                 foreach (var info in infos)
                 {
-                    var campaignId = int.Parse(info.CampaignId);
+                    var campaignId = info.CampaignId;
 
                     var searchAccount = passedInAccount;
                     if (itemsHaveAccountId && searchAccount.AccountCode != info.AccountId)
@@ -198,7 +198,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         searchAccount.SearchCampaigns.Add(new SearchCampaign
                         {
                             SearchCampaignName = info.CampaignName,
-                            ExternalId = campaignId
+                            ExternalId = campaignId,
                         });
                         Logger.Info("Saving new SearchCampaign: {0} ({1})", info.CampaignName, campaignId);
                         db.SaveChanges();
