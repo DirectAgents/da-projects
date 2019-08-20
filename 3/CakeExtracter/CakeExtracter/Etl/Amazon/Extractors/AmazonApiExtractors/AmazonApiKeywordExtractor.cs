@@ -173,7 +173,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
             DateTime date,
             List<AmazonCampaign> campaignsData)
         {
-            var notEmptyStats = keywordStats.Where(x => !x.AllZeros()).ToList();
+            var notEmptyStats = keywordStats.Where(x => x != null).ToList();
             var summaries = notEmptyStats.Select(stat =>
                 CreateSummary(stat, date, campaignsData.FirstOrDefault(c => c.CampaignId == stat.CampaignId)));
             return summaries.ToList();
@@ -184,7 +184,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
             DateTime date,
             List<AmazonCampaign> campaignsData)
         {
-            var notEmptyStats = targetStats.Where(x => !x.AllZeros()).ToList();
+            var notEmptyStats = targetStats.Where(x => x != null).ToList();
             var summaries = notEmptyStats.Select(stat =>
                 CreateSummary(stat, date, campaignsData.FirstOrDefault(c => c.CampaignId == stat.CampaignId)));
             return summaries.ToList();

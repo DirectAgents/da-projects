@@ -157,7 +157,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
             List<AmazonCampaign> campaignInfo)
         {
             var summaries = adStats.Select(stat => CreateSummary(stat, asinStats, date, campaignInfo));
-            var notEmptySummaries = summaries.Where(x => x != null && !x.AllZeros()).ToList();
+            var notEmptySummaries = summaries.Where(x => x != null).ToList();
             return notEmptySummaries;
         }
 
@@ -168,7 +168,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
             List<AmazonCampaign> campaignInfo)
         {
             var asinStatsForProduct = asinStats.Where(x => x.Asin == adStat.Asin && x.AdGroupId == adStat.AdGroupId).ToList();
-            if (!asinStatsForProduct.Any() && adStat.AllZeros())
+            if (!asinStatsForProduct.Any())
             {
                 return null;
             }
