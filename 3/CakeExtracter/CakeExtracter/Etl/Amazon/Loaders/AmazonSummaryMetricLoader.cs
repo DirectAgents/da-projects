@@ -36,15 +36,15 @@ namespace CakeExtracter.Etl.Amazon.Loaders
         }
 
         /// <summary>
-        /// Upserts the summary metrics.
+        /// Merge the summary metrics.
         /// </summary>
         /// <param name="summaryMetrics">The summary metrics.</param>
-        public void UpsertSummaryMetrics(List<SummaryMetric> summaryMetrics)
+        public void MergeSummaryMetrics(List<SummaryMetric> summaryMetrics)
         {
             AddDependentMetricTypes(summaryMetrics);
             AssignMetricTypeIdToItems(summaryMetrics);
             var summaryMetricsItemsToInsert = CastSummaryMetricsToChildClass(summaryMetrics);
-            SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) => db.BulkInsert(summaryMetricsItemsToInsert), "BulkInsert");
+            SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) => db.BulkMerge(summaryMetricsItemsToInsert), "BulkMerge");
         }
 
         private void AssignMetricTypeIdToItems(IEnumerable<SummaryMetric> items)

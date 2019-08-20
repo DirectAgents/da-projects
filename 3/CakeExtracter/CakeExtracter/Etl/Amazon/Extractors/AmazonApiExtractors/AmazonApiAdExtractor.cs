@@ -113,7 +113,6 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
                 accountId,
                 AmazonJobLevels.Creative,
                 AmazonJobOperations.ReportExtracting);
-            RemoveOldData(date);
             Add(items);
         }
 

@@ -19,7 +19,7 @@ namespace CakeExtracter.Etl.Amazon.Loaders
         where TSummaryLevelEntity : DatedStatsSummary
         where TSummaryMetricLevelEntity : SummaryMetric, new()
     {
-        private const int LoadingBatchesSize = 500;
+        private const int LoadingBatchesSize = 1000;
 
         private readonly AmazonSummaryMetricLoader<TSummaryMetricLevelEntity> summaryMetricsItemsLoader;
 
@@ -64,9 +64,9 @@ namespace CakeExtracter.Etl.Amazon.Loaders
                 accountId,
                 LevelName,
                 AmazonJobOperations.EnsureRelatedEntities);
-            UpsertSummaryItems(items);
+            MergeSummaryItems(items);
             var summaryMetricItems = GetSummaryMetricsToInsert(items);
-            UpsertSummaryMetricItems(summaryMetricItems);
+            MergeSummaryMetricItems(summaryMetricItems);
         }
 
         /// <summary>
@@ -113,17 +113,17 @@ namespace CakeExtracter.Etl.Amazon.Loaders
         protected abstract void SetSummaryMetricEntityId(TSummaryLevelEntity summary, SummaryMetric summaryMetric);
 
         /// <summary>
-        /// Upserts the summary metric items into db.
+        /// Merge the summary metric items into db.
         /// </summary>
         /// <param name="items">The items.</param>
-        protected void UpsertSummaryMetricItems(List<SummaryMetric> items)
+        protected void MergeSummaryMetricItems(List<SummaryMetric> items)
         {
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
                 () =>
                 {
                     SafeContextWrapper.Lock(
                         LockerObject,
-                        () => { summaryMetricsItemsLoader.UpsertSummaryMetrics(items); });
+                        () => { summaryMetricsItemsLoader.MergeSummaryMetrics(items); });
                 },
                 accountId,
                 LevelName,
@@ -131,18 +131,18 @@ namespace CakeExtracter.Etl.Amazon.Loaders
         }
 
         /// <summary>
-        /// Upserts the summary items into db.
+        /// Merge the summary items into db.
         /// </summary>
         /// <param name="items">The items.</param>
-        protected void UpsertSummaryItems(List<TSummaryLevelEntity> items)
+        protected void MergeSummaryItems(List<TSummaryLevelEntity> items)
         {
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
                 () =>
                 {
                     SafeContextWrapper.TryMakeTransactionWithLock(
-                        (ClientPortalProgContext db) => db.BulkInsert(items),
+                        (ClientPortalProgContext db) => db.BulkMerge(items),
                         LockerObject,
-                        "BulkInsert");
+                        "BulkMerge");
                 },
                 accountId,
                 LevelName,

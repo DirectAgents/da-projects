@@ -118,7 +118,6 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
                 accountId,
                 AmazonJobLevels.Keyword,
                 AmazonJobOperations.ReportExtracting);
-            RemoveOldData(date);
             Add(items);
         }
 

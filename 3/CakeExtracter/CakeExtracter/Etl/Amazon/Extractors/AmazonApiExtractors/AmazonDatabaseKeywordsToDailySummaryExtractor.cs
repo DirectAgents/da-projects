@@ -60,7 +60,6 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
         {
             try
             {
-                RemoveOldData(dateRange);
                 IEnumerable<DailySummary> items = null;
                 AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
                     () =>
