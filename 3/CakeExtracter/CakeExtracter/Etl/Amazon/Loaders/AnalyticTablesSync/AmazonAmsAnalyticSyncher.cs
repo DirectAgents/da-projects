@@ -5,7 +5,7 @@ using CakeExtracter.Common;
 using CakeExtracter.Common.Constants;
 using Polly;
 
-namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders.AnalyticTablesSync
+namespace CakeExtracter.Etl.Amazon.Loaders.AnalyticTablesSync
 {
     /// <summary>
     /// Helper for synchronization data from amazon ams normal tables to analytic tables.

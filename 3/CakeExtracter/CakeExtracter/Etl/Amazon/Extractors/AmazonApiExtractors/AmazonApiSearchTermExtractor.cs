@@ -4,7 +4,6 @@ using System.Linq;
 using Amazon;
 using Amazon.Entities;
 using Amazon.Entities.Summaries;
-using Amazon.Enums;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Etl.Amazon.Exceptions;
@@ -17,22 +16,22 @@ using DirectAgents.Domain.Entities.CPProg;
 namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
 {
     /// <summary>
-    /// Keyword data extractor for amazon job.
+    /// API extractor for the Search term level.
     /// </summary>
-    /// <seealso cref="BaseAmazonExtractor{T}" />
-    public class AmazonApiKeywordExtractor : BaseAmazonExtractor<KeywordSummary>
+    internal class AmazonApiSearchTermExtractor : BaseAmazonExtractor<SearchTermSummary>
     {
         private readonly AmazonCampaignMetadataExtractor campaignMetadataExtractor;
 
+        /// <inheritdoc cref="BaseAmazonExtractor{SearchTermSummary}"/>
         /// <summary>
-        /// Initializes a new instance of the <see cref="AmazonApiKeywordExtractor"/> class.
+        /// Initializes a new instance of the <see cref="AmazonApiSearchTermExtractor" /> class.
         /// </summary>
         /// <param name="amazonUtility">The amazon utility.</param>
         /// <param name="dateRange">Extraction date range.</param>
         /// <param name="account">Account data.</param>
         /// <param name="campaignFilter">Campaign filter value.</param>
         /// <param name="campaignFilterOut">Campaign filter value out.</param>
-        public AmazonApiKeywordExtractor(
+        public AmazonApiSearchTermExtractor(
             AmazonUtility amazonUtility,
             DateRange dateRange,
             ExtAccount account,
@@ -43,36 +42,40 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
             campaignMetadataExtractor = new AmazonCampaignMetadataExtractor(amazonUtility);
         }
 
+        /// <summary>
+        /// Removing old data before insert fresh data.
+        /// </summary>
+        /// <param name="date">Date for removing.</param>
         public virtual void RemoveOldData(DateTime date)
         {
-            Logger.Info(accountId, "The cleaning of KeywordSummaries for account ({0}) has begun - {1}.", accountId, date);
+            Logger.Info(accountId, "The cleaning of SearchTermSummaries for account ({0}) has begun - {1}.", accountId, date);
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
                 () =>
                 {
                     SafeContextWrapper.TryMakeTransaction(
                         (ClientPortalProgContext db) =>
                         {
-                            db.KeywordSummaryMetrics.Where(x => x.Date == date && x.Keyword.AccountId == accountId)
+                            db.SearchTermSummaryMetrics.Where(x => x.Date == date && x.SearchTerm.AccountId == accountId)
                                 .DeleteFromQuery();
-                            db.KeywordSummaries.Where(x => x.Date == date && x.Keyword.AccountId == accountId)
+                            db.SearchTermSummaries.Where(x => x.Date == date && x.SearchTerm.AccountId == accountId)
                                 .DeleteFromQuery();
                         }, "DeleteFromQuery");
                 },
                 accountId,
-                AmazonJobLevels.Keyword,
+                AmazonJobLevels.SearchTerm,
                 AmazonJobOperations.CleanExistingData);
-            Logger.Info(accountId, "The cleaning of KeywordSummaries for account ({0}) is over - {1}.", accountId, date);
+            Logger.Info(accountId, "The cleaning of SearchTermSummaries for account ({0}) is over - {1}.", accountId, date);
         }
 
+        /// <inheritdoc/>
         /// <summary>
-        /// The derived class implements this method, which calls Add() for each item
-        /// extracted and then calls End() when complete.
+        /// Extracting data of the Search term level from API.
         /// </summary>
         protected override void Extract()
         {
             Logger.Info(
                 accountId,
-                "Extracting KeywordSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
+                "Extracting SearchTermSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 clientId,
                 dateRange.FromDate,
                 dateRange.ToDate);
@@ -108,15 +111,15 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
 
         private void ExtractDaily(DateTime date, List<AmazonCampaign> campaignsData)
         {
-            CommandExecutionContext.Current?.SetJobExecutionStateInHistory($"Keywords Level- {date.ToString()}", accountId);
-            IEnumerable<KeywordSummary> items = null;
+            CommandExecutionContext.Current?.SetJobExecutionStateInHistory($"SearchTerm Level- {date.ToString()}", accountId);
+            IEnumerable<SearchTermSummary> items = null;
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
                 () =>
                 {
-                    items = GetKeywordSummariesFromApi(date, campaignsData);
+                    items = GetSearchTermSummariesFromApi(date, campaignsData);
                 },
                 accountId,
-                AmazonJobLevels.Keyword,
+                AmazonJobLevels.SearchTerm,
                 AmazonJobOperations.ReportExtracting);
             RemoveOldData(date);
             Add(items);
@@ -131,7 +134,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
                     campaignsData = campaignMetadataExtractor.LoadCampaignsMetadata(accountId, clientId).ToList();
                 },
                 accountId,
-                AmazonJobLevels.Keyword,
+                AmazonJobLevels.SearchTerm,
                 AmazonJobOperations.LoadCampaignMetadata);
             return campaignsData;
         }
@@ -139,49 +142,47 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
         private void ProcessFailedStatsExtraction(Exception e, DateTime fromDate, DateTime toDate)
         {
             Logger.Error(accountId, e);
-            var exception = new FailedStatsLoadingException(fromDate, toDate, accountId, e, byKeyword: true);
+            var exception = new FailedStatsLoadingException(fromDate, toDate, accountId, e, bySearchTerm: true);
             InvokeProcessFailedExtractionHandlers(exception);
         }
 
-        private IEnumerable<KeywordSummary> GetKeywordSummariesFromApi(DateTime date, List<AmazonCampaign> campaignsData)
+        private IEnumerable<SearchTermSummary> GetSearchTermSummariesFromApi(DateTime date, List<AmazonCampaign> campaignsData)
         {
-            var keywordSums = ExtractKeywordSummaries(date);
-            var keywordItems = TransformSummaries(keywordSums, date, campaignsData);
+            var searchTermSums = ExtractSearchTermSummaries(date);
+            var searchTermItems = TransformSummaries(searchTermSums, date, campaignsData);
             var targetSums = ExtractTargetSummaries(date);
             var targetItems = TransformSummaries(targetSums, date, campaignsData);
-            var items = keywordItems.Concat(targetItems);
+            var items = searchTermItems.Concat(targetItems);
             return items.ToList();
         }
 
-        private IEnumerable<AmazonKeywordDailySummary> ExtractKeywordSummaries(DateTime date)
+        private IEnumerable<AmazonSearchTermDailySummary> ExtractSearchTermSummaries(DateTime date)
         {
-            var spSums = _amazonUtility.ReportKeywords(CampaignType.SponsoredProducts, date, clientId, true);
-            var sbSums = _amazonUtility.ReportKeywords(CampaignType.SponsoredBrands, date, clientId, true);
-            var sums = spSums.Concat(sbSums);
+            var sums = _amazonUtility.ReportSearchTerms(date, clientId, true);
             var filteredSums = FilterByCampaigns(sums, x => x.CampaignName);
             return filteredSums.ToList();
         }
 
-        private IEnumerable<AmazonTargetKeywordDailySummary> ExtractTargetSummaries(DateTime date)
+        private IEnumerable<AmazonTargetSearchTermDailySummary> ExtractTargetSummaries(DateTime date)
         {
-            var sums = _amazonUtility.ReportTargetKeywords(date, clientId, true);
+            var sums = _amazonUtility.ReportTargetSearchTerms(date, clientId, true);
             var filteredSums = FilterByCampaigns(sums, x => x.CampaignName);
             return filteredSums.ToList();
         }
 
-        private IEnumerable<KeywordSummary> TransformSummaries(
-            IEnumerable<AmazonKeywordDailySummary> keywordStats,
+        private IEnumerable<SearchTermSummary> TransformSummaries(
+            IEnumerable<AmazonSearchTermDailySummary> searchTermStats,
             DateTime date,
             List<AmazonCampaign> campaignsData)
         {
-            var notEmptyStats = keywordStats.Where(x => !x.AllZeros()).ToList();
+            var notEmptyStats = searchTermStats.Where(x => !x.AllZeros()).ToList();
             var summaries = notEmptyStats.Select(stat =>
                 CreateSummary(stat, date, campaignsData.FirstOrDefault(c => c.CampaignId == stat.CampaignId)));
             return summaries.ToList();
         }
 
-        private IEnumerable<KeywordSummary> TransformSummaries(
-            IEnumerable<AmazonTargetKeywordDailySummary> targetStats,
+        private IEnumerable<SearchTermSummary> TransformSummaries(
+            IEnumerable<AmazonTargetSearchTermDailySummary> targetStats,
             DateTime date,
             List<AmazonCampaign> campaignsData)
         {
@@ -191,31 +192,33 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
             return summaries.ToList();
         }
 
-        private KeywordSummary CreateSummary(
-            AmazonKeywordDailySummary keywordStat,
+        private SearchTermSummary CreateSummary(
+            AmazonSearchTermDailySummary searchTermStats,
             DateTime date,
             AmazonCampaign relatedCampaign)
         {
-            var sum = CreateSummary(keywordStat as AmazonStatSummary, date, relatedCampaign);
-            sum.KeywordEid = keywordStat.KeywordId;
-            sum.KeywordName = keywordStat.KeywordText;
+            var sum = CreateSummary(searchTermStats as AmazonStatSummary, date, relatedCampaign);
+            sum.KeywordEid = searchTermStats.KeywordId;
+            sum.KeywordName = searchTermStats.KeywordText;
+            sum.SearchTermName = searchTermStats.Query;
             return sum;
         }
 
-        private KeywordSummary CreateSummary(
-            AmazonTargetKeywordDailySummary targetStat,
+        private SearchTermSummary CreateSummary(
+            AmazonTargetSearchTermDailySummary targetStat,
             DateTime date,
             AmazonCampaign relatedCampaign)
         {
             var sum = CreateSummary(targetStat as AmazonStatSummary, date, relatedCampaign);
             sum.KeywordEid = targetStat.TargetId;
             sum.KeywordName = targetStat.TargetingText;
+            sum.SearchTermName = targetStat.Query;
             return sum;
         }
 
-        private KeywordSummary CreateSummary(AmazonStatSummary stat, DateTime date, AmazonCampaign relatedCampaign)
+        private SearchTermSummary CreateSummary(AmazonStatSummary stat, DateTime date, AmazonCampaign relatedCampaign)
         {
-            var sum = new KeywordSummary
+            var sum = new SearchTermSummary
             {
                 AdSetEid = stat.AdGroupId,
                 AdSetName = stat.AdGroupName,

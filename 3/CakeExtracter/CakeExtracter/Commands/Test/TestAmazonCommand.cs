@@ -7,7 +7,7 @@ using System.Linq;
 using Amazon.Entities;
 using Amazon.Enums;
 using Amazon.Helpers;
-using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors;
+using CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors;
 using CakeExtracter.SimpleRepositories.RepositoriesWithStorage;
 using CakeExtracter.SimpleRepositories.RepositoriesWithStorage.Interfaces;
 using DirectAgents.Domain.Contexts;

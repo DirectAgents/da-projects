@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
+using CakeExtracter.Etl.Amazon.Loaders;
 using CakeExtracter.Tests.JobTests.Amazon.TestImplementations.DIModules.Base;
 using DirectAgents.Domain.Entities.CPProg;
 using Moq;

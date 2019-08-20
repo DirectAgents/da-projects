@@ -1,22 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using CakeExtracter.Etl.Amazon.Exceptions;
+using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using CakeExtracter.Helpers;
-using CakeExtracter.Logging.TimeWatchers;
+using CakeExtracter.Logging.TimeWatchers.Amazon;
 using DirectAgents.Domain.Entities.CPProg;
 
-namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
+namespace CakeExtracter.Etl.Amazon.Loaders
 {
+    /// <inheritdoc />
     /// <summary>
     /// Summary loader for amazon Keyword level.
     /// </summary>
-    /// <seealso cref="CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders.BaseAmazonLevelLoader{DirectAgents.Domain.Entities.CPProg.KeywordSummary, DirectAgents.Domain.Entities.CPProg.KeywordSummaryMetric}" />
     public class AmazonKeywordSummaryLoader : BaseAmazonLevelLoader<KeywordSummary, KeywordSummaryMetric>
     {
         private readonly KeywordSummaryLoader summaryLoader;
 
+        /// <inheritdoc cref="BaseAmazonLevelLoader{KeywordSummary, KeywordSummaryMetric}" />
         /// <summary>
-        /// Initializes a new instance of the <see cref="AmazonKeywordSummaryLoader"/> class.
+        /// Initializes a new instance of the <see cref="AmazonKeywordSummaryLoader" /> class.
         /// </summary>
         /// <param name="accountId">The account identifier.</param>
         public AmazonKeywordSummaryLoader(int accountId)
@@ -31,7 +33,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
         /// <value>
         /// The name of the level.
         /// </value>
-        protected override string LevelName => AmazonJobLevels.keyword;
+        protected override string LevelName => AmazonJobLevels.Keyword;
 
         /// <summary>
         /// Gets the locker object for multithreading operations.
