@@ -33,12 +33,6 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
         void SetJobExecutionItemsAbortedState(int[] itemIds);
 
         /// <summary>
-        /// Sets the state of the job execution items to aborted.
-        /// </summary>
-        /// <param name="execution">The job execution.</param>
-        void SetJobExecutionAbortedState(JobRequestExecution execution);
-
-        /// <summary>
         /// Sets the state of the job execution item to aborted by timeout.
         /// </summary>
         /// <param name="execution">The job execution.</param>

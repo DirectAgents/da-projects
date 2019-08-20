@@ -123,23 +123,9 @@ namespace CakeExtracter.Common.JobExecutionManagement
         /// </summary>
         public void CloseContext()
         {
-            if (currentJobRequestExecution.Status == JobExecutionStatus.Processing)
-            {
-                Logger.Warn("The current job execution has been aborted.");
-                jobExecutionItemService.SetJobExecutionAbortedState(currentJobRequestExecution);
-            }
             if (currentJobRequest.Status == JobRequestStatus.Processing)
             {
-                if (currentJobRequestExecution.Status == JobExecutionStatus.Aborted)
-                {
-                    Logger.Warn("The running job request has been aborted.");
-                    jobRequestLifeCycleManager.ProcessAbortedRequest(currentJobRequest);
-                }
-                else
-                {
-                    Logger.Error(new Exception("The running job request is closing in the Processing state. The request will be processed as Failed."));
-                    jobRequestLifeCycleManager.ProcessFailedRequest(currentJobRequest, currentCommand);
-                }
+                jobRequestLifeCycleManager.ProcessAbortedRequest(currentJobRequest);
             }
         }
 
