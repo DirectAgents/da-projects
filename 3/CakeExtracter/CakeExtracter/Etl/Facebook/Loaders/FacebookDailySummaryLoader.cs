@@ -57,6 +57,10 @@ namespace CakeExtracter.Etl.Facebook.Loaders
         {
             try
             {
+                if (!latestSummaries.Any())
+                {
+                    return;
+                }
                 DeleteOldSummariesFromDb();
                 LoadLatestSummariesToDb(latestSummaries);
             }
