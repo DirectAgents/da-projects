@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using CakeExtracter.Etl.Amazon.Exceptions;
-using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using CakeExtracter.Helpers;
 using CakeExtracter.Logging.TimeWatchers.Amazon;
 using DirectAgents.Domain.Entities.CPProg;
@@ -12,18 +11,15 @@ namespace CakeExtracter.Etl.Amazon.Loaders
     /// Summary loader for amazon Account level.
     /// </summary>
     /// <seealso cref="BaseAmazonLevelLoader{DailySummary, DailySummaryMetric}" />
-    public class AmazonDailySummaryLoader : BaseAmazonLevelLoader<DailySummary,DailySummaryMetric>
+    public class AmazonDailySummaryLoader : BaseAmazonLevelLoader<DailySummary, DailySummaryMetric>
     {
-        private readonly TDDailySummaryLoader summaryItemsLoader;
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="AmazonDailySummaryLoader"/> class.
+        /// Initializes a new instance of the <see cref="AmazonDailySummaryLoader" /> class.
         /// </summary>
         /// <param name="accountId">The account identifier.</param>
         public AmazonDailySummaryLoader(int accountId)
             : base(accountId)
         {
-            summaryItemsLoader = new TDDailySummaryLoader(accountId);
         }
 
         /// <summary>
@@ -48,7 +44,7 @@ namespace CakeExtracter.Etl.Amazon.Loaders
         /// <param name="summaryItems">The summary items.</param>
         protected override void EnsureRelatedItems(List<DailySummary> summaryItems)
         {
-            summaryItemsLoader.AssignIdsToItems(summaryItems);
+            summaryItems.ForEach(i => i.AccountId = accountId);
         }
 
         /// <summary>

@@ -121,6 +121,15 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             AddUpdateDependentStrategiesInDb(strategies);
         }
 
+        public void AddDependentStrategyTypes(ClientPortalProgContext db, IEnumerable<Strategy> strategies)
+        {
+            var targetingTypes = strategies.Select(x => x.TargetingType);
+            var types = strategies.Select(x => x.Type).Concat(targetingTypes);
+            var notStoredTypes = types.Where(x => x?.Name != null).DistinctBy(x => x.Name).ToList();
+            typeRepositoryWithStorage.AddItems(db, notStoredTypes);
+            AssignTypeIdToStrategies(strategies);
+        }
+
         private void AddUpdateDependentStrategiesInDb(IEnumerable<Strategy> strategies)
         {
             using (var db = new ClientPortalProgContext())
@@ -149,15 +158,6 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     });
                 }
             }
-        }
-
-        private void AddDependentStrategyTypes(ClientPortalProgContext db, IEnumerable<Strategy> strategies)
-        {
-            var targetingTypes = strategies.Select(x => x.TargetingType);
-            var types = strategies.Select(x => x.Type).Concat(targetingTypes);
-            var notStoredTypes = types.Where(x => x?.Name != null).DistinctBy(x => x.Name).ToList();
-            typeRepositoryWithStorage.AddItems(db, notStoredTypes);
-            AssignTypeIdToStrategies(strategies);
         }
 
         private void AssignTypeIdToStrategies(IEnumerable<Strategy> strategies)

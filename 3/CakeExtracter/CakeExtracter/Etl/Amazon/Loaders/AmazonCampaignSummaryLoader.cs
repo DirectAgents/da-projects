@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CakeExtracter.Etl.Amazon.Exceptions;
-using CakeExtracter.Etl.TradingDesk.LoadersDA;
+using CakeExtracter.Etl.Amazon.Loaders.EntitiesLoaders;
 using CakeExtracter.Helpers;
 using CakeExtracter.Logging.TimeWatchers.Amazon;
 using DirectAgents.Domain.Entities.CPProg;
@@ -14,7 +14,7 @@ namespace CakeExtracter.Etl.Amazon.Loaders
     /// <seealso cref="BaseAmazonLevelLoader{StrategySummary, StrategySummaryMetric}" />
     public class AmazonCampaignSummaryLoader : BaseAmazonLevelLoader<StrategySummary, StrategySummaryMetric>
     {
-        private readonly TDStrategySummaryLoader summaryItemsLoader;
+        private readonly AmazonStrategyLoader campaignEntityLoader;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AmazonCampaignSummaryLoader"/> class.
@@ -23,7 +23,7 @@ namespace CakeExtracter.Etl.Amazon.Loaders
         public AmazonCampaignSummaryLoader(int accountId)
             : base(accountId)
         {
-            summaryItemsLoader = new TDStrategySummaryLoader(accountId);
+            campaignEntityLoader = new AmazonStrategyLoader(accountId);
         }
 
         /// <summary>
@@ -48,9 +48,7 @@ namespace CakeExtracter.Etl.Amazon.Loaders
         /// <param name="summaryItems">The summary items.</param>
         protected override void EnsureRelatedItems(List<StrategySummary> summaryItems)
         {
-            summaryItemsLoader.PrepareData(summaryItems);
-            summaryItemsLoader.AddUpdateDependentStrategies(summaryItems);
-            summaryItemsLoader.AssignStrategyIdToItems(summaryItems);
+            campaignEntityLoader.MergeDependentStrategies(summaryItems);
         }
 
         /// <summary>

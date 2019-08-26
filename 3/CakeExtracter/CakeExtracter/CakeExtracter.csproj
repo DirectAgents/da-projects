@@ -537,6 +537,9 @@
     <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonApiAdExtractor.cs" />
     <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonApiSearchTermExtractor.cs" />
     <Compile Include="Etl\Amazon\Loaders\AmazonSearchTermSummaryLoader.cs" />
+    <Compile Include="Etl\Amazon\Loaders\EntitiesLoaders\AmazonAdLoader.cs" />
+    <Compile Include="Etl\Amazon\Loaders\EntitiesLoaders\AmazonBaseEntityLoader.cs" />
+    <Compile Include="Etl\Amazon\Loaders\EntitiesLoaders\AmazonStrategyLoader.cs" />
     <Compile Include="Etl\Apple\Exceptions\AppleFailedEtlException.cs" />
     <Compile Include="Etl\Amazon\Exceptions\FailedStatsLoadingException.cs" />
     <Compile Include="Etl\CakeMarketing\DALoaders\DAAffiliatesLoader.cs" />
