@@ -1,5 +1,8 @@
 ﻿namespace Adform.Enums
 {
+    /// <summary>
+    /// Enumerator for Adform conversion types.
+    /// </summary>
     public enum ConversionMetric
     {
         ConversionsConversionType1,

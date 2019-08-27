@@ -45,6 +45,10 @@ namespace CakeExtracter.Commands
 
         public bool DisabledOnly { get; set; }
 
+        private static List<string> accountIdsForOrders;
+        private static Dictionary<string, string> trackingIdsOfAccounts;
+        private static List<string> accountsWithSeveralMedia;
+
         public override void ResetProperties()
         {
             AccountId = null;
@@ -72,57 +76,61 @@ namespace CakeExtracter.Commands
         {
             var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info("Adform ETL. DateRange {0}.", dateRange);
-
             var statsType = new StatsTypeAgg(StatsType);
-            var accountIdsForOrders = ConfigurationHelper.ExtractEnumerableFromConfig("Adform_OrderInsteadOfCampaign");
-            var trackingIdsOfAccounts = ConfigurationHelper.ExtractDictionaryFromConfigValue("Adform_AccountsWithSpecificTracking", "Adform_AccountsTrackingIds");
-
+            SetConfigurableVariables();
             var accounts = GetAccounts();
             AdformUtility.TokenSets = GetTokens();
-
             foreach (var account in accounts)
             {
                 Logger.Info("Commencing ETL for Adform account ({0}) {1}", account.Id, account.Name);
-
-                var etlLevelActions = GetEtlLevelActions(account, dateRange, accountIdsForOrders, trackingIdsOfAccounts, statsType);
+                var etlLevelActions = GetEtlLevelActions(account, dateRange, statsType);
                 Parallel.Invoke(etlLevelActions.ToArray());
             }
-
             SaveTokens(AdformUtility.TokenSets);
             return 0;
         }
 
-        private static List<Action> GetEtlLevelActions(ExtAccount account, DateRange dateRange, List<string> accountIdsForOrders, Dictionary<string, string> trackingIdsOfAccounts, StatsTypeAgg statsType)
+        private static void SetConfigurableVariables()
+        {
+            accountIdsForOrders = ConfigurationHelper.ExtractEnumerableFromConfig("Adform_OrderInsteadOfCampaign");
+            trackingIdsOfAccounts = ConfigurationHelper.ExtractDictionaryFromConfigValue("Adform_AccountsWithSpecificTracking", "Adform_AccountsTrackingIds");
+            accountsWithSeveralMedia = ConfigurationHelper.ExtractEnumerableFromConfig("Adform_AccountsWithSeveralMedia");
+        }
+
+        private static List<Action> GetEtlLevelActions(ExtAccount account, DateRange dateRange, StatsTypeAgg statsType)
         {
             var etlLevelActions = new List<Action>();
-
             var orderInsteadOfCampaign = accountIdsForOrders.Contains(account.ExternalId);
-            var adformUtility = CreateUtility(account, trackingIdsOfAccounts);
-
+            var rtbMediaOnly = !accountsWithSeveralMedia.Contains(account.ExternalId);
+            var adformUtility = CreateUtility(account);
             if (statsType.Daily)
             {
-                var etlLevelAction = GetEtlLevelAction(account, () => DoETL_Daily(dateRange, account, adformUtility));
+                var etlLevelAction = GetEtlLevelAction(
+                    account,
+                    () => DoETL_Daily(dateRange, account, adformUtility, rtbMediaOnly));
                 etlLevelActions.Add(etlLevelAction);
             }
-
             if (statsType.Strategy)
             {
-                var etlLevelAction = GetEtlLevelAction(account, () => DoETL_Strategy(dateRange, account, orderInsteadOfCampaign, adformUtility));
+                var etlLevelAction = GetEtlLevelAction(
+                    account,
+                    () => DoETL_Strategy(dateRange, account, orderInsteadOfCampaign, adformUtility, rtbMediaOnly));
                 etlLevelActions.Add(etlLevelAction);
             }
-
             if (statsType.AdSet)
             {
-                var etlLevelAction = GetEtlLevelAction(account, () => DoETL_AdSet(dateRange, account, orderInsteadOfCampaign, adformUtility));
+                var etlLevelAction = GetEtlLevelAction(
+                    account,
+                    () => DoETL_AdSet(dateRange, account, orderInsteadOfCampaign, adformUtility, rtbMediaOnly));
                 etlLevelActions.Add(etlLevelAction);
             }
-
             if (statsType.Creative)
             {
-                var etlLevelAction = GetEtlLevelAction(account, () => DoETL_Creative(dateRange, account, adformUtility));
+                var etlLevelAction = GetEtlLevelAction(
+                    account,
+                    () => DoETL_Creative(dateRange, account, adformUtility, rtbMediaOnly));
                 etlLevelActions.Add(etlLevelAction);
             }
-
             return etlLevelActions;
         }
 
@@ -141,7 +149,7 @@ namespace CakeExtracter.Commands
             };
         }
 
-        private static AdformUtility CreateUtility(ExtAccount account, Dictionary<string, string> trackingIdsOfAccounts)
+        private static AdformUtility CreateUtility(ExtAccount account)
         {
             var adformUtility = new AdformUtility(
                 message => Logger.Info(account.Id, message),
@@ -150,7 +158,7 @@ namespace CakeExtracter.Commands
             adformUtility.SetWhichAlt(account.ExternalId);
             adformUtility.TrackingIds = trackingIdsOfAccounts.ContainsKey(account.ExternalId)
                 ? new[] { trackingIdsOfAccounts[account.ExternalId] }
-                : new string[] { };
+                : Array.Empty<string>();
             return adformUtility;
         }
 
@@ -165,30 +173,30 @@ namespace CakeExtracter.Commands
         }
 
         // ---
-        private static void DoETL_Daily(DateRange dateRange, ExtAccount account, AdformUtility adformUtility)
+        private static void DoETL_Daily(DateRange dateRange, ExtAccount account, AdformUtility adformUtility, bool rtbMediaOnly)
         {
-            var extractor = new AdformDailySummaryExtractor(adformUtility, dateRange, account);
+            var extractor = new AdformDailySummaryExtractor(adformUtility, dateRange, account, rtbMediaOnly);
             var loader = new TDDailySummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
 
-        private static void DoETL_Strategy(DateRange dateRange, ExtAccount account, bool byOrder, AdformUtility adformUtility)
+        private static void DoETL_Strategy(DateRange dateRange, ExtAccount account, bool byOrder, AdformUtility adformUtility, bool rtbMediaOnly)
         {
-            var extractor = new AdformStrategySummaryExtractor(adformUtility, dateRange, account, byOrder);
+            var extractor = new AdformStrategySummaryExtractor(adformUtility, dateRange, account, rtbMediaOnly, byOrder);
             var loader = new AdformCampaignSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
 
-        private static void DoETL_AdSet(DateRange dateRange, ExtAccount account, bool byOrder, AdformUtility adformUtility)
+        private static void DoETL_AdSet(DateRange dateRange, ExtAccount account, bool byOrder, AdformUtility adformUtility, bool rtbMediaOnly)
         {
-            var extractor = new AdformAdSetSummaryExtractor(adformUtility, dateRange, account, byOrder);
+            var extractor = new AdformAdSetSummaryExtractor(adformUtility, dateRange, account, rtbMediaOnly, byOrder);
             var loader = new AdformLineItemSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
 
-        private static void DoETL_Creative(DateRange dateRange, ExtAccount account, AdformUtility adformUtility)
+        private static void DoETL_Creative(DateRange dateRange, ExtAccount account, AdformUtility adformUtility, bool rtbMediaOnly)
         {
-            var extractor = new AdformTDadSummaryExtractor(adformUtility, dateRange, account);
+            var extractor = new AdformTDadSummaryExtractor(adformUtility, dateRange, account, rtbMediaOnly);
             var loader = new TDadSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }

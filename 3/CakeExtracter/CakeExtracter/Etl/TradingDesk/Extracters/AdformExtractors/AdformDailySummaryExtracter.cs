@@ -10,8 +10,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 {
     public class AdformDailySummaryExtractor : AdformApiBaseExtractor<DailySummary>
     {
-        public AdformDailySummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account)
-            : base(adformUtility, dateRange, account)
+        public AdformDailySummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account, bool rtbMediaOnly)
+            : base(adformUtility, dateRange, account, rtbMediaOnly)
         {
         }
 

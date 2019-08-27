@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Adform.Constants;
 using Adform.Entities;
 using Adform.Entities.ReportEntities.ReportParameters;
 using Adform.Enums;
@@ -22,7 +23,6 @@ namespace Adform.Helpers
         public const string ConversionType3 = "conversionType3";
 
         private const string DateFormat = "yyyy'-'M'-'d";
-        private const string RtbName = "Real Time Bidding";
 
         public static readonly Dictionary<Dimension, string> Dimensions = new Dictionary<Dimension, string>
         {
@@ -97,7 +97,7 @@ namespace Adform.Helpers
                 From = settings.StartDate.ToString(DateFormat),
                 To = settings.EndDate.ToString(DateFormat),
             };
-            filter.Media = new Media { Name = new[] { RtbName } };
+            filter.Media = GetMedia(settings.RtbMediaOnly);
         }
 
         private static IEnumerable<MetricMetadata> GetConversionMetrics(string metricName)
@@ -110,6 +110,13 @@ namespace Adform.Helpers
                     conversionType = convType,
                 },
             });
+        }
+
+        private static Media GetMedia(bool rtbMediaOnly)
+        {
+            return rtbMediaOnly
+                ? new Media { Name = new[] { MediaName.RtbMediaName } }
+                : new Media { Name = new[] { MediaName.RtbMediaName, MediaName.DbmMediaName, MediaName.TtdMediaName, MediaName.YamMediaName } };
         }
     }
 }
