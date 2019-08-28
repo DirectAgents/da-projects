@@ -97,7 +97,9 @@ namespace Adform.Helpers
                 From = settings.StartDate.ToString(DateFormat),
                 To = settings.EndDate.ToString(DateFormat),
             };
-            filter.Media = GetMedia(settings.RtbMediaOnly);
+            filter.Media = settings.RtbMediaOnly
+                ? GetRtbMedia()
+                : GetMultipleMedia();
         }
 
         private static IEnumerable<MetricMetadata> GetConversionMetrics(string metricName)
@@ -112,11 +114,17 @@ namespace Adform.Helpers
             });
         }
 
-        private static Media GetMedia(bool rtbMediaOnly)
+        private static Media GetRtbMedia()
         {
-            return rtbMediaOnly
-                ? new Media { Name = new[] { MediaName.RtbMediaName } }
-                : new Media { Name = new[] { MediaName.RtbMediaName, MediaName.DbmMediaName, MediaName.TtdMediaName, MediaName.YamMediaName } };
+            return new Media { Name = new[] { MediaName.RtbMediaName } };
+        }
+
+        private static Media GetMultipleMedia()
+        {
+            return new Media
+            {
+                Name = new[] { MediaName.RtbMediaName, MediaName.DbmMediaName, MediaName.TtdMediaName, MediaName.YamMediaName },
+            };
         }
     }
 }

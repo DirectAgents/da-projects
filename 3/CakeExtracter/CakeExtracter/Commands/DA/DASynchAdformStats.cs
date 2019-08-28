@@ -47,7 +47,7 @@ namespace CakeExtracter.Commands
 
         private static List<string> accountIdsForOrders;
         private static Dictionary<string, string> trackingIdsOfAccounts;
-        private static List<string> accountsWithSeveralMedia;
+        private static List<string> accountsWithMultipleMedia;
 
         public override void ResetProperties()
         {
@@ -94,14 +94,14 @@ namespace CakeExtracter.Commands
         {
             accountIdsForOrders = ConfigurationHelper.ExtractEnumerableFromConfig("Adform_OrderInsteadOfCampaign");
             trackingIdsOfAccounts = ConfigurationHelper.ExtractDictionaryFromConfigValue("Adform_AccountsWithSpecificTracking", "Adform_AccountsTrackingIds");
-            accountsWithSeveralMedia = ConfigurationHelper.ExtractEnumerableFromConfig("Adform_AccountsWithSeveralMedia");
+            accountsWithMultipleMedia = ConfigurationHelper.ExtractEnumerableFromConfig("Adform_AccountsWithMultipleMedia");
         }
 
         private static List<Action> GetEtlLevelActions(ExtAccount account, DateRange dateRange, StatsTypeAgg statsType)
         {
             var etlLevelActions = new List<Action>();
             var orderInsteadOfCampaign = accountIdsForOrders.Contains(account.ExternalId);
-            var rtbMediaOnly = !accountsWithSeveralMedia.Contains(account.ExternalId);
+            var rtbMediaOnly = !accountsWithMultipleMedia.Contains(account.ExternalId);
             var adformUtility = CreateUtility(account);
             if (statsType.Daily)
             {
