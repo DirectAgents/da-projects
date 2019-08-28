@@ -1,5 +1,8 @@
 ﻿namespace Adform.Enums
 {
+    /// <summary>
+    /// Enumerator for Adform Dimensions.
+    /// </summary>
     public enum Dimension
     {
         Date,
@@ -8,6 +11,6 @@
         LineItem,
         Banner,
         Media,
-        AdInteractionType
+        AdInteractionType,
     }
 }
