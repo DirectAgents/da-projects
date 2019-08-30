@@ -12,7 +12,7 @@ namespace SeleniumDataBrowser.PDA.PageActions
         /// <summary>
         /// Button "Filter by".
         /// </summary>
-        public static By FilterByButton = By.XPath(".//button[contains(text(),'Filter by')]");
+        public static By FilterByButton = By.CssSelector("button[data-e2e-id='topFilterDropdownButton']");
 
         /// <summary>
         /// Button for open Campaign profiles menu.
