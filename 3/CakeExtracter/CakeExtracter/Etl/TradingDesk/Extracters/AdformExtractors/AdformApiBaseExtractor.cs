@@ -16,17 +16,18 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         protected readonly AdformUtility AfUtility;
         protected readonly DateRange DateRange;
         protected readonly int ClientId;
-        protected Dictionary<DateTime, decimal> MonthlyCostMultipliers = new Dictionary<DateTime, decimal>();
 
         /// <summary>
         /// Internal identifier of account.
         /// </summary>
         protected readonly int AccountId;
 
+        protected Dictionary<DateTime, decimal> MonthlyCostMultipliers = new Dictionary<DateTime, decimal>();
+
         private static readonly Dictionary<AdInteractionType, string> AdInteractions = new Dictionary<AdInteractionType, string>
         {
             {AdInteractionType.Clicks, "Click"},
-            {AdInteractionType.Impressions, "Impression"}
+            {AdInteractionType.Impressions, "Impression"},
         };
 
         private static readonly Dictionary<AdInteractionType, Dictionary<ConversionMetric, string>> MetricNames =
@@ -40,7 +41,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                         {ConversionMetric.ConversionsConversionType3, "Adform-Conversions-ConvType3-Clicks"},
                         {ConversionMetric.SalesConversionType1, "Adform-Sales-ConvType1-Clicks"},
                         {ConversionMetric.SalesConversionType2, "Adform-Sales-ConvType2-Clicks"},
-                        {ConversionMetric.SalesConversionType3, "Adform-Sales-ConvType3-Clicks"}
+                        {ConversionMetric.SalesConversionType3, "Adform-Sales-ConvType3-Clicks"},
                     }
                 },
                 {
@@ -51,12 +52,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                         {ConversionMetric.ConversionsConversionType3, "Adform-Conversions-ConvType3-Impressions"},
                         {ConversionMetric.SalesConversionType1, "Adform-Sales-ConvType1-Impressions"},
                         {ConversionMetric.SalesConversionType2, "Adform-Sales-ConvType2-Impressions"},
-                        {ConversionMetric.SalesConversionType3, "Adform-Sales-ConvType3-Impressions"}
+                        {ConversionMetric.SalesConversionType3, "Adform-Sales-ConvType3-Impressions"},
                     }
-                }
+                },
             };
 
-        protected AdformApiBaseExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account)
+        private readonly bool rtbMediaOnly;
+
+        protected AdformApiBaseExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account, bool rtbMediaOnly)
         {
             AfUtility = adformUtility;
             DateRange = dateRange;
@@ -66,6 +69,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             {
                 SetMonthlyCostMultipliers(account, dateRange);
             }
+            this.rtbMediaOnly = rtbMediaOnly;
         }
 
         protected ReportSettings GetBaseSettings()
@@ -77,7 +81,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                 ClientId = ClientId,
                 BasicMetrics = true,
                 ConvMetrics = true,
-                RtbOnly = true,
+                RtbMediaOnly = rtbMediaOnly,
                 TrackingIds = AfUtility.TrackingIds,
                 Dimensions = new List<Dimension> { Dimension.AdInteractionType },
             };
