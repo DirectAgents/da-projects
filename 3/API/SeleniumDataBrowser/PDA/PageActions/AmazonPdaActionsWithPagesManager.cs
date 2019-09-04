@@ -35,8 +35,7 @@ namespace SeleniumDataBrowser.PDA.PageActions
             WaitElementClickable(AmazonPdaPageObjects.CurrentProfileButton);
             MoveToElementAndClick(AmazonPdaPageObjects.CurrentProfileButton);
             WaitElementClickable(AmazonPdaPageObjects.ProfilesMenu);
-            var menuContainers = GetChildrenElements(AmazonPdaPageObjects.ProfilesMenu, AmazonPdaPageObjects.ProfilesMenuItemContainer);
-            var menuItems = menuContainers.Select(x => GetChildElement(x, AmazonPdaPageObjects.ProfilesMenuItem));
+            var menuItems = GetChildrenElements(AmazonPdaPageObjects.ProfilesMenu, AmazonPdaPageObjects.ProfilesMenuItem);
             return menuItems.ToDictionary(x => x.Text.Trim(), x => x.GetAttribute(HrefAttribute));
         }
     }

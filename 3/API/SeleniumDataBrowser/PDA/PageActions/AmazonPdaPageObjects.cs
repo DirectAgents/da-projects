@@ -17,21 +17,16 @@ namespace SeleniumDataBrowser.PDA.PageActions
         /// <summary>
         /// Button for open Campaign profiles menu.
         /// </summary>
-        public static By CurrentProfileButton = By.Id("brandDropDown");
+        public static By CurrentProfileButton = By.CssSelector("div[data-e2e-id='aac-account-dropdown'] > button");
 
         /// <summary>
         /// Campaign profiles menu.
         /// </summary>
-        public static By ProfilesMenu = By.Id("dropDownBrandNameContainer");
-
-        /// <summary>
-        /// Container for elements of Campaign profiles menu.
-        /// </summary>
-        public static By ProfilesMenuItemContainer = By.CssSelector("div.dropDownBrandName");
+        public static By ProfilesMenu = By.CssSelector("div#top-bar-utilities-acc-selector > ul");
 
         /// <summary>
         /// Item of Campaign profiles menu.
         /// </summary>
-        public static By ProfilesMenuItem = By.CssSelector("span > a");
+        public static By ProfilesMenuItem = By.CssSelector("li > a");
     }
 }
