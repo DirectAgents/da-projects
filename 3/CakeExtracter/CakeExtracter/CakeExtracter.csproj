@@ -849,6 +849,7 @@
     <Compile Include="Etl\YAM\Repositories\YamCreativeDatabaseRepository.cs" />
     <Compile Include="Etl\YAM\Repositories\YamLineDatabaseRepository.cs" />
     <Compile Include="Etl\YAM\Repositories\YamPixelDatabaseRepository.cs" />
+    <Compile Include="Extensions\EntityIdStorageEqualityComparer.cs" />
     <Compile Include="Helpers\CommandHelper.cs" />
     <Compile Include="Helpers\ConfigurationHelper.cs" />
     <Compile Include="Helpers\EntityIdStorage.cs" />
