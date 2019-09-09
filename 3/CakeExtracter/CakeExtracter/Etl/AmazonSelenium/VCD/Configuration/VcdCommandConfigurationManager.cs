@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using CakeExtracter.Common;
+﻿using System.Configuration;
 using CakeExtracter.Etl.AmazonSelenium.Configuration;
 using CakeExtracter.Helpers;
 using SeleniumDataBrowser.Helpers;

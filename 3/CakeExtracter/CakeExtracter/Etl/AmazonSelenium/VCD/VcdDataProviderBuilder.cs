@@ -7,7 +7,7 @@ using CakeExtracter.Etl.AmazonSelenium.VCD.Loaders;
 using DirectAgents.Domain.Entities.CPProg;
 using SeleniumDataBrowser.Helpers;
 using SeleniumDataBrowser.Models;
-using SeleniumDataBrowser.VCD;
+using SeleniumDataBrowser.VCD.DataProviders;
 using SeleniumDataBrowser.VCD.Helpers;
 using SeleniumDataBrowser.VCD.Helpers.ReportDownloading;
 using SeleniumDataBrowser.VCD.Helpers.UserInfoExtracting;
@@ -52,7 +52,6 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD
             var loginProcessManager = GetLoginProcessManager(loggerWithoutAccountId);
             vcdDataProvider = VcdDataProvider.GetVcdDataProviderInstance(loginProcessManager);
             vcdDataProvider.LoginToPortal();
-            InitializeLoader();
             vcdAccountsInfo = GetAccountsData();
             return vcdDataProvider;
         }
@@ -153,18 +152,6 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD
         private VcdLoginManager GetLoginProcessManager(SeleniumLogger loggerWithoutAccountId)
         {
             return new VcdLoginManager(authorizationModel, pageActionsManager, loggerWithoutAccountId);
-        }
-
-        private void InitializeLoader()
-        {
-            try
-            {
-                AmazonVcdLoader.PrepareLoader();
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Failed to prepare VCD loader.", e);
-            }
         }
 
         private VcdAccountsManager GetAccountsManager()

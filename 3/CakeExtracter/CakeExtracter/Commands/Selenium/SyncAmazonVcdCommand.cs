@@ -11,9 +11,10 @@ using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Loaders;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Synchers;
 using CakeExtracter.Helpers;
+using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
 using SeleniumDataBrowser.Helpers;
-using SeleniumDataBrowser.VCD;
+using SeleniumDataBrowser.VCD.DataProviders;
 
 namespace CakeExtracter.Commands.Selenium
 {
@@ -27,6 +28,12 @@ namespace CakeExtracter.Commands.Selenium
         private const int DefaultDaysAgo = 60;
 
         private VcdDataProviderBuilder vcdDataProviderBuilder;
+
+        /// <summary>
+        /// Gets or sets the command argument: Account ID in the database
+        /// for which the command will be executed (default = all).
+        /// </summary>
+        public int? AccountId { get; set; }
 
         /// <summary>
         /// Gets or sets the command argument: a number of execution profile (default = 1).
@@ -56,6 +63,11 @@ namespace CakeExtracter.Commands.Selenium
         /// </summary>
         public bool IsHidingBrowserWindow { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to enable manual mode of extracting (default = false).
+        /// </summary>
+        public bool IsExtractManual { get; set; }
+
         /// <inheritdoc cref="ConsoleCommand" />
         /// <summary>
         /// Initializes a new instance of the <see cref="SyncAmazonVcdCommand" /> class.
@@ -63,11 +75,13 @@ namespace CakeExtracter.Commands.Selenium
         public SyncAmazonVcdCommand()
         {
             IsCommand("SyncAmazonVcdCommand", "Sync Vendor Central Stats");
+            HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
             HasOption<int>("p|profileNumber=", "Execution profile number", c => ProfileNumber = c);
             HasOption("s|startDate=", "Start Date (default is 'daysAgo')", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
             HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default = {DefaultDaysAgo})", c => DaysAgoToStart = c);
-            HasOption<bool>("h|hideWindow=", "Include hiding the browser window", c => IsHidingBrowserWindow = c);
+            HasOption<bool>("h|hideWindow=", "Include hiding the browser window (default is false)", c => IsHidingBrowserWindow = c);
+            HasOption<bool>("m|manualExtract=", "Include manual mode of extracting (default is false)", c => IsExtractManual = c);
         }
 
         /// <inheritdoc />
@@ -76,11 +90,13 @@ namespace CakeExtracter.Commands.Selenium
         /// </summary>
         public override void ResetProperties()
         {
+            AccountId = null;
             ProfileNumber = null;
             StartDate = null;
             EndDate = null;
             DaysAgoToStart = null;
             IsHidingBrowserWindow = false;
+            IsExtractManual = false;
         }
 
         /// <inheritdoc />
@@ -92,10 +108,10 @@ namespace CakeExtracter.Commands.Selenium
         /// <returns>Execution code.</returns>
         public override int Execute(string[] remainingArguments)
         {
+            NoNeedToCreateRepeatRequests = IsExtractManual;
             IntervalBetweenUnsuccessfulAndNewRequestInMinutes =
                 VcdCommandConfigurationManager.GetIntervalBetweenUnsuccessfulAndNewRequest();
-            var vcdDataProvider = BuildVcdDataProvider();
-            RunEtls(vcdDataProvider);
+            RunEtls();
             return 0;
         }
 
@@ -112,13 +128,21 @@ namespace CakeExtracter.Commands.Selenium
             return broadCommands;
         }
 
-        private VcdDataProvider BuildVcdDataProvider()
+        private IVcdDataProvider BuildVcdDataProvider()
         {
             try
             {
                 var loggerWithoutAccountId = GetLoggerWithoutAccountId();
-                vcdDataProviderBuilder = new VcdDataProviderBuilder(ProfileNumber, IsHidingBrowserWindow);
-                var vcdDataProvider = vcdDataProviderBuilder.BuildDataProvider(loggerWithoutAccountId);
+                IVcdDataProvider vcdDataProvider;
+                if (IsExtractManual)
+                {
+                    vcdDataProvider = new VcdManualDataProvider(loggerWithoutAccountId);
+                }
+                else
+                {
+                    vcdDataProviderBuilder = new VcdDataProviderBuilder(ProfileNumber, IsHidingBrowserWindow);
+                    vcdDataProvider = vcdDataProviderBuilder.BuildDataProvider(loggerWithoutAccountId);
+                }
                 return vcdDataProvider;
             }
             catch (Exception e)
@@ -127,9 +151,12 @@ namespace CakeExtracter.Commands.Selenium
             }
         }
 
-        private void RunEtls(VcdDataProvider vcdDataProvider)
+        private void RunEtls()
         {
-            var accounts = vcdDataProviderBuilder.GetAccounts();
+            var accounts = IsExtractManual
+                ? GetAccounts()
+                : vcdDataProviderBuilder.GetAccounts();
+            var vcdDataProvider = BuildVcdDataProvider();
             SetInfoAboutAllAccountsInHistory(accounts);
             RunForAccounts(accounts, vcdDataProvider);
         }
@@ -143,7 +170,7 @@ namespace CakeExtracter.Commands.Selenium
             }
         }
 
-        private void RunForAccounts(IEnumerable<ExtAccount> accounts, VcdDataProvider vcdDataProvider)
+        private void RunForAccounts(IEnumerable<ExtAccount> accounts, IVcdDataProvider vcdDataProvider)
         {
             var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info($"Amazon VCD ETL. DateRange {dateRange}.");
@@ -161,11 +188,15 @@ namespace CakeExtracter.Commands.Selenium
             }
         }
 
-        private void DoEtlForAccount(ExtAccount account, DateRange dateRange, VcdDataProvider vcdDataProvider)
+        private void DoEtlForAccount(ExtAccount account, DateRange dateRange, IVcdDataProvider vcdDataProvider)
         {
             Logger.Info(account.Id, $"Amazon VCD, ETL for account {account.Name} ({account.Id}) started.");
-            ConfigureDataProviderForCurrentAccount(account);
+            if (!IsExtractManual)
+            {
+                ConfigureDataProviderForCurrentAccount(account);
+            }
             var extractor = GetDailyDataExtractor(account, dateRange, vcdDataProvider);
+            PrepareDailyDataLoader();
             var loader = new AmazonVcdLoader(account);
             InitEtlEvents(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
@@ -178,11 +209,23 @@ namespace CakeExtracter.Commands.Selenium
             vcdDataProviderBuilder.InitializeReportDownloader(account, loggerWithAccountId);
         }
 
-        private AmazonVcdExtractor GetDailyDataExtractor(ExtAccount account, DateRange dateRange, VcdDataProvider vcdDataProvider)
+        private AmazonVcdExtractor GetDailyDataExtractor(ExtAccount account, DateRange dateRange, IVcdDataProvider vcdDataProvider)
         {
             var maxRetryAttemptsForExtractData = VcdCommandConfigurationManager.GetExtractDailyDataAttemptCount();
             var extractor = new AmazonVcdExtractor(account, dateRange, vcdDataProvider, maxRetryAttemptsForExtractData);
             return extractor;
+        }
+
+        private void PrepareDailyDataLoader()
+        {
+            try
+            {
+                AmazonVcdLoader.PrepareLoader();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to prepare VCD loader.", e);
+            }
         }
 
         private void InitEtlEvents(AmazonVcdExtractor extractor, AmazonVcdLoader loader)
@@ -255,6 +298,18 @@ namespace CakeExtracter.Commands.Selenium
             setting.Item1.DaysAgoToStart = null;
             setting.Item3.Command = setting.Item1;
             return setting.Item3;
+        }
+
+        private List<ExtAccount> GetAccounts()
+        {
+            var repository = new PlatformAccountRepository();
+            if (!AccountId.HasValue)
+            {
+                var accounts = repository.GetAccountsWithFilledExternalIdByPlatformCode(Platform.Code_Amazon, false);
+                return accounts.ToList();
+            }
+            var account = repository.GetAccount(AccountId.Value);
+            return new List<ExtAccount> { account };
         }
     }
 }

@@ -7,7 +7,7 @@ using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.Repor
 using CakeExtracter.Etl.AmazonSelenium.VCD.Models;
 using DirectAgents.Domain.Entities.CPProg;
 using Polly;
-using SeleniumDataBrowser.VCD;
+using SeleniumDataBrowser.VCD.DataProviders;
 
 namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
 {
@@ -16,7 +16,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
     /// </summary>
     internal class AmazonVcdExtractor : Extracter<VcdReportData>
     {
-        private readonly VcdDataProvider vcdDataProvider;
+        private readonly IVcdDataProvider vcdDataProvider;
         private readonly VcdReportCSVParser reportParser;
         private readonly VcdReportComposer reportComposer;
         private readonly ExtAccount account;
@@ -33,7 +33,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
         public AmazonVcdExtractor(
             ExtAccount account,
             DateRange dateRange,
-            VcdDataProvider vcdDataProvider,
+            IVcdDataProvider vcdDataProvider,
             int maxRetryAttemptsForExtractData)
         {
             this.account = account;

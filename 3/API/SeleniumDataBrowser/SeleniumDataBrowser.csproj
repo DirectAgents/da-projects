@@ -104,10 +104,12 @@
     <Compile Include="VCD\Helpers\UserInfoExtracting\Models\PageUserInfo.cs" />
     <Compile Include="VCD\Helpers\UserInfoExtracting\Models\PageAccountInfo.cs" />
     <Compile Include="VCD\Helpers\UserInfoExtracting\UserInfoExtracter.cs" />
+    <Compile Include="VCD\DataProviders\IVcdDataProvider.cs" />
     <Compile Include="VCD\Models\VcdAccountInfo.cs" />
     <Compile Include="VCD\PageActions\AmazonVcdActionsWithPagesManager.cs" />
     <Compile Include="VCD\PageActions\AmazonVcdPageObjects.cs" />
-    <Compile Include="VCD\VcdDataProvider.cs" />
+    <Compile Include="VCD\DataProviders\VcdDataProvider.cs" />
+    <Compile Include="VCD\DataProviders\VcdManualDataProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(SolutionDir)CodeAnalysis\stylecop.json">

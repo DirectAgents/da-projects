@@ -2,12 +2,12 @@
 using SeleniumDataBrowser.VCD.Helpers;
 using SeleniumDataBrowser.VCD.Helpers.ReportDownloading;
 
-namespace SeleniumDataBrowser.VCD
+namespace SeleniumDataBrowser.VCD.DataProviders
 {
     /// <summary>
     /// Data provider for Vendor Central.
     /// </summary>
-    public class VcdDataProvider
+    public class VcdDataProvider : IVcdDataProvider
     {
         private static VcdDataProvider vcdDataProviderInstance;
 
