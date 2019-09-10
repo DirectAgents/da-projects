@@ -121,8 +121,17 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
             Logger.Info(account.Id, $"Amazon VCD, Downloading {reportName} report.");
             var reportProducts = TryExtractData(reportDay, reportName, date =>
             {
+                var products = new List<Product>();
                 var reportTextContent = DownloadReport(downloadReportFunc);
-                return parseReportFunc(reportTextContent, reportDay);
+                if (!string.IsNullOrEmpty(reportTextContent))
+                {
+                    products = parseReportFunc(reportTextContent, reportDay);
+                }
+                else
+                {
+                    Logger.Warn(account.Id, "Amazon VCD, Report content is empty.");
+                }
+                return products;
             });
             Logger.Info(account.Id, $"Amazon VCD, {reportName} report downloaded. {reportProducts.Count} products");
             return reportProducts;

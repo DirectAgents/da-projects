@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Etl.AmazonSelenium.Configuration;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Configuration;
-using CakeExtracter.Etl.AmazonSelenium.VCD.Loaders;
 using DirectAgents.Domain.Entities.CPProg;
 using SeleniumDataBrowser.Helpers;
 using SeleniumDataBrowser.Models;
@@ -15,12 +14,12 @@ using SeleniumDataBrowser.VCD.Helpers.UserInfoExtracting.Models;
 using SeleniumDataBrowser.VCD.Models;
 using SeleniumDataBrowser.VCD.PageActions;
 
-namespace CakeExtracter.Etl.AmazonSelenium.VCD
+namespace CakeExtracter.Etl.AmazonSelenium.VCD.DataProviderBuilders
 {
     /// <summary>
     /// Builder of the VCD Data Provider.
     /// </summary>
-    internal class VcdDataProviderBuilder
+    internal class VcdDataProviderBuilder : IVcdDataProviderBuilder
     {
         private readonly bool isHidingBrowserWindow;
         private AuthorizationModel authorizationModel;
@@ -45,7 +44,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD
         /// </summary>
         /// <param name="loggerWithoutAccountId">Logger without info about account ID.</param>
         /// <returns>Instance of the VCD Data Provider.</returns>
-        public VcdDataProvider BuildDataProvider(SeleniumLogger loggerWithoutAccountId)
+        public IVcdDataProvider BuildDataProvider(SeleniumLogger loggerWithoutAccountId)
         {
             authorizationModel = GetAuthorizationModel();
             pageActionsManager = GetPageActionsManager(loggerWithoutAccountId);

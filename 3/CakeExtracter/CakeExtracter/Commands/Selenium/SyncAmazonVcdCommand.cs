@@ -7,6 +7,7 @@ using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Etl.AmazonSelenium.VCD;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Configuration;
+using CakeExtracter.Etl.AmazonSelenium.VCD.DataProviderBuilders;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Loaders;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Synchers;
@@ -27,7 +28,7 @@ namespace CakeExtracter.Commands.Selenium
     {
         private const int DefaultDaysAgo = 60;
 
-        private VcdDataProviderBuilder vcdDataProviderBuilder;
+        private IVcdDataProviderBuilder vcdDataProviderBuilder;
 
         /// <summary>
         /// Gets or sets the command argument: Account ID in the database
@@ -133,16 +134,15 @@ namespace CakeExtracter.Commands.Selenium
             try
             {
                 var loggerWithoutAccountId = GetLoggerWithoutAccountId();
-                IVcdDataProvider vcdDataProvider;
                 if (IsExtractManual)
                 {
-                    vcdDataProvider = new VcdManualDataProvider(loggerWithoutAccountId);
+                    vcdDataProviderBuilder = new VcdManualDataProviderBuilder(AccountId);
                 }
                 else
                 {
                     vcdDataProviderBuilder = new VcdDataProviderBuilder(ProfileNumber, IsHidingBrowserWindow);
-                    vcdDataProvider = vcdDataProviderBuilder.BuildDataProvider(loggerWithoutAccountId);
                 }
+                var vcdDataProvider = vcdDataProviderBuilder.BuildDataProvider(loggerWithoutAccountId);
                 return vcdDataProvider;
             }
             catch (Exception e)
@@ -153,10 +153,8 @@ namespace CakeExtracter.Commands.Selenium
 
         private void RunEtls()
         {
-            var accounts = IsExtractManual
-                ? GetAccounts()
-                : vcdDataProviderBuilder.GetAccounts();
             var vcdDataProvider = BuildVcdDataProvider();
+            var accounts = vcdDataProviderBuilder.GetAccounts();
             SetInfoAboutAllAccountsInHistory(accounts);
             RunForAccounts(accounts, vcdDataProvider);
         }
@@ -191,10 +189,7 @@ namespace CakeExtracter.Commands.Selenium
         private void DoEtlForAccount(ExtAccount account, DateRange dateRange, IVcdDataProvider vcdDataProvider)
         {
             Logger.Info(account.Id, $"Amazon VCD, ETL for account {account.Name} ({account.Id}) started.");
-            if (!IsExtractManual)
-            {
-                ConfigureDataProviderForCurrentAccount(account);
-            }
+            ConfigureDataProviderForCurrentAccount(account);
             var extractor = GetDailyDataExtractor(account, dateRange, vcdDataProvider);
             PrepareDailyDataLoader();
             var loader = new AmazonVcdLoader(account);
@@ -298,18 +293,6 @@ namespace CakeExtracter.Commands.Selenium
             setting.Item1.DaysAgoToStart = null;
             setting.Item3.Command = setting.Item1;
             return setting.Item3;
-        }
-
-        private List<ExtAccount> GetAccounts()
-        {
-            var repository = new PlatformAccountRepository();
-            if (!AccountId.HasValue)
-            {
-                var accounts = repository.GetAccountsWithFilledExternalIdByPlatformCode(Platform.Code_Amazon, false);
-                return accounts.ToList();
-            }
-            var account = repository.GetAccount(AccountId.Value);
-            return new List<ExtAccount> { account };
         }
     }
 }

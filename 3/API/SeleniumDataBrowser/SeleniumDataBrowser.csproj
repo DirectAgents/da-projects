@@ -94,6 +94,7 @@
     <Compile Include="PDA\PageActions\AmazonPdaPageObjects.cs" />
     <Compile Include="PDA\PdaDataProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VCD\Helpers\ReportDownloading\VcdFolderReportDownloader.cs" />
     <Compile Include="VCD\Helpers\VcdLoginManager.cs" />
     <Compile Include="VCD\Helpers\ReportDownloading\Constants\RequestBodyConstants.cs" />
     <Compile Include="VCD\Helpers\ReportDownloading\Constants\RequestHeaderConstants.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="VCD\Helpers\UserInfoExtracting\Models\PageAccountInfo.cs" />
     <Compile Include="VCD\Helpers\UserInfoExtracting\UserInfoExtracter.cs" />
     <Compile Include="VCD\DataProviders\IVcdDataProvider.cs" />
+    <Compile Include="VCD\Helpers\VcdReportFolderHelper.cs" />
     <Compile Include="VCD\Models\VcdAccountInfo.cs" />
     <Compile Include="VCD\PageActions\AmazonVcdActionsWithPagesManager.cs" />
     <Compile Include="VCD\PageActions\AmazonVcdPageObjects.cs" />
