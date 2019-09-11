@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.DataProviderBuilders
 {
     public class VcdManualDataProviderBuilder : IVcdDataProviderBuilder
     {
+        private readonly string reportFolderPath;
         private readonly int? accountId;
         private readonly Dictionary<ExtAccount, IEnumerable<DirectoryInfo>> daysFoldersByAccounts = new Dictionary<ExtAccount, IEnumerable<DirectoryInfo>>();
         private VcdManualDataProvider vcdDataProvider;
@@ -21,6 +23,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.DataProviderBuilders
         public VcdManualDataProviderBuilder(int? accountId)
         {
             this.accountId = accountId;
+            reportFolderPath = GetPathToReportsFolder();
         }
 
         public IVcdDataProvider BuildDataProvider(SeleniumLogger loggerWithoutAccountId)
@@ -32,7 +35,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.DataProviderBuilders
         public void InitializeReportDownloader(ExtAccount currentAccount, SeleniumLogger loggerWithAccountId)
         {
             var daysFoldersForCurrentAccount = daysFoldersByAccounts[currentAccount];
-            var reportDownloader = new VcdFolderReportDownloader();
+            var reportDownloader = new VcdFolderReportDownloader(reportFolderPath);
             vcdDataProvider.SetReportDownloaderCurrentForDataProvider(reportDownloader, daysFoldersForCurrentAccount);
         }
 
@@ -42,6 +45,14 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.DataProviderBuilders
             SetDaysFoldersByAccounts(dbAccounts);
             var relatedAccounts = new List<ExtAccount>(daysFoldersByAccounts.Keys);
             return relatedAccounts;
+        }
+
+        private string GetPathToReportsFolder()
+        {
+            const string reportsFolderName = "VcdReports";
+            var today = DateTime.Today.ToString("MMddyyyy");
+            var reportsFolderNameForCurrentDay = PathToFileDirectoryHelper.CombinePath(reportsFolderName, today);
+            return PathToFileDirectoryHelper.GetAssemblyRelativePath(reportsFolderNameForCurrentDay);
         }
 
         private IEnumerable<ExtAccount> GetDbAccounts()
@@ -58,9 +69,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.DataProviderBuilders
 
         private void SetDaysFoldersByAccounts(IEnumerable<ExtAccount> dbAccounts)
         {
-            const string reportsFolderName = "VcdReports";
-
-            var accountFolders = VcdReportFolderHelper.GetSubdirectories(reportsFolderName);
+            var accountFolders = VcdReportFolderHelper.GetSubdirectories(reportFolderPath);
             accountFolders.ForEach(accountFolder =>
             {
                 var account = dbAccounts.FirstOrDefault(

@@ -5,11 +5,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
 {
     public class VcdFolderReportDownloader
     {
-        private const string ReportsFolderName = "VcdReports";
-
-        private readonly string reportFolderPath = PathToFileDirectoryHelper.GetAssemblyRelativePath(ReportsFolderName);
-
-        public VcdFolderReportDownloader()
+        public VcdFolderReportDownloader(string reportFolderPath)
         {
             PathToFileDirectoryHelper.CreateDirectoryIfNotExist(reportFolderPath);
         }
