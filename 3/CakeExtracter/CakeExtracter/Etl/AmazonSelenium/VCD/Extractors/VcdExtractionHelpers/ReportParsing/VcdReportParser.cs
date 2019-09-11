@@ -72,6 +72,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
             try
             {
                 Logger.Info(accountId, "Started parsing csv report");
+                reportCsvText = TextUtils.RemoveCrLfCharacters(reportCsvText);
                 reportCsvText = TextUtils.RemoveFirstLine(reportCsvText);
                 using (TextReader sr = new StringReader(reportCsvText))
                 {

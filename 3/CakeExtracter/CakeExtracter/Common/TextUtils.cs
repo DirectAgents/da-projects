@@ -11,5 +11,10 @@ namespace CakeExtracter.Common
             var lines = Regex.Split(text, "\r\n|\r|\n").Skip(1);
             return string.Join(Environment.NewLine, lines.ToArray());
         }
+
+        public static string RemoveCrLfCharacters(string text)
+        {
+            return text.Replace("\r\n", string.Empty);
+        }
     }
 }
