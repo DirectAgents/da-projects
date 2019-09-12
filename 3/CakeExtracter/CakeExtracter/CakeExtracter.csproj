@@ -438,6 +438,7 @@
     <Compile Include="Commands\DA\DASynchYAMStats_Outdated.cs" />
     <Compile Include="Commands\Selenium\SyncAmazonPdaCommand.cs" />
     <Compile Include="Commands\Selenium\SyncAmazonVcdCommand.cs" />
+    <Compile Include="Commands\Test\AdwordsAuth2AuthorizationCommand.cs" />
     <Compile Include="Common\CommandAutoStopWatcher.cs" />
     <Compile Include="Common\Email\EmailNotificationsService.cs" />
     <Compile Include="Common\Email\IEmailNotificationsService.cs" />
