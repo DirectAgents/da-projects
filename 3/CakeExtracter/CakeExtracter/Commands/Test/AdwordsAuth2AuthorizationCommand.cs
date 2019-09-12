@@ -38,51 +38,15 @@ namespace CakeExtracter.Commands.Test
         /// <inheritdoc />
         public override int Execute(string[] remainingArguments)
         {
-            Console.WriteLine(@"This application generates an OAuth2 refresh token for use with
-the Google Ads API .NET client library. To use this application
-1) Follow the instructions on
-https://developers.google.com/adwords/api/docs/guides/authentication#create_a_client_id_and_client_secret
-to generate a new client ID and secret.
-2) Enter the client ID and client Secret when prompted.
-3) Once the output is generated, copy its contents into your App.config file.
-");
-
-            Console.WriteLine(@"Important note: The client ID you use with the example should be
-of type 'Other'. If you are using a Web application client, you should add
-'http://127.0.0.1/authorize' and 'http://localhost/authorize' to the list of
-Authorized redirect URIs in your Google Developer Console to avoid getting a
-redirect_uri_mismatch error.
-");
-
-            // Accept the client ID from user.
-            Console.Write("Enter the client ID: ");
-            var clientId = Console.ReadLine();
-
-            // Accept the client ID from user.
-            Console.Write("Enter the client secret: ");
-            var clientSecret = Console.ReadLine();
-
-            var scopes = GetScopes();
-
-            // Load the JSON secrets.
-            var secrets = new ClientSecrets
-            {
-                ClientId = clientId,
-                ClientSecret = clientSecret,
-            };
-
+            OutputAdditionalInfo();
+            var clientId = AcceptClientIdFromUser();
+            var clientSecret = AcceptClientSecretFromUser();
+            var scopes = AcceptScopes();
+            var secrets = GetClientSecrets(clientId, clientSecret);
             try
             {
-                //var refreshToken = GetRefreshToken(secrets, scopes);
-                var refreshToken = "test";
-                Console.WriteLine($@"
-Copy the following content into your App.config file.
-
-<add key = ""OAuth2Mode"" value = ""APPLICATION"" />
-<add key = ""OAuth2ClientId"" value = ""{clientId}"" />
-<add key = ""OAuth2ClientSecret"" value = ""{clientSecret}"" />
-<add key = ""OAuth2RefreshToken"" value = ""{refreshToken}"" />
-");
+                var refreshToken = GetRefreshToken(secrets, scopes);
+                OutputResultConfigPart(clientId, clientSecret, refreshToken);
                 Console.WriteLine("Press <Enter> to continue...");
                 Console.ReadLine();
             }
@@ -124,30 +88,12 @@ Copy the following content into your App.config file.
             return response;
         }
 
-        private static IEnumerable<string> GetScopes()
+        private static IEnumerable<string> AcceptScopes()
         {
-            // Should API scopes include AdWords API?
-            var useAdWordsApiScope = AcceptInputWithLimitedOptions(
-                "Authenticate for AdWords API?", new[] { "yes", "no" });
-            // Should API scopes include AdWords API?
-            var useAdManagerApiScope = AcceptInputWithLimitedOptions(
-                "Authenticate for Ad Manager API?", new[] { "yes", "no" });
-            // Accept any additional scopes.
-            Console.Write("Enter additional OAuth2 scopes to authenticate for (space separated): ");
-            var additionalScopes = Console.ReadLine();
-
-            var scopes = new List<string>();
-            if (useAdWordsApiScope.ToLower().Trim() == "yes")
-            {
-                scopes.Add(AdwordsApiScope);
-            }
-            if (useAdManagerApiScope.ToLower().Trim() == "yes")
-            {
-                scopes.Add(AdManagerApiScope);
-            }
-            scopes.AddRange(additionalScopes.Split(' ')
-                .Select(s => s.Trim())
-                .Where(s => !string.IsNullOrEmpty(s)));
+            var isAdWordsApiScope = ShouldApiScopesIncludeAdwordsApi();
+            var isAdManagerApiScope = ShouldApiScopesIncludeAdManagerApi();
+            var additionalScopes = AcceptAdditionalScopes();
+            var scopes = SetScopes(isAdWordsApiScope, isAdManagerApiScope, additionalScopes);
             return scopes;
         }
 
@@ -160,6 +106,96 @@ Copy the following content into your App.config file.
             var credential = task.Result;
             var refreshToken = credential.Token.RefreshToken;
             return refreshToken;
+        }
+
+        private static string AcceptClientIdFromUser()
+        {
+            Console.Write("Enter the client ID: ");
+            return Console.ReadLine();
+        }
+
+        private static string AcceptClientSecretFromUser()
+        {
+            Console.Write("Enter the client secret: ");
+            return Console.ReadLine();
+        }
+
+        private static ClientSecrets GetClientSecrets(string clientId, string clientSecret)
+        {
+            return new ClientSecrets
+            {
+                ClientId = clientId,
+                ClientSecret = clientSecret,
+            };
+        }
+
+        private static void OutputAdditionalInfo()
+        {
+            Console.WriteLine(@"This application generates an OAuth2 refresh token for use with
+the Google Ads API .NET client library. To use this application
+1) Follow the instructions on
+https://developers.google.com/adwords/api/docs/guides/authentication#create_a_client_id_and_client_secret
+to generate a new client ID and secret.
+2) Enter the client ID and client Secret when prompted.
+3) Once the output is generated, copy its contents into your App.config file.
+");
+            Console.WriteLine(@"Important note: The client ID you use with the example should be
+of type 'Other'. If you are using a Web application client, you should add
+'http://127.0.0.1/authorize' and 'http://localhost/authorize' to the list of
+Authorized redirect URIs in your Google Developer Console to avoid getting a
+redirect_uri_mismatch error.
+");
+        }
+
+        private static void OutputResultConfigPart(string clientId, string clientSecret, string refreshToken)
+        {
+            Console.WriteLine($@"
+Copy the following content into your App.config file.
+
+<add key=""OAuth2Mode"" value=""APPLICATION"" />
+<add key=""OAuth2ClientId"" value=""{clientId}"" />
+<add key=""OAuth2ClientSecret"" value=""{clientSecret}"" />
+<add key=""OAuth2RefreshToken"" value=""{refreshToken}"" />
+");
+        }
+
+        private static bool ShouldApiScopesIncludeAdwordsApi()
+        {
+            var useAdWordsApiScope = AcceptInputWithLimitedOptions(
+                "Authenticate for AdWords API?", new[] { "yes", "no" });
+            return useAdWordsApiScope.ToLower().Trim() == "yes";
+        }
+
+        private static bool ShouldApiScopesIncludeAdManagerApi()
+        {
+            var useAdManagerApiScope = AcceptInputWithLimitedOptions(
+                "Authenticate for Ad Manager API?", new[] { "yes", "no" });
+            return useAdManagerApiScope.ToLower().Trim() == "yes";
+        }
+
+        private static IEnumerable<string> AcceptAdditionalScopes()
+        {
+            Console.Write("Enter additional OAuth2 scopes to authenticate for (space separated): ");
+            var additionalScopesString = Console.ReadLine();
+            return additionalScopesString.Split(' ')
+                .Select(s => s.Trim())
+                .Where(s => !string.IsNullOrEmpty(s));
+        }
+
+        private static IEnumerable<string> SetScopes(
+            bool isAdWordsApiScope, bool isAdManagerApiScope, IEnumerable<string> additionalScopes)
+        {
+            var scopes = new List<string>();
+            if (isAdWordsApiScope)
+            {
+                scopes.Add(AdwordsApiScope);
+            }
+            if (isAdManagerApiScope)
+            {
+                scopes.Add(AdManagerApiScope);
+            }
+            scopes.AddRange(additionalScopes);
+            return scopes;
         }
     }
 }
