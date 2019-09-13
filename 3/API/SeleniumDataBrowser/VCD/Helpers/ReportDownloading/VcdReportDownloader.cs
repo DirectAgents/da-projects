@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
@@ -13,6 +12,7 @@ using SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants;
 using SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Models;
 using SeleniumDataBrowser.VCD.Models;
 using SeleniumDataBrowser.VCD.PageActions;
+using Cookie = OpenQA.Selenium.Cookie;
 
 namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
 {
@@ -193,11 +193,9 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             };
         }
 
-        private Dictionary<string, string> GetCookies()
+        private IEnumerable<Cookie> GetCookies()
         {
-            var collectionOfCookies = pageActions.GetAllCookies();
-            var cookies = collectionOfCookies.ToDictionary(x => x.Name, x => x.Value);
-            return cookies;
+            return pageActions.GetAllCookies();
         }
 
         private RestRequest GenerateDownloadingReportRequest(DateTime reportDay, string reportLevel, string salesViewName)

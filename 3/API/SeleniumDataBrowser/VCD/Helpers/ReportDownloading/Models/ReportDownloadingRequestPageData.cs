@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using OpenQA.Selenium;
 
 namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Models
 {
@@ -10,7 +11,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Models
             set;
         }
 
-        public Dictionary<string, string> Cookies
+        public IEnumerable<Cookie> Cookies
         {
             get;
             set;
