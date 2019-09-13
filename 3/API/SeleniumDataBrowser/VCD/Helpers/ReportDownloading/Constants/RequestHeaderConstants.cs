@@ -8,12 +8,11 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
 
         public static Dictionary<string, string> GetHeadersDictionary()
         {
-            return new Dictionary<string, string>()
+            return new Dictionary<string, string>
             {
                 { RequestIdHeaderName, "" },  // Should be filled dynamically with guid value
-                { "X-Amzn-Product","ara"},
-                { "Content-Type","application/json"},
-                { "Host","ara.amazon.com"}
+                { "Content-Type", "application/json" },
+                { "Host", "vendorcentral.amazon.com" },
             };
         }
     }

@@ -17,11 +17,11 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
 
         public const string OrderedRevenueLevel = "orderedRevenueLevel";
 
-        public const string ShippedRevenueSalesView = "Shipped Revenue";
+        public const string ShippedRevenueColumnId = "shippedrevenue";
 
-        public const string ShippedCogsSalesView = "Shipped COGS";
+        public const string ShippedCogsColumnId = "shippedcogs";
 
-        public const string OrderedRevenueView = "Ordered Revenue";
+        public const string OrderedRevenueColumnId = "orderedrevenue";
 
         public static Dictionary<string, List<string>> GetInitialVisibleFilters(
             string reportDates, string salesViewName)
@@ -161,7 +161,12 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
                 new ReportParameter
                 {
                     parameterId = "brandCodeVisibility",
-                    values = new List<Value>{ new Value { val = false } }
+                    values = new List<Value> { new Value { val = false } },
+                },
+                new ReportParameter
+                {
+                    parameterId = "subcatVisibility",
+                    values = new List<Value> { new Value { val = false } },
                 },
                 new ReportParameter
                 {
@@ -227,6 +232,26 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
                 {
                     parameterId = "releaseDateVisibility",
                     values = new List<Value>{ new Value { val = isFullSetOfMetrics } }
+                },
+            };
+        }
+
+        public static ReportPaginationWithOrderParameter GetReportPaginationWithOrderParameter(string reportId)
+        {
+            return new ReportPaginationWithOrderParameter
+            {
+                reportPagination = new ReportPagination
+                {
+                    pageIndex = 0,
+                    pageSize = 100,
+                },
+                reportOrders = new List<ReportOrder>
+                {
+                    new ReportOrder
+                    {
+                        columnId = reportId,
+                        ascending = false,
+                    },
                 },
             };
         }

@@ -12,7 +12,7 @@ namespace SeleniumDataBrowser.VCD.Helpers
     /// </summary>
     public class VcdLoginManager
     {
-        private const string SignInPageUrl = "https://www.amazon.com/ap/signin";
+        private const string SignInPageUrl = "https://vendorcentral.amazon.com/gp/vendor/sign-in";
 
         private readonly AuthorizationModel authorizationModel;
         private readonly AmazonVcdActionsWithPagesManager pageActionManager;
@@ -105,9 +105,7 @@ namespace SeleniumDataBrowser.VCD.Helpers
             }
             else
             {
-                logger.LogWarning(
-                    "Login into the portal without using cookies. " +
-                           "Please choose 'Amazon DSP console (formerly Amazon Advertising Platform)' and enter an authorization code!");
+                logger.LogWarning("Login into the portal without using cookies. Please, enter an authorization code!");
                 LoginWithoutCookie();
             }
             pageActionManager.RefreshSalesDiagnosticPage(authorizationModel);

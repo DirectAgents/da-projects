@@ -21,8 +21,8 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
     /// </summary>
     public class VcdReportDownloader
     {
-        private const string AmazonBaseUrl = "https://ara.amazon.com";
-        private const string AmazonCsvDownloadReportUrl = "/analytics/download/csv/dashboard/salesDiagnostic";
+        private const string AmazonBaseUrl = "https://vendorcentral.amazon.com";
+        private const string AmazonCsvDownloadReportUrl = "/analytics/data/dashboard/salesDiagnostic/report/salesDiagnosticDetail";
 
         private static int delayEqualizer;
 
@@ -75,7 +75,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         {
             logger.LogInfo("Amazon VCD, Attempt to download shipped revenue report.");
             return DownloadReportAsCsvText(
-                reportDay, RequestBodyConstants.ShippedRevenueReportLevel, RequestBodyConstants.ShippedRevenueSalesView);
+                reportDay, RequestBodyConstants.ShippedRevenueReportLevel, RequestBodyConstants.ShippedRevenueColumnId);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         {
             logger.LogInfo("Amazon VCD, Attempt to download shipped cogs report.");
             return DownloadReportAsCsvText(
-                reportDay, RequestBodyConstants.ShippedCogsLevel, RequestBodyConstants.ShippedCogsSalesView);
+                reportDay, RequestBodyConstants.ShippedCogsLevel, RequestBodyConstants.ShippedCogsColumnId);
         }
 
         /// <summary>
@@ -99,10 +99,10 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         {
             logger.LogInfo("Amazon VCD, Attempt to download ordered revenue report.");
             return DownloadReportAsCsvText(
-                reportDay, RequestBodyConstants.OrderedRevenueLevel, RequestBodyConstants.OrderedRevenueView);
+                reportDay, RequestBodyConstants.OrderedRevenueLevel, RequestBodyConstants.OrderedRevenueColumnId);
         }
 
-        private string DownloadReportAsCsvText(DateTime reportDay, string reportLevel, string salesViewName)
+        private string DownloadReportAsCsvText(DateTime reportDay, string reportLevel, string reportId)
         {
             var failed = false;
             WaitBeforeReportGenerating(reportDay, reportLevel);
@@ -124,16 +124,16 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
                     })
                 .Execute(() =>
                 {
-                    var resp = DownloadReport(reportDay, reportLevel, salesViewName);
+                    var resp = DownloadReport(reportDay, reportLevel, reportId);
                     EqualizeDelay(IsSuccessfulResponse(resp), failed);
                     return resp;
                 });
             return ProcessResponse(response);
         }
 
-        private IRestResponse DownloadReport(DateTime reportDay, string reportLevel, string salesViewName)
+        private IRestResponse DownloadReport(DateTime reportDay, string reportLevel, string reportId)
         {
-            var request = GenerateDownloadingReportRequest(reportDay, reportLevel, salesViewName);
+            var request = GenerateDownloadingReportRequest(reportDay, reportLevel, reportId);
             var response = RestRequestHelper.SendPostRequest<object>(AmazonBaseUrl, request);
             return response;
         }
@@ -198,11 +198,11 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             return pageActions.GetAllCookies();
         }
 
-        private RestRequest GenerateDownloadingReportRequest(DateTime reportDay, string reportLevel, string salesViewName)
+        private RestRequest GenerateDownloadingReportRequest(DateTime reportDay, string reportLevel, string reportId)
         {
             var pageRequestData = GetPageDataForReportRequest();
             var requestId = Guid.NewGuid().ToString();
-            var requestBodyObject = PrepareRequestBody(requestId, reportDay, reportLevel, salesViewName);
+            var requestBodyObject = PrepareRequestBody(requestId, reportDay, reportLevel, reportId);
             var requestHeaders = GetHeadersDictionary(requestId);
             var requestBodyJson = JsonConvert.SerializeObject(requestBodyObject);
             var requestQueryParams = RequestQueryConstants.GetRequestQueryParameters(
@@ -223,20 +223,16 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             return requestHeaders;
         }
 
-        private DownloadReportRequestBody PrepareRequestBody(string requestId, DateTime reportDay, string reportLevel, string salesViewName)
+        private SalesDiagnosticDetail PrepareRequestBody(
+            string requestId, DateTime reportDay, string reportLevel, string reportId)
         {
-            var visibleFilters = RequestBodyConstants.GetInitialVisibleFilters(
-                GetBodyVisibleFilterDateRange(reportDay), salesViewName);
             var reportParameters = GetReportParameters(reportDay, reportLevel);
-            return new DownloadReportRequestBody
+            var reportPaginationWithOrderParameter = GetReportPaginationWithOrderParameter(reportId);
+            return new SalesDiagnosticDetail
             {
-                salesDiagnosticDetail = new SalesDiagnosticDetail
-                {
-                    requestId = requestId,
-                    reportId = RequestBodyConstants.ReportId,
-                    reportParameters = reportParameters,
-                    visibleFilters = visibleFilters,
-                },
+                requestId = requestId,
+                reportParameters = reportParameters,
+                reportPaginationWithOrderParameter = reportPaginationWithOrderParameter,
             };
         }
 
@@ -247,6 +243,12 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
                 GetReportParameterFilterDate(reportDay),
                 reportLevel);
             return reportParameters;
+        }
+
+        private ReportPaginationWithOrderParameter GetReportPaginationWithOrderParameter(string reportId)
+        {
+            var reportPaginationWithOrderParameter = RequestBodyConstants.GetReportPaginationWithOrderParameter(reportId);
+            return reportPaginationWithOrderParameter;
         }
 
         private string GetBodyVisibleFilterDateRange(DateTime reportDate)

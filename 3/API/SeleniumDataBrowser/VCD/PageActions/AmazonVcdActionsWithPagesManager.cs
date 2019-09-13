@@ -15,7 +15,7 @@ namespace SeleniumDataBrowser.VCD.PageActions
     /// </summary>
     public class AmazonVcdActionsWithPagesManager : AmazonLoginActionsWithPagesManager
     {
-        private const string SalesDiagnosticPageUrl = "https://ara.amazon.com/analytics/dashboard/salesDiagnostic";
+        private const string SalesDiagnosticPageUrl = "https://vendorcentral.amazon.com/analytics/dashboard/salesDiagnostic";
         private const string TypeOfAccounts = "premium";
 
         /// <inheritdoc cref="AmazonLoginActionsWithPagesManager"/>
