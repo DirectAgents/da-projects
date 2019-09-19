@@ -15,6 +15,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
     /// </summary>
     internal class VcdReportCSVParser
     {
+        private const string ValueDelimiter = ";";
         private readonly int accountId;
 
         /// <summary>
@@ -75,6 +76,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
                 {
                     var csvHelper = new CsvReader(sr);
                     csvHelper.Configuration.SkipEmptyRecords = true;
+                    csvHelper.Configuration.Delimiter = ValueDelimiter;
                     csvHelper.Configuration.RegisterClassMap<T>();
                     var products = csvHelper.GetRecords<Product>().ToList();
                     return products;

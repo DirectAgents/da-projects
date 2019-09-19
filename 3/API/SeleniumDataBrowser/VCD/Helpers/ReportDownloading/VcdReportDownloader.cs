@@ -108,15 +108,20 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             try
             {
                 var firstPartOfReportData = TryProcessRequest(reportDay, reportLevel, reportId);
-                var csvReportContent = new StringBuilder();
-                SetCsvReportHeader(csvReportContent, firstPartOfReportData);
-                SetCsvReportRows(reportDay, reportLevel, reportId, csvReportContent, firstPartOfReportData);
-                return csvReportContent.ToString();
+                return CreateCsvReportContent(reportDay, reportLevel, reportId, firstPartOfReportData);
             }
             catch (Exception)
             {
                 return "";
             }
+        }
+
+        private string CreateCsvReportContent(DateTime reportDay, string reportLevel, string reportId, dynamic firstPartOfReportData)
+        {
+            var csvReportContent = new StringBuilder();
+            SetCsvReportHeader(csvReportContent, firstPartOfReportData);
+            SetCsvReportRows(reportDay, reportLevel, reportId, csvReportContent, firstPartOfReportData);
+            return csvReportContent.ToString();
         }
 
         private void SetCsvReportHeader(StringBuilder csvReportContent, dynamic firstPartOfReportData)
@@ -147,20 +152,26 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             dynamic firstPartOfReportData)
         {
             var firstPartOfProductsRows = VcdComposingOfReportHelper.GetReportProductsRows(firstPartOfReportData);
-            var allProductsRows = JsonConvert.DeserializeObject<List<dynamic>>(firstPartOfProductsRows.ToString());
+            var allProductsRows = JsonArrayToList(firstPartOfProductsRows);
             var totalReportRowCount = VcdComposingOfReportHelper.GetTotalReportRowCount(firstPartOfReportData);
             var downloadedRowCount = firstPartOfProductsRows.Count;
 
             var currentPageIndex = 0;
-            //while (downloadedRowCount < totalReportRowCount)
-            //{
-            //    currentPageIndex++;
-            //    var nextPartOfReportData = TryProcessRequest(reportDay, reportLevel, reportId, currentPageIndex);
-            //    var nextPartOfProductsRows = VcdComposingOfReportHelper.GetReportProductsRows(nextPartOfReportData);
-            //    allProductsRows.AddRange(JsonConvert.DeserializeObject<List<dynamic>>(nextPartOfProductsRows.ToString()));
-            //    downloadedRowCount += nextPartOfProductsRows.Count;
-            //}
+            while (downloadedRowCount < totalReportRowCount)
+            {
+                var nextPartOfProductsRows =
+                    GetNextPartOfProductRows(reportDay, reportLevel, reportId, currentPageIndex++);
+                allProductsRows.AddRange(nextPartOfProductsRows);
+                downloadedRowCount += nextPartOfProductsRows.Count;
+            }
             return allProductsRows;
+        }
+
+        private List<dynamic> GetNextPartOfProductRows(DateTime reportDay, string reportLevel, string reportId, int pageIndex)
+        {
+            var nextPartOfReportData = TryProcessRequest(reportDay, reportLevel, reportId, pageIndex);
+            var nextPartOfProductsRows = VcdComposingOfReportHelper.GetReportProductsRows(nextPartOfReportData);
+            return JsonArrayToList(nextPartOfProductsRows);
         }
 
         private dynamic TryProcessRequest(DateTime reportDay, string reportLevel, string reportId, int pageIndex = 0)
@@ -337,6 +348,11 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
                 maxDelayBetweenReportDownloadingInSeconds,
                 minDelayBetweenReportDownloadingInSeconds + reportDownloadingStartedDelayInSeconds * delayEqualizer);
             return TimeSpan.FromSeconds(waitTime);
+        }
+
+        private static List<dynamic> JsonArrayToList(dynamic jsonArray)
+        {
+            return JsonConvert.DeserializeObject<List<dynamic>>(jsonArray.ToString());
         }
     }
 }

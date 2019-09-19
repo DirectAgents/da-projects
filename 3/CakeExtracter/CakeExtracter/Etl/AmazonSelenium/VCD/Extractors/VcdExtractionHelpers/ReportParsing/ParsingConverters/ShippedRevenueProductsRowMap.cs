@@ -13,7 +13,7 @@
             Map(m => m.Binding).Name("binding");
             Map(m => m.Color).Name("color");
             Map(m => m.ModelStyleNumber).Name("modelstyle");
-            Map(m => m.ReleaseDate).Name("releasedate").TypeConverter<DateTimeReportConverter>();
+            Map(m => m.ReleaseDate).Name("releasedate");
             Map(m => m.Name).Name("producttitle");
             Map(m => m.Category).Name("category");
             Map(m => m.Subcategory).Name("subcategory");

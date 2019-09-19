@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Text;
+using SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants;
 
 namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
 {
@@ -8,66 +9,75 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         public static dynamic GetReportProductsRows(dynamic reportData)
         {
             var firstReportPart = GetFirstReportPart(reportData);
-            return firstReportPart["reportRows"];
+            return firstReportPart[ResponseDataConstants.ReportRowsNode];
         }
 
         public static StringBuilder GetLineOfReportColumns(dynamic reportData)
         {
             var columnNamesData = GetColumnNamesData(reportData);
             var columnLine = ComposeColumnLineFromDynamicData(columnNamesData);
-            return RemoveFirstSymbolFromLine(RemoveLastSymbolFromLine(columnLine));
+            RemoveFirstSymbolFromLine(columnLine);
+            RemoveLastSymbolFromLine(columnLine);
+            return columnLine;
         }
 
         public static StringBuilder CreateRowLineOfReport(dynamic productData)
         {
-            var productValuesData = productData["recordValues"];
+            var productValuesData = productData[ResponseDataConstants.RecordValuesNode];
             var rowLine = ComposeRowLineFromDynamicData(productValuesData);
-            return RemoveLastSymbolFromLine(rowLine);
+            RemoveLastSymbolFromLine(rowLine);
+            return rowLine;
         }
 
         public static int GetTotalReportRowCount(dynamic reportData)
         {
             var reportPart = GetFirstReportPart(reportData);
-            return int.Parse(reportPart["rowCount"], NumberStyles.AllowThousands | NumberStyles.AllowLeadingSign);
+            var rowCountDynamic = reportPart[ResponseDataConstants.RowCountNode];
+            return int.Parse(rowCountDynamic, NumberStyles.AllowThousands | NumberStyles.AllowLeadingSign);
         }
 
         private static StringBuilder ComposeColumnLineFromDynamicData(dynamic columnNamesData)
         {
-            var line = new StringBuilder();
-            return line.Append(columnNamesData.ToString());
+            var columnNamesLine = new StringBuilder(columnNamesData.ToString());
+            ChangeDefaultDelimiterToCorrectForLine(columnNamesLine);
+            return columnNamesLine;
         }
 
         private static StringBuilder ComposeRowLineFromDynamicData(dynamic productValuesData)
         {
-            const char valueSeparator = ',';
-            var line = new StringBuilder();
+            var rowLine = new StringBuilder();
             for (var i = 0; i <= productValuesData.Count - 1; i++)
             {
-                var dataValue = $@"""{productValuesData[i]["val"]}""{valueSeparator}";
-                line.Append(dataValue);
+                var dataValue = $"\"{productValuesData[i][ResponseDataConstants.ValueNode]}\"{ResponseDataConstants.CorrectValueDelimiter}";
+                rowLine.Append(dataValue);
             }
-            return line;
+            return rowLine;
         }
 
         private static dynamic GetFirstReportPart(dynamic reportData)
         {
-            return reportData["payload"]["reportParts"][0];
+            return reportData[ResponseDataConstants.PayloadNode][ResponseDataConstants.ReportPartsNode][0];
         }
 
         private static dynamic GetColumnNamesData(dynamic reportData)
         {
             var firstReportPart = GetFirstReportPart(reportData);
-            return firstReportPart["columnNames"];
+            return firstReportPart[ResponseDataConstants.ColumnNamesNode];
         }
 
-        private static StringBuilder RemoveFirstSymbolFromLine(StringBuilder line)
+        private static void ChangeDefaultDelimiterToCorrectForLine(StringBuilder line)
         {
-            return line.Remove(0, 1);
+            line.Replace(ResponseDataConstants.DefaultValueDelimiter, ResponseDataConstants.CorrectValueDelimiter);
         }
 
-        private static StringBuilder RemoveLastSymbolFromLine(StringBuilder line)
+        private static void RemoveFirstSymbolFromLine(StringBuilder line)
         {
-            return line.Remove(line.Length - 1, 1);
+            line.Remove(0, 1);
+        }
+
+        private static void RemoveLastSymbolFromLine(StringBuilder line)
+        {
+            line.Remove(line.Length - 1, 1);
         }
     }
 }

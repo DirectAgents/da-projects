@@ -96,6 +96,7 @@
     <Compile Include="PDA\PageActions\AmazonPdaPageObjects.cs" />
     <Compile Include="PDA\PdaDataProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VCD\Helpers\ReportDownloading\Constants\ResponseDataConstants.cs" />
     <Compile Include="VCD\Helpers\ReportDownloading\VcdComposingOfReportHelper.cs" />
     <Compile Include="VCD\Helpers\VcdLoginManager.cs" />
     <Compile Include="VCD\Helpers\ReportDownloading\Constants\RequestBodyConstants.cs" />

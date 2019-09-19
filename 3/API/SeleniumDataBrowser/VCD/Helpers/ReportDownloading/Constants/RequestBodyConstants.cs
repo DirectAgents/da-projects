@@ -238,12 +238,13 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
 
         public static ReportPaginationWithOrderParameter GetReportPaginationWithOrderParameter(string reportId, int pageIndex)
         {
+            const int pageSizeValue = 100;
             return new ReportPaginationWithOrderParameter
             {
                 reportPagination = new ReportPagination
                 {
                     pageIndex = pageIndex,
-                    pageSize = 1000,
+                    pageSize = pageSizeValue,
                 },
                 reportOrders = new List<ReportOrder>
                 {
