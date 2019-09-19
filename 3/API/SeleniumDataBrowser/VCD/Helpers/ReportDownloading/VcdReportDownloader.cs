@@ -105,15 +105,8 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
 
         private string DownloadCsvReportFromBackendApi(DateTime reportDay, string reportLevel, string reportId)
         {
-            try
-            {
-                var firstPartOfReportData = TryProcessRequest(reportDay, reportLevel, reportId);
-                return CreateCsvReportContent(reportDay, reportLevel, reportId, firstPartOfReportData);
-            }
-            catch (Exception)
-            {
-                return "";
-            }
+            var firstPartOfReportData = TryProcessRequest(reportDay, reportLevel, reportId);
+            return CreateCsvReportContent(reportDay, reportLevel, reportId, firstPartOfReportData);
         }
 
         private string CreateCsvReportContent(DateTime reportDay, string reportLevel, string reportId, dynamic firstPartOfReportData)
@@ -177,7 +170,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         private dynamic TryProcessRequest(DateTime reportDay, string reportLevel, string reportId, int pageIndex = 0)
         {
             var failed = false;
-            WaitBeforeReportGenerating(reportDay, reportLevel);
+            WaitBeforeReportGenerating(reportDay, reportLevel, pageIndex);
             var response = Policy
                 .Handle<Exception>()
                 .OrResult<IRestResponse<dynamic>>(resp => !IsSuccessfulResponse(resp))
@@ -187,9 +180,9 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
                     (exception, timeSpan, retryCount, context) =>
                     {
                         failed = true;
-                        ProcessFailedResponse(exception.Result);
+                        ProcessFailedResponse(exception.Result, pageIndex);
                         logger.LogWaiting(
-                            $"Report generating for {reportDay.ToShortDateString()}, {reportLevel}, {accountInfo.AccountName}. "
+                            $"Report (part {pageIndex}) generating for {reportDay.ToShortDateString()}, {reportLevel}, {accountInfo.AccountName}. "
                             + "Waiting {0} ...",
                             timeSpan,
                             retryCount);
@@ -200,7 +193,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
                     EqualizeDelay(IsSuccessfulResponse(resp), failed);
                     return resp;
                 });
-            return ProcessResponse(response);
+            return ProcessResponse(response, pageIndex);
         }
 
         private IRestResponse<dynamic> ProcessRequest(DateTime reportDay, string reportLevel, string reportId, int pageIndex)
@@ -210,37 +203,37 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             return response;
         }
 
-        private void WaitBeforeReportGenerating(DateTime reportDay, string reportLevel)
+        private void WaitBeforeReportGenerating(DateTime reportDay, string reportLevel, int pageIndex)
         {
             var timeSpan = GetTimeSpanForWaiting();
             logger.LogWaiting(
-                $"Report generating for {reportDay.ToShortDateString()}, {reportLevel}, {accountInfo.AccountName}. "
+                $"Report (part {pageIndex}) generating for {reportDay.ToShortDateString()}, {reportLevel}, {accountInfo.AccountName}. "
                 + "Waiting {0} ...",
                 timeSpan,
                 null);
             Thread.Sleep(timeSpan);
         }
 
-        private dynamic ProcessResponse(IRestResponse<dynamic> response)
+        private dynamic ProcessResponse(IRestResponse<dynamic> response, int pageIndex)
         {
             if (IsSuccessfulResponse(response))
             {
-                return ProcessSuccessfulResponse(response);
+                return ProcessSuccessfulResponse(response, pageIndex);
             }
-            ProcessFailedResponse(response);
-            throw new Exception($"Report was not downloaded successfully. Status code {response.StatusDescription}");
+            ProcessFailedResponse(response, pageIndex);
+            throw new Exception($"Report (part {pageIndex}) was not downloaded successfully. Status code {response.StatusDescription}");
         }
 
-        private dynamic ProcessSuccessfulResponse(IRestResponse<dynamic> response)
+        private dynamic ProcessSuccessfulResponse(IRestResponse<dynamic> response, int pageIndex)
         {
             var data = response.Data;
-            logger.LogInfo($"Amazon VCD, Report downloading finished successfully.");
+            logger.LogInfo($"Amazon VCD, Report (part {pageIndex}) downloading finished successfully.");
             return data;
         }
 
-        private void ProcessFailedResponse(IRestResponse<dynamic> response)
+        private void ProcessFailedResponse(IRestResponse<dynamic> response, int pageIndex)
         {
-            logger.LogWarning($"Report downloading attempt failed, Status code: {response.StatusDescription}, content: {response.Content}");
+            logger.LogWarning($"Report (part {pageIndex}) downloading attempt failed, Status code: {response.StatusDescription}");
             if (response.StatusCode == (HttpStatusCode)429)
             {
                 return;
