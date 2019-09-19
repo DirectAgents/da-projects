@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using SeleniumDataBrowser.PageActions;
 using SeleniumDataBrowser.Helpers;
 using SeleniumDataBrowser.Models;
@@ -79,7 +80,8 @@ namespace SeleniumDataBrowser.VCD.Helpers
 
         private void LoginWithoutCookie()
         {
-            pageActionManager.NavigateToUrl(authorizationModel.SignInUrl, AmazonLoginPageObjects.ForgotPassLink);
+            //pageActionManager.NavigateToUrl(authorizationModel.SignInUrl, AmazonLoginPageObjects.ForgotPassLink);
+            pageActionManager.NavigateToUrl("https://vendorcentral.amazon.com/gp/vendor/sign-in", AmazonLoginPageObjects.ForgotPassLink);
             pageActionManager.LoginProcess(authorizationModel.Login, authorizationModel.Password);
             var cookies = pageActionManager.GetAllCookies();
             SeleniumCookieHelper.SaveCookiesToFiles(cookies, authorizationModel.CookiesDir);
@@ -87,7 +89,8 @@ namespace SeleniumDataBrowser.VCD.Helpers
 
         private void LoginWithCookie()
         {
-            pageActionManager.NavigateToUrl(authorizationModel.SignInUrl);
+            //pageActionManager.NavigateToUrl(authorizationModel.SignInUrl);
+            //pageActionManager.NavigateToUrl("https://vendorcentral.amazon.com/gp/vendor/sign-in", AmazonLoginPageObjects.ForgotPassLink);
             foreach (var cookie in authorizationModel.Cookies)
             {
                 pageActionManager.SetCookie(cookie);
@@ -108,6 +111,7 @@ namespace SeleniumDataBrowser.VCD.Helpers
                 logger.LogWarning("Login into the portal without using cookies. Please, enter an authorization code!");
                 LoginWithoutCookie();
             }
+            Thread.Sleep(3000);
             pageActionManager.RefreshSalesDiagnosticPage(authorizationModel);
         }
     }

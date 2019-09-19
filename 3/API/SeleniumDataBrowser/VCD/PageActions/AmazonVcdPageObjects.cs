@@ -23,5 +23,7 @@ namespace SeleniumDataBrowser.VCD.PageActions
         /// Item of accounts menu.
         /// </summary>
         public static By AccountsDropdownItem = By.CssSelector("div.i90-accounts-dropdown-item");
+
+        public static By DetailViewDataContainer = By.Id("salesDiagnosticDetail");
     }
 }

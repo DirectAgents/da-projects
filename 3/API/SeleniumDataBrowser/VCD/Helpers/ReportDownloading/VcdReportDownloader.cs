@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Text;
 using System.Threading;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 using Newtonsoft.Json;
@@ -74,7 +75,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         public string DownloadShippedRevenueCsvReport(DateTime reportDay)
         {
             logger.LogInfo("Amazon VCD, Attempt to download shipped revenue report.");
-            return DownloadReportAsCsvText(
+            return DownloadCsvReportFromBackendApi(
                 reportDay, RequestBodyConstants.ShippedRevenueReportLevel, RequestBodyConstants.ShippedRevenueColumnId);
         }
 
@@ -86,7 +87,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         public string DownloadShippedCogsCsvReport(DateTime reportDay)
         {
             logger.LogInfo("Amazon VCD, Attempt to download shipped cogs report.");
-            return DownloadReportAsCsvText(
+            return DownloadCsvReportFromBackendApi(
                 reportDay, RequestBodyConstants.ShippedCogsLevel, RequestBodyConstants.ShippedCogsColumnId);
         }
 
@@ -98,17 +99,77 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         public string DownloadOrderedRevenueCsvReport(DateTime reportDay)
         {
             logger.LogInfo("Amazon VCD, Attempt to download ordered revenue report.");
-            return DownloadReportAsCsvText(
+            return DownloadCsvReportFromBackendApi(
                 reportDay, RequestBodyConstants.OrderedRevenueLevel, RequestBodyConstants.OrderedRevenueColumnId);
         }
 
-        private string DownloadReportAsCsvText(DateTime reportDay, string reportLevel, string reportId)
+        private string DownloadCsvReportFromBackendApi(DateTime reportDay, string reportLevel, string reportId)
+        {
+            try
+            {
+                var firstPartOfReportData = TryProcessRequest(reportDay, reportLevel, reportId);
+                var csvReportContent = new StringBuilder();
+                SetCsvReportHeader(csvReportContent, firstPartOfReportData);
+                SetCsvReportRows(reportDay, reportLevel, reportId, csvReportContent, firstPartOfReportData);
+                return csvReportContent.ToString();
+            }
+            catch (Exception)
+            {
+                return "";
+            }
+        }
+
+        private void SetCsvReportHeader(StringBuilder csvReportContent, dynamic firstPartOfReportData)
+        {
+            var reportHeader = VcdComposingOfReportHelper.GetLineOfReportColumns(firstPartOfReportData);
+            csvReportContent.AppendLine(reportHeader.ToString());
+        }
+
+        private void SetCsvReportRows(
+            DateTime reportDay,
+            string reportLevel,
+            string reportId,
+            StringBuilder csvReportContent,
+            dynamic firstPartOfReportData)
+        {
+            var productsRows = GetReportRows(reportDay, reportLevel, reportId, firstPartOfReportData);
+            foreach (var productRow in productsRows)
+            {
+                var newReportLine = VcdComposingOfReportHelper.CreateRowLineOfReport(productRow);
+                csvReportContent.AppendLine(newReportLine.ToString());
+            }
+        }
+
+        private IEnumerable<dynamic> GetReportRows(
+            DateTime reportDay,
+            string reportLevel,
+            string reportId,
+            dynamic firstPartOfReportData)
+        {
+            var firstPartOfProductsRows = VcdComposingOfReportHelper.GetReportProductsRows(firstPartOfReportData);
+            var allProductsRows = JsonConvert.DeserializeObject<List<dynamic>>(firstPartOfProductsRows.ToString());
+            var totalReportRowCount = VcdComposingOfReportHelper.GetTotalReportRowCount(firstPartOfReportData);
+            var downloadedRowCount = firstPartOfProductsRows.Count;
+
+            var currentPageIndex = 0;
+            //while (downloadedRowCount < totalReportRowCount)
+            //{
+            //    currentPageIndex++;
+            //    var nextPartOfReportData = TryProcessRequest(reportDay, reportLevel, reportId, currentPageIndex);
+            //    var nextPartOfProductsRows = VcdComposingOfReportHelper.GetReportProductsRows(nextPartOfReportData);
+            //    allProductsRows.AddRange(JsonConvert.DeserializeObject<List<dynamic>>(nextPartOfProductsRows.ToString()));
+            //    downloadedRowCount += nextPartOfProductsRows.Count;
+            //}
+            return allProductsRows;
+        }
+
+        private dynamic TryProcessRequest(DateTime reportDay, string reportLevel, string reportId, int pageIndex = 0)
         {
             var failed = false;
             WaitBeforeReportGenerating(reportDay, reportLevel);
             var response = Policy
                 .Handle<Exception>()
-                .OrResult<IRestResponse>(resp => !IsSuccessfulResponse(resp))
+                .OrResult<IRestResponse<dynamic>>(resp => !IsSuccessfulResponse(resp))
                 .WaitAndRetry(
                     reportDownloadingAttemptCount,
                     retryCount => GetTimeSpanForWaiting(),
@@ -124,17 +185,17 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
                     })
                 .Execute(() =>
                 {
-                    var resp = DownloadReport(reportDay, reportLevel, reportId);
+                    var resp = ProcessRequest(reportDay, reportLevel, reportId, pageIndex);
                     EqualizeDelay(IsSuccessfulResponse(resp), failed);
                     return resp;
                 });
             return ProcessResponse(response);
         }
 
-        private IRestResponse DownloadReport(DateTime reportDay, string reportLevel, string reportId)
+        private IRestResponse<dynamic> ProcessRequest(DateTime reportDay, string reportLevel, string reportId, int pageIndex)
         {
-            var request = GenerateDownloadingReportRequest(reportDay, reportLevel, reportId);
-            var response = RestRequestHelper.SendPostRequest<object>(AmazonBaseUrl, request);
+            var request = GenerateDownloadingReportRequest(reportDay, reportLevel, reportId, pageIndex);
+            var response = RestRequestHelper.SendPostRequest<dynamic>(AmazonBaseUrl, request);
             return response;
         }
 
@@ -149,7 +210,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             Thread.Sleep(timeSpan);
         }
 
-        private string ProcessResponse(IRestResponse response)
+        private dynamic ProcessResponse(IRestResponse<dynamic> response)
         {
             if (IsSuccessfulResponse(response))
             {
@@ -159,14 +220,14 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             throw new Exception($"Report was not downloaded successfully. Status code {response.StatusDescription}");
         }
 
-        private string ProcessSuccessfulResponse(IRestResponse response)
+        private dynamic ProcessSuccessfulResponse(IRestResponse<dynamic> response)
         {
-            var textReport = System.Text.Encoding.UTF8.GetString(response.RawBytes, 0, response.RawBytes.Length);
-            logger.LogInfo($"Amazon VCD, Report downloading finished successfully. Size: {textReport.Length} characters.");
-            return textReport;
+            var data = response.Data;
+            logger.LogInfo($"Amazon VCD, Report downloading finished successfully.");
+            return data;
         }
 
-        private void ProcessFailedResponse(IRestResponse response)
+        private void ProcessFailedResponse(IRestResponse<dynamic> response)
         {
             logger.LogWarning($"Report downloading attempt failed, Status code: {response.StatusDescription}, content: {response.Content}");
             if (response.StatusCode == (HttpStatusCode)429)
@@ -177,7 +238,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             logger.LogInfo("Amazon VCD, The portal page has been refreshed.");
         }
 
-        private bool IsSuccessfulResponse(IRestResponse response)
+        private bool IsSuccessfulResponse(IRestResponse<dynamic> response)
         {
             return response.StatusCode == HttpStatusCode.OK;
         }
@@ -195,14 +256,16 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
 
         private IEnumerable<Cookie> GetCookies()
         {
-            return pageActions.GetAllCookies();
+            var cookies = pageActions.GetAllCookies();
+            return cookies;
         }
 
-        private RestRequest GenerateDownloadingReportRequest(DateTime reportDay, string reportLevel, string reportId)
+        private RestRequest GenerateDownloadingReportRequest(
+            DateTime reportDay, string reportLevel, string reportId, int pageIndex)
         {
             var pageRequestData = GetPageDataForReportRequest();
             var requestId = Guid.NewGuid().ToString();
-            var requestBodyObject = PrepareRequestBody(requestId, reportDay, reportLevel, reportId);
+            var requestBodyObject = PrepareRequestBody(requestId, reportDay, reportLevel, reportId, pageIndex);
             var requestHeaders = GetHeadersDictionary(requestId);
             var requestBodyJson = JsonConvert.SerializeObject(requestBodyObject);
             var requestQueryParams = RequestQueryConstants.GetRequestQueryParameters(
@@ -224,10 +287,10 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         }
 
         private SalesDiagnosticDetail PrepareRequestBody(
-            string requestId, DateTime reportDay, string reportLevel, string reportId)
+            string requestId, DateTime reportDay, string reportLevel, string reportId, int pageIndex)
         {
             var reportParameters = GetReportParameters(reportDay, reportLevel);
-            var reportPaginationWithOrderParameter = GetReportPaginationWithOrderParameter(reportId);
+            var reportPaginationWithOrderParameter = GetReportPaginationWithOrderParameter(reportId, pageIndex);
             return new SalesDiagnosticDetail
             {
                 requestId = requestId,
@@ -245,16 +308,10 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             return reportParameters;
         }
 
-        private ReportPaginationWithOrderParameter GetReportPaginationWithOrderParameter(string reportId)
+        private ReportPaginationWithOrderParameter GetReportPaginationWithOrderParameter(string reportId, int pageIndex)
         {
-            var reportPaginationWithOrderParameter = RequestBodyConstants.GetReportPaginationWithOrderParameter(reportId);
+            var reportPaginationWithOrderParameter = RequestBodyConstants.GetReportPaginationWithOrderParameter(reportId, pageIndex);
             return reportPaginationWithOrderParameter;
-        }
-
-        private string GetBodyVisibleFilterDateRange(DateTime reportDate)
-        {
-            const string filterDatePattern = "M'/'d'/'yy";
-            return string.Format("{0} - {0}", reportDate.ToString(filterDatePattern));
         }
 
         private string GetReportParameterFilterDate(DateTime reportDate)

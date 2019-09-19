@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Amazon.Helpers;
-using CakeExtracter.Common;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing.ParsingConverters;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Models;
 using CsvHelper;
@@ -72,7 +71,6 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
             try
             {
                 Logger.Info(accountId, "Started parsing csv report");
-                reportCsvText = TextUtils.RemoveFirstLine(reportCsvText);
                 using (TextReader sr = new StringReader(reportCsvText))
                 {
                     var csvHelper = new CsvReader(sr);

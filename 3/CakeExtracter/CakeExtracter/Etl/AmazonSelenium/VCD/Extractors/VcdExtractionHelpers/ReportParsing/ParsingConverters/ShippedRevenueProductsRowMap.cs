@@ -4,22 +4,22 @@
     {
         public ShippedRevenueProductRowMap()
         {
-            Map(m => m.ParentAsin).Name("Parent ASIN");
-            Map(m => m.Ean).Name("EAN");
-            Map(m => m.Upc).Name("UPC");
-            Map(m => m.Brand).Name("Brand");
-            Map(m => m.ApparelSize).Name("Apparel Size");
-            Map(m => m.ApparelSizeWidth).Name("Apparel Size Width");
-            Map(m => m.Binding).Name("Binding");
-            Map(m => m.Color).Name("Color");
-            Map(m => m.ModelStyleNumber).Name("Model / Style Number");
-            Map(m => m.ReleaseDate).Name("Release Date");
-            Map(m => m.Name).Name("Product Title");
-            Map(m => m.Category).Name("Category");
-            Map(m => m.Subcategory).Name("Subcategory");
-            Map(m => m.ShippedRevenue).Name("Shipped Revenue").TypeConverter<DecimalAmountReportConverter>();
-            Map(m => m.ShippedUnits).Name("Shipped Units").TypeConverter<IntNumberReportConverter>();
-            Map(m => m.OrderedUnits).Name("Ordered Units").TypeConverter<IntNumberReportConverter>();
+            Map(m => m.ParentAsin).Name("parentasin");
+            Map(m => m.Ean).Name("ean");
+            Map(m => m.Upc).Name("upc");
+            Map(m => m.Brand).Name("brand");
+            Map(m => m.ApparelSize).Name("apparelsize");
+            Map(m => m.ApparelSizeWidth).Name("apparelsizewidth");
+            Map(m => m.Binding).Name("binding");
+            Map(m => m.Color).Name("color");
+            Map(m => m.ModelStyleNumber).Name("modelstyle");
+            Map(m => m.ReleaseDate).Name("releasedate").TypeConverter<DateTimeReportConverter>();
+            Map(m => m.Name).Name("producttitle");
+            Map(m => m.Category).Name("category");
+            Map(m => m.Subcategory).Name("subcategory");
+            Map(m => m.ShippedRevenue).Name("shippedrevenue").TypeConverter<DecimalAmountReportConverter>();
+            Map(m => m.ShippedUnits).Name("shippedunits").TypeConverter<IntNumberReportConverter>();
+            Map(m => m.OrderedUnits).Name("orderedunits").TypeConverter<IntNumberReportConverter>();
         }
     }
 }

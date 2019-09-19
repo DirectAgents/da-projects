@@ -7,7 +7,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
     {
         public BaseProductRowMap()
         {
-            Map(m => m.Asin).Name("ASIN");
+            Map(m => m.Asin).Name("asin");
         }
     }
 }

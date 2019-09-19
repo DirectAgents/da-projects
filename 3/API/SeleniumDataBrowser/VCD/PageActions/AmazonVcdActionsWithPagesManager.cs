@@ -56,9 +56,16 @@ namespace SeleniumDataBrowser.VCD.PageActions
         /// <summary>
         /// Navigates to sales diagnostic page on ara amazon portal.
         /// </summary>
-        public void NavigateToSalesDiagnosticPage()
+        public void NavigateToSalesDiagnosticPage(By waitingElement = null)
         {
-            NavigateToUrl(SalesDiagnosticPageUrl);
+            if (waitingElement != null)
+            {
+                NavigateToUrl(SalesDiagnosticPageUrl, waitingElement);
+            }
+            else
+            {
+                NavigateToUrl(SalesDiagnosticPageUrl);
+            }
         }
 
         /// <summary>
@@ -68,13 +75,13 @@ namespace SeleniumDataBrowser.VCD.PageActions
         public void RefreshSalesDiagnosticPage(AuthorizationModel authorizationModel)
         {
             Logger.LogInfo("Sales diagnostic page refreshing");
-            NavigateToSalesDiagnosticPage();
+            NavigateToSalesDiagnosticPage(AmazonVcdPageObjects.DetailViewDataContainer);
             if (!VcdLoginManager.NeedRepeatPassword(this))
             {
                 return;
             }
             VcdLoginManager.RepeatPassword(this, authorizationModel);
-            NavigateToSalesDiagnosticPage();
+            NavigateToSalesDiagnosticPage(AmazonVcdPageObjects.DetailViewDataContainer);
         }
 
         /// <summary>
