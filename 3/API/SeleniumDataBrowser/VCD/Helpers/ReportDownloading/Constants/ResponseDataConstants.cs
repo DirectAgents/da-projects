@@ -5,8 +5,8 @@
     /// </summary>
     public static class ResponseDataConstants
     {
-        public const char DefaultValueDelimiter = ',';
-        public const char CorrectValueDelimiter = ';';
+        public const string DefaultValueDelimiter = ",";
+        public const string CorrectValueDelimiter = ";;;";
         public const string PayloadNode = "payload";
         public const string ReportPartsNode = "reportParts";
         public const string ReportRowsNode = "reportRows";

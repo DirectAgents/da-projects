@@ -13,16 +13,16 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
     /// <summary>
     /// Parser for vcd reports.
     /// </summary>
-    internal class VcdReportCSVParser
+    internal class VcdReportCsvParser
     {
-        private const string ValueDelimiter = ";";
+        private const string ValueDelimiter = ";;;";
         private readonly int accountId;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="VcdReportCSVParser"/> class.
+        /// Initializes a new instance of the <see cref="VcdReportCsvParser"/> class.
         /// </summary>
         /// <param name="accountId">Internal account ID.</param>
-        public VcdReportCSVParser(int accountId)
+        public VcdReportCsvParser(int accountId)
         {
             this.accountId = accountId;
         }
@@ -35,7 +35,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
         /// <returns>Collection of products with filled shipped revenue data.</returns>
         public List<Product> ParseShippedRevenueReportData(string reportCsvText, DateTime date)
         {
-            var products = ParseProductsFromReport<ShippedRevenueProductRowMap>(
+            var products = ParseProductsFromReport<ShippedRevenueProductsRowMap>(
                 reportCsvText, date, "shippedRev");
             return products;
         }

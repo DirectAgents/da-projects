@@ -1,8 +1,16 @@
 ﻿namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing.ParsingConverters
 {
-    internal sealed class ShippedRevenueProductRowMap : BaseProductRowMap
+    /// <inheritdoc />
+    /// <summary>
+    /// Row map configuration for Shipped Revenue reports.
+    /// </summary>
+    internal sealed class ShippedRevenueProductsRowMap : BaseProductRowMap
     {
-        public ShippedRevenueProductRowMap()
+        /// <inheritdoc cref="BaseProductRowMap"/>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ShippedRevenueProductsRowMap" /> class.
+        /// </summary>
+        public ShippedRevenueProductsRowMap()
         {
             Map(m => m.ParentAsin).Name("parentasin");
             Map(m => m.Ean).Name("ean");

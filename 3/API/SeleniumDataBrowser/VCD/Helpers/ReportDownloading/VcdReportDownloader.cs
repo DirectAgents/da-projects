@@ -119,7 +119,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
 
         private void SetCsvReportHeader(StringBuilder csvReportContent, dynamic firstPartOfReportData)
         {
-            var reportHeader = VcdComposingOfReportHelper.GetLineOfReportColumns(firstPartOfReportData);
+            var reportHeader = VcdComposingReportDataHelper.CreateHeaderLineWithColumnNames(firstPartOfReportData);
             csvReportContent.AppendLine(reportHeader.ToString());
         }
 
@@ -133,7 +133,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             var productsRows = GetReportRows(reportDay, reportLevel, reportId, firstPartOfReportData);
             foreach (var productRow in productsRows)
             {
-                var newReportLine = VcdComposingOfReportHelper.CreateRowLineOfReport(productRow);
+                var newReportLine = VcdComposingReportDataHelper.CreateRowLineWithProductInfo(productRow);
                 csvReportContent.AppendLine(newReportLine.ToString());
             }
         }
@@ -144,9 +144,9 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             string reportId,
             dynamic firstPartOfReportData)
         {
-            var firstPartOfProductsRows = VcdComposingOfReportHelper.GetReportProductsRows(firstPartOfReportData);
+            var firstPartOfProductsRows = VcdComposingReportDataHelper.GetReportProductsRows(firstPartOfReportData);
             var allProductsRows = JsonArrayToList(firstPartOfProductsRows);
-            var totalReportRowCount = VcdComposingOfReportHelper.GetTotalReportRowCount(firstPartOfReportData);
+            var totalReportRowCount = VcdComposingReportDataHelper.GetTotalReportRowCount(firstPartOfReportData);
             var downloadedRowCount = firstPartOfProductsRows.Count;
 
             var currentPageIndex = 0;
@@ -163,7 +163,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         private List<dynamic> GetNextPartOfProductRows(DateTime reportDay, string reportLevel, string reportId, int pageIndex)
         {
             var nextPartOfReportData = TryProcessRequest(reportDay, reportLevel, reportId, pageIndex);
-            var nextPartOfProductsRows = VcdComposingOfReportHelper.GetReportProductsRows(nextPartOfReportData);
+            var nextPartOfProductsRows = VcdComposingReportDataHelper.GetReportProductsRows(nextPartOfReportData);
             return JsonArrayToList(nextPartOfProductsRows);
         }
 
