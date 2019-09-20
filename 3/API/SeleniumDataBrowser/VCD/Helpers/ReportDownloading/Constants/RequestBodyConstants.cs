@@ -27,6 +27,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
             string startDate, string endDate, string reportLevel)
         {
             var isFullSetOfMetrics = reportLevel == ShippedRevenueReportLevel;
+            var isAllAsins = reportLevel == OrderedRevenueLevel;
             return new List<ReportParameter>
             {
                 new ReportParameter
@@ -42,7 +43,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
                 new ReportParameter
                 {
                     parameterId = "productView",
-                    values = new List<Value>{ new Value { val = "allAsins" } }
+                    values = new List<Value>{ new Value { val = isAllAsins ? "allAsins" : "kindleExcluded" } }
                 },
                 new ReportParameter
                 {
