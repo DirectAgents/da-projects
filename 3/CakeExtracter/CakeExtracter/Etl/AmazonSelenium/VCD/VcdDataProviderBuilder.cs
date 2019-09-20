@@ -107,6 +107,8 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD
                 VcdCommandConfigurationManager.GetMaxDelayBetweenReportDownloading();
             var reportDownloadingAttemptCount =
                 VcdCommandConfigurationManager.GetReportDownloadingAttemptCount();
+            var maxPageSizeForReport =
+                VcdCommandConfigurationManager.GetMaxPageSizeForReport();
             return new VcdReportDownloader(
                 accountInfo,
                 pageActionsManager,
@@ -115,7 +117,8 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD
                 reportDownloadingStartedDelayInSeconds,
                 minDelayBetweenReportDownloadingInSeconds,
                 maxDelayBetweenReportDownloadingInSeconds,
-                reportDownloadingAttemptCount);
+                reportDownloadingAttemptCount,
+                maxPageSizeForReport);
         }
 
         private AuthorizationModel GetAuthorizationModel()

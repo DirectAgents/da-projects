@@ -81,7 +81,7 @@ namespace SeleniumDataBrowser.VCD.Helpers
         private void LoginWithoutCookie()
         {
             //pageActionManager.NavigateToUrl(authorizationModel.SignInUrl, AmazonLoginPageObjects.ForgotPassLink);
-            pageActionManager.NavigateToUrl("https://vendorcentral.amazon.com/gp/vendor/sign-in", AmazonLoginPageObjects.ForgotPassLink);
+            pageActionManager.NavigateToUrl(SignInPageUrl, AmazonLoginPageObjects.ForgotPassLink);
             pageActionManager.LoginProcess(authorizationModel.Login, authorizationModel.Password);
             var cookies = pageActionManager.GetAllCookies();
             SeleniumCookieHelper.SaveCookiesToFiles(cookies, authorizationModel.CookiesDir);

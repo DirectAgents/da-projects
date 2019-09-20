@@ -236,9 +236,9 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
             };
         }
 
-        public static ReportPaginationWithOrderParameter GetReportPaginationWithOrderParameter(string reportId, int pageIndex)
+        public static ReportPaginationWithOrderParameter GetReportPaginationWithOrderParameter(
+            string reportId, int pageIndex, int pageSizeValue)
         {
-            const int pageSizeValue = 100;
             return new ReportPaginationWithOrderParameter
             {
                 reportPagination = new ReportPagination

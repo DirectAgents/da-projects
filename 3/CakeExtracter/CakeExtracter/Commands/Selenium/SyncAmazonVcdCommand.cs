@@ -11,7 +11,6 @@ using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Loaders;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Synchers;
 using CakeExtracter.Helpers;
-using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
 using SeleniumDataBrowser.Helpers;
 using SeleniumDataBrowser.VCD;
@@ -131,7 +130,6 @@ namespace CakeExtracter.Commands.Selenium
         private void RunEtls(VcdDataProvider vcdDataProvider)
         {
             var accounts = vcdDataProviderBuilder.GetAccounts();
-            //var accounts = GetAccounts(1445);
             SetInfoAboutAllAccountsInHistory(accounts);
             RunForAccounts(accounts, vcdDataProvider);
         }
@@ -257,13 +255,6 @@ namespace CakeExtracter.Commands.Selenium
             setting.Item1.DaysAgoToStart = null;
             setting.Item3.Command = setting.Item1;
             return setting.Item3;
-        }
-
-        private List<ExtAccount> GetAccounts(int accountId)
-        {
-            var repository = new PlatformAccountRepository();
-            var account = repository.GetAccount(accountId);
-            return new List<ExtAccount> { account };
         }
     }
 }

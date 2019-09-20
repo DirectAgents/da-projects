@@ -31,6 +31,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         private readonly int minDelayBetweenReportDownloadingInSeconds;
         private readonly int maxDelayBetweenReportDownloadingInSeconds;
         private readonly int reportDownloadingAttemptCount;
+        private readonly int maxPageSizeForReport;
         private readonly AmazonVcdActionsWithPagesManager pageActions;
         private readonly AuthorizationModel authorizationModel;
         private readonly VcdAccountInfo accountInfo;
@@ -47,6 +48,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         /// <param name="minDelayBetweenReportDownloadingInSeconds">Number of seconds minimum delay between attempts downloading reports.</param>
         /// <param name="maxDelayBetweenReportDownloadingInSeconds">Number of seconds maximum delay between attempts downloading reports.</param>
         /// <param name="reportDownloadingAttemptCount">Count of attempts downloading reports.</param>
+        /// <param name="maxPageSizeForReport">Number of report rows that will be return in one response.</param>
         public VcdReportDownloader(
             VcdAccountInfo accountInfo,
             AmazonVcdActionsWithPagesManager pageActions,
@@ -55,7 +57,8 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             int reportDownloadingStartedDelayInSeconds,
             int minDelayBetweenReportDownloadingInSeconds,
             int maxDelayBetweenReportDownloadingInSeconds,
-            int reportDownloadingAttemptCount)
+            int reportDownloadingAttemptCount,
+            int maxPageSizeForReport)
         {
             this.accountInfo = accountInfo;
             this.pageActions = pageActions;
@@ -65,6 +68,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             this.minDelayBetweenReportDownloadingInSeconds = minDelayBetweenReportDownloadingInSeconds;
             this.maxDelayBetweenReportDownloadingInSeconds = maxDelayBetweenReportDownloadingInSeconds;
             this.reportDownloadingAttemptCount = reportDownloadingAttemptCount;
+            this.maxPageSizeForReport = maxPageSizeForReport;
         }
 
         /// <summary>
@@ -153,7 +157,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             while (downloadedRowCount < totalReportRowCount)
             {
                 var nextPartOfProductsRows =
-                    GetNextPartOfProductRows(reportDay, reportLevel, reportId, currentPageIndex++);
+                    GetNextPartOfProductRows(reportDay, reportLevel, reportId, ++currentPageIndex);
                 allProductsRows.AddRange(nextPartOfProductsRows);
                 downloadedRowCount += nextPartOfProductsRows.Count;
             }
@@ -314,7 +318,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
 
         private ReportPaginationWithOrderParameter GetReportPaginationWithOrderParameter(string reportId, int pageIndex)
         {
-            var reportPaginationWithOrderParameter = RequestBodyConstants.GetReportPaginationWithOrderParameter(reportId, pageIndex);
+            var reportPaginationWithOrderParameter = RequestBodyConstants.GetReportPaginationWithOrderParameter(reportId, pageIndex, maxPageSizeForReport);
             return reportPaginationWithOrderParameter;
         }
 
