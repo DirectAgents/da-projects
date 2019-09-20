@@ -1,5 +1,5 @@
 ﻿{
-  "SignInUrl": "https://advertising.amazon.com/sign-in",
+  "SignInUrl": "https://vendorcentral.amazon.com/ap/signin",
   "LoginEmail": "reportingdev@directagents.com",
   "LoginPassword": "",
   "AccountIds": [ 1444, 1450, 1451 ],

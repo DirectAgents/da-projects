@@ -16,7 +16,6 @@ namespace SeleniumDataBrowser.VCD.PageActions
     public class AmazonVcdActionsWithPagesManager : AmazonLoginActionsWithPagesManager
     {
         private const string SalesDiagnosticPageUrl = "https://vendorcentral.amazon.com/analytics/dashboard/salesDiagnostic";
-        private const string TypeOfAccounts = "premium";
 
         /// <inheritdoc cref="AmazonLoginActionsWithPagesManager"/>
         /// <summary>
@@ -85,17 +84,20 @@ namespace SeleniumDataBrowser.VCD.PageActions
         }
 
         /// <summary>
-        /// Selects the account on page from account dropdown on top right side of page.
+        /// Selects the current account from account list on the separate page for choose current account.
         /// </summary>
-        /// <param name="accountName">Name of the account.</param>
+        /// <param name="accountName">Name of the current account.</param>
         public void SelectAccountOnPage(string accountName)
         {
+            const string switchAccountPageUrl = "https://vendorcentral.amazon.com/account/choose";
             try
             {
-                ClickElement(AmazonVcdPageObjects.AccountsDropdownButton);
-                var accountItems = Driver.FindElements(AmazonVcdPageObjects.AccountsDropdownItem);
-                var accountItem = accountItems.FirstOrDefault(x => x.Text == TypeOfAccounts + accountName);
+                NavigateToUrl(switchAccountPageUrl, AmazonVcdPageObjects.SwitchAccountForm);
+                var accountItems = GetChildrenElements(AmazonVcdPageObjects.AccountList, AmazonVcdPageObjects.AccountItem);
+                var accountItem = accountItems.FirstOrDefault(x => x.Text.Contains(accountName));
                 accountItem?.Click();
+                ClickElement(AmazonVcdPageObjects.SwitchCurrentAccountButton);
+                NavigateToSalesDiagnosticPage(AmazonVcdPageObjects.DetailViewDataContainer);
             }
             catch (Exception e)
             {

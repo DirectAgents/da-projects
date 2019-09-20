@@ -23,30 +23,6 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
 
         public const string OrderedRevenueColumnId = "orderedrevenue";
 
-        public static Dictionary<string, List<string>> GetInitialVisibleFilters(
-            string reportDates, string salesViewName)
-        {
-            return new Dictionary<string, List<string>>
-            {
-                { "Program", new List<string> { "Amazon Retail" } },
-                { "Distributor View", new List<string> { "Manufacturing" } },
-                { "Sales View", new List<string> { salesViewName } },
-                { "Category", new List<string> { "All" } },
-                { "Subcategory", new List<string> { "All" } },
-                { "Brand", new List<string> { "All" } },
-                { "Search for ASINs or Keywords", new List<string> { "All" } },
-                { "Reporting Range", new List<string> { "Daily" } },
-                { "Viewing", new List<string> { reportDates } },
-                { "View by", new List<string> { "ASIN" } },
-                { "Add", new List<string>
-                    {
-                        "Subcategory", "Category", "Parent ASIN", "EAN", "UPC", "Brand", "Apparel Size",
-                        "Apparel Size Width", "Binding", "Color", "Model / Style Number", "Release Date",
-                    }
-                },
-            };
-        }
-
         public static List<ReportParameter> GetReportParameters(
             string startDate, string endDate, string reportLevel)
         {

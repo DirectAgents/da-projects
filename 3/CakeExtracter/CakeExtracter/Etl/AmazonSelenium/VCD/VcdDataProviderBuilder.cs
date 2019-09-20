@@ -65,7 +65,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD
         public void InitializeReportDownloader(ExtAccount currentAccount, SeleniumLogger loggerWithAccountId)
         {
             var currentAccountInfo = vcdAccountsInfo[currentAccount];
-            //pageActionsManager.SelectAccountOnPage(currentAccount.Name);
+            pageActionsManager.SelectAccountOnPage(currentAccount.Name);
             var reportDownloader = GetReportDownloader(currentAccountInfo, loggerWithAccountId);
             vcdDataProvider.SetReportDownloaderCurrentForDataProvider(reportDownloader);
         }
