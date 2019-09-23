@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using OpenQA.Selenium;
 using SeleniumDataBrowser.PageActions;
 using SeleniumDataBrowser.Drivers;
@@ -16,6 +17,7 @@ namespace SeleniumDataBrowser.VCD.PageActions
     public class AmazonVcdActionsWithPagesManager : AmazonLoginActionsWithPagesManager
     {
         private const string SalesDiagnosticPageUrl = "https://vendorcentral.amazon.com/analytics/dashboard/salesDiagnostic";
+        private const string SwitchAccountPageUrl = "https://vendorcentral.amazon.com/account/choose";
 
         /// <inheritdoc cref="AmazonLoginActionsWithPagesManager"/>
         /// <summary>
@@ -89,12 +91,10 @@ namespace SeleniumDataBrowser.VCD.PageActions
         /// <param name="accountName">Name of the current account.</param>
         public void SelectAccountOnPage(string accountName)
         {
-            const string switchAccountPageUrl = "https://vendorcentral.amazon.com/account/choose";
             try
             {
-                NavigateToUrl(switchAccountPageUrl, AmazonVcdPageObjects.SwitchAccountForm);
-                var accountItems = GetChildrenElements(AmazonVcdPageObjects.AccountList, AmazonVcdPageObjects.AccountItem);
-                var accountItem = accountItems.FirstOrDefault(x => x.Text.Contains(accountName));
+                NavigateToUrl(SwitchAccountPageUrl, AmazonVcdPageObjects.SwitchAccountForm);
+                var accountItem = GetAccountElementForClicking(accountName);
                 accountItem?.Click();
                 ClickElement(AmazonVcdPageObjects.SwitchCurrentAccountButton);
                 NavigateToSalesDiagnosticPage(AmazonVcdPageObjects.DetailViewDataContainer);
@@ -103,6 +103,20 @@ namespace SeleniumDataBrowser.VCD.PageActions
             {
                 Logger.LogWarning($"Could not open a page for {accountName} account: {e.Message}");
             }
+        }
+
+        private IWebElement GetAccountElementForClicking(string accountName)
+        {
+            var accountItems = GetChildrenElements(AmazonVcdPageObjects.AccountList, AmazonVcdPageObjects.AccountItem);
+            var accountItem = accountItems.FirstOrDefault(x => IsMatchAccountItemToName(x.Text, accountName));
+            return accountItem;
+        }
+
+        private bool IsMatchAccountItemToName(string accountElementText, string accountName)
+        {
+            var pattern = $@"\s{accountName}";
+            var regex = new Regex(pattern);
+            return regex.IsMatch(accountElementText);
         }
     }
 }

@@ -213,6 +213,13 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
             };
         }
 
+        /// <summary>
+        /// Gets part of request body - report parameter of pagination.
+        /// </summary>
+        /// <param name="reportId">String identifier of kind of report.</param>
+        /// <param name="pageIndex">Number of current page index.</param>
+        /// <param name="pageSizeValue">Number of page size.</param>
+        /// <returns>Report parameter of pagination.</returns>
         public static ReportPaginationWithOrderParameter GetReportPaginationWithOrderParameter(
             string reportId, int pageIndex, int pageSizeValue)
         {
