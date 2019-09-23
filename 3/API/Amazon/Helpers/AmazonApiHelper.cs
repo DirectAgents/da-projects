@@ -1,7 +1,8 @@
-﻿using Amazon.Entities.HelperEntities;
-using Amazon.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Amazon.Constants;
+using Amazon.Entities.HelperEntities;
+using Amazon.Enums;
 
 namespace Amazon.Helpers
 {
@@ -37,7 +38,7 @@ namespace Amazon.Helpers
             {
                 {CampaignType.SponsoredProducts, "sp"},
                 {CampaignType.SponsoredBrands, "hsa"},
-                {CampaignType.Empty, string.Empty}
+                {CampaignType.Empty, string.Empty},
             };
 
         private static readonly Dictionary<CampaignType, string> CampaignTypeReadableNames =
@@ -132,7 +133,7 @@ namespace Amazon.Helpers
                             {AttributedMetricDaysInterval.Days14, "attributedSales14dOtherSKU"},
                             {AttributedMetricDaysInterval.Days30, "attributedSales30dOtherSKU"},
                         }
-                    }
+                    },
                 };
 
         private static readonly IEnumerable<string> CommonMetrics = new[] {CostMetric, ImpressionsMetric, ClicksMetric};
@@ -173,14 +174,14 @@ namespace Amazon.Helpers
                         AttributedMetrics[AttributedMetricType.attributedUnitsOrdered][AttributedMetricDaysInterval.Days14],
                         AttributedMetrics[AttributedMetricType.attributedUnitsOrdered][AttributedMetricDaysInterval.Days30],
                     }
-                }
+                },
             };
 
         private static readonly Dictionary<EntitesType, IEnumerable<string>> DependentEntityTypeMetrics =
             new Dictionary<EntitesType, IEnumerable<string>>
             {
                 {
-                    EntitesType.Campaigns, new string[] {}
+                    EntitesType.Campaigns, Array.Empty<string>()
                 },
                 {
                     EntitesType.AdGroups, new[] {CampaignIdMetric, AdGroupNameMetric}
@@ -213,7 +214,21 @@ namespace Amazon.Helpers
                         AttributedMetrics[AttributedMetricType.attributedSalesOtherSKU][AttributedMetricDaysInterval.Days14],
                         AttributedMetrics[AttributedMetricType.attributedSalesOtherSKU][AttributedMetricDaysInterval.Days30],
                     }
-                }
+                },
+            };
+
+        private static readonly Dictionary<string, string> DependentCountryCodeApiEndpointUrls =
+            new Dictionary<string, string>
+            {
+                { "US", ApiEndpointUrl.NorthAmerica },
+                { "CA", ApiEndpointUrl.NorthAmerica },
+                { "JP", ApiEndpointUrl.FarEast },
+                { "AU", ApiEndpointUrl.FarEast },
+                { "FR", ApiEndpointUrl.Europe },
+                { "DE", ApiEndpointUrl.Europe },
+                { "IT", ApiEndpointUrl.Europe },
+                { "ES", ApiEndpointUrl.Europe },
+                { "UK", ApiEndpointUrl.Europe },
             };
 
         public static string GetCampaignTypeName(CampaignType type)
@@ -265,6 +280,17 @@ namespace Amazon.Helpers
             return snapshotParams;
         }
 
+        /// <summary>
+        /// Gets appropriate API endpoint URL by the specified country code.
+        /// </summary>
+        /// <param name="countryCode">Code of country.</param>
+        /// <returns>URL of the API endpoint.</returns>
+        public static string GetAppropriateApiEndpointUrlByCountryCode(string countryCode)
+        {
+            DependentCountryCodeApiEndpointUrls.TryGetValue(countryCode, out var apiEndpointUrl);
+            return apiEndpointUrl ?? ApiEndpointUrl.NorthAmerica;
+        }
+
         private static string GetBaseEntitiesPath(EntitesType entitiesType, CampaignType campaignType)
         {
             var campaignTypePath = campaignType == CampaignType.Empty || entitiesType == EntitesType.Asins
@@ -280,7 +306,7 @@ namespace Amazon.Helpers
             {
                 reportDate = date.ToString(DateFormat),
                 metrics = TransformItemsForRequest(metrics),
-                segment = GetSegmentQuery(entitiesType)
+                segment = GetSegmentQuery(entitiesType),
             };
             return reportParams;
         }

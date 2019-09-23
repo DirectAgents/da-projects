@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading;
 using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Exceptions;
 
 namespace CakeExtracter.Etl
 {
@@ -11,11 +13,14 @@ namespace CakeExtracter.Etl
 
         protected readonly int accountId;
 
-        public int BatchSize { get; set; }
         public int LoadedCount;
         public int ExtractedCount;
 
+        public event Action<FailedEtlException> ProcessEtlFailedWithoutInformation;
+
         private Extracter<T> extractor;
+
+        public int BatchSize { get; set; }
 
         protected Loader()
         {
@@ -29,7 +34,7 @@ namespace CakeExtracter.Etl
             BatchSize = batchSize;
         }
 
-       public Thread Start(Extracter<T> source)
+        public Thread Start(Extracter<T> source)
         {
             extractor = source;
             var thread = new Thread(DoLoad);
@@ -43,7 +48,7 @@ namespace CakeExtracter.Etl
             {
                 LoadedCount = 0;
                 ExtractedCount = 0;
-
+                PreLoadAction();
                 foreach (var list in extractor.EnumerateAll().InBatches(BatchSize))
                 {
                     var loadCount = Load(list);
@@ -52,7 +57,7 @@ namespace CakeExtracter.Etl
                     ExtractedCount = extractor.Added;
 
                     Logger.Info(accountId, "Extracted: {0} Loaded: {1} Queue: {2} Done: {3}", ExtractedCount,
-                        LoadedCount,extractor.Count, extractor.Done);
+                        LoadedCount, extractor.Count, extractor.Done);
                 }
 
                 if (LoadedCount != ExtractedCount)
@@ -61,19 +66,44 @@ namespace CakeExtracter.Etl
                     Logger.Error(accountId, ex);
                     throw ex;
                 }
-
-                AfterLoad();
+                AfterLoadAction();
             }
             catch (Exception e)
             {
-                Logger.Error(new Exception($"Exception in loader: {e}", e));
+                var exception = new FailedEtlException(null, null, accountId, e);
+                LogExceptionInLoader(exception);
+                if (ProcessEtlFailedWithoutInformation == null)
+                {
+                    CommandExecutionContext.Current.MarkCurrentExecutionAsFailed();
+                }
+                else
+                {
+                    ProcessEtlFailedWithoutInformation.Invoke(exception);
+                }
             }
         }
 
         protected abstract int Load(List<T> items);
 
-        protected virtual void AfterLoad()
+        protected virtual void AfterLoadAction()
         {
+        }
+
+        protected virtual void PreLoadAction()
+        {
+        }
+
+        private void LogExceptionInLoader(FailedEtlException exc)
+        {
+            var exception = new Exception($"Exception in loader: {exc}", exc);
+            if (exc.AccountId.HasValue)
+            {
+                Logger.Error(exc.AccountId.Value, exception);
+            }
+            else
+            {
+                Logger.Error(exception);
+            }
         }
     }
 }

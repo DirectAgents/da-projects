@@ -9,7 +9,7 @@ namespace Amazon.Exceptions
 
         public ExtractDataException(Exception exception, string details, EntitesType entitiesType,
             CampaignType campaignType, string profileId) : base(
-            $"{ExceptionMessage} - {details} ({campaignType}, {entitiesType}, EID - {profileId}): {exception.Message}")
+            $"{ExceptionMessage} - {details} ({campaignType}, {entitiesType}, EID - {profileId}): {exception?.Message}")
         {
         }
     }

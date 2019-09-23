@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using BingAds;
+using BingAds.Utilities;
 using CsvHelper;
 using CsvHelper.TypeConversion;
 
@@ -36,6 +36,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors
             catch (Exception exception)
             {
                 Logger.Error(exception);
+                throw exception; // Throws an exception to catch it in the general class Extractor for scheduling a new Bing command with initial parameters.
             }
 
             End();

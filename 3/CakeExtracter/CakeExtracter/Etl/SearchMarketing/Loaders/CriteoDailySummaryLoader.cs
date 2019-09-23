@@ -21,6 +21,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
         {
             AddUpdateSearchCampaigns(campaigns, this.searchAccountId);
         }
+
         public static void AddUpdateSearchCampaigns(campaign[] campaigns, int searchAccountId)
         {
             using (var db = new ClientPortalContext())
@@ -29,13 +30,13 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
                 foreach (var campaign in campaigns)
                 {
-                    var searchCampaign = db.SearchCampaigns.SingleOrDefault(sc => sc.ExternalId == campaign.campaignID);
+                    var searchCampaign = db.SearchCampaigns.SingleOrDefault(sc => sc.ExternalId == campaign.campaignID.ToString());
                     if (searchCampaign == null)
                     {
                         searchAccount.SearchCampaigns.Add(new SearchCampaign
                         {
                             SearchCampaignName = campaign.campaignName,
-                            ExternalId = campaign.campaignID
+                            ExternalId = campaign.campaignID.ToString(),
                         });
                         Logger.Info("Saving new SearchCampaign: {0} ({1})", campaign.campaignName, campaign.campaignID);
                         db.SaveChanges();
@@ -70,7 +71,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
                 foreach (var item in items)
                 {
-                    var campaignID = int.Parse(item["campaignID"]);
+                    var campaignID = item["campaignID"];
                     var searchCampaign = searchAccount.SearchCampaigns.SingleOrDefault(c => c.ExternalId == campaignID);
                     if (searchCampaign != null)
                     {

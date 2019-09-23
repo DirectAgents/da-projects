@@ -81,7 +81,7 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
             var missingOfferIds = neededOfferIds.Where(id => !existingOfferIds.Contains(id));
 
             //NOTE: this _should_ be okay since the CampSum extracter just makes one call to Cake, so that's done by now
-            DACampSumLoader.QuickETL_Offers(missingOfferIds);
+            DACampSumLoader.DoOffersEtl(missingOfferIds);
         }
 
         public static void AddMissingAffiliates(List<EventConversion> items)
@@ -94,9 +94,12 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
             var neededAffIds = items.Select(cs => cs.SourceAffiliate.SourceAffiliateId).Distinct();
             var missingAffIds = neededAffIds.Where(id => !existingAffIds.Contains(id));
 
+            //var affIdArray = missingAffIds.ToArray();
+            //var itemsInQuestion = items.Where(x => affIdArray.Contains(x.SourceAffiliate.SourceAffiliateId));
+
             // ?Could just use the SourceAffiliateId and SourceAffiliateName?
             // ?future: may be interested in other attributes?
-            DACampSumLoader.QuickETL_Affiliates(missingAffIds);
+            DACampSumLoader.DoAffiliatesEtl(missingAffIds);
         }
 
         public static void AddUpdateDependentEvents(List<EventConversion> items)

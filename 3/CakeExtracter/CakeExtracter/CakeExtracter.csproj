@@ -1,5 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <Import Project="..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.3\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props" Condition="Exists('..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.3\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" />
+  <Import Project="..\..\DirectAgents.Web\packages\Microsoft.NetFramework.Analyzers.2.9.3\build\Microsoft.NetFramework.Analyzers.props" Condition="Exists('..\..\DirectAgents.Web\packages\Microsoft.NetFramework.Analyzers.2.9.3\build\Microsoft.NetFramework.Analyzers.props')" />
+  <Import Project="..\..\DirectAgents.Web\packages\Microsoft.NetCore.Analyzers.2.9.3\build\Microsoft.NetCore.Analyzers.props" Condition="Exists('..\..\DirectAgents.Web\packages\Microsoft.NetCore.Analyzers.2.9.3\build\Microsoft.NetCore.Analyzers.props')" />
+  <Import Project="..\..\DirectAgents.Web\packages\Microsoft.CodeQuality.Analyzers.2.9.3\build\Microsoft.CodeQuality.Analyzers.props" Condition="Exists('..\..\DirectAgents.Web\packages\Microsoft.CodeQuality.Analyzers.2.9.3\build\Microsoft.CodeQuality.Analyzers.props')" />
+  <Import Project="..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.3\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props" Condition="Exists('..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.3\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" />
   <PropertyGroup>
     <ProjectGuid>{3B6C5433-5392-4165-A7E4-4AA431A75BB3}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -26,7 +31,6 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NuGetPackageImportStamp>914f3a7f</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -39,6 +43,9 @@
     <Optimize>False</Optimize>
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <CodeAnalysisRuleSet>$(SolutionDir)CodeAnalysis\codeanalysis.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -52,7 +59,9 @@
     <Prefer32Bit>false</Prefer32Bit>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <Optimize>false</Optimize>
+    <CodeAnalysisRuleSet>$(SolutionDir)CodeAnalysis\codeanalysis.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <Prefer32Bit>false</Prefer32Bit>
@@ -169,6 +178,9 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\DirectAgents.Web\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\..\DirectAgents.Web\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
+    </Reference>
     <Reference Include="Polly, Version=6.0.0.0, Culture=neutral, PublicKeyToken=c8a3ffc3f8f825cc, processorArchitecture=MSIL">
       <HintPath>..\..\DirectAgents.Web\packages\Polly.6.1.2\lib\netstandard2.0\Polly.dll</HintPath>
     </Reference>
@@ -176,9 +188,15 @@
     <Reference Include="Quartz">
       <HintPath>..\..\DirectAgents.Web\packages\Quartz.2.1.2\lib\net40\Quartz.dll</HintPath>
     </Reference>
+    <Reference Include="RazorEngine, Version=3.10.0.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <HintPath>..\..\DirectAgents.Web\packages\RazorEngine.3.10.0\lib\net45\RazorEngine.dll</HintPath>
+    </Reference>
     <Reference Include="RestSharp, Version=106.3.1.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
       <HintPath>..\..\DirectAgents.Web\packages\RestSharp.106.3.1\lib\net452\RestSharp.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="SendGrid, Version=9.11.0.0, Culture=neutral, PublicKeyToken=4f047e93159395ca, processorArchitecture=MSIL">
+      <HintPath>..\..\DirectAgents.Web\packages\Sendgrid.9.11.0\lib\net452\SendGrid.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Private>True</Private>
@@ -299,6 +317,9 @@
     <Reference Include="System.Web.Extensions">
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\DirectAgents.Web\packages\Microsoft.AspNet.Razor.3.0.0\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Services">
       <Private>True</Private>
     </Reference>
@@ -329,6 +350,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrappers\AutoMapperBootstrapper.cs" />
+    <Compile Include="Bootstrappers\DependencyInjectionBootstrapper.cs" />
+    <Compile Include="Bootstrappers\DependencyInjectionModules\DependencyInjectionModule.cs" />
     <Compile Include="Bootstrappers\EntityFrameworkBootstrapper.cs" />
     <Compile Include="Bootstrappers\IBootstrapper.cs" />
     <Compile Include="Bootstrappers\LoggingBootstrapper.cs" />
@@ -396,6 +419,7 @@
     <Compile Include="CakeMarketingApi\Entities\SubIdSummary.cs" />
     <Compile Include="CakeMarketingApi\Entities\Tag.cs" />
     <Compile Include="CakeMarketingApi\Entities\Vertical.cs" />
+    <Compile Include="Commands\Core\FailedJobsNotifierCommand.cs" />
     <Compile Include="Commands\DA\DAMonthlyMaintenance.cs" />
     <Compile Include="Commands\DA\DASyncAmazonDspStats.cs" />
     <Compile Include="Commands\DA\DASynchAdformStats.cs" />
@@ -407,16 +431,31 @@
     <Compile Include="Commands\DA\DASynchCampSums.cs" />
     <Compile Include="Commands\DA\DaSynchCommissionJunctionStats.cs" />
     <Compile Include="Commands\DA\DASynchCriteoStats.cs" />
+    <Compile Include="Commands\DA\DASynchDBMStats.cs" />
     <Compile Include="Commands\DA\DASynchDBMStats2.cs" />
     <Compile Include="Commands\DA\DASynchKochavaStats.cs" />
-    <Compile Include="Commands\DA\DASynchYAMStats.cs" />
+    <Compile Include="Commands\DA\DaSynchYamStats.cs" />
+    <Compile Include="Commands\DA\DASynchYAMStats_Outdated.cs" />
+    <Compile Include="Commands\Selenium\SyncAmazonPdaCommand.cs" />
+    <Compile Include="Commands\Selenium\SyncAmazonVcdCommand.cs" />
+    <Compile Include="Common\CommandAutoStopWatcher.cs" />
+    <Compile Include="Common\Email\EmailNotificationsService.cs" />
+    <Compile Include="Common\Email\IEmailNotificationsService.cs" />
+    <Compile Include="Common\FileUtils.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Constants\EmailConfigConstants.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Models\ErrorInJobNotificationModel.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Models\FailedJobNotificationModel.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Services\IJobExecutionNotificationService.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Services\JobExecutionNotificationService.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Repositories\IJobRequestsRepository.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Services\RetryRequestsHolder.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\CommandSchedulingUtils.cs" />
+    <Compile Include="Common\StatsTypeAgg.cs" />
     <Compile Include="Commands\EOMSynchCPCCommand.cs" />
-    <Compile Include="Commands\DA\DASynchFacebookAdPreviews.cs" />
-    <Compile Include="Commands\DA\DASynchDBMCreatives.cs" />
     <Compile Include="Commands\DA\DASeed.cs" />
     <Compile Include="Commands\DA\DASynchAdrollAds.cs" />
-    <Compile Include="Commands\DA\DASynchDBMStatsOld.cs" />
     <Compile Include="Commands\RT\RTSynchTest.cs" />
+    <Compile Include="Commands\Core\ScheduledRequestsLauncherCommand.cs" />
     <Compile Include="Commands\Search\CopySearchDailySummariesCommand.cs" />
     <Compile Include="Commands\Search\SynchSearchDailySummariesAppleCommand.cs" />
     <Compile Include="Commands\Test\TestABCommand.cs" />
@@ -426,16 +465,79 @@
     <Compile Include="Commands\Test\TestAppleCommand.cs" />
     <Compile Include="Commands\Test\TestCakeCommand.cs" />
     <Compile Include="Commands\Test\TestFacebookCommand.cs" />
-    <Compile Include="Commands\Test\TestYAMCommand.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Common\ArchiveExctractors\Contract\IArchiveExtractor.cs" />
-    <Compile Include="Common\ArchiveExctractors\GzipArchiveExtractor.cs" />
-    <Compile Include="Common\ArchiveExctractors\ZipArchiveExtractor.cs" />
+    <Compile Include="Common\Extractors\ArchiveExctractors\Contract\IArchiveExtractor.cs" />
+    <Compile Include="Common\Extractors\ArchiveExctractors\GzipArchiveExtractor.cs" />
+    <Compile Include="Common\Extractors\ArchiveExctractors\ZipArchiveExtractor.cs" />
+    <Compile Include="Common\CommandLineUtils.cs" />
     <Compile Include="Common\Compare.cs" />
+    <Compile Include="Common\Extractors\CsvExtractors\Contracts\ICsvExtractor.cs" />
+    <Compile Include="Common\Extractors\CsvExtractors\CsvAccountExtractor.cs" />
+    <Compile Include="Common\Constants\AnlyticTablesSyncConstants.cs" />
+    <Compile Include="Common\JobExecutionManagement\CommandExecutionContext.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Models\AccountLogData.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Models\JobExecutionLogData.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Services\JobExecutionItemService.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Services\IJobExecutionItemService.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Repositories\JobExecutionItemRepository.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Utils\ExecutionLoggingUtils.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Exceptions\FailedEtlException.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Services\JobRequestLaunchers\Interfaces\IJobExecutionRequestLauncher.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Services\JobRequestLaunchers\JobExecutionRequestLauncher.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Models\CommandWithSchedule.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Repositories\JobRequestRepository.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Services\JobRequestSchedulers\Interfaces\IJobRequestLifeCycleManager.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Services\JobRequestSchedulers\JobRequestLifeCycleManager.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\CommandArgumentsConverter.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\JobRequestsLogger.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\ProcessManager.cs" />
     <Compile Include="Common\SqlScriptsExecutor.cs" />
     <Compile Include="Common\StorageCollection.cs" />
     <Compile Include="Common\TextUtils.cs" />
+    <Compile Include="Common\DIKernel.cs" />
+    <Compile Include="Etl\AmazonSelenium\Configuration\SeleniumCommandConfigurationManager.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Configuration\PdaCommandConfigurationManager.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Enums\AmazonCmApiMetrics.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Enums\AmazonReportMetrics.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Extractors\AmazonPdaCampaignRequestExtractor.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Extractors\AmazonPdaDailyRequestExtractor.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Extractors\AmazonPdaExtractor.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\Models\AmazonPdaCampaignSummary.cs" />
+    <Compile Include="Etl\AmazonSelenium\PDA\PdaDataProviderBuilder.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\AmazonVcdExtractor.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\AmazonVcdLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\Constants\VendorCentralDataLoadingConstants.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\MetricTypesLoader\BaseVendoritemLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\MetricTypesLoader\BrandsSummaryLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\MetricTypesLoader\CategoriesSummaryLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\MetricTypesLoader\ParentProductSummaryLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\MetricTypesLoader\ProductsSummaryLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Loaders\MetricTypesLoader\SubcategoriesSummaryLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\Brand.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\Category.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\ParentProduct.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\Product.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\ShippingItem.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\Subcategory.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Configuration\Models\VcdExecutionProfileConfiguration.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Models\VcdReportData.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Configuration\VcdAccountsManager.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Configuration\VcdCommandConfigurationManager.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Configuration\VcdExecutionProfileManager.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Synchers\VcdAnalyticTablesSyncher.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportDataComposer\VcdReportComposer.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\BaseProductRowMap.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\DecimalAmountReportConverter.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\IntNumberReportConverter.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\OrderedRevenueProductsRowMap.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\ShippedCogsProductsRowMap.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\ShippedRevenueProductsRowMap.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\VcdReportParser.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\VcdDataProviderBuilder.cs" />
+    <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonApiAdExtractor.cs" />
+    <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonApiSearchTermExtractor.cs" />
+    <Compile Include="Etl\Amazon\Loaders\AmazonSearchTermSummaryLoader.cs" />
+    <Compile Include="Etl\Apple\Exceptions\AppleFailedEtlException.cs" />
+    <Compile Include="Etl\Amazon\Exceptions\FailedStatsLoadingException.cs" />
     <Compile Include="Etl\CakeMarketing\DALoaders\DAAffiliatesLoader.cs" />
     <Compile Include="Etl\CakeMarketing\DALoaders\DAAffSubSummaryLoader.cs" />
     <Compile Include="Etl\CakeMarketing\DALoaders\DACampLoader.cs">
@@ -451,6 +553,26 @@
     </Compile>
     <Compile Include="Etl\CakeMarketing\Extracters\SubIdSummariesExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\CPCLoader.cs" />
+    <Compile Include="Etl\DBM\Composer\DbmReportDataComposer.cs" />
+    <Compile Include="Etl\DBM\Extractors\DbmExtractor.cs" />
+    <Compile Include="Etl\DBM\Extractors\DbmLineItemExtractor.cs" />
+    <Compile Include="Etl\DBM\Extractors\Parsers\Models\DbmLineItemReportRow.cs" />
+    <Compile Include="Etl\DBM\Extractors\Parsers\ParsingConverters\DbmLineItemReportEntityRowMap.cs" />
+    <Compile Include="Etl\DBM\Extractors\Parsers\ParsingConverters\DbmReportDataConverter.cs" />
+    <Compile Include="Etl\DBM\Extractors\Parsers\DbmReportCsvParser.cs" />
+    <Compile Include="Etl\DBM\Extractors\Parsers\Models\DbmBaseReportRow.cs" />
+    <Compile Include="Etl\DBM\Extractors\Parsers\Models\DbmCreativeReportRow.cs" />
+    <Compile Include="Etl\DBM\Extractors\Parsers\ParsingConverters\DbmCreativeReportEntityRowMap.cs" />
+    <Compile Include="Etl\DBM\Loaders\EntitiesLoaders\DbmAdvertiserLoader.cs" />
+    <Compile Include="Etl\DBM\Loaders\EntitiesLoaders\DbmBaseEntityLoader.cs" />
+    <Compile Include="Etl\DBM\Loaders\EntitiesLoaders\DbmCampaignLoader.cs" />
+    <Compile Include="Etl\DBM\Loaders\EntitiesLoaders\DbmCreativeLoader.cs" />
+    <Compile Include="Etl\DBM\Loaders\EntitiesLoaders\DbmInsertionOrderLoader.cs" />
+    <Compile Include="Etl\DBM\Loaders\EntitiesLoaders\DbmLineItemLoader.cs" />
+    <Compile Include="Etl\DBM\Loaders\SummariesLoaders\DbmCreativeSummaryLoader.cs" />
+    <Compile Include="Etl\DBM\Loaders\SummariesLoaders\DbmLineItemSummaryLoader.cs" />
+    <Compile Include="Etl\DBM\Models\DbmAccountLineItemReportData.cs" />
+    <Compile Include="Etl\DBM\Models\DbmAccountCreativeReportData.cs" />
     <Compile Include="Etl\DSP\Configuration\AmazonDspConfigurationProvider.cs" />
     <Compile Include="Etl\CommandsExecutionAccountsProvider.cs" />
     <Compile Include="Etl\DSP\Extractors\AmazonDspExtractor.cs" />
@@ -480,34 +602,39 @@
     <Compile Include="Etl\Kochava\Loaders\KochavaItemsDbService.cs" />
     <Compile Include="Etl\Kochava\Loaders\KochavaLoader.cs" />
     <Compile Include="Etl\Kochava\Models\KochavaReportItem.cs" />
-    <Compile Include="Etl\SearchMarketing\Extracters\AppleApiExtracter.cs" />
+    <Compile Include="Etl\Apple\Extractors\AppleApiExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingConvSummaryExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingDailyNonShoppingSummaryExtractor.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingDailyShoppingSummaryExtractor.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\DbExtracters.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\AdWordsConvSummaryLoader.cs" />
-    <Compile Include="Etl\SearchMarketing\Loaders\AppleApiLoader.cs" />
+    <Compile Include="Etl\Apple\Loaders\AppleApiLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\BingConvSummaryLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\SearchDailySummaryLoaders.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdPreviewLoader.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdSetSummaryLoader.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdSummaryLoader.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookCampaignSummaryLoader.cs" />
+    <Compile Include="Etl\Facebook\Extractors\FacebookAdMetadataExtractor.cs" />
+    <Compile Include="Etl\Facebook\FacebookInsightsDataProviderBuilder.cs" />
+    <Compile Include="Etl\Facebook\Loaders\EntitiesLoaders\BaseFacebookEntityLoader.cs" />
+    <Compile Include="Etl\Facebook\Loaders\EntitiesLoaders\FacebookActionTypeLoader.cs" />
+    <Compile Include="Etl\Facebook\Loaders\EntitiesLoaders\FacebookCreativesLoader.cs" />
+    <Compile Include="Etl\Facebook\Loaders\EntitiesLoaders\FacebookAdSetsLoader.cs" />
+    <Compile Include="Etl\Facebook\Loaders\EntitiesLoaders\FacebookAdsLoader.cs" />
+    <Compile Include="Etl\Facebook\Loaders\EntitiesLoaders\FacebookCampaignsLoader.cs" />
+    <Compile Include="Etl\Facebook\Extractors\FacebookAdSetSummaryExtractor.cs" />
+    <Compile Include="Etl\Facebook\Extractors\FacebookAdSummaryExtractor.cs" />
+    <Compile Include="Etl\Facebook\Extractors\FacebookCampaignSummaryExtractor.cs" />
+    <Compile Include="Etl\Facebook\Extractors\FacebookDailySummaryExtractor.cs" />
+    <Compile Include="Etl\Facebook\Loaders\FacebookAdSetSummaryLoaderV2.cs" />
+    <Compile Include="Etl\Facebook\Loaders\FacebookAdSummaryLoaderV2.cs" />
+    <Compile Include="Etl\Facebook\Loaders\FacebookCampaignSummaryLoaderV2.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformAdSetSummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformDailySummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformApiBaseExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformStrategySummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformTDadSummaryExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiAdExtractor.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiAdSetExtractor.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiCampaignSummaryExtractor.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonCampaignMetadataExtractor.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonDatabaseKeywordsToDailySummaryExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiDailySummaryExtractor.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiKeywordExtractor.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiSearchTermExtractor.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\BaseAmazonExtractor.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\AmazonTransformers.cs" />
+    <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonCampaignMetadataExtractor.cs" />
+    <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonDatabaseKeywordsToDailySummaryExtractor.cs" />
+    <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonApiKeywordExtractor.cs" />
+    <Compile Include="Etl\Amazon\Extractors\BaseAmazonExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformTransformers.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdRollAdExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollSiteStatsCsvExtracter.cs" />
@@ -516,8 +643,8 @@
     <Compile Include="Etl\TradingDesk\Extracters\CriteoExtracters.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DataBaseSourceExtractors\DatabaseKeywordsToDailySummaryExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DataBaseSourceExtractors\DatabaseStrategyToDailySummaryExtractor.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\DbmCreativeCloudStorageExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\DBMCreativeExtracter.cs" />
+    <Compile Include="Etl\DBM\Downloader\DbmReportDownloader.cs" />
+    <Compile Include="Etl\DBM\Extractors\DbmCreativeExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\DbmStrategyCsvExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\KeywordSummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\SearchTermSummaryExtracter.cs" />
@@ -526,12 +653,16 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\TDadSummaryExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\YamConValCsvExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\TDConvExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\TDSiteSummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\TDStrategySummaryExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\YAMConValExtracters.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\YAMExtracters.cs" />
+    <Compile Include="Etl\YAM\Extractors\ApiExtractors\YamCampaignSummaryExtractor.cs" />
+    <Compile Include="Etl\YAM\Extractors\ApiExtractors\BaseYamApiExtractor.cs" />
+    <Compile Include="Etl\YAM\Extractors\ApiExtractors\YamDailySummaryExtractor.cs" />
+    <Compile Include="Etl\YAM\Extractors\ApiExtractors\YamCreativeSummaryExtractor.cs" />
+    <Compile Include="Etl\YAM\Extractors\ApiExtractors\YamLineSummaryExtractor.cs" />
+    <Compile Include="Etl\YAM\Extractors\ApiExtractors\YamAdSummaryExtractor.cs" />
+    <Compile Include="Etl\YAM\Extractors\ApiExtractors\YamPixelSummaryExtractor.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\Adders\DailySummaryAdder.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\Adders\SummaryMetricAdder.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdformLoaders\AdformCampaignSummaryLoader.cs" />
@@ -544,16 +675,12 @@
     <Compile Include="Commands\DA\DASynchAdrollConvCsv.cs" />
     <Compile Include="Commands\DA\DASynchAdrollStats.cs" />
     <Compile Include="Commands\DA\DASynchAdvertisers.cs" />
-    <Compile Include="Commands\DA\DASynchDBMStats.cs" />
     <Compile Include="Commands\DA\DASynchFacebookStats.cs" />
     <Compile Include="Commands\DA\DASynchOfferBudgetStats2.cs" />
     <Compile Include="Commands\DA\DASynchOfferBudgetStats.cs" />
     <Compile Include="Commands\DA\DASynchOfferDailySummaries.cs" />
     <Compile Include="Commands\DA\DASynchOffers.cs" />
     <Compile Include="Commands\DA\DASynchTDDailySummaries.cs" />
-    <Compile Include="Commands\PrintItCommand.cs" />
-    <Compile Include="Commands\ScheduledCommand.cs" />
-    <Compile Include="Commands\ScheduledJob.cs" />
     <Compile Include="Commands\SendAutomatedReportsCommand.cs" />
     <Compile Include="Commands\SendSimpleReportsCommand.cs" />
     <Compile Include="Commands\SynchAdvertisersCommand.cs" />
@@ -575,23 +702,13 @@
     <Compile Include="Commands\Search\SynchSearchDailySummariesCriteoCommand.cs" />
     <Compile Include="Commands\TD\TDSynchAdDailySummariesAdroll.cs" />
     <Compile Include="Commands\TD\TDSynchAdDailySummariesAdrollCsv.cs" />
-    <Compile Include="Commands\TD\TDSynchCreativeDailySummariesDbm.cs" />
-    <Compile Include="Commands\TD\TDSynchCreativeDailySummariesDbmCsv.cs" />
-    <Compile Include="Commands\TD\TDSynchDailyStatsDbm.cs" />
-    <Compile Include="Commands\TD\TDSynchDailySummariesDbmCsv.cs" />
-    <Compile Include="Commands\TD\TDSynchDataTransferFilesDbm.cs" />
-    <Compile Include="Commands\TD\TDSynchUserListStats.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Commands\Test\TestAdRollCommand.cs" />
     <Compile Include="Commands\Test\TestBingCommand.cs" />
     <Compile Include="Commands\Test\TestChartCommand.cs" />
     <Compile Include="Commands\Test\TestCriteoCommand.cs" />
-    <Compile Include="Commands\Test\TestDbmCommand.cs" />
     <Compile Include="Commands\Test\TestExcelCommand.cs" />
     <Compile Include="Commands\Test\TestLCCommand.cs" />
     <Compile Include="Common\CopyPropertiesUtility.cs" />
-    <Compile Include="Common\EmailUtility.cs" />
     <Compile Include="Common\EntityFrameworkExtensions.cs" />
     <Compile Include="Common\LinqExtensions.cs" />
     <Compile Include="Common\LogElapsedTime.cs" />
@@ -613,8 +730,6 @@
     <Compile Include="Common\DateRange.cs" />
     <Compile Include="Commands\SynchDailySummariesCommand.cs" />
     <Compile Include="Commands\Search\SynchSearchDailySummariesXmlCommand.cs" />
-    <Compile Include="Common\SqlUtility.cs" />
-    <Compile Include="Common\Utility.cs" />
     <Compile Include="Common\XmlExtensions.cs" />
     <Compile Include="DataWarehouse.cs" />
     <Compile Include="Bootstrappers\EnterpriseLibraryBootstrapper.cs" />
@@ -664,62 +779,42 @@
     <Compile Include="Etl\SearchMarketing\Loaders\CallDailySummaryLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\CriteoDailySummaryLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\CriteoDailySummaryLoader2.cs" />
-    <Compile Include="Etl\SocialMarketing\Extracters\FacebookApiExtracter.cs" />
-    <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookDailySummaryLoader.cs" />
+    <Compile Include="Etl\Facebook\Extractors\FacebookApiExtractor.cs" />
+    <Compile Include="Etl\Facebook\Loaders\FacebookDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollApiExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollConvCsvExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollCsvExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\DbmCloudStorageExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\DbmConversionExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\DbmCsvExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\DbmDailyStatsExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\DbmUserListStatExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\TDDailySummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollAdDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollCampaignSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollConvLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonAdSummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonAdSetSummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonDailySummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonCampaignSummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonKeywordSummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonPdaDailySummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonSearchTermSummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonSummaryMetricLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AnalyticTablesSync\AmazonAmsAnalyticSyncher.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\BaseAmazonLevelLoader.cs" />
+    <Compile Include="Etl\Amazon\Loaders\AmazonAdSummaryLoader.cs" />
+    <Compile Include="Etl\Amazon\Loaders\AmazonDailySummaryLoader.cs" />
+    <Compile Include="Etl\Amazon\Loaders\AmazonCampaignSummaryLoader.cs" />
+    <Compile Include="Etl\Amazon\Loaders\AmazonKeywordSummaryLoader.cs" />
+    <Compile Include="Etl\Amazon\Loaders\AmazonPdaDailySummaryLoader.cs" />
+    <Compile Include="Etl\Amazon\Loaders\AmazonSummaryMetricLoader.cs" />
+    <Compile Include="Etl\Amazon\Loaders\AnalyticTablesSync\AmazonAmsAnalyticSyncher.cs" />
+    <Compile Include="Etl\Amazon\Loaders\BaseAmazonLevelLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\CommissionJunctionLoaders\CommissionJunctionAdvertiserLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\CommissionJunctionLoaders\CommissionJunctionAdvertiserCleaner.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\CommissionJunctionLoaders\CommissionJunctionAdvertiserMapper.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\DbmConvLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\Interfaces\IDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\Interfaces\ISummaryMetricLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\KeywordSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\SearchTermSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\SummaryMetricLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\TDadPreviewLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\DBMCreativeDailySummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\DbmCreativeSummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\DbmDailySummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\DbmLineItemSummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\DbmSiteSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollAdSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\TDAdSetSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\TDadSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\TDConvLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\TDDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\TDSiteSummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\TDStrategyConValLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\TDStrategySummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\TDDailyConValLoader.cs" />
     <Compile Include="Etl\TradingDesk\Loaders\AdrollAdDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\Loaders\AdrollAdDailySummaryLoader2.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollDailySummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\Loaders\DbmConversionLoader.cs" />
-    <Compile Include="Etl\TradingDesk\Loaders\DbmCreativeDailySummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\Loaders\DbmDailyStatsLoader.cs" />
-    <Compile Include="Etl\TradingDesk\Loaders\DbmDailySummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\Loaders\DbmUserListStatLoader.cs" />
     <Compile Include="Etl\Transformer.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\AdWordsXmlReportExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\AdWordsLoader.cs" />
@@ -727,11 +822,40 @@
     <Compile Include="Etl\Loader.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\DailySummariesLoader.cs" />
     <Compile Include="Etl\LoaderTask.cs" />
+    <Compile Include="Etl\YAM\Extractors\CsvExtractors\RowModels\YamRow.cs" />
+    <Compile Include="Etl\YAM\Extractors\CsvExtractors\YamCsvExtractor.cs" />
+    <Compile Include="Etl\YAM\Extractors\CsvExtractors\RowMaps\YamRowMap.cs" />
+    <Compile Include="Etl\YAM\CommonClassesExtensions\YamStatsType.cs" />
+    <Compile Include="Etl\YAM\Loaders\BaseYamSummaryLoader.cs" />
+    <Compile Include="Etl\YAM\Loaders\YamAdSummaryLoader.cs" />
+    <Compile Include="Etl\YAM\Loaders\YamCampaignSummaryLoader.cs" />
+    <Compile Include="Etl\YAM\Loaders\YamCreativeSummaryLoader.cs" />
+    <Compile Include="Etl\YAM\Loaders\YamDailySummaryLoader.cs" />
+    <Compile Include="Etl\YAM\Loaders\YamLineSummaryLoader.cs" />
+    <Compile Include="Etl\YAM\Loaders\YamPixelSummaryLoader.cs" />
+    <Compile Include="Etl\YAM\Outdated\TDDailyConValLoader.cs" />
+    <Compile Include="Etl\YAM\Outdated\TDStrategyConValLoader.cs" />
+    <Compile Include="Etl\YAM\Outdated\YamConValCsvExtracter.cs" />
+    <Compile Include="Etl\YAM\Outdated\YAMConValExtracters.cs" />
+    <Compile Include="Etl\YAM\Outdated\YAMExtracters.cs" />
+    <Compile Include="Etl\YAM\Repositories\Summaries\YamAdSummaryDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\Summaries\YamCampaignSummaryDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\Summaries\YamCreativeSummaryDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\Summaries\YamDailySummaryDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\Summaries\YamLineSummaryDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\Summaries\YamPixelSummaryDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\YamAdDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\YamCampaignDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\YamCreativeDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\YamLineDatabaseRepository.cs" />
+    <Compile Include="Etl\YAM\Repositories\YamPixelDatabaseRepository.cs" />
+    <Compile Include="Extensions\EntityIdStorageEqualityComparer.cs" />
     <Compile Include="Helpers\CommandHelper.cs" />
     <Compile Include="Helpers\ConfigurationHelper.cs" />
     <Compile Include="Helpers\EntityIdStorage.cs" />
     <Compile Include="Extensions\ExceptionExtension.cs" />
     <Compile Include="Helpers\LoadingProgress.cs" />
+    <Compile Include="Helpers\RequestHelper.cs" />
     <Compile Include="Helpers\SafeContextWrapper.cs" />
     <Compile Include="ICakeMarketing.cs" />
     <Compile Include="ICakeMarketingCache.cs" />
@@ -746,6 +870,7 @@
     <Compile Include="Logging\TimeWatchers\Amazon\AmazonTimeTracker.cs" />
     <Compile Include="Logging\TimeWatchers\Amazon\Models\AmazonAccountTrackingData.cs" />
     <Compile Include="Logging\TimeWatchers\Amazon\Models\AmazonLevelTrackingData.cs" />
+    <Compile Include="Logging\Utils\LoggerUtils.cs" />
     <Compile Include="Mef\Composer.cs" />
     <Compile Include="MetricNames.cs" />
     <Compile Include="Logging\EnterpriseLibrary\ConsoleCustomTraceListener.cs" />
@@ -767,13 +892,18 @@
       <DependentUpon>SearchReportRuntimeTextTemplate.tt</DependentUpon>
     </Compile>
     <Compile Include="Reports\SimpleReportManager.cs" />
-    <Compile Include="SimpleRepositories\Interfaces\ISimpleRepository.cs" />
-    <Compile Include="SimpleRepositories\StrategyRepository.cs" />
-    <Compile Include="SimpleRepositories\TypeRepository.cs" />
+    <Compile Include="SimpleRepositories\BaseRepositories\BaseDatabaseRepository.cs" />
+    <Compile Include="SimpleRepositories\BaseRepositories\Interfaces\IBaseRepository.cs" />
+    <Compile Include="SimpleRepositories\RepositoriesWithStorage\Interfaces\IRepositoryWithStorage.cs" />
+    <Compile Include="SimpleRepositories\RepositoriesWithStorage\StrategyRepositoryWithStorage.cs" />
+    <Compile Include="SimpleRepositories\RepositoriesWithStorage\TypeRepositoryWithStorage.cs" />
     <Compile Include="Data\UsersContext.cs" />
     <Compile Include="Common\RetryUtility.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="$(SolutionDir)CodeAnalysis\stylecop.json">
+      <Link>stylecop.json</Link>
+    </None>
     <None Include="271266501f61f25ee49c19a3c5cf3bb9a769ba00-privatekey.p12">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -844,6 +974,10 @@
       <Project>{3358a07a-a5a0-4933-9680-03d4308b278c}</Project>
       <Name>FacebookAPI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\API\SeleniumDataBrowser\SeleniumDataBrowser.csproj">
+      <Project>{09800c2e-2d96-495b-9f32-b461b38d015b}</Project>
+      <Name>SeleniumDataBrowser</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\API\Yahoo\Yahoo.csproj">
       <Project>{b5c95cb8-dbe8-4d94-9a6d-6c2ed3535a26}</Project>
       <Name>Yahoo</Name>
@@ -883,6 +1017,28 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.3\analyzers\dotnet\Microsoft.CodeAnalysis.VersionCheckAnalyzer.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\Microsoft.CodeQuality.Analyzers.2.9.3\analyzers\dotnet\cs\Humanizer.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\Microsoft.CodeQuality.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.CodeQuality.Analyzers.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\Microsoft.CodeQuality.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.CodeQuality.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\Microsoft.NetCore.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.NetCore.Analyzers.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\Microsoft.NetCore.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.NetCore.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\Microsoft.NetFramework.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\Microsoft.NetFramework.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+  </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.3\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.3\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props'))" />
+    <Error Condition="!Exists('..\..\DirectAgents.Web\packages\Microsoft.CodeQuality.Analyzers.2.9.3\build\Microsoft.CodeQuality.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\DirectAgents.Web\packages\Microsoft.CodeQuality.Analyzers.2.9.3\build\Microsoft.CodeQuality.Analyzers.props'))" />
+    <Error Condition="!Exists('..\..\DirectAgents.Web\packages\Microsoft.NetCore.Analyzers.2.9.3\build\Microsoft.NetCore.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\DirectAgents.Web\packages\Microsoft.NetCore.Analyzers.2.9.3\build\Microsoft.NetCore.Analyzers.props'))" />
+    <Error Condition="!Exists('..\..\DirectAgents.Web\packages\Microsoft.NetFramework.Analyzers.2.9.3\build\Microsoft.NetFramework.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\DirectAgents.Web\packages\Microsoft.NetFramework.Analyzers.2.9.3\build\Microsoft.NetFramework.Analyzers.props'))" />
+    <Error Condition="!Exists('..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.3\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.3\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
+  </Target>
 </Project>

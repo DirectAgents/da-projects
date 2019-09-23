@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using Adform;
+using System.Threading.Tasks;
+using Adform.Utilities;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors;
@@ -33,13 +34,20 @@ namespace CakeExtracter.Commands
         }
 
         public int? AccountId { get; set; }
+
         public DateTime? StartDate { get; set; }
+
         public DateTime? EndDate { get; set; }
+
         public int? DaysAgoToStart { get; set; }
+
         public string StatsType { get; set; }
+
         public bool DisabledOnly { get; set; }
 
-        private AdformUtility adformUtility { get; set; }
+        private static List<string> accountIdsForOrders;
+        private static Dictionary<string, string> trackingIdsOfAccounts;
+        private static List<string> accountsWithMultipleMedia;
 
         public override void ResetProperties()
         {
@@ -66,95 +74,129 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            Logger.LogToOneFile = true;
             var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info("Adform ETL. DateRange {0}.", dateRange);
-
             var statsType = new StatsTypeAgg(StatsType);
-            SetupAdformUtility();
+            SetConfigurableVariables();
             var accounts = GetAccounts();
-            var accountIdsForOrders = ConfigurationHelper.ExtractEnumerableFromConfig("Adform_OrderInsteadOfCampaign");
-            var trackingIdsOfAccounts = ConfigurationHelper.ExtractDictionaryFromConfigValue("Adform_AccountsWithSpecificTracking", "Adform_AccountsTrackingIds");
-
+            AdformUtility.TokenSets = GetTokens();
             foreach (var account in accounts)
             {
                 Logger.Info("Commencing ETL for Adform account ({0}) {1}", account.Id, account.Name);
-                SetupAdformUtilityForAccount(account, trackingIdsOfAccounts);
-                var orderInsteadOfCampaign = accountIdsForOrders.Contains(account.ExternalId);
-                try
-                {
-                    if (statsType.Daily)
-                        DoETL_Daily(dateRange, account);
-                    if (statsType.Strategy)
-                        DoETL_Strategy(dateRange, account, orderInsteadOfCampaign);
-                    if (statsType.AdSet)
-                        DoETL_AdSet(dateRange, account, orderInsteadOfCampaign);
-
-                    if (statsType.Creative && !statsType.All) // don't include when getting "all" statstypes
-                        DoETL_Creative(dateRange, account);
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error(ex);
-                }
+                var etlLevelActions = GetEtlLevelActions(account, dateRange, statsType);
+                Parallel.Invoke(etlLevelActions.ToArray());
             }
-            SaveTokens();
+            SaveTokens(AdformUtility.TokenSets);
             return 0;
         }
 
-        private void SetupAdformUtility()
+        private static void SetConfigurableVariables()
         {
-            adformUtility = new AdformUtility(m => Logger.Info(m), m => Logger.Warn(m));
-            GetTokens();
+            accountIdsForOrders = ConfigurationHelper.ExtractEnumerableFromConfig("Adform_OrderInsteadOfCampaign");
+            trackingIdsOfAccounts = ConfigurationHelper.ExtractDictionaryFromConfigValue("Adform_AccountsWithSpecificTracking", "Adform_AccountsTrackingIds");
+            accountsWithMultipleMedia = ConfigurationHelper.ExtractEnumerableFromConfig("Adform_AccountsWithMultipleMedia");
         }
 
-        private void SetupAdformUtilityForAccount(ExtAccount account, Dictionary<string, string> trackingIdsOfAccounts)
+        private static List<Action> GetEtlLevelActions(ExtAccount account, DateRange dateRange, StatsTypeAgg statsType)
         {
-            var eid = account.ExternalId;
-            adformUtility.SetWhichAlt(eid);
-            adformUtility.TrackingId = trackingIdsOfAccounts.ContainsKey(eid) ? trackingIdsOfAccounts[eid] : null;
-        }
-
-        private void GetTokens()
-        {
-            // Get tokens, if any, from the database
-            var tokens = Platform.GetPlatformTokens(Platform.Code_Adform);
-            for (var i = 0; i < tokens.Length && i < AdformUtility.NumAlts; i++)
+            var etlLevelActions = new List<Action>();
+            var orderInsteadOfCampaign = accountIdsForOrders.Contains(account.ExternalId);
+            var rtbMediaOnly = !accountsWithMultipleMedia.Contains(account.ExternalId);
+            var adformUtility = CreateUtility(account);
+            if (statsType.Daily)
             {
-                adformUtility.AccessTokens[i] = tokens[i];
+                var etlLevelAction = GetEtlLevelAction(
+                    account,
+                    () => DoETL_Daily(dateRange, account, adformUtility, rtbMediaOnly));
+                etlLevelActions.Add(etlLevelAction);
             }
+            if (statsType.Strategy)
+            {
+                var etlLevelAction = GetEtlLevelAction(
+                    account,
+                    () => DoETL_Strategy(dateRange, account, orderInsteadOfCampaign, adformUtility, rtbMediaOnly));
+                etlLevelActions.Add(etlLevelAction);
+            }
+            if (statsType.AdSet)
+            {
+                var etlLevelAction = GetEtlLevelAction(
+                    account,
+                    () => DoETL_AdSet(dateRange, account, orderInsteadOfCampaign, adformUtility, rtbMediaOnly));
+                etlLevelActions.Add(etlLevelAction);
+            }
+            if (statsType.Creative)
+            {
+                var etlLevelAction = GetEtlLevelAction(
+                    account,
+                    () => DoETL_Creative(dateRange, account, adformUtility, rtbMediaOnly));
+                etlLevelActions.Add(etlLevelAction);
+            }
+            return etlLevelActions;
         }
 
-        private void SaveTokens()
+        private static Action GetEtlLevelAction(ExtAccount account, Action etlAction)
         {
-            Platform.SavePlatformTokens(Platform.Code_Adform, adformUtility.AccessTokens);
+            return () =>
+            {
+                try
+                {
+                    etlAction();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(account.Id, ex);
+                }
+            };
         }
+
+        private static AdformUtility CreateUtility(ExtAccount account)
+        {
+            var adformUtility = new AdformUtility(
+                message => Logger.Info(account.Id, message),
+                message => Logger.Warn(account.Id, message),
+                exc => Logger.Error(account.Id, exc));
+            adformUtility.SetWhichAlt(account.ExternalId);
+            adformUtility.TrackingIds = trackingIdsOfAccounts.ContainsKey(account.ExternalId)
+                ? new[] { trackingIdsOfAccounts[account.ExternalId] }
+                : Array.Empty<string>();
+            return adformUtility;
+        }
+
+        private static string[] GetTokens()
+        {
+            return Platform.GetPlatformTokens(Platform.Code_Adform);
+        }
+
+        private static void SaveTokens(string[] tokens)
+        {
+            Platform.SavePlatformTokens(Platform.Code_Adform, tokens);
+        }
+
         // ---
-
-        private void DoETL_Daily(DateRange dateRange, ExtAccount account)
+        private static void DoETL_Daily(DateRange dateRange, ExtAccount account, AdformUtility adformUtility, bool rtbMediaOnly)
         {
-            var extractor = new AdformDailySummaryExtractor(adformUtility, dateRange, account);
+            var extractor = new AdformDailySummaryExtractor(adformUtility, dateRange, account, rtbMediaOnly);
             var loader = new TDDailySummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
 
-        private void DoETL_Strategy(DateRange dateRange, ExtAccount account, bool byOrder)
+        private static void DoETL_Strategy(DateRange dateRange, ExtAccount account, bool byOrder, AdformUtility adformUtility, bool rtbMediaOnly)
         {
-            var extractor = new AdformStrategySummaryExtractor(adformUtility, dateRange, account, byOrder);
+            var extractor = new AdformStrategySummaryExtractor(adformUtility, dateRange, account, rtbMediaOnly, byOrder);
             var loader = new AdformCampaignSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
 
-        private void DoETL_AdSet(DateRange dateRange, ExtAccount account, bool byOrder)
+        private static void DoETL_AdSet(DateRange dateRange, ExtAccount account, bool byOrder, AdformUtility adformUtility, bool rtbMediaOnly)
         {
-            var extractor = new AdformAdSetSummaryExtractor(adformUtility, dateRange, account, byOrder);
+            var extractor = new AdformAdSetSummaryExtractor(adformUtility, dateRange, account, rtbMediaOnly, byOrder);
             var loader = new AdformLineItemSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
 
-        private void DoETL_Creative(DateRange dateRange, ExtAccount account)
+        private static void DoETL_Creative(DateRange dateRange, ExtAccount account, AdformUtility adformUtility, bool rtbMediaOnly)
         {
-            var extractor = new AdformTDadSummaryExtractor(adformUtility, dateRange, account);
+            var extractor = new AdformTDadSummaryExtractor(adformUtility, dateRange, account, rtbMediaOnly);
             var loader = new TDadSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
@@ -166,12 +208,18 @@ namespace CakeExtracter.Commands
                 var accounts = db.ExtAccounts.Include("Campaign.BudgetInfos").Include("Campaign.PlatformBudgetInfos")
                     .Where(a => a.Platform.Code == Platform.Code_Adform);
                 if (AccountId.HasValue)
+                {
                     accounts = accounts.Where(a => a.Id == AccountId.Value);
+                }
                 else if (!DisabledOnly)
+                {
                     accounts = accounts.Where(a => !a.Disabled);
+                }
 
                 if (DisabledOnly)
+                {
                     accounts = accounts.Where(a => a.Disabled);
+                }
 
                 return accounts.ToList().Where(a => !string.IsNullOrWhiteSpace(a.ExternalId));
             }

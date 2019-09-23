@@ -129,6 +129,40 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             AddUpdateDependentAdSetsInDb(adSets);
         }
 
+        protected virtual List<AdSet> GetAdSets(ClientPortalProgContext db, AdSet adSet)
+        {
+            //TODO: Check this logic for finding an existing adset...
+            //      The main concern is when uploading stats from a csv and AdSetEids aren't included
+
+            IEnumerable<AdSet> adSetsInDb;
+            if (!string.IsNullOrWhiteSpace(adSet.ExternalId))
+            {
+                // First see if an AdSet with that ExternalId exists
+                adSetsInDb = db.AdSets.Where(x => x.AccountId == adSet.AccountId && x.ExternalId == adSet.ExternalId);
+
+                // If not, check for a match by name where ExternalId == null
+                if (!adSetsInDb.Any())
+                {
+                    adSetsInDb = db.AdSets.Where(x => x.AccountId == adSet.AccountId && x.ExternalId == null && x.Name == adSet.Name);
+                    if (adSet.StrategyId.HasValue)
+                    {
+                        adSetsInDb = adSetsInDb.Where(x => x.StrategyId == adSet.StrategyId);
+                    }
+                }
+            }
+            else
+            {
+                // Check by adset name
+                adSetsInDb = db.AdSets.Where(x => x.AccountId == adSet.AccountId && x.Name == adSet.Name);
+                if (adSet.StrategyId.HasValue)
+                {
+                    adSetsInDb = adSetsInDb.Where(x => x.StrategyId == adSet.StrategyId);
+                }
+            }
+
+            return adSetsInDb.ToList();
+        }
+
         private void AddUpdateDependentAdSetsInDb(IEnumerable<AdSet> items)
         {
             using (var db = new ClientPortalProgContext())
@@ -254,40 +288,6 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 ? target.Metrics
                 : target.Metrics.Where(x => item.InitialMetrics.All(m => m.MetricTypeId != x.MetricTypeId));
             metricLoader.RemoveMetrics(db, deletedMetrics);
-        }
-
-        private List<AdSet> GetAdSets(ClientPortalProgContext db, AdSet adSet)
-        {
-            //TODO: Check this logic for finding an existing adset...
-            //      The main concern is when uploading stats from a csv and AdSetEids aren't included
-
-            IEnumerable<AdSet> adSetsInDb;
-            if (!string.IsNullOrWhiteSpace(adSet.ExternalId))
-            {
-                // First see if an AdSet with that ExternalId exists
-                adSetsInDb = db.AdSets.Where(x => x.AccountId == adSet.AccountId && x.ExternalId == adSet.ExternalId);
-
-                // If not, check for a match by name where ExternalId == null
-                if (!adSetsInDb.Any())
-                {
-                    adSetsInDb = db.AdSets.Where(x => x.AccountId == adSet.AccountId && x.ExternalId == null && x.Name == adSet.Name);
-                    if (adSet.StrategyId.HasValue)
-                    {
-                        adSetsInDb = adSetsInDb.Where(x => x.StrategyId == adSet.StrategyId);
-                    }
-                }
-            }
-            else
-            {
-                // Check by adset name
-                adSetsInDb = db.AdSets.Where(x => x.AccountId == adSet.AccountId && x.Name == adSet.Name);
-                if (adSet.StrategyId.HasValue)
-                {
-                    adSetsInDb = adSetsInDb.Where(x => x.StrategyId == adSet.StrategyId);
-                }
-            }
-
-            return adSetsInDb.ToList();
         }
 
         private AdSet AddAdSet(ClientPortalProgContext db, AdSet adSetProps)

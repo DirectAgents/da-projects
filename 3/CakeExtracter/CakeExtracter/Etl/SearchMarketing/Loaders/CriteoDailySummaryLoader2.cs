@@ -41,7 +41,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
                 foreach (var item in items)
                 {
-                    var searchCampaign = searchAccount.SearchCampaigns.SingleOrDefault(c => c.ExternalId == item.SearchCampaignId);
+                    var searchCampaign = searchAccount.SearchCampaigns.SingleOrDefault(c => c.ExternalId == item.SearchCampaignId.ToString());
                     if (searchCampaign != null)
                     {
                         item.SearchCampaignId = searchCampaign.SearchCampaignId; // replace what was the external id

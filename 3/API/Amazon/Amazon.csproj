@@ -1,5 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.3\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props" Condition="Exists('..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.3\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" />
+  <Import Project="..\..\DirectAgents.Web\packages\Microsoft.NetFramework.Analyzers.2.9.3\build\Microsoft.NetFramework.Analyzers.props" Condition="Exists('..\..\DirectAgents.Web\packages\Microsoft.NetFramework.Analyzers.2.9.3\build\Microsoft.NetFramework.Analyzers.props')" />
+  <Import Project="..\..\DirectAgents.Web\packages\Microsoft.NetCore.Analyzers.2.9.3\build\Microsoft.NetCore.Analyzers.props" Condition="Exists('..\..\DirectAgents.Web\packages\Microsoft.NetCore.Analyzers.2.9.3\build\Microsoft.NetCore.Analyzers.props')" />
+  <Import Project="..\..\DirectAgents.Web\packages\Microsoft.CodeQuality.Analyzers.2.9.3\build\Microsoft.CodeQuality.Analyzers.props" Condition="Exists('..\..\DirectAgents.Web\packages\Microsoft.CodeQuality.Analyzers.2.9.3\build\Microsoft.CodeQuality.Analyzers.props')" />
+  <Import Project="..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.3\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props" Condition="Exists('..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.3\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -21,6 +26,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>$(SolutionDir)CodeAnalysis\codeanalysis.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -75,13 +83,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AmazonAuth.cs" />
     <Compile Include="AwsFilesDownloader.cs" />
     <Compile Include="Entities\AmazonProfile.cs" />
     <Compile Include="Entities\HelperEntities\AmazonApiReportParams.cs" />
     <Compile Include="Entities\HelperEntities\AmazonApiSnapshotParams.cs" />
     <Compile Include="Entities\Summaries\AmazonAsinSummaries.cs" />
-    <Compile Include="Entities\Summaries\AmazonSummary.cs" />
     <Compile Include="Entities\HelperEntities\GetTokenResponse.cs" />
     <Compile Include="Entities\HelperEntities\PreparedDataResponses\PreparedDataRequestResponse.cs" />
     <Compile Include="Entities\HelperEntities\ReportData.cs" />
@@ -91,23 +97,19 @@
     <Compile Include="Entities\HelperEntities\PreparedDataResponses\SnapshotRequestResponse.cs" />
     <Compile Include="Entities\HelperEntities\DownloadInfoResponses\SnapshotResponseDownloadInfo.cs" />
     <Compile Include="Entities\Summaries\AmazonAdDailySummary.cs" />
-    <Compile Include="Entities\Summaries\AmazonAdGroupSummary.cs" />
     <Compile Include="Entities\Summaries\AmazonKeywordDailySummary.cs" />
     <Compile Include="Entities\Summaries\AmazonSearchTermDailySummary.cs" />
     <Compile Include="Entities\Summaries\AmazonStatSummary.cs" />
     <Compile Include="Entities\Summaries\AmazonTargetKeywordDailySummary.cs" />
-    <Compile Include="Entities\Summaries\AmazonTargetSearchTermDailySummary.cs" />
     <Compile Include="Constants\ReportGenerationStatus.cs" />
+    <Compile Include="Constants\ApiEndpointUrl.cs" />
+    <Compile Include="Entities\Summaries\AmazonTargetSearchTermDailySummary.cs" />
     <Compile Include="Exceptions\ExtractDataException.cs" />
     <Compile Include="Exceptions\ReportGenerationTimedOutException.cs" />
     <Compile Include="Helpers\AmazonApiHelper.cs" />
     <Compile Include="AmazonUtility.cs" />
-    <Compile Include="Entities\AmazonAdSet.cs" />
     <Compile Include="Entities\AmazonCampaign.cs" />
     <Compile Include="Entities\AmazonAccountInfo.cs" />
-    <Compile Include="Entities\Summaries\AmazonDailySummary.cs" />
-    <Compile Include="Entities\AmazonKeyword.cs" />
-    <Compile Include="Entities\AmazonProductAds.cs" />
     <Compile Include="Enums\CampaignType.cs" />
     <Compile Include="Enums\EntitesType.cs" />
     <Compile Include="Enums\AttributedMetricDaysInterval.cs" />
@@ -117,13 +119,36 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="$(SolutionDir)CodeAnalysis\stylecop.json">
+      <Link>stylecop.json</Link>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\..\DirectAgents.Web\packages\AWSSDK.S3.3.3.31.14\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.3\analyzers\dotnet\Microsoft.CodeAnalysis.VersionCheckAnalyzer.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\Microsoft.CodeQuality.Analyzers.2.9.3\analyzers\dotnet\cs\Humanizer.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\Microsoft.CodeQuality.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.CodeQuality.Analyzers.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\Microsoft.CodeQuality.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.CodeQuality.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\Microsoft.NetCore.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.NetCore.Analyzers.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\Microsoft.NetCore.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.NetCore.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\Microsoft.NetFramework.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\Microsoft.NetFramework.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\..\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.3\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.3\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props'))" />
+    <Error Condition="!Exists('..\..\DirectAgents.Web\packages\Microsoft.CodeQuality.Analyzers.2.9.3\build\Microsoft.CodeQuality.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\DirectAgents.Web\packages\Microsoft.CodeQuality.Analyzers.2.9.3\build\Microsoft.CodeQuality.Analyzers.props'))" />
+    <Error Condition="!Exists('..\..\DirectAgents.Web\packages\Microsoft.NetCore.Analyzers.2.9.3\build\Microsoft.NetCore.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\DirectAgents.Web\packages\Microsoft.NetCore.Analyzers.2.9.3\build\Microsoft.NetCore.Analyzers.props'))" />
+    <Error Condition="!Exists('..\..\DirectAgents.Web\packages\Microsoft.NetFramework.Analyzers.2.9.3\build\Microsoft.NetFramework.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\DirectAgents.Web\packages\Microsoft.NetFramework.Analyzers.2.9.3\build\Microsoft.NetFramework.Analyzers.props'))" />
+    <Error Condition="!Exists('..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.3\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.3\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

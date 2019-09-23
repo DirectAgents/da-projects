@@ -4,7 +4,7 @@ using CsvHelper.TypeConversion;
 
 namespace CakeExtracter.Etl.DSP.Extractors.Parser.ParsingConverters
 {
-    /// <summary>CSV parsing helper for dsp report decimal values.</summary>
+    /// <summary>CSV parsing helper for report decimal values.</summary>
     internal sealed class DecimalReportConverter : DecimalConverter
     {
         /// <summary>Converts the string to an decimal value.</summary>

@@ -43,6 +43,8 @@ namespace CommissionJunction.Utilities
 
         private readonly CjLogger logger;
 
+        public event Action<SkippedCommissionsException> ProcessSkippedCommissions;
+
         /// <summary>
         /// Number of an alt account number to use specific access values ​​for Api (for alternate credentials)
         /// </summary>
@@ -63,6 +65,7 @@ namespace CommissionJunction.Utilities
         public CjUtility(Action<string> logInfo, Action<Exception> logError, Action<string> logWarning)
         {
             logger = new CjLogger(logInfo, logError, logWarning);
+            ProcessSkippedCommissions += logger.LogError;
         }
 
         /// <summary>
@@ -132,7 +135,7 @@ namespace CommissionJunction.Utilities
         }
 
         public List<T> GetItemsForAllDateRanges<T>(DateTime sinceDate, DateTime beforeDate,
-            string accountId, Func<string, string, List<T>> getItemsFunc)
+            string accountId, Func<DateTime, DateTime, List<T>> getItemsFunc)
         {
             var allItems = new List<T>();
             var tasks = new List<Task>();
@@ -142,7 +145,7 @@ namespace CommissionJunction.Utilities
                 var endTime = beforeDate < nextDateRangeStartTime ? beforeDate : nextDateRangeStartTime;
                 var startTime = sinceDate;
                 var task = Task.Factory
-                    .StartNew(() => getItemsFunc(startTime.ToString(DateFormat), endTime.ToString(DateFormat)))
+                    .StartNew(() => getItemsFunc(startTime, endTime))
                     .ContinueWith(x => allItems.AddRange(x.Result));
                 tasks.Add(task);
                 sinceDate = endTime;
@@ -153,18 +156,23 @@ namespace CommissionJunction.Utilities
         }
 
         private List<AdvertiserCommission> GetAdvertiserCommissionsData(DateRangeType dataRangeType,
-            string sinceTime, string beforeTime, string accountId)
+            DateTime sinceTime, DateTime beforeTime, string accountId)
         {
             try
             {
-                logger.LogInfo($"Get Advertiser Commissions from API (since {sinceTime}, before {beforeTime})");
-                var queryParams = new AdvertiserCommissionQueryParams {AdvertiserId = accountId, SinceDateTime = sinceTime, BeforeDateTime = beforeTime};
+                var queryParams = new AdvertiserCommissionQueryParams
+                {
+                    AdvertiserId = accountId,
+                    SinceDateTime = sinceTime.ToString(DateFormat),
+                    BeforeDateTime = beforeTime.ToString(DateFormat)
+                };
+                logger.LogInfo($"Get Advertiser Commissions from API (since {queryParams.SinceDateTime}, before {queryParams.BeforeDateTime})");
                 return GetAllCommissions(queryParams, dataRangeType, GetAdvertiserCommissionsData);
             }
             catch (Exception exception)
             {
                 var exc = new SkippedCommissionsException(sinceTime, beforeTime, accountId, exception);
-                logger.LogError(exc);
+                ProcessSkippedCommissions?.Invoke(exc);
                 return new List<AdvertiserCommission>();
             }
         }

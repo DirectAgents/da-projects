@@ -1,6 +1,5 @@
 ﻿using Amazon;
 using CakeExtracter.Common;
-using CakeExtracter.Common.ArchiveExtractors;
 using CakeExtracter.Etl;
 using CakeExtracter.Etl.Kochava.Configuration;
 using CakeExtracter.Etl.Kochava.Extractors;
@@ -10,6 +9,7 @@ using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
 using System;
 using System.ComponentModel.Composition;
+using CakeExtracter.Common.Extractors.ArchiveExctractors;
 
 namespace CakeExtracter.Commands.DA
 {
@@ -25,7 +25,7 @@ namespace CakeExtracter.Commands.DA
         private readonly KochavaLoader loader;
         private readonly CommandsExecutionAccountsProvider accountsProvider;
 
-        private int? AccountId { get; set; }
+        public int? AccountId { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DASynchKochavaStats"/> class.

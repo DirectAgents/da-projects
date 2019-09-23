@@ -2,6 +2,7 @@
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using DirectAgents.Domain.Entities;
+using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.DBM;
 using DirectAgents.Domain.Entities.CPProg;
@@ -10,7 +11,16 @@ using DirectAgents.Domain.Entities.CPProg.Vendor.SummaryMetrics;
 using DirectAgents.Domain.Entities.CPProg.DSP;
 using DirectAgents.Domain.Entities.CPProg.DSP.SummaryMetrics;
 using DirectAgents.Domain.Entities.CPProg.CJ;
+using DirectAgents.Domain.Entities.CPProg.DBM.Entities;
+using DirectAgents.Domain.Entities.CPProg.DBM.SummaryMetrics;
 using DirectAgents.Domain.Entities.CPProg.Kochava;
+using DirectAgents.Domain.Entities.CPProg.Facebook.Ad;
+using DirectAgents.Domain.Entities.CPProg.Facebook;
+using DirectAgents.Domain.Entities.CPProg.Facebook.AdSet;
+using DirectAgents.Domain.Entities.CPProg.Facebook.Campaign;
+using DirectAgents.Domain.Entities.CPProg.Facebook.Daily;
+using DirectAgents.Domain.Entities.CPProg.YAM;
+using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
 
 namespace DirectAgents.Domain.Contexts
 {
@@ -19,6 +29,7 @@ namespace DirectAgents.Domain.Contexts
         const string adrollSchema = "adr";
         const string dbmSchema = "dbm";
         const string tdSchema = "td";
+        const string admSchema = "adm";
 
         public ClientPortalProgContext()
         {
@@ -34,6 +45,10 @@ namespace DirectAgents.Domain.Contexts
             //modelBuilder.HasDefaultSchema(tdSchema); //can't do this b/c __MigrationHistory table is under dbo schema
 
             modelBuilder.Entity<Employee>().ToTable("Employee", "dbo");
+
+            // Adm
+            modelBuilder.Entity<JobRequestExecution>().ToTable("JobRequestExecution", admSchema);
+            modelBuilder.Entity<JobRequest>().ToTable("JobRequest", admSchema);
 
             // TD
             modelBuilder.Entity<Advertiser>().ToTable("Advertiser", tdSchema);
@@ -85,6 +100,21 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<VendorSubcategorySummaryMetric>().ToTable("VSubcategorySummaryMetric", tdSchema);
             modelBuilder.Entity<VendorBrandSummaryMetric>().ToTable("VBrandSummaryMetric", tdSchema);
             modelBuilder.Entity<VendorParentProductSummaryMetric>().ToTable("VParentProductSummaryMetric", tdSchema);
+            modelBuilder.Entity<VcdAnalyticItem>().ToTable("VcdAnalytic", tdSchema);
+
+            //TD Facebook
+            modelBuilder.Entity<FbAd>().ToTable("FbAd", tdSchema);
+            modelBuilder.Entity<FbAdAction>().ToTable("FbAdAction", tdSchema);
+            modelBuilder.Entity<FbAdSummary>().ToTable("FbAdSummary", tdSchema);
+            modelBuilder.Entity<FbCreative>().ToTable("FbCreative", tdSchema);
+            modelBuilder.Entity<FbAdSet>().ToTable("FbAdSet", tdSchema);
+            modelBuilder.Entity<FbAdSetAction>().ToTable("FbAdSetAction", tdSchema);
+            modelBuilder.Entity<FbAdSetSummary>().ToTable("FbAdSetSummary", tdSchema);
+            modelBuilder.Entity<FbCampaign>().ToTable("FbCampaign", tdSchema);
+            modelBuilder.Entity<FbCampaignAction>().ToTable("FbCampaignAction", tdSchema);
+            modelBuilder.Entity<FbCampaignSummary>().ToTable("FbCampaignSummary", tdSchema);
+            modelBuilder.Entity<FbDailySummary>().ToTable("FbDailySummary", tdSchema);
+            modelBuilder.Entity<FbActionType>().ToTable("FbActionType", tdSchema);
 
             //TD CJ
             modelBuilder.Entity<CjAdvertiserCommission>().ToTable("CjAdvertiserCommission", tdSchema);
@@ -100,8 +130,21 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<DspLineDailyMetricValues>().ToTable("DspLineDailyMetricValues", tdSchema);
             modelBuilder.Entity<DspCreativeDailyMetricValues>().ToTable("DspCreativeDailyMetricValues", tdSchema);
 
-            //Kochava
+            //TD Kochava
             modelBuilder.Entity<KochavaItem>().ToTable("KochavaItem", tdSchema);
+
+            // YAM
+            modelBuilder.Entity<YamCampaign>().ToTable("YamCampaign", tdSchema);
+            modelBuilder.Entity<YamLine>().ToTable("YamLine", tdSchema);
+            modelBuilder.Entity<YamAd>().ToTable("YamAd", tdSchema);
+            modelBuilder.Entity<YamCreative>().ToTable("YamCreative", tdSchema);
+            modelBuilder.Entity<YamPixel>().ToTable("YamPixel", tdSchema);
+            modelBuilder.Entity<YamDailySummary>().ToTable("YamDailySummary", tdSchema);
+            modelBuilder.Entity<YamCampaignSummary>().ToTable("YamCampaignSummary", tdSchema);
+            modelBuilder.Entity<YamLineSummary>().ToTable("YamLineSummary", tdSchema);
+            modelBuilder.Entity<YamAdSummary>().ToTable("YamAdSummary", tdSchema);
+            modelBuilder.Entity<YamCreativeSummary>().ToTable("YamCreativeSummary", tdSchema);
+            modelBuilder.Entity<YamPixelSummary>().ToTable("YamPixelSummary", tdSchema);
 
             modelBuilder.Entity<Campaign>().Property(c => c.BaseFee).HasPrecision(14, 2);
             modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudgetInfo.MediaSpend).HasPrecision(14, 2).HasColumnName("MediaSpend");
@@ -192,12 +235,16 @@ namespace DirectAgents.Domain.Contexts
                 .HasForeignKey(x => new { x.Date, x.EntityId })
                 .WillCascadeOnDelete(false);
 
+            //TD Facebook
+            SetupFacebookModel(modelBuilder);
+
             //TD Vendor
             SetupSummaryMetricModel<VendorProductSummaryMetric>(modelBuilder, "ProductId");
             SetupSummaryMetricModel<VendorSubcategorySummaryMetric>(modelBuilder, "SubcategoryId");
             SetupSummaryMetricModel<VendorCategorySummaryMetric>(modelBuilder, "CategoryId");
             SetupSummaryMetricModel<VendorBrandSummaryMetric>(modelBuilder, "BrandId");
             SetupSummaryMetricModel<VendorParentProductSummaryMetric>(modelBuilder, "ParentProductId");
+            SetupVcdAnalyticModelValues(modelBuilder);
 
             //TD DSP
             SetupDailyMetricModelValues<DspAdvertiserDailyMetricValues>(modelBuilder, "AdvertiserId");
@@ -207,6 +254,22 @@ namespace DirectAgents.Domain.Contexts
 
             //TD CJ
             SetupCjModelValues(modelBuilder);
+
+            // YAM
+            SetupYamDailyMetricModelValues<YamDailySummary>(modelBuilder, "AccountId");
+            SetupYamDailyMetricModelValues<YamCampaignSummary>(modelBuilder, "CampaignId");
+            SetupYamDailyMetricModelValues<YamLineSummary>(modelBuilder, "LineId");
+            SetupYamDailyMetricModelValues<YamAdSummary>(modelBuilder, "AdId");
+            SetupYamDailyMetricModelValues<YamCreativeSummary>(modelBuilder, "CreativeId");
+            SetupYamDailyMetricModelValues<YamPixelSummary>(modelBuilder, "PixelId");
+            modelBuilder.Entity<YamLine>()
+                .HasMany(g => g.Ads)
+                .WithRequired(s => s.Line)
+                .WillCascadeOnDelete(false);
+            modelBuilder.Entity<YamCreative>()
+                .HasMany(g => g.Ads)
+                .WithRequired(s => s.Creative)
+                .WillCascadeOnDelete(false);
 
             // AdRoll
             modelBuilder.Entity<Advertisable>().ToTable("Advertisable", adrollSchema);
@@ -225,9 +288,25 @@ namespace DirectAgents.Domain.Contexts
                 .ToTable("CreativeDailySummary", dbmSchema);
             modelBuilder.Entity<CreativeDailySummary>()
                 .Property(cds => cds.Revenue).HasPrecision(18, 6);
+
+            //TD DBM
+            modelBuilder.Entity<DbmAdvertiser>().ToTable("DbmAdvertiser", tdSchema);
+            modelBuilder.Entity<DbmCampaign>().ToTable("DbmCampaign", tdSchema);
+            modelBuilder.Entity<DbmInsertionOrder>().ToTable("DbmInsertionOrder", tdSchema);
+            modelBuilder.Entity<DbmLineItem>().ToTable("DbmLineItem", tdSchema);
+            modelBuilder.Entity<DbmCreative>().ToTable("DbmCreative", tdSchema);
+            modelBuilder.Entity<DbmLineItemSummary>().ToTable("DbmLineItemSummary", tdSchema);
+            modelBuilder.Entity<DbmCreativeSummary>().ToTable("DbmCreativeSummary", tdSchema);
+
+            SetupDbmSummaryMetricModelValues<DbmLineItemSummary>(modelBuilder, "LineItemId");
+            SetupDbmSummaryMetricModelValues<DbmCreativeSummary>(modelBuilder, "CreativeId");
         }
 
         public DbSet<Employee> Employees { get; set; }
+
+        // Adm
+        public DbSet<JobRequestExecution> JobRequestExecutions { get; set; }
+        public DbSet<JobRequest> JobExecutionRequests { get; set; }
 
         // TD
         public DbSet<Advertiser> Advertisers { get; set; }
@@ -279,6 +358,22 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<VendorSubcategorySummaryMetric> VendorSubcategorySummaryMetrics { get; set; }
         public DbSet<VendorBrandSummaryMetric> VendorBrandSummaryMetrics { get; set; }
         public DbSet<VendorParentProductSummaryMetric> VendorParentProductSummaryMetrics { get; set; }
+        public DbSet<VcdAnalyticItem> VcdAnalytic { get; set; }
+
+
+        //TD Facebook
+        public DbSet<FbAd> FbAds { get; set; }
+        public DbSet<FbAdAction> FbAdActions { get; set; }
+        public DbSet<FbAdSummary> FbAdSummaries { get; set; }
+        public DbSet<FbCreative> FbCreatives { get; set; }
+        public DbSet<FbAdSet> FbAdSets { get; set; }
+        public DbSet<FbAdSetAction> FbAdSetActions { get; set; }
+        public DbSet<FbAdSetSummary> FbAdSetSummaries { get; set; }
+        public DbSet<FbCampaign> FbCampaigns { get; set; }
+        public DbSet<FbCampaignAction> FbCampaignActions { get; set; }
+        public DbSet<FbCampaignSummary> FbCampaignSummaries { get; set; }
+        public DbSet<FbDailySummary> FbDailySummaries { get; set; }
+        public DbSet<FbActionType> FbActionTypes { get; set; }
 
         //TD DSP
         public DbSet<DspAdvertiser> DspAdvertisers { get; set; }
@@ -294,8 +389,21 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<CjAdvertiserCommission> CjAdvertiserCommissions { get; set; }
         public DbSet<CjAdvertiserCommissionItem> CjAdvertiserCommissionItems { get; set; }
 
-        //TD
+        //TD Kochava
         public DbSet<KochavaItem> KochavaItems { get; set; }
+
+        // YAM
+        public DbSet<YamCampaign> YamCampaigns { get; set; }
+        public DbSet<YamLine> YamLines { get; set; }
+        public DbSet<YamAd> YamAds { get; set; }
+        public DbSet<YamPixel> YamPixels { get; set; }
+        public DbSet<YamCreative> YamCreatives { get; set; }
+        public DbSet<YamDailySummary> YamDailySummaries { get; set; }
+        public DbSet<YamCampaignSummary> YamCampaignSummaries { get; set; }
+        public DbSet<YamLineSummary> YamLineSummaries { get; set; }
+        public DbSet<YamAdSummary> YamAdSummaries { get; set; }
+        public DbSet<YamPixelSummary> YamPixelSummaries { get; set; }
+        public DbSet<YamCreativeSummary> YamCreativeSummaries { get; set; }
 
         // AdRoll
         public DbSet<Advertisable> Advertisables { get; set; }
@@ -307,6 +415,14 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<Creative> Creatives { get; set; }
         public DbSet<CreativeDailySummary> DBMCreativeDailySummaries { get; set; }
 
+        //TD DBM
+        public DbSet<DbmCampaign> DbmCampaigns { get; set; }
+        public DbSet<DbmInsertionOrder> DbmInsertionOrders { get; set; }
+        public DbSet<DbmLineItem> DbmLineItems { get; set; }
+        public DbSet<DbmLineItemSummary> DbmLineItemSummaries { get; set; }
+        public DbSet<DbmCreative> DbmCreatives { get; set; }
+        public DbSet<DbmCreativeSummary> DbmCreativeSummaries { get; set; }
+        
         private void SetupCjModelValues(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CjAdvertiserCommission>().Property(t => t.AdvCommissionAmountUsd).HasPrecision(18, 6);
@@ -323,6 +439,31 @@ namespace DirectAgents.Domain.Contexts
                 .WillCascadeOnDelete();
         }
 
+        private static void SetupDbmSummaryMetricModelValues<TSummaryMetrics>(DbModelBuilder modelBuilder, string entityColumnName)
+            where TSummaryMetrics : DbmBaseSummaryEntity
+        {
+            modelBuilder.Entity<TSummaryMetrics>().HasKey(summary => new { summary.EntityId, summary.Date, summary.Country });
+            modelBuilder.Entity<TSummaryMetrics>().Property(x => x.EntityId).HasColumnName(entityColumnName);
+            modelBuilder.Entity<TSummaryMetrics>().Property(m => m.Revenue).HasPrecision(18, 6);
+            modelBuilder.Entity<TSummaryMetrics>().Property(m => m.Impressions);
+            modelBuilder.Entity<TSummaryMetrics>().Property(m => m.Clicks);
+            modelBuilder.Entity<TSummaryMetrics>().Property(m => m.PostClickConversions);
+            modelBuilder.Entity<TSummaryMetrics>().Property(m => m.PostViewConversions);
+            modelBuilder.Entity<TSummaryMetrics>().Property(m => m.CMPostClickRevenue).HasPrecision(18, 6);
+            modelBuilder.Entity<TSummaryMetrics>().Property(m => m.CMPostViewRevenue).HasPrecision(18, 6);
+        }
+
+        private static void SetupVcdAnalyticModelValues(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.ShippedRevenue).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.ShippedUnits).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.OrderedUnits).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.ShippedCOGS).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.FreeReplacements).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.CustomerReturns).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.OrderedRevenue).HasPrecision(18, 6);
+        }
+        
         private void SetupDailyMetricModelValues<TDailyMetricValues>(DbModelBuilder modelBuilder, string entityColumnName)
              where TDailyMetricValues : DspMetricValues
         {
@@ -339,6 +480,54 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<TDailyMetricValues>().Property(t => t.Purchase).HasPrecision(18, 6);
             modelBuilder.Entity<TDailyMetricValues>().Property(t => t.PurchaseViews).HasPrecision(18, 6);
             modelBuilder.Entity<TDailyMetricValues>().Property(t => t.PurchaseClicks).HasPrecision(18, 6);
+        }
+
+        private void SetupFacebookModel(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<FbAdSummary>().HasKey(s => new { s.Date, s.AdId });
+            modelBuilder.Entity<FbAdSetSummary>().HasKey(s => new { s.Date, s.AdSetId });
+            modelBuilder.Entity<FbCampaignSummary>().HasKey(s => new { s.Date, s.CampaignId });
+            modelBuilder.Entity<FbDailySummary>().HasKey(s => new { s.Date, s.AccountId });
+
+            modelBuilder.Entity<FbAdSummary>().Property(t => t.Cost).HasPrecision(18, 6);
+            modelBuilder.Entity<FbAdSetSummary>().Property(t => t.Cost).HasPrecision(18, 6);
+            modelBuilder.Entity<FbCampaignSummary>().Property(t => t.Cost).HasPrecision(18, 6);
+            modelBuilder.Entity<FbDailySummary>().Property(t => t.Cost).HasPrecision(18, 6);
+
+            modelBuilder.Entity<FbAdSummary>().Property(t => t.PostClickRev).HasPrecision(18, 6);
+            modelBuilder.Entity<FbAdSetSummary>().Property(t => t.PostClickRev).HasPrecision(18, 6);
+            modelBuilder.Entity<FbCampaignSummary>().Property(t => t.PostClickRev).HasPrecision(18, 6);
+            modelBuilder.Entity<FbDailySummary>().Property(t => t.PostClickRev).HasPrecision(18, 6);
+
+            modelBuilder.Entity<FbAdSummary>().Property(t => t.PostViewRev).HasPrecision(18, 6);
+            modelBuilder.Entity<FbAdSetSummary>().Property(t => t.PostViewRev).HasPrecision(18, 6);
+            modelBuilder.Entity<FbCampaignSummary>().Property(t => t.PostViewRev).HasPrecision(18, 6);
+            modelBuilder.Entity<FbDailySummary>().Property(t => t.PostViewRev).HasPrecision(18, 6);
+
+            modelBuilder.Entity<FbAdAction>()
+                .HasKey(x => new { x.Date, x.AdId, x.ActionTypeId });
+            modelBuilder.Entity<FbAdSetAction>()
+                .HasKey(x => new { x.Date, x.AdSetId, x.ActionTypeId });
+            modelBuilder.Entity<FbCampaignAction>()
+                 .HasKey(x => new { x.Date, x.CampaignId, x.ActionTypeId });
+
+            modelBuilder.Entity<FbAdAction>().Property(t => t.PostClickVal).HasPrecision(18, 6);
+            modelBuilder.Entity<FbAdSetAction>().Property(t => t.PostClickVal).HasPrecision(18, 6);
+            modelBuilder.Entity<FbCampaignAction>().Property(t => t.PostClickVal).HasPrecision(18, 6);
+            modelBuilder.Entity<FbAdAction>().Property(t => t.PostViewVal).HasPrecision(18, 6);
+            modelBuilder.Entity<FbAdSetAction>().Property(t => t.PostViewVal).HasPrecision(18, 6);
+            modelBuilder.Entity<FbCampaignAction>().Property(t => t.PostViewVal).HasPrecision(18, 6);
+        }
+
+        private void SetupYamDailyMetricModelValues<TDailyMetricValues>(DbModelBuilder modelBuilder, string entityColumnName)
+            where TDailyMetricValues : BaseYamSummary
+        {
+            modelBuilder.Entity<TDailyMetricValues>().HasKey(s => new { s.Date, s.EntityId });
+            modelBuilder.Entity<TDailyMetricValues>().Property(x => x.EntityId).HasColumnName(entityColumnName);
+            modelBuilder.Entity<TDailyMetricValues>().Property(t => t.ConversionValue).HasPrecision(18, 6);
+            modelBuilder.Entity<TDailyMetricValues>().Property(t => t.AdvertiserSpending).HasPrecision(18, 6);
+            modelBuilder.Entity<TDailyMetricValues>().Property(t => t.ClickConversionValueByPixelQuery).HasPrecision(18, 6);
+            modelBuilder.Entity<TDailyMetricValues>().Property(t => t.ViewConversionValueByPixelQuery).HasPrecision(18, 6);
         }
 
         private void SetupSummaryMetricModel<TSummaryMetric>(DbModelBuilder modelBuilder, string entityColumnName)

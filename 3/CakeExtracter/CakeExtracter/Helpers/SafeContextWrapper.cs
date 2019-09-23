@@ -104,16 +104,18 @@ namespace CakeExtracter.Helpers
             }
         }
 
-        public static void TryMakeTransactionWithLock<T>(Action<T> transactionAction, object contextLocker, string level)
+        public static bool TryMakeTransactionWithLock<T>(Action<T> transactionAction, object contextLocker, string level)
            where T : DbContext, new()
         {
             try
             {
                 TryToMakeTransactionManyTimes(false, contextLocker, transactionAction);
+                return true;
             }
             catch (Exception exception)
             {
                 LogEndOfRetrying(exception, level);
+                return false;
             }
         }
 
@@ -145,7 +147,7 @@ namespace CakeExtracter.Helpers
             TryToMakeActionManyTimes(true, () => numChanges = dbContext.SaveChanges());
             return numChanges;
         }
-        
+
         public static void TryToMakeTransactionManyTimes<T>(bool needToWait, object contextLocker, Action<T> transactionAction)
             where T : DbContext, new()
         {
@@ -200,7 +202,7 @@ namespace CakeExtracter.Helpers
                     break;
             }
         }
-        
+
         private static void ProcessDbUpdateException(DbUpdateException exception)
         {
             var notSavedEntriesInfo = exception.Entries.Select(GetEntryInfo);

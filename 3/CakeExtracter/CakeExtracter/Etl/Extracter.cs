@@ -2,18 +2,22 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
+using CakeExtracter.Common.JobExecutionManagement;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Exceptions;
 
 namespace CakeExtracter.Etl
 {
     public abstract class Extracter<T> : IDisposable
     {
+        private const int DefaultCollectionBoundedCapacity = 5000;
+
         private readonly object locker = new object();
         private readonly int collectionBoundedCapacity;
 
         private BlockingCollection<T> items;
         private int added;
 
-        private const int DefaultCollectionBoundedCapacity = 5000;
+        public event Action<FailedEtlException> ProcessEtlFailedWithoutInformation;
 
         protected Extracter(int collectionBoundedCapacity = DefaultCollectionBoundedCapacity)
         {
@@ -88,7 +92,17 @@ namespace CakeExtracter.Etl
             }
             catch (Exception e)
             {
-                Logger.Error(new Exception($"Exception in extractor: {e}", e));
+                var exception = new FailedEtlException(null, null, null, e);
+                LogExceptionInExtractor(exception);
+                if (ProcessEtlFailedWithoutInformation == null)
+                {
+                    CommandExecutionContext.Current.MarkCurrentExecutionAsFailed();
+                }
+                else
+                {
+                    ProcessEtlFailedWithoutInformation.Invoke(exception);
+                }
+                End();
             }
         }
 
@@ -141,15 +155,17 @@ namespace CakeExtracter.Etl
             disposed = true;
         }
 
-        // http://msdn.microsoft.com/en-us/library/system.idisposable.aspx
-        // Use C# destructor syntax for finalization code. 
-        // This destructor will run only if the Dispose method 
-        // does not get called. 
-        // It gives your base class the opportunity to finalize. 
-        // Do not provide destructors in types derived from this class.
-        //~Extracter()
-        //{
-        //    Dispose(false);
-        //}
+        private void LogExceptionInExtractor(FailedEtlException exc)
+        {
+            var exception = new Exception($"Exception in extractor: {exc}", exc);
+            if (exc.AccountId.HasValue)
+            {
+                Logger.Error(exc.AccountId.Value, exception);
+            }
+            else
+            {
+                Logger.Error(exception);
+            }
+        }
     }
 }

@@ -1,0 +1,51 @@
+﻿@model IEnumerable<DirectAgents.Web.Areas.ProgAdmin.Models.SpecialPlatformSummariesVM>
+@{
+    ViewBag.Title = "Special Platform Stats";
+
+    var yesterday = DateTime.Today.AddDays(-1);
+}
+
+<h2>Special Platform Stats</h2>
+
+<table>
+    <tr>
+        <th colspan="4" style="text-align:right">X = disabled</th>
+        <th colspan="2">Daily</th>
+    </tr>
+    <tr>
+        <th>Partner</th>
+        <th style="text-align:right">ID</th>
+        <th colspan="2">External&nbsp;Account&nbsp;&nbsp;&nbsp;</th>
+        <th>Earliest</th>
+        <th>Latest</th>
+    </tr>
+    @foreach (var summaries in Model)
+    {
+        <tr style="font-weight: bold; background-color: aquamarine">
+            <td colspan="4">@summaries.Platform.Name.Replace(' ', '_')&nbsp;-&nbsp;Summary:</td>
+            <td style="text-align: right">@summaries.SpecialPlatformSummaries.Min(summary => summary.EarliestDate).ToShortDateString()</td>
+            <td style="text-align: right">@summaries.SpecialPlatformSummaries.Max(summary => summary.LatestDate).ToShortDateString()</td>
+        </tr>
+        if (summaries.SpecialPlatformSummaries != null)
+        {
+            foreach (var summary in summaries.SpecialPlatformSummaries)
+            {
+                <tr>
+                    <td>@summary.Account.Platform.Name</td>
+                    <td style="text-align: right">@summary.Account.Id</td>
+                    <td>@summary.Account.Name</td>
+                    <td style="text-align: center">@(summary.Account.Disabled ? "X" : "")</td>
+                    <td style="text-align: right">@summary.EarliestDate.ToShortDateString()</td>
+                    @if (summary.LatestDate != null && summary.LatestDate.Value.Date == yesterday)
+                    {
+                        <td style="text-align: right; background-color: lightgreen">@summary.LatestDate.ToShortDateString()</td>
+                    }
+                    else
+                    {
+                        <td style="text-align: right">@summary.LatestDate.ToShortDateString()</td>
+                    }
+                </tr>
+            }
+        }
+    }
+</table>

@@ -1,12 +1,4 @@
-﻿using Amazon.Entities;
-using Amazon.Enums;
-using Amazon.Helpers;
-using Newtonsoft.Json;
-using Polly;
-using RestSharp;
-using RestSharp.Authenticators;
-using RestSharp.Deserializers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
@@ -14,11 +6,19 @@ using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
 using Amazon.Constants;
+using Amazon.Entities;
 using Amazon.Entities.HelperEntities;
 using Amazon.Entities.HelperEntities.DownloadInfoResponses;
 using Amazon.Entities.HelperEntities.PreparedDataResponses;
 using Amazon.Entities.Summaries;
+using Amazon.Enums;
 using Amazon.Exceptions;
+using Amazon.Helpers;
+using Newtonsoft.Json;
+using Polly;
+using RestSharp;
+using RestSharp.Authenticators;
+using RestSharp.Deserializers;
 
 namespace Amazon
 {
@@ -29,6 +29,12 @@ namespace Amazon
         private const string TokenDelimiter = "|AMZNAMZN|";
         private const int NumAlts = 10; // including the default (0)
 
+        private const int WaitTimeSecondsDefault = 5;
+        private const int WaitAttemptsNumberDefault = 3;
+        private const int UnauthorizedAttemptsNumberDefault = 3;
+        private const int FailedRequestAttemptsNumberDefault = 2;
+        private const int ReportGenerationAttemptsNumberDefault = 2;
+
         private const string AuthorizationHeader = "Authorization";
         private const string AmazonHeaderProfile = "Amazon-Advertising-API-Scope";
         private const string AmazonHeaderClient = "Amazon-Advertising-API-ClientId";
@@ -37,32 +43,32 @@ namespace Amazon
         private static readonly object FileLock = new object();
         private static readonly object AccessTokenLock = new object();
 
-        // From Config File
-        // Wait time is increased after every third attempt by the value of waitTimeSeconds. (15 min - async report generation time, service guarantees)
-        private readonly int waitTimeSeconds = int.Parse(ConfigurationManager.AppSettings["AmazonWaitTimeSeconds"]);
-        private readonly int waitAttemptsNumber = int.Parse(ConfigurationManager.AppSettings["AmazonWaitAttemptsNumber"]);
-        private readonly int unauthorizedAttemptsNumber = int.Parse(ConfigurationManager.AppSettings["AmazonUnauthorizedAttemptsNumber"]);
-        private readonly int failedRequestAttemptsNumber = int.Parse(ConfigurationManager.AppSettings["AmazonFailedRequestAttemptsNumber"]);
-        private readonly int reportGenerationAttemptsNumber = int.Parse(ConfigurationManager.AppSettings["AmazonReportGenerationAttemptsNumber"]);
-
-        private readonly string amazonClientId = ConfigurationManager.AppSettings["AmazonClientId"];
-        private readonly string amazonClientSecret = ConfigurationManager.AppSettings["AmazonClientSecret"];
-        private readonly string amazonApiEndpointUrl = ConfigurationManager.AppSettings["AmazonAPIEndpointUrl"];
-        private readonly string amazonAuthorizeUrl = ConfigurationManager.AppSettings["AmazonAuthorizeUrl"];
-        private readonly string amazonTokenUrl = ConfigurationManager.AppSettings["AmazonTokenUrl"];
-        private readonly string amazonClientUrl = ConfigurationManager.AppSettings["AmazonClientUrl"];
-        private readonly string amazonReportsFolder = GetReportFolderName(ConfigurationManager.AppSettings["AmazonReportsBaseFolder"]);
-
         private static readonly string[] AccessToken = new string[NumAlts];
         private static readonly string[] RefreshToken = new string[NumAlts];
+
         private readonly string[] authCode = new string[NumAlts];
         private readonly string[] altAccountIDs = new string[NumAlts];
+
+        // From Config File
+        // Wait time is increased after every third attempt by the value of waitTimeSeconds. (15 min - async report generation time, service guarantees)
+        private int waitTimeSeconds;
+        private int waitAttemptsNumber;
+        private int unauthorizedAttemptsNumber;
+        private int failedRequestAttemptsNumber;
+        private int reportGenerationAttemptsNumber;
+
+        private string amazonClientId;
+        private string amazonClientSecret;
+        private string amazonAuthorizeUrl;
+        private string amazonTokenUrl;
+        private string amazonClientUrl;
+        private string amazonReportsFolder;
 
         public int WhichAlt { get; set; } // default: 0
         public bool KeepReports { get; set; }
         public string ReportPrefix { get; set; }
 
-        private string ApiEndpointUrl { get; set; }
+        private string CurrentApiEndpointUrl { get; set; }
         private string AuthorizeUrl { get; set; }
         private string TokenUrl { get; set; }
         private string ClientUrl { get; set; }
@@ -234,6 +240,7 @@ namespace Amazon
 
         public AmazonUtility()
         {
+            SetupConfigurationValues();
             ResetCredentials();
             Setup();
         }
@@ -244,7 +251,43 @@ namespace Amazon
             this.logInfo = logInfo;
             this.logError = logError;
         }
-        
+
+        private void SetupConfigurationValues()
+        {
+            waitTimeSeconds = GetIntConfigurationValue("AmazonWaitTimeSeconds", WaitTimeSecondsDefault);
+            waitAttemptsNumber = GetIntConfigurationValue("AmazonWaitAttemptsNumber", WaitAttemptsNumberDefault);
+            unauthorizedAttemptsNumber = GetIntConfigurationValue("AmazonUnauthorizedAttemptsNumber", UnauthorizedAttemptsNumberDefault);
+            failedRequestAttemptsNumber = GetIntConfigurationValue("AmazonFailedRequestAttemptsNumber", FailedRequestAttemptsNumberDefault);
+            reportGenerationAttemptsNumber = GetIntConfigurationValue("AmazonReportGenerationAttemptsNumber", ReportGenerationAttemptsNumberDefault);
+
+            amazonClientId = GetConfigurationValue("AmazonClientId");
+            amazonClientSecret = GetConfigurationValue("AmazonClientSecret");
+            amazonAuthorizeUrl = GetConfigurationValue("AmazonAuthorizeUrl");
+            amazonTokenUrl = GetConfigurationValue("AmazonTokenUrl");
+            amazonClientUrl = GetConfigurationValue("AmazonClientUrl");
+            amazonReportsFolder = GetReportFolderName(GetConfigurationValue("AmazonReportsBaseFolder"));
+        }
+
+        private int GetIntConfigurationValue(string configurationValueName, int defaultValue = 0)
+        {
+            var configurationValue = GetConfigurationValue(configurationValueName, defaultValue.ToString());
+            return int.Parse(configurationValue);
+        }
+
+        private string GetConfigurationValue(string configurationValueName, string defaultValue = "")
+        {
+            try
+            {
+                var configurationValue = ConfigurationManager.AppSettings[configurationValueName];
+                return configurationValue ?? defaultValue;
+            }
+            catch (Exception e)
+            {
+                logInfo(e.Message);
+                return defaultValue;
+            }
+        }
+
         private static string GetReportFolderName(string baseFolderName)
         {
             var today = DateTime.Today.ToUniversalTime();
@@ -253,7 +296,7 @@ namespace Amazon
 
         private void ResetCredentials()
         {
-            ApiEndpointUrl = amazonApiEndpointUrl;
+            CurrentApiEndpointUrl = GetApiEndpointUrl();
             AuthorizeUrl = amazonAuthorizeUrl;
             TokenUrl = amazonTokenUrl;
             ClientUrl = amazonClientUrl;
@@ -300,35 +343,29 @@ namespace Amazon
             }
         }
 
-        public List<AmazonProfile> GetProfiles()
+        /// <summary>
+        /// Sets the URL of regional API endpoint for Amazon utility instance by the country code that specified in the account name.
+        /// </summary>
+        /// <param name="accountName">Name of account.</param>
+        public void SetApiEndpointUrl(string accountName)
+        {
+            var accountCountryCode = GetCountryCodeFromAccountName(accountName);
+            CurrentApiEndpointUrl = GetApiEndpointUrl(accountCountryCode);
+        }
+
+        public virtual List<AmazonProfile> GetProfiles()
         {
             return GetEntities<AmazonProfile>(EntitesType.Profiles);
         }
 
-        public List<AmazonCampaign> GetCampaigns(CampaignType campaignType, string profileId)
+        public virtual List<AmazonCampaign> GetCampaigns(CampaignType campaignType, string profileId)
         {
             return GetEntities<AmazonCampaign>(EntitesType.Campaigns, campaignType, null, profileId);
         }
 
-        /// For Sponsored Brands only the following attributed metrics are available:
-        /// attributedSales14d, attributedSales14dSameSKU, attributedConversions14d, attributedConversions14dSameSKU
-        public List<AmazonDailySummary> ReportCampaigns(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
-        {
-            var param = AmazonApiHelper.CreateReportParams(EntitesType.Campaigns, campaignType, date, includeCampaignName);
-            return GetReportInfoManyTimes<AmazonDailySummary>(EntitesType.Campaigns, campaignType, param, profileId);
-        }
-
-        /// For Sponsored Brands only the following attributed metrics are available:
-        /// attributedSales14d, attributedSales14dSameSKU, attributedConversions14d, attributedConversions14dSameSKU
-        public List<AmazonAdGroupSummary> ReportAdGroups(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
-        {
-            var param = AmazonApiHelper.CreateReportParams(EntitesType.AdGroups, campaignType, date, includeCampaignName);
-            return GetReportInfoManyTimes<AmazonAdGroupSummary>(EntitesType.AdGroups, campaignType, param, profileId);
-        }
-
         /// Only for Sponsored Product
         /// sku metric - is not available for vendor accounts
-        public List<AmazonAdDailySummary> ReportProductAds(DateTime date, string profileId, bool includeCampaignName)
+        public virtual List<AmazonAdDailySummary> ReportProductAds(DateTime date, string profileId, bool includeCampaignName)
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = AmazonApiHelper.CreateReportParams(EntitesType.ProductAds, campaignType, date, includeCampaignName);
@@ -337,37 +374,37 @@ namespace Amazon
 
         /// For Sponsored Brands only the following attributed metrics are available:
         /// attributedSales14d, attributedSales14dSameSKU, attributedConversions14d, attributedConversions14dSameSKU
-        public List<AmazonKeywordDailySummary> ReportKeywords(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
+        public virtual List<AmazonKeywordDailySummary> ReportKeywords(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
         {
             var param = AmazonApiHelper.CreateReportParams(EntitesType.Keywords, campaignType, date, includeCampaignName);
             return GetReportInfoManyTimes<AmazonKeywordDailySummary>(EntitesType.Keywords, campaignType, param, profileId);
         }
 
         /// Only for Sponsored Product
-        public List<AmazonSearchTermDailySummary> ReportSearchTerms(DateTime date, string profileId, bool includeCampaignName)
-        {
-            const CampaignType campaignType = CampaignType.SponsoredProducts;
-            var param = AmazonApiHelper.CreateReportParams(EntitesType.SearchTerm, campaignType, date, includeCampaignName);
-            return GetReportInfoManyTimes<AmazonSearchTermDailySummary>(EntitesType.SearchTerm, campaignType, param, profileId);
-        }
-
-        /// Only for Sponsored Product
-        public List<AmazonTargetKeywordDailySummary> ReportTargetKeywords(DateTime date, string profileId, bool includeCampaignName)
+        public virtual List<AmazonTargetKeywordDailySummary> ReportTargetKeywords(DateTime date, string profileId, bool includeCampaignName)
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = AmazonApiHelper.CreateReportParams(EntitesType.TargetKeywords, campaignType, date, includeCampaignName);
             return GetReportInfoManyTimes<AmazonTargetKeywordDailySummary>(EntitesType.TargetKeywords, campaignType, param, profileId);
         }
 
-        /// Only for Sponsored Product
-        public List<AmazonTargetSearchTermDailySummary> ReportTargetSearchTerms(DateTime date, string profileId, bool includeCampaignName)
+        // Only for Sponsored Product
+        public virtual List<AmazonSearchTermDailySummary> ReportSearchTerms(DateTime date, string profileId, bool includeCampaignName)
+        {
+            const CampaignType campaignType = CampaignType.SponsoredProducts;
+            var param = AmazonApiHelper.CreateReportParams(EntitesType.SearchTerm, campaignType, date, includeCampaignName);
+            return GetReportInfoManyTimes<AmazonSearchTermDailySummary>(EntitesType.SearchTerm, campaignType, param, profileId);
+        }
+
+        // Only for Sponsored Product
+        public virtual List<AmazonTargetSearchTermDailySummary> ReportTargetSearchTerms(DateTime date, string profileId, bool includeCampaignName)
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = AmazonApiHelper.CreateReportParams(EntitesType.TargetSearchTerm, campaignType, date, includeCampaignName);
             return GetReportInfoManyTimes<AmazonTargetSearchTermDailySummary>(EntitesType.TargetSearchTerm, campaignType, param, profileId);
         }
 
-        /// Only for Sponsored Product
+        // Only for Sponsored Product
         public List<AmazonAsinSummaries> ReportAsins(DateTime date, string profileId)
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
@@ -408,7 +445,7 @@ namespace Amazon
         }
 
         private List<TStat> GetReportInfoManyTimes<TStat>(EntitesType reportType, CampaignType campaignType, AmazonApiReportParams parameters, string profileId)
-            where TStat : AmazonDailySummary
+            where TStat : AmazonStatSummary
         {
             var reportName = GetReportName(parameters.reportDate, reportType, campaignType);
             try
@@ -444,7 +481,7 @@ namespace Amazon
 
         private List<TStat> GetReportInfo<TStat>(EntitesType reportType, CampaignType campaignType, AmazonApiReportParams parameters,
             string profileId, string reportName)
-            where TStat : AmazonDailySummary
+            where TStat : AmazonStatSummary
         {
             var submitReportResponse = SubmitReport(parameters, campaignType, reportType, profileId);
             var data = DownloadPreparedData<ReportResponseDownloadInfo, TStat>("reports", submitReportResponse.ReportId, profileId, reportName);
@@ -453,7 +490,7 @@ namespace Amazon
         }
 
         private void SetCampaignType<TStat>(List<TStat> summaries, CampaignType campaignType)
-            where TStat : AmazonDailySummary
+            where TStat : AmazonStatSummary
         {
             var campaignTypeName = AmazonApiHelper.GetCampaignTypeName(campaignType);
             summaries.ForEach(x => x.CampaignType = campaignTypeName);
@@ -479,6 +516,7 @@ namespace Amazon
             {
                 ThrowGenerationTimedOutException(reportResponse);
             }
+
             return reportInfo;
         }
 
@@ -614,6 +652,7 @@ namespace Amazon
             {
                 LogInfo($"Report {reportName} has been saved.");
             }
+
             return json;
         }
 
@@ -631,7 +670,7 @@ namespace Amazon
             where T : new()
         {
             IRestResponse<T> response;
-            var restClient = new RestClient(amazonApiEndpointUrl);
+            var restClient = new RestClient(CurrentApiEndpointUrl);
             lock (RequestLock)
             {
                 response = ProcessRequest<T>(restClient, restRequest, isPostMethod);
@@ -646,6 +685,12 @@ namespace Amazon
                 ? response.Content
                 : response.ErrorMessage;
             LogError(message);
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new Exception(response.Content);
+            }
+
             return response;
         }
 
@@ -783,6 +828,31 @@ namespace Amazon
         {
             var waitTime = waitTimeSeconds * ((retryNumber - 1) / 3 + 1);
             return TimeSpan.FromSeconds(waitTime);
+        }
+
+        private string GetApiEndpointUrl(string accountCountryCode = null)
+        {
+            return string.IsNullOrEmpty(accountCountryCode)
+                ? ApiEndpointUrl.NorthAmerica
+                : AmazonApiHelper.GetAppropriateApiEndpointUrlByCountryCode(accountCountryCode);
+        }
+
+        private string GetCountryCodeFromAccountName(string accountName)
+        {
+            if (!IsAccountNameContainsCountryCode(accountName))
+            {
+                return null;
+            }
+            var firstCountryCodeIndex = accountName.IndexOf('[') + 1;
+            var secondCountryCodeIndex = accountName.IndexOf(']');
+            var accountCountryCode = accountName.Substring(
+                firstCountryCodeIndex, secondCountryCodeIndex - firstCountryCodeIndex);
+            return accountCountryCode;
+        }
+
+        private bool IsAccountNameContainsCountryCode(string accountName)
+        {
+            return accountName.Contains('[') && accountName.Contains(']');
         }
     }
 }

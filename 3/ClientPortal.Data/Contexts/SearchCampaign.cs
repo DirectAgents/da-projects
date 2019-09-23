@@ -28,7 +28,7 @@ namespace ClientPortal.Data.Contexts
         public string SearchCampaignName { get; set; }
         public Nullable<int> AdvertiserId { get; set; }
         public string Channel { get; set; }
-        public Nullable<int> ExternalId { get; set; }
+        public string ExternalId { get; set; }
         public Nullable<int> SearchAccountId { get; set; }
         public Nullable<int> AltSearchAccountId { get; set; }
         public string LCcmpid { get; set; }

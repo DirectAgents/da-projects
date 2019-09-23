@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
@@ -7,7 +6,7 @@ using DirectAgents.Domain.Entities.CPSearch;
 
 namespace DirectAgents.Web.Areas.ClientAdmin.Controllers
 {
-    public class ClientReportsController : DirectAgents.Web.Controllers.ControllerBase
+    public class ClientReportsController : Web.Controllers.ControllerBase
     {
         public ClientReportsController(ICPProgRepository cpProgRepository, ICPSearchRepository cpSearchRepository, IClientRepository clientRepository)
         {

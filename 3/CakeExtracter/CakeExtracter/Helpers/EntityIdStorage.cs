@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using CakeExtracter.Extensions;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 
 namespace CakeExtracter.Helpers
@@ -9,7 +10,7 @@ namespace CakeExtracter.Helpers
     {
         public const int NotExistingId = -1;
 
-        private readonly ConcurrentDictionary<string, int> ids = new ConcurrentDictionary<string, int>();
+        private readonly ConcurrentDictionary<string, int> ids = new ConcurrentDictionary<string, int>(new EntityIdStorageEqualityComparer());
 
         private readonly Func<T, int> getIdFunc;
         private readonly Func<T, string>[] getCompositeKeyFunctions;

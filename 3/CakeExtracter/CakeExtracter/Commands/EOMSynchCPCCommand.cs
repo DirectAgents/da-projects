@@ -11,7 +11,6 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class EOMSynchCPCCommand : ConsoleCommand
     {
-
         public static int RunStatic(int offerid,IMainRepository mainRepository,DateTime? start, DateTime? end)
         {
             AutoMapperBootstrapper.CheckRunSetup();

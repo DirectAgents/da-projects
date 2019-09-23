@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BingAds;
+using BingAds.Utilities;
 
 namespace CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors
 {
@@ -18,7 +18,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors
 
         protected override IEnumerable<Dictionary<string, string>> ExtractAndEnumerateRows()
         {
-            var filepath = BingUtility.GetReport_DailySummariesByGoal(AccountId, StartDate, EndDate);
+            var filepath = BingUtility.GetDailySummariesByGoalReport(AccountId, StartDate, EndDate);
             if (filepath == null)
             {
                 return new List<Dictionary<string, string>>();

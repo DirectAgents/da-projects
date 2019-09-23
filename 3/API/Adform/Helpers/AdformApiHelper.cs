@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
+using Adform.Constants;
 using Adform.Entities;
-using Adform.Entities.ReportEntities;
+using Adform.Entities.ReportEntities.ReportParameters;
 using Adform.Enums;
 
 namespace Adform.Helpers
@@ -23,7 +23,6 @@ namespace Adform.Helpers
         public const string ConversionType3 = "conversionType3";
 
         private const string DateFormat = "yyyy'-'M'-'d";
-        private const string RtbName = "Real Time Bidding";
 
         public static readonly Dictionary<Dimension, string> Dimensions = new Dictionary<Dimension, string>
         {
@@ -33,34 +32,24 @@ namespace Adform.Helpers
             {Dimension.LineItem, "lineItem"},
             {Dimension.Banner, "banner"},
             {Dimension.Media, "media"},
-            {Dimension.AdInteractionType, "adInteractionType"} // Click, Impression, etc.
+            {Dimension.AdInteractionType, "adInteractionType"}, // Click, Impression, etc.
         };
 
-        private static readonly string[] BasicMetrics = {CostMetric, ImpressionsMetric, ClicksMetric};
+        private static readonly string[] BasicMetrics = { CostMetric, ImpressionsMetric, ClicksMetric };
 
-        private static readonly string[] ConversionMetrics = {ConversionsMetric, SalesMetric };
+        private static readonly string[] ConversionMetrics = { ConversionsMetric, SalesMetric };
 
-        private static readonly string[] ConversionTypes = {ConversionTypeAll, ConversionType1, ConversionType2, ConversionType3};
+        private static readonly string[] ConversionTypes = { ConversionTypeAll, ConversionType1, ConversionType2, ConversionType3 };
 
-        public static ExpandoObject GetFilters(ReportSettings settings)
+        public static ReportFilter GetFilters(ReportSettings settings)
         {
-            dynamic filter = new ExpandoObject();
-            filter.client = new[] {settings.ClientId};
-            if (settings.TrackingId != null)
-            {
-                filter.tracking = settings.TrackingId;
-            }
-
-            filter.date = new Dates
-            {
-                from = settings.StartDate.ToString(DateFormat),
-                to = settings.EndDate.ToString(DateFormat)
-            };
-            if (settings.RtbOnly)
-            {
-                filter.media = new {name = new[] {RtbName}};
-            }
-
+            var filter = settings.TrackingIds.Any(x => !string.IsNullOrEmpty(x))
+                ? new ReportFilterWithTracking
+                {
+                    Tracking = settings.TrackingIds,
+                }
+                : new ReportFilter();
+            InitializeReportFilter(filter, settings);
             return filter;
         }
 
@@ -84,7 +73,7 @@ namespace Adform.Helpers
 
         public static string[] GetDimensions(ReportSettings settings)
         {
-            var defaultDimensions = new[] {Dimension.Date};
+            var defaultDimensions = new[] { Dimension.Date };
             var dimensions = settings.Dimensions == null
                 ? defaultDimensions
                 : settings.Dimensions.Concat(defaultDimensions);
@@ -96,20 +85,46 @@ namespace Adform.Helpers
         {
             return new MetricMetadata
             {
-                metric = metricName
+                Metric = metricName,
             };
+        }
+
+        private static void InitializeReportFilter(ReportFilter filter, ReportSettings settings)
+        {
+            filter.Client = new[] { settings.ClientId };
+            filter.Date = new Dates
+            {
+                From = settings.StartDate.ToString(DateFormat),
+                To = settings.EndDate.ToString(DateFormat),
+            };
+            filter.Media = settings.RtbMediaOnly
+                ? GetRtbMedia()
+                : GetMultipleMedia();
         }
 
         private static IEnumerable<MetricMetadata> GetConversionMetrics(string metricName)
         {
             return ConversionTypes.Select(convType => new MetricMetadata
             {
-                metric = metricName,
-                specs = new
+                Metric = metricName,
+                Specs = new
                 {
-                    conversionType = convType
-                }
+                    conversionType = convType,
+                },
             });
+        }
+
+        private static Media GetRtbMedia()
+        {
+            return new Media { Name = new[] { MediaName.RtbMediaName } };
+        }
+
+        private static Media GetMultipleMedia()
+        {
+            return new Media
+            {
+                Name = new[] { MediaName.RtbMediaName, MediaName.DbmMediaName, MediaName.TtdMediaName, MediaName.YamMediaName },
+            };
         }
     }
 }

@@ -2,11 +2,15 @@
 using System.ComponentModel.Composition;
 using AutoMapper;
 using CakeExtracter.Etl.Kochava.Models;
+using CakeExtracter.Etl.YAM.Extractors.CsvExtractors.RowModels;
 using ClientPortal.Data.Contexts;
 using CommissionJunction.Entities;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.CJ;
 using DirectAgents.Domain.Entities.CPProg.Kochava;
+using DirectAgents.Domain.Entities.CPProg.Vendor;
+using DirectAgents.Domain.Entities.CPProg.YAM;
+using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
 
 namespace CakeExtracter.Bootstrappers
 {
@@ -28,10 +32,6 @@ namespace CakeExtracter.Bootstrappers
                 cfg.CreateMap<CallDailySummary, CallDailySummary>();
                 cfg.CreateMap<SearchConvSummary, SearchConvSummary>();
 
-                cfg.CreateMap<ClientPortal.Data.Entities.TD.DBM.CreativeDailySummary, ClientPortal.Data.Entities.TD.DBM.CreativeDailySummary>();
-                cfg.CreateMap<ClientPortal.Data.Entities.TD.DBM.DBMDailySummary, ClientPortal.Data.Entities.TD.DBM.DBMDailySummary>();
-                cfg.CreateMap<ClientPortal.Data.Entities.TD.DBM.DBMConversion, ClientPortal.Data.Entities.TD.DBM.DBMConversion>();
-                cfg.CreateMap<ClientPortal.Data.Entities.TD.DBM.UserListStat, ClientPortal.Data.Entities.TD.DBM.UserListStat>();
                 cfg.CreateMap<ClientPortal.Data.Entities.TD.AdRoll.AdDailySummary, ClientPortal.Data.Entities.TD.AdRoll.AdDailySummary>();
 
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.DailySummary, DirectAgents.Domain.Entities.CPProg.DailySummary>();
@@ -138,6 +138,9 @@ namespace CakeExtracter.Bootstrappers
                 cfg.CreateMap<AdvertiserCommission, CjAdvertiserCommission>();
                 cfg.CreateMap<CommissionJunction.Entities.Item, CjAdvertiserCommissionItem>();
                 cfg.CreateMap<KochavaReportItem, KochavaItem>();
+                cfg.CreateMap<VcdAnalyticItem, VcdAnalyticItem>();
+                
+                CreateYamMaps(cfg);
             });
         }
 
@@ -157,6 +160,57 @@ namespace CakeExtracter.Bootstrappers
                 }
                 //Ignore other exceptions: e.g. "unmapped members were found"
             }
+        }
+
+        private static void CreateYamMaps(IProfileExpression cfg)
+        {
+            //YAM Entities
+            cfg.CreateMap<YamRow, YamCampaign>()
+                .ConstructUsing(s => new YamCampaign
+                {
+                    Name = s.CampaignName,
+                    ExternalId = s.CampaignId
+                });
+            cfg.CreateMap<YamRow, YamLine>()
+                .ConstructUsing(s => new YamLine
+                {
+                    Name = s.LineName,
+                    ExternalId = s.LineId
+                })
+                .ForMember(d => d.Campaign, opt => opt.MapFrom(s => Mapper.Map<YamCampaign>(s)));
+            cfg.CreateMap<YamRow, YamCreative>()
+                .ConstructUsing(s => new YamCreative
+                {
+                    Name = s.CreativeName,
+                    ExternalId = s.CreativeId
+                });
+            cfg.CreateMap<YamRow, YamAd>()
+                .ConstructUsing(s => new YamAd
+                {
+                    Name = s.AdName,
+                    ExternalId = s.AdId
+                })
+                .ForMember(d => d.Line, opt => opt.MapFrom(s => Mapper.Map<YamLine>(s)))
+                .ForMember(d => d.Creative, opt => opt.MapFrom(s => Mapper.Map<YamCreative>(s)));
+            cfg.CreateMap<YamRow, YamPixel>()
+                .ConstructUsing(s => new YamPixel
+                {
+                    Name = s.PixelName,
+                    ExternalId = int.TryParse(s.PixelId, out var id) ? id : 0
+                });
+
+            //YAM Summaries
+            cfg.CreateMap<YamRow, YamDailySummary>();
+            cfg.CreateMap<YamRow, YamCampaignSummary>()
+                .ForMember(d => d.Campaign, opt => opt.MapFrom(s => Mapper.Map<YamCampaign>(s)));
+            cfg.CreateMap<YamRow, YamLineSummary>()
+                .ForMember(d => d.Line, opt => opt.MapFrom(s => Mapper.Map<YamLine>(s)));
+            cfg.CreateMap<YamRow, YamCreativeSummary>()
+                .ForMember(d => d.Creative, opt => opt.MapFrom(s => Mapper.Map<YamCreative>(s)));
+            cfg.CreateMap<YamRow, YamAdSummary>()
+                .ForMember(d => d.Ad, opt => opt.MapFrom(s => Mapper.Map<YamAd>(s)));
+            cfg.CreateMap<YamRow, YamPixelSummary>()
+                .ForMember(d => d.Pixel, opt => opt.MapFrom(s => Mapper.Map<YamPixel>(s)));
         }
     }
 }

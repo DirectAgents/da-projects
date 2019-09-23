@@ -7,7 +7,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 {
     public class SearchDailySummaryFromOldDbLoader : Loader<ClientPortal.Data.Contexts.SearchCampaign>
     {
-        private Dictionary<int, int> searchCampaignIdLookupByExternalId = new Dictionary<int, int>();
+        private Dictionary<string, int> searchCampaignIdLookupByExternalId = new Dictionary<string, int>();
 
         public SearchDailySummaryFromOldDbLoader(int searchAccountId)
         {
@@ -18,8 +18,8 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
         {
             using (var db = new ClientPortalSearchContext())
             {
-                var searchCamps = db.SearchCampaigns.Where(sc => sc.SearchAccountId == searchAccountId && sc.ExternalId.HasValue);
-                searchCampaignIdLookupByExternalId = searchCamps.ToDictionary(sc => sc.ExternalId.Value, sc => sc.SearchCampaignId);
+                var searchCamps = db.SearchCampaigns.Where(sc => sc.SearchAccountId == searchAccountId && !string.IsNullOrEmpty(sc.ExternalId));
+                searchCampaignIdLookupByExternalId = searchCamps.ToDictionary(sc => sc.ExternalId, sc => sc.SearchCampaignId);
             }
         }
 
@@ -40,12 +40,12 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             {
                 foreach (var searchCampaign in items)
                 {
-                    if (!searchCampaign.ExternalId.HasValue)
+                    if (string.IsNullOrEmpty(searchCampaign.ExternalId))
                     {
                         Logger.Info("SearchCampaign ({0}) has no ExternalId. Skipping copy of its SearchDailySummaries.", searchCampaign.SearchCampaignId);
                         break;
                     }
-                    int searchCampaignId = searchCampaignIdLookupByExternalId[searchCampaign.ExternalId.Value];
+                    int searchCampaignId = searchCampaignIdLookupByExternalId[searchCampaign.ExternalId];
                     foreach (var sds in searchCampaign.SearchDailySummaries)
                     {
                         var newSDS = CreateSDS(searchCampaignId, sds);

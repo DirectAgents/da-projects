@@ -1,0 +1,48 @@
+﻿@using MVCGrid.Web
+
+<link href="~/Content/css/jobHistory.css" rel="stylesheet" />
+
+<h2>Job Execution History</h2>
+
+<div class="well">
+    <div class="form-inline">
+        <div class="form-group">
+            <span class="filter-label">Date:</span>
+            <div class='input-group date' id='datetimepicker'>
+                <input data-mvcgrid-type="filter" data-mvcgrid-option="StartTime" type='text' class="form-control" />
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <span class="filter-label">CommandName:</span>
+            <input type="text" class="form-control"
+                   data-mvcgrid-type="filter" data-mvcgrid-option="CommandName" />
+        </div>
+        <div class="form-group">
+            <span class="filter-label">ParentJobId:</span>
+            <input type="number" class="form-control"
+                   data-mvcgrid-type="filter" data-mvcgrid-option="ParentJobId" />
+        </div>
+        <div class="form-group">
+            <span class="filter-label">Status:</span>
+            <select class="form-control" data-mvcgrid-type="filter" data-mvcgrid-option="Status">
+                <option value=""></option>
+                <option value="0">Processing</option>
+                <option value="1">Completed</option>
+                <option value="2">Failed</option>
+                <option value="3">Aborted</option>
+                <option value="4">Aborted by timeout</option>
+                <option value="errors">With Errors</option>
+            </select>
+        </div>
+        <button type="button" class="btn btn-default" data-mvcgrid-apply-filter="click">Apply Filters</button>
+        <button type="button" class="btn btn-default abort" onclick="setAbortedStatusToItems()">Abort Selected</button>
+    </div>
+</div>
+
+@Html.MVCGrid("JobHistory")
+
+<script src="~/Content/scripts/jobHistory.js"></script>

@@ -1,5 +1,4 @@
-﻿
-namespace Amazon.Entities.Summaries
+﻿namespace Amazon.Entities.Summaries
 {
     public class AmazonTargetSearchTermDailySummary : AmazonTargetKeywordDailySummary
     {

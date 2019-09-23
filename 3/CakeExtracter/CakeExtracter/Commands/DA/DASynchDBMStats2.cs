@@ -119,18 +119,26 @@ namespace CakeExtracter.Commands
 
         private void DoEtLs(ExtAccount account, DateRange dateRange)
         {
-            var reportUrl = DbmUtility.GetURLForReport(account.ExternalId_int.Value);
+            var reportId = GetTemporaryReportIdFromAccount(account);
+            var reportUrl = DbmUtility.GetURLForReport(reportId);
             if (string.IsNullOrWhiteSpace(reportUrl))
             {
                 return;
             }
 
             var colMapping = GetInitializedAccountColMapping(account);
-            var streamReader = TDDailySummaryExtracter.CreateStreamReaderFromUrl(reportUrl);
+            var streamReader = RequestHelper.CreateStreamReaderFromUrl(reportUrl);
             DoETL_Strategy(account.Id, colMapping, streamReader, dateRange);
 
             Logger.Info("Creating daily stats from strategy stats.");
             DoETL_DailyFromStrategyInDatabase(account.Id, dateRange);
+        }
+
+        private int GetTemporaryReportIdFromAccount(ExtAccount account)
+        {
+            const int defaultValue = 0;
+            var temporaryReportId = int.TryParse(account.Filter, out _) ? int.Parse(account.Filter) : defaultValue;
+            return temporaryReportId;
         }
 
         // --- setup ---
@@ -168,7 +176,7 @@ namespace CakeExtracter.Commands
         {
             var accountsDb = GetEnabledAccountsFromDatabase();
             var accountsConfig = GetEnabledAccountsFromConfig();
-            var enabledAccounts = accountsDb.Where(x => accountsConfig.Contains(x.ExternalId) && x.ExternalId_int.HasValue).ToList();
+            var enabledAccounts = accountsDb.Where(x => accountsConfig.Contains(x.Filter) && x.ExternalId_int.HasValue).ToList();
             return enabledAccounts;
         }
 
