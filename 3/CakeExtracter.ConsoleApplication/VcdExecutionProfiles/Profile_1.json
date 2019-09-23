@@ -2,6 +2,6 @@
   "SignInUrl": "https://vendorcentral.amazon.com/ap/signin",
   "LoginEmail": "reportingdev@directagents.com",
   "LoginPassword": "",
-  "AccountIds": [ 1444, 1450, 1451 ],
+  "AccountIds": [ 1444, 1450, 1451, 1452 ],
   "CookiesDirectory": "VcdCookies1"
 }
