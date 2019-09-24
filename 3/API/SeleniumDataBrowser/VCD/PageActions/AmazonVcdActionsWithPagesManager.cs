@@ -106,6 +106,17 @@ namespace SeleniumDataBrowser.VCD.PageActions
             }
         }
 
+        /// <summary>
+        /// Navigates to sign in to Vendor Central page and clicks on the Sign In button.
+        /// </summary>
+        /// <param name="signInPageUrl">URL to the Sign In page.</param>
+        public void NavigateToSignInPage(string signInPageUrl)
+        {
+            NavigateToUrl(signInPageUrl, AmazonVcdPageObjects.SignInToVendorCentralButton);
+            WaitElementClickable(AmazonVcdPageObjects.SignInToVendorCentralButton);
+            ClickElement(AmazonVcdPageObjects.SignInToVendorCentralButton);
+        }
+
         private IWebElement GetAccountElementForClicking(string accountName)
         {
             var accountItems = GetChildrenElements(AmazonVcdPageObjects.AccountList, AmazonVcdPageObjects.AccountItem);

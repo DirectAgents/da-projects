@@ -10,6 +10,11 @@ namespace SeleniumDataBrowser.VCD.PageActions
     internal class AmazonVcdPageObjects : AmazonLoginPageObjects
     {
         /// <summary>
+        /// "Sign In to Vendor Central" button.
+        /// </summary>
+        public static By SignInToVendorCentralButton = By.Id("login-button-container");
+
+        /// <summary>
         /// Data container of Detail View on main page.
         /// </summary>
         public static By DetailViewDataContainer = By.Id("salesDiagnosticDetail");

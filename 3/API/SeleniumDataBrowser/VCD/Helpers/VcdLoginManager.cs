@@ -79,7 +79,7 @@ namespace SeleniumDataBrowser.VCD.Helpers
 
         private void LoginWithoutCookie()
         {
-            pageActionManager.NavigateToUrl(SignInPageUrl, AmazonLoginPageObjects.ForgotPassLink);
+            pageActionManager.NavigateToSignInPage(SignInPageUrl);
             pageActionManager.LoginProcess(authorizationModel.Login, authorizationModel.Password);
             var cookies = pageActionManager.GetAllCookies();
             SeleniumCookieHelper.SaveCookiesToFiles(cookies, authorizationModel.CookiesDir);
