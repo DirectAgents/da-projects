@@ -57,6 +57,7 @@ namespace SeleniumDataBrowser.VCD.PageActions
         /// <summary>
         /// Navigates to sales diagnostic page on ara amazon portal.
         /// </summary>
+        /// <param name="waitingElement">Element for waiting if needed.</param>
         public void NavigateToSalesDiagnosticPage(By waitingElement = null)
         {
             if (waitingElement != null)
