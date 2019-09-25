@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
+using OpenQA.Selenium;
 using RestSharp;
 
 namespace SeleniumDataBrowser.Helpers
@@ -16,7 +17,7 @@ namespace SeleniumDataBrowser.Helpers
 
         public static RestRequest CreateRestRequest(
             string relativePath,
-            Dictionary<string, string> cookies,
+            IEnumerable<Cookie> cookies,
             Dictionary<string, string> queryParams = null,
             object body = null)
         {
@@ -36,9 +37,9 @@ namespace SeleniumDataBrowser.Helpers
             return request;
         }
 
-        private static void SetCookies(IRestRequest request, Dictionary<string, string> cookies)
+        private static void SetCookies(IRestRequest request, IEnumerable<Cookie> cookies)
         {
-            cookies?.ForEach(x => request.AddCookie(x.Key, x.Value));
+            cookies?.ForEach(x => request.AddCookie(x.Name, x.Value));
         }
 
         private static void SetQueryParameters(IRestRequest request, Dictionary<string, string> queryParams)

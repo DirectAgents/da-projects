@@ -10,18 +10,33 @@ namespace SeleniumDataBrowser.VCD.PageActions
     internal class AmazonVcdPageObjects : AmazonLoginPageObjects
     {
         /// <summary>
-        /// Button for open accounts menu.
+        /// "Sign In to Vendor Central" button.
         /// </summary>
-        public static By AccountsDropdownButton = By.CssSelector("a.i90-accounts-dropdown-button");
+        public static By SignInToVendorCentralButton = By.Id("login-button-container");
 
         /// <summary>
-        /// Container for elements of accounts menu.
+        /// Data container of Detail View on main page.
         /// </summary>
-        public static By AccountsDropdownContainer = By.CssSelector("div.i90-accounts-dropdown-content");
+        public static By DetailViewDataContainer = By.Id("salesDiagnosticDetail");
 
         /// <summary>
-        /// Item of accounts menu.
+        /// Form of switch VCD accounts.
         /// </summary>
-        public static By AccountsDropdownItem = By.CssSelector("div.i90-accounts-dropdown-item");
+        public static By SwitchAccountForm = By.Id("vendor-group-switch-account-form");
+
+        /// <summary>
+        /// Element of list with VCD available accounts.
+        /// </summary>
+        public static By AccountList = By.CssSelector("form#vendor-group-switch-account-form > div > div > div > div");
+
+        /// <summary>
+        /// Element of VCD account.
+        /// </summary>
+        public static By AccountItem = By.CssSelector("div > label > span");
+
+        /// <summary>
+        /// Button for switch current account.
+        /// </summary>
+        public static By SwitchCurrentAccountButton = By.CssSelector("span#vendor-group-switch-confirm-button");
     }
 }

@@ -17,7 +17,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
     internal class AmazonVcdExtractor : Extracter<VcdReportData>
     {
         private readonly VcdDataProvider vcdDataProvider;
-        private readonly VcdReportCSVParser reportParser;
+        private readonly VcdReportCsvParser reportParser;
         private readonly VcdReportComposer reportComposer;
         private readonly ExtAccount account;
         private readonly DateRange dateRange;
@@ -40,7 +40,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
             this.dateRange = dateRange;
             this.vcdDataProvider = vcdDataProvider;
             this.maxRetryAttemptsForExtractData = maxRetryAttemptsForExtractData;
-            reportParser = new VcdReportCSVParser(account.Id);
+            reportParser = new VcdReportCsvParser(account.Id);
             reportComposer = new VcdReportComposer();
         }
 

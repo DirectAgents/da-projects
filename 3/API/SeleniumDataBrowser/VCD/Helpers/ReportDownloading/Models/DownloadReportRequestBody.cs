@@ -3,21 +3,34 @@
 namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Models
 {
     //auto generated class from json value from amazon sales diagnostic page
-    internal class DownloadReportRequestBody
-    {
-        public SalesDiagnosticDetail salesDiagnosticDetail { get; set; }
-    }
-
-    //auto generated class from json value from amazon sales diagnostic page
     internal class SalesDiagnosticDetail
     {
         public string requestId { get; set; }
 
-        public string reportId { get; set; }
-
         public List<ReportParameter> reportParameters { get; set; }
 
-        public Dictionary<string, List<string>> visibleFilters;
+        public ReportPaginationWithOrderParameter reportPaginationWithOrderParameter { get; set; }
+    }
+
+    internal class ReportPaginationWithOrderParameter
+    {
+        public List<ReportOrder> reportOrders { get; set; }
+
+        public ReportPagination reportPagination { get; set; }
+    }
+
+    internal class ReportOrder
+    {
+        public string columnId { get; set; }
+
+        public bool ascending { get; set; }
+    }
+
+    internal class ReportPagination
+    {
+        public int pageIndex { get; set; }
+
+        public int pageSize { get; set; }
     }
 
     //auto generated class from json value from amazon sales diagnostic page

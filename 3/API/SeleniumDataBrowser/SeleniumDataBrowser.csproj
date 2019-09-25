@@ -20,6 +20,8 @@
     <CodeAnalysisRuleSet>$(SolutionDir)CodeAnalysis\codeanalysis.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -94,6 +96,8 @@
     <Compile Include="PDA\PageActions\AmazonPdaPageObjects.cs" />
     <Compile Include="PDA\PdaDataProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VCD\Helpers\ReportDownloading\Constants\ResponseDataConstants.cs" />
+    <Compile Include="VCD\Helpers\ReportDownloading\VcdComposingReportDataHelper.cs" />
     <Compile Include="VCD\Helpers\VcdLoginManager.cs" />
     <Compile Include="VCD\Helpers\ReportDownloading\Constants\RequestBodyConstants.cs" />
     <Compile Include="VCD\Helpers\ReportDownloading\Constants\RequestHeaderConstants.cs" />
@@ -138,7 +142,7 @@
     <Error Condition="!Exists('..\..\DirectAgents.Web\packages\Microsoft.NetCore.Analyzers.2.9.3\build\Microsoft.NetCore.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\DirectAgents.Web\packages\Microsoft.NetCore.Analyzers.2.9.3\build\Microsoft.NetCore.Analyzers.props'))" />
     <Error Condition="!Exists('..\..\DirectAgents.Web\packages\Microsoft.NetFramework.Analyzers.2.9.3\build\Microsoft.NetFramework.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\DirectAgents.Web\packages\Microsoft.NetFramework.Analyzers.2.9.3\build\Microsoft.NetFramework.Analyzers.props'))" />
     <Error Condition="!Exists('..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.3\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.3\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
-    <Error Condition="!Exists('..\..\DirectAgents.Web\packages\Selenium.Chrome.WebDriver.75.0.0\build\Selenium.Chrome.WebDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\DirectAgents.Web\packages\Selenium.Chrome.WebDriver.75.0.0\build\Selenium.Chrome.WebDriver.targets'))" />
+    <Error Condition="!Exists('..\..\DirectAgents.Web\packages\Selenium.Chrome.WebDriver.76.0.0\build\Selenium.Chrome.WebDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\DirectAgents.Web\packages\Selenium.Chrome.WebDriver.76.0.0\build\Selenium.Chrome.WebDriver.targets'))" />
   </Target>
-  <Import Project="..\..\DirectAgents.Web\packages\Selenium.Chrome.WebDriver.75.0.0\build\Selenium.Chrome.WebDriver.targets" Condition="Exists('..\..\DirectAgents.Web\packages\Selenium.Chrome.WebDriver.75.0.0\build\Selenium.Chrome.WebDriver.targets')" />
+  <Import Project="..\..\DirectAgents.Web\packages\Selenium.Chrome.WebDriver.76.0.0\build\Selenium.Chrome.WebDriver.targets" Condition="Exists('..\..\DirectAgents.Web\packages\Selenium.Chrome.WebDriver.76.0.0\build\Selenium.Chrome.WebDriver.targets')" />
 </Project>

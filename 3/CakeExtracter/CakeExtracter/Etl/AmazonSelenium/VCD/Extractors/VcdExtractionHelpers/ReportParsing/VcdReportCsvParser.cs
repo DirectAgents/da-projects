@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Amazon.Helpers;
-using CakeExtracter.Common;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing.ParsingConverters;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Models;
 using CsvHelper;
@@ -14,15 +13,16 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
     /// <summary>
     /// Parser for vcd reports.
     /// </summary>
-    internal class VcdReportCSVParser
+    internal class VcdReportCsvParser
     {
+        private const string ValueDelimiter = ";;;";
         private readonly int accountId;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="VcdReportCSVParser"/> class.
+        /// Initializes a new instance of the <see cref="VcdReportCsvParser"/> class.
         /// </summary>
         /// <param name="accountId">Internal account ID.</param>
-        public VcdReportCSVParser(int accountId)
+        public VcdReportCsvParser(int accountId)
         {
             this.accountId = accountId;
         }
@@ -35,7 +35,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
         /// <returns>Collection of products with filled shipped revenue data.</returns>
         public List<Product> ParseShippedRevenueReportData(string reportCsvText, DateTime date)
         {
-            var products = ParseProductsFromReport<ShippedRevenueProductRowMap>(
+            var products = ParseProductsFromReport<ShippedRevenueProductsRowMap>(
                 reportCsvText, date, "shippedRev");
             return products;
         }
@@ -72,11 +72,11 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
             try
             {
                 Logger.Info(accountId, "Started parsing csv report");
-                reportCsvText = TextUtils.RemoveFirstLine(reportCsvText);
                 using (TextReader sr = new StringReader(reportCsvText))
                 {
                     var csvHelper = new CsvReader(sr);
                     csvHelper.Configuration.SkipEmptyRecords = true;
+                    csvHelper.Configuration.Delimiter = ValueDelimiter;
                     csvHelper.Configuration.RegisterClassMap<T>();
                     var products = csvHelper.GetRecords<Product>().ToList();
                     return products;
