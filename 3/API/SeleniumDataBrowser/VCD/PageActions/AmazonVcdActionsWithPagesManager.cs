@@ -77,7 +77,7 @@ namespace SeleniumDataBrowser.VCD.PageActions
         public void RefreshSalesDiagnosticPage(AuthorizationModel authorizationModel)
         {
             Logger.LogInfo("Sales diagnostic page refreshing");
-            NavigateToSalesDiagnosticPage(AmazonVcdPageObjects.DetailViewDataContainer);
+            NavigateToSalesDiagnosticPage();
             if (!VcdLoginManager.NeedRepeatPassword(this))
             {
                 return;
@@ -90,7 +90,8 @@ namespace SeleniumDataBrowser.VCD.PageActions
         /// Selects the current account from account list on the separate page for choose current account.
         /// </summary>
         /// <param name="accountName">Name of the current account.</param>
-        public void SelectAccountOnPage(string accountName)
+        /// <returns>True if successfully select.</returns>
+        public bool SelectAccountOnPage(string accountName)
         {
             try
             {
@@ -99,10 +100,12 @@ namespace SeleniumDataBrowser.VCD.PageActions
                 accountItem?.Click();
                 ClickElement(AmazonVcdPageObjects.SwitchCurrentAccountButton);
                 NavigateToSalesDiagnosticPage(AmazonVcdPageObjects.DetailViewDataContainer);
+                return true;
             }
             catch (Exception e)
             {
                 Logger.LogWarning($"Could not open a page for {accountName} account: {e.Message}");
+                return false;
             }
         }
 

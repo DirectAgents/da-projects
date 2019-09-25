@@ -65,7 +65,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD
         public void InitializeReportDownloader(ExtAccount currentAccount, SeleniumLogger loggerWithAccountId)
         {
             var currentAccountInfo = vcdAccountsInfo[currentAccount];
-            pageActionsManager.SelectAccountOnPage(currentAccount.Name);
+            SelectAccountPage(currentAccount.Name);
             var reportDownloader = GetReportDownloader(currentAccountInfo, loggerWithAccountId);
             vcdDataProvider.SetReportDownloaderCurrentForDataProvider(reportDownloader);
         }
@@ -77,6 +77,16 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD
         public List<ExtAccount> GetAccounts()
         {
             return vcdAccountsInfo.Keys.ToList();
+        }
+
+        private void SelectAccountPage(string currentAccountName)
+        {
+            bool resultOfSelecting;
+            do
+            {
+                resultOfSelecting = pageActionsManager.SelectAccountOnPage(currentAccountName);
+            }
+            while (!resultOfSelecting);
         }
 
         private void SetExecutionProfile(int? currentProfileNumber)
