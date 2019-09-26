@@ -6,7 +6,12 @@ using DirectAgents.Domain.Entities.CPProg.DBM.Entities;
 
 namespace CakeExtracter.Etl.DBM.Loaders.EntitiesLoaders
 {
-    public abstract class DbmBaseEntityLoader<T> where T : DbmEntity
+    /// <summary>
+    /// Base loader for DBM entity.
+    /// </summary>
+    /// <typeparam name="T">DBM base entity.</typeparam>
+    public abstract class DbmBaseEntityLoader<T>
+        where T : DbmEntity
     {
         /// <summary>
         /// Adds or updates dependent items.
@@ -48,7 +53,7 @@ namespace CakeExtracter.Etl.DBM.Loaders.EntitiesLoaders
         /// </summary>
         /// <param name="existingDbItem">The existing database item.</param>
         /// <param name="latestItemFromApi">The latest item from API.</param>
-        /// <returns></returns>
+        /// <returns>True if updated, False if no.</returns>
         protected abstract bool UpdateExistingDbItemPropertiesIfNecessary(T existingDbItem, T latestItemFromApi);
 
         /// <summary>
@@ -78,18 +83,14 @@ namespace CakeExtracter.Etl.DBM.Loaders.EntitiesLoaders
 
         private void AddMissedDbItems(IReadOnlyCollection<T> itemsToBeAdded, object lockObject)
         {
-            SafeContextWrapper.TryMakeTransactionWithLock<ClientPortalProgContext>(dbContext =>
-            {
-                dbContext.BulkInsert(itemsToBeAdded);
-            }, lockObject, "BulkInserting");
+            SafeContextWrapper.TryMakeTransactionWithLock<ClientPortalProgContext>(
+                dbContext => { dbContext.BulkInsert(itemsToBeAdded); }, lockObject, "BulkInserting");
         }
 
         private void UpdateOutdatedDbItems(IReadOnlyCollection<T> itemsToBeUpdated, object lockObject)
         {
-            SafeContextWrapper.TryMakeTransactionWithLock<ClientPortalProgContext>(dbContext =>
-            {
-                dbContext.BulkUpdate(itemsToBeUpdated);
-            }, lockObject, "BulkUpdating");
+            SafeContextWrapper.TryMakeTransactionWithLock<ClientPortalProgContext>(
+                dbContext => { dbContext.BulkUpdate(itemsToBeUpdated); }, lockObject, "BulkUpdating");
         }
 
         private void AddItemsToEntityIdStorage(List<T> items, EntityIdStorage<T> entityIdStorage)

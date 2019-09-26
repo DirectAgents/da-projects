@@ -5,18 +5,26 @@ using DirectAgents.Domain.Entities.CPProg.DBM.Entities;
 
 namespace CakeExtracter.Etl.DBM.Loaders.EntitiesLoaders
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// Loader for DBM campaigns.
+    /// </summary>
     public class DbmCampaignLoader : DbmBaseEntityLoader<DbmCampaign>
     {
-        private readonly DbmAdvertiserLoader advertiserLoader;
-
         /// <summary>
         /// Entity id storage of already updated entity.
         /// </summary>
-        private static readonly EntityIdStorage<DbmCampaign> campaignIdStorage = 
+        private static readonly EntityIdStorage<DbmCampaign> CampaignIdStorage =
             new EntityIdStorage<DbmCampaign>(x => x.Id, x => $"{x.Name} {x.ExternalId}");
 
-        private static readonly object lockObject = new object();
+        private static readonly object LockObject = new object();
 
+        private readonly DbmAdvertiserLoader advertiserLoader;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbmCampaignLoader"/> class.
+        /// </summary>
+        /// <param name="advertiserLoader">Loader for advertisers.</param>
         public DbmCampaignLoader(DbmAdvertiserLoader advertiserLoader)
         {
             this.advertiserLoader = advertiserLoader;
@@ -31,16 +39,11 @@ namespace CakeExtracter.Etl.DBM.Loaders.EntitiesLoaders
             AssignAccountIdToItems(items);
             var uniqueItems = items.GroupBy(item => item.ExternalId).Select(gr => gr.First()).ToList();
             EnsureAdvertisersData(uniqueItems);
-            AddUpdateDependentItems(uniqueItems, campaignIdStorage, lockObject);
-            AssignIdToItems(items, campaignIdStorage);
+            AddUpdateDependentItems(uniqueItems, CampaignIdStorage, LockObject);
+            AssignIdToItems(items, CampaignIdStorage);
         }
 
-        /// <summary>
-        /// Updates the existing database item properties if necessary.
-        /// </summary>
-        /// <param name="existingDbItem">The existing database item.</param>
-        /// <param name="latestItemFromApi">The latest item from API.</param>
-        /// <returns></returns>
+        /// <inheritdoc />
         protected override bool UpdateExistingDbItemPropertiesIfNecessary(DbmCampaign existingDbItem, DbmCampaign latestItemFromApi)
         {
             if (existingDbItem.Name == latestItemFromApi.Name &&
