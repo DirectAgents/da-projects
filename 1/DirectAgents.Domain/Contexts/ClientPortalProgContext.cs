@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using DirectAgents.Domain.Entities;
@@ -289,7 +290,7 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<CreativeDailySummary>()
                 .Property(cds => cds.Revenue).HasPrecision(18, 6);
 
-            //TD DBM
+            // TD DBM
             modelBuilder.Entity<DbmAdvertiser>().ToTable("DbmAdvertiser", tdSchema);
             modelBuilder.Entity<DbmCampaign>().ToTable("DbmCampaign", tdSchema);
             modelBuilder.Entity<DbmInsertionOrder>().ToTable("DbmInsertionOrder", tdSchema);
@@ -298,8 +299,8 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<DbmLineItemSummary>().ToTable("DbmLineItemSummary", tdSchema);
             modelBuilder.Entity<DbmCreativeSummary>().ToTable("DbmCreativeSummary", tdSchema);
 
-            SetupDbmSummaryMetricModelValues<DbmLineItemSummary>(modelBuilder, "LineItemId");
-            SetupDbmSummaryMetricModelValues<DbmCreativeSummary>(modelBuilder, "CreativeId");
+            SetupDbmLineItemSummaryMetricModelValues(modelBuilder);
+            SetupDbmCreativeSummaryMetricModelValues(modelBuilder);
         }
 
         public DbSet<Employee> Employees { get; set; }
@@ -439,11 +440,23 @@ namespace DirectAgents.Domain.Contexts
                 .WillCascadeOnDelete();
         }
 
-        private static void SetupDbmSummaryMetricModelValues<TSummaryMetrics>(DbModelBuilder modelBuilder, string entityColumnName)
+        private static void SetupDbmLineItemSummaryMetricModelValues(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<DbmLineItemSummary>().HasKey(summary => new { summary.EntityId, summary.Date, summary.Country, summary.FloodlightActivityName });
+            modelBuilder.Entity<DbmLineItemSummary>().Property(x => x.EntityId).HasColumnName("LineItemId");
+            SetupDbmBasicSummaryMetricModelValues<DbmLineItemSummary>(modelBuilder);
+        }
+
+        private static void SetupDbmCreativeSummaryMetricModelValues(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<DbmCreativeSummary>().HasKey(summary => new { summary.EntityId, summary.Date, summary.Country });
+            modelBuilder.Entity<DbmCreativeSummary>().Property(x => x.EntityId).HasColumnName("CreativeId");
+            SetupDbmBasicSummaryMetricModelValues<DbmCreativeSummary>(modelBuilder);
+        }
+
+        private static void SetupDbmBasicSummaryMetricModelValues<TSummaryMetrics>(DbModelBuilder modelBuilder)
             where TSummaryMetrics : DbmBaseSummaryEntity
         {
-            modelBuilder.Entity<TSummaryMetrics>().HasKey(summary => new { summary.EntityId, summary.Date, summary.Country });
-            modelBuilder.Entity<TSummaryMetrics>().Property(x => x.EntityId).HasColumnName(entityColumnName);
             modelBuilder.Entity<TSummaryMetrics>().Property(m => m.Revenue).HasPrecision(18, 6);
             modelBuilder.Entity<TSummaryMetrics>().Property(m => m.Impressions);
             modelBuilder.Entity<TSummaryMetrics>().Property(m => m.Clicks);

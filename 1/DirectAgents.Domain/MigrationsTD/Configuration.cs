@@ -1,19 +1,17 @@
 namespace DirectAgents.Domain.MigrationsTD
 {
-    using System;
-    using System.Data.Entity;
     using System.Data.Entity.Migrations;
-    using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<DirectAgents.Domain.Contexts.ClientPortalProgContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<Contexts.ClientPortalProgContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
             MigrationsDirectory = @"MigrationsTD";
+            CommandTimeout = 60 * 5;
         }
 
-        protected override void Seed(DirectAgents.Domain.Contexts.ClientPortalProgContext context)
+        protected override void Seed(Contexts.ClientPortalProgContext context)
         {
         }
     }

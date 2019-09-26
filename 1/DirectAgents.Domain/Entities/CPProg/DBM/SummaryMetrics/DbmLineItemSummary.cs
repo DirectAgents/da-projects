@@ -7,5 +7,7 @@ namespace DirectAgents.Domain.Entities.CPProg.DBM.SummaryMetrics
     {
         [ForeignKey("EntityId")]
         public virtual DbmLineItem LineItem { get; set; }
+
+        public string FloodlightActivityName { get; set; }
     }
 }
