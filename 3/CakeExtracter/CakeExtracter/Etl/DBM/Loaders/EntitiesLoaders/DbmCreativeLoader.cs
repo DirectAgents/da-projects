@@ -5,18 +5,26 @@ using DirectAgents.Domain.Entities.CPProg.DBM.Entities;
 
 namespace CakeExtracter.Etl.DBM.Loaders.EntitiesLoaders
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// Loader for DBM creatives.
+    /// </summary>
     public class DbmCreativeLoader : DbmBaseEntityLoader<DbmCreative>
     {
-        private readonly DbmAdvertiserLoader advertiserLoader;
-        
         /// <summary>
         /// Entity id storage of already updated entity.
         /// </summary>
-        private static readonly EntityIdStorage<DbmCreative> creativeIdStorage =
+        private static readonly EntityIdStorage<DbmCreative> CreativeIdStorage =
             new EntityIdStorage<DbmCreative>(x => x.Id, x => $"{x.Name} {x.ExternalId}");
 
-        private static readonly object lockObject = new object();
+        private static readonly object LockObject = new object();
 
+        private readonly DbmAdvertiserLoader advertiserLoader;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbmCreativeLoader"/> class.
+        /// </summary>
+        /// <param name="advertiserLoader">Loader for advertisers.</param>
         public DbmCreativeLoader(DbmAdvertiserLoader advertiserLoader)
         {
             this.advertiserLoader = advertiserLoader;
@@ -31,16 +39,11 @@ namespace CakeExtracter.Etl.DBM.Loaders.EntitiesLoaders
             AssignAccountIdToItems(items);
             var uniqueItems = items.GroupBy(item => item.ExternalId).Select(gr => gr.First()).ToList();
             EnsureAdvertisersData(uniqueItems);
-            AddUpdateDependentItems(uniqueItems, creativeIdStorage, lockObject);
-            AssignIdToItems(items, creativeIdStorage);
+            AddUpdateDependentItems(uniqueItems, CreativeIdStorage, LockObject);
+            AssignIdToItems(items, CreativeIdStorage);
         }
 
-        /// <summary>
-        /// Updates the existing database item properties if necessary.
-        /// </summary>
-        /// <param name="existingDbItem">The existing database item.</param>
-        /// <param name="latestItemFromApi">The latest item from API.</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         protected override bool UpdateExistingDbItemPropertiesIfNecessary(DbmCreative existingDbItem, DbmCreative latestItemFromApi)
         {
             if (existingDbItem.Name == latestItemFromApi.Name &&

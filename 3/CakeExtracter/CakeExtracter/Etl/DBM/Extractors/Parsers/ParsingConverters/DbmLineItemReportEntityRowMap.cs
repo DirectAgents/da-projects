@@ -22,6 +22,7 @@ namespace CakeExtracter.Etl.DBM.Extractors.Parsers.ParsingConverters
             Map(m => m.LineItemName).Name("Line Item");
             Map(m => m.LineItemType).Name("Line Item Type");
             Map(m => m.LineItemStatus).Name("Line Item Status");
+            Map(m => m.FloodlightActivityName).Name("Floodlight Activity Name");
             Map(m => m.Revenue).Name("Revenue (USD)").TypeConverter<DecimalReportConverter>();
             Map(m => m.Impressions).ConvertUsing(row => (int)row.GetField<decimal>("Impressions"));
             Map(m => m.Clicks).ConvertUsing(row => (int)row.GetField<decimal>("Clicks"));

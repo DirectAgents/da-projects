@@ -5,18 +5,26 @@ using DirectAgents.Domain.Entities.CPProg.DBM.Entities;
 
 namespace CakeExtracter.Etl.DBM.Loaders.EntitiesLoaders
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// Loader for DBM insertion orders.
+    /// </summary>
     public class DbmInsertionOrderLoader : DbmBaseEntityLoader<DbmInsertionOrder>
     {
-        private readonly DbmCampaignLoader campaignLoader;
-
         /// <summary>
         /// Entity id storage of already updated entity.
         /// </summary>
-        private static readonly EntityIdStorage<DbmInsertionOrder> insertionOrderIdStorage =
+        private static readonly EntityIdStorage<DbmInsertionOrder> InsertionOrderIdStorage =
             new EntityIdStorage<DbmInsertionOrder>(x => x.Id, x => $"{x.Name} {x.ExternalId}");
 
-        private static readonly object lockObject = new object();
+        private static readonly object LockObject = new object();
 
+        private readonly DbmCampaignLoader campaignLoader;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbmInsertionOrderLoader"/> class.
+        /// </summary>
+        /// <param name="campaignLoader">Loader for campaigns.</param>
         public DbmInsertionOrderLoader(DbmCampaignLoader campaignLoader)
         {
             this.campaignLoader = campaignLoader;
@@ -31,16 +39,11 @@ namespace CakeExtracter.Etl.DBM.Loaders.EntitiesLoaders
             AssignAccountIdToItems(items);
             var uniqueItems = items.GroupBy(item => item.ExternalId).Select(gr => gr.First()).ToList();
             EnsureCampaignsData(uniqueItems);
-            AddUpdateDependentItems(uniqueItems, insertionOrderIdStorage, lockObject);
-            AssignIdToItems(items, insertionOrderIdStorage);
+            AddUpdateDependentItems(uniqueItems, InsertionOrderIdStorage, LockObject);
+            AssignIdToItems(items, InsertionOrderIdStorage);
         }
 
-        /// <summary>
-        /// Updates the existing database item properties if necessary.
-        /// </summary>
-        /// <param name="existingDbItem">The existing database item.</param>
-        /// <param name="latestItemFromApi">The latest item from API.</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         protected override bool UpdateExistingDbItemPropertiesIfNecessary(DbmInsertionOrder existingDbItem, DbmInsertionOrder latestItemFromApi)
         {
             if (existingDbItem.Name == latestItemFromApi.Name &&

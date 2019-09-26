@@ -12,34 +12,40 @@ using DirectAgents.Domain.Entities.CPProg.DBM.SummaryMetrics;
 
 namespace CakeExtracter.Etl.DBM.Extractors
 {
+    /// <inheritdoc />
     /// <summary>
-    /// Extractor of DBM line item summaries
+    /// Extractor of DBM line item summaries.
     /// </summary>
     internal class DbmLineItemExtractor : DbmExtractor
     {
-        private readonly IEnumerable<ExtAccount> accounts;
         private readonly int reportId;
         private readonly DbmReportDataComposer composer;
         private readonly DbmReportDataConverter converter;
 
-        public DbmLineItemExtractor(DBMUtility dbmUtility, DateRange dateRange, IEnumerable<ExtAccount> accounts,
-            int creativeReportId, bool keepReports) : base(dbmUtility, dateRange, keepReports)
+        /// <inheritdoc cref="DbmExtractor"/>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbmLineItemExtractor" /> class.
+        /// </summary>
+        public DbmLineItemExtractor(
+            DBMUtility dbmUtility, DateRange dateRange, IEnumerable<ExtAccount> accounts, int creativeReportId, bool keepReports)
+            : base(dbmUtility, dateRange, keepReports)
         {
-            this.accounts = accounts;
-            this.reportId = creativeReportId;
-            composer = new DbmReportDataComposer(this.accounts);
+            reportId = creativeReportId;
+            composer = new DbmReportDataComposer(accounts);
             converter = new DbmReportDataConverter();
         }
-        
+
+        /// <summary>
+        /// Extracts DBM line item summaries from report.
+        /// </summary>
+        /// <returns>List of DBM line item summaries.</returns>
         public List<DbmLineItemSummary> Extract()
         {
             try
             {
                 Logger.Info($"Start extracting line item report [report ID: {reportId}]...");
-
                 var summariesGroups = PrepareLineItemReportData();
                 var summaries = GetLineItemSummaries(summariesGroups);
-
                 Logger.Info($"Finished extracting line item report [report ID: {reportId}] (items extracted [{summaries.Count}])");
                 return summaries;
             }

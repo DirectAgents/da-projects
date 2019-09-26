@@ -5,17 +5,17 @@ using DirectAgents.Domain.Entities.CPProg;
 namespace CakeExtracter.Etl.DBM.Models
 {
     /// <summary>
-    /// Model for creative report data grouped by account
+    /// Model for creative report data grouped by account.
     /// </summary>
     public class DbmAccountCreativeReportData
     {
         /// <summary>
-        /// External account
+        /// Gets or sets the external account.
         /// </summary>
         public ExtAccount Account { get; set; }
 
         /// <summary>
-        /// List of creative report rows
+        /// Gets or sets the list of creative report rows.
         /// </summary>
         public IEnumerable<DbmCreativeReportRow> CreativeReportRows { get; set; }
     }

@@ -9,5 +9,7 @@
         public string LineItemType { get; set; }
 
         public string LineItemStatus { get; set; }
+
+        public string FloodlightActivityName { get; set; }
     }
 }

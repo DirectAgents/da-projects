@@ -110,6 +110,10 @@
     <Compile Include="MigrationsTD\201907111300498_Mig_DbmCountry.Designer.cs">
       <DependentUpon>201907111300498_Mig_DbmCountry.cs</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsTD\201909261143087_Mig_DbmFloodlightActivityName.cs" />
+    <Compile Include="MigrationsTD\201909261143087_Mig_DbmFloodlightActivityName.Designer.cs">
+      <DependentUpon>201909261143087_Mig_DbmFloodlightActivityName.cs</DependentUpon>
+    </Compile>
     <Compile Include="SpecialPlatformsDataProviders\Facebook\IFacebookWebPortalDataService.cs" />
     <Compile Include="Abstract\IMainRepository.cs" />
     <Compile Include="Abstract\IPlatformAccountRepository.cs" />
@@ -1129,6 +1133,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201907111300498_Mig_DbmCountry.resx">
       <DependentUpon>201907111300498_Mig_DbmCountry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201909261143087_Mig_DbmFloodlightActivityName.resx">
+      <DependentUpon>201909261143087_Mig_DbmFloodlightActivityName.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

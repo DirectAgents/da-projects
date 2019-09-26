@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Etl.DBM.Extractors.Parsers.Models;
 using CakeExtracter.Etl.DBM.Models;
@@ -12,6 +11,8 @@ namespace CakeExtracter.Etl.DBM.Extractors.Parsers.ParsingConverters
     /// <summary>DBM report data converter.</summary>
     internal class DbmReportDataConverter
     {
+        private const string NullReportValue = "Unknown";
+
         /// <summary>
         /// The method converts report rows of line items to the list of line item summaries
         /// </summary>
@@ -36,29 +37,25 @@ namespace CakeExtracter.Etl.DBM.Extractors.Parsers.ParsingConverters
 
         private static DbmCreativeSummary GetCreativeSummary(ExtAccount account, DbmCreativeReportRow row)
         {
-            var summary = new DbmCreativeSummary
-            {
-                Creative = GetCreative(account, row)
-            };
-            SetMetricsForSummary(summary, row);
+            var summary = new DbmCreativeSummary();
+            SetBasicMetricsForSummary(summary, row);
+            summary.Creative = GetCreative(account, row);
             return summary;
         }
 
         private static DbmLineItemSummary GetLineItemSummary(ExtAccount account, DbmLineItemReportRow row)
         {
-            var summary = new DbmLineItemSummary
-            {
-                LineItem = GetLineItem(account, row)
-            };
-            SetMetricsForSummary(summary, row);
+            var summary = new DbmLineItemSummary();
+            SetBasicMetricsForSummary(summary, row);
+            summary.LineItem = GetLineItem(account, row);
+            summary.FloodlightActivityName = row.FloodlightActivityName ?? NullReportValue;
             return summary;
         }
 
-        private static void SetMetricsForSummary(DbmBaseSummaryEntity summary, DbmBaseReportRow row)
+        private static void SetBasicMetricsForSummary(DbmBaseSummaryEntity summary, DbmBaseReportRow row)
         {
-            const string nullCountryValue = "Unknown";
             summary.Date = row.Date;
-            summary.Country = row.Country ?? nullCountryValue;
+            summary.Country = row.Country ?? NullReportValue;
             summary.Revenue = row.Revenue;
             summary.Impressions = row.Impressions;
             summary.Clicks = row.Clicks;

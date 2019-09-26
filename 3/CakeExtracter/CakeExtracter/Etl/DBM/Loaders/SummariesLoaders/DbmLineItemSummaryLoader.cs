@@ -15,9 +15,8 @@ namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
     /// </summary>
     public class DbmLineItemSummaryLoader
     {
+        private static readonly object LockObject = new object();
         private readonly DbmLineItemLoader lineItemLoader;
-
-        private static readonly object lockObject = new object();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DbmLineItemSummaryLoader"/> class.
@@ -37,7 +36,6 @@ namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
         public void Load(List<DbmLineItemSummary> summaries)
         {
             Logger.Info("Started loading line item summaries...");
-
             EnsureLineItemEntitiesData(summaries);
             var summaryGroups = GetSummariesGroupedByAccount(summaries);
             foreach (var summaryGroup in summaryGroups)
@@ -57,12 +55,9 @@ namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
         {
             var accountId = Convert.ToInt32(summaryForAccount.Key);
             var dateRange = GetDateRangeForLoadingSummaries(summaryForAccount);
-
             Logger.Info(accountId, "DBM ETL Line Item. Account (ID = {0})", accountId);
-
             DeleteOldSummariesFromDb(accountId, dateRange);
             LoadSummariesToDb(accountId, summaryForAccount, dateRange);
-
             Logger.Info(accountId, "Finished DBM ETL Line Item for account (ID = {0})", accountId);
         }
 
@@ -82,7 +77,7 @@ namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
                     db.DbmLineItemSummaries
                         .Where(x => (x.Date >= summaryDateRange.FromDate && x.Date <= summaryDateRange.ToDate) && x.LineItem.AccountId == accountId)
                         .DeleteFromQuery();
-                }, lockObject,
+                }, LockObject,
                 "BulkDeleteByQuery");
             Logger.Info(accountId, $"The cleaning of line item summaries is over - {summaryDateRange.ToString()})");
         }
@@ -92,7 +87,7 @@ namespace CakeExtracter.Etl.DBM.Loaders.SummariesLoaders
             Logger.Info(accountId, $"Started loading of line item summaries has begun - {summaryDateRange.ToString()}");
             SafeContextWrapper.TryMakeTransactionWithLock(
                 (ClientPortalProgContext db) => { db.BulkInsert(summaryForAccount); },
-                lockObject,
+                LockObject,
                 "BulkInsert");
             Logger.Info(accountId, $"The loading of line item summaries is over - {summaryDateRange.ToString()})");
         }
