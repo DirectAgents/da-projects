@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using OpenQA.Selenium;
 using SeleniumDataBrowser.PageActions;
 using SeleniumDataBrowser.Drivers;
@@ -15,8 +16,8 @@ namespace SeleniumDataBrowser.VCD.PageActions
     /// </summary>
     public class AmazonVcdActionsWithPagesManager : AmazonLoginActionsWithPagesManager
     {
-        private const string SalesDiagnosticPageUrl = "https://ara.amazon.com/analytics/dashboard/salesDiagnostic";
-        private const string TypeOfAccounts = "premium";
+        private const string SalesDiagnosticPageUrl = "https://vendorcentral.amazon.com/analytics/dashboard/salesDiagnostic";
+        private const string SwitchAccountPageUrl = "https://vendorcentral.amazon.com/account/choose";
 
         /// <inheritdoc cref="AmazonLoginActionsWithPagesManager"/>
         /// <summary>
@@ -56,9 +57,17 @@ namespace SeleniumDataBrowser.VCD.PageActions
         /// <summary>
         /// Navigates to sales diagnostic page on ara amazon portal.
         /// </summary>
-        public void NavigateToSalesDiagnosticPage()
+        /// <param name="waitingElement">Element for waiting if needed.</param>
+        public void NavigateToSalesDiagnosticPage(By waitingElement = null)
         {
-            NavigateToUrl(SalesDiagnosticPageUrl);
+            if (waitingElement != null)
+            {
+                NavigateToUrl(SalesDiagnosticPageUrl, waitingElement);
+            }
+            else
+            {
+                NavigateToUrl(SalesDiagnosticPageUrl);
+            }
         }
 
         /// <summary>
@@ -74,26 +83,55 @@ namespace SeleniumDataBrowser.VCD.PageActions
                 return;
             }
             VcdLoginManager.RepeatPassword(this, authorizationModel);
-            NavigateToSalesDiagnosticPage();
+            NavigateToSalesDiagnosticPage(AmazonVcdPageObjects.DetailViewDataContainer);
         }
 
         /// <summary>
-        /// Selects the account on page from account dropdown on top right side of page.
+        /// Selects the current account from account list on the separate page for choose current account.
         /// </summary>
-        /// <param name="accountName">Name of the account.</param>
-        public void SelectAccountOnPage(string accountName)
+        /// <param name="accountName">Name of the current account.</param>
+        /// <returns>True if successfully select.</returns>
+        public bool SelectAccountOnPage(string accountName)
         {
             try
             {
-                ClickElement(AmazonVcdPageObjects.AccountsDropdownButton);
-                var accountItems = Driver.FindElements(AmazonVcdPageObjects.AccountsDropdownItem);
-                var accountItem = accountItems.FirstOrDefault(x => x.Text == TypeOfAccounts + accountName);
+                NavigateToUrl(SwitchAccountPageUrl, AmazonVcdPageObjects.SwitchAccountForm);
+                var accountItem = GetAccountElementForClicking(accountName);
                 accountItem?.Click();
+                ClickElement(AmazonVcdPageObjects.SwitchCurrentAccountButton);
+                NavigateToSalesDiagnosticPage(AmazonVcdPageObjects.DetailViewDataContainer);
+                return true;
             }
             catch (Exception e)
             {
                 Logger.LogWarning($"Could not open a page for {accountName} account: {e.Message}");
+                return false;
             }
+        }
+
+        /// <summary>
+        /// Navigates to sign in to Vendor Central page and clicks on the Sign In button.
+        /// </summary>
+        /// <param name="signInPageUrl">URL to the Sign In page.</param>
+        public void NavigateToSignInPage(string signInPageUrl)
+        {
+            NavigateToUrl(signInPageUrl, AmazonVcdPageObjects.SignInToVendorCentralButton);
+            WaitElementClickable(AmazonVcdPageObjects.SignInToVendorCentralButton);
+            ClickElement(AmazonVcdPageObjects.SignInToVendorCentralButton);
+        }
+
+        private IWebElement GetAccountElementForClicking(string accountName)
+        {
+            var accountItems = GetChildrenElements(AmazonVcdPageObjects.AccountList, AmazonVcdPageObjects.AccountItem);
+            var accountItem = accountItems.FirstOrDefault(x => IsMatchAccountItemToName(x.Text, accountName));
+            return accountItem;
+        }
+
+        private bool IsMatchAccountItemToName(string accountElementText, string accountName)
+        {
+            var pattern = $@"\s{accountName}";
+            var regex = new Regex(pattern);
+            return regex.IsMatch(accountElementText);
         }
     }
 }

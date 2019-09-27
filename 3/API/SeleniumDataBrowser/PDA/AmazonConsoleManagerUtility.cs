@@ -29,7 +29,7 @@ namespace SeleniumDataBrowser.PDA
         private readonly int maxRetryAttempts;
         private readonly TimeSpan pauseBetweenAttempts;
 
-        private Dictionary<string, string> cookies;
+        private IEnumerable<Cookie> cookies;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AmazonConsoleManagerUtility"/> class.
@@ -76,7 +76,7 @@ namespace SeleniumDataBrowser.PDA
         /// <param name="collectionOfCookies">Collection of cookies.</param>
         public void SetCookiesForUtility(IEnumerable<Cookie> collectionOfCookies)
         {
-            cookies = collectionOfCookies.ToDictionary(x => x.Name, x => x.Value);
+            cookies = collectionOfCookies;
         }
 
         private static void AddDynamicCampaignDataToResultData(List<AmazonCmApiCampaignSummary> resultData, dynamic data)

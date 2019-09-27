@@ -30,7 +30,7 @@ namespace SeleniumDataBrowser.PageActions
         /// <summary>
         /// Link "Forgot your password?".
         /// </summary>
-        public static By ForgotPassLink = By.LinkText("Forgot your password?");
+        public static By ForgotPassLink = By.Id("auth-fpp-link-bottom");
 
         /// <summary>
         /// Button for submit login.

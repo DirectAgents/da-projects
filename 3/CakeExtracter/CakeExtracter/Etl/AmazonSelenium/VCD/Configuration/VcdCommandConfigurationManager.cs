@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using CakeExtracter.Common;
+﻿using System.Configuration;
 using CakeExtracter.Etl.AmazonSelenium.Configuration;
 using CakeExtracter.Helpers;
 using SeleniumDataBrowser.Helpers;
@@ -16,12 +12,14 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Configuration
     internal class VcdCommandConfigurationManager : SeleniumCommandConfigurationManager
     {
         private const int DefaultIntervalBetweenUnsuccessfulAndNewRequestsInMinutes = 30;
+        private const int DefaultPageSizeValue = 100;
         private const string ReportDownloadingStartedDelayConfigurationKey = "VCD_ReportDownloadingStartedDelayInSeconds";
         private const string MinDelayBetweenReportDownloadingConfigurationKey = "VCD_MinDelayBetweenReportDownloadingInSeconds";
         private const string MaxDelayBetweenReportDownloadingConfigurationKey = "VCD_MaxDelayBetweenReportDownloadingInSeconds";
         private const string ReportDownloadingAttemptCountConfigurationKey = "VCD_ReportDownloadingAttemptCount";
         private const string ExtractDailyDataAttemptCountConfigurationKey = "VCD_ExtractDailyDataAttemptCount";
         private const string IntervalBetweenUnsuccessfulAndNewRequestsConfigurationKey = "VCD_IntervalBetweenUnsuccessfulAndNewRequestsInMinutes";
+        private const string MaxPageSizeForReportConfigurationKey = "VCD_MaxPageSizeForReport";
         private const string SyncScriptPathConfigurationKey = "VCD_SyncScriptPath";
         private const string SyncScriptNameConfigurationKey = "VCD_SyncScriptName";
 
@@ -91,6 +89,15 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Configuration
         public static int GetExtractDailyDataAttemptCount()
         {
             return ConfigurationHelper.GetIntConfigurationValue(ExtractDailyDataAttemptCountConfigurationKey);
+        }
+
+        /// <summary>
+        /// Gets the number of report rows that will be return in one response.
+        /// </summary>
+        /// <returns>Number of report rows that will be return in one response.</returns>
+        public static int GetMaxPageSizeForReport()
+        {
+            return ConfigurationHelper.GetIntConfigurationValue(MaxPageSizeForReportConfigurationKey, DefaultPageSizeValue);
         }
     }
 }

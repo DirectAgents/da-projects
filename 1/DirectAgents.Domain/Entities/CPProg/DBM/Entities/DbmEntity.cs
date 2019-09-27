@@ -3,7 +3,7 @@
 namespace DirectAgents.Domain.Entities.CPProg.DBM.Entities
 {
     /// <summary>
-    /// Db related entity
+    /// DBM DB related entity.
     /// </summary>
     public class DbmEntity
     {
@@ -13,12 +13,12 @@ namespace DirectAgents.Domain.Entities.CPProg.DBM.Entities
         public int Id { get; set; }
 
         /// <summary>
-        /// The item unique identifier from API
+        /// Gets or sets the item unique identifier from API.
         /// </summary>
         public string ExternalId { get; set; }
 
         /// <summary>
-        /// The item name
+        /// Gets or sets the item name.
         /// </summary>
         public string Name { get; set; }
 
@@ -28,7 +28,7 @@ namespace DirectAgents.Domain.Entities.CPProg.DBM.Entities
         public int? AccountId { get; set; }
 
         /// <summary>
-        /// Account entity from Accounts table. Mapped by AccountId property.
+        /// Gets or sets the account entity from Accounts table. Mapped by AccountId property.
         /// </summary>
         [ForeignKey("AccountId")]
         public virtual ExtAccount Account { get; set; }
