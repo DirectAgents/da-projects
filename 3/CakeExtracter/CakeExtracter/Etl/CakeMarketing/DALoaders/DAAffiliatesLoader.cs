@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
+using System.Linq;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.Cake;
 
@@ -35,6 +36,17 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                         }
                     }
                     affiliate.AffiliateName = item.AffiliateName;
+
+                    // Set AccountManager
+                    if (item.AccountManagers != null && item.AccountManagers.Count > 0)
+                    {
+                        int accountManagerId = item.AccountManagers[0].ContactId;
+                        var contact = db.Set<Contact>().Find(accountManagerId);
+                        if (contact != null)
+                            affiliate.AccountManagerId = contact.ContactId;
+                        else
+                            Logger.Info("Affiliate {0}'s AccountManager (ContactId {1}) doesn't exist. Leaving AccountManagerId unchanged.", affiliate.AffiliateId, accountManagerId);
+                    }
                 }
                 db.SaveChanges();
             }

@@ -6,7 +6,7 @@ namespace CakeExtracter.CakeMarketingApi.Entities
     {
         public int AffiliateId { get; set; }
         public string AffiliateName { get; set; }
-        //AccountManagers
+        public List<Contact> AccountManagers { get; set; }
         //AccountStatus
         //Address
         //PaymentType

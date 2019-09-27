@@ -34,7 +34,7 @@ namespace CakeExtracter.Commands
 
         public DASynchAdvertisers()
         {
-            IsCommand("daSynchAdvertisers", "synch Advertisers");
+            IsCommand("daSynchAdvertisers", "synch Cake Advertisers");
             HasOption<int>("a|advertiserId=", "Advertiser Id (0 = all (default))", c => AdvertiserId = c);
             HasOption("c|contacts=", "synch Contacts also (default is false)", c => IncludeContacts = bool.Parse(c));
             HasOption("o|offers=", "synch Offers also (default is false)", c => SynchOffersAlso = bool.Parse(c));
