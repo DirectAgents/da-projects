@@ -423,6 +423,7 @@
     <Compile Include="Commands\DA\DAMonthlyMaintenance.cs" />
     <Compile Include="Commands\DA\DASyncAmazonDspStats.cs" />
     <Compile Include="Commands\DA\DASynchAdformStats.cs" />
+    <Compile Include="Commands\DA\DASynchAffiliates.cs" />
     <Compile Include="Commands\DA\DASynchAffSubSums.cs" />
     <Compile Include="Commands\DA\DASynchAmazonStats.cs" />
     <Compile Include="Commands\DA\DASynchCakeEventConversions.cs">
