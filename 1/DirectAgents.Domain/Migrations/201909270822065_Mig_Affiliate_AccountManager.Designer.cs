@@ -13,7 +13,7 @@ namespace DirectAgents.Domain.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201909260109417_Mig_Affiliate_AccountManager"; }
+            get { return "201909270822065_Mig_Affiliate_AccountManager"; }
         }
         
         string IMigrationMetadata.Source
