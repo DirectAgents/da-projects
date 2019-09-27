@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DirectAgents.Domain.Entities.Cake
 {
@@ -7,6 +8,10 @@ namespace DirectAgents.Domain.Entities.Cake
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int AffiliateId { get; set; }
         public string AffiliateName { get; set; }
+
+        public Nullable<int> AccountManagerId { get; set; }
+        [ForeignKey("AccountManagerId")]
+        public virtual Contact AccountManager { get; set; }
     }
 
     public class AffSub
