@@ -12,7 +12,7 @@ namespace SeleniumDataBrowser.VCD.Helpers
     /// </summary>
     public class VcdLoginManager
     {
-        private const string SignInPageUrl = "https://vendorcentral.amazon.com/gp/vendor/sign-in";
+        private const string SignInPageUrl = "https://vendorcentral.amazon.com/ap/signin";
 
         private readonly AuthorizationModel authorizationModel;
         private readonly AmazonVcdActionsWithPagesManager pageActionManager;
