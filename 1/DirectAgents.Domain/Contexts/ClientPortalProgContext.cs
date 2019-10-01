@@ -299,8 +299,8 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<DbmLineItemSummary>().ToTable("DbmLineItemSummary", tdSchema);
             modelBuilder.Entity<DbmCreativeSummary>().ToTable("DbmCreativeSummary", tdSchema);
 
-            SetupDbmLineItemSummaryMetricModelValues(modelBuilder);
-            SetupDbmCreativeSummaryMetricModelValues(modelBuilder);
+            SetupDbmBasicSummaryMetricModelValues<DbmLineItemSummary>(modelBuilder, "LineItemId");
+            SetupDbmBasicSummaryMetricModelValues<DbmCreativeSummary>(modelBuilder, "CreativeId");
         }
 
         public DbSet<Employee> Employees { get; set; }
@@ -440,23 +440,11 @@ namespace DirectAgents.Domain.Contexts
                 .WillCascadeOnDelete();
         }
 
-        private static void SetupDbmLineItemSummaryMetricModelValues(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<DbmLineItemSummary>().HasKey(summary => new { summary.EntityId, summary.Date, summary.Country, summary.FloodlightActivityName });
-            modelBuilder.Entity<DbmLineItemSummary>().Property(x => x.EntityId).HasColumnName("LineItemId");
-            SetupDbmBasicSummaryMetricModelValues<DbmLineItemSummary>(modelBuilder);
-        }
-
-        private static void SetupDbmCreativeSummaryMetricModelValues(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<DbmCreativeSummary>().HasKey(summary => new { summary.EntityId, summary.Date, summary.Country });
-            modelBuilder.Entity<DbmCreativeSummary>().Property(x => x.EntityId).HasColumnName("CreativeId");
-            SetupDbmBasicSummaryMetricModelValues<DbmCreativeSummary>(modelBuilder);
-        }
-
-        private static void SetupDbmBasicSummaryMetricModelValues<TSummaryMetrics>(DbModelBuilder modelBuilder)
+        private static void SetupDbmBasicSummaryMetricModelValues<TSummaryMetrics>(DbModelBuilder modelBuilder, string entityColumnName)
             where TSummaryMetrics : DbmBaseSummaryEntity
         {
+            modelBuilder.Entity<TSummaryMetrics>().HasKey(m => m.Id);
+            modelBuilder.Entity<TSummaryMetrics>().Property(m => m.EntityId).HasColumnName(entityColumnName);
             modelBuilder.Entity<TSummaryMetrics>().Property(m => m.Revenue).HasPrecision(18, 6);
             modelBuilder.Entity<TSummaryMetrics>().Property(m => m.Impressions);
             modelBuilder.Entity<TSummaryMetrics>().Property(m => m.Clicks);
