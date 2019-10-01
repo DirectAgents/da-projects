@@ -8,6 +8,11 @@ namespace DirectAgents.Domain.Entities.CPProg.DBM.SummaryMetrics
     public class DbmBaseSummaryEntity
     {
         /// <summary>
+        /// Gets or sets the identifier.
+        /// </summary>
+        public long Id { get; set; }
+
+        /// <summary>
         /// Gets or sets the date.
         /// </summary>
         public DateTime Date { get; set; }
