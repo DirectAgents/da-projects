@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using BingAds.Helpers;
 using BingAds.Models;
 using Microsoft.BingAds;
-using Microsoft.BingAds.V12.Reporting;
+using Microsoft.BingAds.V13.Reporting;
 
 namespace BingAds.Utilities
 {
