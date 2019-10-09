@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using CakeExtracter.Helpers;
 using ClientPortal.Data.Contexts;
 
 namespace CakeExtracter.Etl.SearchMarketing.Loaders
@@ -19,12 +20,17 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
         protected override int Load(List<Dictionary<string, string>> items)
         {
             Logger.Info("Loading {0} SearchConvSummaries..", items.Count);
-            if (items.Count == 0) return 0;
+            if (items.Count == 0)
+            {
+                return 0;
+            }
 
             AddUpdateDependentConvTypes(items, "Goal");
             hasAccountId = items[0].ContainsKey("AccountId");
             if (hasAccountId)
+            {
                 BingLoader.AddUpdateDependentSearchAccounts(items, this.searchAccountId);
+            }
             BingLoader.AddUpdateDependentSearchCampaigns(items, this.searchAccountId);
             var count = UpsertConvSummaries(items);
             return count;
@@ -32,10 +38,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
         private int UpsertConvSummaries(List<Dictionary<string, string>> items)
         {
-            var addedCount = 0;
-            var updatedCount = 0;
-            var duplicateCount = 0;
-            var itemCount = 0;
+            var progress = new LoadingProgress();
             using (var db = new ClientPortalContext())
             {
                 var passedInAccount = db.SearchAccounts.Find(this.searchAccountId);
@@ -49,7 +52,9 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     {
                         var accountCode = item["AccountId"];
                         if (searchAccount.AccountCode != accountCode)
+                        {
                             searchAccount = searchAccount.SearchProfile.SearchAccounts.Single(sa => sa.AccountCode == accountCode && sa.Channel == BingLoader.BingChannel);
+                        }
                     }
 
                     var scs = new SearchConvSummary
@@ -59,8 +64,8 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         SearchConvTypeId = convTypeIdLookupByName[item["Goal"]],
                         Network = ".",
                         Device = ".",
-                        Conversions = double.Parse(item["Conversions"]),
-                        ConVal = decimal.Parse(item["Revenue"])
+                        Conversions = double.Parse(item["AllConversions"]),
+                        ConVal = decimal.Parse(item["AllRevenue"]),
                         //CurrencyId
                     };
 
@@ -70,7 +75,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     if (target == null)
                     {
                         db.SearchConvSummaries.Add(scs);
-                        addedCount++;
+                        progress.AddedCount++;
                     }
                     else // Summary already exists; update it
                     {
@@ -80,21 +85,21 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                             entry.State = EntityState.Detached;
                             AutoMapper.Mapper.Map(scs, target);
                             entry.State = EntityState.Modified;
-                            updatedCount++;
+                            progress.UpdatedCount++;
                         }
                         else
                         {
                             Logger.Warn("Encountered duplicate for {0:d} - SearchCampaignId {1}, SearchConvTypeId {2}, Network {3}, Device {4}",
                                 scs.Date, scs.SearchCampaignId, scs.SearchConvTypeId, scs.Network, scs.Device);
-                            duplicateCount++;
+                            progress.DuplicateCount++;
                         }
                     }
-                    itemCount++;
+                    progress.ItemCount++;
                 }
-                Logger.Info("Saving {0} SearchConvSummaries ({1} updates, {2} additions, {3} duplicates)", itemCount, updatedCount, addedCount, duplicateCount);
-                int numChanges = db.SaveChanges();
+                Logger.Info($"Saving {progress.ItemCount} SearchConvSummaries ({progress.UpdatedCount} updates, {progress.AddedCount} additions, {progress.DuplicateCount} duplicates)");
+                db.SaveChanges();
             }
-            return itemCount;
+            return progress.ItemCount;
         }
     }
 }

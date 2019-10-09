@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BingAds.Utilities;
+using CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors.Models;
 
 namespace CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors
 {
@@ -26,7 +27,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors
                 return new List<Dictionary<string, string>>();
             }
 
-            var bingRows = EnumerateRowsGeneric<BingRow>(filepath, true);
+            var bingRows = EnumerateRowsGeneric<BingDailyRow>(filepath, true);
             var rows = EnumerateRowsAsDictionaries(bingRows);
             return rows.ToList();
         }

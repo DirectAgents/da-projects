@@ -608,6 +608,9 @@
     <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingConvSummaryExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingDailyNonShoppingSummaryExtractor.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingDailyShoppingSummaryExtractor.cs" />
+    <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\Models\BaseBingRow.cs" />
+    <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\Models\BingDailyRow.cs" />
+    <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\Models\BingGoalRow.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\DbExtracters.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\AdWordsConvSummaryLoader.cs" />
     <Compile Include="Etl\Apple\Loaders\AppleApiLoader.cs" />

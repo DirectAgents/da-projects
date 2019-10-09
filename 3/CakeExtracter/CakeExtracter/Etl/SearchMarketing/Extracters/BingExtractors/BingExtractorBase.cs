@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using BingAds.Utilities;
+using CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors.Models;
 using CsvHelper;
 using CsvHelper.TypeConversion;
 
@@ -68,13 +69,13 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors
             }
         }
         
-        protected IEnumerable<BingRow> GroupAndEnumerateBingRows(string filepath, bool throwOnMissingField)
+        protected IEnumerable<BingDailyRow> GroupAndEnumerateBingRows(string filepath, bool throwOnMissingField)
         {
-            var groups = EnumerateRowsGeneric<BingRow>(filepath, throwOnMissingField)
+            var groups = EnumerateRowsGeneric<BingDailyRow>(filepath, throwOnMissingField)
                 .GroupBy(b => new { b.TimePeriod, b.AccountId, b.AccountName, b.AccountNumber, b.CampaignId, b.CampaignName });
             foreach (var g in groups)
             {
-                var bingRow = new BingRow
+                var bingRow = new BingDailyRow
                 {
                     TimePeriod = g.Key.TimePeriod,
                     AccountId = g.Key.AccountId,
@@ -131,30 +132,5 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors
         //      Map(m => m.Spend).TypeConverterOption(NumberStyles.Currency);
         //}
         //NOTE: setting globally (TypeConverterOptionsFactory options - above) instead
-
-        protected class BingRow
-        {
-            public string TimePeriod { get; set; } // date
-            public int Impressions { get; set; } // int
-            public int Clicks { get; set; } // int
-            public int Conversions { get; set; } // int
-            public decimal Spend { get; set; } // decimal
-            public decimal Revenue { get; set; } // decimal
-            public string AccountId { get; set; } // int
-            public string AccountName { get; set; } // string
-            public string AccountNumber { get; set; } // string
-            public string CampaignId { get; set; } // int
-            public string CampaignName { get; set; } // string
-
-            //public string MerchantProductId { get; set; }
-            //public string CurrencyCode { get; set; }
-        }
-
-        protected class BingRowWithGoal : BingRow
-        {
-            public string GoalId { get; set; } // int?
-            public string Goal { get; set; } // string
-        }
     }
-
 }
