@@ -4,7 +4,7 @@
     /// <summary>
     /// Model for Bing daily row that extracted from CSV report.
     /// </summary>
-    public class BingDailyRow : BaseBingRow
+    public class BingDailyRow : BingBaseRow
     {
         /// <summary>
         /// Gets or sets the Conversions column.

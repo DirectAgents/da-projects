@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 using BingAds.Utilities;
 using CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors.Models;
-using CsvHelper;
-using CsvHelper.TypeConversion;
+using CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors.Parsers;
+using CsvHelper.Configuration;
 
 namespace CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors
 {
@@ -68,69 +66,22 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors
                 yield return dict;
             }
         }
-        
-        protected IEnumerable<BingDailyRow> GroupAndEnumerateBingRows(string filepath, bool throwOnMissingField)
+
+        /// <summary>
+        /// Parses the report content.
+        /// </summary>
+        /// <typeparam name="TBingReportRow">Base Bing report row type.</typeparam>
+        /// <param name="reportFilePath">Path to report file.</param>
+        /// <param name="rowMap">Row map for parsing.</param>
+        /// <returns>List of report rows.</returns>
+        protected List<TBingReportRow> GetReportRows<TBingReportRow>(string reportFilePath, CsvClassMap rowMap)
+            where TBingReportRow : BingBaseRow
         {
-            var groups = EnumerateRowsGeneric<BingDailyRow>(filepath, throwOnMissingField)
-                .GroupBy(b => new { b.TimePeriod, b.AccountId, b.AccountName, b.AccountNumber, b.CampaignId, b.CampaignName });
-            foreach (var g in groups)
-            {
-                var bingRow = new BingDailyRow
-                {
-                    TimePeriod = g.Key.TimePeriod,
-                    AccountId = g.Key.AccountId,
-                    AccountName = g.Key.AccountName,
-                    AccountNumber = g.Key.AccountNumber,
-                    CampaignId = g.Key.CampaignId,
-                    CampaignName = g.Key.CampaignName,
-                    Impressions = g.Sum(r => r.Impressions),
-                    Clicks = g.Sum(r => r.Clicks),
-                    Conversions = g.Sum(r => r.Conversions),
-                    Spend = g.Sum(r => r.Spend),
-                    Revenue = g.Sum(r => r.Revenue)
-                };
-                yield return bingRow;
-            }
+            Logger.Info("Parsing a report...");
+            var parser = new BingReportCsvParser<TBingReportRow>(rowMap, reportFilePath);
+            var reportRows = parser.EnumerateRows().ToList();
+            Logger.Info($"The report parsed successfully (row count: {reportRows.Count})");
+            return reportRows;
         }
-
-        protected static IEnumerable<T> EnumerateRowsGeneric<T>(string filepath, bool throwOnMissingField)
-        {
-            TypeConverterOptionsFactory.GetOptions(typeof(decimal)).NumberStyle = NumberStyles.AllowThousands | NumberStyles.AllowDecimalPoint;
-
-            using (var reader = File.OpenText(filepath))
-            {
-                for (var i = 0; i < 9; i++)
-                {
-                    reader.ReadLine();
-                }
-
-                using (var csv = new CsvReader(reader))
-                {
-                    csv.Configuration.SkipEmptyRecords = true;
-                    csv.Configuration.WillThrowOnMissingField = throwOnMissingField;
-
-                    while (csv.Read())
-                    {
-                        T csvRow;
-                        try
-                        {
-                            csvRow = csv.GetRecord<T>();
-                        }
-                        catch (CsvHelperException ex)
-                        {
-                            continue; // if error converting the row
-                        }
-                        yield return csvRow;
-                    }
-                }
-            }
-        }
-
-        //public sealed class BingRowMap : CsvClassMap<BingRow>
-        //{
-        //    public BingRowMap() ...
-        //      Map(m => m.Spend).TypeConverterOption(NumberStyles.Currency);
-        //}
-        //NOTE: setting globally (TypeConverterOptionsFactory options - above) instead
     }
 }

@@ -4,7 +4,7 @@
     /// <summary>
     /// Model for Bing row with goal that extracted from CSV report.
     /// </summary>
-    public class BingGoalRow : BaseBingRow
+    public class BingGoalRow : BingBaseRow
     {
         /// <summary>
         /// Gets or sets the GoalId column.

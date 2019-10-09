@@ -3,7 +3,7 @@
     /// <summary>
     /// Base model for Bing row that extracted from CSV report.
     /// </summary>
-    public class BaseBingRow
+    public class BingBaseRow
     {
         /// <summary>
         /// Gets or sets the TimePeriod column.
