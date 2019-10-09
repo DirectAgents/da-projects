@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors.Models;
@@ -15,8 +14,6 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors.Parsers
     public class BingReportCsvParser<T>
         where T : BingBaseRow
     {
-        private const string FirstColumnHeaderName = "TimePeriod";
-
         private readonly string csvFilePath;
         private readonly CsvClassMap csvClassMap;
 
@@ -58,12 +55,8 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors.Parsers
         /// <inheritdoc cref="CsvConfiguration"/>
         protected virtual bool ShouldReaderSkipRecord(string[] row)
         {
-            // assume column 0 is a required field (e.g. the date field)
-            var firstColumn = row[0];
-            var isSkipRecord = string.IsNullOrWhiteSpace(firstColumn) || firstColumn.LastOrDefault() == ':';
-            var isFirstColumnIsNotDateTime = ShouldReaderSkipRecordNotDateTime(firstColumn);
-
-            return isSkipRecord || isFirstColumnIsNotDateTime;
+            var isSkipRecord = row.Length <= 1;
+            return isSkipRecord;
         }
 
         private void SetupCsvReaderConfig(CsvReader csvReader)
@@ -77,20 +70,6 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors.Parsers
                 Logger.Error(ex);
             };
             csvReader.Configuration.IsHeaderCaseSensitive = false;
-        }
-
-        /// <summary>
-        /// Method skips those records for which the value of the first column isn't Date Time (except for the title).
-        /// </summary>
-        /// <param name="firstColumn">The first column of a row from a CSV report, the value of the first column must be of a type DateTime.</param>
-        /// <returns>True - skip the record; False - not skip the record.</returns>
-        private bool ShouldReaderSkipRecordNotDateTime(string firstColumn)
-        {
-            if (string.Equals(firstColumn, FirstColumnHeaderName, StringComparison.CurrentCulture))
-            {
-                return false;
-            }
-            return !DateTime.TryParse(firstColumn, out _);
         }
 
         private IEnumerable<T> EnumerateRowsInner(TextReader reader)
