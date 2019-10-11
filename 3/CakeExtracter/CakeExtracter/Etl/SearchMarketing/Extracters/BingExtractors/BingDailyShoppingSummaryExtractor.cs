@@ -28,15 +28,15 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors
                 return new List<Dictionary<string, string>>();
             }
 
-            var bingRows = GroupAndEnumerateBingRows(reportFilePath);
+            var rowMap = new BingDailyReportEntityRowMap();
+            var allBingRows = GetReportRows<BingDailyRow>(reportFilePath, rowMap);
+            var bingRows = GroupAndEnumerateBingRows(allBingRows);
             var rows = EnumerateRowsAsDictionaries(bingRows);
             return rows.ToList();
         }
 
-        private IEnumerable<BingDailyRow> GroupAndEnumerateBingRows(string reportFilePath)
+        private IEnumerable<BingDailyRow> GroupAndEnumerateBingRows(IEnumerable<BingDailyRow> allRows)
         {
-            var rowMap = new BingDailyReportEntityRowMap();
-            var allRows = GetReportRows<BingDailyRow>(reportFilePath, rowMap);
             var uniqueRows = GetUniqueBingRow(allRows);
             return uniqueRows;
         }
