@@ -3,7 +3,7 @@
 namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook.Models
 {
     /// <summary>
-    /// Facebook Level Totals Info
+    /// Facebook Level Totals Info.
     /// </summary>
     public class FacebookTotalsInfo
     {
@@ -78,5 +78,13 @@ namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook.Models
         /// The cost total.
         /// </value>
         public decimal CostTotal { get; set; }
+
+        /// <summary>
+        /// Gets or sets the reach total.
+        /// </summary>
+        /// <value>
+        /// The reach total.
+        /// </value>
+        public int ReachTotal { get; set; }
     }
 }

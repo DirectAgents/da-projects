@@ -195,6 +195,7 @@ namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook
             totalsInfo.PostViewConvTotal = gr.Sum(z => z.PostViewConv);
             totalsInfo.PostClickRevTotal = gr.Sum(z => z.PostClickRev);
             totalsInfo.PostViewRevTotal = gr.Sum(z => z.PostViewRev);
+            totalsInfo.ReachTotal = gr.Sum(z => z.Reach);
         }
 
         private List<ExtAccount> GetAccountsForStatsDisplaying()
