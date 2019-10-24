@@ -62,7 +62,7 @@ namespace CakeExtracter.Etl.Facebook.Extractors
                     {
                         AccountId = accountId,
                         Name = item.CampaignName,
-                        ExternalId = item.CampaignId
+                        ExternalId = item.CampaignId,
                     },
                 },
                 Impressions = item.Impressions,
@@ -73,7 +73,8 @@ namespace CakeExtracter.Etl.Facebook.Extractors
                 PostClickRev = item.ConVal_click,
                 PostViewRev = item.ConVal_view,
                 Cost = item.Spend,
-                Actions = GetActions(item)
+                Reach = item.Reach,
+                Actions = GetActions(item),
             };
             return sum;
         }

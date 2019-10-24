@@ -57,6 +57,10 @@ namespace FacebookAPI.Converters
                 fbSum.Spend = decParseVal;
             if (int.TryParse(row.impressions, out intParseVal))
                 fbSum.Impressions = intParseVal;
+            if (int.TryParse(row.reach, out intParseVal))
+            {
+                fbSum.Reach = intParseVal;
+            }
             if (int.TryParse(row.inline_link_clicks, out intParseVal))
                 fbSum.LinkClicks = intParseVal;
             if (int.TryParse(row.clicks, out intParseVal))

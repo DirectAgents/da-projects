@@ -58,7 +58,8 @@ namespace CakeExtracter.Etl.Facebook.Extractors
                 PostViewConv = item.Conversions_view,
                 PostClickRev = item.ConVal_click,
                 PostViewRev = item.ConVal_view,
-                Cost = item.Spend
+                Cost = item.Spend,
+                Reach = item.Reach,
             };
             return sum;
         }

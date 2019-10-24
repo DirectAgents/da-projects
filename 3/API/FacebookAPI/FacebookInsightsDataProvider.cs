@@ -189,7 +189,7 @@ namespace FacebookAPI
         private FacebookJobRequest PrepareSummaryExtractingRequest(string accountId, DateTime start, DateTime end, bool byCampaign = false, bool byAdSet = false, bool byAd = false, bool getArchived = false)
         {
             var levelVal = "";
-            var fieldsVal = "spend,impressions,inline_link_clicks,clicks,actions,action_values";
+            var fieldsVal = "spend,impressions,reach,inline_link_clicks,clicks,actions,action_values";
             if (byCampaign)
             {
                 levelVal = "campaign";

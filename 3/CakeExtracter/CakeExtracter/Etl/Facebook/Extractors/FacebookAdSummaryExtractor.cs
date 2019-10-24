@@ -68,7 +68,6 @@ namespace CakeExtracter.Etl.Facebook.Extractors
                     Status = relatedAdMetadata?.Status,
                     ExternalId = item.AdId,
                     AccountId = accountId,
-                    
                     AdSet = new FbAdSet
                     {
                         AccountId = accountId,
@@ -91,7 +90,8 @@ namespace CakeExtracter.Etl.Facebook.Extractors
                 PostClickRev = item.ConVal_click,
                 PostViewRev = item.ConVal_view,
                 Cost = item.Spend,
-                Actions = GetActions(item)
+                Reach = item.Reach,
+                Actions = GetActions(item),
             };
             return sum;
         }
