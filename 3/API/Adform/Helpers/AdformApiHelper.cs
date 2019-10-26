@@ -16,30 +16,36 @@ namespace Adform.Helpers
         public const string SalesMetric = "sales";
 
         public const string SpecsConversionType = "conversionType";
+        public const string SpecsAdUniqueness = "adUniqueness";
 
-        public const string ConversionTypeAll = "allConversionTypes";
-        public const string ConversionType1 = "conversionType1";
-        public const string ConversionType2 = "conversionType2";
-        public const string ConversionType3 = "conversionType3";
+        public const string SpecsValueConversionTypeAll = "allConversionTypes";
+        public const string SpecsValueConversionType1 = "conversionType1";
+        public const string SpecsValueConversionType2 = "conversionType2";
+        public const string SpecsValueConversionType3 = "conversionType3";
+        public const string SpecsValueCampaignUnique = "campaignUnique";
+        public const string SpecsValueAll = "all";
 
         private const string DateFormat = "yyyy'-'M'-'d";
 
         public static readonly Dictionary<Dimension, string> Dimensions = new Dictionary<Dimension, string>
         {
-            {Dimension.Date, "date"},
-            {Dimension.Campaign, "campaign"},
-            {Dimension.Order, "order"},
-            {Dimension.LineItem, "lineItem"},
-            {Dimension.Banner, "banner"},
-            {Dimension.Media, "media"},
-            {Dimension.AdInteractionType, "adInteractionType"}, // Click, Impression, etc.
+            { Dimension.Date, "date" },
+            { Dimension.Campaign, "campaign" },
+            { Dimension.Order, "order" },
+            { Dimension.LineItem, "lineItem" },
+            { Dimension.Banner, "banner" },
+            { Dimension.Media, "media" },
+            { Dimension.AdInteractionType, "adInteractionType" }, // Click, Impression, etc.
         };
 
         private static readonly string[] BasicMetrics = { CostMetric, ImpressionsMetric, ClicksMetric };
 
         private static readonly string[] ConversionMetrics = { ConversionsMetric, SalesMetric };
 
-        private static readonly string[] ConversionTypes = { ConversionTypeAll, ConversionType1, ConversionType2, ConversionType3 };
+        private static readonly string[] ConversionTypes =
+        {
+            SpecsValueConversionTypeAll, SpecsValueConversionType1, SpecsValueConversionType2, SpecsValueConversionType3,
+        };
 
         public static ReportFilter GetFilters(ReportSettings settings)
         {
@@ -61,13 +67,13 @@ namespace Adform.Helpers
                 var basicMetrics = BasicMetrics.Select(GetBasicMetric);
                 metrics.AddRange(basicMetrics);
             }
-
             if (settings.ConvMetrics)
             {
                 var convMetrics = ConversionMetrics.SelectMany(GetConversionMetrics);
                 metrics.AddRange(convMetrics);
+                var uniqueImpressionsMetric = GetUniqueImpressionsMetric();
+                metrics.Add(uniqueImpressionsMetric);
             }
-
             return metrics.ToArray();
         }
 
@@ -112,6 +118,18 @@ namespace Adform.Helpers
                     conversionType = convType,
                 },
             });
+        }
+
+        private static MetricMetadata GetUniqueImpressionsMetric()
+        {
+            return new MetricMetadata
+            {
+                Metric = ImpressionsMetric,
+                Specs = new
+                {
+                    adUniqueness = SpecsValueCampaignUnique,
+                },
+            };
         }
 
         private static Media GetRtbMedia()

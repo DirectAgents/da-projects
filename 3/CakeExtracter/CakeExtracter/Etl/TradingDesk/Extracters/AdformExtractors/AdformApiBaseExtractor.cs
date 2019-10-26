@@ -26,8 +26,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 
         private static readonly Dictionary<AdInteractionType, string> AdInteractions = new Dictionary<AdInteractionType, string>
         {
-            {AdInteractionType.Clicks, "Click"},
-            {AdInteractionType.Impressions, "Impression"},
+            { AdInteractionType.Clicks, "Click" },
+            { AdInteractionType.Impressions, "Impression" },
+            { AdInteractionType.UniqueImpressions, "None" },
         };
 
         private static readonly Dictionary<AdInteractionType, Dictionary<ConversionMetric, string>> MetricNames =
@@ -53,6 +54,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                         {ConversionMetric.SalesConversionType1, "Adform-Sales-ConvType1-Impressions"},
                         {ConversionMetric.SalesConversionType2, "Adform-Sales-ConvType2-Impressions"},
                         {ConversionMetric.SalesConversionType3, "Adform-Sales-ConvType3-Impressions"},
+                    }
+                },
+                {
+                    AdInteractionType.UniqueImpressions, new Dictionary<ConversionMetric, string>
+                    {
+                        { ConversionMetric.UniqueImpressions, "Adform-Unique-Impressions" },
                     }
                 },
             };
@@ -136,7 +143,16 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             var metrics = new List<SummaryMetric>();
             AddMetrics(metrics, clickThroughs, AdInteractionType.Clicks, date);
             AddMetrics(metrics, viewThroughs, AdInteractionType.Impressions, date);
+            AddUniqueImpressionsMetric(metrics, date, adformStats);
             stats.InitialMetrics = metrics;
+        }
+
+        private static void AddUniqueImpressionsMetric(List<SummaryMetric> metrics, DateTime date, IEnumerable<AdformSummary> adformStats)
+        {
+            var uniqueImpressionSum = adformStats
+                .Where(x => x.AdInteractionType == AdInteractions[AdInteractionType.UniqueImpressions])
+                .Sum(x => x.UniqueImpressions);
+            AddMetric(metrics, AdInteractionType.UniqueImpressions, ConversionMetric.UniqueImpressions, date, uniqueImpressionSum);
         }
 
         private static void AddMetrics(List<SummaryMetric> metrics, IEnumerable<AdformSummary> adInteractionStats, AdInteractionType adInteractionType, DateTime date)

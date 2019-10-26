@@ -17,20 +17,21 @@ namespace Adform.Entities.ReportEntities
         public readonly string LineItemColumnId = AdformApiHelper.Dimensions[Dimension.LineItem];
         public readonly string BannerColumnId = AdformApiHelper.Dimensions[Dimension.Banner];
         public readonly string MediaColumnId = AdformApiHelper.Dimensions[Dimension.Media];
-        public readonly string ImpressionColumnId = AdformApiHelper.ImpressionsMetric;
-        public readonly string ClickColumnId = AdformApiHelper.ClicksMetric;
+        public readonly string ImpressionColumnId = GetColumnId(AdformApiHelper.ImpressionsMetric, AdformApiHelper.SpecsValueAll);
+        public readonly string ClickColumnId = GetColumnId(AdformApiHelper.ClicksMetric, AdformApiHelper.SpecsValueAll);
         public readonly string CostColumnId = AdformApiHelper.CostMetric;
-        public readonly string ConversionAllColumnId = GetColumnId(AdformApiHelper.ConversionsMetric, AdformApiHelper.ConversionTypeAll);
-        public readonly string Conversion1ColumnId = GetColumnId(AdformApiHelper.ConversionsMetric, AdformApiHelper.ConversionType1);
-        public readonly string Conversion2ColumnId = GetColumnId(AdformApiHelper.ConversionsMetric, AdformApiHelper.ConversionType2);
-        public readonly string Conversion3ColumnId = GetColumnId(AdformApiHelper.ConversionsMetric, AdformApiHelper.ConversionType3);
-        public readonly string SalesAllColumnId = GetColumnId(AdformApiHelper.SalesMetric, AdformApiHelper.ConversionTypeAll);
-        public readonly string Sales1ColumnId = GetColumnId(AdformApiHelper.SalesMetric, AdformApiHelper.ConversionType1);
-        public readonly string Sales2ColumnId = GetColumnId(AdformApiHelper.SalesMetric, AdformApiHelper.ConversionType2);
-        public readonly string Sales3ColumnId = GetColumnId(AdformApiHelper.SalesMetric, AdformApiHelper.ConversionType3);
+        public readonly string ConversionAllColumnId = GetColumnId(AdformApiHelper.ConversionsMetric, AdformApiHelper.SpecsValueConversionTypeAll);
+        public readonly string Conversion1ColumnId = GetColumnId(AdformApiHelper.ConversionsMetric, AdformApiHelper.SpecsValueConversionType1);
+        public readonly string Conversion2ColumnId = GetColumnId(AdformApiHelper.ConversionsMetric, AdformApiHelper.SpecsValueConversionType2);
+        public readonly string Conversion3ColumnId = GetColumnId(AdformApiHelper.ConversionsMetric, AdformApiHelper.SpecsValueConversionType3);
+        public readonly string SalesAllColumnId = GetColumnId(AdformApiHelper.SalesMetric, AdformApiHelper.SpecsValueConversionTypeAll);
+        public readonly string Sales1ColumnId = GetColumnId(AdformApiHelper.SalesMetric, AdformApiHelper.SpecsValueConversionType1);
+        public readonly string Sales2ColumnId = GetColumnId(AdformApiHelper.SalesMetric, AdformApiHelper.SpecsValueConversionType2);
+        public readonly string Sales3ColumnId = GetColumnId(AdformApiHelper.SalesMetric, AdformApiHelper.SpecsValueConversionType3);
+        public readonly string UniqueImpressionsColumnId = GetColumnId(AdformApiHelper.ImpressionsMetric, AdformApiHelper.SpecsValueCampaignUnique);
 
         /// <summary>
-        /// Lists dimension keys (names) followed by the metric keys (names) with their specs. 
+        /// Lists dimension keys (names) followed by the metric keys (names) with their specs.
         /// </summary>
         public List<Dictionary<string, dynamic>> columns { get; set; }
 
@@ -43,6 +44,7 @@ namespace Adform.Entities.ReportEntities
         /// <summary>
         /// The method returns a dictionary that matches a unique name of a column with its number.
         /// </summary>
+        /// <returns>Dictionary that matches a unique name of a column with its number.</returns>
         public Dictionary<string, int> CreateColumnLookup()
         {
             var columnLookup = new Dictionary<string, int>();
@@ -51,22 +53,37 @@ namespace Adform.Entities.ReportEntities
                 var columnId = GetColumnId(columns[i]);
                 columnLookup[columnId] = i;
             }
-
             return columnLookup;
         }
 
-        private string GetColumnId(Dictionary<string, dynamic> columnMetadata)
+        private static string GetColumnId(IReadOnlyDictionary<string, dynamic> columnMetadata)
         {
-            var conversionType = columnMetadata.ContainsKey("specs") && columnMetadata["specs"].ContainsKey(AdformApiHelper.SpecsConversionType)
-                ? columnMetadata["specs"][AdformApiHelper.SpecsConversionType]
-                : string.Empty;
-            var columnId = GetColumnId(columnMetadata["key"], conversionType);
+            var specsValue = GetSpecsValue(columnMetadata);
+            var columnId = GetColumnId(columnMetadata["key"], specsValue);
             return columnId;
         }
 
-        private static string GetColumnId(string columnName, string conversionType)
+        private static string GetColumnId(string columnName, string specsValue)
         {
-            return string.IsNullOrEmpty(conversionType) ? columnName : $"{columnName} - {conversionType}";
+            return string.IsNullOrEmpty(specsValue) ? columnName : $"{columnName} - {specsValue}";
+        }
+
+        private static string GetSpecsValue(IReadOnlyDictionary<string, dynamic> columnMetadata)
+        {
+            var specsValue = string.Empty;
+            if (!columnMetadata.ContainsKey("specs"))
+            {
+                return specsValue;
+            }
+            if (columnMetadata["specs"].ContainsKey(AdformApiHelper.SpecsConversionType))
+            {
+                specsValue = columnMetadata["specs"][AdformApiHelper.SpecsConversionType];
+            }
+            if (columnMetadata["specs"].ContainsKey(AdformApiHelper.SpecsAdUniqueness))
+            {
+                specsValue = columnMetadata["specs"][AdformApiHelper.SpecsAdUniqueness];
+            }
+            return specsValue;
         }
     }
 }
