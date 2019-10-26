@@ -11,5 +11,6 @@
         SalesConversionType1,
         SalesConversionType2,
         SalesConversionType3,
+        UniqueImpressions,
     }
 }

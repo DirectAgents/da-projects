@@ -7,5 +7,6 @@
     {
         Impressions,
         Clicks,
+        UniqueImpressions,
     }
 }

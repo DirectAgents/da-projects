@@ -118,6 +118,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         {
             AssignConversionProperties(summary, row);
             AssignSaleProperties(summary, row);
+            AssignUniqueImpressionsProperty(summary, row);
         }
 
         private void AssignConversionProperties(AdformSummary summary, List<object> row)
@@ -134,6 +135,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             summary.SalesConvType1 = ReturnValueIfColumnExists(row, reportData.Sales1ColumnId, Convert.ToDecimal);
             summary.SalesConvType2 = ReturnValueIfColumnExists(row, reportData.Sales2ColumnId, Convert.ToDecimal);
             summary.SalesConvType3 = ReturnValueIfColumnExists(row, reportData.Sales3ColumnId, Convert.ToDecimal);
+        }
+
+        private void AssignUniqueImpressionsProperty(AdformSummary summary, List<object> row)
+        {
+            summary.UniqueImpressions = ReturnValueIfColumnExists(row, reportData.UniqueImpressionsColumnId, Convert.ToInt32);
         }
 
         private T ReturnValueIfColumnExists<T>(List<object> row, string columnId, Func<object, T> convertFunc)
