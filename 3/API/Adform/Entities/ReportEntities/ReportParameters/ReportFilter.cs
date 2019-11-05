@@ -14,10 +14,5 @@
         /// Gets or sets report dates.
         /// </summary>
         public Dates Date { get; set; }
-
-        /// <summary>
-        /// Gets or sets media.
-        /// </summary>
-        public Media Media { get; set; }
     }
 }

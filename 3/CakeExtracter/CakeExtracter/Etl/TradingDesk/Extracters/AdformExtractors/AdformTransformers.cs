@@ -17,9 +17,17 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         private readonly bool includeOrder;
         private readonly bool includeLineItem;
         private readonly bool includeBanner;
+        private readonly bool includeUniqueImpressions;
 
-        public AdformTransformer(ReportData reportData, bool basicStatsOnly = false, bool convStatsOnly = false,
-            bool byCampaign = false, bool byLineItem = false, bool byBanner = false, bool byOrder = false)
+        public AdformTransformer(
+            ReportData reportData,
+            bool basicStatsOnly = false,
+            bool convStatsOnly = false,
+            bool byCampaign = false,
+            bool byLineItem = false,
+            bool byBanner = false,
+            bool byOrder = false,
+            bool uniqueImpressionsOnly = false)
         {
             this.reportData = reportData;
             rows = reportData.rows;
@@ -30,6 +38,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             includeOrder = byOrder;
             includeLineItem = byLineItem;
             includeBanner = byBanner;
+            includeUniqueImpressions = uniqueImpressionsOnly;
         }
 
         public IEnumerable<AdformSummary> EnumerateAdformSummaries()
@@ -66,35 +75,33 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             {
                 summary.Campaign = ReturnValueIfColumnExists(row, reportData.CampaignColumnId, Convert.ToString);
             }
-
             if (includeOrder)
             {
                 summary.Order = ReturnValueIfColumnExists(row, reportData.OrderColumnId, Convert.ToString);
             }
-
             if (includeLineItem)
             {
                 summary.LineItem = ReturnValueIfColumnExists(row, reportData.LineItemColumnId, Convert.ToString);
             }
-
             if (includeBanner)
             {
                 summary.Banner = ReturnValueIfColumnExists(row, reportData.BannerColumnId, Convert.ToString);
             }
-
             if (includeAdInteractionType)
             {
                 AssignAdInteractionType(summary, row);
             }
-
             if (includeBasicStats)
             {
                 AssignBasicSummaryProperties(summary, row);
             }
-
             if (includeConvStats)
             {
                 AssignConversionSummaryProperties(summary, row);
+            }
+            if (includeUniqueImpressions)
+            {
+                AssignUniqueImpressionsProperty(summary, row);
             }
         }
 
@@ -118,7 +125,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         {
             AssignConversionProperties(summary, row);
             AssignSaleProperties(summary, row);
-            AssignUniqueImpressionsProperty(summary, row);
         }
 
         private void AssignConversionProperties(AdformSummary summary, List<object> row)

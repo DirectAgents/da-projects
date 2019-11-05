@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Adform.Constants;
 using Adform.Entities;
@@ -25,8 +26,6 @@ namespace Adform.Helpers
         public const string SpecsValueCampaignUnique = "campaignUnique";
         public const string SpecsValueAll = "all";
 
-        private const string DateFormat = "yyyy'-'M'-'d";
-
         public static readonly Dictionary<Dimension, string> Dimensions = new Dictionary<Dimension, string>
         {
             { Dimension.Date, "date" },
@@ -47,15 +46,24 @@ namespace Adform.Helpers
             SpecsValueConversionTypeAll, SpecsValueConversionType1, SpecsValueConversionType2, SpecsValueConversionType3,
         };
 
-        public static ReportFilter GetFilters(ReportSettings settings)
+        /// <summary>
+        /// Creates the filter for request a report by report settings.
+        /// </summary>
+        /// <param name="settings">Report settings.</param>
+        /// <returns>Filter object.</returns>
+        public static dynamic CreateRequestFilterBySettings(ReportSettings settings)
         {
-            var filter = settings.TrackingIds.Any(x => !string.IsNullOrEmpty(x))
-                ? new ReportFilterWithTracking
-                {
-                    Tracking = settings.TrackingIds,
-                }
-                : new ReportFilter();
-            InitializeReportFilter(filter, settings);
+            dynamic filter = new System.Dynamic.ExpandoObject();
+            filter.Client = new[] { settings.ClientId };
+            filter.Date = GetDatesFilter(settings.StartDate, settings.EndDate);
+            if (IsMediaFilterNeed(settings.UniqueImpressionsMetric))
+            {
+                filter.Media = GetMediaFilter(settings.RtbMediaOnly);
+            }
+            if (IsTrackingFilterNeed(settings.TrackingIds))
+            {
+                filter.Tracking = settings.TrackingIds;
+            }
             return filter;
         }
 
@@ -71,6 +79,9 @@ namespace Adform.Helpers
             {
                 var convMetrics = ConversionMetrics.SelectMany(GetConversionMetrics);
                 metrics.AddRange(convMetrics);
+            }
+            if (settings.UniqueImpressionsMetric)
+            {
                 var uniqueImpressionsMetric = GetUniqueImpressionsMetric();
                 metrics.Add(uniqueImpressionsMetric);
             }
@@ -95,19 +106,6 @@ namespace Adform.Helpers
             };
         }
 
-        private static void InitializeReportFilter(ReportFilter filter, ReportSettings settings)
-        {
-            filter.Client = new[] { settings.ClientId };
-            filter.Date = new Dates
-            {
-                From = settings.StartDate.ToString(DateFormat),
-                To = settings.EndDate.ToString(DateFormat),
-            };
-            filter.Media = settings.RtbMediaOnly
-                ? GetRtbMedia()
-                : GetMultipleMedia();
-        }
-
         private static IEnumerable<MetricMetadata> GetConversionMetrics(string metricName)
         {
             return ConversionTypes.Select(convType => new MetricMetadata
@@ -130,6 +128,31 @@ namespace Adform.Helpers
                     adUniqueness = SpecsValueCampaignUnique,
                 },
             };
+        }
+
+        private static Dates GetDatesFilter(DateTime startDate, DateTime endDate)
+        {
+            const string dateFormat = "yyyy'-'M'-'d";
+            return new Dates
+            {
+                From = startDate.ToString(dateFormat),
+                To = endDate.ToString(dateFormat),
+            };
+        }
+
+        private static Media GetMediaFilter(bool rtbMediaOnly)
+        {
+            return rtbMediaOnly ? GetRtbMedia() : GetMultipleMedia();
+        }
+
+        private static bool IsMediaFilterNeed(bool isUniqueImpressionsMetricExist)
+        {
+            return !isUniqueImpressionsMetricExist;
+        }
+
+        private static bool IsTrackingFilterNeed(IEnumerable<string> trackingIds)
+        {
+            return trackingIds.Any(x => !string.IsNullOrEmpty(x));
         }
 
         private static Media GetRtbMedia()

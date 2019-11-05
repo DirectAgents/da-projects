@@ -61,7 +61,6 @@
     <Compile Include="Constants\MediaName.cs" />
     <Compile Include="Entities\ReportEntities\ReportParameters\Media.cs" />
     <Compile Include="Entities\ReportEntities\ReportParameters\ReportFilter.cs" />
-    <Compile Include="Entities\ReportEntities\ReportParameters\ReportFilterWithTracking.cs" />
     <Compile Include="Entities\ResponseStatus.cs" />
     <Compile Include="Utilities\AdformLogger.cs" />
     <Compile Include="Utilities\AdformUtility.cs" />

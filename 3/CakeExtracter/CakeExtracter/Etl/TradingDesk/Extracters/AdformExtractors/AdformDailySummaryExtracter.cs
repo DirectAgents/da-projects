@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Adform.Entities;
 using Adform.Entities.ReportEntities;
 using Adform.Utilities;
 using CakeExtracter.Common;
@@ -22,7 +23,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             {
                 var basicStatsReportData = GetBasicStatsReportData();
                 var convStatsReportData = GetConvStatsReportData();
-                var daySums = EnumerateRows(basicStatsReportData, convStatsReportData);
+                var uniqueImpressionStatsReportData = GetUniqueImpressionStatsReportData();
+                var daySums = EnumerateRows(basicStatsReportData, convStatsReportData, uniqueImpressionStatsReportData);
                 daySums = AdjustItems(daySums);
                 Add(daySums);
             }
@@ -30,7 +32,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             {
                 Logger.Error(AccountId, ex);
             }
-
             End();
         }
 
@@ -41,7 +42,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             settings.Dimensions = null;
             var parameters = AfUtility.CreateReportParams(settings);
             var basicStatsReportData = AfUtility.TryGetReportData(parameters);
-
             return basicStatsReportData;
         }
 
@@ -51,11 +51,29 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             settings.BasicMetrics = false;
             var parameters = AfUtility.CreateReportParams(settings);
             var convStatsReportData = AfUtility.TryGetReportData(parameters);
-
             return convStatsReportData;
         }
 
-        private IEnumerable<DailySummary> EnumerateRows(ReportData basicStatsReportData, ReportData convStatsReportData)
+        private ReportData GetUniqueImpressionStatsReportData()
+        {
+            var settings = GetUniqueImpressionSettings();
+            var parameters = AfUtility.CreateReportParams(settings);
+            var uniqueImpressionReportData = AfUtility.TryGetReportData(parameters);
+            return uniqueImpressionReportData;
+        }
+
+        private ReportSettings GetUniqueImpressionSettings()
+        {
+            var settings = GetBaseSettings();
+            settings.BasicMetrics = false;
+            settings.ConvMetrics = false;
+            settings.Dimensions = null;
+            settings.UniqueImpressionsMetric = true;
+            return settings;
+        }
+
+        private IEnumerable<DailySummary> EnumerateRows(
+            ReportData basicStatsReportData, ReportData convStatsReportData, ReportData uniqueImpressionReportData)
         {
             var dayStatsTransformer = new AdformTransformer(basicStatsReportData, basicStatsOnly: true);
             var daySumDict = dayStatsTransformer.EnumerateAdformSummaries().ToDictionary(x => x.Date);
@@ -63,6 +81,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             var convStatsTransformer = new AdformTransformer(convStatsReportData, convStatsOnly: true);
             var convSums = convStatsTransformer.EnumerateAdformSummaries();
             var convSumGroups = convSums.GroupBy(x => x.Date).ToList();
+
+            var uniqueImpressionStatsTransformer = new AdformTransformer(uniqueImpressionReportData);
+            var uniqueImpressionStats = uniqueImpressionStatsTransformer.EnumerateAdformSummaries();
             // Steps:
             // loop through convSumGroups; get daySum or create blank one
             // then go through daySums that didn't have a convSumGroup
