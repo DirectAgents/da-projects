@@ -101,8 +101,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                 SetClickAndViewStats(daySum, conversionStatsGroup);
                 if (areUniqueImpressionsForAllMediaTypes)
                 {
-                    var uniqueImpressionStatsForDay = uniqueImpressionStats.Where(s => s.Date == conversionStatsGroup.Key).ToList();
-                    SetUniqueImpressionMetric(daySum, conversionStatsGroup.Key, uniqueImpressionStatsForDay);
+                    var uniqImprStatsForDay = uniqueImpressionStats.Where(s => s.Date == conversionStatsGroup.Key).ToList();
+                    SetConversionMetricsWithUniqImprForAllMedia(daySum, conversionStatsGroup.Key, conversionStatsGroup, uniqImprStatsForDay);
                 }
                 else
                 {
