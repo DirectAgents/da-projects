@@ -17,7 +17,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         private readonly bool includeOrder;
         private readonly bool includeLineItem;
         private readonly bool includeBanner;
-        private readonly bool includeUniqueImpressions;
+        private readonly bool includeUniqueImpressionsForAllMediaTypes;
 
         public AdformTransformer(
             ReportData reportData,
@@ -38,7 +38,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             includeOrder = byOrder;
             includeLineItem = byLineItem;
             includeBanner = byBanner;
-            includeUniqueImpressions = uniqueImpressionsOnly;
+            includeUniqueImpressionsForAllMediaTypes = uniqueImpressionsOnly;
         }
 
         public IEnumerable<AdformSummary> EnumerateAdformSummaries()
@@ -87,19 +87,19 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             {
                 summary.Banner = ReturnValueIfColumnExists(row, reportData.BannerColumnId, Convert.ToString);
             }
-            if (includeAdInteractionType)
+            if (includeAdInteractionType && !includeUniqueImpressionsForAllMediaTypes)
             {
                 AssignAdInteractionType(summary, row);
             }
-            if (includeBasicStats)
+            if (includeBasicStats && !includeUniqueImpressionsForAllMediaTypes)
             {
                 AssignBasicSummaryProperties(summary, row);
             }
-            if (includeConvStats)
+            if (includeConvStats && !includeUniqueImpressionsForAllMediaTypes)
             {
                 AssignConversionSummaryProperties(summary, row);
             }
-            if (includeUniqueImpressions)
+            if (includeUniqueImpressionsForAllMediaTypes)
             {
                 AssignUniqueImpressionsProperty(summary, row);
             }
@@ -125,6 +125,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         {
             AssignConversionProperties(summary, row);
             AssignSaleProperties(summary, row);
+            AssignUniqueImpressionsProperty(summary, row);
         }
 
         private void AssignConversionProperties(AdformSummary summary, List<object> row)

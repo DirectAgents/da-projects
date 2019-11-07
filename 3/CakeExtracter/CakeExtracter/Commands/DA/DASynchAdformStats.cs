@@ -48,6 +48,7 @@ namespace CakeExtracter.Commands
         private static List<string> accountIdsForOrders;
         private static Dictionary<string, string> trackingIdsOfAccounts;
         private static List<string> accountsWithMultipleMedia;
+        private static List<string> accountsWithAllMediaUniqueImpressions;
 
         public override void ResetProperties()
         {
@@ -95,6 +96,7 @@ namespace CakeExtracter.Commands
             accountIdsForOrders = ConfigurationHelper.ExtractEnumerableFromConfig("Adform_OrderInsteadOfCampaign");
             trackingIdsOfAccounts = ConfigurationHelper.ExtractDictionaryFromConfigValue("Adform_AccountsWithSpecificTracking", "Adform_AccountsTrackingIds");
             accountsWithMultipleMedia = ConfigurationHelper.ExtractEnumerableFromConfig("Adform_AccountsWithMultipleMedia");
+            accountsWithAllMediaUniqueImpressions = ConfigurationHelper.ExtractEnumerableFromConfig("Adform_AccountsWithAllMediaUniqueImpressions");
         }
 
         private static List<Action> GetEtlLevelActions(ExtAccount account, DateRange dateRange, StatsTypeAgg statsType)
@@ -175,7 +177,8 @@ namespace CakeExtracter.Commands
         // ---
         private static void DoETL_Daily(DateRange dateRange, ExtAccount account, AdformUtility adformUtility, bool rtbMediaOnly)
         {
-            var extractor = new AdformDailySummaryExtractor(adformUtility, dateRange, account, rtbMediaOnly);
+            var uniqueImpressionsForAllMediaTypes = accountsWithAllMediaUniqueImpressions.Contains(account.ExternalId);
+            var extractor = new AdformDailySummaryExtractor(adformUtility, dateRange, account, rtbMediaOnly, uniqueImpressionsForAllMediaTypes);
             var loader = new TDDailySummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }

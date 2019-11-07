@@ -56,7 +56,7 @@ namespace Adform.Helpers
             dynamic filter = new System.Dynamic.ExpandoObject();
             filter.Client = new[] { settings.ClientId };
             filter.Date = GetDatesFilter(settings.StartDate, settings.EndDate);
-            if (IsMediaFilterNeed(settings.UniqueImpressionsMetric))
+            if (IsMediaFilterNeed(settings.UniqueImpressionsMetricForAllMediaTypes))
             {
                 filter.Media = GetMediaFilter(settings.RtbMediaOnly);
             }
@@ -72,18 +72,16 @@ namespace Adform.Helpers
             var metrics = new List<MetricMetadata>();
             if (settings.BasicMetrics)
             {
-                var basicMetrics = BasicMetrics.Select(GetBasicMetric);
-                metrics.AddRange(basicMetrics);
+                SetBasicMetrics(metrics);
             }
             if (settings.ConvMetrics)
             {
-                var convMetrics = ConversionMetrics.SelectMany(GetConversionMetrics);
-                metrics.AddRange(convMetrics);
+                SetConversionMetrics(metrics);
+                SetUniqueImpressionMetric(metrics);
             }
-            if (settings.UniqueImpressionsMetric)
+            if (settings.UniqueImpressionsMetricForAllMediaTypes)
             {
-                var uniqueImpressionsMetric = GetUniqueImpressionsMetric();
-                metrics.Add(uniqueImpressionsMetric);
+                SetUniqueImpressionMetric(metrics);
             }
             return metrics.ToArray();
         }
@@ -96,6 +94,24 @@ namespace Adform.Helpers
                 : settings.Dimensions.Concat(defaultDimensions);
             var strDimensions = dimensions.Select(x => Dimensions[x]).ToArray();
             return strDimensions;
+        }
+
+        private static void SetBasicMetrics(List<MetricMetadata> metrics)
+        {
+            var basicMetrics = BasicMetrics.Select(GetBasicMetric);
+            metrics.AddRange(basicMetrics);
+        }
+
+        private static void SetConversionMetrics(List<MetricMetadata> metrics)
+        {
+            var convMetrics = ConversionMetrics.SelectMany(GetConversionMetrics);
+            metrics.AddRange(convMetrics);
+        }
+
+        private static void SetUniqueImpressionMetric(List<MetricMetadata> metrics)
+        {
+            var uniqueImpressionsMetric = GetUniqueImpressionsMetric();
+            metrics.Add(uniqueImpressionsMetric);
         }
 
         private static MetricMetadata GetBasicMetric(string metricName)
@@ -145,9 +161,9 @@ namespace Adform.Helpers
             return rtbMediaOnly ? GetRtbMedia() : GetMultipleMedia();
         }
 
-        private static bool IsMediaFilterNeed(bool isUniqueImpressionsMetricExist)
+        private static bool IsMediaFilterNeed(bool isUniqueImpressionsMetricForAllMediaTypes)
         {
-            return !isUniqueImpressionsMetricExist;
+            return !isUniqueImpressionsMetricForAllMediaTypes;
         }
 
         private static bool IsTrackingFilterNeed(IEnumerable<string> trackingIds)
