@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Adform;
+using Adform.Entities;
 using Adform.Entities.ReportEntities;
 using Adform.Utilities;
 using CakeExtracter.Common;
@@ -10,9 +12,17 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 {
     public class AdformDailySummaryExtractor : AdformApiBaseExtractor<DailySummary>
     {
-        public AdformDailySummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account, bool rtbMediaOnly)
+        private bool areUniqueImpressionsForAllMediaTypes;
+
+        public AdformDailySummaryExtractor(
+            AdformUtility adformUtility,
+            DateRange dateRange,
+            ExtAccount account,
+            bool rtbMediaOnly,
+            bool areUniqueImpressionsForAllMediaTypes)
             : base(adformUtility, dateRange, account, rtbMediaOnly)
         {
+            this.areUniqueImpressionsForAllMediaTypes = areUniqueImpressionsForAllMediaTypes;
         }
 
         protected override void Extract()
@@ -22,7 +32,10 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             {
                 var basicStatsReportData = GetBasicStatsReportData();
                 var convStatsReportData = GetConvStatsReportData();
-                var daySums = EnumerateRows(basicStatsReportData, convStatsReportData);
+                var uniqueImpressionStatsReportData = areUniqueImpressionsForAllMediaTypes
+                    ? GetUniqueImpressionStatsReportData()
+                    : null;
+                var daySums = EnumerateRows(basicStatsReportData, convStatsReportData, uniqueImpressionStatsReportData);
                 daySums = AdjustItems(daySums);
                 Add(daySums);
             }
@@ -30,7 +43,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             {
                 Logger.Error(AccountId, ex);
             }
-
             End();
         }
 
@@ -41,7 +53,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             settings.Dimensions = null;
             var parameters = AfUtility.CreateReportParams(settings);
             var basicStatsReportData = AfUtility.TryGetReportData(parameters);
-
             return basicStatsReportData;
         }
 
@@ -51,41 +62,90 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             settings.BasicMetrics = false;
             var parameters = AfUtility.CreateReportParams(settings);
             var convStatsReportData = AfUtility.TryGetReportData(parameters);
-
             return convStatsReportData;
         }
 
-        private IEnumerable<DailySummary> EnumerateRows(ReportData basicStatsReportData, ReportData convStatsReportData)
+        private ReportData GetUniqueImpressionStatsReportData()
         {
-            var dayStatsTransformer = new AdformTransformer(basicStatsReportData, basicStatsOnly: true);
-            var daySumDict = dayStatsTransformer.EnumerateAdformSummaries().ToDictionary(x => x.Date);
+            var settings = GetUniqueImpressionSettings();
+            var parameters = AfUtility.CreateReportParams(settings);
+            var uniqueImpressionReportData = AfUtility.TryGetReportData(parameters);
+            return uniqueImpressionReportData;
+        }
 
-            var convStatsTransformer = new AdformTransformer(convStatsReportData, convStatsOnly: true);
-            var convSums = convStatsTransformer.EnumerateAdformSummaries();
-            var convSumGroups = convSums.GroupBy(x => x.Date).ToList();
+        private IEnumerable<DailySummary> EnumerateRows(
+            ReportData basicStatsReportData,
+            ReportData convStatsReportData,
+            ReportData uniqueImpressionReportData)
+        {
+            var dailyStats = TransformDailyReportData(basicStatsReportData);
+            var dailyStatsByDate = dailyStats.ToDictionary(x => x.Date);
+            var conversionStats = TransformConversionReportData(convStatsReportData);
+            var conversionStatsGroups = conversionStats.GroupBy(x => x.Date).ToList();
+
+            IEnumerable<AdformSummary> uniqueImpressionStats = new List<AdformSummary>();
+            if (areUniqueImpressionsForAllMediaTypes)
+            {
+                uniqueImpressionStats = TransformUniqueImpressionReportData(uniqueImpressionReportData);
+            }
             // Steps:
             // loop through convSumGroups; get daySum or create blank one
             // then go through daySums that didn't have a convSumGroup
-            foreach (var csGroup in convSumGroups)
+            foreach (var conversionStatsGroup in conversionStatsGroups)
             {
-                var daySum = new DailySummary { Date = csGroup.Key };
-                if (daySumDict.ContainsKey(csGroup.Key))
+                var daySum = new DailySummary { Date = conversionStatsGroup.Key };
+                if (dailyStatsByDate.ContainsKey(conversionStatsGroup.Key))
                 {
-                    SetBaseStats(daySum, daySumDict[csGroup.Key]);
+                    SetBaseStats(daySum, dailyStatsByDate[conversionStatsGroup.Key]);
                 }
-
-                SetConversionStats(daySum, csGroup, csGroup.Key);
+                SetClickAndViewStats(daySum, conversionStatsGroup);
+                if (areUniqueImpressionsForAllMediaTypes)
+                {
+                    var uniqueImpressionStatsForDay = uniqueImpressionStats.Where(s => s.Date == conversionStatsGroup.Key).ToList();
+                    SetUniqueImpressionMetric(daySum, conversionStatsGroup.Key, uniqueImpressionStatsForDay);
+                }
+                else
+                {
+                    SetConversionMetrics(daySum, conversionStatsGroup.Key, conversionStatsGroup);
+                }
                 yield return daySum;
             }
-
-            var convSumDates = convSumGroups.Select(x => x.Key).ToArray();
-            var remainingDaySums = daySumDict.Values.Where(ds => !convSumDates.Contains(ds.Date));
+            var convSumDates = conversionStatsGroups.Select(x => x.Key).ToArray();
+            var remainingDaySums = dailyStatsByDate.Values.Where(ds => !convSumDates.Contains(ds.Date));
             foreach (var adfSum in remainingDaySums) // the daily summaries that didn't have any conversion summaries
             {
                 var daySum = new DailySummary { Date = adfSum.Date };
                 SetBaseStats(daySum, adfSum);
                 yield return daySum;
             }
+        }
+
+        private ReportSettings GetUniqueImpressionSettings()
+        {
+            var settings = GetBaseSettings();
+            settings.BasicMetrics = false;
+            settings.ConvMetrics = false;
+            settings.Dimensions = null;
+            settings.UniqueImpressionsMetricForAllMediaTypes = true;
+            return settings;
+        }
+
+        private IEnumerable<AdformSummary> TransformDailyReportData(ReportData reportData)
+        {
+            var dayStatsTransformer = new AdformTransformer(reportData, basicStatsOnly: true);
+            return dayStatsTransformer.EnumerateAdformSummaries();
+        }
+
+        private IEnumerable<AdformSummary> TransformConversionReportData(ReportData reportData)
+        {
+            var convStatsTransformer = new AdformTransformer(reportData, convStatsOnly: true);
+            return convStatsTransformer.EnumerateAdformSummaries();
+        }
+
+        private IEnumerable<AdformSummary> TransformUniqueImpressionReportData(ReportData reportData)
+        {
+            var uniqueImpressionStatsTransformer = new AdformTransformer(reportData, uniqueImpressionsOnly: true);
+            return uniqueImpressionStatsTransformer.EnumerateAdformSummaries().ToList();
         }
     }
 }

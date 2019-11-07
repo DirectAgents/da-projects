@@ -88,6 +88,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                 ClientId = ClientId,
                 BasicMetrics = true,
                 ConvMetrics = true,
+                UniqueImpressionsMetricForAllMediaTypes = false,
                 RtbMediaOnly = rtbMediaOnly,
                 TrackingIds = AfUtility.TrackingIds,
                 Dimensions = new List<Dimension> { Dimension.AdInteractionType },
@@ -112,7 +113,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         {
             stats.Date = date;
             SetBaseStats(stats, adformStats);
-            SetConversionStats(stats, adformStats, date);
+            SetClickAndViewStats(stats, adformStats);
+            SetConversionMetrics(stats, date, adformStats);
         }
 
         protected void SetBaseStats(T stats, AdformSummary adformStat)
@@ -127,7 +129,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             stats.Clicks = adformStats.Sum(x => x.Clicks);
         }
 
-        protected void SetConversionStats(T stats, IEnumerable<AdformSummary> adformStats, DateTime date)
+        protected static void SetClickAndViewStats(T stats, IEnumerable<AdformSummary> adformStats)
         {
             var clickThroughs = adformStats.Where(x => x.AdInteractionType == AdInteractions[AdInteractionType.Clicks]);
             var viewThroughs = adformStats.Where(x => x.AdInteractionType == AdInteractions[AdInteractionType.Impressions]);
@@ -139,20 +141,28 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                 rev.PostClickRev = clickThroughs.Sum(x => x.SalesAll);
                 rev.PostViewRev = viewThroughs.Sum(x => x.SalesAll);
             }
-
-            var metrics = new List<SummaryMetric>();
-            AddMetrics(metrics, clickThroughs, AdInteractionType.Clicks, date);
-            AddMetrics(metrics, viewThroughs, AdInteractionType.Impressions, date);
-            AddUniqueImpressionsMetric(metrics, date, adformStats);
-            stats.InitialMetrics = metrics;
         }
 
-        private static void AddUniqueImpressionsMetric(List<SummaryMetric> metrics, DateTime date, IEnumerable<AdformSummary> adformStats)
+        protected static void SetConversionMetrics(T stats, DateTime date, IEnumerable<AdformSummary> adformStats)
         {
+            var clickThroughs = adformStats.Where(x => x.AdInteractionType == AdInteractions[AdInteractionType.Clicks]);
+            var viewThroughs = adformStats.Where(x => x.AdInteractionType == AdInteractions[AdInteractionType.Impressions]);
             var uniqueImpressionSum = adformStats
                 .Where(x => x.AdInteractionType == AdInteractions[AdInteractionType.UniqueImpressions])
                 .Sum(x => x.UniqueImpressions);
+            var metrics = new List<SummaryMetric>();
+            AddMetrics(metrics, clickThroughs, AdInteractionType.Clicks, date);
+            AddMetrics(metrics, viewThroughs, AdInteractionType.Impressions, date);
             AddMetric(metrics, AdInteractionType.UniqueImpressions, ConversionMetric.UniqueImpressions, date, uniqueImpressionSum);
+            stats.InitialMetrics = metrics;
+        }
+
+        protected static void SetUniqueImpressionMetric(T stats, DateTime date, IEnumerable<AdformSummary> uniqueImpressionStats)
+        {
+            var metrics = new List<SummaryMetric>();
+            var uniqueImpressionSum = uniqueImpressionStats.Sum(x => x.UniqueImpressions);
+            AddMetric(metrics, AdInteractionType.UniqueImpressions, ConversionMetric.UniqueImpressions, date, uniqueImpressionSum);
+            stats.InitialMetrics = metrics;
         }
 
         private static void AddMetrics(List<SummaryMetric> metrics, IEnumerable<AdformSummary> adInteractionStats, AdInteractionType adInteractionType, DateTime date)

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Adform.Constants;
 using Adform.Entities;
@@ -25,8 +26,6 @@ namespace Adform.Helpers
         public const string SpecsValueCampaignUnique = "campaignUnique";
         public const string SpecsValueAll = "all";
 
-        private const string DateFormat = "yyyy'-'M'-'d";
-
         public static readonly Dictionary<Dimension, string> Dimensions = new Dictionary<Dimension, string>
         {
             { Dimension.Date, "date" },
@@ -47,15 +46,24 @@ namespace Adform.Helpers
             SpecsValueConversionTypeAll, SpecsValueConversionType1, SpecsValueConversionType2, SpecsValueConversionType3,
         };
 
-        public static ReportFilter GetFilters(ReportSettings settings)
+        /// <summary>
+        /// Creates the filter for request a report by report settings.
+        /// </summary>
+        /// <param name="settings">Report settings.</param>
+        /// <returns>Filter object.</returns>
+        public static dynamic CreateRequestFilterBySettings(ReportSettings settings)
         {
-            var filter = settings.TrackingIds.Any(x => !string.IsNullOrEmpty(x))
-                ? new ReportFilterWithTracking
-                {
-                    Tracking = settings.TrackingIds,
-                }
-                : new ReportFilter();
-            InitializeReportFilter(filter, settings);
+            dynamic filter = new System.Dynamic.ExpandoObject();
+            filter.Client = new[] { settings.ClientId };
+            filter.Date = GetDatesFilter(settings.StartDate, settings.EndDate);
+            if (IsMediaFilterNeed(settings.UniqueImpressionsMetricForAllMediaTypes))
+            {
+                filter.Media = GetMediaFilter(settings.RtbMediaOnly);
+            }
+            if (IsTrackingFilterNeed(settings.TrackingIds))
+            {
+                filter.Tracking = settings.TrackingIds;
+            }
             return filter;
         }
 
@@ -64,15 +72,16 @@ namespace Adform.Helpers
             var metrics = new List<MetricMetadata>();
             if (settings.BasicMetrics)
             {
-                var basicMetrics = BasicMetrics.Select(GetBasicMetric);
-                metrics.AddRange(basicMetrics);
+                SetBasicMetrics(metrics);
             }
             if (settings.ConvMetrics)
             {
-                var convMetrics = ConversionMetrics.SelectMany(GetConversionMetrics);
-                metrics.AddRange(convMetrics);
-                var uniqueImpressionsMetric = GetUniqueImpressionsMetric();
-                metrics.Add(uniqueImpressionsMetric);
+                SetConversionMetrics(metrics);
+                SetUniqueImpressionMetric(metrics);
+            }
+            if (settings.UniqueImpressionsMetricForAllMediaTypes)
+            {
+                SetUniqueImpressionMetric(metrics);
             }
             return metrics.ToArray();
         }
@@ -87,25 +96,30 @@ namespace Adform.Helpers
             return strDimensions;
         }
 
+        private static void SetBasicMetrics(List<MetricMetadata> metrics)
+        {
+            var basicMetrics = BasicMetrics.Select(GetBasicMetric);
+            metrics.AddRange(basicMetrics);
+        }
+
+        private static void SetConversionMetrics(List<MetricMetadata> metrics)
+        {
+            var convMetrics = ConversionMetrics.SelectMany(GetConversionMetrics);
+            metrics.AddRange(convMetrics);
+        }
+
+        private static void SetUniqueImpressionMetric(List<MetricMetadata> metrics)
+        {
+            var uniqueImpressionsMetric = GetUniqueImpressionsMetric();
+            metrics.Add(uniqueImpressionsMetric);
+        }
+
         private static MetricMetadata GetBasicMetric(string metricName)
         {
             return new MetricMetadata
             {
                 Metric = metricName,
             };
-        }
-
-        private static void InitializeReportFilter(ReportFilter filter, ReportSettings settings)
-        {
-            filter.Client = new[] { settings.ClientId };
-            filter.Date = new Dates
-            {
-                From = settings.StartDate.ToString(DateFormat),
-                To = settings.EndDate.ToString(DateFormat),
-            };
-            filter.Media = settings.RtbMediaOnly
-                ? GetRtbMedia()
-                : GetMultipleMedia();
         }
 
         private static IEnumerable<MetricMetadata> GetConversionMetrics(string metricName)
@@ -130,6 +144,31 @@ namespace Adform.Helpers
                     adUniqueness = SpecsValueCampaignUnique,
                 },
             };
+        }
+
+        private static Dates GetDatesFilter(DateTime startDate, DateTime endDate)
+        {
+            const string dateFormat = "yyyy'-'M'-'d";
+            return new Dates
+            {
+                From = startDate.ToString(dateFormat),
+                To = endDate.ToString(dateFormat),
+            };
+        }
+
+        private static Media GetMediaFilter(bool rtbMediaOnly)
+        {
+            return rtbMediaOnly ? GetRtbMedia() : GetMultipleMedia();
+        }
+
+        private static bool IsMediaFilterNeed(bool isUniqueImpressionsMetricForAllMediaTypes)
+        {
+            return !isUniqueImpressionsMetricForAllMediaTypes;
+        }
+
+        private static bool IsTrackingFilterNeed(IEnumerable<string> trackingIds)
+        {
+            return trackingIds.Any(x => !string.IsNullOrEmpty(x));
         }
 
         private static Media GetRtbMedia()

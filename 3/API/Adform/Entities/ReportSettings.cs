@@ -28,5 +28,11 @@ namespace Adform.Entities
         /// (for real-time bidding campaigns only).
         /// </summary>
         public bool RtbMediaOnly { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to include
+        /// the "Unique impressions" metric for all media types.
+        /// </summary>
+        public bool UniqueImpressionsMetricForAllMediaTypes { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Dynamic;
+using System.Linq;
 
 namespace Adform.Entities.ReportEntities.ReportParameters
 {
@@ -21,7 +23,7 @@ namespace Adform.Entities.ReportEntities.ReportParameters
         /// <summary>
         /// Gets or sets filter object provides filters in the request.
         /// </summary>
-        public ReportFilter Filter { get; set; }
+        public dynamic Filter { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the report includes the total number of rows as a result of the query.
@@ -51,12 +53,35 @@ namespace Adform.Entities.ReportEntities.ReportParameters
             var metricsStr = string.Join(", ", metricsWithSpecsStr);
             var datesStr = $"{Filter.Date.From}/{Filter.Date.To}";
             var clientsStr = string.Join(", ", Filter.Client);
-            var mediaStr = string.Join(", ", Filter.Media.Name);
-            var trackingStr = Filter is ReportFilterWithTracking trackingFilter
-                ? $", tracking - {string.Join(", ", trackingFilter.Tracking)}"
-                : string.Empty;
-            var filtersStr = $"dates - {datesStr}, clients - {clientsStr}, media - {mediaStr}{trackingStr}";
+            var mediaStr = GetMediaStringIfPropertyExists();
+            var trackingStr = GetTrackingStringIfPropertyExists();
+            var filtersStr = $"dates - {datesStr}, clients - {clientsStr}{mediaStr}{trackingStr}";
             return $"dimensions: {dimensionsStr}; metrics: {metricsStr}; filters: {filtersStr}";
+        }
+
+        private string GetMediaStringIfPropertyExists()
+        {
+            const string mediaPropertyKey = "Media";
+            return IsFilterPropertyExist(mediaPropertyKey)
+                ? $", media - {string.Join(", ", Filter.Media.Name)}"
+                : string.Empty;
+        }
+
+        private string GetTrackingStringIfPropertyExists()
+        {
+            const string trackingPropertyKey = "Tracking";
+            return IsFilterPropertyExist(trackingPropertyKey)
+                ? $", tracking - {string.Join(", ", Filter.Tracking)}"
+                : string.Empty;
+        }
+
+        private bool IsFilterPropertyExist(string name)
+        {
+            if (Filter is ExpandoObject)
+            {
+                return ((IDictionary<string, object>)Filter).ContainsKey(name);
+            }
+            return Filter.GetType().GetProperty(name) != null;
         }
     }
 }
