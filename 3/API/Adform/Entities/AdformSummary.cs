@@ -96,5 +96,10 @@ namespace Adform
         /// Gets or sets the "Impressions" metric for the "Campaign unique" level.
         /// </summary>
         public int UniqueImpressions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Media.
+        /// </summary>
+        public string Media { get; set; }
     }
 }

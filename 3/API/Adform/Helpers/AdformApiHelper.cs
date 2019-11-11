@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Adform.Constants;
 using Adform.Entities;
 using Adform.Entities.ReportEntities.ReportParameters;
 using Adform.Enums;
@@ -80,7 +79,11 @@ namespace Adform.Helpers
 
         public static string[] GetDimensions(ReportSettings settings)
         {
-            var defaultDimensions = new[] { Dimension.Date };
+            var defaultDimensions = new[]
+            {
+                Dimension.Media,
+                Dimension.Date,
+            };
             var dimensions = settings.Dimensions == null
                 ? defaultDimensions
                 : settings.Dimensions.Concat(defaultDimensions);
@@ -148,27 +151,9 @@ namespace Adform.Helpers
             };
         }
 
-        private static Media GetMediaFilter(bool rtbMediaOnly)
-        {
-            return rtbMediaOnly ? GetRtbMedia() : GetMultipleMedia();
-        }
-
         private static bool IsTrackingFilterNeed(IEnumerable<string> trackingIds)
         {
             return trackingIds.Any(x => !string.IsNullOrEmpty(x));
-        }
-
-        private static Media GetRtbMedia()
-        {
-            return new Media { Name = new[] { MediaName.RtbMediaName } };
-        }
-
-        private static Media GetMultipleMedia()
-        {
-            return new Media
-            {
-                Name = new[] { MediaName.RtbMediaName, MediaName.DbmMediaName, MediaName.TtdMediaName, MediaName.YamMediaName },
-            };
         }
     }
 }

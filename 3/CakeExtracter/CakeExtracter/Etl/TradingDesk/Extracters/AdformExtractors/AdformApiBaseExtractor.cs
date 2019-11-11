@@ -163,13 +163,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             AddMetric(metrics, AdInteractionType.UniqueImpressions, ConversionMetric.UniqueImpressions, date, uniqueImpressionSum);
         }
 
-        private static void SetUniqueImpressionMetricForAllMedia(
-            List<SummaryMetric> metrics, IEnumerable<AdformSummary> uniqueImpressionStats, DateTime date)
-        {
-            var uniqueImpressionSum = uniqueImpressionStats.Sum(x => x.UniqueImpressions);
-            AddMetric(metrics, AdInteractionType.UniqueImpressions, ConversionMetric.UniqueImpressions, date, uniqueImpressionSum);
-        }
-
         private static void AddMetrics(List<SummaryMetric> metrics, IEnumerable<AdformSummary> adInteractionStats, AdInteractionType adInteractionType, DateTime date)
         {
             AddMetric(metrics, adInteractionType, ConversionMetric.ConversionsConversionType1, date, adInteractionStats.Sum(x => x.ConversionsConvType1));
