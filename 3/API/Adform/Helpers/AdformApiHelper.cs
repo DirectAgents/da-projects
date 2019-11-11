@@ -32,6 +32,7 @@ namespace Adform.Helpers
             { Dimension.Order, "order" },
             { Dimension.LineItem, "lineItem" },
             { Dimension.Banner, "banner" },
+            { Dimension.MediaId, "mediaID" },
             { Dimension.Media, "media" },
             { Dimension.AdInteractionType, "adInteractionType" }, // Click, Impression, etc.
         };
@@ -82,6 +83,7 @@ namespace Adform.Helpers
             var defaultDimensions = new[]
             {
                 Dimension.Media,
+                Dimension.MediaId,
                 Dimension.Date,
             };
             var dimensions = settings.Dimensions == null

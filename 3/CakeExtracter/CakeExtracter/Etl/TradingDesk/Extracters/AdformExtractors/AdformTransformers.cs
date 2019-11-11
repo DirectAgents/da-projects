@@ -68,6 +68,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         private void AssignSummaryProperties(AdformSummary summary, List<object> row)
         {
             summary.Date = DateTime.Parse(row[columnLookup[reportData.DateColumnId]].ToString());
+            summary.MediaId = row[columnLookup[reportData.MediaIdColumnId]].ToString();
             summary.Media = row[columnLookup[reportData.MediaColumnId]].ToString();
             if (includeCampaign)
             {

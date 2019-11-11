@@ -10,6 +10,7 @@
         Order,
         LineItem,
         Banner,
+        MediaId,
         Media,
         AdInteractionType,
     }

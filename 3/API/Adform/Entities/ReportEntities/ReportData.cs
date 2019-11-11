@@ -17,6 +17,7 @@ namespace Adform.Entities.ReportEntities
         public readonly string LineItemColumnId = AdformApiHelper.Dimensions[Dimension.LineItem];
         public readonly string BannerColumnId = AdformApiHelper.Dimensions[Dimension.Banner];
         public readonly string MediaColumnId = AdformApiHelper.Dimensions[Dimension.Media];
+        public readonly string MediaIdColumnId = AdformApiHelper.Dimensions[Dimension.MediaId];
         public readonly string ImpressionColumnId = GetColumnId(AdformApiHelper.ImpressionsMetric, AdformApiHelper.SpecsValueAll);
         public readonly string ClickColumnId = GetColumnId(AdformApiHelper.ClicksMetric, AdformApiHelper.SpecsValueAll);
         public readonly string CostColumnId = AdformApiHelper.CostMetric;

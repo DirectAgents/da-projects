@@ -3,7 +3,7 @@
 namespace Adform
 {
     /// <summary>
-    /// Adform summary entity for all levels.
+    /// Adform summary report entity for all levels.
     /// </summary>
     public class AdformSummary
     {
@@ -96,6 +96,11 @@ namespace Adform
         /// Gets or sets the "Impressions" metric for the "Campaign unique" level.
         /// </summary>
         public int UniqueImpressions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the identifier of media.
+        /// </summary>
+        public string MediaId { get; set; }
 
         /// <summary>
         /// Gets or sets the Media.
