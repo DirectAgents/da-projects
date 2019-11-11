@@ -65,8 +65,10 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             };
 
         private readonly bool rtbMediaOnly;
+        private readonly bool areAllStatsForAllMediaTypes;
 
-        protected AdformApiBaseExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account, bool rtbMediaOnly)
+        protected AdformApiBaseExtractor(
+            AdformUtility adformUtility, DateRange dateRange, ExtAccount account, bool rtbMediaOnly, bool areAllStatsForAllMediaTypes)
         {
             AfUtility = adformUtility;
             DateRange = dateRange;
@@ -77,6 +79,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                 SetMonthlyCostMultipliers(account, dateRange);
             }
             this.rtbMediaOnly = rtbMediaOnly;
+            this.areAllStatsForAllMediaTypes = areAllStatsForAllMediaTypes;
         }
 
         protected ReportSettings GetBaseSettings()
@@ -90,6 +93,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                 ConvMetrics = true,
                 UniqueImpressionsMetricForAllMediaTypes = false,
                 RtbMediaOnly = rtbMediaOnly,
+                StatsForAllMediaTypes = areAllStatsForAllMediaTypes,
                 TrackingIds = AfUtility.TrackingIds,
                 Dimensions = new List<Dimension> { Dimension.AdInteractionType },
             };
