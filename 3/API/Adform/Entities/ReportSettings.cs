@@ -34,5 +34,11 @@ namespace Adform.Entities
         /// the "Unique impressions" metric for all media types.
         /// </summary>
         public bool UniqueImpressionsMetricForAllMediaTypes { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to include
+        /// all statistics for all media types.
+        /// </summary>
+        public bool StatsForAllMediaTypes { get; set; }
     }
 }

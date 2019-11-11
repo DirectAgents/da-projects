@@ -56,7 +56,7 @@ namespace Adform.Helpers
             dynamic filter = new System.Dynamic.ExpandoObject();
             filter.Client = new[] { settings.ClientId };
             filter.Date = GetDatesFilter(settings.StartDate, settings.EndDate);
-            if (IsMediaFilterNeed(settings.UniqueImpressionsMetricForAllMediaTypes))
+            if (IsMediaFilterNeed(settings))
             {
                 filter.Media = GetMediaFilter(settings.RtbMediaOnly);
             }
@@ -161,9 +161,11 @@ namespace Adform.Helpers
             return rtbMediaOnly ? GetRtbMedia() : GetMultipleMedia();
         }
 
-        private static bool IsMediaFilterNeed(bool isUniqueImpressionsMetricForAllMediaTypes)
+        private static bool IsMediaFilterNeed(ReportSettings settings)
         {
-            return !isUniqueImpressionsMetricForAllMediaTypes;
+            var isUniqueImpressionsMetricForAllMediaTypes = settings.UniqueImpressionsMetricForAllMediaTypes;
+            var areAllStatsForAllMediaTypes = settings.StatsForAllMediaTypes;
+            return !(isUniqueImpressionsMetricForAllMediaTypes || areAllStatsForAllMediaTypes);
         }
 
         private static bool IsTrackingFilterNeed(IEnumerable<string> trackingIds)

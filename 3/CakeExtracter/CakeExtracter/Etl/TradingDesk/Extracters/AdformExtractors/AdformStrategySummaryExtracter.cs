@@ -14,8 +14,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
     {
         private readonly bool byOrder;
 
-        public AdformStrategySummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account, bool rtbMediaOnly, bool byOrder = false)
-            : base(adformUtility, dateRange, account, rtbMediaOnly)
+        public AdformStrategySummaryExtractor(
+            AdformUtility adformUtility,
+            DateRange dateRange,
+            ExtAccount account,
+            bool rtbMediaOnly,
+            bool areAllStatsForAllMediaTypes,
+            bool byOrder = false)
+            : base(adformUtility, dateRange, account, rtbMediaOnly, areAllStatsForAllMediaTypes)
         {
             this.byOrder = byOrder;
         }

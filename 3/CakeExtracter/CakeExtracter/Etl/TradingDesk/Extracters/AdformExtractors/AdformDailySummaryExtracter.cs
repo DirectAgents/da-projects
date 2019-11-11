@@ -19,8 +19,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             DateRange dateRange,
             ExtAccount account,
             bool rtbMediaOnly,
-            bool areUniqueImpressionsForAllMediaTypes)
-            : base(adformUtility, dateRange, account, rtbMediaOnly)
+            bool areUniqueImpressionsForAllMediaTypes,
+            bool areAllStatsForAllMediaTypes)
+            : base(adformUtility, dateRange, account, rtbMediaOnly, areAllStatsForAllMediaTypes)
         {
             this.areUniqueImpressionsForAllMediaTypes = areUniqueImpressionsForAllMediaTypes;
         }
