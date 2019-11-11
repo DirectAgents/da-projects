@@ -64,9 +64,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                 },
             };
 
-        private readonly bool rtbMediaOnly;
-
-        protected AdformApiBaseExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account, bool rtbMediaOnly)
+        protected AdformApiBaseExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account)
         {
             AfUtility = adformUtility;
             DateRange = dateRange;
@@ -76,7 +74,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             {
                 SetMonthlyCostMultipliers(account, dateRange);
             }
-            this.rtbMediaOnly = rtbMediaOnly;
         }
 
         protected ReportSettings GetBaseSettings()
@@ -88,8 +85,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                 ClientId = ClientId,
                 BasicMetrics = true,
                 ConvMetrics = true,
-                UniqueImpressionsMetricForAllMediaTypes = false,
-                RtbMediaOnly = rtbMediaOnly,
                 TrackingIds = AfUtility.TrackingIds,
                 Dimensions = new List<Dimension> { Dimension.AdInteractionType },
             };
@@ -148,15 +143,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             var metrics = new List<SummaryMetric>();
             SetConversionMetrics(metrics, adformStats, date);
             SetUniqueImpressionMetric(metrics, adformStats, date);
-            stats.InitialMetrics = metrics;
-        }
-
-        protected static void SetConversionMetricsWithUniqImprForAllMedia(
-            T stats, DateTime date, IEnumerable<AdformSummary> adformStats, IEnumerable<AdformSummary> uniqueImpressionStats)
-        {
-            var metrics = new List<SummaryMetric>();
-            SetConversionMetrics(metrics, adformStats, date);
-            SetUniqueImpressionMetricForAllMedia(metrics, uniqueImpressionStats, date);
             stats.InitialMetrics = metrics;
         }
 

@@ -17,7 +17,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         private readonly bool includeOrder;
         private readonly bool includeLineItem;
         private readonly bool includeBanner;
-        private readonly bool includeUniqueImpressionsForAllMediaTypes;
 
         public AdformTransformer(
             ReportData reportData,
@@ -26,8 +25,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             bool byCampaign = false,
             bool byLineItem = false,
             bool byBanner = false,
-            bool byOrder = false,
-            bool uniqueImpressionsOnly = false)
+            bool byOrder = false)
         {
             this.reportData = reportData;
             rows = reportData.rows;
@@ -38,7 +36,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             includeOrder = byOrder;
             includeLineItem = byLineItem;
             includeBanner = byBanner;
-            includeUniqueImpressionsForAllMediaTypes = uniqueImpressionsOnly;
         }
 
         public IEnumerable<AdformSummary> EnumerateAdformSummaries()
@@ -87,21 +84,17 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             {
                 summary.Banner = ReturnValueIfColumnExists(row, reportData.BannerColumnId, Convert.ToString);
             }
-            if (includeAdInteractionType && !includeUniqueImpressionsForAllMediaTypes)
+            if (includeAdInteractionType)
             {
                 AssignAdInteractionType(summary, row);
             }
-            if (includeBasicStats && !includeUniqueImpressionsForAllMediaTypes)
+            if (includeBasicStats)
             {
                 AssignBasicSummaryProperties(summary, row);
             }
-            if (includeConvStats && !includeUniqueImpressionsForAllMediaTypes)
+            if (includeConvStats)
             {
                 AssignConversionSummaryProperties(summary, row);
-            }
-            if (includeUniqueImpressionsForAllMediaTypes)
-            {
-                AssignUniqueImpressionsProperty(summary, row);
             }
         }
 
