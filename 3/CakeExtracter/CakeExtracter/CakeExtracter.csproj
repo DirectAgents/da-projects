@@ -500,9 +500,11 @@
     <Compile Include="Etl\Adform\Loaders\AdfCampaignSummaryLoader.cs" />
     <Compile Include="Etl\Adform\Loaders\AdfDailySummaryLoader.cs" />
     <Compile Include="Etl\Adform\Loaders\AdfLineItemSummaryLoader.cs" />
+    <Compile Include="Etl\Adform\Loaders\AdfMediaTypeLoader.cs" />
     <Compile Include="Etl\Adform\Repositories\AdfBannerDatabaseRepository.cs" />
     <Compile Include="Etl\Adform\Repositories\AdfCampaignDatabaseRepository.cs" />
     <Compile Include="Etl\Adform\Repositories\AdfLineItemDatabaseRepository.cs" />
+    <Compile Include="Etl\Adform\Repositories\AdfMediaTypeDatabaseRepository.cs" />
     <Compile Include="Etl\Adform\Repositories\Summaries\AdfBannerSummaryDatabaseRepository.cs" />
     <Compile Include="Etl\Adform\Repositories\Summaries\AdfCampaignSummaryDatabaseRepository.cs" />
     <Compile Include="Etl\Adform\Repositories\Summaries\AdfDailySummaryDatabaseRepository.cs" />
