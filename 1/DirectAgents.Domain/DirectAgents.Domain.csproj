@@ -98,6 +98,16 @@
     <Compile Include="Abstract\IDepartmentRepository.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Entities\CPProg\Adform\AdfBanner.cs" />
+    <Compile Include="Entities\CPProg\Adform\AdfCampaign.cs" />
+    <Compile Include="Entities\CPProg\Adform\AdfLineItem.cs" />
+    <Compile Include="Entities\CPProg\Adform\Summaries\AdfBannerSummary.cs" />
+    <Compile Include="Entities\CPProg\Adform\Summaries\AdfBaseSummary.cs" />
+    <Compile Include="Entities\CPProg\Adform\Summaries\AdfCampaignSummary.cs" />
+    <Compile Include="Entities\CPProg\Adform\Summaries\AdfDailySummary.cs" />
+    <Compile Include="Entities\CPProg\Adform\AdfBaseEntity.cs" />
+    <Compile Include="Entities\CPProg\Adform\AdfMediaType.cs" />
+    <Compile Include="Entities\CPProg\Adform\Summaries\AdfLineItemSummary.cs" />
     <Compile Include="MigrationsTD\201905311144009_Mig_ErrorEmailSentProperty.cs" />
     <Compile Include="MigrationsTD\201905311144009_Mig_ErrorEmailSentProperty.Designer.cs">
       <DependentUpon>201905311144009_Mig_ErrorEmailSentProperty.cs</DependentUpon>

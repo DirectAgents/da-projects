@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using DirectAgents.Domain.Entities;
@@ -7,6 +6,8 @@ using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.DBM;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.CPProg.Adform;
+using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
 using DirectAgents.Domain.Entities.CPProg.Vendor;
 using DirectAgents.Domain.Entities.CPProg.Vendor.SummaryMetrics;
 using DirectAgents.Domain.Entities.CPProg.DSP;
@@ -116,6 +117,16 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<FbCampaignSummary>().ToTable("FbCampaignSummary", tdSchema);
             modelBuilder.Entity<FbDailySummary>().ToTable("FbDailySummary", tdSchema);
             modelBuilder.Entity<FbActionType>().ToTable("FbActionType", tdSchema);
+
+            //TD Adform
+            modelBuilder.Entity<AdfDailySummary>().ToTable("AdfDailySummary", tdSchema);
+            modelBuilder.Entity<AdfCampaignSummary>().ToTable("AdfCampaignSummary", tdSchema);
+            modelBuilder.Entity<AdfLineItemSummary>().ToTable("AdfLineItemSummary", tdSchema);
+            modelBuilder.Entity<AdfBannerSummary>().ToTable("AdfBannerSummary", tdSchema);
+            modelBuilder.Entity<AdfCampaign>().ToTable("AdfCampaign", tdSchema);
+            modelBuilder.Entity<AdfLineItem>().ToTable("AdfLineItem", tdSchema);
+            modelBuilder.Entity<AdfBanner>().ToTable("AdfBanner", tdSchema);
+            modelBuilder.Entity<AdfMediaType>().ToTable("AdfMediaType", tdSchema);
 
             //TD CJ
             modelBuilder.Entity<CjAdvertiserCommission>().ToTable("CjAdvertiserCommission", tdSchema);
@@ -239,6 +250,9 @@ namespace DirectAgents.Domain.Contexts
             //TD Facebook
             SetupFacebookModel(modelBuilder);
 
+            //TD Adform
+            SetupAdformModel(modelBuilder);
+
             //TD Vendor
             SetupSummaryMetricModel<VendorProductSummaryMetric>(modelBuilder, "ProductId");
             SetupSummaryMetricModel<VendorSubcategorySummaryMetric>(modelBuilder, "SubcategoryId");
@@ -361,7 +375,6 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<VendorParentProductSummaryMetric> VendorParentProductSummaryMetrics { get; set; }
         public DbSet<VcdAnalyticItem> VcdAnalytic { get; set; }
 
-
         //TD Facebook
         public DbSet<FbAd> FbAds { get; set; }
         public DbSet<FbAdAction> FbAdActions { get; set; }
@@ -375,6 +388,16 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<FbCampaignSummary> FbCampaignSummaries { get; set; }
         public DbSet<FbDailySummary> FbDailySummaries { get; set; }
         public DbSet<FbActionType> FbActionTypes { get; set; }
+
+        //TD Adform
+        public DbSet<AdfDailySummary> AdfDailySummaries { get; set; }
+        public DbSet<AdfCampaignSummary> AdfCampaignSummaries { get; set; }
+        public DbSet<AdfLineItemSummary> AdfLineItemSummaries { get; set; }
+        public DbSet<AdfBannerSummary> AdfBannerSummaries { get; set; }
+        public DbSet<AdfCampaign> AdfCampaigns { get; set; }
+        public DbSet<AdfLineItem> AdfLineItems { get; set; }
+        public DbSet<AdfBanner> AdfBanners { get; set; }
+        public DbSet<AdfMediaType> AdfMediaTypes { get; set; }
 
         //TD DSP
         public DbSet<DspAdvertiser> DspAdvertisers { get; set; }
@@ -464,7 +487,7 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.CustomerReturns).HasPrecision(18, 6);
             modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.OrderedRevenue).HasPrecision(18, 6);
         }
-        
+
         private void SetupDailyMetricModelValues<TDailyMetricValues>(DbModelBuilder modelBuilder, string entityColumnName)
              where TDailyMetricValues : DspMetricValues
         {
@@ -518,6 +541,36 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<FbAdAction>().Property(t => t.PostViewVal).HasPrecision(18, 6);
             modelBuilder.Entity<FbAdSetAction>().Property(t => t.PostViewVal).HasPrecision(18, 6);
             modelBuilder.Entity<FbCampaignAction>().Property(t => t.PostViewVal).HasPrecision(18, 6);
+        }
+
+        private void SetupAdformModel(DbModelBuilder modelBuilder)
+        {
+            SetupAdformBaseMetricModelValues<AdfDailySummary>(modelBuilder, "AccountId");
+            SetupAdformBaseMetricModelValues<AdfCampaignSummary>(modelBuilder, "CampaignId");
+            SetupAdformBaseMetricModelValues<AdfLineItemSummary>(modelBuilder, "LineItemId");
+            SetupAdformBaseMetricModelValues<AdfBannerSummary>(modelBuilder, "BannerId");
+            modelBuilder.Entity<AdfCampaign>()
+                .HasMany(g => g.LineItems)
+                .WithRequired(s => s.Campaign)
+                .WillCascadeOnDelete(false);
+            modelBuilder.Entity<AdfLineItem>()
+                .HasMany(g => g.Banners)
+                .WithRequired(s => s.LineItem)
+                .WillCascadeOnDelete(false);
+        }
+
+        private void SetupAdformBaseMetricModelValues<TBaseMetricValues>(DbModelBuilder modelBuilder, string entityColumnName)
+            where TBaseMetricValues : AdfBaseSummary
+        {
+            modelBuilder.Entity<TBaseMetricValues>().HasKey(s => s.Id);
+            modelBuilder.Entity<TBaseMetricValues>().Property(x => x.EntityId).HasColumnName(entityColumnName);
+            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.Cost).HasPrecision(18, 6);
+            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.PostClickRev).HasPrecision(18, 6);
+            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.PostViewRev).HasPrecision(18, 6);
+            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.SalesAll).HasPrecision(18, 6);
+            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.SalesConvType1).HasPrecision(18, 6);
+            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.SalesConvType2).HasPrecision(18, 6);
+            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.SalesConvType3).HasPrecision(18, 6);
         }
 
         private void SetupYamDailyMetricModelValues<TDailyMetricValues>(DbModelBuilder modelBuilder, string entityColumnName)
