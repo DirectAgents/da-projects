@@ -7,10 +7,12 @@ using Adform.Enums;
 using Adform.Utilities;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.CPProg.Adform;
+using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 {
-    public class AdformStrategySummaryExtractor : AdformApiBaseExtractor<StrategySummary>
+    public class AdformStrategySummaryExtractor : AdformApiBaseExtractor<AdfCampaignSummary>
     {
         private readonly bool byOrder;
 
@@ -43,6 +45,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         {
             var settings = GetBaseSettings();
             settings.Dimensions.Add(byOrder ? Dimension.Order : Dimension.Campaign);
+            settings.Dimensions.Add(byOrder ? Dimension.OrderId : Dimension.CampaignId);
             var parameters = AfUtility.CreateReportParams(settings);
             var allReportData = AfUtility.GetReportDataWithLimits(parameters);
             var adFormSums = allReportData.SelectMany(TransformReportData).ToList();
@@ -56,23 +59,33 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             return afSums;
         }
 
-        private IEnumerable<StrategySummary> GroupSummaries(IEnumerable<AdformSummary> adFormSums)
+        private IEnumerable<AdfCampaignSummary> GroupSummaries(IEnumerable<AdformSummary> adFormSums)
         {
             var sums = EnumerateRows(adFormSums);
             var resultSums = AdjustItems(sums);
             return resultSums;
         }
 
-        private IEnumerable<StrategySummary> EnumerateRows(IEnumerable<AdformSummary> afSums)
+        private IEnumerable<AdfCampaignSummary> EnumerateRows(IEnumerable<AdformSummary> afSums)
         {
-            var campDateGroups = afSums.GroupBy(x => new { x.Campaign, x.Order, x.Date });
+            var campDateGroups = afSums.GroupBy(x => new { x.Campaign, x.CampaignId, x.Order, x.OrderId, x.Date, x.MediaId, x.Media });
             foreach (var campDateGroup in campDateGroups)
             {
-                var sum = new StrategySummary
+                var sum = new AdfCampaignSummary
                 {
-                    StrategyName = byOrder ? campDateGroup.Key.Order : campDateGroup.Key.Campaign,
+                    Date = campDateGroup.Key.Date,
+                    Campaign = new AdfCampaign
+                    {
+                        Name = byOrder ? campDateGroup.Key.Order : campDateGroup.Key.Campaign,
+                        ExternalId = byOrder ? campDateGroup.Key.OrderId : campDateGroup.Key.CampaignId,
+                    },
+                    MediaType = new AdfMediaType
+                    {
+                        ExternalId = campDateGroup.Key.MediaId,
+                        Name = campDateGroup.Key.Media,
+                    },
                 };
-                SetStats(sum, campDateGroup, campDateGroup.Key.Date);
+                SetStats(sum, campDateGroup/*, campDateGroup.Key.Date*/);
                 yield return sum;
             }
         }

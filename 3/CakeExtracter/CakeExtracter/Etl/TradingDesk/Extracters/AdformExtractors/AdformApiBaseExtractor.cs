@@ -7,11 +7,13 @@ using Adform.Enums;
 using Adform.Utilities;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 {
     public abstract class AdformApiBaseExtractor<T> : Extracter<T>
-        where T : DatedStatsSummary
+        //where T : DatedStatsSummary
+        where T : AdfBaseSummary
     {
         protected readonly AdformUtility AfUtility;
         protected readonly DateRange DateRange;
@@ -31,38 +33,38 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             { AdInteractionType.UniqueImpressions, "None" },
         };
 
-        private static readonly Dictionary<AdInteractionType, Dictionary<ConversionMetric, string>> MetricNames =
-            new Dictionary<AdInteractionType, Dictionary<ConversionMetric, string>>
-            {
-                {
-                    AdInteractionType.Clicks, new Dictionary<ConversionMetric, string>
-                    {
-                        {ConversionMetric.ConversionsConversionType1, "Adform-Conversions-ConvType1-Clicks"},
-                        {ConversionMetric.ConversionsConversionType2, "Adform-Conversions-ConvType2-Clicks"},
-                        {ConversionMetric.ConversionsConversionType3, "Adform-Conversions-ConvType3-Clicks"},
-                        {ConversionMetric.SalesConversionType1, "Adform-Sales-ConvType1-Clicks"},
-                        {ConversionMetric.SalesConversionType2, "Adform-Sales-ConvType2-Clicks"},
-                        {ConversionMetric.SalesConversionType3, "Adform-Sales-ConvType3-Clicks"},
-                    }
-                },
-                {
-                    AdInteractionType.Impressions, new Dictionary<ConversionMetric, string>
-                    {
-                        {ConversionMetric.ConversionsConversionType1, "Adform-Conversions-ConvType1-Impressions"},
-                        {ConversionMetric.ConversionsConversionType2, "Adform-Conversions-ConvType2-Impressions"},
-                        {ConversionMetric.ConversionsConversionType3, "Adform-Conversions-ConvType3-Impressions"},
-                        {ConversionMetric.SalesConversionType1, "Adform-Sales-ConvType1-Impressions"},
-                        {ConversionMetric.SalesConversionType2, "Adform-Sales-ConvType2-Impressions"},
-                        {ConversionMetric.SalesConversionType3, "Adform-Sales-ConvType3-Impressions"},
-                    }
-                },
-                {
-                    AdInteractionType.UniqueImpressions, new Dictionary<ConversionMetric, string>
-                    {
-                        { ConversionMetric.UniqueImpressions, "Adform-Unique-Impressions" },
-                    }
-                },
-            };
+        //private static readonly Dictionary<AdInteractionType, Dictionary<ConversionMetric, string>> MetricNames =
+        //    new Dictionary<AdInteractionType, Dictionary<ConversionMetric, string>>
+        //    {
+        //        {
+        //            AdInteractionType.Clicks, new Dictionary<ConversionMetric, string>
+        //            {
+        //                {ConversionMetric.ConversionsConversionType1, "Adform-Conversions-ConvType1-Clicks"},
+        //                {ConversionMetric.ConversionsConversionType2, "Adform-Conversions-ConvType2-Clicks"},
+        //                {ConversionMetric.ConversionsConversionType3, "Adform-Conversions-ConvType3-Clicks"},
+        //                {ConversionMetric.SalesConversionType1, "Adform-Sales-ConvType1-Clicks"},
+        //                {ConversionMetric.SalesConversionType2, "Adform-Sales-ConvType2-Clicks"},
+        //                {ConversionMetric.SalesConversionType3, "Adform-Sales-ConvType3-Clicks"},
+        //            }
+        //        },
+        //        {
+        //            AdInteractionType.Impressions, new Dictionary<ConversionMetric, string>
+        //            {
+        //                {ConversionMetric.ConversionsConversionType1, "Adform-Conversions-ConvType1-Impressions"},
+        //                {ConversionMetric.ConversionsConversionType2, "Adform-Conversions-ConvType2-Impressions"},
+        //                {ConversionMetric.ConversionsConversionType3, "Adform-Conversions-ConvType3-Impressions"},
+        //                {ConversionMetric.SalesConversionType1, "Adform-Sales-ConvType1-Impressions"},
+        //                {ConversionMetric.SalesConversionType2, "Adform-Sales-ConvType2-Impressions"},
+        //                {ConversionMetric.SalesConversionType3, "Adform-Sales-ConvType3-Impressions"},
+        //            }
+        //        },
+        //        {
+        //            AdInteractionType.UniqueImpressions, new Dictionary<ConversionMetric, string>
+        //            {
+        //                { ConversionMetric.UniqueImpressions, "Adform-Unique-Impressions" },
+        //            }
+        //        },
+        //    };
 
         protected AdformApiBaseExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account)
         {
@@ -104,12 +106,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             }
         }
 
-        protected void SetStats(T stats, IEnumerable<AdformSummary> adformStats, DateTime date)
+        protected void SetStats(T stats, IEnumerable<AdformSummary> adformStats/*, DateTime date*/)
         {
-            stats.Date = date;
+            //stats.Date = date;
             SetBaseStats(stats, adformStats);
             SetClickAndViewStats(stats, adformStats);
-            SetConversionMetrics(stats, date, adformStats);
+            SetConversionMetrics(stats, adformStats);
         }
 
         protected void SetBaseStats(T stats, AdformSummary adformStat)
@@ -130,66 +132,62 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             var viewThroughs = adformStats.Where(x => x.AdInteractionType == AdInteractions[AdInteractionType.Impressions]);
             stats.PostClickConv = clickThroughs.Sum(x => x.ConversionsAll);
             stats.PostViewConv = viewThroughs.Sum(x => x.ConversionsAll);
-            var rev = stats as DatedStatsSummaryWithRev;
-            if (rev != null)
-            {
-                rev.PostClickRev = clickThroughs.Sum(x => x.SalesAll);
-                rev.PostViewRev = viewThroughs.Sum(x => x.SalesAll);
-            }
+            stats.PostClickRev = clickThroughs.Sum(x => x.SalesAll);
+            stats.PostViewRev = viewThroughs.Sum(x => x.SalesAll);
         }
 
-        protected static void SetConversionMetrics(T stats, DateTime date, IEnumerable<AdformSummary> adformStats)
-        {
-            var metrics = new List<SummaryMetric>();
-            SetConversionMetrics(metrics, adformStats, date);
-            SetUniqueImpressionMetric(metrics, adformStats, date);
-            stats.InitialMetrics = metrics;
-        }
-
-        private static void SetConversionMetrics(List<SummaryMetric> metrics, IEnumerable<AdformSummary> adformStats, DateTime date)
+        protected static void SetConversionMetrics(T stats, IEnumerable<AdformSummary> adformStats/*, DateTime date*/)
         {
             var clickThroughs = adformStats.Where(x => x.AdInteractionType == AdInteractions[AdInteractionType.Clicks]);
             var viewThroughs = adformStats.Where(x => x.AdInteractionType == AdInteractions[AdInteractionType.Impressions]);
-            AddMetrics(metrics, clickThroughs, AdInteractionType.Clicks, date);
-            AddMetrics(metrics, viewThroughs, AdInteractionType.Impressions, date);
+            var uniqImpressions = adformStats.Where(x => x.AdInteractionType == AdInteractions[AdInteractionType.UniqueImpressions]);
+            stats.ConversionsConvType1Clicks = clickThroughs.Sum(x => x.ConversionsConvType1);
+            stats.ConversionsConvType2Clicks = clickThroughs.Sum(x => x.ConversionsConvType2);
+            stats.ConversionsConvType3Clicks = clickThroughs.Sum(x => x.ConversionsConvType3);
+            stats.SalesConvType1Clicks = clickThroughs.Sum(x => x.SalesConvType1);
+            stats.SalesConvType2Clicks = clickThroughs.Sum(x => x.SalesConvType2);
+            stats.SalesConvType3Clicks = clickThroughs.Sum(x => x.SalesConvType3);
+
+            stats.ConversionsConvType1Impressions = viewThroughs.Sum(x => x.ConversionsConvType1);
+            stats.ConversionsConvType2Impressions = viewThroughs.Sum(x => x.ConversionsConvType2);
+            stats.ConversionsConvType3Impressions = viewThroughs.Sum(x => x.ConversionsConvType3);
+            stats.SalesConvType1Impressions = viewThroughs.Sum(x => x.SalesConvType1);
+            stats.SalesConvType2Impressions = viewThroughs.Sum(x => x.SalesConvType2);
+            stats.SalesConvType3Impressions = viewThroughs.Sum(x => x.SalesConvType3);
+
+            stats.UniqueImpressions = uniqImpressions.Sum(x => x.UniqueImpressions);
+            
+            //AddMetrics(stats, clickThroughs, AdInteractionType.Clicks, date);
+            //AddMetrics(stats, viewThroughs, AdInteractionType.Impressions, date);
         }
 
-        private static void SetUniqueImpressionMetric(
-            List<SummaryMetric> metrics, IEnumerable<AdformSummary> adformStats, DateTime date)
-        {
-            var uniqueImpressionSum = adformStats
-                .Where(x => x.AdInteractionType == AdInteractions[AdInteractionType.UniqueImpressions])
-                .Sum(x => x.UniqueImpressions);
-            AddMetric(metrics, AdInteractionType.UniqueImpressions, ConversionMetric.UniqueImpressions, date, uniqueImpressionSum);
-        }
+        //private static void AddMetrics(T stats, IEnumerable<AdformSummary> adInteractionStats, AdInteractionType adInteractionType, DateTime date)
+        //{
+            //AddMetric(metrics, adInteractionType, ConversionMetric.ConversionsConversionType1, date, adInteractionStats.Sum(x => x.ConversionsConvType1));
+            //AddMetric(metrics, adInteractionType, ConversionMetric.ConversionsConversionType2, date, adInteractionStats.Sum(x => x.ConversionsConvType2));
+            //AddMetric(metrics, adInteractionType, ConversionMetric.ConversionsConversionType3, date, adInteractionStats.Sum(x => x.ConversionsConvType3));
+            //AddMetric(metrics, adInteractionType, ConversionMetric.SalesConversionType1, date, adInteractionStats.Sum(x => x.SalesConvType1));
+            //AddMetric(metrics, adInteractionType, ConversionMetric.SalesConversionType2, date, adInteractionStats.Sum(x => x.SalesConvType2));
+            //AddMetric(metrics, adInteractionType, ConversionMetric.SalesConversionType3, date, adInteractionStats.Sum(x => x.SalesConvType3));
+        //}
 
-        private static void AddMetrics(List<SummaryMetric> metrics, IEnumerable<AdformSummary> adInteractionStats, AdInteractionType adInteractionType, DateTime date)
-        {
-            AddMetric(metrics, adInteractionType, ConversionMetric.ConversionsConversionType1, date, adInteractionStats.Sum(x => x.ConversionsConvType1));
-            AddMetric(metrics, adInteractionType, ConversionMetric.ConversionsConversionType2, date, adInteractionStats.Sum(x => x.ConversionsConvType2));
-            AddMetric(metrics, adInteractionType, ConversionMetric.ConversionsConversionType3, date, adInteractionStats.Sum(x => x.ConversionsConvType3));
-            AddMetric(metrics, adInteractionType, ConversionMetric.SalesConversionType1, date, adInteractionStats.Sum(x => x.SalesConvType1));
-            AddMetric(metrics, adInteractionType, ConversionMetric.SalesConversionType2, date, adInteractionStats.Sum(x => x.SalesConvType2));
-            AddMetric(metrics, adInteractionType, ConversionMetric.SalesConversionType3, date, adInteractionStats.Sum(x => x.SalesConvType3));
-        }
+        //private static void AddMetric(List<SummaryMetric> metrics, AdInteractionType adInteractionType, ConversionMetric metricType, DateTime date, decimal metricValue)
+        //{
+        //    if (metricValue == 0.0M)
+        //    {
+        //        return;
+        //    }
 
-        private static void AddMetric(List<SummaryMetric> metrics, AdInteractionType adInteractionType, ConversionMetric metricType, DateTime date, decimal metricValue)
-        {
-            if (metricValue == 0.0M)
-            {
-                return;
-            }
+        //    var metric = GetMetric(MetricNames[adInteractionType][metricType], null, date, metricValue);
+        //    metrics.Add(metric);
+        //}
 
-            var metric = GetMetric(MetricNames[adInteractionType][metricType], null, date, metricValue);
-            metrics.Add(metric);
-        }
-
-        private static SummaryMetric GetMetric(string metricName, int? daysInterval, DateTime date, decimal metricValue)
-        {
-            var metricType = new MetricType(metricName, daysInterval);
-            var metric = new SummaryMetric(date, metricType, metricValue);
-            return metric;
-        }
+        //private static SummaryMetric GetMetric(string metricName, int? daysInterval, DateTime date, decimal metricValue)
+        //{
+        //    var metricType = new MetricType(metricName, daysInterval);
+        //    var metric = new SummaryMetric(date, metricType, metricValue);
+        //    return metric;
+        //}
 
         private void SetMonthlyCostMultipliers(ExtAccount account, DateRange dateRange)
         {

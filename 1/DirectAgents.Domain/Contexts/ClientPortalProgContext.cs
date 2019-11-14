@@ -568,9 +568,12 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<TBaseMetricValues>().Property(s => s.PostClickRev).HasPrecision(18, 6);
             modelBuilder.Entity<TBaseMetricValues>().Property(s => s.PostViewRev).HasPrecision(18, 6);
             modelBuilder.Entity<TBaseMetricValues>().Property(s => s.SalesAll).HasPrecision(18, 6);
-            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.SalesConvType1).HasPrecision(18, 6);
-            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.SalesConvType2).HasPrecision(18, 6);
-            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.SalesConvType3).HasPrecision(18, 6);
+            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.SalesConvType1Clicks).HasPrecision(18, 6);
+            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.SalesConvType2Clicks).HasPrecision(18, 6);
+            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.SalesConvType3Clicks).HasPrecision(18, 6);
+            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.SalesConvType1Impressions).HasPrecision(18, 6);
+            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.SalesConvType2Impressions).HasPrecision(18, 6);
+            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.SalesConvType3Impressions).HasPrecision(18, 6);
         }
 
         private void SetupYamDailyMetricModelValues<TDailyMetricValues>(DbModelBuilder modelBuilder, string entityColumnName)

@@ -7,14 +7,19 @@ using Adform.Enums;
 using Adform.Utilities;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.CPProg.Adform;
+using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 {
-    public class AdformTDadSummaryExtractor : AdformApiBaseExtractor<TDadSummary>
+    public class AdformTDadSummaryExtractor : AdformApiBaseExtractor<AdfBannerSummary>
     {
-        public AdformTDadSummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account)
+        private readonly bool byOrder;
+
+        public AdformTDadSummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account, bool byOrder)
             : base(adformUtility, dateRange, account)
         {
+            this.byOrder = byOrder;
         }
 
         protected override void Extract()
@@ -38,7 +43,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         private IEnumerable<AdformSummary> ExtractData()
         {
             var settings = GetBaseSettings();
+            settings.Dimensions.Add(Dimension.BannerId);
             settings.Dimensions.Add(Dimension.Banner);
+            settings.Dimensions.Add(Dimension.LineItem);
+            settings.Dimensions.Add(Dimension.LineItemId);
+            settings.Dimensions.Add(byOrder ? Dimension.Order : Dimension.Campaign);
+            settings.Dimensions.Add(byOrder ? Dimension.OrderId : Dimension.CampaignId);
             var parameters = AfUtility.CreateReportParams(settings);
             var allReportData = AfUtility.GetReportDataWithLimits(parameters);
             var adFormSums = allReportData.SelectMany(TransformReportData).ToList();
@@ -47,28 +57,48 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 
         private IEnumerable<AdformSummary> TransformReportData(ReportData reportData)
         {
-            var adFormTransformer = new AdformTransformer(reportData, byBanner: true);
+            var adFormTransformer = new AdformTransformer(reportData, byLineItem: true, byCampaign: !byOrder, byOrder: byOrder, byBanner: true);
             var afSums = adFormTransformer.EnumerateAdformSummaries();
             return afSums;
         }
 
-        private IEnumerable<TDadSummary> GroupSummaries(IEnumerable<AdformSummary> adFormSums)
+        private IEnumerable<AdfBannerSummary> GroupSummaries(IEnumerable<AdformSummary> adFormSums)
         {
             var sums = EnumerateRows(adFormSums);
             var resultSums = AdjustItems(sums);
             return resultSums;
         }
 
-        private IEnumerable<TDadSummary> EnumerateRows(IEnumerable<AdformSummary> afSums)
+        private IEnumerable<AdfBannerSummary> EnumerateRows(IEnumerable<AdformSummary> afSums)
         {
-            var bannerDateGroups = afSums.GroupBy(x => new { x.Banner, x.Date });
-            foreach (var bdGroup in bannerDateGroups)
+            var bannerGroups = afSums.GroupBy(x => new { x.CampaignId, x.Campaign, x.LineItemId, x.LineItem, x.BannerId, x.Banner, x.Date, x.MediaId, x.Media });
+            foreach (var bannerGroup in bannerGroups)
             {
-                var sum = new TDadSummary
+                var sum = new AdfBannerSummary
                 {
-                    TDadName = bdGroup.Key.Banner,
+                    Date = bannerGroup.Key.Date,
+                    MediaType = new AdfMediaType
+                    {
+                        ExternalId = bannerGroup.Key.MediaId,
+                        Name = bannerGroup.Key.Media,
+                    },
+                    Banner = new AdfBanner
+                    {
+                        ExternalId = bannerGroup.Key.BannerId,
+                        Name = bannerGroup.Key.Banner,
+                        LineItem = new AdfLineItem
+                        {
+                            ExternalId = bannerGroup.Key.LineItemId,
+                            Name = bannerGroup.Key.LineItem,
+                            Campaign = new AdfCampaign
+                            {
+                                ExternalId = bannerGroup.First().CampaignId,
+                                Name = bannerGroup.First().Campaign,
+                            },
+                        },
+                    },
                 };
-                SetStats(sum, bdGroup, bdGroup.Key.Date);
+                SetStats(sum, bannerGroup/*, bannerGroup.Key.Date*/);
                 yield return sum;
             }
         }

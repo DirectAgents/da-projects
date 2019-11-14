@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 using Adform.Utilities;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
+using CakeExtracter.Etl.Adform.Loaders;
+using CakeExtracter.Etl.Adform.Repositories;
+using CakeExtracter.Etl.Adform.Repositories.Summaries;
 using CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors;
-using CakeExtracter.Etl.TradingDesk.LoadersDA;
-using CakeExtracter.Etl.TradingDesk.LoadersDA.AdformLoaders;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
@@ -125,7 +126,7 @@ namespace CakeExtracter.Commands
             {
                 var etlLevelAction = GetEtlLevelAction(
                     account,
-                    () => DoETL_Creative(dateRange, account, adformUtility));
+                    () => DoETL_Creative(dateRange, account, orderInsteadOfCampaign, adformUtility));
                 etlLevelActions.Add(etlLevelAction);
             }
             return etlLevelActions;
@@ -173,36 +174,67 @@ namespace CakeExtracter.Commands
         private static void DoETL_Daily(DateRange dateRange, ExtAccount account, AdformUtility adformUtility)
         {
             var extractor = new AdformDailySummaryExtractor(adformUtility, dateRange, account);
-            var loader = new TDDailySummaryLoader(account.Id);
+            var loader = CreateDailyLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
 
         private static void DoETL_Strategy(DateRange dateRange, ExtAccount account, bool byOrder, AdformUtility adformUtility)
         {
             var extractor = new AdformStrategySummaryExtractor(adformUtility, dateRange, account, byOrder);
-            var loader = new AdformCampaignSummaryLoader(account.Id);
+            var loader = CreateCampaignLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
 
         private static void DoETL_AdSet(DateRange dateRange, ExtAccount account, bool byOrder, AdformUtility adformUtility)
         {
             var extractor = new AdformAdSetSummaryExtractor(adformUtility, dateRange, account, byOrder);
-            var loader = new AdformLineItemSummaryLoader(account.Id);
+            var loader = CreateLineItemLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
 
-        private static void DoETL_Creative(DateRange dateRange, ExtAccount account, AdformUtility adformUtility)
+        private static void DoETL_Creative(DateRange dateRange, ExtAccount account, bool byOrder, AdformUtility adformUtility)
         {
-            var extractor = new AdformTDadSummaryExtractor(adformUtility, dateRange, account);
-            var loader = new TDadSummaryLoader(account.Id);
+            var extractor = new AdformTDadSummaryExtractor(adformUtility, dateRange, account, byOrder);
+            var loader = CreateBannerLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
+        }
+
+        private static AdfDailySummaryLoader CreateDailyLoader(int accountId)
+        {
+            var summaryRepository = new AdfDailySummaryDatabaseRepository();
+            return new AdfDailySummaryLoader(accountId, summaryRepository);
+        }
+
+        private static AdfCampaignSummaryLoader CreateCampaignLoader(int accountId)
+        {
+            var entityRepository = new AdfCampaignDatabaseRepository();
+            var summaryRepository = new AdfCampaignSummaryDatabaseRepository();
+            return new AdfCampaignSummaryLoader(accountId, entityRepository, summaryRepository);
+        }
+
+        private static AdfLineItemSummaryLoader CreateLineItemLoader(int accountId)
+        {
+            var entityRepository = new AdfLineItemDatabaseRepository();
+            var summaryRepository = new AdfLineItemSummaryDatabaseRepository();
+            var campaignLoader = CreateCampaignLoader(accountId);
+            return new AdfLineItemSummaryLoader(accountId, entityRepository, summaryRepository, campaignLoader);
+        }
+
+        private static AdfBannerSummaryLoader CreateBannerLoader(int accountId)
+        {
+            var entityRepository = new AdfBannerDatabaseRepository();
+            var summaryRepository = new AdfBannerSummaryDatabaseRepository();
+            var lineItemLoader = CreateLineItemLoader(accountId);
+            return new AdfBannerSummaryLoader(accountId, entityRepository, summaryRepository, lineItemLoader);
         }
 
         private IEnumerable<ExtAccount> GetAccounts()
         {
             using (var db = new ClientPortalProgContext())
             {
-                var accounts = db.ExtAccounts.Include("Campaign.BudgetInfos").Include("Campaign.PlatformBudgetInfos")
+                var accounts = db.ExtAccounts
+                    .Include("Campaign.BudgetInfos")
+                    .Include("Campaign.PlatformBudgetInfos")
                     .Where(a => a.Platform.Code == Platform.Code_Adform);
                 if (AccountId.HasValue)
                 {
@@ -212,15 +244,12 @@ namespace CakeExtracter.Commands
                 {
                     accounts = accounts.Where(a => !a.Disabled);
                 }
-
                 if (DisabledOnly)
                 {
                     accounts = accounts.Where(a => a.Disabled);
                 }
-
                 return accounts.ToList().Where(a => !string.IsNullOrWhiteSpace(a.ExternalId));
             }
         }
-
     }
 }

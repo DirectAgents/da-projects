@@ -7,10 +7,12 @@ using Adform.Enums;
 using Adform.Utilities;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.CPProg.Adform;
+using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 {
-    public class AdformAdSetSummaryExtractor : AdformApiBaseExtractor<AdSetSummary>
+    public class AdformAdSetSummaryExtractor : AdformApiBaseExtractor<AdfLineItemSummary>
     {
         private readonly bool byOrder;
 
@@ -42,7 +44,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         {
             var settings = GetBaseSettings();
             settings.Dimensions.Add(Dimension.LineItem);
+            settings.Dimensions.Add(Dimension.LineItemId);
             settings.Dimensions.Add(byOrder ? Dimension.Order : Dimension.Campaign);
+            settings.Dimensions.Add(byOrder ? Dimension.OrderId : Dimension.CampaignId);
             var parameters = AfUtility.CreateReportParams(settings);
             var allReportData = AfUtility.GetReportDataWithLimits(parameters);
             var adFormSums = allReportData.SelectMany(TransformReportData).ToList();
@@ -56,24 +60,38 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             return afSums;
         }
 
-        private IEnumerable<AdSetSummary> GroupSummaries(IEnumerable<AdformSummary> adFormSums)
+        private IEnumerable<AdfLineItemSummary> GroupSummaries(IEnumerable<AdformSummary> adFormSums)
         {
             var sums = EnumerateRows(adFormSums);
             var resultSums = AdjustItems(sums);
             return resultSums;
         }
 
-        private IEnumerable<AdSetSummary> EnumerateRows(IEnumerable<AdformSummary> afSums)
+        private IEnumerable<AdfLineItemSummary> EnumerateRows(IEnumerable<AdformSummary> afSums)
         {
-            var liDateGroups = afSums.GroupBy(x => new { x.LineItem, x.Date });
+            var liDateGroups = afSums.GroupBy(x => new { x.CampaignId, x.Campaign, x.LineItemId, x.LineItem, x.Date, x.MediaId, x.Media });
             foreach (var liDateGroup in liDateGroups)
             {
-                var sum = new AdSetSummary
+                var sum = new AdfLineItemSummary
                 {
-                    StrategyName = byOrder ? liDateGroup.First().Order : liDateGroup.First().Campaign,
-                    AdSetName = liDateGroup.Key.LineItem,
+                     Date = liDateGroup.Key.Date,
+                     MediaType = new AdfMediaType
+                     {
+                         ExternalId = liDateGroup.Key.MediaId,
+                         Name = liDateGroup.Key.Media,
+                     },
+                     LineItem = new AdfLineItem
+                     {
+                         ExternalId = liDateGroup.Key.LineItemId,
+                         Name = liDateGroup.Key.LineItem,
+                         Campaign = new AdfCampaign
+                         {
+                             ExternalId = byOrder ? liDateGroup.First().OrderId : liDateGroup.First().CampaignId,
+                             Name = byOrder ? liDateGroup.First().Order : liDateGroup.First().Campaign,
+                         },
+                     },
                 };
-                SetStats(sum, liDateGroup, liDateGroup.Key.Date);
+                SetStats(sum, liDateGroup/*, liDateGroup.Key.Date*/);
                 yield return sum;
             }
         }

@@ -29,9 +29,13 @@ namespace Adform.Helpers
         {
             { Dimension.Date, "date" },
             { Dimension.Campaign, "campaign" },
+            { Dimension.CampaignId, "campaignID" },
             { Dimension.Order, "order" },
+            { Dimension.OrderId, "orderID" },
             { Dimension.LineItem, "lineItem" },
+            { Dimension.LineItemId, "lineItemID" },
             { Dimension.Banner, "banner" },
+            { Dimension.BannerId, "bannerID" },
             { Dimension.MediaId, "mediaID" },
             { Dimension.Media, "media" },
             { Dimension.AdInteractionType, "adInteractionType" }, // Click, Impression, etc.

@@ -32,20 +32,28 @@ namespace Adform
         /// </summary>
         public string Order { get; set; }
 
+        public string OrderId { get; set; }
+
         /// <summary>
         /// Gets or sets the Campaign.
         /// </summary>
         public string Campaign { get; set; }
+
+        public string CampaignId { get; set; }
 
         /// <summary>
         /// Gets or sets the LineItem.
         /// </summary>
         public string LineItem { get; set; }
 
+        public string LineItemId { get; set; }
+
         /// <summary>
         /// Gets or sets the Banner.
         /// </summary>
         public string Banner { get; set; }
+
+        public string BannerId { get; set; }
 
         /// <summary>
         /// Gets or sets the ad interaction type.

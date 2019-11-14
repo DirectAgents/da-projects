@@ -7,9 +7,13 @@
     {
         Date,
         Campaign,
+        CampaignId,
         Order,
+        OrderId,
         LineItem,
+        LineItemId,
         Banner,
+        BannerId,
         MediaId,
         Media,
         AdInteractionType,

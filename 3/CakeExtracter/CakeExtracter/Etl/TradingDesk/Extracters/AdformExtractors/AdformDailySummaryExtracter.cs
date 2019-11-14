@@ -6,10 +6,12 @@ using Adform.Entities.ReportEntities;
 using Adform.Utilities;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.CPProg.Adform;
+using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 {
-    public class AdformDailySummaryExtractor : AdformApiBaseExtractor<DailySummary>
+    public class AdformDailySummaryExtractor : AdformApiBaseExtractor<AdfDailySummary>
     {
         public AdformDailySummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account)
             : base(adformUtility, dateRange, account)
@@ -53,31 +55,39 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             return convStatsReportData;
         }
 
-        private IEnumerable<DailySummary> EnumerateRows(ReportData basicStatsReportData, ReportData convStatsReportData)
+        private IEnumerable<AdfDailySummary> EnumerateRows(ReportData basicStatsReportData, ReportData convStatsReportData)
         {
             var dailyStats = TransformDailyReportData(basicStatsReportData);
-            var dailyStatsByDate = dailyStats.ToDictionary(x => x.Date);
+            var dailyStatsByDate = dailyStats.GroupBy(x => new { x.Date, x.MediaId, x.Media }).ToList();
             var conversionStats = TransformConversionReportData(convStatsReportData);
-            var conversionStatsGroups = conversionStats.GroupBy(x => x.Date).ToList();
+            var conversionStatsGroups = conversionStats.GroupBy(x => new { x.Date, x.MediaId, x.Media }).ToList();
             // Steps:
             // loop through convSumGroups; get daySum or create blank one
             // then go through daySums that didn't have a convSumGroup
             foreach (var conversionStatsGroup in conversionStatsGroups)
             {
-                var daySum = new DailySummary { Date = conversionStatsGroup.Key };
-                if (dailyStatsByDate.ContainsKey(conversionStatsGroup.Key))
+                var daySum = new AdfDailySummary
                 {
-                    SetBaseStats(daySum, dailyStatsByDate[conversionStatsGroup.Key]);
+                    Date = conversionStatsGroup.Key.Date,
+                    MediaType = new AdfMediaType
+                    {
+                        ExternalId = conversionStatsGroup.Key.MediaId,
+                        Name = conversionStatsGroup.Key.Media,
+                    },
+                };
+                if (dailyStatsByDate.Any(s => s.Key == conversionStatsGroup.Key))
+                {
+                    SetBaseStats(daySum, dailyStatsByDate.First(s => s.Key == conversionStatsGroup.Key));
                 }
                 SetClickAndViewStats(daySum, conversionStatsGroup);
-                SetConversionMetrics(daySum, conversionStatsGroup.Key, conversionStatsGroup);
+                SetConversionMetrics(daySum, conversionStatsGroup);
                 yield return daySum;
             }
             var convSumDates = conversionStatsGroups.Select(x => x.Key).ToArray();
-            var remainingDaySums = dailyStatsByDate.Values.Where(ds => !convSumDates.Contains(ds.Date));
+            var remainingDaySums = dailyStatsByDate.First(ds => convSumDates.All(s => s != ds.Key));
             foreach (var adfSum in remainingDaySums) // the daily summaries that didn't have any conversion summaries
             {
-                var daySum = new DailySummary { Date = adfSum.Date };
+                var daySum = new AdfDailySummary { Date = adfSum.Date };
                 SetBaseStats(daySum, adfSum);
                 yield return daySum;
             }
