@@ -73,18 +73,22 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             if (includeCampaign)
             {
                 summary.Campaign = ReturnValueIfColumnExists(row, reportData.CampaignColumnId, Convert.ToString);
+                summary.CampaignId = ReturnValueIfColumnExists(row, reportData.CampaignIdColumnId, Convert.ToString);
             }
             if (includeOrder)
             {
                 summary.Order = ReturnValueIfColumnExists(row, reportData.OrderColumnId, Convert.ToString);
+                summary.OrderId = ReturnValueIfColumnExists(row, reportData.OrderIdColumnId, Convert.ToString);
             }
             if (includeLineItem)
             {
                 summary.LineItem = ReturnValueIfColumnExists(row, reportData.LineItemColumnId, Convert.ToString);
+                summary.LineItemId = ReturnValueIfColumnExists(row, reportData.LineItemIdColumnId, Convert.ToString);
             }
             if (includeBanner)
             {
                 summary.Banner = ReturnValueIfColumnExists(row, reportData.BannerColumnId, Convert.ToString);
+                summary.BannerId = ReturnValueIfColumnExists(row, reportData.BannerIdColumnId, Convert.ToString);
             }
             if (includeAdInteractionType)
             {

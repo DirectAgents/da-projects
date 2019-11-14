@@ -34,7 +34,7 @@ namespace CakeExtracter.Etl.Adform.Loaders
             var entities = GetUniqueEntities(items);
             var result = mediaTypeRepository.MergeItems(entities, entityBulkOptionsAction);
             SetEntityDatabaseIds(items, entities);
-            LogMergedEntities(items, mediaTypeRepository.EntityName);
+            LogMergedEntities(entities, mediaTypeRepository.EntityName);
             return result;
         }
 

@@ -46,6 +46,7 @@ namespace CakeExtracter.Etl.Adform.Loaders
 
         protected override void SetSummaryParents(AdfCampaignSummary summary)
         {
+            base.SetSummaryParents(summary);
             summary.EntityId = summary.Campaign.Id;
         }
     }

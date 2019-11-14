@@ -31,6 +31,7 @@ namespace CakeExtracter.Etl.Adform.Loaders
 
         protected override void SetSummaryParents(AdfDailySummary summary)
         {
+            base.SetSummaryParents(summary);
             summary.EntityId = accountId;
         }
     }

@@ -13,7 +13,7 @@ namespace DirectAgents.Domain.MigrationsTD
         
         string IMigrationMetadata.Id
         {
-            get { return "201911141223563_Mig_AdformNewDbTables"; }
+            get { return "201911141300344_Mig_AdformNewDbTables"; }
         }
         
         string IMigrationMetadata.Source

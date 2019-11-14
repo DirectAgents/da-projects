@@ -32,8 +32,6 @@ namespace CakeExtracter.Etl.Adform.Loaders
 
         protected abstract void SetEntityParents(TEntity entity);
 
-        protected abstract void SetSummaryParents(TSummary summary);
-
         public bool MergeDependentEntitiesWithExisted(IEnumerable<TEntity> items)
         {
             return MergeDependentEntitiesWithExisted(items, options =>
@@ -49,23 +47,27 @@ namespace CakeExtracter.Etl.Adform.Loaders
             var entities = GetUniqueEntities(items, SetEntityParents);
             var result = entityRepository.MergeItems(entities, entityBulkOptionsAction);
             SetEntityDatabaseIds(items, entities);
-            LogMergedEntities(items, entityRepository.EntityName);
+            LogMergedEntities(entities, entityRepository.EntityName);
             return result;
         }
 
         public bool MergeSummariesWithExisted(IEnumerable<TSummary> items)
         {
-            items.ForEach(SetSummaryParents);
-
             var mediaTypes = items.Select(i => i.MediaType).ToList();
             var result = mediaTypeLoader.MergeDependentEntitiesWithExisted(mediaTypes);
             if (!result)
             {
                 return false;
             }
+            items.ForEach(SetSummaryParents);
             result = summaryRepository.MergeItems(items);
             LogMergedEntities(items, summaryRepository.EntityName);
             return result;
+        }
+
+        protected virtual void SetSummaryParents(TSummary summary)
+        {
+            summary.MediaTypeId = summary.MediaType.Id;
         }
 
         private void LogMergedEntities(IEnumerable<object> items, string entitiesName)
