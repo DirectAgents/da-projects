@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Adform;
 using Adform.Entities.ReportEntities;
+using Adform.Enums;
 using Adform.Utilities;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
@@ -23,9 +24,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             Logger.Info(AccountId, $"Extracting DailySummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d}");
             try
             {
-                var basicStatsReportData = GetBasicStatsReportData();
-                var convStatsReportData = GetConvStatsReportData();
-                var daySums = EnumerateRows(basicStatsReportData, convStatsReportData);
+                var data = ExtractData();
+                var daySums = EnumerateRows(data);
                 daySums = AdjustItems(daySums);
                 Add(daySums);
             }
@@ -36,73 +36,40 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             End();
         }
 
-        private ReportData GetBasicStatsReportData()
+        private IEnumerable<AdformSummary> ExtractData()
         {
             var settings = GetBaseSettings();
-            settings.ConvMetrics = false;
-            settings.Dimensions = null;
+            var dimensions = new List<Dimension> { Dimension.Media };
+            SetDimensionsForReportSettings(dimensions, settings);
             var parameters = AfUtility.CreateReportParams(settings);
-            var basicStatsReportData = AfUtility.TryGetReportData(parameters);
-            return basicStatsReportData;
+            var allReportData = AfUtility.GetReportDataWithLimits(parameters);
+            var adFormSums = allReportData.SelectMany(TransformReportData).ToList();
+            return adFormSums;
         }
 
-        private ReportData GetConvStatsReportData()
+        private IEnumerable<AdfDailySummary> EnumerateRows(IEnumerable<AdformSummary> afSums)
         {
-            var settings = GetBaseSettings();
-            settings.BasicMetrics = false;
-            var parameters = AfUtility.CreateReportParams(settings);
-            var convStatsReportData = AfUtility.TryGetReportData(parameters);
-            return convStatsReportData;
-        }
-
-        private IEnumerable<AdfDailySummary> EnumerateRows(ReportData basicStatsReportData, ReportData convStatsReportData)
-        {
-            var dailyStats = TransformDailyReportData(basicStatsReportData);
-            var dailyStatsByDate = dailyStats.GroupBy(x => new { x.Date, x.MediaId, x.Media }).ToList();
-            var conversionStats = TransformConversionReportData(convStatsReportData);
-            var conversionStatsGroups = conversionStats.GroupBy(x => new { x.Date, x.MediaId, x.Media }).ToList();
-            // Steps:
-            // loop through convSumGroups; get daySum or create blank one
-            // then go through daySums that didn't have a convSumGroup
-            foreach (var conversionStatsGroup in conversionStatsGroups)
+            var dailyGroups = afSums.GroupBy(x => new { x.Date, x.MediaId, x.Media }).ToList();
+            foreach (var dailyGroup in dailyGroups)
             {
                 var daySum = new AdfDailySummary
                 {
-                    Date = conversionStatsGroup.Key.Date,
+                    Date = dailyGroup.Key.Date,
                     MediaType = new AdfMediaType
                     {
-                        ExternalId = conversionStatsGroup.Key.MediaId,
-                        Name = conversionStatsGroup.Key.Media,
+                        ExternalId = dailyGroup.Key.MediaId,
+                        Name = dailyGroup.Key.Media,
                     },
                 };
-                if (dailyStatsByDate.Any(s => s.Key == conversionStatsGroup.Key))
-                {
-                    SetBaseStats(daySum, dailyStatsByDate.First(s => s.Key == conversionStatsGroup.Key));
-                }
-                SetClickAndViewStats(daySum, conversionStatsGroup);
-                SetConversionMetrics(daySum, conversionStatsGroup);
-                yield return daySum;
-            }
-            var convSumDates = conversionStatsGroups.Select(x => x.Key).ToArray();
-            var remainingDaySums = dailyStatsByDate.First(ds => convSumDates.All(s => s != ds.Key));
-            foreach (var adfSum in remainingDaySums) // the daily summaries that didn't have any conversion summaries
-            {
-                var daySum = new AdfDailySummary { Date = adfSum.Date };
-                SetBaseStats(daySum, adfSum);
+                SetStats(daySum, dailyGroup);
                 yield return daySum;
             }
         }
 
-        private IEnumerable<AdformSummary> TransformDailyReportData(ReportData reportData)
+        private IEnumerable<AdformSummary> TransformReportData(ReportData reportData)
         {
-            var dayStatsTransformer = new AdformTransformer(reportData, basicStatsOnly: true);
+            var dayStatsTransformer = new AdformTransformer(reportData);
             return dayStatsTransformer.EnumerateAdformSummaries();
-        }
-
-        private IEnumerable<AdformSummary> TransformConversionReportData(ReportData reportData)
-        {
-            var convStatsTransformer = new AdformTransformer(reportData, convStatsOnly: true);
-            return convStatsTransformer.EnumerateAdformSummaries();
         }
     }
 }

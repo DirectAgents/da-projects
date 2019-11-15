@@ -69,7 +69,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         {
             summary.Date = DateTime.Parse(row[columnLookup[reportData.DateColumnId]].ToString());
             summary.MediaId = row[columnLookup[reportData.MediaIdColumnId]].ToString();
-            summary.Media = row[columnLookup[reportData.MediaColumnId]].ToString();
+            summary.Media = ReturnValueIfColumnExists(row, reportData.MediaColumnId, Convert.ToString);
             if (includeCampaign)
             {
                 summary.Campaign = ReturnValueIfColumnExists(row, reportData.CampaignColumnId, Convert.ToString);

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
+using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg.Adform;
 using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
 
@@ -11,8 +12,9 @@ namespace CakeExtracter.Etl.Adform.Loaders
         public AdfCampaignSummaryLoader(
             int accountId,
             IBaseRepository<AdfCampaign> entityRepository,
-            IBaseRepository<AdfCampaignSummary> summaryRepository)
-            : base(accountId, entityRepository, summaryRepository)
+            IBaseRepository<AdfCampaignSummary> summaryRepository,
+            AdfMediaTypeLoader mediaTypeLoader)
+            : base(accountId, entityRepository, summaryRepository, mediaTypeLoader)
         {
         }
 
@@ -30,6 +32,14 @@ namespace CakeExtracter.Etl.Adform.Loaders
         public bool MergeDependentCampaigns(List<AdfCampaign> items)
         {
             return MergeDependentEntitiesWithExisted(items);
+        }
+
+        public AdfCampaign GetCampaignByExternalId(string externalId)
+        {
+            using (var db = new ClientPortalProgContext())
+            {
+                return db.AdfCampaigns.FirstOrDefault(campaign => campaign.ExternalId == externalId);
+            }
         }
 
         protected override int Load(List<AdfCampaignSummary> items)

@@ -14,8 +14,9 @@ namespace CakeExtracter.Etl.Adform.Loaders
             int accountId,
             IBaseRepository<AdfBanner> entityRepository,
             IBaseRepository<AdfBannerSummary> summaryRepository,
-            AdfLineItemSummaryLoader lineItemLoader)
-            : base(accountId, entityRepository, summaryRepository)
+            AdfLineItemSummaryLoader lineItemLoader,
+            AdfMediaTypeLoader mediaTypeLoader)
+            : base(accountId, entityRepository, summaryRepository, mediaTypeLoader)
         {
             this.lineItemLoader = lineItemLoader;
         }
@@ -33,13 +34,7 @@ namespace CakeExtracter.Etl.Adform.Loaders
 
         public bool MergeDependentBanners(List<AdfBanner> items)
         {
-            var lineItems = items.Select(x => x.LineItem).ToList();
-            var result = lineItemLoader.MergeDependentLineItems(lineItems);
-            if (result)
-            {
-                result = MergeDependentEntitiesWithExisted(items);
-            }
-            return result;
+            return MergeDependentEntitiesWithExisted(items);
         }
 
         protected override int Load(List<AdfBannerSummary> items)
@@ -51,7 +46,8 @@ namespace CakeExtracter.Etl.Adform.Loaders
 
         protected override void SetEntityParents(AdfBanner entity)
         {
-            entity.LineItemId = entity.LineItem.Id;
+            var dbLineItem = lineItemLoader.GetLineItemByExternalId(entity.LineItem.ExternalId);
+            entity.LineItemId = dbLineItem.Id;
         }
 
         protected override void SetSummaryParents(AdfBannerSummary summary)

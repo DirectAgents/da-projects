@@ -36,19 +36,20 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             {
                 Logger.Error(AccountId, ex);
             }
-
             End();
         }
 
         private IEnumerable<AdformSummary> ExtractData()
         {
             var settings = GetBaseSettings();
-            settings.Dimensions.Add(Dimension.BannerId);
-            settings.Dimensions.Add(Dimension.Banner);
-            settings.Dimensions.Add(Dimension.LineItem);
-            settings.Dimensions.Add(Dimension.LineItemId);
-            settings.Dimensions.Add(byOrder ? Dimension.Order : Dimension.Campaign);
-            settings.Dimensions.Add(byOrder ? Dimension.OrderId : Dimension.CampaignId);
+            var dimensions = new List<Dimension>
+            {
+                Dimension.BannerId,
+                Dimension.Banner,
+                Dimension.LineItemId,
+            };
+            SetDimensionsForReportSettings(dimensions, settings);
+            //settings.Dimensions.Add(byOrder ? Dimension.OrderId : Dimension.CampaignId);
             var parameters = AfUtility.CreateReportParams(settings);
             var allReportData = AfUtility.GetReportDataWithLimits(parameters);
             var adFormSums = allReportData.SelectMany(TransformReportData).ToList();
@@ -57,7 +58,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 
         private IEnumerable<AdformSummary> TransformReportData(ReportData reportData)
         {
-            var adFormTransformer = new AdformTransformer(reportData, byLineItem: true, byCampaign: !byOrder, byOrder: byOrder, byBanner: true);
+            var adFormTransformer = new AdformTransformer(reportData, byLineItem: true, byBanner: true);
             var afSums = adFormTransformer.EnumerateAdformSummaries();
             return afSums;
         }
@@ -71,7 +72,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 
         private IEnumerable<AdfBannerSummary> EnumerateRows(IEnumerable<AdformSummary> afSums)
         {
-            var bannerGroups = afSums.GroupBy(x => new { x.CampaignId, x.Campaign, x.LineItemId, x.LineItem, x.BannerId, x.Banner, x.Date, x.MediaId, x.Media });
+            //var bannerGroups = afSums.GroupBy(x => new { x.CampaignId, x.Campaign, x.LineItemId, x.LineItem, x.BannerId, x.Banner, x.Date, x.MediaId, x.Media });
+            var bannerGroups = afSums.GroupBy(x => new { x.LineItemId, x.BannerId, x.Banner, x.Date, x.MediaId });
             foreach (var bannerGroup in bannerGroups)
             {
                 var sum = new AdfBannerSummary
@@ -80,7 +82,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                     MediaType = new AdfMediaType
                     {
                         ExternalId = bannerGroup.Key.MediaId,
-                        Name = bannerGroup.Key.Media,
+                        //Name = bannerGroup.Key.Media,
                     },
                     Banner = new AdfBanner
                     {
@@ -89,16 +91,16 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                         LineItem = new AdfLineItem
                         {
                             ExternalId = bannerGroup.Key.LineItemId,
-                            Name = bannerGroup.Key.LineItem,
-                            Campaign = new AdfCampaign
-                            {
-                                ExternalId = bannerGroup.First().CampaignId,
-                                Name = bannerGroup.First().Campaign,
-                            },
+                            //Name = bannerGroup.Key.LineItem,
+                            //Campaign = new AdfCampaign
+                            //{
+                            //    ExternalId = bannerGroup.First().CampaignId,
+                            //    Name = bannerGroup.First().Campaign,
+                            //},
                         },
                     },
                 };
-                SetStats(sum, bannerGroup/*, bannerGroup.Key.Date*/);
+                SetStats(sum, bannerGroup);
                 yield return sum;
             }
         }

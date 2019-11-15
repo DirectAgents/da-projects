@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
+using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg.Adform;
 using Z.EntityFramework.Extensions;
 
 namespace CakeExtracter.Etl.Adform.Loaders
 {
-    internal class AdfMediaTypeLoader //: Loader<AdfMediaType>
+    public class AdfMediaTypeLoader
     {
         private readonly int accountId;
         private readonly IBaseRepository<AdfMediaType> mediaTypeRepository;
 
         public AdfMediaTypeLoader(int accountId, IBaseRepository<AdfMediaType> mediaTypeRepository)
-           // : base(accountId)
         {
             this.accountId = accountId;
             this.mediaTypeRepository = mediaTypeRepository;
@@ -36,6 +36,14 @@ namespace CakeExtracter.Etl.Adform.Loaders
             SetEntityDatabaseIds(items, entities);
             LogMergedEntities(entities, mediaTypeRepository.EntityName);
             return result;
+        }
+
+        public AdfMediaType GetMediaTypeByExternalId(string externalId)
+        {
+            using (var db = new ClientPortalProgContext())
+            {
+                return db.AdfMediaTypes.FirstOrDefault(mediaType => mediaType.ExternalId == externalId);
+            }
         }
 
         private static IEnumerable<AdfMediaType> GetUniqueEntities(IEnumerable<AdfMediaType> items)

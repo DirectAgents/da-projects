@@ -86,7 +86,6 @@ namespace Adform.Helpers
         {
             var defaultDimensions = new[]
             {
-                Dimension.Media,
                 Dimension.MediaId,
                 Dimension.Date,
             };

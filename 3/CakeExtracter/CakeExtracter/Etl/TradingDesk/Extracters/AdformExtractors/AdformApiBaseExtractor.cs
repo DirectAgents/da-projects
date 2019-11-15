@@ -92,6 +92,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             };
         }
 
+        protected void SetDimensionsForReportSettings(IEnumerable<Dimension> dimensions, ReportSettings settings)
+        {
+            settings.Dimensions.AddRange(dimensions);
+        }
+
         protected IEnumerable<T> AdjustItems(IEnumerable<T> items)
         {
             foreach (var item in items)

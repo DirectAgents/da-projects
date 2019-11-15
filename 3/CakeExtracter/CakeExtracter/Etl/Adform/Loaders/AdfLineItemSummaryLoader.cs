@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
+using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg.Adform;
 using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
 
@@ -14,8 +15,9 @@ namespace CakeExtracter.Etl.Adform.Loaders
             int accountId,
             IBaseRepository<AdfLineItem> entityRepository,
             IBaseRepository<AdfLineItemSummary> summaryRepository,
-            AdfCampaignSummaryLoader campaignLoader)
-            : base(accountId, entityRepository, summaryRepository)
+            AdfCampaignSummaryLoader campaignLoader,
+            AdfMediaTypeLoader mediaTypeLoader)
+            : base(accountId, entityRepository, summaryRepository, mediaTypeLoader)
         {
             this.campaignLoader = campaignLoader;
         }
@@ -28,19 +30,20 @@ namespace CakeExtracter.Etl.Adform.Loaders
             {
                 result = MergeSummariesWithExisted(items);
             }
-
             return result;
         }
 
         public bool MergeDependentLineItems(List<AdfLineItem> items)
         {
-            var campaigns = items.Select(x => x.Campaign).ToList();
-            var result = campaignLoader.MergeDependentCampaigns(campaigns);
-            if (result)
+            return MergeDependentEntitiesWithExisted(items);
+        }
+
+        public AdfLineItem GetLineItemByExternalId(string externalId)
+        {
+            using (var db = new ClientPortalProgContext())
             {
-                result = MergeDependentEntitiesWithExisted(items);
+                return db.AdfLineItems.FirstOrDefault(lineItem => lineItem.ExternalId == externalId);
             }
-            return result;
         }
 
         protected override int Load(List<AdfLineItemSummary> items)
@@ -52,7 +55,8 @@ namespace CakeExtracter.Etl.Adform.Loaders
 
         protected override void SetEntityParents(AdfLineItem entity)
         {
-            entity.CampaignId = entity.Campaign.Id;
+            var dbCampaign = campaignLoader.GetCampaignByExternalId(entity.Campaign.ExternalId);
+            entity.CampaignId = dbCampaign.Id;
         }
 
         protected override void SetSummaryParents(AdfLineItemSummary summary)

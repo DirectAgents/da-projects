@@ -199,17 +199,25 @@ namespace CakeExtracter.Commands
             CommandHelper.DoEtl(extractor, loader);
         }
 
+        private static AdfMediaTypeLoader CreateMediaTypeLoader(int accountId)
+        {
+            var mediaTypeRepository = new AdfMediaTypeDatabaseRepository();
+            return new AdfMediaTypeLoader(accountId, mediaTypeRepository);
+        }
+
         private static AdfDailySummaryLoader CreateDailyLoader(int accountId)
         {
             var summaryRepository = new AdfDailySummaryDatabaseRepository();
-            return new AdfDailySummaryLoader(accountId, summaryRepository);
+            var mediaTypeLoader = CreateMediaTypeLoader(accountId);
+            return new AdfDailySummaryLoader(accountId, summaryRepository, mediaTypeLoader);
         }
 
         private static AdfCampaignSummaryLoader CreateCampaignLoader(int accountId)
         {
             var entityRepository = new AdfCampaignDatabaseRepository();
             var summaryRepository = new AdfCampaignSummaryDatabaseRepository();
-            return new AdfCampaignSummaryLoader(accountId, entityRepository, summaryRepository);
+            var mediaTypeLoader = CreateMediaTypeLoader(accountId);
+            return new AdfCampaignSummaryLoader(accountId, entityRepository, summaryRepository, mediaTypeLoader);
         }
 
         private static AdfLineItemSummaryLoader CreateLineItemLoader(int accountId)
@@ -217,7 +225,8 @@ namespace CakeExtracter.Commands
             var entityRepository = new AdfLineItemDatabaseRepository();
             var summaryRepository = new AdfLineItemSummaryDatabaseRepository();
             var campaignLoader = CreateCampaignLoader(accountId);
-            return new AdfLineItemSummaryLoader(accountId, entityRepository, summaryRepository, campaignLoader);
+            var mediaTypeLoader = CreateMediaTypeLoader(accountId);
+            return new AdfLineItemSummaryLoader(accountId, entityRepository, summaryRepository, campaignLoader, mediaTypeLoader);
         }
 
         private static AdfBannerSummaryLoader CreateBannerLoader(int accountId)
@@ -225,7 +234,8 @@ namespace CakeExtracter.Commands
             var entityRepository = new AdfBannerDatabaseRepository();
             var summaryRepository = new AdfBannerSummaryDatabaseRepository();
             var lineItemLoader = CreateLineItemLoader(accountId);
-            return new AdfBannerSummaryLoader(accountId, entityRepository, summaryRepository, lineItemLoader);
+            var mediaTypeLoader = CreateMediaTypeLoader(accountId);
+            return new AdfBannerSummaryLoader(accountId, entityRepository, summaryRepository, lineItemLoader, mediaTypeLoader);
         }
 
         private IEnumerable<ExtAccount> GetAccounts()

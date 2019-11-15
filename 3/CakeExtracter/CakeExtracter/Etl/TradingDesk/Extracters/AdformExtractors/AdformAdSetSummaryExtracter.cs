@@ -43,10 +43,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         private IEnumerable<AdformSummary> ExtractData()
         {
             var settings = GetBaseSettings();
-            settings.Dimensions.Add(Dimension.LineItem);
-            settings.Dimensions.Add(Dimension.LineItemId);
-            settings.Dimensions.Add(byOrder ? Dimension.Order : Dimension.Campaign);
-            settings.Dimensions.Add(byOrder ? Dimension.OrderId : Dimension.CampaignId);
+            //    settings.Dimensions.Add(byOrder ? Dimension.Order : Dimension.Campaign);
+            var dimensions = new List<Dimension>
+            {
+                byOrder ? Dimension.OrderId : Dimension.CampaignId,
+                Dimension.LineItem,
+                Dimension.LineItemId,
+            };
+            SetDimensionsForReportSettings(dimensions, settings);
             var parameters = AfUtility.CreateReportParams(settings);
             var allReportData = AfUtility.GetReportDataWithLimits(parameters);
             var adFormSums = allReportData.SelectMany(TransformReportData).ToList();
@@ -69,7 +73,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 
         private IEnumerable<AdfLineItemSummary> EnumerateRows(IEnumerable<AdformSummary> afSums)
         {
-            var liDateGroups = afSums.GroupBy(x => new { x.CampaignId, x.Campaign, x.LineItemId, x.LineItem, x.Date, x.MediaId, x.Media });
+            //var liDateGroups = afSums.GroupBy(x => new { x.CampaignId, x.Campaign, x.LineItemId, x.LineItem, x.Date, x.MediaId, x.Media });
+            var liDateGroups = afSums.GroupBy(x => new { x.CampaignId, x.OrderId, x.LineItemId, x.LineItem, x.Date, x.MediaId });
             foreach (var liDateGroup in liDateGroups)
             {
                 var sum = new AdfLineItemSummary
@@ -78,7 +83,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                      MediaType = new AdfMediaType
                      {
                          ExternalId = liDateGroup.Key.MediaId,
-                         Name = liDateGroup.Key.Media,
+                         //Name = liDateGroup.Key.Media,
                      },
                      LineItem = new AdfLineItem
                      {
@@ -87,11 +92,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                          Campaign = new AdfCampaign
                          {
                              ExternalId = byOrder ? liDateGroup.First().OrderId : liDateGroup.First().CampaignId,
-                             Name = byOrder ? liDateGroup.First().Order : liDateGroup.First().Campaign,
+                             //Name = byOrder ? liDateGroup.First().Order : liDateGroup.First().Campaign,
                          },
                      },
                 };
-                SetStats(sum, liDateGroup/*, liDateGroup.Key.Date*/);
+                SetStats(sum, liDateGroup);
                 yield return sum;
             }
         }

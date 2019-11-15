@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.CPProg.Adform;
 using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
@@ -7,14 +8,23 @@ namespace CakeExtracter.Etl.Adform.Loaders
 {
     internal class AdfDailySummaryLoader : AdfBaseSummaryLoader<AdfBaseEntity, AdfDailySummary>
     {
-        public AdfDailySummaryLoader(int accountId, IBaseRepository<AdfDailySummary> summaryRepository)
-            : base(accountId, null, summaryRepository)
+        public AdfDailySummaryLoader(
+            int accountId,
+            IBaseRepository<AdfDailySummary> summaryRepository,
+            AdfMediaTypeLoader mediaTypeLoader)
+            : base(accountId, null, summaryRepository, mediaTypeLoader)
         {
         }
 
         public virtual bool MergeItemsWithExisted(List<AdfDailySummary> items)
         {
-            return MergeSummariesWithExisted(items);
+            var mediaTypes = items.Select(i => i.MediaType).ToList();
+            var result = MergeDependentMediaTypesWithExisted(mediaTypes);
+            if (result)
+            {
+                result = MergeSummariesWithExisted(items);
+            }
+            return result;
         }
 
         protected override int Load(List<AdfDailySummary> items)

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CakeExtracter.Etl.Adform.Repositories;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.CPProg.Adform;
 using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
@@ -14,20 +13,20 @@ namespace CakeExtracter.Etl.Adform.Loaders
         where TEntity : AdfBaseEntity
         where TSummary : AdfBaseSummary
     {
+        private readonly AdfMediaTypeLoader mediaTypeLoader;
         private readonly IBaseRepository<TEntity> entityRepository;
         private readonly IBaseRepository<TSummary> summaryRepository;
-        private readonly AdfMediaTypeLoader mediaTypeLoader;
 
         protected AdfBaseSummaryLoader(
             int accountId,
             IBaseRepository<TEntity> entityRepository,
-            IBaseRepository<TSummary> summaryRepository)
+            IBaseRepository<TSummary> summaryRepository,
+            AdfMediaTypeLoader mediaTypeLoader)
             : base(accountId)
         {
             this.entityRepository = entityRepository;
             this.summaryRepository = summaryRepository;
-
-            mediaTypeLoader = new AdfMediaTypeLoader(accountId, new AdfMediaTypeDatabaseRepository());
+            this.mediaTypeLoader = mediaTypeLoader;
         }
 
         protected abstract void SetEntityParents(TEntity entity);
@@ -53,21 +52,21 @@ namespace CakeExtracter.Etl.Adform.Loaders
 
         public bool MergeSummariesWithExisted(IEnumerable<TSummary> items)
         {
-            var mediaTypes = items.Select(i => i.MediaType).ToList();
-            var result = mediaTypeLoader.MergeDependentEntitiesWithExisted(mediaTypes);
-            if (!result)
-            {
-                return false;
-            }
             items.ForEach(SetSummaryParents);
-            result = summaryRepository.MergeItems(items);
+            var result = summaryRepository.MergeItems(items);
             LogMergedEntities(items, summaryRepository.EntityName);
             return result;
         }
 
         protected virtual void SetSummaryParents(TSummary summary)
         {
-            summary.MediaTypeId = summary.MediaType.Id;
+            var dbMediaType = mediaTypeLoader.GetMediaTypeByExternalId(summary.MediaType.ExternalId);
+            summary.MediaTypeId = dbMediaType.Id;
+        }
+
+        protected bool MergeDependentMediaTypesWithExisted(IEnumerable<AdfMediaType> mediaTypes)
+        {
+            return mediaTypeLoader.MergeDependentEntitiesWithExisted(mediaTypes);
         }
 
         private void LogMergedEntities(IEnumerable<object> items, string entitiesName)

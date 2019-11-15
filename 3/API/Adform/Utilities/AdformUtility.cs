@@ -180,7 +180,6 @@ namespace Adform.Utilities
                     allReportData.Add(reportData);
                 }
             }
-
             return allReportData;
         }
 

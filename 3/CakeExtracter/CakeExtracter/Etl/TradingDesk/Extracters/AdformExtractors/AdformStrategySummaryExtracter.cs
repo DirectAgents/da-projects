@@ -44,8 +44,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         private IEnumerable<AdformSummary> ExtractData()
         {
             var settings = GetBaseSettings();
-            settings.Dimensions.Add(byOrder ? Dimension.Order : Dimension.Campaign);
-            settings.Dimensions.Add(byOrder ? Dimension.OrderId : Dimension.CampaignId);
+            var dimensions = new List<Dimension>
+            {
+                byOrder ? Dimension.Order : Dimension.Campaign,
+                byOrder ? Dimension.OrderId : Dimension.CampaignId,
+            };
+            SetDimensionsForReportSettings(dimensions, settings);
             var parameters = AfUtility.CreateReportParams(settings);
             var allReportData = AfUtility.GetReportDataWithLimits(parameters);
             var adFormSums = allReportData.SelectMany(TransformReportData).ToList();
@@ -68,7 +72,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 
         private IEnumerable<AdfCampaignSummary> EnumerateRows(IEnumerable<AdformSummary> afSums)
         {
-            var campDateGroups = afSums.GroupBy(x => new { x.Campaign, x.CampaignId, x.Order, x.OrderId, x.Date, x.MediaId, x.Media });
+            var campDateGroups = afSums.GroupBy(x => new { x.Campaign, x.CampaignId, x.Order, x.OrderId, x.Date, x.MediaId });
             foreach (var campDateGroup in campDateGroups)
             {
                 var sum = new AdfCampaignSummary
@@ -82,10 +86,10 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                     MediaType = new AdfMediaType
                     {
                         ExternalId = campDateGroup.Key.MediaId,
-                        Name = campDateGroup.Key.Media,
+                        //Name = campDateGroup.Key.Media,
                     },
                 };
-                SetStats(sum, campDateGroup/*, campDateGroup.Key.Date*/);
+                SetStats(sum, campDateGroup);
                 yield return sum;
             }
         }
