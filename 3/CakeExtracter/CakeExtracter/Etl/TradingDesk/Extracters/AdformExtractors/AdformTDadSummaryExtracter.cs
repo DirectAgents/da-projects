@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Adform;
 using Adform.Entities.ReportEntities;
+using Adform.Entities.ReportEntities.ReportParameters;
 using Adform.Enums;
 using Adform.Utilities;
 using CakeExtracter.Common;
@@ -12,16 +13,25 @@ using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// Adform Banner summary extractor.
+    /// </summary>
     public class AdformTDadSummaryExtractor : AdformApiBaseExtractor<AdfBannerSummary>
     {
-        private readonly bool byOrder;
-
-        public AdformTDadSummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account, bool byOrder)
+        /// <inheritdoc cref="AdformApiBaseExtractor{T}"/>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AdformTDadSummaryExtractor"/> class.
+        /// </summary>
+        /// <param name="adformUtility">API utility.</param>
+        /// <param name="dateRange">Date range.</param>
+        /// <param name="account">Account.</param>
+        public AdformTDadSummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account)
             : base(adformUtility, dateRange, account)
         {
-            this.byOrder = byOrder;
         }
 
+        /// <inheritdoc/>
         protected override void Extract()
         {
             Logger.Info(AccountId, $"Extracting TDadSummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d}");
@@ -41,19 +51,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 
         private IEnumerable<AdformSummary> ExtractData()
         {
-            var settings = GetBaseSettings();
-            var dimensions = new List<Dimension>
-            {
-                Dimension.BannerId,
-                Dimension.Banner,
-                Dimension.LineItemId,
-            };
-            SetDimensionsForReportSettings(dimensions, settings);
-            //settings.Dimensions.Add(byOrder ? Dimension.OrderId : Dimension.CampaignId);
-            var parameters = AfUtility.CreateReportParams(settings);
-            var allReportData = AfUtility.GetReportDataWithLimits(parameters);
-            var adFormSums = allReportData.SelectMany(TransformReportData).ToList();
-            return adFormSums;
+            var reportData = GetReportData();
+            return reportData.SelectMany(TransformReportData).ToList();
         }
 
         private IEnumerable<AdformSummary> TransformReportData(ReportData reportData)
@@ -72,7 +71,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 
         private IEnumerable<AdfBannerSummary> EnumerateRows(IEnumerable<AdformSummary> afSums)
         {
-            //var bannerGroups = afSums.GroupBy(x => new { x.CampaignId, x.Campaign, x.LineItemId, x.LineItem, x.BannerId, x.Banner, x.Date, x.MediaId, x.Media });
             var bannerGroups = afSums.GroupBy(x => new { x.LineItemId, x.BannerId, x.Banner, x.Date, x.MediaId });
             foreach (var bannerGroup in bannerGroups)
             {
@@ -82,7 +80,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                     MediaType = new AdfMediaType
                     {
                         ExternalId = bannerGroup.Key.MediaId,
-                        //Name = bannerGroup.Key.Media,
                     },
                     Banner = new AdfBanner
                     {
@@ -91,18 +88,31 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                         LineItem = new AdfLineItem
                         {
                             ExternalId = bannerGroup.Key.LineItemId,
-                            //Name = bannerGroup.Key.LineItem,
-                            //Campaign = new AdfCampaign
-                            //{
-                            //    ExternalId = bannerGroup.First().CampaignId,
-                            //    Name = bannerGroup.First().Campaign,
-                            //},
                         },
                     },
                 };
                 SetStats(sum, bannerGroup);
                 yield return sum;
             }
+        }
+
+        private IEnumerable<ReportData> GetReportData()
+        {
+            var parameters = GetReportParameters();
+            return AfUtility.GetReportDataWithLimits(parameters);
+        }
+
+        private ReportParams GetReportParameters()
+        {
+            var settings = GetBaseSettings();
+            var dimensions = new List<Dimension>
+            {
+                Dimension.BannerId,
+                Dimension.Banner,
+                Dimension.LineItemId,
+            };
+            SetDimensionsForReportSettings(dimensions, settings);
+            return AfUtility.CreateReportParams(settings);
         }
     }
 }

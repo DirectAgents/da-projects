@@ -114,7 +114,7 @@ namespace CakeExtracter.Commands
                 }
                 if (statsType.Creative)
                 {
-                    DoETL_Creative(dateRange, account, orderInsteadOfCampaign, adformUtility);
+                    DoETL_Creative(dateRange, account, adformUtility);
                 }
             }
             catch (Exception ex)
@@ -168,9 +168,9 @@ namespace CakeExtracter.Commands
             CommandHelper.DoEtl(extractor, loader);
         }
 
-        private static void DoETL_Creative(DateRange dateRange, ExtAccount account, bool byOrder, AdformUtility adformUtility)
+        private static void DoETL_Creative(DateRange dateRange, ExtAccount account, AdformUtility adformUtility)
         {
-            var extractor = new AdformTDadSummaryExtractor(adformUtility, dateRange, account, byOrder);
+            var extractor = new AdformTDadSummaryExtractor(adformUtility, dateRange, account);
             var loader = CreateBannerLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }

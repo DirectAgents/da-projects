@@ -11,6 +11,10 @@ using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 {
+    /// <summary>
+    /// Adform base extractor.
+    /// </summary>
+    /// <typeparam name="T">Adform base summary entity.</typeparam>
     public abstract class AdformApiBaseExtractor<T> : Extracter<T>
         where T : AdfBaseSummary
     {
@@ -32,6 +36,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             { AdInteractionType.None, "None" },
         };
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AdformApiBaseExtractor{T}"/> class.
+        /// </summary>
+        /// <param name="adformUtility">API utility.</param>
+        /// <param name="dateRange">Date range.</param>
+        /// <param name="account">Account.</param>
         protected AdformApiBaseExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account)
         {
             AfUtility = adformUtility;

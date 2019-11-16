@@ -13,6 +13,7 @@ namespace CakeExtracter.Etl.Adform.Loaders
         where TEntity : AdfBaseEntity
         where TSummary : AdfBaseSummary
     {
+        private const int DefaultBatchSize = 1000;
         private readonly AdfMediaTypeLoader mediaTypeLoader;
         private readonly IBaseRepository<TEntity> entityRepository;
         private readonly IBaseRepository<TSummary> summaryRepository;
@@ -22,7 +23,7 @@ namespace CakeExtracter.Etl.Adform.Loaders
             IBaseRepository<TEntity> entityRepository,
             IBaseRepository<TSummary> summaryRepository,
             AdfMediaTypeLoader mediaTypeLoader)
-            : base(accountId)
+            : base(accountId, DefaultBatchSize)
         {
             this.entityRepository = entityRepository;
             this.summaryRepository = summaryRepository;
