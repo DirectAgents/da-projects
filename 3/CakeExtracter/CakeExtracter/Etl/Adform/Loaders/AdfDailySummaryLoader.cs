@@ -29,7 +29,7 @@ namespace CakeExtracter.Etl.Adform.Loaders
 
         protected override int Load(List<AdfDailySummary> items)
         {
-            Logger.Info(accountId, "Loading {0} YamDailySummaries..", items.Count);
+            Logger.Info(accountId, "Loading {0} Adform Daily Summaries..", items.Count);
             var result = MergeItemsWithExisted(items);
             return result ? items.Count : 0;
         }

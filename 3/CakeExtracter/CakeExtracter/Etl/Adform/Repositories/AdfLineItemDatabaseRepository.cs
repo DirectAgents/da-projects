@@ -12,7 +12,7 @@ namespace CakeExtracter.Etl.Adform.Repositories
         protected override object Locker { get; set; } = RequestLocker;
 
         /// <inheritdoc />
-        public override string EntityName => "Adform Line Item";
+        public override string EntityName => "Adform LineItem";
 
         /// <inheritdoc />
         public override object[] GetKeys(AdfLineItem item)

@@ -44,7 +44,7 @@ namespace CakeExtracter.Etl.Adform.Loaders
 
         protected override int Load(List<AdfCampaignSummary> items)
         {
-            Logger.Info(accountId, "Loading {0} AdfCampaignSummaries..", items.Count);
+            Logger.Info(accountId, "Loading {0} Adform Campaign Summaries..", items.Count);
             var result = MergeItemsWithExisted(items);
             return result ? items.Count : 0;
         }
