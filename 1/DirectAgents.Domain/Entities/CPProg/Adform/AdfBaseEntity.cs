@@ -1,7 +1,7 @@
 ﻿namespace DirectAgents.Domain.Entities.CPProg.Adform
 {
     /// <summary>
-    /// Adform base DB entity.
+    /// Adform base database entity.
     /// </summary>
     public class AdfBaseEntity
     {

@@ -549,14 +549,6 @@ namespace DirectAgents.Domain.Contexts
             SetupAdformBaseMetricModelValues<AdfCampaignSummary>(modelBuilder, "CampaignId");
             SetupAdformBaseMetricModelValues<AdfLineItemSummary>(modelBuilder, "LineItemId");
             SetupAdformBaseMetricModelValues<AdfBannerSummary>(modelBuilder, "BannerId");
-            modelBuilder.Entity<AdfCampaign>()
-                .HasMany(g => g.LineItems)
-                .WithRequired(s => s.Campaign)
-                .WillCascadeOnDelete(false);
-            modelBuilder.Entity<AdfLineItem>()
-                .HasMany(g => g.Banners)
-                .WithRequired(s => s.LineItem)
-                .WillCascadeOnDelete(false);
         }
 
         private void SetupAdformBaseMetricModelValues<TBaseMetricValues>(DbModelBuilder modelBuilder, string entityColumnName)
@@ -565,15 +557,14 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<TBaseMetricValues>().HasKey(s => s.Id);
             modelBuilder.Entity<TBaseMetricValues>().Property(x => x.EntityId).HasColumnName(entityColumnName);
             modelBuilder.Entity<TBaseMetricValues>().Property(s => s.Cost).HasPrecision(18, 6);
-            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.PostClickRev).HasPrecision(18, 6);
-            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.PostViewRev).HasPrecision(18, 6);
-            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.SalesAll).HasPrecision(18, 6);
-            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.SalesConvType1Clicks).HasPrecision(18, 6);
-            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.SalesConvType2Clicks).HasPrecision(18, 6);
-            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.SalesConvType3Clicks).HasPrecision(18, 6);
-            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.SalesConvType1Impressions).HasPrecision(18, 6);
-            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.SalesConvType2Impressions).HasPrecision(18, 6);
-            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.SalesConvType3Impressions).HasPrecision(18, 6);
+            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.ClickSalesConvTypeAll).HasPrecision(18, 6);
+            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.ClickSalesConvType1).HasPrecision(18, 6);
+            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.ClickSalesConvType2).HasPrecision(18, 6);
+            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.ClickSalesConvType3).HasPrecision(18, 6);
+            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.ImpressionSalesConvTypeAll).HasPrecision(18, 6);
+            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.ImpressionSalesConvType1).HasPrecision(18, 6);
+            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.ImpressionSalesConvType2).HasPrecision(18, 6);
+            modelBuilder.Entity<TBaseMetricValues>().Property(s => s.ImpressionSalesConvType3).HasPrecision(18, 6);
         }
 
         private void SetupYamDailyMetricModelValues<TDailyMetricValues>(DbModelBuilder modelBuilder, string entityColumnName)

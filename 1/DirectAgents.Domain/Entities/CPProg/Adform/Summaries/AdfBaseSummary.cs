@@ -40,34 +40,9 @@ namespace DirectAgents.Domain.Entities.CPProg.Adform.Summaries
         public int Impressions { get; set; }
 
         /// <summary>
-        /// Gets or sets the unique impressions metric value.
-        /// </summary>
-        public int UniqueImpressions { get; set; }
-
-        /// <summary>
         /// Gets or sets the clicks metric value.
         /// </summary>
         public int Clicks { get; set; }
-
-        /// <summary>
-        /// Gets or sets the post click conversion metric value.
-        /// </summary>
-        public int PostClickConv { get; set; }
-
-        /// <summary>
-        /// Gets or sets the post view conversion metric value.
-        /// </summary>
-        public int PostViewConv { get; set; }
-
-        /// <summary>
-        /// Gets or sets the post click revenue metric value.
-        /// </summary>
-        public decimal PostClickRev { get; set; }
-
-        /// <summary>
-        /// Gets or sets the post view revenue metric value.
-        /// </summary>
-        public decimal PostViewRev { get; set; }
 
         /// <summary>
         /// Gets or sets the cost metric value.
@@ -75,73 +50,88 @@ namespace DirectAgents.Domain.Entities.CPProg.Adform.Summaries
         public decimal Cost { get; set; }
 
         /// <summary>
-        /// Gets or sets the conversions metric value for all conversion types.
+        /// Gets or sets the post click conversions metric value for all conversion types.
         /// </summary>
-        public int ConversionsAll { get; set; }
+        public int ClickConversionsConvTypeAll { get; set; }
 
         /// <summary>
-        /// Gets or sets the conversions metric value for conversion type 1.
+        /// Gets or sets the post click conversions metric value for conversion type 1.
         /// </summary>
-        public int ConversionsConvType1Clicks { get; set; }
+        public int ClickConversionsConvType1 { get; set; }
 
         /// <summary>
-        /// Gets or sets the conversions metric value for conversion type 2.
+        /// Gets or sets the post click conversions metric value for conversion type 2.
         /// </summary>
-        public int ConversionsConvType2Clicks { get; set; }
+        public int ClickConversionsConvType2 { get; set; }
 
         /// <summary>
-        /// Gets or sets the conversions metric value for conversion type 3.
+        /// Gets or sets the post click conversions metric value for conversion type 3.
         /// </summary>
-        public int ConversionsConvType3Clicks { get; set; }
+        public int ClickConversionsConvType3 { get; set; }
 
         /// <summary>
-        /// Gets or sets the conversions metric value for conversion type 1.
+        /// Gets or sets the post impression conversions metric value for all conversion types.
         /// </summary>
-        public int ConversionsConvType1Impressions { get; set; }
+        public int ImpressionConversionsConvTypeAll { get; set; }
 
         /// <summary>
-        /// Gets or sets the conversions metric value for conversion type 2.
+        /// Gets or sets the post impression conversions metric value for conversion type 1.
         /// </summary>
-        public int ConversionsConvType2Impressions { get; set; }
+        public int ImpressionConversionsConvType1 { get; set; }
 
         /// <summary>
-        /// Gets or sets the conversions metric value for conversion type 3.
+        /// Gets or sets the post impression conversions metric value for conversion type 2.
         /// </summary>
-        public int ConversionsConvType3Impressions { get; set; }
+        public int ImpressionConversionsConvType2 { get; set; }
 
         /// <summary>
-        /// Gets or sets the sales metric value for all conversion types.
+        /// Gets or sets the post impression conversions metric value for conversion type 3.
         /// </summary>
-        public decimal SalesAll { get; set; }
+        public int ImpressionConversionsConvType3 { get; set; }
 
         /// <summary>
-        /// Gets or sets the sales metric value for conversion type 1.
+        /// Gets or sets the post click sales metric value for all conversion types.
         /// </summary>
-        public decimal SalesConvType1Clicks { get; set; }
+        public decimal ClickSalesConvTypeAll { get; set; }
 
         /// <summary>
-        /// Gets or sets the sales metric value for conversion type 2.
+        /// Gets or sets the post click sales metric value for conversion type 1.
         /// </summary>
-        public decimal SalesConvType2Clicks { get; set; }
+        public decimal ClickSalesConvType1 { get; set; }
 
         /// <summary>
-        /// Gets or sets the sales metric value for conversion type 3.
+        /// Gets or sets the post click sales metric value for conversion type 2.
         /// </summary>
-        public decimal SalesConvType3Clicks { get; set; }
+        public decimal ClickSalesConvType2 { get; set; }
 
         /// <summary>
-        /// Gets or sets the sales metric value for conversion type 1.
+        /// Gets or sets the post click sales metric value for conversion type 3.
         /// </summary>
-        public decimal SalesConvType1Impressions { get; set; }
+        public decimal ClickSalesConvType3 { get; set; }
 
         /// <summary>
-        /// Gets or sets the sales metric value for conversion type 2.
+        /// Gets or sets the post impression sales metric value for all conversion types.
         /// </summary>
-        public decimal SalesConvType2Impressions { get; set; }
+        public decimal ImpressionSalesConvTypeAll { get; set; }
 
         /// <summary>
-        /// Gets or sets the sales metric value for conversion type 3.
+        /// Gets or sets the post impression sales metric value for conversion type 1.
         /// </summary>
-        public decimal SalesConvType3Impressions { get; set; }
+        public decimal ImpressionSalesConvType1 { get; set; }
+
+        /// <summary>
+        /// Gets or sets the post impression sales metric value for conversion type 2.
+        /// </summary>
+        public decimal ImpressionSalesConvType2 { get; set; }
+
+        /// <summary>
+        /// Gets or sets the post impression sales metric value for conversion type 3.
+        /// </summary>
+        public decimal ImpressionSalesConvType3 { get; set; }
+
+        /// <summary>
+        /// Gets or sets the impressions metric value for campaign unique.
+        /// </summary>
+        public int UniqueImpressions { get; set; }
     }
 }

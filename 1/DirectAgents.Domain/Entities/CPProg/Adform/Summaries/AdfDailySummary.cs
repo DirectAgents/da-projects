@@ -2,6 +2,10 @@
 
 namespace DirectAgents.Domain.Entities.CPProg.Adform.Summaries
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// Adform Daily summary database entity.
+    /// </summary>
     public class AdfDailySummary : AdfBaseSummary
     {
         /// <summary>

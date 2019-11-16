@@ -29,7 +29,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         {
             { AdInteractionType.Clicks, "Click" },
             { AdInteractionType.Impressions, "Impression" },
-            { AdInteractionType.UniqueImpressions, "None" },
+            { AdInteractionType.None, "None" },
         };
 
         protected AdformApiBaseExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account)
@@ -79,52 +79,73 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         protected void SetStats(T stats, IEnumerable<AdformSummary> adformStats/*, DateTime date*/)
         {
             SetBaseStats(stats, adformStats);
-            SetClickAndViewStats(stats, adformStats);
-            SetConversionMetrics(stats, adformStats);
+            SetConversionStats(stats, adformStats);
         }
 
-        protected void SetBaseStats(T stats, AdformSummary adformStat)
-        {
-            SetBaseStats(stats, new[] {adformStat});
-        }
-
-        protected void SetBaseStats(T stats, IEnumerable<AdformSummary> adformStats)
+        private static void SetBaseStats(T stats, IEnumerable<AdformSummary> adformStats)
         {
             stats.Cost = adformStats.Sum(x => x.Cost);
             stats.Impressions = adformStats.Sum(x => x.Impressions);
             stats.Clicks = adformStats.Sum(x => x.Clicks);
         }
 
-        protected static void SetClickAndViewStats(T stats, IEnumerable<AdformSummary> adformStats)
+        private static void SetConversionStats(T stats, IEnumerable<AdformSummary> adformStats)
         {
-            var clickThroughs = adformStats.Where(x => x.AdInteractionType == AdInteractions[AdInteractionType.Clicks]);
-            var viewThroughs = adformStats.Where(x => x.AdInteractionType == AdInteractions[AdInteractionType.Impressions]);
-            stats.PostClickConv = clickThroughs.Sum(x => x.ConversionsAll);
-            stats.PostViewConv = viewThroughs.Sum(x => x.ConversionsAll);
-            stats.PostClickRev = clickThroughs.Sum(x => x.SalesAll);
-            stats.PostViewRev = viewThroughs.Sum(x => x.SalesAll);
+            SetClickAdInteractionMetrics(stats, adformStats);
+            SetImpressionAdInteractionMetrics(stats, adformStats);
+            SetUniqueImpressionMetric(stats, adformStats);
         }
 
-        protected static void SetConversionMetrics(T stats, IEnumerable<AdformSummary> adformStats)
+        private static void SetClickAdInteractionMetrics(T stats, IEnumerable<AdformSummary> adformStats)
         {
-            var clickThroughs = adformStats.Where(x => x.AdInteractionType == AdInteractions[AdInteractionType.Clicks]);
-            var viewThroughs = adformStats.Where(x => x.AdInteractionType == AdInteractions[AdInteractionType.Impressions]);
-            var uniqImpressions = adformStats.Where(x => x.AdInteractionType == AdInteractions[AdInteractionType.UniqueImpressions]);
-            stats.ConversionsConvType1Clicks = clickThroughs.Sum(x => x.ConversionsConvType1);
-            stats.ConversionsConvType2Clicks = clickThroughs.Sum(x => x.ConversionsConvType2);
-            stats.ConversionsConvType3Clicks = clickThroughs.Sum(x => x.ConversionsConvType3);
-            stats.SalesConvType1Clicks = clickThroughs.Sum(x => x.SalesConvType1);
-            stats.SalesConvType2Clicks = clickThroughs.Sum(x => x.SalesConvType2);
-            stats.SalesConvType3Clicks = clickThroughs.Sum(x => x.SalesConvType3);
+            var clickAdInteractionStats = adformStats.Where(x => x.AdInteractionType == AdInteractions[AdInteractionType.Clicks]);
+            SetClickConversionMetrics(stats, clickAdInteractionStats);
+            SetClickSaleMetrics(stats, clickAdInteractionStats);
+        }
 
-            stats.ConversionsConvType1Impressions = viewThroughs.Sum(x => x.ConversionsConvType1);
-            stats.ConversionsConvType2Impressions = viewThroughs.Sum(x => x.ConversionsConvType2);
-            stats.ConversionsConvType3Impressions = viewThroughs.Sum(x => x.ConversionsConvType3);
-            stats.SalesConvType1Impressions = viewThroughs.Sum(x => x.SalesConvType1);
-            stats.SalesConvType2Impressions = viewThroughs.Sum(x => x.SalesConvType2);
-            stats.SalesConvType3Impressions = viewThroughs.Sum(x => x.SalesConvType3);
+        private static void SetImpressionAdInteractionMetrics(T stats, IEnumerable<AdformSummary> adformStats)
+        {
+            var viewAdInteractionStats = adformStats.Where(x => x.AdInteractionType == AdInteractions[AdInteractionType.Impressions]);
+            SetImpressionConversionMetrics(stats, viewAdInteractionStats);
+            SetImpressionSaleMetrics(stats, viewAdInteractionStats);
+        }
 
-            stats.UniqueImpressions = uniqImpressions.Sum(x => x.UniqueImpressions);
+        private static void SetUniqueImpressionMetric(T stats, IEnumerable<AdformSummary> adformStats)
+        {
+            var uniqueImpressionStats = adformStats.Where(x => x.AdInteractionType == AdInteractions[AdInteractionType.None]);
+            stats.UniqueImpressions = uniqueImpressionStats.Sum(x => x.UniqueImpressions);
+        }
+
+        private static void SetClickConversionMetrics(T stats, IEnumerable<AdformSummary> clickAdInteractionStats)
+        {
+            stats.ClickConversionsConvTypeAll = clickAdInteractionStats.Sum(x => x.ConversionsAll);
+            stats.ClickConversionsConvType1 = clickAdInteractionStats.Sum(x => x.ConversionsConvType1);
+            stats.ClickConversionsConvType2 = clickAdInteractionStats.Sum(x => x.ConversionsConvType2);
+            stats.ClickConversionsConvType3 = clickAdInteractionStats.Sum(x => x.ConversionsConvType3);
+        }
+
+        private static void SetClickSaleMetrics(T stats, IEnumerable<AdformSummary> clickAdInteractionStats)
+        {
+            stats.ClickSalesConvTypeAll = clickAdInteractionStats.Sum(x => x.SalesAll);
+            stats.ClickSalesConvType1 = clickAdInteractionStats.Sum(x => x.SalesConvType1);
+            stats.ClickSalesConvType2 = clickAdInteractionStats.Sum(x => x.SalesConvType2);
+            stats.ClickSalesConvType3 = clickAdInteractionStats.Sum(x => x.SalesConvType3);
+        }
+
+        private static void SetImpressionConversionMetrics(T stats, IEnumerable<AdformSummary> viewAdInteractionStats)
+        {
+            stats.ImpressionConversionsConvTypeAll = viewAdInteractionStats.Sum(x => x.ConversionsAll);
+            stats.ImpressionConversionsConvType1 = viewAdInteractionStats.Sum(x => x.ConversionsConvType1);
+            stats.ImpressionConversionsConvType2 = viewAdInteractionStats.Sum(x => x.ConversionsConvType2);
+            stats.ImpressionConversionsConvType3 = viewAdInteractionStats.Sum(x => x.ConversionsConvType3);
+        }
+
+        private static void SetImpressionSaleMetrics(T stats, IEnumerable<AdformSummary> viewAdInteractionStats)
+        {
+            stats.ImpressionSalesConvTypeAll = viewAdInteractionStats.Sum(x => x.SalesAll);
+            stats.ImpressionSalesConvType1 = viewAdInteractionStats.Sum(x => x.SalesConvType1);
+            stats.ImpressionSalesConvType2 = viewAdInteractionStats.Sum(x => x.SalesConvType2);
+            stats.ImpressionSalesConvType3 = viewAdInteractionStats.Sum(x => x.SalesConvType3);
         }
 
         private void SetMonthlyCostMultipliers(ExtAccount account, DateRange dateRange)

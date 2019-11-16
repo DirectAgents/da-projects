@@ -7,6 +7,6 @@
     {
         Impressions,
         Clicks,
-        UniqueImpressions,
+        None,
     }
 }
