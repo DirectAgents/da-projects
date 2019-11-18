@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Adform;
+using Adform.Entities;
 using Adform.Entities.ReportEntities;
 using Adform.Entities.ReportEntities.ReportParameters;
 using Adform.Enums;
@@ -53,27 +53,27 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             End();
         }
 
-        private IEnumerable<AdformSummary> ExtractData()
+        private IEnumerable<AdformReportSummary> ExtractData()
         {
             var reportData = GetReportData();
             return reportData.SelectMany(TransformReportData).ToList();
         }
 
-        private IEnumerable<AdformSummary> TransformReportData(ReportData reportData)
+        private IEnumerable<AdformReportSummary> TransformReportData(ReportData reportData)
         {
             var adFormTransformer = new AdformTransformer(reportData, byCampaign: !byOrder, byOrder: byOrder);
             var afSums = adFormTransformer.EnumerateAdformSummaries();
             return afSums;
         }
 
-        private IEnumerable<AdfCampaignSummary> GroupSummaries(IEnumerable<AdformSummary> adFormSums)
+        private IEnumerable<AdfCampaignSummary> GroupSummaries(IEnumerable<AdformReportSummary> adFormSums)
         {
             var sums = EnumerateRows(adFormSums);
             var resultSums = AdjustItems(sums);
             return resultSums;
         }
 
-        private IEnumerable<AdfCampaignSummary> EnumerateRows(IEnumerable<AdformSummary> afSums)
+        private IEnumerable<AdfCampaignSummary> EnumerateRows(IEnumerable<AdformReportSummary> afSums)
         {
             var campaignGroups = afSums.GroupBy(x => new { x.Campaign, x.CampaignId, x.Order, x.OrderId, x.Date, x.MediaId });
             foreach (var campaignGroup in campaignGroups)

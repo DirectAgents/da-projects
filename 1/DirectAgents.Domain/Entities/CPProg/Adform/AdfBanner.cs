@@ -2,7 +2,7 @@
 {
     /// <inheritdoc />
     /// <summary>
-    /// Adform Campaign database entity.
+    /// Adform Banner database entity.
     /// </summary>
     public class AdfBanner : AdfBaseEntity
     {

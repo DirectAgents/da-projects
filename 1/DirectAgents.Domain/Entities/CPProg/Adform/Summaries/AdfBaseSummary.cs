@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DirectAgents.Domain.Entities.CPProg.Adform.Summaries
 {
     /// <summary>
-    /// Adform base summary metric entity.
+    /// Adform base summary entity.
     /// </summary>
     public abstract class AdfBaseSummary
     {

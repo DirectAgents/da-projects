@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Adform;
 using Adform.Entities;
 using Adform.Enums;
 using Adform.Utilities;
@@ -86,47 +85,47 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             }
         }
 
-        protected void SetStats(T stats, IEnumerable<AdformSummary> adformStats/*, DateTime date*/)
+        protected void SetStats(T stats, IEnumerable<AdformReportSummary> adformStats)
         {
             SetBaseStats(stats, adformStats);
             SetConversionStats(stats, adformStats);
         }
 
-        private static void SetBaseStats(T stats, IEnumerable<AdformSummary> adformStats)
+        private static void SetBaseStats(T stats, IEnumerable<AdformReportSummary> adformStats)
         {
             stats.Cost = adformStats.Sum(x => x.Cost);
             stats.Impressions = adformStats.Sum(x => x.Impressions);
             stats.Clicks = adformStats.Sum(x => x.Clicks);
         }
 
-        private static void SetConversionStats(T stats, IEnumerable<AdformSummary> adformStats)
+        private static void SetConversionStats(T stats, IEnumerable<AdformReportSummary> adformStats)
         {
             SetClickAdInteractionMetrics(stats, adformStats);
             SetImpressionAdInteractionMetrics(stats, adformStats);
             SetUniqueImpressionMetric(stats, adformStats);
         }
 
-        private static void SetClickAdInteractionMetrics(T stats, IEnumerable<AdformSummary> adformStats)
+        private static void SetClickAdInteractionMetrics(T stats, IEnumerable<AdformReportSummary> adformStats)
         {
             var clickAdInteractionStats = adformStats.Where(x => x.AdInteractionType == AdInteractions[AdInteractionType.Clicks]);
             SetClickConversionMetrics(stats, clickAdInteractionStats);
             SetClickSaleMetrics(stats, clickAdInteractionStats);
         }
 
-        private static void SetImpressionAdInteractionMetrics(T stats, IEnumerable<AdformSummary> adformStats)
+        private static void SetImpressionAdInteractionMetrics(T stats, IEnumerable<AdformReportSummary> adformStats)
         {
             var viewAdInteractionStats = adformStats.Where(x => x.AdInteractionType == AdInteractions[AdInteractionType.Impressions]);
             SetImpressionConversionMetrics(stats, viewAdInteractionStats);
             SetImpressionSaleMetrics(stats, viewAdInteractionStats);
         }
 
-        private static void SetUniqueImpressionMetric(T stats, IEnumerable<AdformSummary> adformStats)
+        private static void SetUniqueImpressionMetric(T stats, IEnumerable<AdformReportSummary> adformStats)
         {
             var uniqueImpressionStats = adformStats.Where(x => x.AdInteractionType == AdInteractions[AdInteractionType.None]);
             stats.UniqueImpressions = uniqueImpressionStats.Sum(x => x.UniqueImpressions);
         }
 
-        private static void SetClickConversionMetrics(T stats, IEnumerable<AdformSummary> clickAdInteractionStats)
+        private static void SetClickConversionMetrics(T stats, IEnumerable<AdformReportSummary> clickAdInteractionStats)
         {
             stats.ClickConversionsConvTypeAll = clickAdInteractionStats.Sum(x => x.ConversionsAll);
             stats.ClickConversionsConvType1 = clickAdInteractionStats.Sum(x => x.ConversionsConvType1);
@@ -134,7 +133,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             stats.ClickConversionsConvType3 = clickAdInteractionStats.Sum(x => x.ConversionsConvType3);
         }
 
-        private static void SetClickSaleMetrics(T stats, IEnumerable<AdformSummary> clickAdInteractionStats)
+        private static void SetClickSaleMetrics(T stats, IEnumerable<AdformReportSummary> clickAdInteractionStats)
         {
             stats.ClickSalesConvTypeAll = clickAdInteractionStats.Sum(x => x.SalesAll);
             stats.ClickSalesConvType1 = clickAdInteractionStats.Sum(x => x.SalesConvType1);
@@ -142,7 +141,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             stats.ClickSalesConvType3 = clickAdInteractionStats.Sum(x => x.SalesConvType3);
         }
 
-        private static void SetImpressionConversionMetrics(T stats, IEnumerable<AdformSummary> viewAdInteractionStats)
+        private static void SetImpressionConversionMetrics(T stats, IEnumerable<AdformReportSummary> viewAdInteractionStats)
         {
             stats.ImpressionConversionsConvTypeAll = viewAdInteractionStats.Sum(x => x.ConversionsAll);
             stats.ImpressionConversionsConvType1 = viewAdInteractionStats.Sum(x => x.ConversionsConvType1);
@@ -150,7 +149,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             stats.ImpressionConversionsConvType3 = viewAdInteractionStats.Sum(x => x.ConversionsConvType3);
         }
 
-        private static void SetImpressionSaleMetrics(T stats, IEnumerable<AdformSummary> viewAdInteractionStats)
+        private static void SetImpressionSaleMetrics(T stats, IEnumerable<AdformReportSummary> viewAdInteractionStats)
         {
             stats.ImpressionSalesConvTypeAll = viewAdInteractionStats.Sum(x => x.SalesAll);
             stats.ImpressionSalesConvType1 = viewAdInteractionStats.Sum(x => x.SalesConvType1);

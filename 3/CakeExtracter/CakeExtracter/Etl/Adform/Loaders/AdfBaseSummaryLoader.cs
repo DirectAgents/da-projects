@@ -9,6 +9,11 @@ using Z.EntityFramework.Extensions;
 
 namespace CakeExtracter.Etl.Adform.Loaders
 {
+    /// <summary>
+    /// Adform base summary loader.
+    /// </summary>
+    /// <typeparam name="TEntity">Common entity type.</typeparam>
+    /// <typeparam name="TSummary">Common summary type.</typeparam>
     public abstract class AdfBaseSummaryLoader<TEntity, TSummary> : Loader<TSummary>
         where TEntity : AdfBaseEntity
         where TSummary : AdfBaseSummary
@@ -18,6 +23,13 @@ namespace CakeExtracter.Etl.Adform.Loaders
         private readonly IBaseRepository<TEntity> entityRepository;
         private readonly IBaseRepository<TSummary> summaryRepository;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AdfBaseSummaryLoader{TEntity, TSummary}"/> class.
+        /// </summary>
+        /// <param name="accountId">Identifier of DB account.</param>
+        /// <param name="entityRepository">DB repository for entities.</param>
+        /// <param name="summaryRepository">DB repository for summaries.</param>
+        /// <param name="mediaTypeLoader">Loader of media types.</param>
         protected AdfBaseSummaryLoader(
             int accountId,
             IBaseRepository<TEntity> entityRepository,
@@ -30,8 +42,11 @@ namespace CakeExtracter.Etl.Adform.Loaders
             this.mediaTypeLoader = mediaTypeLoader;
         }
 
-        protected abstract void SetEntityParents(TEntity entity);
-
+        /// <summary>
+        /// Merges (inserts or updates) dependent entities with existed in DB.
+        /// </summary>
+        /// <param name="items">Items for merge.</param>
+        /// <returns>True if successfully merged.</returns>
         public bool MergeDependentEntitiesWithExisted(IEnumerable<TEntity> items)
         {
             return MergeDependentEntitiesWithExisted(items, options =>
@@ -40,6 +55,12 @@ namespace CakeExtracter.Etl.Adform.Loaders
             });
         }
 
+        /// <summary>
+        /// Merges (inserts or updates) dependent entities with existed in DB.
+        /// </summary>
+        /// <param name="items">Items for merge.</param>
+        /// <param name="entityBulkOptionsAction">Action for bulk merge extension.</param>
+        /// <returns>True if successfully merged.</returns>
         public bool MergeDependentEntitiesWithExisted(
             IEnumerable<TEntity> items,
             Action<EntityBulkOperation<TEntity>> entityBulkOptionsAction)
@@ -51,6 +72,11 @@ namespace CakeExtracter.Etl.Adform.Loaders
             return result;
         }
 
+        /// <summary>
+        /// Merges (inserts or updates) summaries with existed in DB.
+        /// </summary>
+        /// <param name="items">Summary items for merge.</param>
+        /// <returns>True if successfully merged.</returns>
         public bool MergeSummariesWithExisted(IEnumerable<TSummary> items)
         {
             items.ForEach(SetSummaryParents);
@@ -59,12 +85,34 @@ namespace CakeExtracter.Etl.Adform.Loaders
             return result;
         }
 
+        /// <summary>
+        /// Merges (inserts or updates) summaries with existed in DB.
+        /// </summary>
+        /// <param name="items">Summary items for merge.</param>
+        /// <returns>True if successfully merged.</returns>
+        protected abstract bool MergeItemsWithExisted(List<TSummary> items);
+
+        /// <summary>
+        /// Sets DB identifier of parent entity for entity.
+        /// </summary>
+        /// <param name="entity">Entity for which the parent ID will be set.</param>
+        protected abstract void SetEntityParents(TEntity entity);
+
+        /// <summary>
+        /// Sets DB identifier of parent entity for summary.
+        /// </summary>
+        /// <param name="summary">Summary for which the parent entity ID will be set.</param>
         protected virtual void SetSummaryParents(TSummary summary)
         {
             var dbMediaType = mediaTypeLoader.GetMediaTypeByExternalId(summary.MediaType.ExternalId);
             summary.MediaTypeId = dbMediaType.Id;
         }
 
+        /// <summary>
+        /// Merges (inserts or updates) dependent media types with existed in DB.
+        /// </summary>
+        /// <param name="mediaTypes">Media types for merge.</param>
+        /// <returns>True if successfully merged.</returns>
         protected bool MergeDependentMediaTypesWithExisted(IEnumerable<AdfMediaType> mediaTypes)
         {
             return mediaTypeLoader.MergeDependentEntitiesWithExisted(mediaTypes);
@@ -86,8 +134,7 @@ namespace CakeExtracter.Etl.Adform.Loaders
             return entities;
         }
 
-        private static void SetEntityDatabaseIds<TEntity>(IEnumerable<TEntity> items, IEnumerable<TEntity> dbEntities)
-            where TEntity : AdfBaseEntity
+        private static void SetEntityDatabaseIds(IEnumerable<TEntity> items, IEnumerable<TEntity> dbEntities)
         {
             foreach (var item in items)
             {

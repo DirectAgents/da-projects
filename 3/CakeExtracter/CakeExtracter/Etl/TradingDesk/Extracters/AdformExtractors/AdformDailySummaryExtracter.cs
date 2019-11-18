@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Adform;
+using Adform.Entities;
 using Adform.Entities.ReportEntities;
 using Adform.Entities.ReportEntities.ReportParameters;
 using Adform.Enums;
@@ -49,13 +49,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             End();
         }
 
-        private IEnumerable<AdformSummary> ExtractData()
+        private IEnumerable<AdformReportSummary> ExtractData()
         {
             var reportData = GetReportData();
             return reportData.SelectMany(TransformReportData).ToList();
         }
 
-        private IEnumerable<AdfDailySummary> EnumerateRows(IEnumerable<AdformSummary> afSums)
+        private IEnumerable<AdfDailySummary> EnumerateRows(IEnumerable<AdformReportSummary> afSums)
         {
             var dailyGroups = afSums.GroupBy(x => new { x.Date, x.MediaId, x.Media });
             foreach (var dailyGroup in dailyGroups)
@@ -88,7 +88,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             return AfUtility.CreateReportParams(settings);
         }
 
-        private IEnumerable<AdformSummary> TransformReportData(ReportData reportData)
+        private IEnumerable<AdformReportSummary> TransformReportData(ReportData reportData)
         {
             var dayStatsTransformer = new AdformTransformer(reportData);
             return dayStatsTransformer.EnumerateAdformSummaries();
