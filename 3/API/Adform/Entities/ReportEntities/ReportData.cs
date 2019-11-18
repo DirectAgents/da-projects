@@ -12,11 +12,16 @@ namespace Adform.Entities.ReportEntities
         //These constants must match column IDs from the column Lookup.
         public readonly string AdInteractionColumnId = AdformApiHelper.Dimensions[Dimension.AdInteractionType];
         public readonly string OrderColumnId = AdformApiHelper.Dimensions[Dimension.Order];
+        public readonly string OrderIdColumnId = AdformApiHelper.Dimensions[Dimension.OrderId];
         public readonly string CampaignColumnId = AdformApiHelper.Dimensions[Dimension.Campaign];
+        public readonly string CampaignIdColumnId = AdformApiHelper.Dimensions[Dimension.CampaignId];
         public readonly string DateColumnId = AdformApiHelper.Dimensions[Dimension.Date];
         public readonly string LineItemColumnId = AdformApiHelper.Dimensions[Dimension.LineItem];
+        public readonly string LineItemIdColumnId = AdformApiHelper.Dimensions[Dimension.LineItemId];
         public readonly string BannerColumnId = AdformApiHelper.Dimensions[Dimension.Banner];
+        public readonly string BannerIdColumnId = AdformApiHelper.Dimensions[Dimension.BannerId];
         public readonly string MediaColumnId = AdformApiHelper.Dimensions[Dimension.Media];
+        public readonly string MediaIdColumnId = AdformApiHelper.Dimensions[Dimension.MediaId];
         public readonly string ImpressionColumnId = GetColumnId(AdformApiHelper.ImpressionsMetric, AdformApiHelper.SpecsValueAll);
         public readonly string ClickColumnId = GetColumnId(AdformApiHelper.ClicksMetric, AdformApiHelper.SpecsValueAll);
         public readonly string CostColumnId = AdformApiHelper.CostMetric;

@@ -98,6 +98,16 @@
     <Compile Include="Abstract\IDepartmentRepository.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Entities\CPProg\Adform\AdfBanner.cs" />
+    <Compile Include="Entities\CPProg\Adform\AdfCampaign.cs" />
+    <Compile Include="Entities\CPProg\Adform\AdfLineItem.cs" />
+    <Compile Include="Entities\CPProg\Adform\Summaries\AdfBannerSummary.cs" />
+    <Compile Include="Entities\CPProg\Adform\Summaries\AdfBaseSummary.cs" />
+    <Compile Include="Entities\CPProg\Adform\Summaries\AdfCampaignSummary.cs" />
+    <Compile Include="Entities\CPProg\Adform\Summaries\AdfDailySummary.cs" />
+    <Compile Include="Entities\CPProg\Adform\AdfBaseEntity.cs" />
+    <Compile Include="Entities\CPProg\Adform\AdfMediaType.cs" />
+    <Compile Include="Entities\CPProg\Adform\Summaries\AdfLineItemSummary.cs" />
     <Compile Include="MigrationsTD\201905311144009_Mig_ErrorEmailSentProperty.cs" />
     <Compile Include="MigrationsTD\201905311144009_Mig_ErrorEmailSentProperty.Designer.cs">
       <DependentUpon>201905311144009_Mig_ErrorEmailSentProperty.cs</DependentUpon>
@@ -121,6 +131,10 @@
     <Compile Include="MigrationsTD\201910231135310_Mig_FacebookAddReachMetric.cs" />
     <Compile Include="MigrationsTD\201910231135310_Mig_FacebookAddReachMetric.Designer.cs">
       <DependentUpon>201910231135310_Mig_FacebookAddReachMetric.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\201911161221115_Mig_AdformNewDbTables.cs" />
+    <Compile Include="MigrationsTD\201911161221115_Mig_AdformNewDbTables.Designer.cs">
+      <DependentUpon>201911161221115_Mig_AdformNewDbTables.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201909270822065_Mig_Affiliate_AccountManager.cs" />
     <Compile Include="Migrations\201909270822065_Mig_Affiliate_AccountManager.Designer.cs">
@@ -1154,6 +1168,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201910231135310_Mig_FacebookAddReachMetric.resx">
       <DependentUpon>201910231135310_Mig_FacebookAddReachMetric.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201911161221115_Mig_AdformNewDbTables.resx">
+      <DependentUpon>201911161221115_Mig_AdformNewDbTables.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

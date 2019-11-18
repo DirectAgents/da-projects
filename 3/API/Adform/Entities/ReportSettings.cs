@@ -22,23 +22,5 @@ namespace Adform.Entities
         public bool ConvMetrics { get; set; }
 
         public List<Dimension> Dimensions { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to include "Real-Time Bidding" media only
-        /// (for real-time bidding campaigns only).
-        /// </summary>
-        public bool RtbMediaOnly { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to include
-        /// the "Unique impressions" metric for all media types.
-        /// </summary>
-        public bool UniqueImpressionsMetricForAllMediaTypes { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to include
-        /// all statistics for all media types.
-        /// </summary>
-        public bool StatsForAllMediaTypes { get; set; }
     }
 }

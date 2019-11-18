@@ -1,27 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Adform;
+using Adform.Entities;
 using Adform.Entities.ReportEntities;
+using Adform.Entities.ReportEntities.ReportParameters;
 using Adform.Enums;
 using Adform.Utilities;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.CPProg.Adform;
+using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 {
-    public class AdformStrategySummaryExtractor : AdformApiBaseExtractor<StrategySummary>
+    /// <inheritdoc />
+    /// <summary>
+    /// Adform Campaign summary extractor.
+    /// </summary>
+    public class AdformStrategySummaryExtractor : AdformApiBaseExtractor<AdfCampaignSummary>
     {
         private readonly bool byOrder;
 
-        public AdformStrategySummaryExtractor(
-            AdformUtility adformUtility,
-            DateRange dateRange,
-            ExtAccount account,
-            bool rtbMediaOnly,
-            bool areAllStatsForAllMediaTypes,
-            bool byOrder = false)
-            : base(adformUtility, dateRange, account, rtbMediaOnly, areAllStatsForAllMediaTypes)
+        /// <inheritdoc cref="AdformApiBaseExtractor{T}"/>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AdformStrategySummaryExtractor"/> class.
+        /// </summary>
+        /// <param name="adformUtility">API utility.</param>
+        /// <param name="dateRange">Date range.</param>
+        /// <param name="account">Account.</param>
+        /// <param name="byOrder">Flag indicates to extract order dimension instead campaign dimension.</param>
+        public AdformStrategySummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account, bool byOrder = false)
+            : base(adformUtility, dateRange, account)
         {
             this.byOrder = byOrder;
         }
@@ -41,46 +50,68 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             {
                 Logger.Error(AccountId, ex);
             }
-
             End();
         }
 
-        private IEnumerable<AdformSummary> ExtractData()
+        private IEnumerable<AdformReportSummary> ExtractData()
         {
-            var settings = GetBaseSettings();
-            settings.Dimensions.Add(byOrder ? Dimension.Order : Dimension.Campaign);
-            var parameters = AfUtility.CreateReportParams(settings);
-            var allReportData = AfUtility.GetReportDataWithLimits(parameters);
-            var adFormSums = allReportData.SelectMany(TransformReportData).ToList();
-            return adFormSums;
+            var reportData = GetReportData();
+            return reportData.SelectMany(TransformReportData).ToList();
         }
 
-        private IEnumerable<AdformSummary> TransformReportData(ReportData reportData)
+        private IEnumerable<AdformReportSummary> TransformReportData(ReportData reportData)
         {
             var adFormTransformer = new AdformTransformer(reportData, byCampaign: !byOrder, byOrder: byOrder);
             var afSums = adFormTransformer.EnumerateAdformSummaries();
             return afSums;
         }
 
-        private IEnumerable<StrategySummary> GroupSummaries(IEnumerable<AdformSummary> adFormSums)
+        private IEnumerable<AdfCampaignSummary> GroupSummaries(IEnumerable<AdformReportSummary> adFormSums)
         {
             var sums = EnumerateRows(adFormSums);
             var resultSums = AdjustItems(sums);
             return resultSums;
         }
 
-        private IEnumerable<StrategySummary> EnumerateRows(IEnumerable<AdformSummary> afSums)
+        private IEnumerable<AdfCampaignSummary> EnumerateRows(IEnumerable<AdformReportSummary> afSums)
         {
-            var campDateGroups = afSums.GroupBy(x => new { x.Campaign, x.Order, x.Date });
-            foreach (var campDateGroup in campDateGroups)
+            var campaignGroups = afSums.GroupBy(x => new { x.Campaign, x.CampaignId, x.Order, x.OrderId, x.Date, x.MediaId });
+            foreach (var campaignGroup in campaignGroups)
             {
-                var sum = new StrategySummary
+                var sum = new AdfCampaignSummary
                 {
-                    StrategyName = byOrder ? campDateGroup.Key.Order : campDateGroup.Key.Campaign,
+                    Date = campaignGroup.Key.Date,
+                    Campaign = new AdfCampaign
+                    {
+                        Name = byOrder ? campaignGroup.Key.Order : campaignGroup.Key.Campaign,
+                        ExternalId = byOrder ? campaignGroup.Key.OrderId : campaignGroup.Key.CampaignId,
+                    },
+                    MediaType = new AdfMediaType
+                    {
+                        ExternalId = campaignGroup.Key.MediaId,
+                    },
                 };
-                SetStats(sum, campDateGroup, campDateGroup.Key.Date);
+                SetStats(sum, campaignGroup);
                 yield return sum;
             }
+        }
+
+        private IEnumerable<ReportData> GetReportData()
+        {
+            var parameters = GetReportParameters();
+            return AfUtility.GetReportDataWithLimits(parameters);
+        }
+
+        private ReportParams GetReportParameters()
+        {
+            var settings = GetBaseSettings();
+            var dimensions = new List<Dimension>
+            {
+                byOrder ? Dimension.Order : Dimension.Campaign,
+                byOrder ? Dimension.OrderId : Dimension.CampaignId,
+            };
+            SetDimensionsForReportSettings(dimensions, settings);
+            return AfUtility.CreateReportParams(settings);
         }
     }
 }

@@ -53,18 +53,9 @@ namespace Adform.Entities.ReportEntities.ReportParameters
             var metricsStr = string.Join(", ", metricsWithSpecsStr);
             var datesStr = $"{Filter.Date.From}/{Filter.Date.To}";
             var clientsStr = string.Join(", ", Filter.Client);
-            var mediaStr = GetMediaStringIfPropertyExists();
             var trackingStr = GetTrackingStringIfPropertyExists();
-            var filtersStr = $"dates - {datesStr}, clients - {clientsStr}{mediaStr}{trackingStr}";
+            var filtersStr = $"dates - {datesStr}, clients - {clientsStr}{trackingStr}";
             return $"dimensions: {dimensionsStr}; metrics: {metricsStr}; filters: {filtersStr}";
-        }
-
-        private string GetMediaStringIfPropertyExists()
-        {
-            const string mediaPropertyKey = "Media";
-            return IsFilterPropertyExist(mediaPropertyKey)
-                ? $", media - {string.Join(", ", Filter.Media.Name)}"
-                : string.Empty;
         }
 
         private string GetTrackingStringIfPropertyExists()

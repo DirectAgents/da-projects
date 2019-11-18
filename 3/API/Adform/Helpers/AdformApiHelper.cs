@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Adform.Constants;
 using Adform.Entities;
 using Adform.Entities.ReportEntities.ReportParameters;
 using Adform.Enums;
@@ -30,9 +29,14 @@ namespace Adform.Helpers
         {
             { Dimension.Date, "date" },
             { Dimension.Campaign, "campaign" },
+            { Dimension.CampaignId, "campaignID" },
             { Dimension.Order, "order" },
+            { Dimension.OrderId, "orderID" },
             { Dimension.LineItem, "lineItem" },
+            { Dimension.LineItemId, "lineItemID" },
             { Dimension.Banner, "banner" },
+            { Dimension.BannerId, "bannerID" },
+            { Dimension.MediaId, "mediaID" },
             { Dimension.Media, "media" },
             { Dimension.AdInteractionType, "adInteractionType" }, // Click, Impression, etc.
         };
@@ -56,10 +60,6 @@ namespace Adform.Helpers
             dynamic filter = new System.Dynamic.ExpandoObject();
             filter.Client = new[] { settings.ClientId };
             filter.Date = GetDatesFilter(settings.StartDate, settings.EndDate);
-            if (IsMediaFilterNeed(settings))
-            {
-                filter.Media = GetMediaFilter(settings.RtbMediaOnly);
-            }
             if (IsTrackingFilterNeed(settings.TrackingIds))
             {
                 filter.Tracking = settings.TrackingIds;
@@ -79,16 +79,16 @@ namespace Adform.Helpers
                 SetConversionMetrics(metrics);
                 SetUniqueImpressionMetric(metrics);
             }
-            if (settings.UniqueImpressionsMetricForAllMediaTypes)
-            {
-                SetUniqueImpressionMetric(metrics);
-            }
             return metrics.ToArray();
         }
 
         public static string[] GetDimensions(ReportSettings settings)
         {
-            var defaultDimensions = new[] { Dimension.Date };
+            var defaultDimensions = new[]
+            {
+                Dimension.MediaId,
+                Dimension.Date,
+            };
             var dimensions = settings.Dimensions == null
                 ? defaultDimensions
                 : settings.Dimensions.Concat(defaultDimensions);
@@ -156,34 +156,9 @@ namespace Adform.Helpers
             };
         }
 
-        private static Media GetMediaFilter(bool rtbMediaOnly)
-        {
-            return rtbMediaOnly ? GetRtbMedia() : GetMultipleMedia();
-        }
-
-        private static bool IsMediaFilterNeed(ReportSettings settings)
-        {
-            var isUniqueImpressionsMetricForAllMediaTypes = settings.UniqueImpressionsMetricForAllMediaTypes;
-            var areAllStatsForAllMediaTypes = settings.StatsForAllMediaTypes;
-            return !(isUniqueImpressionsMetricForAllMediaTypes || areAllStatsForAllMediaTypes);
-        }
-
         private static bool IsTrackingFilterNeed(IEnumerable<string> trackingIds)
         {
             return trackingIds.Any(x => !string.IsNullOrEmpty(x));
-        }
-
-        private static Media GetRtbMedia()
-        {
-            return new Media { Name = new[] { MediaName.RtbMediaName } };
-        }
-
-        private static Media GetMultipleMedia()
-        {
-            return new Media
-            {
-                Name = new[] { MediaName.RtbMediaName, MediaName.DbmMediaName, MediaName.TtdMediaName, MediaName.YamMediaName },
-            };
         }
     }
 }

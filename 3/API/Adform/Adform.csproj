@@ -58,8 +58,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constants\MediaName.cs" />
-    <Compile Include="Entities\ReportEntities\ReportParameters\Media.cs" />
     <Compile Include="Entities\ResponseStatus.cs" />
     <Compile Include="Utilities\AdformLogger.cs" />
     <Compile Include="Utilities\AdformUtility.cs" />
@@ -74,7 +72,7 @@
     <Compile Include="Enums\AdInteractionType.cs" />
     <Compile Include="Enums\ConversionMetric.cs" />
     <Compile Include="Enums\Dimension.cs" />
-    <Compile Include="Entities\AdformSummary.cs" />
+    <Compile Include="Entities\AdformReportSummary.cs" />
     <Compile Include="Helpers\AdformApiHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

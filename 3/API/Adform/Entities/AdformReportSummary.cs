@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace Adform
+namespace Adform.Entities
 {
     /// <summary>
-    /// Adform summary entity for all levels.
+    /// Adform summary report entity for all levels.
     /// </summary>
-    public class AdformSummary
+    public class AdformReportSummary
     {
         /// <summary>
         /// Gets or sets the date.
@@ -33,19 +33,39 @@ namespace Adform
         public string Order { get; set; }
 
         /// <summary>
+        /// Gets or sets the identifier of order.
+        /// </summary>
+        public string OrderId { get; set; }
+
+        /// <summary>
         /// Gets or sets the Campaign.
         /// </summary>
         public string Campaign { get; set; }
 
         /// <summary>
-        /// Gets or sets the LineItem.
+        /// Gets or sets the identifier of campaign.
+        /// </summary>
+        public string CampaignId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Line item.
         /// </summary>
         public string LineItem { get; set; }
+
+        /// <summary>
+        /// Gets or sets the identifier of line item.
+        /// </summary>
+        public string LineItemId { get; set; }
 
         /// <summary>
         /// Gets or sets the Banner.
         /// </summary>
         public string Banner { get; set; }
+
+        /// <summary>
+        /// Gets or sets the identifier of banner.
+        /// </summary>
+        public string BannerId { get; set; }
 
         /// <summary>
         /// Gets or sets the ad interaction type.
@@ -96,5 +116,15 @@ namespace Adform
         /// Gets or sets the "Impressions" metric for the "Campaign unique" level.
         /// </summary>
         public int UniqueImpressions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the identifier of media.
+        /// </summary>
+        public string MediaId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Media.
+        /// </summary>
+        public string Media { get; set; }
     }
 }
