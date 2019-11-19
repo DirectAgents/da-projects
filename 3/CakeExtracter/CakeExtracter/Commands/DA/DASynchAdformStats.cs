@@ -5,6 +5,7 @@ using System.Linq;
 using Adform.Utilities;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Etl.Adform.Loaders;
 using CakeExtracter.Etl.Adform.Repositories;
 using CakeExtracter.Etl.Adform.Repositories.Summaries;
@@ -82,7 +83,9 @@ namespace CakeExtracter.Commands
             foreach (var account in accounts)
             {
                 Logger.Info("Commencing ETL for Adform account ({0}) {1}", account.Id, account.Name);
+                CommandExecutionContext.Current.SetJobExecutionStateInHistory("Started", account.Id);
                 DoETLs(account, dateRange, statsType);
+                CommandExecutionContext.Current.SetJobExecutionStateInHistory("Finished", account.Id);
             }
             SaveTokens(AdformUtility.TokenSets);
             return 0;
@@ -98,21 +101,22 @@ namespace CakeExtracter.Commands
         {
             var orderInsteadOfCampaign = accountIdsForOrders.Contains(account.ExternalId);
             var adformUtility = CreateUtility(account);
+            int? numberOfAddedDailyItems = null;
             try
             {
                 if (statsType.Daily)
                 {
-                    DoETL_Daily(dateRange, account, adformUtility);
+                    numberOfAddedDailyItems = DoETL_Daily(dateRange, account, adformUtility);
                 }
-                if (statsType.Strategy)
+                if (statsType.Strategy && (numberOfAddedDailyItems == null || numberOfAddedDailyItems.Value > 0))
                 {
                     DoETL_Strategy(dateRange, account, orderInsteadOfCampaign, adformUtility);
                 }
-                if (statsType.AdSet)
+                if (statsType.AdSet && (numberOfAddedDailyItems == null || numberOfAddedDailyItems.Value > 0))
                 {
                     DoETL_AdSet(dateRange, account, orderInsteadOfCampaign, adformUtility);
                 }
-                if (statsType.Creative)
+                if (statsType.Creative && (numberOfAddedDailyItems == null || numberOfAddedDailyItems.Value > 0))
                 {
                     DoETL_Creative(dateRange, account, adformUtility);
                 }
@@ -147,15 +151,18 @@ namespace CakeExtracter.Commands
         }
 
         // ---
-        private static void DoETL_Daily(DateRange dateRange, ExtAccount account, AdformUtility adformUtility)
+        private static int DoETL_Daily(DateRange dateRange, ExtAccount account, AdformUtility adformUtility)
         {
+            CommandExecutionContext.Current.SetJobExecutionStateInHistory("Daily level.", account.Id);
             var extractor = new AdformDailySummaryExtractor(adformUtility, dateRange, account);
             var loader = CreateDailyLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
+            return extractor.Added;
         }
 
         private static void DoETL_Strategy(DateRange dateRange, ExtAccount account, bool byOrder, AdformUtility adformUtility)
         {
+            CommandExecutionContext.Current.SetJobExecutionStateInHistory("Campaign level.", account.Id);
             var extractor = new AdformStrategySummaryExtractor(adformUtility, dateRange, account, byOrder);
             var loader = CreateCampaignLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
@@ -163,6 +170,7 @@ namespace CakeExtracter.Commands
 
         private static void DoETL_AdSet(DateRange dateRange, ExtAccount account, bool byOrder, AdformUtility adformUtility)
         {
+            CommandExecutionContext.Current.SetJobExecutionStateInHistory("LineItem level.", account.Id);
             var extractor = new AdformAdSetSummaryExtractor(adformUtility, dateRange, account, byOrder);
             var loader = CreateLineItemLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
@@ -170,6 +178,7 @@ namespace CakeExtracter.Commands
 
         private static void DoETL_Creative(DateRange dateRange, ExtAccount account, AdformUtility adformUtility)
         {
+            CommandExecutionContext.Current.SetJobExecutionStateInHistory("Banner level.", account.Id);
             var extractor = new AdformTDadSummaryExtractor(adformUtility, dateRange, account);
             var loader = CreateBannerLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);

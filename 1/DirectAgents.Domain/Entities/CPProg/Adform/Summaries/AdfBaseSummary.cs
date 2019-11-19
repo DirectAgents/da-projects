@@ -133,5 +133,34 @@ namespace DirectAgents.Domain.Entities.CPProg.Adform.Summaries
         /// Gets or sets the impressions metric value for campaign unique.
         /// </summary>
         public int UniqueImpressions { get; set; }
+
+        /// <summary>
+        /// Returns true if the object does not contain real metric values.
+        /// </summary>
+        /// <returns>Result if the object is empty.</returns>
+        public bool IsEmpty()
+        {
+            const decimal emptyValue = default(decimal);
+            return Impressions == emptyValue
+                   && UniqueImpressions == emptyValue
+                   && Clicks == emptyValue
+                   && Cost == emptyValue
+                   && ClickConversionsConvTypeAll == emptyValue
+                   && ClickConversionsConvType1 == emptyValue
+                   && ClickConversionsConvType2 == emptyValue
+                   && ClickConversionsConvType3 == emptyValue
+                   && ImpressionConversionsConvTypeAll == emptyValue
+                   && ImpressionConversionsConvType1 == emptyValue
+                   && ImpressionConversionsConvType2 == emptyValue
+                   && ImpressionConversionsConvType3 == emptyValue
+                   && ClickSalesConvTypeAll == emptyValue
+                   && ClickSalesConvType1 == emptyValue
+                   && ClickSalesConvType2 == emptyValue
+                   && ClickSalesConvType3 == emptyValue
+                   && ImpressionSalesConvTypeAll == emptyValue
+                   && ImpressionSalesConvType1 == emptyValue
+                   && ImpressionSalesConvType2 == emptyValue
+                   && ImpressionSalesConvType3 == emptyValue;
+        }
     }
 }

@@ -38,7 +38,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         protected override void Extract()
         {
             var additionInfo = byOrder ? "Orders" : "Campaigns";
-            Logger.Info(AccountId, $"Extracting StrategySummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d} - {additionInfo}");
+            Logger.Info(AccountId, $"Extracting CampaignSummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d} - {additionInfo}");
             //TODO: Do X days at a time...?
             try
             {

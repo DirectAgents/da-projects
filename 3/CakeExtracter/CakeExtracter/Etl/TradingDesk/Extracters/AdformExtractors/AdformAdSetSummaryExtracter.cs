@@ -38,7 +38,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         /// <inheritdoc/>
         protected override void Extract()
         {
-            Logger.Info(AccountId, $"Extracting AdSetSummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d}");
+            Logger.Info(AccountId, $"Extracting LineItemSummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d}");
             //TODO: Do X days at a time...?
             try
             {

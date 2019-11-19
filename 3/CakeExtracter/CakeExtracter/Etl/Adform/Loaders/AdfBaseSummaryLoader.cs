@@ -80,7 +80,12 @@ namespace CakeExtracter.Etl.Adform.Loaders
         public bool MergeSummariesWithExisted(IEnumerable<TSummary> items)
         {
             items.ForEach(SetSummaryParents);
-            var result = summaryRepository.MergeItems(items);
+            var result = summaryRepository.MergeItems(
+                items,
+                options =>
+                {
+                    options.ColumnPrimaryKeyExpression = x => new { x.Date, x.EntityId, x.MediaTypeId };
+                });
             LogMergedEntities(items, summaryRepository.EntityName);
             return result;
         }
