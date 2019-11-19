@@ -74,7 +74,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 
         protected IEnumerable<T> AdjustItems(IEnumerable<T> items)
         {
-            foreach (var item in items)
+            var notEmptyStats = items.Where(x => !x.IsEmpty()).ToList();
+            foreach (var item in notEmptyStats)
             {
                 var monthStart = new DateTime(item.Date.Year, item.Date.Month, 1);
                 if (MonthlyCostMultipliers.ContainsKey(monthStart))

@@ -17,7 +17,7 @@ namespace CakeExtracter.Etl.Adform.Repositories.Summaries
         /// <inheritdoc />
         public override object[] GetKeys(AdfBannerSummary item)
         {
-            return new object[] { item.Id };
+            return new object[] { item.Date, item.EntityId, item.MediaTypeId };
         }
     }
 }
