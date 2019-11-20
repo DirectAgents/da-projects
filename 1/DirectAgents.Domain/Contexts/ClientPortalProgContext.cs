@@ -554,7 +554,7 @@ namespace DirectAgents.Domain.Contexts
         private void SetupAdformBaseMetricModelValues<TBaseMetricValues>(DbModelBuilder modelBuilder, string entityColumnName)
             where TBaseMetricValues : AdfBaseSummary
         {
-            modelBuilder.Entity<TBaseMetricValues>().HasKey(s => s.Id);
+            modelBuilder.Entity<TBaseMetricValues>().HasKey(s => new { s.Date, s.EntityId, s.MediaTypeId });
             modelBuilder.Entity<TBaseMetricValues>().Property(x => x.EntityId).HasColumnName(entityColumnName);
             modelBuilder.Entity<TBaseMetricValues>().Property(s => s.Cost).HasPrecision(18, 6);
             modelBuilder.Entity<TBaseMetricValues>().Property(s => s.ClickSalesConvTypeAll).HasPrecision(18, 6);

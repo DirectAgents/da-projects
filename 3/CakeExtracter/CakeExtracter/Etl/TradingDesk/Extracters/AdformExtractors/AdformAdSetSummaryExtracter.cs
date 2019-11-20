@@ -75,7 +75,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 
         private IEnumerable<AdfLineItemSummary> EnumerateRows(IEnumerable<AdformReportSummary> afSums)
         {
-            var lineItemGroups = afSums.GroupBy(x => new { x.CampaignId, x.OrderId, x.LineItemId, x.LineItem, x.Date, x.MediaId });
+            var lineItemGroups = afSums.GroupBy(x => new { x.Campaign, x.CampaignId, x.OrderId, x.LineItemId, x.LineItem, x.Date, x.MediaId });
             foreach (var lineItemGroup in lineItemGroups)
             {
                 var sum = new AdfLineItemSummary
@@ -92,6 +92,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                          Campaign = new AdfCampaign
                          {
                              ExternalId = byOrder ? lineItemGroup.First().OrderId : lineItemGroup.First().CampaignId,
+                             Name = byOrder ? lineItemGroup.First().Order : lineItemGroup.First().Campaign,
                          },
                      },
                 };
@@ -111,6 +112,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             var settings = GetBaseSettings();
             var dimensions = new List<Dimension>
             {
+                byOrder ? Dimension.Order : Dimension.Campaign,
                 byOrder ? Dimension.OrderId : Dimension.CampaignId,
                 Dimension.LineItem,
                 Dimension.LineItemId,

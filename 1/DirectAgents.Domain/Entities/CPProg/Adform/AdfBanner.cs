@@ -7,13 +7,19 @@
     public class AdfBanner : AdfBaseEntity
     {
         /// <summary>
-        /// Gets or sets the database ID of parent line item.
+        /// Gets or sets a database ID of a parent account.
         /// </summary>
-        public int LineItemId { get; set; }
+        /// <value>
+        /// The account ID.
+        /// </value>
+        public int AccountId { get; set; }
 
         /// <summary>
-        /// Gets or sets the parent line item.
+        /// Gets or sets an account of the entity.
         /// </summary>
-        public virtual AdfLineItem LineItem { get; set; }
+        /// <value>
+        /// The account.
+        /// </value>
+        public virtual ExtAccount Account { get; set; }
     }
 }

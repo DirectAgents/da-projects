@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DirectAgents.Domain.Entities.CPProg.Adform.Summaries
@@ -9,23 +10,21 @@ namespace DirectAgents.Domain.Entities.CPProg.Adform.Summaries
     public abstract class AdfBaseSummary
     {
         /// <summary>
-        /// Gets or sets the identifier.
-        /// </summary>
-        public int Id { get; set; }
-
-        /// <summary>
         /// Gets or sets the identifier of parent entity.
         /// </summary>
+        [Key]
         public int EntityId { get; set; }
 
         /// <summary>
         /// Gets or sets the identifier of media type.
         /// </summary>
+        [Key]
         public int MediaTypeId { get; set; }
 
         /// <summary>
         /// Gets or sets the date.
         /// </summary>
+        [Key]
         public DateTime Date { get; set; }
 
         /// <summary>

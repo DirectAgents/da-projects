@@ -12,8 +12,6 @@ namespace CakeExtracter.Etl.Adform.Loaders
     /// </summary>
     internal class AdfBannerSummaryLoader : AdfBaseSummaryLoader<AdfBanner, AdfBannerSummary>
     {
-        private readonly AdfLineItemSummaryLoader lineItemLoader;
-
         /// <inheritdoc cref="AdfBaseSummaryLoader{AdfBanner, AdfBannerSummary}"/>
         /// <summary>
         /// Initializes a new instance of the <see cref="AdfBannerSummaryLoader" /> class.
@@ -21,17 +19,14 @@ namespace CakeExtracter.Etl.Adform.Loaders
         /// <param name="accountId"></param>
         /// <param name="entityRepository"></param>
         /// <param name="summaryRepository"></param>
-        /// <param name="lineItemLoader">Line item summary loader.</param>
         /// <param name="mediaTypeLoader"></param>
         public AdfBannerSummaryLoader(
             int accountId,
             IBaseRepository<AdfBanner> entityRepository,
             IBaseRepository<AdfBannerSummary> summaryRepository,
-            AdfLineItemSummaryLoader lineItemLoader,
             AdfMediaTypeLoader mediaTypeLoader)
             : base(accountId, entityRepository, summaryRepository, mediaTypeLoader)
         {
-            this.lineItemLoader = lineItemLoader;
         }
 
         /// <summary>
@@ -41,7 +36,12 @@ namespace CakeExtracter.Etl.Adform.Loaders
         /// <returns>True if successfully.</returns>
         public bool MergeDependentBanners(List<AdfBanner> items)
         {
-            return MergeDependentEntitiesWithExisted(items);
+            return MergeDependentEntitiesWithExisted(
+                items,
+                options =>
+                {
+                    options.ColumnPrimaryKeyExpression = x => new { x.AccountId, x.ExternalId };
+                });
         }
 
         /// <inheritdoc />
@@ -71,13 +71,12 @@ namespace CakeExtracter.Etl.Adform.Loaders
 
         /// <inheritdoc />
         /// <summary>
-        /// Sets DB identifier of parent Line item for Banner.
+        /// Sets DB identifier of parent account for Banner.
         /// </summary>
-        /// <param name="entity">Banner for which the parent Line item ID will be set.</param>
+        /// <param name="entity">Banner for which the parent account ID will be set.</param>
         protected override void SetEntityParents(AdfBanner entity)
         {
-            var dbLineItem = lineItemLoader.GetLineItemByExternalId(entity.LineItem.ExternalId);
-            entity.LineItemId = dbLineItem.Id;
+            entity.AccountId = accountId;
         }
 
         /// <inheritdoc />
