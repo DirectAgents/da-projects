@@ -57,7 +57,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 
         private IEnumerable<AdformReportSummary> TransformReportData(ReportData reportData)
         {
-            var adFormTransformer = new AdformTransformer(reportData, byLineItem: true, byBanner: true);
+            var adFormTransformer = new AdformTransformer(reportData, byBanner: true);
             var afSums = adFormTransformer.EnumerateAdformSummaries();
             return afSums;
         }
@@ -71,7 +71,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 
         private IEnumerable<AdfBannerSummary> EnumerateRows(IEnumerable<AdformReportSummary> afSums)
         {
-            var bannerGroups = afSums.GroupBy(x => new { x.LineItemId, x.BannerId, x.Banner, x.Date, x.MediaId });
+            var bannerGroups = afSums.GroupBy(x => new { x.BannerId, x.Banner, x.Date, x.MediaId });
             foreach (var bannerGroup in bannerGroups)
             {
                 var sum = new AdfBannerSummary
@@ -85,10 +85,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                     {
                         ExternalId = bannerGroup.Key.BannerId,
                         Name = bannerGroup.Key.Banner,
-                        LineItem = new AdfLineItem
-                        {
-                            ExternalId = bannerGroup.Key.LineItemId,
-                        },
                     },
                 };
                 SetStats(sum, bannerGroup);
@@ -109,7 +105,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             {
                 Dimension.BannerId,
                 Dimension.Banner,
-                Dimension.LineItemId,
             };
             SetDimensionsForReportSettings(dimensions, settings);
             return AfUtility.CreateReportParams(settings);

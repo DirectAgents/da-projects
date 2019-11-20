@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
-using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg.Adform;
 using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
 
@@ -42,20 +41,13 @@ namespace CakeExtracter.Etl.Adform.Loaders
         /// <returns>True if successfully.</returns>
         public bool MergeDependentLineItems(List<AdfLineItem> items)
         {
-            return MergeDependentEntitiesWithExisted(items);
-        }
-
-        /// <summary>
-        /// Finds existed line item in DB by its external ID.
-        /// </summary>
-        /// <param name="externalId">Line item external ID for searching.</param>
-        /// <returns>Line item from DB.</returns>
-        public AdfLineItem GetLineItemByExternalId(string externalId)
-        {
-            using (var db = new ClientPortalProgContext())
+            var campaigns = items.Select(x => x.Campaign).ToList();
+            var result = campaignLoader.MergeDependentCampaigns(campaigns);
+            if (result)
             {
-                return db.AdfLineItems.FirstOrDefault(lineItem => lineItem.ExternalId == externalId);
+                result = MergeDependentEntitiesWithExisted(items);
             }
+            return result;
         }
 
         /// <inheritdoc />
@@ -90,8 +82,7 @@ namespace CakeExtracter.Etl.Adform.Loaders
         /// <param name="entity">Line item for which the parent Campaign ID will be set.</param>
         protected override void SetEntityParents(AdfLineItem entity)
         {
-            var dbCampaign = campaignLoader.GetCampaignByExternalId(entity.Campaign.ExternalId);
-            entity.CampaignId = dbCampaign.Id;
+            entity.CampaignId = entity.Campaign.Id;
         }
 
         /// <inheritdoc />

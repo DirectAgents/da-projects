@@ -218,9 +218,8 @@ namespace CakeExtracter.Commands
         {
             var entityRepository = new AdfBannerDatabaseRepository();
             var summaryRepository = new AdfBannerSummaryDatabaseRepository();
-            var lineItemLoader = CreateLineItemLoader(accountId);
             var mediaTypeLoader = CreateMediaTypeLoader(accountId);
-            return new AdfBannerSummaryLoader(accountId, entityRepository, summaryRepository, lineItemLoader, mediaTypeLoader);
+            return new AdfBannerSummaryLoader(accountId, entityRepository, summaryRepository, mediaTypeLoader);
         }
 
         private IEnumerable<ExtAccount> GetAccounts()
