@@ -423,6 +423,7 @@
     <Compile Include="Commands\DA\DAMonthlyMaintenance.cs" />
     <Compile Include="Commands\DA\DASyncAmazonDspStats.cs" />
     <Compile Include="Commands\DA\DASynchAdformStats.cs" />
+    <Compile Include="Commands\DA\DASynchAdformStats_Outdated.cs" />
     <Compile Include="Commands\DA\DASynchAffiliates.cs" />
     <Compile Include="Commands\DA\DASynchAffSubSums.cs" />
     <Compile Include="Commands\DA\DASynchAmazonStats.cs" />
@@ -658,6 +659,12 @@
     <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonApiKeywordExtractor.cs" />
     <Compile Include="Etl\Amazon\Extractors\BaseAmazonExtractor.cs" />
     <Compile Include="Etl\Adform\AdformReportDataTransformer.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformAdSetSummaryExtracter.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformApiBaseExtractor.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformDailySummaryExtracter.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformStrategySummaryExtracter.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformTDadSummaryExtracter.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformTransformers.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdRollAdExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollSiteStatsCsvExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\CPCExtracter.cs" />
@@ -1051,9 +1058,7 @@
     <Analyzer Include="..\..\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\..\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Etl\TradingDesk\Extracters\AdformExtractors\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

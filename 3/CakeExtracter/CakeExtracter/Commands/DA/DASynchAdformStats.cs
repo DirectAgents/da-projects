@@ -61,7 +61,7 @@ namespace CakeExtracter.Commands
 
         public DASynchAdformStats()
         {
-            IsCommand("daSynchAdformStats", "synch Adform Stats");
+            IsCommand("daSynchAdformStats", "Synch Adform Stats");
             HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
             HasOption("s|startDate=", "Start Date (default is 'daysAgo')", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
