@@ -9,7 +9,7 @@ using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Etl.Adform.Loaders;
 using CakeExtracter.Etl.Adform.Repositories;
 using CakeExtracter.Etl.Adform.Repositories.Summaries;
-using CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors;
+using CakeExtracter.Etl.Adform.Extractors;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
@@ -61,7 +61,7 @@ namespace CakeExtracter.Commands
 
         public DASynchAdformStats()
         {
-            IsCommand("daSynchAdformStats", "synch Adform Stats");
+            IsCommand("daSynchAdformStats", "Synch Adform Stats");
             HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
             HasOption("s|startDate=", "Start Date (default is 'daysAgo')", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));

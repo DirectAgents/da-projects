@@ -1,44 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Adform.Entities;
-using Adform.Entities.ReportEntities;
-using Adform.Entities.ReportEntities.ReportParameters;
-using Adform.Enums;
-using Adform.Utilities;
+using Adform.Outdated.Entities;
+using Adform.Outdated.Entities.ReportEntities;
+using Adform.Outdated.Utilities;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
-using DirectAgents.Domain.Entities.CPProg.Adform;
-using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 {
-    /// <inheritdoc />
-    /// <summary>
-    /// Adform Daily summary extractor.
-    /// </summary>
-    public class AdformDailySummaryExtractor : AdformApiBaseExtractor<AdfDailySummary>
+    public class AdformDailySummaryExtractor : AdformApiBaseExtractor<DailySummary>
     {
-        /// <inheritdoc cref="AdformApiBaseExtractor{T}"/>
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AdformDailySummaryExtractor" /> class.
-        /// </summary>
-        /// <param name="adformUtility">API utility.</param>
-        /// <param name="dateRange">Date range.</param>
-        /// <param name="account">Account.</param>
-        public AdformDailySummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account)
-            : base(adformUtility, dateRange, account)
+        private bool areUniqueImpressionsForAllMediaTypes;
+
+        public AdformDailySummaryExtractor(
+            AdformUtility adformUtility,
+            DateRange dateRange,
+            ExtAccount account,
+            bool rtbMediaOnly,
+            bool areUniqueImpressionsForAllMediaTypes,
+            bool areAllStatsForAllMediaTypes)
+            : base(adformUtility, dateRange, account, rtbMediaOnly, areAllStatsForAllMediaTypes)
         {
+            this.areUniqueImpressionsForAllMediaTypes = areUniqueImpressionsForAllMediaTypes;
         }
 
-        /// <inheritdoc />
         protected override void Extract()
         {
             Logger.Info(AccountId, $"Extracting DailySummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d}");
             try
             {
-                var data = ExtractData();
-                var daySums = EnumerateRows(data);
+                var basicStatsReportData = GetBasicStatsReportData();
+                var convStatsReportData = GetConvStatsReportData();
+                var uniqueImpressionStatsReportData = areUniqueImpressionsForAllMediaTypes
+                    ? GetUniqueImpressionStatsReportData()
+                    : null;
+                var daySums = EnumerateRows(basicStatsReportData, convStatsReportData, uniqueImpressionStatsReportData);
                 daySums = AdjustItems(daySums);
                 Add(daySums);
             }
@@ -49,49 +46,106 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             End();
         }
 
-        private IEnumerable<AdformReportSummary> ExtractData()
+        private ReportData GetBasicStatsReportData()
         {
-            var reportData = GetReportData();
-            return reportData.SelectMany(TransformReportData).ToList();
+            var settings = GetBaseSettings();
+            settings.ConvMetrics = false;
+            settings.Dimensions = null;
+            var parameters = AfUtility.CreateReportParams(settings);
+            var basicStatsReportData = AfUtility.TryGetReportData(parameters);
+            return basicStatsReportData;
         }
 
-        private IEnumerable<AdfDailySummary> EnumerateRows(IEnumerable<AdformReportSummary> afSums)
+        private ReportData GetConvStatsReportData()
         {
-            var dailyGroups = afSums.GroupBy(x => new { x.Date, x.MediaId, x.Media });
-            foreach (var dailyGroup in dailyGroups)
+            var settings = GetBaseSettings();
+            settings.BasicMetrics = false;
+            var parameters = AfUtility.CreateReportParams(settings);
+            var convStatsReportData = AfUtility.TryGetReportData(parameters);
+            return convStatsReportData;
+        }
+
+        private ReportData GetUniqueImpressionStatsReportData()
+        {
+            var settings = GetUniqueImpressionSettings();
+            var parameters = AfUtility.CreateReportParams(settings);
+            var uniqueImpressionReportData = AfUtility.TryGetReportData(parameters);
+            return uniqueImpressionReportData;
+        }
+
+        private IEnumerable<DailySummary> EnumerateRows(
+            ReportData basicStatsReportData,
+            ReportData convStatsReportData,
+            ReportData uniqueImpressionReportData)
+        {
+            var dailyStats = TransformDailyReportData(basicStatsReportData);
+            var dailyStatsByDate = dailyStats.ToDictionary(x => x.Date);
+            var conversionStats = TransformConversionReportData(convStatsReportData);
+            var conversionStatsGroups = conversionStats.GroupBy(x => x.Date).ToList();
+
+            IEnumerable<AdformSummary> uniqueImpressionStats = new List<AdformSummary>();
+            if (areUniqueImpressionsForAllMediaTypes)
             {
-                var dailySummary = new AdfDailySummary
+                uniqueImpressionStats = TransformUniqueImpressionReportData(uniqueImpressionReportData);
+            }
+            // Steps:
+            // loop through convSumGroups; get daySum or create blank one
+            // then go through daySums that didn't have a convSumGroup
+            foreach (var conversionStatsGroup in conversionStatsGroups)
+            {
+                var daySum = new DailySummary { Date = conversionStatsGroup.Key };
+                if (dailyStatsByDate.ContainsKey(conversionStatsGroup.Key))
                 {
-                    Date = dailyGroup.Key.Date,
-                    MediaType = new AdfMediaType
-                    {
-                        ExternalId = dailyGroup.Key.MediaId,
-                        Name = dailyGroup.Key.Media,
-                    },
-                };
-                SetStats(dailySummary, dailyGroup);
-                yield return dailySummary;
+                    SetBaseStats(daySum, dailyStatsByDate[conversionStatsGroup.Key]);
+                }
+                SetClickAndViewStats(daySum, conversionStatsGroup);
+                if (areUniqueImpressionsForAllMediaTypes)
+                {
+                    var uniqImprStatsForDay = uniqueImpressionStats.Where(s => s.Date == conversionStatsGroup.Key).ToList();
+                    SetConversionMetricsWithUniqImprForAllMedia(daySum, conversionStatsGroup.Key, conversionStatsGroup, uniqImprStatsForDay);
+                }
+                else
+                {
+                    SetConversionMetrics(daySum, conversionStatsGroup.Key, conversionStatsGroup);
+                }
+                yield return daySum;
+            }
+            var convSumDates = conversionStatsGroups.Select(x => x.Key).ToArray();
+            var remainingDaySums = dailyStatsByDate.Values.Where(ds => !convSumDates.Contains(ds.Date));
+            foreach (var adfSum in remainingDaySums) // the daily summaries that didn't have any conversion summaries
+            {
+                var daySum = new DailySummary { Date = adfSum.Date };
+                SetBaseStats(daySum, adfSum);
+                yield return daySum;
             }
         }
 
-        private IEnumerable<ReportData> GetReportData()
-        {
-            var parameters = GetReportParameters();
-            return AfUtility.GetReportDataWithLimits(parameters);
-        }
-
-        private ReportParams GetReportParameters()
+        private ReportSettings GetUniqueImpressionSettings()
         {
             var settings = GetBaseSettings();
-            var dimensions = new List<Dimension> { Dimension.Media };
-            SetDimensionsForReportSettings(dimensions, settings);
-            return AfUtility.CreateReportParams(settings);
+            settings.BasicMetrics = false;
+            settings.ConvMetrics = false;
+            settings.Dimensions = null;
+            settings.UniqueImpressionsMetricForAllMediaTypes = true;
+            return settings;
         }
 
-        private IEnumerable<AdformReportSummary> TransformReportData(ReportData reportData)
+        private IEnumerable<AdformSummary> TransformDailyReportData(ReportData reportData)
         {
-            var dayStatsTransformer = new AdformTransformer(reportData);
+            var dayStatsTransformer = new AdformTransformer(reportData, basicStatsOnly: true);
             return dayStatsTransformer.EnumerateAdformSummaries();
+        }
+
+        private IEnumerable<AdformSummary> TransformConversionReportData(ReportData reportData)
+        {
+            var convStatsTransformer = new AdformTransformer(reportData, convStatsOnly: true);
+            return convStatsTransformer.EnumerateAdformSummaries();
+        }
+
+        private IEnumerable<AdformSummary> TransformUniqueImpressionReportData(ReportData reportData)
+        {
+            var uniqueImpressionStatsTransformer = new AdformTransformer(reportData, uniqueImpressionsOnly: true);
+            return uniqueImpressionStatsTransformer.EnumerateAdformSummaries().ToList();
         }
     }
 }

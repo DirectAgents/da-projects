@@ -1,36 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Adform.Entities;
-using Adform.Entities.ReportEntities;
-using Adform.Entities.ReportEntities.ReportParameters;
-using Adform.Enums;
-using Adform.Utilities;
+using Adform.Outdated.Entities;
+using Adform.Outdated.Entities.ReportEntities;
+using Adform.Outdated.Enums;
+using Adform.Outdated.Utilities;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
-using DirectAgents.Domain.Entities.CPProg.Adform;
-using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 {
-    /// <inheritdoc />
-    /// <summary>
-    /// Adform Campaign summary extractor.
-    /// </summary>
-    public class AdformStrategySummaryExtractor : AdformApiBaseExtractor<AdfCampaignSummary>
+    public class AdformStrategySummaryExtractor : AdformApiBaseExtractor<StrategySummary>
     {
         private readonly bool byOrder;
 
-        /// <inheritdoc cref="AdformApiBaseExtractor{T}"/>
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AdformStrategySummaryExtractor"/> class.
-        /// </summary>
-        /// <param name="adformUtility">API utility.</param>
-        /// <param name="dateRange">Date range.</param>
-        /// <param name="account">Account.</param>
-        /// <param name="byOrder">Flag indicates to extract order dimension instead campaign dimension.</param>
-        public AdformStrategySummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account, bool byOrder = false)
-            : base(adformUtility, dateRange, account)
+        public AdformStrategySummaryExtractor(
+            AdformUtility adformUtility,
+            DateRange dateRange,
+            ExtAccount account,
+            bool rtbMediaOnly,
+            bool areAllStatsForAllMediaTypes,
+            bool byOrder = false)
+            : base(adformUtility, dateRange, account, rtbMediaOnly, areAllStatsForAllMediaTypes)
         {
             this.byOrder = byOrder;
         }
@@ -38,7 +29,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         protected override void Extract()
         {
             var additionInfo = byOrder ? "Orders" : "Campaigns";
-            Logger.Info(AccountId, $"Extracting CampaignSummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d} - {additionInfo}");
+            Logger.Info(AccountId, $"Extracting StrategySummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d} - {additionInfo}");
             //TODO: Do X days at a time...?
             try
             {
@@ -50,68 +41,46 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             {
                 Logger.Error(AccountId, ex);
             }
+
             End();
         }
 
-        private IEnumerable<AdformReportSummary> ExtractData()
+        private IEnumerable<AdformSummary> ExtractData()
         {
-            var reportData = GetReportData();
-            return reportData.SelectMany(TransformReportData).ToList();
+            var settings = GetBaseSettings();
+            settings.Dimensions.Add(byOrder ? Dimension.Order : Dimension.Campaign);
+            var parameters = AfUtility.CreateReportParams(settings);
+            var allReportData = AfUtility.GetReportDataWithLimits(parameters);
+            var adFormSums = allReportData.SelectMany(TransformReportData).ToList();
+            return adFormSums;
         }
 
-        private IEnumerable<AdformReportSummary> TransformReportData(ReportData reportData)
+        private IEnumerable<AdformSummary> TransformReportData(ReportData reportData)
         {
             var adFormTransformer = new AdformTransformer(reportData, byCampaign: !byOrder, byOrder: byOrder);
             var afSums = adFormTransformer.EnumerateAdformSummaries();
             return afSums;
         }
 
-        private IEnumerable<AdfCampaignSummary> GroupSummaries(IEnumerable<AdformReportSummary> adFormSums)
+        private IEnumerable<StrategySummary> GroupSummaries(IEnumerable<AdformSummary> adFormSums)
         {
             var sums = EnumerateRows(adFormSums);
             var resultSums = AdjustItems(sums);
             return resultSums;
         }
 
-        private IEnumerable<AdfCampaignSummary> EnumerateRows(IEnumerable<AdformReportSummary> afSums)
+        private IEnumerable<StrategySummary> EnumerateRows(IEnumerable<AdformSummary> afSums)
         {
-            var campaignGroups = afSums.GroupBy(x => new { x.Campaign, x.CampaignId, x.Order, x.OrderId, x.Date, x.MediaId });
-            foreach (var campaignGroup in campaignGroups)
+            var campDateGroups = afSums.GroupBy(x => new { x.Campaign, x.Order, x.Date });
+            foreach (var campDateGroup in campDateGroups)
             {
-                var sum = new AdfCampaignSummary
+                var sum = new StrategySummary
                 {
-                    Date = campaignGroup.Key.Date,
-                    Campaign = new AdfCampaign
-                    {
-                        Name = byOrder ? campaignGroup.Key.Order : campaignGroup.Key.Campaign,
-                        ExternalId = byOrder ? campaignGroup.Key.OrderId : campaignGroup.Key.CampaignId,
-                    },
-                    MediaType = new AdfMediaType
-                    {
-                        ExternalId = campaignGroup.Key.MediaId,
-                    },
+                    StrategyName = byOrder ? campDateGroup.Key.Order : campDateGroup.Key.Campaign,
                 };
-                SetStats(sum, campaignGroup);
+                SetStats(sum, campDateGroup, campDateGroup.Key.Date);
                 yield return sum;
             }
-        }
-
-        private IEnumerable<ReportData> GetReportData()
-        {
-            var parameters = GetReportParameters();
-            return AfUtility.GetReportDataWithLimits(parameters);
-        }
-
-        private ReportParams GetReportParameters()
-        {
-            var settings = GetBaseSettings();
-            var dimensions = new List<Dimension>
-            {
-                byOrder ? Dimension.Order : Dimension.Campaign,
-                byOrder ? Dimension.OrderId : Dimension.CampaignId,
-            };
-            SetDimensionsForReportSettings(dimensions, settings);
-            return AfUtility.CreateReportParams(settings);
         }
     }
 }

@@ -1,40 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Adform.Entities;
-using Adform.Entities.ReportEntities;
-using Adform.Entities.ReportEntities.ReportParameters;
-using Adform.Enums;
-using Adform.Utilities;
+using Adform.Outdated.Entities;
+using Adform.Outdated.Entities.ReportEntities;
+using Adform.Outdated.Enums;
+using Adform.Outdated.Utilities;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
-using DirectAgents.Domain.Entities.CPProg.Adform;
-using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 {
-    /// <inheritdoc />
-    /// <summary>
-    /// Adform Banner summary extractor.
-    /// </summary>
-    public class AdformTDadSummaryExtractor : AdformApiBaseExtractor<AdfBannerSummary>
+    public class AdformTDadSummaryExtractor : AdformApiBaseExtractor<TDadSummary>
     {
-        /// <inheritdoc cref="AdformApiBaseExtractor{T}"/>
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AdformTDadSummaryExtractor"/> class.
-        /// </summary>
-        /// <param name="adformUtility">API utility.</param>
-        /// <param name="dateRange">Date range.</param>
-        /// <param name="account">Account.</param>
-        public AdformTDadSummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account)
-            : base(adformUtility, dateRange, account)
+        public AdformTDadSummaryExtractor(
+            AdformUtility adformUtility,
+            DateRange dateRange,
+            ExtAccount account,
+            bool rtbMediaOnly,
+            bool areAllStatsForAllMediaTypes)
+            : base(adformUtility, dateRange, account, rtbMediaOnly, areAllStatsForAllMediaTypes)
         {
         }
 
-        /// <inheritdoc/>
         protected override void Extract()
         {
-            Logger.Info(AccountId, $"Extracting BannerSummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d}");
+            Logger.Info(AccountId, $"Extracting TDadSummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d}");
             //TODO: Do X days at a time...?
             try
             {
@@ -46,68 +36,46 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             {
                 Logger.Error(AccountId, ex);
             }
+
             End();
         }
 
-        private IEnumerable<AdformReportSummary> ExtractData()
+        private IEnumerable<AdformSummary> ExtractData()
         {
-            var reportData = GetReportData();
-            return reportData.SelectMany(TransformReportData).ToList();
+            var settings = GetBaseSettings();
+            settings.Dimensions.Add(Dimension.Banner);
+            var parameters = AfUtility.CreateReportParams(settings);
+            var allReportData = AfUtility.GetReportDataWithLimits(parameters);
+            var adFormSums = allReportData.SelectMany(TransformReportData).ToList();
+            return adFormSums;
         }
 
-        private IEnumerable<AdformReportSummary> TransformReportData(ReportData reportData)
+        private IEnumerable<AdformSummary> TransformReportData(ReportData reportData)
         {
             var adFormTransformer = new AdformTransformer(reportData, byBanner: true);
             var afSums = adFormTransformer.EnumerateAdformSummaries();
             return afSums;
         }
 
-        private IEnumerable<AdfBannerSummary> GroupSummaries(IEnumerable<AdformReportSummary> adFormSums)
+        private IEnumerable<TDadSummary> GroupSummaries(IEnumerable<AdformSummary> adFormSums)
         {
             var sums = EnumerateRows(adFormSums);
             var resultSums = AdjustItems(sums);
             return resultSums;
         }
 
-        private IEnumerable<AdfBannerSummary> EnumerateRows(IEnumerable<AdformReportSummary> afSums)
+        private IEnumerable<TDadSummary> EnumerateRows(IEnumerable<AdformSummary> afSums)
         {
-            var bannerGroups = afSums.GroupBy(x => new { x.BannerId, x.Banner, x.Date, x.MediaId });
-            foreach (var bannerGroup in bannerGroups)
+            var bannerDateGroups = afSums.GroupBy(x => new { x.Banner, x.Date });
+            foreach (var bdGroup in bannerDateGroups)
             {
-                var sum = new AdfBannerSummary
+                var sum = new TDadSummary
                 {
-                    Date = bannerGroup.Key.Date,
-                    MediaType = new AdfMediaType
-                    {
-                        ExternalId = bannerGroup.Key.MediaId,
-                    },
-                    Banner = new AdfBanner
-                    {
-                        ExternalId = bannerGroup.Key.BannerId,
-                        Name = bannerGroup.Key.Banner,
-                    },
+                    TDadName = bdGroup.Key.Banner,
                 };
-                SetStats(sum, bannerGroup);
+                SetStats(sum, bdGroup, bdGroup.Key.Date);
                 yield return sum;
             }
-        }
-
-        private IEnumerable<ReportData> GetReportData()
-        {
-            var parameters = GetReportParameters();
-            return AfUtility.GetReportDataWithLimits(parameters);
-        }
-
-        private ReportParams GetReportParameters()
-        {
-            var settings = GetBaseSettings();
-            var dimensions = new List<Dimension>
-            {
-                Dimension.BannerId,
-                Dimension.Banner,
-            };
-            SetDimensionsForReportSettings(dimensions, settings);
-            return AfUtility.CreateReportParams(settings);
         }
     }
 }
