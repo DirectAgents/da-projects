@@ -9,7 +9,7 @@ using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Etl.Adform.Loaders;
 using CakeExtracter.Etl.Adform.Repositories;
 using CakeExtracter.Etl.Adform.Repositories.Summaries;
-using CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors;
+using CakeExtracter.Etl.Adform.Extractors;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;

@@ -11,7 +11,7 @@ using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.Adform;
 using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
 
-namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
+namespace CakeExtracter.Etl.Adform.Extractors
 {
     /// <inheritdoc />
     /// <summary>
@@ -90,7 +90,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 
         private IEnumerable<AdformReportSummary> TransformReportData(ReportData reportData)
         {
-            var dayStatsTransformer = new AdformTransformer(reportData);
+            var dayStatsTransformer = new AdformReportDataTransformer(reportData);
             return dayStatsTransformer.EnumerateAdformSummaries();
         }
     }

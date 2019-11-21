@@ -8,7 +8,7 @@ using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
 
-namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
+namespace CakeExtracter.Etl.Adform.Extractors
 {
     /// <summary>
     /// Adform base extractor.

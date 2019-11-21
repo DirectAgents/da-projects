@@ -11,7 +11,7 @@ using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.Adform;
 using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
 
-namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
+namespace CakeExtracter.Etl.Adform.Extractors
 {
     /// <inheritdoc />
     /// <summary>
@@ -61,7 +61,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 
         private IEnumerable<AdformReportSummary> TransformReportData(ReportData reportData)
         {
-            var adFormTransformer = new AdformTransformer(reportData, byCampaign: !byOrder, byOrder: byOrder);
+            var adFormTransformer = new AdformReportDataTransformer(reportData, byCampaign: !byOrder, byOrder: byOrder);
             var afSums = adFormTransformer.EnumerateAdformSummaries();
             return afSums;
         }

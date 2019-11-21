@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using Adform.Entities;
 using Adform.Entities.ReportEntities;
 
-namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
+namespace CakeExtracter.Etl.Adform
 {
-    public class AdformTransformer
+    public class AdformReportDataTransformer
     {
         private readonly ReportData reportData;
         private readonly List<List<object>> rows;
@@ -18,7 +18,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         private readonly bool includeLineItem;
         private readonly bool includeBanner;
 
-        public AdformTransformer(
+        public AdformReportDataTransformer(
             ReportData reportData,
             bool basicStatsOnly = false,
             bool convStatsOnly = false,
