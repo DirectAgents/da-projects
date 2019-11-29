@@ -8,12 +8,13 @@ using FacebookAPI.Providers;
 
 namespace CakeExtracter.Etl.Facebook.Extractors
 {
+    /// <inheritdoc />
     /// <summary>
     /// Facebook daily summary extractor.
     /// </summary>
-    /// <seealso cref="Extractors.FacebookApiExtractor{FbDailySummary, FacebookInsightsDataProvider}" />
     public class FacebookDailySummaryExtractor : FacebookApiExtractor<FbDailySummary, FacebookInsightsDataProvider>
     {
+        /// <inheritdoc cref="FacebookApiExtractor{T,TProvider}"/>
         /// <summary>
         /// Initializes a new instance of the <see cref="FacebookDailySummaryExtractor"/> class.
         /// </summary>
@@ -22,25 +23,27 @@ namespace CakeExtracter.Etl.Facebook.Extractors
         /// <param name="fbUtility">The fb utility.</param>
         public FacebookDailySummaryExtractor(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
             : base(fbUtility, dateRange, account)
-        { }
+        {
+        }
 
+        /// <inheritdoc />
         /// <summary>
         /// The derived class implements this method, which calls Add() for each item
         /// extracted and then calls End() when complete.
         /// </summary>
         protected override void Extract()
         {
-            Logger.Info(accountId, "Extracting DailySummaries from Facebook API for ({0}) from {1:d} to {2:d}",
-                        this.fbAccountId, this.dateRange.Value.FromDate, this.dateRange.Value.ToDate);
+            Logger.Info(AccountId, "Extracting DailySummaries from Facebook API for ({0}) from {1:d} to {2:d}",
+                        this.FbAccountId, this.DateRange.Value.FromDate, this.DateRange.Value.ToDate);
             try
             {
-                var fbSums = _fbUtility.GetDailyStats("act_" + fbAccountId, dateRange.Value.FromDate, dateRange.Value.ToDate);
+                var fbSums = FbUtility.GetDailyStats("act_" + FbAccountId, DateRange.Value.FromDate, DateRange.Value.ToDate);
                 var fbDailySummaryItems = fbSums.Select(CreateFbDailySummary);
                 Add(fbDailySummaryItems);
             }
             catch (Exception ex)
             {
-                Logger.Error(accountId, ex);
+                Logger.Error(AccountId, ex);
             }
             End();
         }
@@ -50,7 +53,7 @@ namespace CakeExtracter.Etl.Facebook.Extractors
             var sum = new FbDailySummary
             {
                 Date = item.Date,
-                AccountId = accountId,
+                AccountId = AccountId,
                 Impressions = item.Impressions,
                 AllClicks = item.AllClicks,
                 Clicks = item.LinkClicks,

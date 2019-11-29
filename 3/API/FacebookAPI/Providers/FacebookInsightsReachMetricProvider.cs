@@ -52,7 +52,7 @@ namespace FacebookAPI.Providers
             {
                 filterList.Add(new Filter { field = "campaign.name", @operator = CampaignFilterOperator, value = CampaignFilterValue });
             }
-            var timeRanges = FacebookReachPeriodHelper.GetPeriodsForRequest();
+            var timeRanges = FacebookReachPeriodHelper.GetPeriodsForApiRequest();
             var parameters = new
             {
                 filtering = filterList.ToArray(),
@@ -63,21 +63,6 @@ namespace FacebookAPI.Providers
             var facebookClient = CreateFBClient();
             var path = accountId + "/insights";
             return CreateFacebookJobRequest(facebookClient, path, parameters, logMessage);
-        }
-
-        private IEnumerable<FbReachRow> ProcessJobRequest(
-            FacebookJobRequest asyncJobRequest, FacebookReachMetricConverter converter)
-        {
-            LogInfo(asyncJobRequest.logMessage);
-            var initialRunId = asyncJobRequest.GetRunId();
-            var finalRunId = WaitAsyncJobRequestCompletionWithRetries(asyncJobRequest);
-            return ReadJobRequestReachMetricResults(asyncJobRequest, finalRunId, converter);
-        }
-
-        private IEnumerable<FbReachRow> ReadJobRequestReachMetricResults(
-            FacebookJobRequest asyncJobRequest, string runId, FacebookReachMetricConverter converter)
-        {
-            return ReadJobRequestResults(asyncJobRequest, runId, converter);
         }
     }
 }

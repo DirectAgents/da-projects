@@ -151,7 +151,25 @@ namespace FacebookAPI.Providers
             return asyncJobRequest.GetRunId();
         }
 
-        protected IEnumerable<TSummary> ReadJobRequestResults<TSummary>(FacebookJobRequest asyncJobRequest, string runId, IFacebookConverter<TSummary> converter)
+        /// <summary>
+        /// Processes the job request.
+        /// </summary>
+        /// <typeparam name="TSummary">Summary entity.</typeparam>
+        /// <param name="asyncJobRequest">Prepared job request data.</param>
+        /// <param name="converter">The converter.</param>
+        /// <returns>Enumerable collection of FbSummaries from asynchronous job.</returns>
+        /// <exception cref="Exception">
+        /// Job failed. Execution will be requested again.
+        /// </exception>
+        protected IEnumerable<TSummary> ProcessJobRequest<TSummary>(FacebookJobRequest asyncJobRequest, IFacebookConverter<TSummary> converter)
+        {
+            LogInfo(asyncJobRequest.logMessage);
+            var initialRunId = asyncJobRequest.GetRunId();
+            var finalRunId = WaitAsyncJobRequestCompletionWithRetries(asyncJobRequest);
+            return ReadJobRequestResults(asyncJobRequest, finalRunId, converter);
+        }
+
+        private IEnumerable<TSummary> ReadJobRequestResults<TSummary>(FacebookJobRequest asyncJobRequest, string runId, IFacebookConverter<TSummary> converter)
         {
             bool moreData = false;
             var afterVal = ""; // later, used for paging
@@ -310,29 +328,6 @@ namespace FacebookAPI.Providers
             var facebookClient = CreateFBClient();
             var path = accountId + "/insights";
             return CreateFacebookJobRequest(facebookClient, path, parameters, logMessage);
-        }
-
-        /// <summary>
-        /// Processes the job request.
-        /// </summary>
-        /// <param name="asyncJobRequest">Prepared job request data.</param>
-        /// <param name="converter">The converter.</param>
-        /// <returns>Enumerable collection of FbSummaries from asynchronous job.</returns>
-        /// <exception cref="System.Exception">
-        /// Job failed. Execution will be requested again.
-        /// </exception>
-        private IEnumerable<FBSummary> ProcessJobRequest(FacebookJobRequest asyncJobRequest, FacebookSummaryConverter converter)
-        {
-            LogInfo(asyncJobRequest.logMessage);
-            var initialRunId = asyncJobRequest.GetRunId();
-            var finalRunId = WaitAsyncJobRequestCompletionWithRetries(asyncJobRequest);
-            return ReadJobRequestSummaryResults(asyncJobRequest, finalRunId, converter);
-        }
-
-        private IEnumerable<FBSummary> ReadJobRequestSummaryResults(
-            FacebookJobRequest asyncJobRequest, string runId, FacebookSummaryConverter converter)
-        {
-            return ReadJobRequestResults(asyncJobRequest, runId, converter);
         }
 
         private void WaitForAsyncJobRequestCompletion(FacebookJobRequest asyncJobRequest)

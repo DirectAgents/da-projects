@@ -7,27 +7,28 @@ namespace CakeExtracter.Etl.Facebook.Extractors
     /// <summary>
     /// BaseFacebook Api extractor.
     /// </summary>
-    /// <seealso cref="Etl.Extracter{T}" />
-    public abstract class FacebookApiExtractor<T, TProvider> : Extracter<T>
-    where TProvider : FacebookInsightsDataProvider
+    /// <typeparam name="TSummary">Summary entity.</typeparam>
+    /// <typeparam name="TDataProvider">Data provider.</typeparam>
+    public abstract class FacebookApiExtractor<TSummary, TDataProvider> : Extracter<TSummary>
+        where TDataProvider : FacebookInsightsDataProvider
     {
-        protected readonly TProvider _fbUtility;
-        protected readonly DateRange? dateRange;
-        protected readonly int accountId;   // in our db
-        protected readonly string fbAccountId; // fb account: aka "ad account"
+        protected readonly TDataProvider FbUtility;
+        protected readonly DateRange? DateRange;
+        protected readonly int AccountId; // in our db
+        protected readonly string FbAccountId; // fb account: aka "ad account"
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FacebookApiExtractor{T, TProvider}"/> class.
+        /// Initializes a new instance of the <see cref="FacebookApiExtractor{TSummary, TDataProvider}"/> class.
         /// </summary>
         /// <param name="fbUtility">The fb utility.</param>
         /// <param name="dateRange">The date range.</param>
         /// <param name="account">The account.</param>
-        protected FacebookApiExtractor(TProvider fbUtility, DateRange? dateRange, ExtAccount account)
+        protected FacebookApiExtractor(TDataProvider fbUtility, DateRange? dateRange, ExtAccount account)
         {
-            this._fbUtility = fbUtility;
-            this.dateRange = dateRange;
-            this.accountId = account.Id;
-            this.fbAccountId = account.ExternalId;
+            FbUtility = fbUtility;
+            DateRange = dateRange;
+            AccountId = account.Id;
+            FbAccountId = account.ExternalId;
         }
     }
 }

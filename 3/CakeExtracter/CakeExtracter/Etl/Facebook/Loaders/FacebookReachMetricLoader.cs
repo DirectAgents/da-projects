@@ -5,10 +5,18 @@ using DirectAgents.Domain.Entities.CPProg.Facebook;
 
 namespace CakeExtracter.Etl.Facebook.Loaders
 {
+    /// <summary>
+    /// Facebook loader of Reach metrics.
+    /// </summary>
     public class FacebookReachMetricLoader : Loader<FbReachMetric>
     {
         private readonly IBaseRepository<FbReachMetric> metricRepository;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FacebookReachMetricLoader"/> class.
+        /// </summary>
+        /// <param name="accountId">Identifier of Db account.</param>
+        /// <param name="metricRepository">Database metric repository.</param>
         public FacebookReachMetricLoader(int accountId, IBaseRepository<FbReachMetric> metricRepository)
             : base(accountId)
         {

@@ -6,82 +6,134 @@ using FacebookAPI.Utils;
 
 namespace FacebookAPI.Helpers
 {
+    /// <summary>
+    /// Facebook helper for periods of Reach metric.
+    /// </summary>
     public static class FacebookReachPeriodHelper
     {
+        /// <summary>
+        /// Gets the key-name of reach period by start date of period.
+        /// </summary>
+        /// <param name="startPeriodDate">Start date of period.</param>
+        /// <returns>Key-name of reach period.</returns>
         public static string GetPeriodName(DateTime startPeriodDate)
         {
             var currentPeriod = GetCurrentPeriod(startPeriodDate);
-            var currentMonthName = GetNameOfMonth(startPeriodDate);
+            var periodMonthName = GetFullNameOfMonth(startPeriodDate);
             switch (currentPeriod)
             {
                 case ReachPeriod.LastMonth:
-                    return $"Last month ({currentMonthName})";
+                    return $"Last month ({periodMonthName})";
                 case ReachPeriod.FirstPartOfCurrentMonth:
-                    return $"First part of {currentMonthName}";
+                    return $"First part of {periodMonthName}";
                 case ReachPeriod.SecondPartOfCurrentMonth:
-                    return $"Second part of {currentMonthName}";
+                    return $"Second part of {periodMonthName}";
                 default:
                     throw new NotSupportedException("Reach period not found");
             }
         }
 
-        public static object[] GetPeriodsForRequest()
+        /// <summary>
+        /// Gets array of periods for the API request of the Reach metric.
+        /// </summary>
+        /// <returns>Array of periods.</returns>
+        public static object[] GetPeriodsForApiRequest()
         {
-            var requestPeriods = new List<object>();
+            var requestedPeriods = new List<object>();
+            var firstPartOfMonthPeriod = GetPeriodOfFirstPartOfCurrentMonth();
+            requestedPeriods.Add(firstPartOfMonthPeriod);
+            var lastMonthPeriod = GetPeriodOfLastMonth();
+            requestedPeriods.Add(lastMonthPeriod);
+            if (IsSecondPartOfMonthPeriodNeeded())
+            {
+                var secondPartOfMonthPeriod = GetPeriodOfSecondPartOfCurrentMonth();
+                requestedPeriods.Add(secondPartOfMonthPeriod);
+            }
+            return requestedPeriods.ToArray();
+        }
 
+        private static object GetPeriodOfFirstPartOfCurrentMonth()
+        {
             var today = DateTime.Today;
+            var middleOfCurrentMonth = GetMiddleOfCurrentMonth();
+            var endOfFirstPart = today.Day < middleOfCurrentMonth.Day
+                ? today
+                : middleOfCurrentMonth;
+            var startOfFirstPart = GetBeginOfCurrentMonth();
+            return new
+            {
+                since = FacebookRequestUtils.GetDateString(startOfFirstPart),
+                until = FacebookRequestUtils.GetDateString(endOfFirstPart),
+            };
+        }
 
-            var beginOfCurrentMonth = new DateTime(today.Year, today.Month, 1);
+        private static object GetPeriodOfSecondPartOfCurrentMonth()
+        {
+            var middleOfCurrentMonth = GetMiddleOfCurrentMonth();
+            var nextDayAfterMiddleOfCurrentMonth = middleOfCurrentMonth.AddDays(1);
+            var startOfSecondPart = nextDayAfterMiddleOfCurrentMonth;
+            var endOfSecondPart = DateTime.Today;
+            return new
+            {
+                since = FacebookRequestUtils.GetDateString(startOfSecondPart),
+                until = FacebookRequestUtils.GetDateString(endOfSecondPart),
+            };
+        }
 
-            var middleOfCurrentMonth = new DateTime(today.Year, today.Month, 15);
-            var endOfFirstPart = today.Day < middleOfCurrentMonth.Day ? today : middleOfCurrentMonth;
-            var firstPartOfMonthPeriod = new { since = FacebookRequestUtils.GetDateString(beginOfCurrentMonth), until = FacebookRequestUtils.GetDateString(endOfFirstPart) };
-            requestPeriods.Add(firstPartOfMonthPeriod);
-
+        private static object GetPeriodOfLastMonth()
+        {
+            var beginOfCurrentMonth = GetBeginOfCurrentMonth();
             var beginOfPreviousMonth = beginOfCurrentMonth.AddMonths(-1);
             var endOfPreviousMonth = beginOfCurrentMonth.AddDays(-1);
-            var lastMonthPeriod = new
+            return new
             {
                 since = FacebookRequestUtils.GetDateString(beginOfPreviousMonth),
                 until = FacebookRequestUtils.GetDateString(endOfPreviousMonth),
             };
-            requestPeriods.Add(lastMonthPeriod);
+        }
 
-            if (today.Day > middleOfCurrentMonth.Day)
-            {
-                var nextDayAfterMiddleOfCurrentMonth = middleOfCurrentMonth.AddDays(1);
-                var secondPartOfMonthPeriod = new
-                {
-                    since = FacebookRequestUtils.GetDateString(nextDayAfterMiddleOfCurrentMonth),
-                    until = FacebookRequestUtils.GetDateString(today),
-                };
-                requestPeriods.Add(secondPartOfMonthPeriod);
-            }
-            return requestPeriods.ToArray();
+        private static bool IsSecondPartOfMonthPeriodNeeded()
+        {
+            var today = DateTime.Today;
+            var middleOfCurrentMonth = GetMiddleOfCurrentMonth();
+            return today.Day > middleOfCurrentMonth.Day;
         }
 
         private static ReachPeriod GetCurrentPeriod(DateTime startPeriodDate)
         {
-            ReachPeriod currentPeriod;
-            var currentMonth = DateTime.Today.Month;
-            var periodMonth = startPeriodDate.Month;
-            if (periodMonth == currentMonth)
-            {
-                var beginOfCurrentMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
-                currentPeriod = startPeriodDate.Day == beginOfCurrentMonth.Day
-                    ? ReachPeriod.FirstPartOfCurrentMonth
-                    : ReachPeriod.SecondPartOfCurrentMonth;
-            }
-            else
-            {
-                currentPeriod = ReachPeriod.LastMonth;
-            }
-            return currentPeriod;
+            return DoesPeriodBelongCurrentMonth(startPeriodDate)
+                ? GetPartOfCurrentMonth(startPeriodDate)
+                : ReachPeriod.LastMonth;
         }
 
-        private static string GetNameOfMonth(DateTime date)
+        private static ReachPeriod GetPartOfCurrentMonth(DateTime periodDate)
+        {
+            var beginOfCurrentMonth = GetBeginOfCurrentMonth();
+            return periodDate.Day == beginOfCurrentMonth.Day
+                ? ReachPeriod.FirstPartOfCurrentMonth
+                : ReachPeriod.SecondPartOfCurrentMonth;
+        }
+
+        private static bool DoesPeriodBelongCurrentMonth(DateTime periodDate)
+        {
+            var currentMonth = DateTime.Today.Month;
+            var periodMonth = periodDate.Month;
+            return periodMonth == currentMonth;
+        }
+
+        private static string GetFullNameOfMonth(DateTime date)
         {
             return date.ToString("MMMM", CultureInfo.InvariantCulture);
+        }
+
+        private static DateTime GetBeginOfCurrentMonth()
+        {
+            return new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+        }
+
+        private static DateTime GetMiddleOfCurrentMonth()
+        {
+            return new DateTime(DateTime.Today.Year, DateTime.Today.Month, 15);
         }
     }
 }
