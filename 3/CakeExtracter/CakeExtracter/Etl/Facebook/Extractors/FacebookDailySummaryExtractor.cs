@@ -3,16 +3,16 @@ using System.Linq;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.Facebook.Daily;
-using FacebookAPI;
 using FacebookAPI.Entities;
+using FacebookAPI.Providers;
 
 namespace CakeExtracter.Etl.Facebook.Extractors
 {
     /// <summary>
     /// Facebook daily summary extractor.
     /// </summary>
-    /// <seealso cref="Extractors.FacebookApiExtractor{FbDailySummary}" />
-    public class FacebookDailySummaryExtractor : FacebookApiExtractor<FbDailySummary>
+    /// <seealso cref="Extractors.FacebookApiExtractor{FbDailySummary, FacebookInsightsDataProvider}" />
+    public class FacebookDailySummaryExtractor : FacebookApiExtractor<FbDailySummary, FacebookInsightsDataProvider>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FacebookDailySummaryExtractor"/> class.
@@ -59,7 +59,6 @@ namespace CakeExtracter.Etl.Facebook.Extractors
                 PostClickRev = item.ConVal_click,
                 PostViewRev = item.ConVal_view,
                 Cost = item.Spend,
-                Reach = item.Reach,
             };
             return sum;
         }

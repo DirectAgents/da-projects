@@ -80,14 +80,5 @@ namespace DirectAgents.Domain.Entities.CPProg.Facebook
         /// The cost.
         /// </value>
         public decimal Cost { get; set; }
-
-        /// <summary>
-        /// Gets or sets the reach metric value.
-        /// The number of people who saw your ads at least once.
-        /// </summary>
-        /// <value>
-        /// The reach.
-        /// </value>
-        public int Reach { get; set; }
     }
 }

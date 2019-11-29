@@ -14,8 +14,6 @@ namespace FacebookAPI.Entities
 
         public int Impressions { get; set; }
 
-        public int Reach { get; set; }
-
         public int LinkClicks { get; set; }
 
         public int AllClicks { get; set; }
@@ -44,7 +42,7 @@ namespace FacebookAPI.Entities
 
         public bool AllZeros()
         {
-            return Spend == 0 && Impressions == 0 && Reach == 0 && LinkClicks == 0 && AllClicks == 0 &&
+            return Spend == 0 && Impressions == 0 && LinkClicks == 0 && AllClicks == 0 &&
                    Conversions_click == 0 && Conversions_view == 0 && ConVal_click == 0 && ConVal_view == 0;
         }
 

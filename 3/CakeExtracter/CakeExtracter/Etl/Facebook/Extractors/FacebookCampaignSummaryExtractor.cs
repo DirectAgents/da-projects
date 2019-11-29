@@ -3,16 +3,16 @@ using System.Linq;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.Facebook.Campaign;
-using FacebookAPI;
 using FacebookAPI.Entities;
+using FacebookAPI.Providers;
 
 namespace CakeExtracter.Etl.Facebook.Extractors
 {
     /// <summary>
     /// Facebook campaigns summary extractor.
     /// </summary>
-    /// <seealso cref="FacebookApiExtractor{T}.Domain.Entities.CPProg.Facebook.Campaign.FbCampaignSummary}" />
-    public class FacebookCampaignSummaryExtractor : FacebookApiExtractor<FbCampaignSummary>
+    /// <seealso cref="FacebookApiExtractor{T, TProvider}.Domain.Entities.CPProg.Facebook.Campaign.FbCampaignSummary}" />
+    public class FacebookCampaignSummaryExtractor : FacebookApiExtractor<FbCampaignSummary, FacebookInsightsDataProvider>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FacebookCampaignSummaryExtractor"/> class.
@@ -64,7 +64,6 @@ namespace CakeExtracter.Etl.Facebook.Extractors
                 PostClickRev = item.ConVal_click,
                 PostViewRev = item.ConVal_view,
                 Cost = item.Spend,
-                Reach = item.Reach,
             };
             return sum;
         }

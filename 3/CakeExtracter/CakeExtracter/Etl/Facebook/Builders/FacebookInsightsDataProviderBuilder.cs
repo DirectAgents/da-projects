@@ -2,10 +2,10 @@
 using System.Text.RegularExpressions;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Entities.CPProg;
-using FacebookAPI;
 using FacebookAPI.Enums;
+using FacebookAPI.Providers;
 
-namespace CakeExtracter.Etl.Facebook
+namespace CakeExtracter.Etl.Facebook.Builders
 {
     /// <summary>
     /// Facebook InsightsData Provider Builder.
@@ -62,7 +62,7 @@ namespace CakeExtracter.Etl.Facebook
             return fbUtility;
         }
 
-        private void SetUtilityFilters(FacebookInsightsDataProvider fbUtility, ExtAccount account)
+        protected void SetUtilityFilters(FacebookInsightsDataProvider fbUtility, ExtAccount account)
         {
             if (account.Network != null)
             {

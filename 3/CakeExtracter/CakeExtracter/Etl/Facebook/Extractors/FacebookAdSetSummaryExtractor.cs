@@ -6,8 +6,8 @@ using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.Facebook;
 using DirectAgents.Domain.Entities.CPProg.Facebook.AdSet;
 using DirectAgents.Domain.Entities.CPProg.Facebook.Campaign;
-using FacebookAPI;
 using FacebookAPI.Entities;
+using FacebookAPI.Providers;
 
 namespace CakeExtracter.Etl.Facebook.Extractors
 {
@@ -15,7 +15,7 @@ namespace CakeExtracter.Etl.Facebook.Extractors
     /// Facebook Adset summary extractor.
     /// </summary>
     /// <seealso cref="FacebookApiExtractor{T}.Domain.Entities.CPProg.Facebook.AdSet.FbAdSetSummary}" />
-    public class FacebookAdSetSummaryExtractor : FacebookApiExtractor<FbAdSetSummary>
+    public class FacebookAdSetSummaryExtractor : FacebookApiExtractor<FbAdSetSummary, FacebookInsightsDataProvider>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FacebookAdSetSummaryExtractor"/> class.
@@ -73,7 +73,6 @@ namespace CakeExtracter.Etl.Facebook.Extractors
                 PostClickRev = item.ConVal_click,
                 PostViewRev = item.ConVal_view,
                 Cost = item.Spend,
-                Reach = item.Reach,
                 Actions = GetActions(item),
             };
             return sum;
@@ -96,7 +95,7 @@ namespace CakeExtracter.Etl.Facebook.Extractors
                     PostClick = fbAction.Num_click ?? 0,
                     PostView = fbAction.Num_view ?? 0,
                     PostClickVal = fbAction.Val_click ?? 0,
-                    PostViewVal = fbAction.Val_view ?? 0
+                    PostViewVal = fbAction.Val_view ?? 0,
                 }).ToList();
             }
             return actions;

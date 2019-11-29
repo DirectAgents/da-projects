@@ -1,28 +1,28 @@
 ﻿using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
-using FacebookAPI;
+using FacebookAPI.Providers;
 
 namespace CakeExtracter.Etl.Facebook.Extractors
 {
     /// <summary>
-    /// BaseFacebook Api extractor
+    /// BaseFacebook Api extractor.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
     /// <seealso cref="Etl.Extracter{T}" />
-    public abstract class FacebookApiExtractor<T> : Extracter<T>
+    public abstract class FacebookApiExtractor<T, TProvider> : Extracter<T>
+    where TProvider : FacebookInsightsDataProvider
     {
-        protected readonly FacebookInsightsDataProvider _fbUtility;
+        protected readonly TProvider _fbUtility;
         protected readonly DateRange? dateRange;
         protected readonly int accountId;   // in our db
         protected readonly string fbAccountId; // fb account: aka "ad account"
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FacebookApiExtractor{T}"/> class.
+        /// Initializes a new instance of the <see cref="FacebookApiExtractor{T, TProvider}"/> class.
         /// </summary>
         /// <param name="fbUtility">The fb utility.</param>
         /// <param name="dateRange">The date range.</param>
         /// <param name="account">The account.</param>
-        public FacebookApiExtractor(FacebookInsightsDataProvider fbUtility, DateRange? dateRange, ExtAccount account)
+        protected FacebookApiExtractor(TProvider fbUtility, DateRange? dateRange, ExtAccount account)
         {
             this._fbUtility = fbUtility;
             this.dateRange = dateRange;

@@ -27,7 +27,7 @@ namespace FacebookAPI.Converters
         /// </summary>
         /// <param name="row">The row.</param>
         /// <returns></returns>
-        public override FBSummary ParseSummaryRow(dynamic row)
+        public override FBSummary ParseSummaryFromRow(dynamic row)
         {
             var summary = GetFacebookSummaryMetricsFromRow(row);
             ProcessAllActions(row, summary);

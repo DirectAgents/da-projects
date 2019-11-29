@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using Facebook;
 using FacebookAPI.Api;
 using FacebookAPI.Constants;
 using FacebookAPI.Converters;
@@ -9,17 +10,18 @@ using FacebookAPI.Enums;
 using FacebookAPI.Utils;
 using Polly;
 
-namespace FacebookAPI
+namespace FacebookAPI.Providers
 {
     /// <summary>
     /// Facebook Insights data provider.
     /// </summary>
-    /// <seealso cref="FacebookAPI.BaseFacebookDataProvider" />
+    /// <seealso cref="BaseFacebookDataProvider" />
     public class FacebookInsightsDataProvider : BaseFacebookDataProvider
     {
+        protected const int InitialWaitMillisecs = 1500;
+
         private const int RowsReturnedAtATime = 100;
         private const string Pattern_ParenNums = @"^\((\d+)\)\s*";
-        private const int InitialWaitMillisecs = 1500;
         private const int MaxRetries = 20;
         private const int SecondsToWaitIfLimitReached = 61;
 
@@ -54,11 +56,11 @@ namespace FacebookAPI
         public int DaysPerCall_Campaign = 15;
         public int DaysPerCall_AdSet = 7;
         public int DaysPerCall_Ad = 3;
+        public string CampaignFilterOperator;
+        public string CampaignFilterValue;
+        public string CurrentPlatformFilter = PlatformFilterNames[PlatformFilter.All];
 
-        private string campaignFilterOperator;
-        private string campaignFilterValue;
         private string conversionActionType = ActionTypeNames[ConversionActionType.Default];
-        private string platformFilter = PlatformFilterNames[PlatformFilter.All];
         private string clickAttribution = GetAttributionName(AttributionWindowType.Click, AttributionWindowValue.Days28);
         private string viewAttribution = GetAttributionName(AttributionWindowType.View, AttributionWindowValue.Day1);
 
@@ -75,19 +77,19 @@ namespace FacebookAPI
 
         public void SetPlatformFilter(PlatformFilter filter)
         {
-            platformFilter = PlatformFilterNames[filter];
+            CurrentPlatformFilter = PlatformFilterNames[filter];
         }
 
         public void SetCampaignFilter(string filter)
         {
             if (string.IsNullOrEmpty(filter))
             {
-                campaignFilterValue = null;
+                CampaignFilterValue = null;
             }
             else
             {
-                campaignFilterValue = filter;
-                campaignFilterOperator = "CONTAIN";
+                CampaignFilterValue = filter;
+                CampaignFilterOperator = "CONTAIN";
             }
         }
 
@@ -99,11 +101,6 @@ namespace FacebookAPI
         public void SetViewAttributionWindow(AttributionWindowValue window)
         {
             viewAttribution = GetAttributionName(AttributionWindowType.View, window);
-        }
-
-        private static string GetAttributionName(AttributionWindowType attribution, AttributionWindowValue window)
-        {
-            return $"{(int)window}d_{AttributionPostfixNames[attribution]}";
         }
 
         public IEnumerable<FBSummary> GetDailyStats(string accountId, DateTime start, DateTime end)
@@ -128,6 +125,81 @@ namespace FacebookAPI
         {
             var converter = new AdInsigthsFacebookSummaryConverter(conversionActionType, clickAttribution, viewAttribution);
             return GetFBSummariesLoop(accountId, start, end, converter, byCampaign: true, byAdSet: true, byAd: true, getArchived: true);
+        }
+
+        protected FacebookJobRequest CreateFacebookJobRequest(FacebookClient facebookClient, string path, object parameters, string logMessage)
+        {
+            return new FacebookJobRequest
+            {
+                fbClient = facebookClient,
+                path = path,
+                parms = parameters,
+                logMessage = logMessage,
+            };
+        }
+
+        protected string WaitAsyncJobRequestCompletionWithRetries(FacebookJobRequest asyncJobRequest)
+        {
+            Policy
+                .Handle<Exception>()
+                .WaitAndRetry(asyncJobFailureRetriesNumber, GetPauseBetweenFailureAttempts, (exception, timeSpan, retryCount, context) =>
+                {
+                    asyncJobRequest.ResetAndGetRunId_withRetry(LogInfo, LogError);
+                    LogInfo($"Waiting job request completion failed. Trying again.");
+                })
+                .Execute(() => WaitForAsyncJobRequestCompletion(asyncJobRequest));
+            return asyncJobRequest.GetRunId();
+        }
+
+        protected IEnumerable<TSummary> ReadJobRequestResults<TSummary>(FacebookJobRequest asyncJobRequest, string runId, IFacebookConverter<TSummary> converter)
+        {
+            bool moreData = false;
+            var afterVal = ""; // later, used for paging
+            do
+            {
+                dynamic retObj = null;
+                int tryNumber = 0;
+                do
+                {
+                    try
+                    {
+                        retObj = asyncJobRequest.fbClient.Get(runId + "/insights", new { after = afterVal }); // get the actual data
+                        tryNumber = 0; // mark as call succeeded (no exception)
+                    }
+                    catch (Exception ex)
+                    {
+                        LogError(ex.Message);
+                        int secondsToWait = SecondsToWaitIfLimitReached;
+                        tryNumber++;
+                        if (tryNumber < MaxRetries)
+                        {
+                            LogInfo(String.Format("Waiting {0} seconds before trying again.", secondsToWait));
+                            Thread.Sleep(secondsToWait * 1000);
+                        }
+                    }
+                } while (tryNumber > 0 && tryNumber < MaxRetries);
+                if (tryNumber >= MaxRetries)
+                    throw new Exception(String.Format("Tried {0} times. Aborting GetFBSummaries.", tryNumber));
+                if (retObj == null)
+                    continue;
+                if (retObj.data != null)
+                {
+                    foreach (var row in retObj.data)
+                    {
+                        var fbSum = converter.ParseSummaryFromRow(row);
+                        yield return fbSum;
+                    }
+                }
+                moreData = (retObj.paging != null && retObj.paging.next != null);
+                if (moreData)
+                    afterVal = retObj.paging.cursors.after;
+            }
+            while (moreData);
+        }
+
+        private static string GetAttributionName(AttributionWindowType attribution, AttributionWindowValue window)
+        {
+            return $"{(int)window}d_{AttributionPostfixNames[attribution]}";
         }
 
         private IEnumerable<FBSummary> GetFBSummariesLoop(string accountId, DateTime start, DateTime end, FacebookSummaryConverter converter,
@@ -189,7 +261,7 @@ namespace FacebookAPI
         private FacebookJobRequest PrepareSummaryExtractingRequest(string accountId, DateTime start, DateTime end, bool byCampaign = false, bool byAdSet = false, bool byAd = false, bool getArchived = false)
         {
             var levelVal = "";
-            var fieldsVal = "spend,impressions,reach,inline_link_clicks,clicks,actions,action_values";
+            var fieldsVal = "spend,impressions,inline_link_clicks,clicks,actions,action_values";
             if (byCampaign)
             {
                 levelVal = "campaign";
@@ -207,10 +279,14 @@ namespace FacebookAPI
                 fieldsVal += ",ad_id,ad_name";
             }
             var filterList = new List<Filter>();
-            if (!String.IsNullOrWhiteSpace(platformFilter))
-                filterList.Add(new Filter { field = "publisher_platform", @operator = "IN", value = new[] { platformFilter } });
-            if (!String.IsNullOrEmpty(campaignFilterValue))
-                filterList.Add(new Filter { field = "campaign.name", @operator = campaignFilterOperator, value = campaignFilterValue });
+            if (!string.IsNullOrWhiteSpace(CurrentPlatformFilter))
+            {
+                filterList.Add(new Filter { field = "publisher_platform", @operator = "IN", value = new[] { CurrentPlatformFilter } });
+            }
+            if (!string.IsNullOrEmpty(CampaignFilterValue))
+            {
+                filterList.Add(new Filter { field = "campaign.name", @operator = CampaignFilterOperator, value = CampaignFilterValue });
+            }
             if (getArchived)
             {
                 filterList.Add(new Filter { field = $"{levelVal}.effective_status", @operator = "IN", value = new[] { EffectiveStatuses.Archived } });
@@ -229,15 +305,11 @@ namespace FacebookAPI
             string by = byCampaign ? " by Campaign" : "";
             by += byAdSet ? " by AdSet" : "";
             by += byAd ? " by Ad" : "";
-            string logMessage = string.Format("GetFBSummaries {0:d} - {1:d} ({2}{3})", start, end, accountId, by);
+            var logMessage = string.Format("GetFBSummaries {0:d} - {1:d} ({2}{3})", start, end, accountId, by);
 
-            return new FacebookJobRequest
-            {
-                fbClient = CreateFBClient(),
-                path = accountId + "/insights",
-                parms = parameters,
-                logMessage = logMessage,
-            };
+            var facebookClient = CreateFBClient();
+            var path = accountId + "/insights";
+            return CreateFacebookJobRequest(facebookClient, path, parameters, logMessage);
         }
 
         /// <summary>
@@ -254,66 +326,13 @@ namespace FacebookAPI
             LogInfo(asyncJobRequest.logMessage);
             var initialRunId = asyncJobRequest.GetRunId();
             var finalRunId = WaitAsyncJobRequestCompletionWithRetries(asyncJobRequest);
-            return ReadJobRequestResults(asyncJobRequest, finalRunId, converter);
+            return ReadJobRequestSummaryResults(asyncJobRequest, finalRunId, converter);
         }
 
-        private IEnumerable<FBSummary> ReadJobRequestResults(FacebookJobRequest asyncJobRequest, string runId, FacebookSummaryConverter converter)
+        private IEnumerable<FBSummary> ReadJobRequestSummaryResults(
+            FacebookJobRequest asyncJobRequest, string runId, FacebookSummaryConverter converter)
         {
-            bool moreData = false;
-            var afterVal = ""; // later, used for paging
-            do
-            {
-                dynamic retObj = null;
-                int tryNumber = 0;
-                do
-                {
-                    try
-                    {
-                        retObj = asyncJobRequest.fbClient.Get(runId + "/insights", new { after = afterVal }); // get the actual data
-                        tryNumber = 0; // mark as call succeeded (no exception)
-                    }
-                    catch (Exception ex)
-                    {
-                        LogError(ex.Message);
-                        int secondsToWait = SecondsToWaitIfLimitReached;
-                        tryNumber++;
-                        if (tryNumber < MaxRetries)
-                        {
-                            LogInfo(String.Format("Waiting {0} seconds before trying again.", secondsToWait));
-                            Thread.Sleep(secondsToWait * 1000);
-                        }
-                    }
-                } while (tryNumber > 0 && tryNumber < MaxRetries);
-                if (tryNumber >= MaxRetries)
-                    throw new Exception(String.Format("Tried {0} times. Aborting GetFBSummaries.", tryNumber));
-                if (retObj == null)
-                    continue;
-                if (retObj.data != null)
-                {
-                    foreach (var row in retObj.data)
-                    {
-                        var fbSum = converter.ParseSummaryRow(row);
-                        yield return fbSum;
-                    }
-                }
-                moreData = (retObj.paging != null && retObj.paging.next != null);
-                if (moreData)
-                    afterVal = retObj.paging.cursors.after;
-            }
-            while (moreData);
-        }
-
-        private string WaitAsyncJobRequestCompletionWithRetries(FacebookJobRequest asyncJobRequest)
-        {
-            Policy
-                .Handle<Exception>()
-                .WaitAndRetry(asyncJobFailureRetriesNumber, GetPauseBetweenFailureAttempts, (exception, timeSpan, retryCount, context) =>
-                {
-                    asyncJobRequest.ResetAndGetRunId_withRetry(LogInfo, LogError);
-                    LogInfo($"Waiting job request completion failed. Trying again.");
-                })
-                .Execute(() => WaitForAsyncJobRequestCompletion(asyncJobRequest));
-            return asyncJobRequest.GetRunId();
+            return ReadJobRequestResults(asyncJobRequest, runId, converter);
         }
 
         private void WaitForAsyncJobRequestCompletion(FacebookJobRequest asyncJobRequest)
