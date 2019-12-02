@@ -117,6 +117,7 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<FbCampaignSummary>().ToTable("FbCampaignSummary", tdSchema);
             modelBuilder.Entity<FbDailySummary>().ToTable("FbDailySummary", tdSchema);
             modelBuilder.Entity<FbActionType>().ToTable("FbActionType", tdSchema);
+            modelBuilder.Entity<FbReachMetric>().ToTable("FbReachMetric", tdSchema);
 
             //TD Adform
             modelBuilder.Entity<AdfDailySummary>().ToTable("AdfDailySummary", tdSchema);
@@ -508,39 +509,44 @@ namespace DirectAgents.Domain.Contexts
 
         private void SetupFacebookModel(DbModelBuilder modelBuilder)
         {
+            SetupFacebookModelKeys(modelBuilder);
+            SetupFacebookSummaryMetricModelValues<FbAdSummary>(modelBuilder);
+            SetupFacebookSummaryMetricModelValues<FbAdSetSummary>(modelBuilder);
+            SetupFacebookSummaryMetricModelValues<FbCampaignSummary>(modelBuilder);
+            SetupFacebookSummaryMetricModelValues<FbDailySummary>(modelBuilder);
+            SetupFacebookActionMetricModelValues<FbAdAction>(modelBuilder);
+            SetupFacebookActionMetricModelValues<FbAdSetAction>(modelBuilder);
+            SetupFacebookActionMetricModelValues<FbCampaignAction>(modelBuilder);
+        }
+
+        private void SetupFacebookModelKeys(DbModelBuilder modelBuilder)
+        {
             modelBuilder.Entity<FbAdSummary>().HasKey(s => new { s.Date, s.AdId });
             modelBuilder.Entity<FbAdSetSummary>().HasKey(s => new { s.Date, s.AdSetId });
             modelBuilder.Entity<FbCampaignSummary>().HasKey(s => new { s.Date, s.CampaignId });
             modelBuilder.Entity<FbDailySummary>().HasKey(s => new { s.Date, s.AccountId });
-
-            modelBuilder.Entity<FbAdSummary>().Property(t => t.Cost).HasPrecision(18, 6);
-            modelBuilder.Entity<FbAdSetSummary>().Property(t => t.Cost).HasPrecision(18, 6);
-            modelBuilder.Entity<FbCampaignSummary>().Property(t => t.Cost).HasPrecision(18, 6);
-            modelBuilder.Entity<FbDailySummary>().Property(t => t.Cost).HasPrecision(18, 6);
-
-            modelBuilder.Entity<FbAdSummary>().Property(t => t.PostClickRev).HasPrecision(18, 6);
-            modelBuilder.Entity<FbAdSetSummary>().Property(t => t.PostClickRev).HasPrecision(18, 6);
-            modelBuilder.Entity<FbCampaignSummary>().Property(t => t.PostClickRev).HasPrecision(18, 6);
-            modelBuilder.Entity<FbDailySummary>().Property(t => t.PostClickRev).HasPrecision(18, 6);
-
-            modelBuilder.Entity<FbAdSummary>().Property(t => t.PostViewRev).HasPrecision(18, 6);
-            modelBuilder.Entity<FbAdSetSummary>().Property(t => t.PostViewRev).HasPrecision(18, 6);
-            modelBuilder.Entity<FbCampaignSummary>().Property(t => t.PostViewRev).HasPrecision(18, 6);
-            modelBuilder.Entity<FbDailySummary>().Property(t => t.PostViewRev).HasPrecision(18, 6);
-
             modelBuilder.Entity<FbAdAction>()
                 .HasKey(x => new { x.Date, x.AdId, x.ActionTypeId });
             modelBuilder.Entity<FbAdSetAction>()
                 .HasKey(x => new { x.Date, x.AdSetId, x.ActionTypeId });
             modelBuilder.Entity<FbCampaignAction>()
-                 .HasKey(x => new { x.Date, x.CampaignId, x.ActionTypeId });
+                .HasKey(x => new { x.Date, x.CampaignId, x.ActionTypeId });
+            modelBuilder.Entity<FbReachMetric>().HasKey(x => new { x.AccountId, x.Period });
+        }
 
-            modelBuilder.Entity<FbAdAction>().Property(t => t.PostClickVal).HasPrecision(18, 6);
-            modelBuilder.Entity<FbAdSetAction>().Property(t => t.PostClickVal).HasPrecision(18, 6);
-            modelBuilder.Entity<FbCampaignAction>().Property(t => t.PostClickVal).HasPrecision(18, 6);
-            modelBuilder.Entity<FbAdAction>().Property(t => t.PostViewVal).HasPrecision(18, 6);
-            modelBuilder.Entity<FbAdSetAction>().Property(t => t.PostViewVal).HasPrecision(18, 6);
-            modelBuilder.Entity<FbCampaignAction>().Property(t => t.PostViewVal).HasPrecision(18, 6);
+        private void SetupFacebookSummaryMetricModelValues<TSummary>(DbModelBuilder modelBuilder)
+            where TSummary : FbBaseSummary
+        {
+            modelBuilder.Entity<TSummary>().Property(t => t.Cost).HasPrecision(18, 6);
+            modelBuilder.Entity<TSummary>().Property(t => t.PostClickRev).HasPrecision(18, 6);
+            modelBuilder.Entity<TSummary>().Property(t => t.PostViewRev).HasPrecision(18, 6);
+        }
+
+        private void SetupFacebookActionMetricModelValues<TAction>(DbModelBuilder modelBuilder)
+            where TAction : FbAction
+        {
+            modelBuilder.Entity<TAction>().Property(t => t.PostClickVal).HasPrecision(18, 6);
+            modelBuilder.Entity<TAction>().Property(t => t.PostViewVal).HasPrecision(18, 6);
         }
 
         private void SetupAdformModel(DbModelBuilder modelBuilder)

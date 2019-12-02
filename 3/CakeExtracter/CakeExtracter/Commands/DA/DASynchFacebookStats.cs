@@ -6,18 +6,19 @@ using System.Threading.Tasks;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement;
-using CakeExtracter.Etl.Facebook;
+using CakeExtracter.Etl.Facebook.Builders;
 using CakeExtracter.Etl.Facebook.Extractors;
 using CakeExtracter.Etl.Facebook.Loaders;
+using CakeExtracter.Etl.Facebook.Repositories;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
-using FacebookAPI;
+using FacebookAPI.Providers;
 
 namespace CakeExtracter.Commands
 {
     /// <summary>
-    /// Facebook stats updating command(Included creatives expansion)
+    /// Facebook stats updating command(Included creatives expansion).
     /// </summary>
     /// <seealso cref="ConsoleCommand" />
     [Export(typeof(ConsoleCommand))]
@@ -27,7 +28,8 @@ namespace CakeExtracter.Commands
 
         private const int ProcessingChunkSize = 11;
 
-        private FacebookInsightsDataProviderBuilder insightsDataProviderBuilder;
+        private readonly FacebookInsightsDataProviderBuilder insightsDataProviderBuilder;
+        private readonly FacebookInsightsReachMetricProviderBuilder insightsReachMetricProviderBuilder;
 
         public int? AccountId { get; set; }
 
@@ -83,6 +85,7 @@ namespace CakeExtracter.Commands
             HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
             HasOption<int>("m|minAccountId=", "Include this and all higher accountIds (optional)", c => MinAccountId = c);
             insightsDataProviderBuilder = new FacebookInsightsDataProviderBuilder();
+            insightsReachMetricProviderBuilder = new FacebookInsightsReachMetricProviderBuilder();
         }
 
         public override int Execute(string[] remainingArguments)
@@ -101,12 +104,18 @@ namespace CakeExtracter.Commands
                 var acctDateRange = new DateRange(dateRange.FromDate, dateRange.ToDate);
                 if (account.Campaign != null) // check/adjust daterange - if acct assigned to a campaign/advertiser
                 {
-                    if (!StartDate.HasValue && account.Campaign.Advertiser.StartDate.HasValue
+                    if (!StartDate.HasValue
+                        && account.Campaign.Advertiser.StartDate.HasValue
                         && acctDateRange.FromDate < account.Campaign.Advertiser.StartDate.Value)
+                    {
                         acctDateRange.FromDate = account.Campaign.Advertiser.StartDate.Value;
-                    if (!EndDate.HasValue && account.Campaign.Advertiser.EndDate.HasValue
+                    }
+                    if (!EndDate.HasValue
+                        && account.Campaign.Advertiser.EndDate.HasValue
                         && acctDateRange.ToDate > account.Campaign.Advertiser.EndDate.Value)
+                    {
                         acctDateRange.ToDate = account.Campaign.Advertiser.EndDate.Value;
+                    }
                 }
                 Logger.Info(account.Id, "Facebook ETL. Account {0} - {1}. DateRange {2}.", account.Id, account.Name, acctDateRange);
                 if (acctDateRange.ToDate < acctDateRange.FromDate)
@@ -118,12 +127,13 @@ namespace CakeExtracter.Commands
                 var fbUtility = insightsDataProviderBuilder.BuildInsightsDataProvider(account);
                 int? numDailyItems = null;
                 if (statsType.Daily)
+                {
                     numDailyItems = DoETL_Daily(acctDateRange, account, fbUtility);
-
-                var Accts_DailyOnly = !AccountId.HasValue || statsType.All
+                }
+                var dailyOnlyAccounts = !AccountId.HasValue || statsType.All
                     ? ConfigurationHelper.ExtractEnumerableFromConfig("FB_DailyStatsOnly").ToArray()
-                    : new string[] { };
-                if (Accts_DailyOnly.Contains(account.ExternalId))
+                    : Array.Empty<string>();
+                if (dailyOnlyAccounts.Contains(account.ExternalId))
                 {
                     Logger.Info(account.Id, "Finished Facebook ETL. Account {0} - {1}. DateRange {2}.", account.Id, account.Name, acctDateRange);
                     CommandExecutionContext.Current.SetJobExecutionStateInHistory("Finished", account.Id);
@@ -132,11 +142,23 @@ namespace CakeExtracter.Commands
 
                 // Skip strategy & adset stats if there were no dailies
                 if (statsType.Strategy && (numDailyItems == null || numDailyItems.Value > 0))
+                {
                     DoETL_Strategy(acctDateRange, account, fbUtility);
+                }
                 if (statsType.AdSet && (numDailyItems == null || numDailyItems.Value > 0))
+                {
                     DoETL_AdSet(acctDateRange, account, fbUtility);
+                }
                 if (statsType.Creative && (numDailyItems == null || numDailyItems.Value > 0))
+                {
                     DoETL_Creative(acctDateRange, account, fbUtility, metadataExtractor);
+                }
+                if (numDailyItems == null || numDailyItems.Value > 0)
+                {
+                    var fbReachMetricUtility = insightsReachMetricProviderBuilder.BuildInsightsReachMetricProvider(account);
+                    DoETL_Reach(acctDateRange, account, fbReachMetricUtility);
+
+                }
                 Logger.Info(account.Id, "Finished Facebook ETL. Account {0} - {1}. DateRange {2}.", account.Id, account.Name, acctDateRange);
                 CommandExecutionContext.Current.SetJobExecutionStateInHistory("Finished", account.Id);
             });
@@ -197,6 +219,15 @@ namespace CakeExtracter.Commands
                 var loader = new FacebookAdSummaryLoaderV2(account.Id, rangeToProcess);
                 CommandHelper.DoEtl(extractor, loader);
             });
+        }
+
+        private void DoETL_Reach(DateRange dateRange, ExtAccount account, FacebookInsightsReachMetricProvider fbReachMetricUtility)
+        {
+            CommandExecutionContext.Current.SetJobExecutionStateInHistory("Reach Metric level.", account.Id);
+            var metricRepository = new FacebookReachMetricDatabaseRepository();
+            var extractor = new FacebookReachMetricExtractor(dateRange, account, fbReachMetricUtility);
+            var loader = new FacebookReachMetricLoader(account.Id, metricRepository);
+            CommandHelper.DoEtl(extractor, loader);
         }
 
         private IEnumerable<ExtAccount> GetAccounts()

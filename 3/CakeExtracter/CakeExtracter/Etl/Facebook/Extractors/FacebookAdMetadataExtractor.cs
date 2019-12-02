@@ -2,9 +2,8 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using DirectAgents.Domain.Entities.CPProg;
-using FacebookAPI;
-using FacebookAPI.Entities;
 using FacebookAPI.Entities.AdDataEntities;
+using FacebookAPI.Providers;
 
 namespace CakeExtracter.Etl.Facebook.Extractors
 {

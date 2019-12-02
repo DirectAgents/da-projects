@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using FacebookAPI.Constants;
-using FacebookAPI.Entities;
 using FacebookAPI.Entities.AdDataEntities;
 using Polly;
 
-namespace FacebookAPI
+namespace FacebookAPI.Providers
 {
     /// <summary>
     /// Provider for facebook ads metadata. 
     /// </summary>
-    /// <seealso cref="FacebookAPI.BaseFacebookDataProvider" />
+    /// <seealso cref="BaseFacebookDataProvider" />
     public class FacebookAdMetadataProvider : BaseFacebookDataProvider
     {
         private const int MetadataFetchingPageSize = 300;

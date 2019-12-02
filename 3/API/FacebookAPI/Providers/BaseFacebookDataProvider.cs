@@ -1,11 +1,11 @@
-﻿using Facebook;
-using System;
+﻿using System;
 using System.Configuration;
+using Facebook;
 
-namespace FacebookAPI
+namespace FacebookAPI.Providers
 {
     /// <summary>
-    /// Base facebook data provider
+    /// Base facebook data provider.
     /// </summary>
     public class BaseFacebookDataProvider
     {

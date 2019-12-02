@@ -612,6 +612,10 @@
     <Compile Include="Etl\DSP\Models\ReportEntities\ReportLineItem.cs" />
     <Compile Include="Etl\DSP\Models\ReportEntities\DspReportEntity.cs" />
     <Compile Include="Etl\DSP\Models\ReportEntities\ReportOrder.cs" />
+    <Compile Include="Etl\Facebook\Builders\FacebookInsightsReachMetricProviderBuilder.cs" />
+    <Compile Include="Etl\Facebook\Extractors\FacebookReachMetricExtractor.cs" />
+    <Compile Include="Etl\Facebook\Loaders\FacebookReachMetricLoader.cs" />
+    <Compile Include="Etl\Facebook\Repositories\FacebookReachMetricDatabaseRepository.cs" />
     <Compile Include="Etl\Kochava\Configuration\KochavaConfigurationProvider.cs" />
     <Compile Include="Etl\Kochava\Extractors\KochavaExtractor.cs" />
     <Compile Include="Etl\Kochava\Extractors\Parsers\KochavaReportParser.cs" />
@@ -635,7 +639,7 @@
     <Compile Include="Etl\SearchMarketing\Loaders\BingConvSummaryLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\SearchDailySummaryLoaders.cs" />
     <Compile Include="Etl\Facebook\Extractors\FacebookAdMetadataExtractor.cs" />
-    <Compile Include="Etl\Facebook\FacebookInsightsDataProviderBuilder.cs" />
+    <Compile Include="Etl\Facebook\Builders\FacebookInsightsDataProviderBuilder.cs" />
     <Compile Include="Etl\Facebook\Loaders\EntitiesLoaders\BaseFacebookEntityLoader.cs" />
     <Compile Include="Etl\Facebook\Loaders\EntitiesLoaders\FacebookActionTypeLoader.cs" />
     <Compile Include="Etl\Facebook\Loaders\EntitiesLoaders\FacebookCreativesLoader.cs" />

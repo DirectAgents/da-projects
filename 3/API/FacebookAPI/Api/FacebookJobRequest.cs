@@ -5,9 +5,9 @@ using Facebook;
 namespace FacebookAPI.Api
 {
     /// <summary>
-    /// Facebook API Client Job Requests Utility
+    /// Facebook API Client Job Requests Utility.
     /// </summary>
-    internal class FacebookJobRequest
+    public class FacebookJobRequest
     {
         public FacebookClient fbClient;
         public string path;
