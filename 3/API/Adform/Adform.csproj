@@ -37,6 +37,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\..\DirectAgents.Web\CodeAnalysis\codeanalysis.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Polly">
@@ -57,11 +58,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constants\MediaName.cs" />
-    <Compile Include="Entities\ReportEntities\ReportParameters\Media.cs" />
-    <Compile Include="Entities\ReportEntities\ReportParameters\ReportFilter.cs" />
-    <Compile Include="Entities\ReportEntities\ReportParameters\ReportFilterWithTracking.cs" />
     <Compile Include="Entities\ResponseStatus.cs" />
+    <Compile Include="Outdated\Constants\MediaName.cs" />
+    <Compile Include="Outdated\Entities\AdformSummary.cs" />
+    <Compile Include="Outdated\Entities\ReportEntities\ReportData.cs" />
+    <Compile Include="Outdated\Entities\ReportEntities\ReportParameters\Media.cs" />
+    <Compile Include="Outdated\Entities\ReportEntities\ReportParameters\ReportParams.cs" />
+    <Compile Include="Outdated\Entities\ReportEntities\ReportResponse.cs" />
+    <Compile Include="Outdated\Entities\ReportSettings.cs" />
+    <Compile Include="Outdated\Enums\AdInteractionType.cs" />
+    <Compile Include="Outdated\Enums\Dimension.cs" />
+    <Compile Include="Outdated\Helpers\AdformApiHelper.cs" />
+    <Compile Include="Outdated\Utilities\AdformLogger.cs" />
+    <Compile Include="Outdated\Utilities\AdformUtility.cs" />
     <Compile Include="Utilities\AdformLogger.cs" />
     <Compile Include="Utilities\AdformUtility.cs" />
     <Compile Include="Entities\ReportEntities\ReportParameters\MetricMetadata.cs" />
@@ -75,7 +84,7 @@
     <Compile Include="Enums\AdInteractionType.cs" />
     <Compile Include="Enums\ConversionMetric.cs" />
     <Compile Include="Enums\Dimension.cs" />
-    <Compile Include="Entities\AdformSummary.cs" />
+    <Compile Include="Entities\AdformReportSummary.cs" />
     <Compile Include="Helpers\AdformApiHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -97,6 +106,7 @@
     <Analyzer Include="..\..\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\..\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

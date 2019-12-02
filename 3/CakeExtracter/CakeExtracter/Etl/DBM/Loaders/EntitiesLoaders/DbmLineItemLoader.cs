@@ -5,18 +5,26 @@ using DirectAgents.Domain.Entities.CPProg.DBM.Entities;
 
 namespace CakeExtracter.Etl.DBM.Loaders.EntitiesLoaders
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// Loader for DBM line items.
+    /// </summary>
     public class DbmLineItemLoader : DbmBaseEntityLoader<DbmLineItem>
     {
-        private readonly DbmInsertionOrderLoader insertionOrderLoader;
-
         /// <summary>
         /// Entity id storage of already updated entity.
         /// </summary>
-        private static readonly EntityIdStorage<DbmLineItem> lineItemIdStorage =
+        private static readonly EntityIdStorage<DbmLineItem> LineItemIdStorage =
             new EntityIdStorage<DbmLineItem>(x => x.Id, x => $"{x.Name} {x.ExternalId}");
 
-        private static readonly object lockObject = new object();
+        private static readonly object LockObject = new object();
 
+        private readonly DbmInsertionOrderLoader insertionOrderLoader;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbmLineItemLoader"/> class.
+        /// </summary>
+        /// <param name="insertionOrderLoader">Loader for insertion orders.</param>
         public DbmLineItemLoader(DbmInsertionOrderLoader insertionOrderLoader)
         {
             this.insertionOrderLoader = insertionOrderLoader;
@@ -31,16 +39,11 @@ namespace CakeExtracter.Etl.DBM.Loaders.EntitiesLoaders
             AssignAccountIdToItems(items);
             var uniqueItems = items.GroupBy(item => item.ExternalId).Select(gr => gr.First()).ToList();
             EnsureInsertionOrdersData(uniqueItems);
-            AddUpdateDependentItems(uniqueItems, lineItemIdStorage, lockObject);
-            AssignIdToItems(items, lineItemIdStorage);
+            AddUpdateDependentItems(uniqueItems, LineItemIdStorage, LockObject);
+            AssignIdToItems(items, LineItemIdStorage);
         }
 
-        /// <summary>
-        /// Updates the existing database item properties if necessary.
-        /// </summary>
-        /// <param name="existingDbItem">The existing database item.</param>
-        /// <param name="latestItemFromApi">The latest item from API.</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         protected override bool UpdateExistingDbItemPropertiesIfNecessary(DbmLineItem existingDbItem, DbmLineItem latestItemFromApi)
         {
             if (existingDbItem.Name == latestItemFromApi.Name &&

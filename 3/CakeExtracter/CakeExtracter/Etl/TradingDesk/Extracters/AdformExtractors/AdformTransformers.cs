@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Adform;
-using Adform.Entities.ReportEntities;
+using Adform.Outdated.Entities;
+using Adform.Outdated.Entities.ReportEntities;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 {
@@ -17,9 +17,17 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         private readonly bool includeOrder;
         private readonly bool includeLineItem;
         private readonly bool includeBanner;
+        private readonly bool includeUniqueImpressionsForAllMediaTypes;
 
-        public AdformTransformer(ReportData reportData, bool basicStatsOnly = false, bool convStatsOnly = false,
-            bool byCampaign = false, bool byLineItem = false, bool byBanner = false, bool byOrder = false)
+        public AdformTransformer(
+            ReportData reportData,
+            bool basicStatsOnly = false,
+            bool convStatsOnly = false,
+            bool byCampaign = false,
+            bool byLineItem = false,
+            bool byBanner = false,
+            bool byOrder = false,
+            bool uniqueImpressionsOnly = false)
         {
             this.reportData = reportData;
             rows = reportData.rows;
@@ -30,6 +38,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             includeOrder = byOrder;
             includeLineItem = byLineItem;
             includeBanner = byBanner;
+            includeUniqueImpressionsForAllMediaTypes = uniqueImpressionsOnly;
         }
 
         public IEnumerable<AdformSummary> EnumerateAdformSummaries()
@@ -66,35 +75,33 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             {
                 summary.Campaign = ReturnValueIfColumnExists(row, reportData.CampaignColumnId, Convert.ToString);
             }
-
             if (includeOrder)
             {
                 summary.Order = ReturnValueIfColumnExists(row, reportData.OrderColumnId, Convert.ToString);
             }
-
             if (includeLineItem)
             {
                 summary.LineItem = ReturnValueIfColumnExists(row, reportData.LineItemColumnId, Convert.ToString);
             }
-
             if (includeBanner)
             {
                 summary.Banner = ReturnValueIfColumnExists(row, reportData.BannerColumnId, Convert.ToString);
             }
-
-            if (includeAdInteractionType)
+            if (includeAdInteractionType && !includeUniqueImpressionsForAllMediaTypes)
             {
                 AssignAdInteractionType(summary, row);
             }
-
-            if (includeBasicStats)
+            if (includeBasicStats && !includeUniqueImpressionsForAllMediaTypes)
             {
                 AssignBasicSummaryProperties(summary, row);
             }
-
-            if (includeConvStats)
+            if (includeConvStats && !includeUniqueImpressionsForAllMediaTypes)
             {
                 AssignConversionSummaryProperties(summary, row);
+            }
+            if (includeUniqueImpressionsForAllMediaTypes)
+            {
+                AssignUniqueImpressionsProperty(summary, row);
             }
         }
 
@@ -118,6 +125,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         {
             AssignConversionProperties(summary, row);
             AssignSaleProperties(summary, row);
+            AssignUniqueImpressionsProperty(summary, row);
         }
 
         private void AssignConversionProperties(AdformSummary summary, List<object> row)
@@ -134,6 +142,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             summary.SalesConvType1 = ReturnValueIfColumnExists(row, reportData.Sales1ColumnId, Convert.ToDecimal);
             summary.SalesConvType2 = ReturnValueIfColumnExists(row, reportData.Sales2ColumnId, Convert.ToDecimal);
             summary.SalesConvType3 = ReturnValueIfColumnExists(row, reportData.Sales3ColumnId, Convert.ToDecimal);
+        }
+
+        private void AssignUniqueImpressionsProperty(AdformSummary summary, List<object> row)
+        {
+            summary.UniqueImpressions = ReturnValueIfColumnExists(row, reportData.UniqueImpressionsColumnId, Convert.ToInt32);
         }
 
         private T ReturnValueIfColumnExists<T>(List<object> row, string columnId, Func<object, T> convertFunc)

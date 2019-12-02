@@ -7,51 +7,52 @@ using DirectAgents.Domain.Entities.CPProg.Facebook;
 using DirectAgents.Domain.Entities.CPProg.Facebook.Ad;
 using DirectAgents.Domain.Entities.CPProg.Facebook.AdSet;
 using DirectAgents.Domain.Entities.CPProg.Facebook.Campaign;
-using FacebookAPI;
 using FacebookAPI.Entities;
 using FacebookAPI.Entities.AdDataEntities;
+using FacebookAPI.Providers;
 
 namespace CakeExtracter.Etl.Facebook.Extractors
 {
     /// <summary>
     /// Facebook ads summary extractor.
     /// </summary>
-    /// <seealso cref="SocialMarketing.Extracters.FacebookApiExtractor{FbAdSummary}" />
-    public class FacebookAdSummaryExtractor : FacebookApiExtractor<FbAdSummary>
+    public class FacebookAdSummaryExtractor : FacebookApiExtractor<FbAdSummary, FacebookInsightsDataProvider>
     {
         private readonly List<AdCreativeData> allAdsMetadata;
 
+        /// <inheritdoc cref="FacebookApiExtractor{T,TProvider}"/>
         /// <summary>
-        /// Initializes a new instance of the <see cref="FacebookAdSummaryExtractor"/> class.
+        /// Initializes a new instance of the <see cref="FacebookAdSummaryExtractor" /> class.
         /// </summary>
         /// <param name="dateRange">The date range.</param>
         /// <param name="account">The account.</param>
         /// <param name="fbUtility">The fb utility.</param>
         /// <param name="allAdsMetadata">All ads metadata.</param>
-        public FacebookAdSummaryExtractor(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility,
-            List<AdCreativeData> allAdsMetadata) : base(fbUtility, dateRange, account)
+        public FacebookAdSummaryExtractor(
+            DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility, List<AdCreativeData> allAdsMetadata)
+            : base(fbUtility, dateRange, account)
         {
             this.allAdsMetadata = allAdsMetadata;
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// The derived class implements this method, which calls Add() for each item
         /// extracted and then calls End() when complete.
         /// </summary>
         protected override void Extract()
         {
-            Logger.Info(accountId, "Extracting Ad Summaries from Facebook API for ({0}) from {1:d} to {2:d}",
-                        this.fbAccountId, this.dateRange.Value.FromDate, this.dateRange.Value.ToDate);
+            Logger.Info(AccountId, "Extracting Ad Summaries from Facebook API for ({0}) from {1:d} to {2:d}",
+                        this.FbAccountId, this.DateRange.Value.FromDate, this.DateRange.Value.ToDate);
             try
             {
-                var fbSums = _fbUtility.GetDailyAdStats("act_" + fbAccountId, dateRange.Value.FromDate, dateRange.Value.ToDate);
-                
-                var fbAdSummaryItems = fbSums.Select(item => { return CreateFbAdSummary(item, allAdsMetadata); });
+                var fbSums = FbUtility.GetDailyAdStats("act_" + FbAccountId, DateRange.Value.FromDate, DateRange.Value.ToDate);
+                var fbAdSummaryItems = fbSums.Select(item => CreateFbAdSummary(item, allAdsMetadata));
                 Add(fbAdSummaryItems);
             }
             catch (Exception ex)
             {
-                Logger.Error(accountId, ex);
+                Logger.Error(AccountId, ex);
             }
             End();
         }
@@ -67,16 +68,15 @@ namespace CakeExtracter.Etl.Facebook.Extractors
                     Name = item.AdName,
                     Status = relatedAdMetadata?.Status,
                     ExternalId = item.AdId,
-                    AccountId = accountId,
-                    
+                    AccountId = AccountId,
                     AdSet = new FbAdSet
                     {
-                        AccountId = accountId,
+                        AccountId = AccountId,
                         Name = item.AdSetName,
                         ExternalId = item.AdSetId,
                         Campaign = new FbCampaign
                         {
-                            AccountId = accountId,
+                            AccountId = AccountId,
                             Name = item.CampaignName,
                             ExternalId = item.CampaignId
                         },
@@ -91,7 +91,7 @@ namespace CakeExtracter.Etl.Facebook.Extractors
                 PostClickRev = item.ConVal_click,
                 PostViewRev = item.ConVal_view,
                 Cost = item.Spend,
-                Actions = GetActions(item)
+                Actions = GetActions(item),
             };
             return sum;
         }
@@ -125,7 +125,7 @@ namespace CakeExtracter.Etl.Facebook.Extractors
             {
                 return new FbCreative
                 {
-                    AccountId = accountId,
+                    AccountId = AccountId,
                     Body = relatedAdMetadata.Creative.Body,
                     ExternalId = relatedAdMetadata.Creative.Id,
                     Title = relatedAdMetadata.Creative.Title,

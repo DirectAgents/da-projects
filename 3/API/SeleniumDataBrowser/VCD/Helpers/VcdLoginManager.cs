@@ -12,7 +12,7 @@ namespace SeleniumDataBrowser.VCD.Helpers
     /// </summary>
     public class VcdLoginManager
     {
-        private const string SignInPageUrl = "https://www.amazon.com/ap/signin";
+        private const string SignInPageUrl = "https://vendorcentral.amazon.com/ap/signin";
 
         private readonly AuthorizationModel authorizationModel;
         private readonly AmazonVcdActionsWithPagesManager pageActionManager;
@@ -79,7 +79,7 @@ namespace SeleniumDataBrowser.VCD.Helpers
 
         private void LoginWithoutCookie()
         {
-            pageActionManager.NavigateToUrl(authorizationModel.SignInUrl, AmazonLoginPageObjects.ForgotPassLink);
+            pageActionManager.NavigateToSignInPage(SignInPageUrl);
             pageActionManager.LoginProcess(authorizationModel.Login, authorizationModel.Password);
             var cookies = pageActionManager.GetAllCookies();
             SeleniumCookieHelper.SaveCookiesToFiles(cookies, authorizationModel.CookiesDir);
@@ -87,7 +87,6 @@ namespace SeleniumDataBrowser.VCD.Helpers
 
         private void LoginWithCookie()
         {
-            pageActionManager.NavigateToUrl(authorizationModel.SignInUrl);
             foreach (var cookie in authorizationModel.Cookies)
             {
                 pageActionManager.SetCookie(cookie);
@@ -105,9 +104,7 @@ namespace SeleniumDataBrowser.VCD.Helpers
             }
             else
             {
-                logger.LogWarning(
-                    "Login into the portal without using cookies. " +
-                           "Please choose 'Amazon DSP console (formerly Amazon Advertising Platform)' and enter an authorization code!");
+                logger.LogWarning("Login into the portal without using cookies. Please, enter an authorization code!");
                 LoginWithoutCookie();
             }
             pageActionManager.RefreshSalesDiagnosticPage(authorizationModel);

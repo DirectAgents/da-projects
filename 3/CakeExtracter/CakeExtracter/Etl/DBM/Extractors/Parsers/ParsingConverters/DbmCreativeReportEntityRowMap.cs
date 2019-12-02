@@ -26,7 +26,7 @@ namespace CakeExtracter.Etl.DBM.Extractors.Parsers.ParsingConverters
             Map(m => m.PostClickConversions).ConvertUsing(row => (int)row.GetField<float>("Post-Click Conversions"));
             Map(m => m.PostViewConversions).ConvertUsing(row => (int)row.GetField<float>("Post-View Conversions"));
             Map(m => m.CMPostClickRevenue).Name("CM Post-Click Revenue").TypeConverter<DecimalReportConverter>();
-            Map(m => m.CMPostViewRevenue).Name("CM Post-Click Revenue").TypeConverter<DecimalReportConverter>();
+            Map(m => m.CMPostViewRevenue).Name("CM Post-View Revenue").TypeConverter<DecimalReportConverter>();
         }
     }
 }

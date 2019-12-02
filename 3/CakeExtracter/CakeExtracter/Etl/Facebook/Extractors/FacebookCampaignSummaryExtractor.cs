@@ -3,17 +3,18 @@ using System.Linq;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.Facebook.Campaign;
-using FacebookAPI;
 using FacebookAPI.Entities;
+using FacebookAPI.Providers;
 
 namespace CakeExtracter.Etl.Facebook.Extractors
 {
+    /// <inheritdoc />
     /// <summary>
     /// Facebook campaigns summary extractor.
     /// </summary>
-    /// <seealso cref="FacebookApiExtractor{T}.Domain.Entities.CPProg.Facebook.Campaign.FbCampaignSummary}" />
-    public class FacebookCampaignSummaryExtractor : FacebookApiExtractor<FbCampaignSummary>
+    public class FacebookCampaignSummaryExtractor : FacebookApiExtractor<FbCampaignSummary, FacebookInsightsDataProvider>
     {
+        /// <inheritdoc cref="FacebookApiExtractor{T,TProvider}"/>
         /// <summary>
         /// Initializes a new instance of the <see cref="FacebookCampaignSummaryExtractor"/> class.
         /// </summary>
@@ -22,25 +23,27 @@ namespace CakeExtracter.Etl.Facebook.Extractors
         /// <param name="fbUtility">The fb utility.</param>
         public FacebookCampaignSummaryExtractor(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
             : base(fbUtility, dateRange, account)
-        { }
+        {
+        }
 
+        /// <inheritdoc />
         /// <summary>
         /// The derived class implements this method, which calls Add() for each item
         /// extracted and then calls End() when complete.
         /// </summary>
         protected override void Extract()
         {
-            Logger.Info(accountId, "Extracting Campaign Summaries from Facebook API for ({0}) from {1:d} to {2:d}",
-                        this.fbAccountId, this.dateRange.Value.FromDate, this.dateRange.Value.ToDate);
+            Logger.Info(AccountId, "Extracting Campaign Summaries from Facebook API for ({0}) from {1:d} to {2:d}",
+                        this.FbAccountId, this.DateRange.Value.FromDate, this.DateRange.Value.ToDate);
             try
             {
-                var fbSums = _fbUtility.GetDailyCampaignStats("act_" + fbAccountId, dateRange.Value.FromDate, dateRange.Value.ToDate);
+                var fbSums = FbUtility.GetDailyCampaignStats("act_" + FbAccountId, DateRange.Value.FromDate, DateRange.Value.ToDate);
                 var fbCampaignSummaryItems = fbSums.Select(CreateFbCampaignSummary);
                 Add(fbCampaignSummaryItems);
             }
             catch (Exception ex)
             {
-                Logger.Error(accountId, ex);
+                Logger.Error(AccountId, ex);
             }
             End();
         }
@@ -52,9 +55,9 @@ namespace CakeExtracter.Etl.Facebook.Extractors
                 Date = item.Date,
                 Campaign = new FbCampaign
                 {
-                    AccountId = accountId,
+                    AccountId = AccountId,
                     Name = item.CampaignName,
-                    ExternalId = item.CampaignId
+                    ExternalId = item.CampaignId,
                 },
                 Impressions = item.Impressions,
                 AllClicks = item.AllClicks,
@@ -63,7 +66,7 @@ namespace CakeExtracter.Etl.Facebook.Extractors
                 PostViewConv = item.Conversions_view,
                 PostClickRev = item.ConVal_click,
                 PostViewRev = item.ConVal_view,
-                Cost = item.Spend
+                Cost = item.Spend,
             };
             return sum;
         }

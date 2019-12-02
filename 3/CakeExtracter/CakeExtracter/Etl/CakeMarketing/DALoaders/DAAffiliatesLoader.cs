@@ -5,7 +5,7 @@ using DirectAgents.Domain.Entities.Cake;
 
 namespace CakeExtracter.Etl.CakeMarketing.DALoaders
 {
-    public class DAAffiliatesLoader : Loader<CakeExtracter.CakeMarketingApi.Entities.Affiliate>
+    public class DAAffiliatesLoader : Loader<CakeMarketingApi.Entities.Affiliate>
     {
         public DAAffiliatesLoader() { }
 
@@ -35,11 +35,25 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                         }
                     }
                     affiliate.AffiliateName = item.AffiliateName;
+                    SetAccountManagerForAffiliate(db, item, affiliate);
                 }
                 db.SaveChanges();
             }
             return items.Count;
         }
 
+        private void SetAccountManagerForAffiliate(DbContext db, CakeMarketingApi.Entities.Affiliate item, Affiliate affiliate)
+        {
+            var accountManagerId = item.AccountManagers[0].ContactId;
+            var contact = db.Set<Contact>().Find(accountManagerId);
+            if (contact != null)
+            {
+                affiliate.AccountManagerId = contact.ContactId;
+            }
+            else
+            {
+                Logger.Info("Affiliate {0}'s AccountManager (ContactId {1}) doesn't exist. Leaving AccountManagerId unchanged.", affiliate.AffiliateId, accountManagerId);
+            }
+        }
     }
 }

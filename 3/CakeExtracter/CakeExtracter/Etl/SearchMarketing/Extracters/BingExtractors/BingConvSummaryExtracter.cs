@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using BingAds.Utilities;
+using CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors.Models;
+using CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors.Parsers.ParsingConverters;
 
 namespace CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors
 {
@@ -18,13 +20,14 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors
 
         protected override IEnumerable<Dictionary<string, string>> ExtractAndEnumerateRows()
         {
-            var filepath = BingUtility.GetDailySummariesByGoalReport(AccountId, StartDate, EndDate);
-            if (filepath == null)
+            var reportFilePath = BingUtility.GetDailySummariesByGoalReport(AccountId, StartDate, EndDate);
+            if (reportFilePath == null)
             {
                 return new List<Dictionary<string, string>>();
             }
 
-            var bingRowsWithGoal = EnumerateRowsGeneric<BingRowWithGoal>(filepath, false);
+            var rowMap = new BingGoalReportEntityRowMap();
+            var bingRowsWithGoal = GetReportRows<BingGoalRow>(reportFilePath, rowMap);
             var rows = EnumerateRowsAsDictionaries(bingRowsWithGoal);
             return rows.ToList();
         }

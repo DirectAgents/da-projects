@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Adform;
-using Adform.Entities;
 using Adform.Enums;
-using Adform.Utilities;
+using Adform.Outdated.Entities;
+using Adform.Outdated.Utilities;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
+using AdInteractionType = Adform.Outdated.Enums.AdInteractionType;
+using Dimension = Adform.Outdated.Enums.Dimension;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 {
@@ -26,8 +27,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 
         private static readonly Dictionary<AdInteractionType, string> AdInteractions = new Dictionary<AdInteractionType, string>
         {
-            {AdInteractionType.Clicks, "Click"},
-            {AdInteractionType.Impressions, "Impression"},
+            { AdInteractionType.Clicks, "Click" },
+            { AdInteractionType.Impressions, "Impression" },
+            { AdInteractionType.UniqueImpressions, "None" },
         };
 
         private static readonly Dictionary<AdInteractionType, Dictionary<ConversionMetric, string>> MetricNames =
@@ -55,11 +57,19 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                         {ConversionMetric.SalesConversionType3, "Adform-Sales-ConvType3-Impressions"},
                     }
                 },
+                {
+                    AdInteractionType.UniqueImpressions, new Dictionary<ConversionMetric, string>
+                    {
+                        { ConversionMetric.UniqueImpressions, "Adform-Unique-Impressions" },
+                    }
+                },
             };
 
         private readonly bool rtbMediaOnly;
+        private readonly bool areAllStatsForAllMediaTypes;
 
-        protected AdformApiBaseExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account, bool rtbMediaOnly)
+        protected AdformApiBaseExtractor(
+            AdformUtility adformUtility, DateRange dateRange, ExtAccount account, bool rtbMediaOnly, bool areAllStatsForAllMediaTypes)
         {
             AfUtility = adformUtility;
             DateRange = dateRange;
@@ -70,6 +80,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                 SetMonthlyCostMultipliers(account, dateRange);
             }
             this.rtbMediaOnly = rtbMediaOnly;
+            this.areAllStatsForAllMediaTypes = areAllStatsForAllMediaTypes;
         }
 
         protected ReportSettings GetBaseSettings()
@@ -81,7 +92,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                 ClientId = ClientId,
                 BasicMetrics = true,
                 ConvMetrics = true,
+                UniqueImpressionsMetricForAllMediaTypes = false,
                 RtbMediaOnly = rtbMediaOnly,
+                StatsForAllMediaTypes = areAllStatsForAllMediaTypes,
                 TrackingIds = AfUtility.TrackingIds,
                 Dimensions = new List<Dimension> { Dimension.AdInteractionType },
             };
@@ -105,7 +118,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
         {
             stats.Date = date;
             SetBaseStats(stats, adformStats);
-            SetConversionStats(stats, adformStats, date);
+            SetClickAndViewStats(stats, adformStats);
+            SetConversionMetrics(stats, date, adformStats);
         }
 
         protected void SetBaseStats(T stats, AdformSummary adformStat)
@@ -120,7 +134,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             stats.Clicks = adformStats.Sum(x => x.Clicks);
         }
 
-        protected void SetConversionStats(T stats, IEnumerable<AdformSummary> adformStats, DateTime date)
+        protected static void SetClickAndViewStats(T stats, IEnumerable<AdformSummary> adformStats)
         {
             var clickThroughs = adformStats.Where(x => x.AdInteractionType == AdInteractions[AdInteractionType.Clicks]);
             var viewThroughs = adformStats.Where(x => x.AdInteractionType == AdInteractions[AdInteractionType.Impressions]);
@@ -132,11 +146,47 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                 rev.PostClickRev = clickThroughs.Sum(x => x.SalesAll);
                 rev.PostViewRev = viewThroughs.Sum(x => x.SalesAll);
             }
+        }
 
+        protected static void SetConversionMetrics(T stats, DateTime date, IEnumerable<AdformSummary> adformStats)
+        {
             var metrics = new List<SummaryMetric>();
+            SetConversionMetrics(metrics, adformStats, date);
+            SetUniqueImpressionMetric(metrics, adformStats, date);
+            stats.InitialMetrics = metrics;
+        }
+
+        protected static void SetConversionMetricsWithUniqImprForAllMedia(
+            T stats, DateTime date, IEnumerable<AdformSummary> adformStats, IEnumerable<AdformSummary> uniqueImpressionStats)
+        {
+            var metrics = new List<SummaryMetric>();
+            SetConversionMetrics(metrics, adformStats, date);
+            SetUniqueImpressionMetricForAllMedia(metrics, uniqueImpressionStats, date);
+            stats.InitialMetrics = metrics;
+        }
+
+        private static void SetConversionMetrics(List<SummaryMetric> metrics, IEnumerable<AdformSummary> adformStats, DateTime date)
+        {
+            var clickThroughs = adformStats.Where(x => x.AdInteractionType == AdInteractions[AdInteractionType.Clicks]);
+            var viewThroughs = adformStats.Where(x => x.AdInteractionType == AdInteractions[AdInteractionType.Impressions]);
             AddMetrics(metrics, clickThroughs, AdInteractionType.Clicks, date);
             AddMetrics(metrics, viewThroughs, AdInteractionType.Impressions, date);
-            stats.InitialMetrics = metrics;
+        }
+
+        private static void SetUniqueImpressionMetric(
+            List<SummaryMetric> metrics, IEnumerable<AdformSummary> adformStats, DateTime date)
+        {
+            var uniqueImpressionSum = adformStats
+                .Where(x => x.AdInteractionType == AdInteractions[AdInteractionType.UniqueImpressions])
+                .Sum(x => x.UniqueImpressions);
+            AddMetric(metrics, AdInteractionType.UniqueImpressions, ConversionMetric.UniqueImpressions, date, uniqueImpressionSum);
+        }
+
+        private static void SetUniqueImpressionMetricForAllMedia(
+            List<SummaryMetric> metrics, IEnumerable<AdformSummary> uniqueImpressionStats, DateTime date)
+        {
+            var uniqueImpressionSum = uniqueImpressionStats.Sum(x => x.UniqueImpressions);
+            AddMetric(metrics, AdInteractionType.UniqueImpressions, ConversionMetric.UniqueImpressions, date, uniqueImpressionSum);
         }
 
         private static void AddMetrics(List<SummaryMetric> metrics, IEnumerable<AdformSummary> adInteractionStats, AdInteractionType adInteractionType, DateTime date)

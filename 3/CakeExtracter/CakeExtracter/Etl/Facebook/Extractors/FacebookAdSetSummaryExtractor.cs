@@ -6,17 +6,18 @@ using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.Facebook;
 using DirectAgents.Domain.Entities.CPProg.Facebook.AdSet;
 using DirectAgents.Domain.Entities.CPProg.Facebook.Campaign;
-using FacebookAPI;
 using FacebookAPI.Entities;
+using FacebookAPI.Providers;
 
 namespace CakeExtracter.Etl.Facebook.Extractors
 {
+    /// <inheritdoc />
     /// <summary>
     /// Facebook Adset summary extractor.
     /// </summary>
-    /// <seealso cref="FacebookApiExtractor{T}.Domain.Entities.CPProg.Facebook.AdSet.FbAdSetSummary}" />
-    public class FacebookAdSetSummaryExtractor : FacebookApiExtractor<FbAdSetSummary>
+    public class FacebookAdSetSummaryExtractor : FacebookApiExtractor<FbAdSetSummary, FacebookInsightsDataProvider>
     {
+        /// <inheritdoc cref="FacebookApiExtractor{T,TProvider}"/>
         /// <summary>
         /// Initializes a new instance of the <see cref="FacebookAdSetSummaryExtractor"/> class.
         /// </summary>
@@ -25,25 +26,27 @@ namespace CakeExtracter.Etl.Facebook.Extractors
         /// <param name="fbUtility">The fb utility.</param>
         public FacebookAdSetSummaryExtractor(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
             : base(fbUtility, dateRange, account)
-        { }
+        {
+        }
 
+        /// <inheritdoc />
         /// <summary>
         /// The derived class implements this method, which calls Add() for each item
         /// extracted and then calls End() when complete.
         /// </summary>
         protected override void Extract()
         {
-            Logger.Info(accountId, "Extracting AdSet Summaries from Facebook API for ({0}) from {1:d} to {2:d}",
-                        this.fbAccountId, this.dateRange.Value.FromDate, this.dateRange.Value.ToDate);
+            Logger.Info(AccountId, "Extracting AdSet Summaries from Facebook API for ({0}) from {1:d} to {2:d}",
+                        this.FbAccountId, this.DateRange.Value.FromDate, this.DateRange.Value.ToDate);
             try
             {
-                var fbSums = _fbUtility.GetDailyAdSetStats("act_" + fbAccountId, dateRange.Value.FromDate, dateRange.Value.ToDate);
+                var fbSums = FbUtility.GetDailyAdSetStats("act_" + FbAccountId, DateRange.Value.FromDate, DateRange.Value.ToDate);
                 var fbAdSetSummaryItems = fbSums.Select(CreateFbAdsetSummary);
                 Add(fbAdSetSummaryItems);
             }
             catch (Exception ex)
             {
-                Logger.Error(accountId, ex);
+                Logger.Error(AccountId, ex);
             }
             End();
         }
@@ -57,12 +60,12 @@ namespace CakeExtracter.Etl.Facebook.Extractors
                 {
                     Name = item.AdSetName,
                     ExternalId = item.AdSetId,
-                    AccountId = accountId,
+                    AccountId = AccountId,
                     Campaign = new FbCampaign
                     {
-                        AccountId = accountId,
+                        AccountId = AccountId,
                         Name = item.CampaignName,
-                        ExternalId = item.CampaignId
+                        ExternalId = item.CampaignId,
                     },
                 },
                 Impressions = item.Impressions,
@@ -73,7 +76,7 @@ namespace CakeExtracter.Etl.Facebook.Extractors
                 PostClickRev = item.ConVal_click,
                 PostViewRev = item.ConVal_view,
                 Cost = item.Spend,
-                Actions = GetActions(item)
+                Actions = GetActions(item),
             };
             return sum;
         }
@@ -95,7 +98,7 @@ namespace CakeExtracter.Etl.Facebook.Extractors
                     PostClick = fbAction.Num_click ?? 0,
                     PostView = fbAction.Num_view ?? 0,
                     PostClickVal = fbAction.Val_click ?? 0,
-                    PostViewVal = fbAction.Val_view ?? 0
+                    PostViewVal = fbAction.Val_view ?? 0,
                 }).ToList();
             }
             return actions;

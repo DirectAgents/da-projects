@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Adform;
-using Adform.Entities.ReportEntities;
-using Adform.Enums;
-using Adform.Utilities;
+using Adform.Outdated.Entities;
+using Adform.Outdated.Entities.ReportEntities;
+using Adform.Outdated.Enums;
+using Adform.Outdated.Utilities;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
 
@@ -14,8 +14,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
     {
         private readonly bool byOrder;
 
-        public AdformStrategySummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account, bool rtbMediaOnly, bool byOrder = false)
-            : base(adformUtility, dateRange, account, rtbMediaOnly)
+        public AdformStrategySummaryExtractor(
+            AdformUtility adformUtility,
+            DateRange dateRange,
+            ExtAccount account,
+            bool rtbMediaOnly,
+            bool areAllStatsForAllMediaTypes,
+            bool byOrder = false)
+            : base(adformUtility, dateRange, account, rtbMediaOnly, areAllStatsForAllMediaTypes)
         {
             this.byOrder = byOrder;
         }

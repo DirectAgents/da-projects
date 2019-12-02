@@ -104,6 +104,7 @@ namespace SeleniumDataBrowser.PageActions
 
         private void EnterEmail(string email)
         {
+            WaitElementClickable(AmazonLoginPageObjects.LoginEmailInput);
             ClickElement(AmazonLoginPageObjects.LoginEmailInput);
             SendKeys(AmazonLoginPageObjects.LoginEmailInput, email);
         }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.Facebook;
@@ -13,7 +12,7 @@ namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook
     /// <summary>
     /// Facebook web portal data provider service.
     /// </summary>
-    /// <seealso cref="DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook.IFacebookWebPortalDataService" />
+    /// <seealso cref="IFacebookWebPortalDataService" />
     public class FacebookWebPortalDataService : IFacebookWebPortalDataService
     {
         private ClientPortalProgContext context;

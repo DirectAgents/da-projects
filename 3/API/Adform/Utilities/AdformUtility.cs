@@ -147,14 +147,16 @@ namespace Adform.Utilities
         /// <returns>Parameters of report <see cref="ReportParams"/>.</returns>
         public ReportParams CreateReportParams(ReportSettings settings)
         {
-            var reportParams = new ReportParams
+            var filter = AdformApiHelper.CreateRequestFilterBySettings(settings);
+            var dimensions = AdformApiHelper.GetDimensions(settings);
+            var metrics = AdformApiHelper.GetMetrics(settings);
+            return new ReportParams
             {
-                Filter = AdformApiHelper.GetFilters(settings),
-                Dimensions = AdformApiHelper.GetDimensions(settings),
-                Metrics = AdformApiHelper.GetMetrics(settings),
+                Filter = filter,
+                Dimensions = dimensions,
+                Metrics = metrics,
                 IncludeRowCount = true,
             };
-            return reportParams;
         }
 
         /// <summary>
@@ -178,7 +180,6 @@ namespace Adform.Utilities
                     allReportData.Add(reportData);
                 }
             }
-
             return allReportData;
         }
 

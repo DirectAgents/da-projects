@@ -211,7 +211,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\DirectAgents.Web\packages\Selenium.Chrome.WebDriver.75.0.0\driver\chromedriver.exe">
+    <Content Include="..\DirectAgents.Web\packages\Selenium.Chrome.WebDriver.77.0.0\driver\chromedriver.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Email\JobErrorOccuredBody.cshtml">

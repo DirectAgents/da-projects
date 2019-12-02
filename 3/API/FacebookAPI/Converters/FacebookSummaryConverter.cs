@@ -1,13 +1,13 @@
-﻿using FacebookAPI.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using FacebookAPI.Entities;
 
 namespace FacebookAPI.Converters
 {
     /// <summary>
-    /// Facebook summary row parser
+    /// Facebook summary row parser.
     /// </summary>
-    internal abstract class FacebookSummaryConverter
+    internal abstract class FacebookSummaryConverter : IFacebookConverter<FBSummary>
     {
         protected string conversionActionType;
         protected string clickAttribution;
@@ -19,8 +19,7 @@ namespace FacebookAPI.Converters
         /// <param name="conversionActionType">Type of the conversion action.</param>
         /// <param name="clickAttribution">The click attribution.</param>
         /// <param name="viewAttribution">The view attribution.</param>
-        public FacebookSummaryConverter(string conversionActionType,
-            string clickAttribution, string viewAttribution)
+        public FacebookSummaryConverter(string conversionActionType, string clickAttribution, string viewAttribution)
         {
             this.conversionActionType = conversionActionType;
             this.clickAttribution = clickAttribution;
@@ -32,7 +31,7 @@ namespace FacebookAPI.Converters
         /// </summary>
         /// <param name="row">The row.</param>
         /// <returns></returns>
-        public abstract FBSummary ParseSummaryRow(dynamic row);
+        public abstract FBSummary ParseSummaryFromRow(dynamic row);
 
         /// <summary>
         /// Gets the facebook summary metrics from row.

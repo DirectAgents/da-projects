@@ -3,7 +3,7 @@
 namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook.Models
 {
     /// <summary>
-    /// Facebook Level Totals Info
+    /// Facebook Level Totals Info.
     /// </summary>
     public class FacebookTotalsInfo
     {

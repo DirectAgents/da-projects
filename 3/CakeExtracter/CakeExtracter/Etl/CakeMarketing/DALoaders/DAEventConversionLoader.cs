@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using CakeExtracter.CakeMarketingApi.Entities;
-using CakeExtracter.Etl.CakeMarketing.Extracters;
 using DirectAgents.Domain.Contexts;
 
 namespace CakeExtracter.Etl.CakeMarketing.DALoaders

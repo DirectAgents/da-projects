@@ -4,6 +4,7 @@ namespace DirectAgents.Domain.Entities.CPProg.Facebook
 {
     /// <summary>
     /// Facebook base summary metric entity.
+    /// <see cref="https://developers.facebook.com/docs/marketing-api/insights/parameters/v4.0#parameters-and-fields"/>.
     /// </summary>
     public class FbBaseSummary
     {
@@ -17,6 +18,7 @@ namespace DirectAgents.Domain.Entities.CPProg.Facebook
 
         /// <summary>
         /// Gets or sets the impressions metric value.
+        /// The number of times your ads were on screen.
         /// </summary>
         /// <value>
         /// The impressions.

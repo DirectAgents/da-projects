@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.BingAds.V12.Reporting;
+using Microsoft.BingAds.V13.Reporting;
 
 namespace BingAds.Helpers
 {
@@ -110,8 +110,8 @@ namespace BingAds.Helpers
                     GoalsAndFunnelsReportColumn.TimePeriod,
                     GoalsAndFunnelsReportColumn.GoalId,
                     GoalsAndFunnelsReportColumn.Goal,
-                    GoalsAndFunnelsReportColumn.Conversions,
-                    GoalsAndFunnelsReportColumn.Revenue,
+                    GoalsAndFunnelsReportColumn.AllConversions,
+                    GoalsAndFunnelsReportColumn.AllRevenue,
                     GoalsAndFunnelsReportColumn.AccountId,
                     GoalsAndFunnelsReportColumn.AccountName,
                     GoalsAndFunnelsReportColumn.AccountNumber,
