@@ -13,7 +13,7 @@ namespace CakeExtracter.Etl.Facebook.Extractors
 {
     /// <inheritdoc />
     /// <summary>
-    ///  Facebook Adset summary extractor.
+    /// Facebook Adset summary extractor.
     /// </summary>
     public class FacebookAdSetSummaryExtractor : FacebookApiExtractor<FbAdSetSummary, FacebookInsightsDataProvider>
     {

@@ -14,13 +14,13 @@ namespace FacebookAPI.Helpers
         /// <summary>
         /// Gets the key-name of reach period by start date of period.
         /// </summary>
-        /// <param name="startPeriodDate">Start date of period.</param>
+        /// <param name="startDateOfPeriod">Start date of period.</param>
         /// <returns>Key-name of reach period.</returns>
-        public static string GetPeriodName(DateTime startPeriodDate)
+        public static string GetPeriodName(DateTime startDateOfPeriod)
         {
-            var currentPeriod = GetCurrentPeriod(startPeriodDate);
-            var periodMonthName = GetFullNameOfMonth(startPeriodDate);
-            switch (currentPeriod)
+            var period = GetReachPeriod(startDateOfPeriod);
+            var periodMonthName = GetFullNameOfMonth(startDateOfPeriod);
+            switch (period)
             {
                 case ReachPeriod.LastMonth:
                     return $"Last month ({periodMonthName})";
@@ -99,7 +99,7 @@ namespace FacebookAPI.Helpers
             return today.Day > middleOfCurrentMonth.Day;
         }
 
-        private static ReachPeriod GetCurrentPeriod(DateTime startPeriodDate)
+        private static ReachPeriod GetReachPeriod(DateTime startPeriodDate)
         {
             return DoesPeriodBelongCurrentMonth(startPeriodDate)
                 ? GetPartOfCurrentMonth(startPeriodDate)

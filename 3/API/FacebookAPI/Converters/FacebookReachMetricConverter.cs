@@ -11,7 +11,7 @@ namespace FacebookAPI.Converters
         /// <summary>
         /// Gets the Facebook Reach metric from row.
         /// </summary>
-        /// <param name="row">report row.</param>
+        /// <param name="row">Report row.</param>
         /// <returns>Facebook Reach metric.</returns>
         public FbReachRow ParseSummaryFromRow(dynamic row)
         {

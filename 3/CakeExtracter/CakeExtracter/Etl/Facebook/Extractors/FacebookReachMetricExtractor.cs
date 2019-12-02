@@ -30,11 +30,10 @@ namespace CakeExtracter.Etl.Facebook.Extractors
         /// <inheritdoc/>
         protected override void Extract()
         {
-            Logger.Info(AccountId, "Extracting Reach metrics from Facebook API for ({0}) from {1:d} to {2:d}",
-                FbAccountId, DateRange.Value.FromDate, DateRange.Value.ToDate);
+            Logger.Info(AccountId, $"Extracting Reach metrics from Facebook API for ({FbAccountId})");
             try
             {
-                var reachMetricRows = FbUtility.GetReachMetricStats("act_" + FbAccountId, DateRange.Value.FromDate, DateRange.Value.ToDate);
+                var reachMetricRows = FbUtility.GetReachMetricStats("act_" + FbAccountId);
                 var reachMetricStats = reachMetricRows.Select(CreateReachMetric);
                 Add(reachMetricStats);
             }

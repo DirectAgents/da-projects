@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DirectAgents.Domain.Entities.CPProg.Facebook
@@ -21,11 +20,11 @@ namespace DirectAgents.Domain.Entities.CPProg.Facebook
         [ForeignKey("AccountId")]
         public virtual ExtAccount ExtAccount { get; set; }
 
+        /// <summary>
+        /// Gets or sets the period for which reach metrics are extracted.
+        /// </summary>
         [Key]
         public string Period { get; set; }
-
-        //public virtual DateTime PeriodStartDate { get; set; }
-        //public virtual DateTime PeriodEndDate { get; set; }
 
         /// <summary>
         /// Gets or sets the reach metric value.

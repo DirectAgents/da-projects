@@ -8,27 +8,39 @@ using FacebookAPI.Helpers;
 
 namespace FacebookAPI.Providers
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// Facebook insights data provider for Reach metrics.
+    /// </summary>
     public class FacebookInsightsReachMetricProvider : FacebookInsightsDataProvider
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FacebookInsightsReachMetricProvider"/> class.
+        /// </summary>
+        /// <param name="logInfo">Action for logging (the info level).</param>
+        /// <param name="logError">Action for logging (the error level).</param>
         public FacebookInsightsReachMetricProvider(Action<string> logInfo, Action<string> logError)
             : base(logInfo, logError)
         {
         }
 
-        public IEnumerable<FbReachRow> GetReachMetricStats(string accountId, DateTime start, DateTime end)
+        /// <summary>
+        /// Gets list of Reach metrics from API.
+        /// </summary>
+        /// <param name="accountId">External identifier of account.</param>
+        /// <returns>List of Reach metrics.</returns>
+        public IEnumerable<FbReachRow> GetReachMetricStats(string accountId)
         {
             var converter = new FacebookReachMetricConverter();
-            return GetReachMetricsLoop(accountId, start, end, converter);
+            return GetReachMetricsLoop(accountId, converter);
         }
 
-        private IEnumerable<FbReachRow> GetReachMetricsLoop(
-            string accountId, DateTime start, DateTime end, FacebookReachMetricConverter converter)
+        private IEnumerable<FbReachRow> GetReachMetricsLoop(string accountId, FacebookReachMetricConverter converter)
         {
             var clientParametersList = new List<FacebookJobRequest>();
-            var clientParameters = PrepareReachMetricExtractingRequest(accountId, start, end);
+            var clientParameters = PrepareReachMetricExtractingRequest(accountId);
             clientParameters.ResetAndGetRunId_withRetry(LogInfo, LogError);
             clientParametersList.Add(clientParameters);
-
             Thread.Sleep(InitialWaitMillisecs);
             foreach (var clientParms in clientParametersList)
             {
@@ -40,9 +52,30 @@ namespace FacebookAPI.Providers
             }
         }
 
-        private FacebookJobRequest PrepareReachMetricExtractingRequest(string accountId, DateTime start, DateTime end)
+        private FacebookJobRequest PrepareReachMetricExtractingRequest(string accountId)
+        {
+            var facebookClient = CreateFBClient();
+            var path = accountId + "/insights";
+            var parameters = CreateRequestParameters();
+            var logMessage = $"Get FB Reach metrics ({accountId})";
+            return CreateFacebookJobRequest(facebookClient, path, parameters, logMessage);
+        }
+
+        private object CreateRequestParameters()
         {
             const string fieldsVal = "reach";
+            var filters = GetRequestFilters();
+            var timeRanges = FacebookReachPeriodHelper.GetPeriodsForApiRequest();
+            return new
+            {
+                filtering = filters,
+                fields = fieldsVal,
+                time_ranges = timeRanges,
+            };
+        }
+
+        private Filter[] GetRequestFilters()
+        {
             var filterList = new List<Filter>();
             if (!string.IsNullOrWhiteSpace(CurrentPlatformFilter))
             {
@@ -52,17 +85,7 @@ namespace FacebookAPI.Providers
             {
                 filterList.Add(new Filter { field = "campaign.name", @operator = CampaignFilterOperator, value = CampaignFilterValue });
             }
-            var timeRanges = FacebookReachPeriodHelper.GetPeriodsForApiRequest();
-            var parameters = new
-            {
-                filtering = filterList.ToArray(),
-                fields = fieldsVal,
-                time_ranges = timeRanges,
-            };
-            var logMessage = $"Get FB Reach metrics {start:d} - {end:d} ({accountId})";
-            var facebookClient = CreateFBClient();
-            var path = accountId + "/insights";
-            return CreateFacebookJobRequest(facebookClient, path, parameters, logMessage);
+            return filterList.ToArray();
         }
     }
 }
