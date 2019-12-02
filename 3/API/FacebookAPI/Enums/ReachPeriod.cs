@@ -5,7 +5,7 @@
     /// </summary>
     internal enum ReachPeriod
     {
-        LastMonth,
+        FullPreviousMonth,
         FirstPartOfCurrentMonth,
         SecondPartOfCurrentMonth,
     }

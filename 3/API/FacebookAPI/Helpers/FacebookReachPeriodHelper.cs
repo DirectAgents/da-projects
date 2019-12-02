@@ -19,18 +19,7 @@ namespace FacebookAPI.Helpers
         public static string GetPeriodName(DateTime startDateOfPeriod)
         {
             var period = GetReachPeriod(startDateOfPeriod);
-            var periodMonthName = GetFullNameOfMonth(startDateOfPeriod);
-            switch (period)
-            {
-                case ReachPeriod.LastMonth:
-                    return $"Last month ({periodMonthName})";
-                case ReachPeriod.FirstPartOfCurrentMonth:
-                    return $"First part of {periodMonthName}";
-                case ReachPeriod.SecondPartOfCurrentMonth:
-                    return $"Second part of {periodMonthName}";
-                default:
-                    throw new NotSupportedException("Reach period not found");
-            }
+            return GetPeriodKeyName(period, startDateOfPeriod);
         }
 
         /// <summary>
@@ -103,7 +92,7 @@ namespace FacebookAPI.Helpers
         {
             return DoesPeriodBelongCurrentMonth(startPeriodDate)
                 ? GetPartOfCurrentMonth(startPeriodDate)
-                : ReachPeriod.LastMonth;
+                : ReachPeriod.FullPreviousMonth;
         }
 
         private static ReachPeriod GetPartOfCurrentMonth(DateTime periodDate)
@@ -119,6 +108,23 @@ namespace FacebookAPI.Helpers
             var currentMonth = DateTime.Today.Month;
             var periodMonth = periodDate.Month;
             return periodMonth == currentMonth;
+        }
+
+        private static string GetPeriodKeyName(ReachPeriod period, DateTime startDateOfPeriod)
+        {
+            var periodYear = startDateOfPeriod.Year;
+            var periodMonthName = GetFullNameOfMonth(startDateOfPeriod);
+            switch (period)
+            {
+                case ReachPeriod.FullPreviousMonth:
+                    return $"{periodYear}. {periodMonthName}";
+                case ReachPeriod.FirstPartOfCurrentMonth:
+                    return $"{periodYear}. {periodMonthName}. First part";
+                case ReachPeriod.SecondPartOfCurrentMonth:
+                    return $"{periodYear}. {periodMonthName}. Second part";
+                default:
+                    throw new NotSupportedException("Reach period not found");
+            }
         }
 
         private static string GetFullNameOfMonth(DateTime date)
