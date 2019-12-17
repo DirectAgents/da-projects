@@ -78,8 +78,8 @@ namespace CakeExtracter.Commands
             Logger.Info("Adform ETL. DateRange {0}.", dateRange);
             var statsType = new StatsTypeAgg(StatsType);
             SetConfigurableVariables();
-            var accounts = GetAccounts();
             AdformUtility.TokenSets = GetTokens();
+            var accounts = GetAccounts();
             foreach (var account in accounts)
             {
                 Logger.Info("Commencing ETL for Adform account ({0}) {1}", account.Id, account.Name);
@@ -242,7 +242,18 @@ namespace CakeExtracter.Commands
                 {
                     accounts = accounts.Where(a => a.Disabled);
                 }
-                return accounts.ToList().Where(a => !string.IsNullOrWhiteSpace(a.ExternalId));
+                var accountsWithFilledExternalId = accounts.ToList().Where(a => !string.IsNullOrWhiteSpace(a.ExternalId));
+                SetInfoAboutAllAccountsInHistory(accountsWithFilledExternalId);
+                return accountsWithFilledExternalId;
+            }
+        }
+
+        private void SetInfoAboutAllAccountsInHistory(IEnumerable<ExtAccount> accounts)
+        {
+            const string firstAccountState = "Not started";
+            foreach (var account in accounts)
+            {
+                CommandExecutionContext.Current.SetJobExecutionStateInHistory(firstAccountState, account.Id);
             }
         }
     }
