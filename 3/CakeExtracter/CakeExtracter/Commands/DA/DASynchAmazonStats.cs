@@ -39,6 +39,8 @@ namespace CakeExtracter.Commands
 
         public virtual bool KeepAmazonReports { get; set; }
 
+        public virtual bool SearchTermDateRangeToToday { get; set; }
+
         public DASynchAmazonStats()
         {
             IsCommand("daSynchAmazonStats", "Synch Amazon Stats");
@@ -48,6 +50,10 @@ namespace CakeExtracter.Commands
             HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default = {DefaultDaysAgo})", c => DaysAgoToStart = c);
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
             HasOption<bool>("k|keepAmazonReports=", "Store received Amazon reports in a separate folder (default = false)", c => KeepAmazonReports = c);
+            HasOption<bool>(
+                "w|willSearchTermDateRangeToToday=",
+                "End date of range for Search terms will be today, if 'End date' is not specified (default = false (yesterday))",
+                c => SearchTermDateRangeToToday = c);
         }
 
         public static int RunStatic(int? accountId = null, DateTime? startDate = null, DateTime? endDate = null, string statsType = null)
@@ -71,6 +77,7 @@ namespace CakeExtracter.Commands
             DaysAgoToStart = null;
             StatsType = null;
             KeepAmazonReports = false;
+            SearchTermDateRangeToToday = false;
         }
 
         public override int Execute(string[] remainingArguments)
@@ -259,12 +266,13 @@ namespace CakeExtracter.Commands
 
         private void DoETL_SearchTerm(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
+            var searchTermDateRange = GetDateRangeForSearchTerms(dateRange);
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
                 () =>
                 {
                     var extractor = DIKernel.Get<AmazonApiSearchTermExtractor>(
                         ("amazonUtility", amazonUtility),
-                        ("dateRange", dateRange),
+                        ("dateRange", searchTermDateRange),
                         ("account", account),
                         ("campaignFilter", account.Filter),
                         ("campaignFilterOut", null));
@@ -360,6 +368,18 @@ namespace CakeExtracter.Commands
             setting.Item1.DaysAgoToStart = null;
             setting.Item3.Command = setting.Item1;
             return setting.Item3;
+        }
+
+        private DateRange GetDateRangeForSearchTerms(DateRange dateRange)
+        {
+            var searchTermDateRange = dateRange;
+            if (!SearchTermDateRangeToToday)
+            {
+                return searchTermDateRange;
+            }
+            searchTermDateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo, true);
+            Logger.Info("Search Term Date Range - {0}.", searchTermDateRange);
+            return searchTermDateRange;
         }
     }
 }
