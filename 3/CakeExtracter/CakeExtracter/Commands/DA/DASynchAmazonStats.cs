@@ -39,7 +39,7 @@ namespace CakeExtracter.Commands
 
         public virtual bool KeepAmazonReports { get; set; }
 
-        public virtual bool SearchTermDateRangeToToday { get; set; }
+        public virtual bool DateRangeToToday { get; set; }
 
         public DASynchAmazonStats()
         {
@@ -51,9 +51,9 @@ namespace CakeExtracter.Commands
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
             HasOption<bool>("k|keepAmazonReports=", "Store received Amazon reports in a separate folder (default = false)", c => KeepAmazonReports = c);
             HasOption<bool>(
-                "w|willSearchTermDateRangeToToday=",
-                "End date of range for Search terms will be today, if 'End date' is not specified (default = false (yesterday))",
-                c => SearchTermDateRangeToToday = c);
+                "w|willDateRangeForExtractingToToday=",
+                "End date of range for extracting will be today, if 'End date' is not specified (default = false (yesterday))",
+                c => DateRangeToToday = c);
         }
 
         public static int RunStatic(int? accountId = null, DateTime? startDate = null, DateTime? endDate = null, string statsType = null)
@@ -77,7 +77,7 @@ namespace CakeExtracter.Commands
             DaysAgoToStart = null;
             StatsType = null;
             KeepAmazonReports = false;
-            SearchTermDateRangeToToday = false;
+            DateRangeToToday = false;
         }
 
         public override int Execute(string[] remainingArguments)
@@ -246,12 +246,13 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Keyword(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
+            var keywordDateRange = GetDateRangeForExtracting(dateRange);
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
                 () =>
                 {
                     var extractor = DIKernel.Get<AmazonApiKeywordExtractor>(
                         ("amazonUtility", amazonUtility),
-                        ("dateRange", dateRange),
+                        ("dateRange", keywordDateRange),
                         ("account", account),
                         ("campaignFilter", account.Filter),
                         ("campaignFilterOut", null));
@@ -266,7 +267,7 @@ namespace CakeExtracter.Commands
 
         private void DoETL_SearchTerm(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
-            var searchTermDateRange = GetDateRangeForSearchTerms(dateRange);
+            var searchTermDateRange = GetDateRangeForExtracting(dateRange);
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
                 () =>
                 {
@@ -370,16 +371,16 @@ namespace CakeExtracter.Commands
             return setting.Item3;
         }
 
-        private DateRange GetDateRangeForSearchTerms(DateRange dateRange)
+        private DateRange GetDateRangeForExtracting(DateRange dateRange)
         {
-            var searchTermDateRange = dateRange;
-            if (!SearchTermDateRangeToToday)
+            var dateRangeForExtracting = dateRange;
+            if (!DateRangeToToday)
             {
-                return searchTermDateRange;
+                return dateRangeForExtracting;
             }
-            searchTermDateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo, true);
-            Logger.Info("Search Term Date Range - {0}.", searchTermDateRange);
-            return searchTermDateRange;
+            dateRangeForExtracting = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo, true);
+            Logger.Info("Changed Date Range for extracting - {0}.", dateRangeForExtracting);
+            return dateRangeForExtracting;
         }
     }
 }
