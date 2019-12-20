@@ -100,7 +100,7 @@ namespace CakeExtracter.Commands
                         DoETL_Creative(dateRange, account, amazonUtility);
                     }
 
-                    if (statsType.Keyword)
+                    if (statsType.Keyword || (statsType.SearchTerm && !statsType.All))
                     {
                         DoETL_Keyword(dateRange, account, amazonUtility);
                     }
