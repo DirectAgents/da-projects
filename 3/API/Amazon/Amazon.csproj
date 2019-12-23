@@ -100,6 +100,7 @@
     <Compile Include="Entities\Summaries\AmazonKeywordDailySummary.cs" />
     <Compile Include="Entities\Summaries\AmazonSearchTermDailySummary.cs" />
     <Compile Include="Entities\Summaries\AmazonStatSummary.cs" />
+    <Compile Include="Entities\Summaries\AmazonStrategyDailySummary.cs" />
     <Compile Include="Entities\Summaries\AmazonTargetKeywordDailySummary.cs" />
     <Compile Include="Constants\ReportGenerationStatus.cs" />
     <Compile Include="Constants\ApiEndpointUrl.cs" />

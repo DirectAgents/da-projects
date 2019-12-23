@@ -38,6 +38,7 @@ namespace Amazon.Helpers
             {
                 {CampaignType.SponsoredProducts, "sp"},
                 {CampaignType.SponsoredBrands, "hsa"},
+                {CampaignType.ProductDisplay, "sd"},
                 {CampaignType.Empty, string.Empty},
             };
 
@@ -296,7 +297,9 @@ namespace Amazon.Helpers
             var campaignTypePath = campaignType == CampaignType.Empty || entitiesType == EntitesType.Asins
                 ? string.Empty
                 : CampaignTypeNames[campaignType] + "/";
-            var resourcePath = $"{ApiVersion}/{campaignTypePath}{EntitiesTypeNames[entitiesType]}";
+            var resourcePath = campaignType == CampaignType.ProductDisplay
+               ? $"{campaignTypePath}{EntitiesTypeNames[entitiesType]}"
+               : $"{ApiVersion}/{campaignTypePath}{EntitiesTypeNames[entitiesType]}";
             return resourcePath;
         }
 

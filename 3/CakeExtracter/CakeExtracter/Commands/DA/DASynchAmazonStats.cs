@@ -107,6 +107,10 @@ namespace CakeExtracter.Commands
                     {
                         DoETL_SearchTerm(dateRange, account, amazonUtility); // need to update keywords stats first
                     }
+                    if (statsType.Strategy)
+                    {
+                        DoETL_Campaign(dateRange, account, amazonUtility);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -212,6 +216,27 @@ namespace CakeExtracter.Commands
                 },
                 account.Id,
                 AmazonJobLevels.Account,
+                AmazonJobOperations.Total);
+        }
+
+        private void DoETL_Campaign(DateRange dateRange, ExtAccount account,AmazonUtility amazonUtility)
+        {
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
+                () =>
+                {
+                    var extractor = DIKernel.Get<AmazonApiCampaignExtractor>(
+                        ("amazonUtility", amazonUtility),
+                        ("dateRange", dateRange),
+                        ("account", account),
+                        ("campaignFilter", account.Filter),
+                        ("campaignFilterOut", null));
+                    var loader = DIKernel.Get<BaseAmazonLevelLoader<StrategySummary, StrategySummaryMetric>>(("accountId", account.Id));
+                    InitEtlEvents<StrategySummary, StrategySummaryMetric, AmazonApiCampaignExtractor,
+                        BaseAmazonLevelLoader<StrategySummary, StrategySummaryMetric>>(extractor, loader);
+                    CommandHelper.DoEtl(extractor, loader);
+                },
+                account.Id,
+                AmazonJobLevels.Strategy,
                 AmazonJobOperations.Total);
         }
 

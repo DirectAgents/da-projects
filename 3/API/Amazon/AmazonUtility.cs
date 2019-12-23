@@ -396,6 +396,14 @@ namespace Amazon
             return GetReportInfoManyTimes<AmazonSearchTermDailySummary>(EntitesType.SearchTerm, campaignType, param, profileId);
         }
 
+        // Only for Product Display
+        public virtual List<AmazonStrategyDailySummary> ReportStrategy(DateTime date, string profileId, bool includeCampaignName)
+        {
+            const CampaignType campaignType = CampaignType.ProductDisplay;
+            var param = AmazonApiHelper.CreateReportParams(EntitesType.Campaigns, campaignType, date, includeCampaignName);
+            return GetReportInfoManyTimes<AmazonStrategyDailySummary>(EntitesType.Campaigns, campaignType, param, profileId);
+        }
+
         // Only for Sponsored Product
         public virtual List<AmazonTargetSearchTermDailySummary> ReportTargetSearchTerms(DateTime date, string profileId, bool includeCampaignName)
         {
