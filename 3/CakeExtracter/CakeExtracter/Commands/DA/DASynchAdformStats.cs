@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Threading.Tasks;
 using Adform.Utilities;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
@@ -133,23 +134,37 @@ namespace CakeExtracter.Commands
                 {
                     numberOfAddedDailyItems = DoETL_Daily(dateRange, account, adformUtility);
                 }
-                if (statsType.Strategy && (numberOfAddedDailyItems == null || numberOfAddedDailyItems.Value > 0))
-                {
-                    DoETL_Strategy(dateRange, account, orderInsteadOfCampaign, adformUtility);
-                }
-                if (statsType.AdSet && (numberOfAddedDailyItems == null || numberOfAddedDailyItems.Value > 0))
-                {
-                    DoETL_AdSet(dateRange, account, orderInsteadOfCampaign, adformUtility);
-                }
-                if (statsType.Creative && (numberOfAddedDailyItems == null || numberOfAddedDailyItems.Value > 0))
-                {
-                    DoETL_Creative(dateRange, account, adformUtility);
-                }
+                var etlLevelActions = GetEtlLevelActions(account, dateRange, statsType, numberOfAddedDailyItems, orderInsteadOfCampaign, adformUtility);
+                Parallel.Invoke(etlLevelActions.ToArray());
             }
             catch (Exception ex)
             {
                 Logger.Error(account.Id, ex);
             }
+        }
+
+        private List<Action> GetEtlLevelActions(
+            ExtAccount account,
+            DateRange dateRange,
+            StatsTypeAgg statsType,
+            int? numberOfAddedDailyItems,
+            bool orderInsteadOfCampaign,
+            AdformUtility adformUtility)
+        {
+            var etlLevelActions = new List<Action>();
+            if (statsType.Strategy && (numberOfAddedDailyItems == null || numberOfAddedDailyItems.Value > 0))
+            {
+                etlLevelActions.Add(() => DoETL_Strategy(dateRange, account, orderInsteadOfCampaign, adformUtility));
+            }
+            if (statsType.AdSet && (numberOfAddedDailyItems == null || numberOfAddedDailyItems.Value > 0))
+            {
+                etlLevelActions.Add(() => DoETL_AdSet(dateRange, account, orderInsteadOfCampaign, adformUtility));
+            }
+            if (statsType.Creative && (numberOfAddedDailyItems == null || numberOfAddedDailyItems.Value > 0))
+            {
+                etlLevelActions.Add(() => DoETL_Creative(dateRange, account, adformUtility));
+            }
+            return etlLevelActions;
         }
 
         private static AdformUtility CreateUtility(ExtAccount account)
