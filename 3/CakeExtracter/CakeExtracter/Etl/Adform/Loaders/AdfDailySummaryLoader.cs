@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.Etl.Adform.Exceptions;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.CPProg.Adform;
 using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
@@ -48,14 +50,22 @@ namespace CakeExtracter.Etl.Adform.Loaders
         protected override int Load(List<AdfDailySummary> items)
         {
             Logger.Info(accountId, "Loading {0} Adform Daily Summaries..", items.Count);
-            var result = MergeItemsWithExisted(items);
-            return result ? items.Count : 0;
+            try
+            {
+                var result = MergeItemsWithExisted(items);
+                return result ? items.Count : 0;
+            }
+            catch (Exception e)
+            {
+                ProcessFailedStatsExtraction(e, items);
+                return items.Count;
+            }
         }
 
         /// <inheritdoc />
         protected override void SetEntityParents(AdfBaseEntity entity)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc />
@@ -67,6 +77,14 @@ namespace CakeExtracter.Etl.Adform.Loaders
         {
             base.SetSummaryParents(summary);
             summary.EntityId = accountId;
+        }
+
+        private void ProcessFailedStatsExtraction(Exception e, List<AdfDailySummary> items)
+        {
+            Logger.Error(accountId, e);
+            var exception = GetFailedStatsLoadingException(e, items);
+            exception.ByDaily = true;
+            InvokeProcessFailedExtractionHandlers(exception);
         }
     }
 }

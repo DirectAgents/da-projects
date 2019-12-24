@@ -6,6 +6,9 @@ using Adform.Utilities;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Exceptions;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
+using CakeExtracter.Etl.Adform.Exceptions;
 using CakeExtracter.Etl.Adform.Loaders;
 using CakeExtracter.Etl.Adform.Repositories;
 using CakeExtracter.Etl.Adform.Repositories.Summaries;
@@ -13,6 +16,8 @@ using CakeExtracter.Etl.Adform.Extractors;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.CPProg.Adform;
+using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
 
 namespace CakeExtracter.Commands
 {
@@ -74,6 +79,8 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
+            IntervalBetweenUnsuccessfulAndNewRequestInMinutes = ConfigurationHelper.GetIntConfigurationValue(
+                "AdformIntervalBetweenRequestsInMinutes", IntervalBetweenUnsuccessfulAndNewRequestInMinutes);
             var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info("Adform ETL. DateRange {0}.", dateRange);
             var statsType = new StatsTypeAgg(StatsType);
@@ -91,13 +98,31 @@ namespace CakeExtracter.Commands
             return 0;
         }
 
+        /// <inheritdoc/>
+        public override IEnumerable<CommandWithSchedule> GetUniqueBroadCommands(
+            IEnumerable<CommandWithSchedule> commands)
+        {
+            var broadCommands = new List<CommandWithSchedule>();
+            var commandsGroupedByAccountAndLevel = commands.GroupBy(x =>
+            {
+                var command = x.Command as DASynchAdformStats;
+                return new { command?.AccountId, command?.StatsType };
+            });
+            foreach (var commandsGroup in commandsGroupedByAccountAndLevel)
+            {
+                var accountLevelBroadCommands = GetUniqueBroadAccountLevelCommands(commandsGroup);
+                broadCommands.AddRange(accountLevelBroadCommands);
+            }
+            return broadCommands;
+        }
+
         private static void SetConfigurableVariables()
         {
             accountIdsForOrders = ConfigurationHelper.ExtractEnumerableFromConfig("Adform_OrderInsteadOfCampaign");
             trackingIdsOfAccounts = ConfigurationHelper.ExtractDictionaryFromConfigValue("Adform_AccountsWithSpecificTracking", "Adform_AccountsTrackingIds");
         }
 
-        private static void DoETLs(ExtAccount account, DateRange dateRange, StatsTypeAgg statsType)
+        private void DoETLs(ExtAccount account, DateRange dateRange, StatsTypeAgg statsType)
         {
             var orderInsteadOfCampaign = accountIdsForOrders.Contains(account.ExternalId);
             var adformUtility = CreateUtility(account);
@@ -151,36 +176,40 @@ namespace CakeExtracter.Commands
         }
 
         // ---
-        private static int DoETL_Daily(DateRange dateRange, ExtAccount account, AdformUtility adformUtility)
+        private int DoETL_Daily(DateRange dateRange, ExtAccount account, AdformUtility adformUtility)
         {
             CommandExecutionContext.Current.SetJobExecutionStateInHistory("Daily level.", account.Id);
             var extractor = new AdformDailySummaryExtractor(adformUtility, dateRange, account);
             var loader = CreateDailyLoader(account.Id);
+            InitEtlEvents<AdfDailySummary, AdfBaseEntity, AdformDailySummaryExtractor, AdfDailySummaryLoader>(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
             return extractor.Added;
         }
 
-        private static void DoETL_Strategy(DateRange dateRange, ExtAccount account, bool byOrder, AdformUtility adformUtility)
+        private void DoETL_Strategy(DateRange dateRange, ExtAccount account, bool byOrder, AdformUtility adformUtility)
         {
             CommandExecutionContext.Current.SetJobExecutionStateInHistory("Campaign level.", account.Id);
             var extractor = new AdformStrategySummaryExtractor(adformUtility, dateRange, account, byOrder);
             var loader = CreateCampaignLoader(account.Id);
+            InitEtlEvents<AdfCampaignSummary, AdfCampaign, AdformStrategySummaryExtractor, AdfCampaignSummaryLoader>(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
         }
 
-        private static void DoETL_AdSet(DateRange dateRange, ExtAccount account, bool byOrder, AdformUtility adformUtility)
+        private void DoETL_AdSet(DateRange dateRange, ExtAccount account, bool byOrder, AdformUtility adformUtility)
         {
             CommandExecutionContext.Current.SetJobExecutionStateInHistory("LineItem level.", account.Id);
             var extractor = new AdformAdSetSummaryExtractor(adformUtility, dateRange, account, byOrder);
             var loader = CreateLineItemLoader(account.Id);
+            InitEtlEvents<AdfLineItemSummary, AdfLineItem, AdformAdSetSummaryExtractor, AdfLineItemSummaryLoader>(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
         }
 
-        private static void DoETL_Creative(DateRange dateRange, ExtAccount account, AdformUtility adformUtility)
+        private void DoETL_Creative(DateRange dateRange, ExtAccount account, AdformUtility adformUtility)
         {
             CommandExecutionContext.Current.SetJobExecutionStateInHistory("Banner level.", account.Id);
             var extractor = new AdformTDadSummaryExtractor(adformUtility, dateRange, account);
             var loader = CreateBannerLoader(account.Id);
+            InitEtlEvents<AdfBannerSummary, AdfBanner, AdformTDadSummaryExtractor, AdfBannerSummaryLoader>(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
         }
 
@@ -255,6 +284,74 @@ namespace CakeExtracter.Commands
             {
                 CommandExecutionContext.Current.SetJobExecutionStateInHistory(firstAccountState, account.Id);
             }
+        }
+
+        private void InitEtlEvents<TSummary, TEntity, TExtractor, TLoader>(TExtractor extractor, TLoader loader)
+            where TSummary : AdfBaseSummary, new()
+            where TEntity : AdfBaseEntity, new()
+            where TExtractor : AdformApiBaseExtractor<TSummary>
+            where TLoader : AdfBaseSummaryLoader<TEntity, TSummary>
+        {
+            extractor.ProcessFailedExtraction += exception =>
+                ScheduleNewCommandLaunch<DASynchAdformStats>(command => UpdateCommandParameters(command, exception));
+            extractor.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewCommandLaunch<DASynchAdformStats>(command => UpdateCommandParameters(command, exception));
+            loader.ProcessFailedExtraction += exception =>
+                ScheduleNewCommandLaunch<DASynchAdformStats>(command => UpdateCommandParameters(command, exception));
+            loader.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewCommandLaunch<DASynchAdformStats>(command => UpdateCommandParameters(command, exception));
+        }
+
+        private void UpdateCommandParameters(DASynchAdformStats command, FailedEtlException exception)
+        {
+            command.AccountId = exception.AccountId;
+        }
+
+        private void UpdateCommandParameters(DASynchAdformStats command, AdformFailedStatsLoadingException exception)
+        {
+            command.StartDate = exception.StartDate ?? command.StartDate;
+            command.EndDate = exception.EndDate ?? command.EndDate;
+            command.AccountId = exception.AccountId ?? command.AccountId;
+            var statsTypeAgg = new StatsTypeAgg
+            {
+                Daily = exception.ByDaily,
+                Strategy = exception.ByCampaign,
+                AdSet = exception.ByLineItem,
+                Creative = exception.ByBanner,
+            };
+            command.StatsType = statsTypeAgg.GetStatsTypeString();
+        }
+
+        private IEnumerable<CommandWithSchedule> GetUniqueBroadAccountLevelCommands(IEnumerable<CommandWithSchedule> commandsWithSchedule)
+        {
+            var accountLevelCommands = new List<Tuple<DASynchAdformStats, DateRange, CommandWithSchedule>>();
+            foreach (var commandWithSchedule in commandsWithSchedule)
+            {
+                var command = (DASynchAdformStats)commandWithSchedule.Command;
+                var commandDateRange = CommandHelper.GetDateRange(command.StartDate, command.EndDate, command.DaysAgoToStart, DefaultDaysAgo);
+                var crossCommands = accountLevelCommands.Where(x => commandDateRange.IsCrossDateRange(x.Item2)).ToList();
+                foreach (var crossCommand in crossCommands)
+                {
+                    commandDateRange = commandDateRange.MergeDateRange(crossCommand.Item2);
+                    commandWithSchedule.ScheduledTime =
+                        crossCommand.Item3.ScheduledTime > commandWithSchedule.ScheduledTime
+                            ? crossCommand.Item3.ScheduledTime
+                            : commandWithSchedule.ScheduledTime;
+                    accountLevelCommands.Remove(crossCommand);
+                }
+                accountLevelCommands.Add(new Tuple<DASynchAdformStats, DateRange, CommandWithSchedule>(command, commandDateRange, commandWithSchedule));
+            }
+            var broadCommands = accountLevelCommands.Select(GetCommandWithCorrectDateRange).ToList();
+            return broadCommands;
+        }
+
+        private CommandWithSchedule GetCommandWithCorrectDateRange(Tuple<DASynchAdformStats, DateRange, CommandWithSchedule> setting)
+        {
+            setting.Item1.StartDate = setting.Item2.FromDate;
+            setting.Item1.EndDate = setting.Item2.ToDate;
+            setting.Item1.DaysAgoToStart = null;
+            setting.Item3.Command = setting.Item1;
+            return setting.Item3;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.CPProg.Adform;
@@ -65,8 +66,16 @@ namespace CakeExtracter.Etl.Adform.Loaders
         protected override int Load(List<AdfBannerSummary> items)
         {
             Logger.Info(accountId, "Loading {0} Adform Banner Summaries..", items.Count);
-            var result = MergeItemsWithExisted(items);
-            return result ? items.Count : 0;
+            try
+            {
+                var result = MergeItemsWithExisted(items);
+                return result ? items.Count : 0;
+            }
+            catch (Exception e)
+            {
+                ProcessFailedStatsExtraction(e, items);
+                return items.Count;
+            }
         }
 
         /// <inheritdoc />
@@ -88,6 +97,14 @@ namespace CakeExtracter.Etl.Adform.Loaders
         {
             base.SetSummaryParents(summary);
             summary.EntityId = summary.Banner.Id;
+        }
+
+        private void ProcessFailedStatsExtraction(Exception e, List<AdfBannerSummary> items)
+        {
+            Logger.Error(accountId, e);
+            var exception = GetFailedStatsLoadingException(e, items);
+            exception.ByBanner = true;
+            InvokeProcessFailedExtractionHandlers(exception);
         }
     }
 }
