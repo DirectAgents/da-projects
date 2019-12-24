@@ -36,7 +36,7 @@
                     <td>@summary.Account.Name</td>
                     <td style="text-align: center">@(summary.Account.Disabled ? "X" : "")</td>
                     <td style="text-align: right">@summary.EarliestDate.ToShortDateString()</td>
-                    @if (summary.LatestDate != null && summary.LatestDate.Value.Date == yesterday)
+                    @if (summary.LatestDate != null && DateTime.Compare(summary.LatestDate.Value.Date, yesterday) >= 0)
                     {
                         <td style="text-align: right; background-color: lightgreen">@summary.LatestDate.ToShortDateString()</td>
                     }
