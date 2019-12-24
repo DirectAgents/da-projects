@@ -125,17 +125,20 @@ namespace CakeExtracter.Commands
 
         private void DoETLs(ExtAccount account, DateRange dateRange, StatsTypeAgg statsType)
         {
-            var orderInsteadOfCampaign = accountIdsForOrders.Contains(account.ExternalId);
-            var adformUtility = CreateUtility(account);
-            int? numberOfAddedDailyItems = null;
             try
             {
+                var adformUtility = CreateUtility(account);
+                int? numberOfAddedDailyItems = null;
                 if (statsType.Daily)
                 {
                     numberOfAddedDailyItems = DoETL_Daily(dateRange, account, adformUtility);
                 }
-                var etlLevelActions = GetEtlLevelActions(account, dateRange, statsType, numberOfAddedDailyItems, orderInsteadOfCampaign, adformUtility);
-                Parallel.Invoke(etlLevelActions.ToArray());
+                if (numberOfAddedDailyItems == null || numberOfAddedDailyItems.Value > 0)
+                {
+                    var orderInsteadOfCampaign = accountIdsForOrders.Contains(account.ExternalId);
+                    var etlLevelActions = GetEtlLevelActions(account, dateRange, statsType, orderInsteadOfCampaign, adformUtility);
+                    Parallel.Invoke(etlLevelActions.ToArray());
+                }
             }
             catch (Exception ex)
             {
@@ -147,20 +150,19 @@ namespace CakeExtracter.Commands
             ExtAccount account,
             DateRange dateRange,
             StatsTypeAgg statsType,
-            int? numberOfAddedDailyItems,
             bool orderInsteadOfCampaign,
             AdformUtility adformUtility)
         {
             var etlLevelActions = new List<Action>();
-            if (statsType.Strategy && (numberOfAddedDailyItems == null || numberOfAddedDailyItems.Value > 0))
+            if (statsType.Strategy)
             {
                 etlLevelActions.Add(() => DoETL_Strategy(dateRange, account, orderInsteadOfCampaign, adformUtility));
             }
-            if (statsType.AdSet && (numberOfAddedDailyItems == null || numberOfAddedDailyItems.Value > 0))
+            if (statsType.AdSet)
             {
                 etlLevelActions.Add(() => DoETL_AdSet(dateRange, account, orderInsteadOfCampaign, adformUtility));
             }
-            if (statsType.Creative && (numberOfAddedDailyItems == null || numberOfAddedDailyItems.Value > 0))
+            if (statsType.Creative)
             {
                 etlLevelActions.Add(() => DoETL_Creative(dateRange, account, adformUtility));
             }
