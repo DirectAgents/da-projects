@@ -9,6 +9,8 @@
         attributedSalesSameSKU,
         attributedSalesOtherSKU,
         attributedUnitsOrdered,
-        attributedUnitsOrderedOtherSKU
+        attributedUnitsOrderedOtherSKU,
+        attributedDPV,
+        attributedUnitsSold
     }
 }

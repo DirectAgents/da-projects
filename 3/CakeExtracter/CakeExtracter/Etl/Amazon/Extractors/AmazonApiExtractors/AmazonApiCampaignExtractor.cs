@@ -153,7 +153,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
             return strategyItems.ToList();
         }
 
-        private IEnumerable<StrategySummary> ExtractStrategySummaries(DateTime date)
+        private IEnumerable<AmazonStrategyDailySummary> ExtractStrategySummaries(DateTime date)
         {
             var sums = _amazonUtility.ReportStrategy(date, clientId, true);
             var filteredSums = FilterByCampaigns(sums, x => x.CampaignName);
