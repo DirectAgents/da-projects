@@ -72,7 +72,7 @@ namespace FacebookAPI.Converters
         {
             var actionStats = row.actions;
             var actionVals = row.action_values;
-            var videoStats1 = row.video_10_sec_watched_actions;
+            var videoStats1 = row.video_thruplay_watched_actions;
             var videoStats2 = row.video_p100_watched_actions;
             fbSum.Actions = new Dictionary<string, FBAction>();
             if (videoStats1 != null)
@@ -81,9 +81,9 @@ namespace FacebookAPI.Converters
                 {
                     var action = new FBAction
                     {
-                        ActionType = "video_10_sec_watched",
+                        ActionType = "video_thruplay_watched",
                         ClickAttrWindow = clickAttribution,
-                        ViewAttrWindow = viewAttribution
+                        ViewAttrWindow = viewAttribution,
                     };
                     SetNum_ClickView(action, videoStat);
                     fbSum.Actions[action.ActionType] = action;
@@ -98,7 +98,7 @@ namespace FacebookAPI.Converters
                     {
                         ActionType = "video_p100_watched",
                         ClickAttrWindow = clickAttribution,
-                        ViewAttrWindow = viewAttribution
+                        ViewAttrWindow = viewAttribution,
                     };
                     SetNum_ClickView(action, videoStat);
                     fbSum.Actions[action.ActionType] = action;
