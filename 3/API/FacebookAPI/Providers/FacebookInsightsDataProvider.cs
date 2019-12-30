@@ -239,7 +239,7 @@ namespace FacebookAPI.Providers
             {
                 levelVal = "adset";
                 fieldsVal += ",adset_id,adset_name";
-                fieldsVal += ",video_10_sec_watched_actions,video_p100_watched_actions";
+                fieldsVal += ",video_thruplay_watched_actions,video_p100_watched_actions";
             }
             if (byAd)
             {
