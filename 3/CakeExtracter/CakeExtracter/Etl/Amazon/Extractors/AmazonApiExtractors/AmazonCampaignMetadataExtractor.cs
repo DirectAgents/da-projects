@@ -38,8 +38,8 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
         {
             var spCampaigns = AmazonUtility.GetCampaigns(CampaignType.SponsoredProducts, accountExternalId);
             var sbCampaigns = AmazonUtility.GetCampaigns(CampaignType.SponsoredBrands, accountExternalId);
-            var sdCampaigns = AmazonUtility.GetCampaigns(CampaignType.ProductDisplay, accountExternalId);
-            var campaigns = spCampaigns.Concat(sbCampaigns).Concat(sdCampaigns);
+           // var sdCampaigns = AmazonUtility.GetCampaigns(CampaignType.ProductDisplay, accountExternalId);
+           var campaigns = spCampaigns.Concat(sbCampaigns);
             return campaigns.ToList();
         }
     }

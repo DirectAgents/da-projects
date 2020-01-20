@@ -224,14 +224,14 @@ namespace CakeExtracter.Commands
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
                 () =>
                 {
-                    var extractor = DIKernel.Get<AmazonApiCampaignExtractor>(
+                    var extractor = DIKernel.Get<AmazonApiSponsoredDisplayExtractor>(
                         ("amazonUtility", amazonUtility),
                         ("dateRange", dateRange),
                         ("account", account),
                         ("campaignFilter", account.Filter),
                         ("campaignFilterOut", null));
                     var loader = DIKernel.Get<BaseAmazonLevelLoader<StrategySummary, StrategySummaryMetric>>(("accountId", account.Id));
-                    InitEtlEvents<StrategySummary, StrategySummaryMetric, AmazonApiCampaignExtractor,
+                    InitEtlEvents<StrategySummary, StrategySummaryMetric, AmazonApiSponsoredDisplayExtractor,
                         BaseAmazonLevelLoader<StrategySummary, StrategySummaryMetric>>(extractor, loader);
                     CommandHelper.DoEtl(extractor, loader);
                 },

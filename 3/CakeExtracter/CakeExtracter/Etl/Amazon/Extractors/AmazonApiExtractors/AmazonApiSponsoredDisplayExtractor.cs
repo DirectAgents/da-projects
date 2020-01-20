@@ -4,6 +4,7 @@ using System.Linq;
 using Amazon;
 using Amazon.Entities;
 using Amazon.Entities.Summaries;
+using Amazon.Enums;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Etl.Amazon.Exceptions;
@@ -15,23 +16,21 @@ using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
 {
-    /// <summary>
-    /// API extractor for the Search term level.
-    /// </summary>
-    internal class AmazonApiCampaignExtractor : BaseAmazonExtractor<StrategySummary>
+    //public class AmazonApiSponsoredDisplayExtractor
+    internal class AmazonApiSponsoredDisplayExtractor : BaseAmazonExtractor<StrategySummary>
     {
-        private readonly AmazonCampaignMetadataExtractor campaignMetadataExtractor;
+        private readonly AmazonSponsoredDisplayMetadataExtractor sponsoredDisplayMetadataExtractor;
 
         /// <inheritdoc cref="BaseAmazonExtractor{CampaignSummary}"/>
         /// <summary>
-        /// Initializes a new instance of the <see cref="AmazonApiCampaignExtractor" /> class.
+        /// Initializes a new instance of the <see cref="AmazonApiSponsoredDisplayExtractor" /> class.
         /// </summary>
         /// <param name="amazonUtility">The amazon utility.</param>
         /// <param name="dateRange">Extraction date range.</param>
         /// <param name="account">Account data.</param>
         /// <param name="campaignFilter">Campaign filter value.</param>
         /// <param name="campaignFilterOut">Campaign filter value out.</param>
-        public AmazonApiCampaignExtractor(
+        public AmazonApiSponsoredDisplayExtractor(
             AmazonUtility amazonUtility,
             DateRange dateRange,
             ExtAccount account,
@@ -39,7 +38,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
             string campaignFilterOut = null)
             : base(amazonUtility, dateRange, account, campaignFilter, campaignFilterOut)
         {
-            campaignMetadataExtractor = new AmazonCampaignMetadataExtractor(amazonUtility);
+            sponsoredDisplayMetadataExtractor = new AmazonSponsoredDisplayMetadataExtractor(amazonUtility);
         }
 
         /// <summary>
@@ -49,7 +48,9 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
         public virtual void RemoveOldData(DateTime date)
         {
             const int productDisplayCampaignTypeId = 8;
-            Logger.Info(accountId, "The cleaning of CampaignSummaries for account ({0}) has begun - {1}.", accountId, date);
+
+            Logger.Info(accountId, "The cleaning of CampaignSummaries for account ({0}) has begun - {1}.", accountId,
+                date);
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
                 () =>
                 {
@@ -57,19 +58,18 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
                         (ClientPortalProgContext db) =>
                         {
                             db.StrategySummaryMetrics.Where(x =>
-                                    x.Date == date && x.Strategy.AccountId == accountId &&
-                                    x.Strategy.TypeId == productDisplayCampaignTypeId)
+                                    x.Date == date && x.Strategy.AccountId == accountId && x.Strategy.TypeId == productDisplayCampaignTypeId)
                                 .DeleteFromQuery();
                             db.StrategySummaries.Where(x =>
-                                    x.Date == date && x.Strategy.AccountId == accountId &&
-                                    x.Strategy.TypeId == productDisplayCampaignTypeId)
+                                    x.Date == date && x.Strategy.AccountId == accountId && x.Strategy.TypeId == productDisplayCampaignTypeId)
                                 .DeleteFromQuery();
                         }, "DeleteFromQuery");
                 },
                 accountId,
                 AmazonJobLevels.Strategy,
                 AmazonJobOperations.CleanExistingData);
-            Logger.Info(accountId, "The cleaning of StrategySummaries for account ({0}) is over - {1}.", accountId, date);
+            Logger.Info(accountId, "The cleaning of StrategySummaries for account ({0}) is over - {1}.", accountId,
+                date);
         }
 
         /// <inheritdoc/>
@@ -116,13 +116,15 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
 
         private void ExtractDaily(DateTime date, List<AmazonCampaign> campaignsData)
         {
-            CommandExecutionContext.Current?.SetJobExecutionStateInHistory($"Strategy Level- {date.ToString()}", accountId);
+            CommandExecutionContext.Current?.SetJobExecutionStateInHistory($"Strategy Level- {date.ToString()}",
+                accountId);
             IEnumerable<StrategySummary> items = null;
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
                 () => { items = GetStrategyFromApi(date, campaignsData); },
                 accountId,
                 AmazonJobLevels.Strategy,
                 AmazonJobOperations.ReportExtracting);
+
             RemoveOldData(date);
             Add(items);
         }
@@ -133,7 +135,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
                 () =>
                 {
-                    campaignsData = campaignMetadataExtractor.LoadCampaignsMetadata(accountId, clientId).ToList();
+                    campaignsData = sponsoredDisplayMetadataExtractor.LoadSponsoredDisplayMetadata(accountId, clientId).ToList();
                 },
                 accountId,
                 AmazonJobLevels.Strategy,

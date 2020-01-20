@@ -28,8 +28,8 @@ namespace Amazon.Helpers
 
         private const string SegmentDimensionalQuery = "query";
         //Tactic parametr, Choose one of them 
-        //private const string TacticDimensionalQuery = "remarketing";
-        private const string TacticDimensionalQuery = "T00001";
+        private const string TacticDimensionalQuery = "remarketing";
+       // private const string TacticDimensionalQuery = "T00001";
 
         private const string SponsoredProductsCampaignType = "sponsoredProducts";
         private const string CampaignEnabledState = "enabled";
@@ -196,9 +196,9 @@ namespace Amazon.Helpers
                 {
                     CampaignType.ProductDisplay, new[]
                     {
-                       AttributedMetrics[AttributedMetricType.attributedDPV][AttributedMetricDaysInterval.Days14],
+                      /* AttributedMetrics[AttributedMetricType.attributedDPV][AttributedMetricDaysInterval.Days14],
                        AttributedMetrics[AttributedMetricType.attributedUnitsSold][AttributedMetricDaysInterval.Days14],
-                       AttributedMetrics[AttributedMetricType.attributedSales][AttributedMetricDaysInterval.Days14],
+                       AttributedMetrics[AttributedMetricType.attributedSales][AttributedMetricDaysInterval.Days14],*/
                        AttributedMetrics[AttributedMetricType.attributedUnitsOrdered][AttributedMetricDaysInterval.Days1],
                        AttributedMetrics[AttributedMetricType.attributedUnitsOrdered][AttributedMetricDaysInterval.Days7],
                        AttributedMetrics[AttributedMetricType.attributedUnitsOrdered][AttributedMetricDaysInterval.Days14],
