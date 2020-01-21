@@ -31,6 +31,7 @@ namespace CakeExtracter.Commands.Selenium
         private const int DefaultDaysAgo = 41;
 
         private PdaDataProviderBuilder pdaDataProviderBuilder;
+        private PdaCommandConfigurationManager configurationManager;
 
         /// <summary>
         /// Gets or sets the command argument: Account ID in the database
@@ -105,8 +106,8 @@ namespace CakeExtracter.Commands.Selenium
         /// <returns>Execution code.</returns>
         public override int Execute(string[] remainingArguments)
         {
-            IntervalBetweenUnsuccessfulAndNewRequestInMinutes =
-                PdaCommandConfigurationManager.GetIntervalBetweenUnsuccessfulAndNewRequest();
+            SetCommandConfigurationManager();
+            IntervalBetweenUnsuccessfulAndNewRequestInMinutes = configurationManager.GetIntervalBetweenUnsuccessfulAndNewRequest();
             var pdaDataProvider = BuildPdaDataProvider();
             RunEtls(pdaDataProvider);
             return 0;
@@ -135,8 +136,8 @@ namespace CakeExtracter.Commands.Selenium
             try
             {
                 var loggerWithoutAccountId = GetLoggerWithoutAccountId();
-                pdaDataProviderBuilder = new PdaDataProviderBuilder(IsHidingBrowserWindow);
-                var pdaDataProvider = pdaDataProviderBuilder.BuildDataProvider(loggerWithoutAccountId);
+                pdaDataProviderBuilder = new PdaDataProviderBuilder(configurationManager);
+                var pdaDataProvider = pdaDataProviderBuilder.BuildDataProvider(loggerWithoutAccountId, IsHidingBrowserWindow);
                 return pdaDataProvider;
             }
             catch (Exception e)
@@ -268,6 +269,23 @@ namespace CakeExtracter.Commands.Selenium
             }
             var account = repository.GetAccount(AccountId.Value);
             return new List<ExtAccount> { account };
+        }
+
+        private void SetCommandConfigurationManager()
+        {
+            const string cookiesDirectoryNameConfigurationKey = "PDA_CookiesDirectoryName";
+            const string emailConfigurationKey = "PDA_EMail";
+            const string emailPasswordConfigurationKey = "PDA_EMailPassword";
+            const string maxRetryAttemptsConfigurationKey = "PDA_MaxRetryAttempts";
+            const string pauseBetweenAttemptsConfigurationKey = "PDA_PauseBetweenAttemptsInSeconds";
+            const string intervalBetweenUnsuccessfulAndNewRequestsConfigurationKey = "PDA_IntervalBetweenUnsuccessfulAndNewRequestsInMinutes";
+            configurationManager = new PdaCommandConfigurationManager(
+                cookiesDirectoryNameConfigurationKey,
+                emailConfigurationKey,
+                emailPasswordConfigurationKey,
+                maxRetryAttemptsConfigurationKey,
+                pauseBetweenAttemptsConfigurationKey,
+                intervalBetweenUnsuccessfulAndNewRequestsConfigurationKey);
         }
 
         private SeleniumLogger GetLoggerWithoutAccountId()

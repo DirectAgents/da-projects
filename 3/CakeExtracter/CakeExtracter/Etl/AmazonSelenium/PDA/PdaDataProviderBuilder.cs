@@ -15,9 +15,9 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA
     /// </summary>
     internal class PdaDataProviderBuilder
     {
-        private readonly bool isHidingBrowserWindow;
         private readonly int maxRetryAttempts;
         private readonly TimeSpan pauseBetweenAttempts;
+        private readonly PdaCommandConfigurationManager configurationManager;
         private AuthorizationModel authorizationModel;
         private PdaDataProvider pdaDataProvider;
         private Dictionary<string, string> availableProfileUrls;
@@ -25,12 +25,11 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA
         /// <summary>
         /// Initializes a new instance of the <see cref="PdaDataProviderBuilder"/> class.
         /// </summary>
-        /// <param name="isHidingBrowserWindow">Include hiding the browser window.</param>
-        public PdaDataProviderBuilder(bool isHidingBrowserWindow)
+        public PdaDataProviderBuilder(PdaCommandConfigurationManager configurationManager)
         {
-            this.isHidingBrowserWindow = isHidingBrowserWindow;
-            maxRetryAttempts = PdaCommandConfigurationManager.GetMaxRetryAttempts();
-            pauseBetweenAttempts = PdaCommandConfigurationManager.GetPauseBetweenAttempts();
+            this.configurationManager = configurationManager;
+            maxRetryAttempts = this.configurationManager.GetMaxRetryAttempts();
+            pauseBetweenAttempts = this.configurationManager.GetPauseBetweenAttempts();
         }
 
         /// <summary>
@@ -38,11 +37,11 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA
         /// </summary>
         /// <param name="loggerWithoutAccountId">Logger without info about account ID.</param>
         /// <returns>Instance of the PDA Data Provider.</returns>
-        public PdaDataProvider BuildDataProvider(SeleniumLogger loggerWithoutAccountId)
+        public PdaDataProvider BuildDataProvider(SeleniumLogger loggerWithoutAccountId, bool isHidingBrowserWindow)
         {
             authorizationModel = GetAuthorizationModel();
-            var pageActionsManager = GetPageActionsManager(loggerWithoutAccountId);
-            var loginProcessManager = GetLoginProcessManager(pageActionsManager, loggerWithoutAccountId);
+            var pageActionsManager = GetPageActionsManager(loggerWithoutAccountId, isHidingBrowserWindow);
+            var loginProcessManager = GetLoginProcessManager(pageActionsManager, loggerWithoutAccountId, authorizationModel);
             var pdaProfileUrlManager = GetProfileUrlManager(pageActionsManager, loginProcessManager);
             pdaDataProvider = PdaDataProvider.GetPdaDataProviderInstance(loginProcessManager, pdaProfileUrlManager);
             pdaDataProvider.LoginToPortal();
@@ -89,9 +88,9 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA
         {
             try
             {
-                var emailLogin = PdaCommandConfigurationManager.GetEMail();
-                var emailPassword = PdaCommandConfigurationManager.GetEMailPassword();
-                var cookieDirectoryName = PdaCommandConfigurationManager.GetCookiesDirectoryName();
+                var emailLogin = configurationManager.GetEMail();
+                var emailPassword = configurationManager.GetEMailPassword();
+                var cookieDirectoryName = configurationManager.GetCookiesDirectoryName();
                 return new AuthorizationModel
                 {
                     Login = emailLogin,
@@ -105,15 +104,12 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA
             }
         }
 
-        private AmazonPdaActionsWithPagesManager GetPageActionsManager(SeleniumLogger loggerWithoutAccountId)
+        private AmazonPdaActionsWithPagesManager GetPageActionsManager(SeleniumLogger logger, bool isHidingBrowserWindow)
         {
             try
             {
                 var timeoutInMinutes = SeleniumCommandConfigurationManager.GetWaitPageTimeout();
-                return new AmazonPdaActionsWithPagesManager(
-                    timeoutInMinutes,
-                    isHidingBrowserWindow,
-                    loggerWithoutAccountId);
+                return new AmazonPdaActionsWithPagesManager(timeoutInMinutes, isHidingBrowserWindow, logger);
             }
             catch (Exception e)
             {
@@ -122,11 +118,13 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA
         }
 
         private PdaLoginManager GetLoginProcessManager(
-            AmazonPdaActionsWithPagesManager pageActionsManager, SeleniumLogger loggerWithoutAccountId)
+            AmazonPdaActionsWithPagesManager pageActionsManager,
+            SeleniumLogger logger,
+            AuthorizationModel authorizationModel)
         {
             try
             {
-                return new PdaLoginManager(authorizationModel, pageActionsManager, loggerWithoutAccountId);
+                return new PdaLoginManager(authorizationModel, pageActionsManager, logger);
             }
             catch (Exception e)
             {

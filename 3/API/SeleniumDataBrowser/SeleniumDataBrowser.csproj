@@ -74,6 +74,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\AmazonAdvertisingProfileHelper.cs" />
     <Compile Include="Helpers\SeleniumLogger.cs" />
     <Compile Include="PageActions\AmazonLoginPageObjects.cs" />
     <Compile Include="PDA\AmazonConsoleManagerUtility.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="PDA\PageActions\AmazonPdaPageObjects.cs" />
     <Compile Include="PDA\PdaDataProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="GenerationReportsTrigger\AmazonReportGenerator.cs" />
     <Compile Include="VCD\Helpers\ReportDownloading\Constants\ResponseDataConstants.cs" />
     <Compile Include="VCD\Helpers\ReportDownloading\VcdComposingReportDataHelper.cs" />
     <Compile Include="VCD\Helpers\VcdLoginManager.cs" />
