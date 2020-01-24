@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using SeleniumDataBrowser.PDA.PageActions;
 using SeleniumDataBrowser.PageActions;
 using Polly;
-using SeleniumDataBrowser.Helpers;
 
 namespace SeleniumDataBrowser.PDA.Helpers
 {
@@ -49,26 +48,15 @@ namespace SeleniumDataBrowser.PDA.Helpers
             return availableProfileUrls;
         }
 
-        /// <summary>
-        /// Gets the URLs for the available profiles to the "Reports" page of the Advertising Portal.
-        /// </summary>
-        /// <returns>Dictionary of available profile URLs.</returns>
-        public Dictionary<string, string> GetAvailableReportsProfileUrls()
-        {
-            GoToPortalMainPage();
-            var availableProfileUrls = TryGetAvailableProfiles();
-            var reportProfileUrls = ModifyCampaignUrlsToReportUrls(availableProfileUrls);
-            return reportProfileUrls;
-        }
-
         private void GoToPortalMainPage()
         {
-            pageActionsManager.NavigateToUrl(CampaignPageUrl, AmazonPdaPageObjects.FilterByButton);
+            pageActionsManager.NavigateToUrl(CampaignPageUrl);
             if (!pageActionsManager.IsElementPresent(AmazonPdaPageObjects.FilterByButton)
                 && pageActionsManager.IsElementPresent(AmazonLoginPageObjects.LoginPassInput))
             {
                 // need to repeat the password
-                loginProcessManager.RepeatPasswordForLogin(AmazonPdaPageObjects.FilterByButton);
+                loginProcessManager.RepeatPasswordForLogin();
+                pageActionsManager.NavigateToUrl(CampaignPageUrl, AmazonPdaPageObjects.FilterByButton);
             }
         }
 
@@ -78,17 +66,6 @@ namespace SeleniumDataBrowser.PDA.Helpers
                 .Handle<Exception>()
                 .WaitAndRetry(maxRetryAttempts, i => pauseBetweenAttempts)
                 .Execute(pageActionsManager.GetAvailableProfileUrls);
-        }
-
-        private Dictionary<string, string> ModifyCampaignUrlsToReportUrls(Dictionary<string, string> campaignProfileUrls)
-        {
-            var reportProfileUrls = new Dictionary<string, string>();
-            foreach (var campaignProfile in campaignProfileUrls)
-            {
-                var reportProfileUrl = AmazonAdvertisingProfileHelper.GetReportProfileUrlByCampaignUrl(campaignProfile.Value);
-                reportProfileUrls.Add(campaignProfile.Key, reportProfileUrl);
-            }
-            return reportProfileUrls;
         }
     }
 }

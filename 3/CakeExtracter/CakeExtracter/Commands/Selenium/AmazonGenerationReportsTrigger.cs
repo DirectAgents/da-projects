@@ -53,8 +53,28 @@ namespace CakeExtracter.Commands.Selenium
         {
             SetCommandConfigurationManager();
             var reportGenerator = BuildReportGenerator();
-            RunGenerationOfReports(reportGenerator);
+            Logger.Info("Amazon Generation reports.");
+            reportGenerator.GenerateReports();
+            Logger.Info("Amazon Reports Creation has been finished.");
             return 0;
+        }
+
+        private void SetCommandConfigurationManager()
+        {
+            const string cookiesDirectoryNameConfigurationKey = "GenerationReports_CookiesDirectoryName";
+            const string emailConfigurationKey = "GenerationReports_EMail";
+            const string emailPasswordConfigurationKey = "GenerationReports_EMailPassword";
+            const string maxRetryAttemptsConfigurationKey = "GenerationReports_MaxRetryAttempts";
+            const string pauseBetweenAttemptsConfigurationKey = "GenerationReports_PauseBetweenAttemptsInSeconds";
+            const string intervalBetweenUnsuccessfulAndNewRequestsConfigurationKey =
+                "GenerationReports_IntervalBetweenUnsuccessfulAndNewRequestsInMinutes";
+            configurationManager = new PdaCommandConfigurationManager(
+                cookiesDirectoryNameConfigurationKey,
+                emailConfigurationKey,
+                emailPasswordConfigurationKey,
+                maxRetryAttemptsConfigurationKey,
+                pauseBetweenAttemptsConfigurationKey,
+                intervalBetweenUnsuccessfulAndNewRequestsConfigurationKey);
         }
 
         private AmazonReportGenerator BuildReportGenerator()
@@ -70,30 +90,6 @@ namespace CakeExtracter.Commands.Selenium
             {
                 throw new Exception("Failed to build PDA data provider.", e);
             }
-        }
-
-        private void RunGenerationOfReports(AmazonReportGenerator reportGenerator)
-        {
-            Logger.Info("Amazon Generation reports.");
-            reportGenerator.GenerateReports();
-            Logger.Info("Amazon Reports Creation has been finished.");
-        }
-
-        private void SetCommandConfigurationManager()
-        {
-            const string cookiesDirectoryNameConfigurationKey = "GenerationReports_CookiesDirectoryName";
-            const string emailConfigurationKey = "GenerationReports_EMail";
-            const string emailPasswordConfigurationKey = "GenerationReports_EMailPassword";
-            const string maxRetryAttemptsConfigurationKey = "GenerationReports_MaxRetryAttempts";
-            const string pauseBetweenAttemptsConfigurationKey = "GenerationReports_PauseBetweenAttemptsInSeconds";
-            const string intervalBetweenUnsuccessfulAndNewRequestsConfigurationKey = "GenerationReports_IntervalBetweenUnsuccessfulAndNewRequestsInMinutes";
-            configurationManager = new PdaCommandConfigurationManager(
-                cookiesDirectoryNameConfigurationKey,
-                emailConfigurationKey,
-                emailPasswordConfigurationKey,
-                maxRetryAttemptsConfigurationKey,
-                pauseBetweenAttemptsConfigurationKey,
-                intervalBetweenUnsuccessfulAndNewRequestsConfigurationKey);
         }
     }
 }

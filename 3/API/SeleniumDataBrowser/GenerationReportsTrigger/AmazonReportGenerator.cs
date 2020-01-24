@@ -1,25 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using SeleniumDataBrowser.GenerationReportsTrigger.Helpers;
+using SeleniumDataBrowser.GenerationReportsTrigger.PageActions;
 using SeleniumDataBrowser.Helpers;
 using SeleniumDataBrowser.PDA.Helpers;
 
 namespace SeleniumDataBrowser.GenerationReportsTrigger
 {
-    public class AmazonReportGenerator //: ISeleniumProvider
+    public class AmazonReportGenerator
     {
         private readonly PdaLoginManager loginProcessManager;
-        private readonly PdaProfileUrlManager profileUrlManager;
+        private readonly GenerationReportsProfileUrlManager profileUrlManager;
+        private readonly GenerationReportsActionsWithPagesManager actionsWithPagesManager;
         private readonly SeleniumLogger logger;
 
         private Dictionary<string, string> reportProfileUrls;
 
         public AmazonReportGenerator(
             PdaLoginManager loginProcessManager,
-            PdaProfileUrlManager profileUrlManager,
+            GenerationReportsProfileUrlManager profileUrlManager,
+            GenerationReportsActionsWithPagesManager actionsWithPagesManager,
             SeleniumLogger logger)
         {
             this.loginProcessManager = loginProcessManager;
             this.profileUrlManager = profileUrlManager;
+            this.actionsWithPagesManager = actionsWithPagesManager;
             this.logger = logger;
         }
 
@@ -28,7 +33,14 @@ namespace SeleniumDataBrowser.GenerationReportsTrigger
         /// </summary>
         public void LoginToPortal()
         {
-            loginProcessManager.LoginToPortal();
+            try
+            {
+                loginProcessManager.LoginToPortal();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to login to Amazon Advertiser Portal.", e);
+            }
         }
 
         /// <summary>
@@ -51,18 +63,12 @@ namespace SeleniumDataBrowser.GenerationReportsTrigger
             }
         }
 
-        ///// <summary>
-        ///// Sets current cookies that uses web driver for PDA data provider.
-        ///// </summary>
-        ///// <param name="pageActionsManager">Manager of actions with web pages.</param>
-        //public void SetCookiesForDataProvider(AmazonPdaActionsWithPagesManager pageActionsManager)
-        //{
-        //    cookies = pageActionsManager.GetAllCookies();
-        //}
-
         public void GenerateReports()
         {
-            
+            foreach (var reportProfile in reportProfileUrls)
+            {
+                actionsWithPagesManager.GenerateSearchTermReport(reportProfile.Value);
+            }
         }
     }
 }

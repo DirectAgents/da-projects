@@ -74,7 +74,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helpers\AmazonAdvertisingProfileHelper.cs" />
+    <Compile Include="GenerationReportsTrigger\Helpers\GenerationReportsProfileUrlManager.cs" />
+    <Compile Include="GenerationReportsTrigger\PageActions\GenerationReportsActionsWithPagesManager.cs" />
+    <Compile Include="GenerationReportsTrigger\PageActions\GenerationReportsPageObjects.cs" />
     <Compile Include="Helpers\SeleniumLogger.cs" />
     <Compile Include="PageActions\AmazonLoginPageObjects.cs" />
     <Compile Include="PDA\AmazonConsoleManagerUtility.cs" />

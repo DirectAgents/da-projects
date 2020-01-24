@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
@@ -148,6 +149,22 @@ namespace SeleniumDataBrowser.PageActions
         }
 
         /// <summary>
+        /// Clicks on the specified web-element.
+        /// </summary>
+        /// <param name="element">Web-element.</param>
+        protected static void ClickElement(IWebElement element)
+        {
+            try
+            {
+                element.Click();
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Could not click on the element [{element}]: {e.Message}", e);
+            }
+        }
+
+        /// <summary>
         /// Enters the specified characters in the specified web-element.
         /// </summary>
         /// <param name="byElement">Web-element.</param>
@@ -221,6 +238,23 @@ namespace SeleniumDataBrowser.PageActions
         }
 
         /// <summary>
+        /// Clears on the specified web-element.
+        /// </summary>
+        /// <param name="byElement">Web-element.</param>
+        protected void ClearElement(By byElement)
+        {
+            try
+            {
+                var element = Driver.FindElement(byElement);
+                element.Clear();
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Could not clear on the element [{byElement}]: {e.Message}", e);
+            }
+        }
+
+        /// <summary>
         /// Moves to the specified web-element and clicks on it.
         /// </summary>
         /// <param name="byElement">Web-element.</param>
@@ -279,6 +313,42 @@ namespace SeleniumDataBrowser.PageActions
             {
                 throw new Exception($"Could not wait the loader [{loaderElement}]: {e.Message}", e);
             }
+        }
+
+        /// <summary>
+        /// Gets first the web element from the list of web elements by its text.
+        /// </summary>
+        /// <param name="webElements">List of web elements.</param>
+        /// <param name="webElementText">Text of web element.</param>
+        /// <returns>Founded web element.</returns>
+        protected IWebElement GetWebElementFromListByText(IEnumerable<IWebElement> webElements, string webElementText)
+        {
+            return webElements.First(dataUnit => string.Equals(dataUnit.Text, webElementText, StringComparison.CurrentCulture));
+        }
+
+        protected IEnumerable<IWebElement> GetItemListFromSpecifiedDropdown(By dropdownElement, By dropdownItemListElement, By dropdownItem)
+        {
+            WaitElementClickable(dropdownElement);
+            ClickElement(dropdownElement);
+            //MoveToElementAndClick(dropdownElement);
+            //WaitElementClickable(dropdownItemListElement);
+            return GetChildrenElements(dropdownItemListElement, dropdownItem);
+        }
+
+        protected void SetupTextToInput(By inputElement, string text)
+        {
+            WaitElementClickable(inputElement);
+            ClickElement(inputElement);
+            ClearElement(inputElement);
+            SendKeys(inputElement, text);
+        }
+
+        protected void SetupSpecifiedItemFromDropdownItemList(
+            Func<IEnumerable<IWebElement>> fGetItemListFromDropdown, string textOfElement)
+        {
+            var items = fGetItemListFromDropdown();
+            var itemElement = GetWebElementFromListByText(items, textOfElement);
+            ClickElement(itemElement);
         }
 
         private bool IsElementVisible(By byElement)

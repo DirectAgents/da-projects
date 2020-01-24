@@ -2,6 +2,8 @@
 using CakeExtracter.Etl.AmazonSelenium.Configuration;
 using CakeExtracter.Etl.AmazonSelenium.PDA.Configuration;
 using SeleniumDataBrowser.GenerationReportsTrigger;
+using SeleniumDataBrowser.GenerationReportsTrigger.Helpers;
+using SeleniumDataBrowser.GenerationReportsTrigger.PageActions;
 using SeleniumDataBrowser.Helpers;
 using SeleniumDataBrowser.Models;
 using SeleniumDataBrowser.PDA.Helpers;
@@ -33,7 +35,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.GenerationReportsTrigger
             var pageActionsManager = GetPageActionsManager(logger, isHidingBrowserWindow);
             var loginProcessManager = GetLoginProcessManager(pageActionsManager, logger);
             var pdaProfileUrlManager = GetProfileUrlManager(pageActionsManager, loginProcessManager);
-            reportGenerator = new AmazonReportGenerator(loginProcessManager, pdaProfileUrlManager, logger);
+            reportGenerator = new AmazonReportGenerator(loginProcessManager, pdaProfileUrlManager, pageActionsManager, logger);
             reportGenerator.LoginToPortal();
             reportGenerator.SetAvailableProfileUrls();
             return reportGenerator;
@@ -59,12 +61,12 @@ namespace CakeExtracter.Etl.AmazonSelenium.GenerationReportsTrigger
             }
         }
 
-        private AmazonPdaActionsWithPagesManager GetPageActionsManager(SeleniumLogger logger, bool isHidingBrowserWindow)
+        private GenerationReportsActionsWithPagesManager GetPageActionsManager(SeleniumLogger logger, bool isHidingBrowserWindow)
         {
             try
             {
                 var timeoutInMinutes = SeleniumCommandConfigurationManager.GetWaitPageTimeout();
-                return new AmazonPdaActionsWithPagesManager(timeoutInMinutes, isHidingBrowserWindow, logger);
+                return new GenerationReportsActionsWithPagesManager(timeoutInMinutes, isHidingBrowserWindow, logger);
             }
             catch (Exception e)
             {
@@ -84,12 +86,12 @@ namespace CakeExtracter.Etl.AmazonSelenium.GenerationReportsTrigger
             }
         }
 
-        private PdaProfileUrlManager GetProfileUrlManager(
-            AmazonPdaActionsWithPagesManager pageActionsManager, PdaLoginManager loginProcessManager)
+        private GenerationReportsProfileUrlManager GetProfileUrlManager(
+            GenerationReportsActionsWithPagesManager pageActionsManager, PdaLoginManager loginProcessManager)
         {
             try
             {
-                return new PdaProfileUrlManager(pageActionsManager, loginProcessManager, maxRetryAttempts, pauseBetweenAttempts);
+                return new GenerationReportsProfileUrlManager(pageActionsManager, loginProcessManager, maxRetryAttempts, pauseBetweenAttempts);
             }
             catch (Exception e)
             {
