@@ -260,6 +260,7 @@
     <Compile Include="Areas\ProgAdmin\Controllers\ActionsController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\CampStatsController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\DailySummariesController.cs" />
+    <Compile Include="Areas\ProgAdmin\Controllers\DBM\DbmController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\ExtAccountsController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\AdvertisersController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\BudgetInfosController.cs" />
@@ -279,6 +280,7 @@
     <Compile Include="Areas\ProgAdmin\Models\CampaignPacingVM.cs" />
     <Compile Include="Areas\ProgAdmin\Models\DailySummariesVM.cs" />
     <Compile Include="Areas\ProgAdmin\Models\DashboardVM.cs" />
+    <Compile Include="Areas\ProgAdmin\Models\DBM\DbmLatestsInfoVm.cs" />
     <Compile Include="Areas\ProgAdmin\Models\ExtraItemsVM.cs" />
     <Compile Include="Areas\ProgAdmin\Models\FacebookActionsTotalsVm.cs" />
     <Compile Include="Areas\ProgAdmin\Models\FacebookTotalsInfoVm.cs" />
@@ -1214,6 +1216,7 @@
     <Content Include="Areas\ProgAdmin\Views\Shared\DatePicker.cshtml" />
     <Content Include="Areas\ProgAdmin\Views\Facebook\ActionTotals.cshtml" />
     <Content Include="Areas\Cake\Views\Advertisers\ShowStats.cshtml" />
+    <Content Include="Areas\ProgAdmin\Views\DBM\Latests.cshtml" />
     <None Include="Properties\PublishProfiles\dagents_vm_staging.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\DayOfWeek.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
