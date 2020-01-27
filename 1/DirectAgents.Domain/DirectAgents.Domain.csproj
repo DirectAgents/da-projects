@@ -145,6 +145,9 @@
     <Compile Include="Migrations\201909270822065_Mig_Affiliate_AccountManager.Designer.cs">
       <DependentUpon>201909270822065_Mig_Affiliate_AccountManager.cs</DependentUpon>
     </Compile>
+    <Compile Include="SpecialPlatformsDataProviders\DBM\DbmWebPortalDataService.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\DBM\IDbmWebPortalDataService.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\DBM\Models\DbmLatestsInfo.cs" />
     <Compile Include="SpecialPlatformsDataProviders\Facebook\IFacebookWebPortalDataService.cs" />
     <Compile Include="Abstract\IMainRepository.cs" />
     <Compile Include="Abstract\IPlatformAccountRepository.cs" />
@@ -1265,6 +1268,7 @@
     <Analyzer Include="..\..\3\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\..\3\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

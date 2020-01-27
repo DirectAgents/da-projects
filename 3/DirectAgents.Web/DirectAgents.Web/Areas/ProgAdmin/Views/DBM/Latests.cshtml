@@ -1,0 +1,54 @@
+﻿@model DirectAgents.Web.Areas.ProgAdmin.Models.DBM.DBMLatestsInfoVm
+@{
+    ViewBag.Title = "DBM Latests Stats";
+    var yesterday = DateTime.Today.AddDays(-1);
+}
+
+<h2>DBM Latests Stats</h2>
+
+<table>
+    <tr>
+        <th colspan="3" style="text-align:right">X = disabled</th>
+        <th colspan="2">LineItem</th>
+        <th colspan="2">Creative</th>
+    </tr>
+    <tr>
+        <th>ID</th>
+        <th colspan="2">External&nbsp;Account&nbsp;&nbsp;&nbsp;</th>
+        <th>Earliest</th>
+        <th>Latest</th>
+
+        <th>Earliest</th>
+        <th>Latest</th>
+    </tr>
+    @foreach (var accountSummary in Model.LatestsInfo)
+    {
+
+        <tr>
+            <td>@accountSummary.Account.Id</td>
+            <td>@accountSummary.Account.Name</td>
+            <td style="text-align: center">@(accountSummary.Account.Disabled ? "X" : "")</td>
+            @if (accountSummary.LineItemLatestsInfo != null)
+            {
+                <td>@accountSummary.LineItemLatestsInfo.EarliestDate.ToShortDateString()</td>
+                <td style="@(accountSummary.LineItemLatestsInfo.LatestDate >=  yesterday ? "background-color: lightgreen" : "")">@accountSummary.LineItemLatestsInfo.LatestDate.ToShortDateString()</td>
+            }
+            else
+            {
+                <td></td>
+                <td></td>
+            }
+
+            @if (accountSummary.CreativeLatestsInfo != null)
+            {
+                <td>@accountSummary.CreativeLatestsInfo.EarliestDate.ToShortDateString()</td>
+                <td style="@(accountSummary.CreativeLatestsInfo.LatestDate >=  yesterday ? "background-color: lightgreen" : "")">@accountSummary.CreativeLatestsInfo.LatestDate.ToShortDateString()</td>
+            }
+            else
+            {
+                <td></td>
+                <td></td>
+            }
+        </tr>
+    }
+</table>
