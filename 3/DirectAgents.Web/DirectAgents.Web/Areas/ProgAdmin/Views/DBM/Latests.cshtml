@@ -1,4 +1,4 @@
-﻿@model DirectAgents.Web.Areas.ProgAdmin.Models.DBM.DBMLatestsInfoVm
+﻿@model DirectAgents.Web.Areas.ProgAdmin.Models.DBM.DbmLatestsInfoVm
 @{
     ViewBag.Title = "DBM Latests Stats";
     var yesterday = DateTime.Today.AddDays(-1);
@@ -17,13 +17,11 @@
         <th colspan="2">External&nbsp;Account&nbsp;&nbsp;&nbsp;</th>
         <th>Earliest</th>
         <th>Latest</th>
-
         <th>Earliest</th>
         <th>Latest</th>
     </tr>
     @foreach (var accountSummary in Model.LatestsInfo)
     {
-
         <tr>
             <td>@accountSummary.Account.Id</td>
             <td>@accountSummary.Account.Name</td>
@@ -31,18 +29,21 @@
             @if (accountSummary.LineItemLatestsInfo != null)
             {
                 <td>@accountSummary.LineItemLatestsInfo.EarliestDate.ToShortDateString()</td>
-                <td style="@(accountSummary.LineItemLatestsInfo.LatestDate >=  yesterday ? "background-color: lightgreen" : "")">@accountSummary.LineItemLatestsInfo.LatestDate.ToShortDateString()</td>
+                <td style="@(accountSummary.LineItemLatestsInfo.LatestDate >= yesterday ? "background-color: lightgreen" : "")">
+                    @accountSummary.LineItemLatestsInfo.LatestDate.ToShortDateString()
+                </td>
             }
             else
             {
                 <td></td>
                 <td></td>
             }
-
             @if (accountSummary.CreativeLatestsInfo != null)
             {
                 <td>@accountSummary.CreativeLatestsInfo.EarliestDate.ToShortDateString()</td>
-                <td style="@(accountSummary.CreativeLatestsInfo.LatestDate >=  yesterday ? "background-color: lightgreen" : "")">@accountSummary.CreativeLatestsInfo.LatestDate.ToShortDateString()</td>
+                <td style="@(accountSummary.CreativeLatestsInfo.LatestDate >= yesterday ? "background-color: lightgreen" : "")">
+                    @accountSummary.CreativeLatestsInfo.LatestDate.ToShortDateString()
+                </td>
             }
             else
             {

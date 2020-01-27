@@ -260,7 +260,7 @@
     <Compile Include="Areas\ProgAdmin\Controllers\ActionsController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\CampStatsController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\DailySummariesController.cs" />
-    <Compile Include="Areas\ProgAdmin\Controllers\DBM\DBMController.cs" />
+    <Compile Include="Areas\ProgAdmin\Controllers\DBM\DbmController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\ExtAccountsController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\AdvertisersController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\BudgetInfosController.cs" />
@@ -280,7 +280,7 @@
     <Compile Include="Areas\ProgAdmin\Models\CampaignPacingVM.cs" />
     <Compile Include="Areas\ProgAdmin\Models\DailySummariesVM.cs" />
     <Compile Include="Areas\ProgAdmin\Models\DashboardVM.cs" />
-    <Compile Include="Areas\ProgAdmin\Models\DBM\DBMLatestsInfoVm.cs" />
+    <Compile Include="Areas\ProgAdmin\Models\DBM\DbmLatestsInfoVm.cs" />
     <Compile Include="Areas\ProgAdmin\Models\ExtraItemsVM.cs" />
     <Compile Include="Areas\ProgAdmin\Models\FacebookActionsTotalsVm.cs" />
     <Compile Include="Areas\ProgAdmin\Models\FacebookTotalsInfoVm.cs" />

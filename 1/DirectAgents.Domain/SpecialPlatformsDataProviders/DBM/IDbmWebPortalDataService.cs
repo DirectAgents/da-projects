@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DirectAgents.Domain.SpecialPlatformsDataProviders.DBM.Models;
 
 namespace DirectAgents.Domain.SpecialPlatformsDataProviders.DBM

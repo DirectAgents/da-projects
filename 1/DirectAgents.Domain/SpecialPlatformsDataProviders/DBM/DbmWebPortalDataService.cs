@@ -1,10 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
 using DirectAgents.Domain.SpecialPlatformsDataProviders.DBM.Models;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
-using DirectAgents.Domain.Entities.CPProg.DBM.Entities;
 using DirectAgents.Domain.SpecialPlatformsDataProviders.Models;
 
 namespace DirectAgents.Domain.SpecialPlatformsDataProviders.DBM

@@ -1,5 +1,4 @@
-﻿using DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DirectAgents.Domain.SpecialPlatformsDataProviders.DBM.Models;
 
 namespace DirectAgents.Web.Areas.ProgAdmin.Models.DBM
@@ -7,7 +6,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Models.DBM
     /// <summary>
     /// Web model for latests DBM info.
     /// </summary>
-    public class DBMLatestsInfoVm
+    public class DbmLatestsInfoVm
     {
         /// <summary>
         /// Gets or sets the latests information.

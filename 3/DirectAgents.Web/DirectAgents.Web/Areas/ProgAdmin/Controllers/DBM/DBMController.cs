@@ -1,8 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Domain.SpecialPlatformsDataProviders.DBM;
-using DirectAgents.Web.Areas.ProgAdmin.Models;
 using DirectAgents.Web.Areas.ProgAdmin.Models.DBM;
 
 namespace DirectAgents.Web.Areas.ProgAdmin.Controllers.DBM
@@ -11,15 +9,15 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers.DBM
     /// DBM Stats Controller.
     /// </summary>
     /// <seealso cref="System.Web.Mvc.Controller" />
-    public class DBMController : Controller
+    public class DbmController : Controller
     {
         private readonly IDbmWebPortalDataService dataService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DBMController"/> class.
+        /// Initializes a new instance of the <see cref="DbmController"/> class.
         /// </summary>
         /// <param name="dataService">The DBM web portal data service.</param>
-        public DBMController(IDbmWebPortalDataService dataService)
+        public DbmController(IDbmWebPortalDataService dataService)
         {
             this.dataService = dataService;
         }
@@ -34,7 +32,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers.DBM
         public ActionResult Latests()
         {
             var latests = dataService.GetAccountsLatestsInfo();
-            var model = new DBMLatestsInfoVm
+            var model = new DbmLatestsInfoVm
             {
                 LatestsInfo = latests.ToList(),
             };
