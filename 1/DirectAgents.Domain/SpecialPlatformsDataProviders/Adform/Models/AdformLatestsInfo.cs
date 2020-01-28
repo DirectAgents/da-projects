@@ -3,6 +3,9 @@ using DirectAgents.Domain.SpecialPlatformsDataProviders.Models;
 
 namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Adform.Models
 {
+    /// <summary>
+    /// Latests info for Adform accounts(earliest date, latest date)
+    /// </summary>
     public class AdformLatestsInfo
     {
         /// <summary>

@@ -25,9 +25,6 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers.Adform
         /// <summary>
         /// Endpoint for latests page.
         /// </summary>
-        /// <param name="acctId">The acct identifier.</param>
-        /// <param name="start">The start.</param>
-        /// <param name="end">The end.</param>
         /// <returns>Latests Action Result</returns>
         public ActionResult Latests()
         {
