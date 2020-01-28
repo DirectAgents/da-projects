@@ -14,7 +14,7 @@ namespace SeleniumDataBrowser.GenerationReportsTrigger
         private readonly GenerationReportsActionsWithPagesManager actionsWithPagesManager;
         private readonly SeleniumLogger logger;
 
-        private Dictionary<string, string> reportProfileUrls;
+        private List<string> reportProfileUrls;
 
         public AmazonReportGenerator(
             PdaLoginManager loginProcessManager,
@@ -54,7 +54,7 @@ namespace SeleniumDataBrowser.GenerationReportsTrigger
                 logger.LogInfo("The following profiles were found for the current account:");
                 foreach (var reportProfileUrl in reportProfileUrls)
                 {
-                    logger.LogInfo($"{reportProfileUrl.Key} - {reportProfileUrl.Value}");
+                    logger.LogInfo(reportProfileUrl);
                 }
             }
             catch (Exception e)
@@ -65,9 +65,12 @@ namespace SeleniumDataBrowser.GenerationReportsTrigger
 
         public void GenerateReports()
         {
-            foreach (var reportProfile in reportProfileUrls)
+            foreach (var reportProfileUrl in reportProfileUrls)
             {
-                actionsWithPagesManager.GenerateSearchTermReport(reportProfile.Value);
+                logger.LogInfo($"Start generate report for the profile: [{reportProfileUrl}]");
+                profileUrlManager.GoToReportProfile(reportProfileUrl);
+                actionsWithPagesManager.GenerateSearchTermReport();
+                logger.LogInfo($"Finish generate report for the profile: [{reportProfileUrl}]");
             }
         }
     }

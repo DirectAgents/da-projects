@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using OpenQA.Selenium;
 using SeleniumDataBrowser.Helpers;
 using SeleniumDataBrowser.PDA.PageActions;
@@ -7,44 +8,97 @@ namespace SeleniumDataBrowser.GenerationReportsTrigger.PageActions
 {
     public class GenerationReportsActionsWithPagesManager : AmazonPdaActionsWithPagesManager
     {
+        private const string AdvertisingPortalUrlForCanada = "https://advertising.amazon.ca";
+        private const string TextOfSearchTermReportTypeForUS = "Search term";
+        private const string TextOfSearchTermReportTypeForCanada = "Search terms";
+        private const string TextOfLastMonthTimePeriodForUS = "Last month";
+        private const string TextOfLastMonthTimePeriodForCanada = "Last Month";
+        private const string TextOfDailyDataUnit = "Daily";
+        private const string TextForReportName = "GenerationReportsTrigger_SP_SearchTerm_Report";
+        private const string AdvertisingAccountUrlPattern = "https://advertising.amazon.com/home?entityId=";
+
         public GenerationReportsActionsWithPagesManager(
             int timeoutMinutes, bool isHiddenBrowserWindow, SeleniumLogger logger)
             : base(timeoutMinutes, isHiddenBrowserWindow, logger)
         {
         }
 
-        public void GenerateSearchTermReport(string reportProfileUrl)
+        public List<string> GetDefaultMarketplaceProfileUrls()
         {
-            NavigateToUrl(reportProfileUrl, GenerationReportsPageObjects.ReportsDashboard);
-            SetupReportName();
+            var entities = GetChildrenElements(
+                GenerationReportsPageObjects.EntitiesPageMainContainer, GenerationReportsPageObjects.EntitiesPageRow);
+            var someAccount = entities.FirstOrDefault(entity =>
+                entity.GetAttribute(HrefAttribute).Contains(AdvertisingAccountUrlPattern));
+            var accounts = entities.Where(entity =>
+                entity.GetAttribute(HrefAttribute).Contains(AdvertisingAccountUrlPattern)).ToList();
+            var defaultMarketplaceProfileUrls = accounts.Select(x => x.GetAttribute(HrefAttribute)).ToList();
+            GoToSomeAccountHomePage(someAccount);
+            return defaultMarketplaceProfileUrls;
+        }
+
+        public List<string> GetOtherMarketplaceProfileUrls()
+        {
+            WaitElementClickable(AmazonPdaPageObjects.CurrentProfileButton);
+            MoveToElementAndClick(AmazonPdaPageObjects.CurrentProfileButton);
+            WaitElementClickable(GenerationReportsPageObjects.OtherMarketplace);
+            ClickElement(GenerationReportsPageObjects.OtherMarketplace);
+            WaitElementClickable(AmazonPdaPageObjects.ProfilesMenu);
+            var menuItems = GetChildrenElements(AmazonPdaPageObjects.ProfilesMenu, AmazonPdaPageObjects.ProfilesMenuItem);
+            var otherMarketplaceProfileUrls = menuItems.Select(x => x.GetAttribute(HrefAttribute)).ToList();
+            return otherMarketplaceProfileUrls;
+        }
+
+        public void GenerateSearchTermReport()
+        {
             SetupSearchTermReportType();
             SetupLastMonthTimePeriod();
             SetupDailyDataUnit();
-            ClickElement(GenerationReportsPageObjects.CreateReportButton);
+            SetupReportName();
+            WaitElementClickable(GenerationReportsPageObjects.CreateReportButton);
+            Logger.LogInfo("Generate report!");
+            // ClickElement(GenerationReportsPageObjects.CreateReportButton);
+        }
+
+        public bool IsCurrentUrlForCanadaMarketplace()
+        {
+            var currentUrl = GetCurrentWindowUrl();
+            return currentUrl.Contains(AdvertisingPortalUrlForCanada);
+        }
+
+        private void GoToSomeAccountHomePage(IWebElement someAccount)
+        {
+            ClickElement(someAccount);
+            WaitElementClickable(AmazonPdaPageObjects.FilterByButton);
         }
 
         private void SetupSearchTermReportType()
         {
-            const string textOfSearchTermReportType = "Search term";
+            var textOfSearchTermReportType = IsCurrentUrlForCanadaMarketplace()
+                ? TextOfSearchTermReportTypeForCanada
+                : TextOfSearchTermReportTypeForUS;
+            Logger.LogInfo($"Setup the [{textOfSearchTermReportType}] report type...");
             SetupSpecifiedItemFromDropdownItemList(GetReportTypesFromDropdown, textOfSearchTermReportType);
         }
 
         private void SetupLastMonthTimePeriod()
         {
-            const string textOfLastMonthTimePeriod = "Last month";
+            var textOfLastMonthTimePeriod = IsCurrentUrlForCanadaMarketplace()
+                ? TextOfLastMonthTimePeriodForCanada
+                : TextOfLastMonthTimePeriodForUS;
+            Logger.LogInfo($"Setup the [{textOfLastMonthTimePeriod}] time period...");
             SetupSpecifiedItemFromDropdownItemList(GetTimePeriodsFromDropdown, textOfLastMonthTimePeriod);
         }
 
         private void SetupDailyDataUnit()
         {
-            const string textOfDailyDataUnit = "Daily";
-            SetupSpecifiedItemFromDropdownItemList(GetDataUnitsFromDropdown, textOfDailyDataUnit);
+            Logger.LogInfo($"Setup the [{TextOfDailyDataUnit}] data unit...");
+            SetupSpecifiedItemFromDropdownItemList(GetDataUnitsFromDropdown, TextOfDailyDataUnit);
         }
 
         private void SetupReportName()
         {
-            const string reportName = "GenerationReportsTrigger_SP_SearchTerm_Report";
-            SetupTextToInput(GenerationReportsPageObjects.ReportNameInput, reportName);
+            Logger.LogInfo($"Setup the [{TextForReportName}] report name...");
+            SetupTextToInput(GenerationReportsPageObjects.ReportNameInput, TextForReportName);
         }
 
         private IEnumerable<IWebElement> GetReportTypesFromDropdown()

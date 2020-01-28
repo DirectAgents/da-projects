@@ -50,6 +50,7 @@ namespace SeleniumDataBrowser.PDA.Helpers
             logger.LogWarning(
                 "Login into the portal without using cookies. " +
                 "Please choose 'Amazon DSP console (formerly Amazon Advertising Platform)' and enter an authorization code!");
+            pageActionsManager.NavigateToUrl(SignInPageUrl, AmazonLoginPageObjects.ForgotPassLink);
             LoginWithoutCookie();
         }
 
@@ -57,14 +58,21 @@ namespace SeleniumDataBrowser.PDA.Helpers
         /// To repeat the password, the method enters only the password and waits for the page to load.
         /// </summary>
         /// <param name="waitElement">Web element that the method will wait for after logging in.</param>
-        public void RepeatPasswordForLogin(By waitElement = null)
+        public void RepeatPasswordForLogin(By waitElement)
         {
             pageActionsManager.LoginWithPasswordAndWaiting(authorizationModel.Password, waitElement);
         }
 
-        private void LoginWithoutCookie()
+        /// <summary>
+        /// To repeat the password, the method enters only the password and waits for the page to load.
+        /// </summary>
+        public void RepeatPasswordForLogin()
         {
-            pageActionsManager.NavigateToUrl(SignInPageUrl, AmazonLoginPageObjects.ForgotPassLink);
+            pageActionsManager.LoginWithPasswordAndWaiting(authorizationModel.Password);
+        }
+
+        public void LoginWithoutCookie()
+        {
             pageActionsManager.LoginProcess(authorizationModel.Login, authorizationModel.Password);
             var cookies = pageActionsManager.GetAllCookies();
             SeleniumCookieHelper.SaveCookiesToFiles(cookies, authorizationModel.CookiesDir);

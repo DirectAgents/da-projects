@@ -13,10 +13,10 @@ namespace SeleniumDataBrowser.PDA.Helpers
     {
         private const string CampaignPageUrl = "https://advertising.amazon.com/cm/campaigns";
 
-        private readonly AmazonPdaActionsWithPagesManager pageActionsManager;
-        private readonly PdaLoginManager loginProcessManager;
-        private readonly int maxRetryAttempts;
-        private readonly TimeSpan pauseBetweenAttempts;
+        protected readonly AmazonPdaActionsWithPagesManager pageActionsManager;
+        protected readonly PdaLoginManager loginProcessManager;
+        protected readonly int maxRetryAttempts;
+        protected readonly TimeSpan pauseBetweenAttempts;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PdaProfileUrlManager"/> class.
@@ -48,6 +48,14 @@ namespace SeleniumDataBrowser.PDA.Helpers
             return availableProfileUrls;
         }
 
+        protected Dictionary<string, string> TryGetAvailableProfiles()
+        {
+            return Policy
+                .Handle<Exception>()
+                .WaitAndRetry(maxRetryAttempts, i => pauseBetweenAttempts)
+                .Execute(pageActionsManager.GetAvailableProfileUrls);
+        }
+
         private void GoToPortalMainPage()
         {
             pageActionsManager.NavigateToUrl(CampaignPageUrl);
@@ -55,17 +63,8 @@ namespace SeleniumDataBrowser.PDA.Helpers
                 && pageActionsManager.IsElementPresent(AmazonLoginPageObjects.LoginPassInput))
             {
                 // need to repeat the password
-                loginProcessManager.RepeatPasswordForLogin();
-                pageActionsManager.NavigateToUrl(CampaignPageUrl, AmazonPdaPageObjects.FilterByButton);
+                loginProcessManager.RepeatPasswordForLogin(AmazonPdaPageObjects.FilterByButton);
             }
-        }
-
-        private Dictionary<string, string> TryGetAvailableProfiles()
-        {
-            return Policy
-                .Handle<Exception>()
-                .WaitAndRetry(maxRetryAttempts, i => pauseBetweenAttempts)
-                .Execute(pageActionsManager.GetAvailableProfileUrls);
         }
     }
 }

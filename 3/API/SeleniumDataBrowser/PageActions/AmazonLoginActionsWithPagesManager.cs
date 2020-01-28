@@ -45,7 +45,7 @@ namespace SeleniumDataBrowser.PageActions
         /// </summary>
         /// <param name="password">Password to be entered.</param>
         /// <param name="waitElement">Web element that the method will wait for after logging in.</param>
-        public void LoginWithPasswordAndWaiting(string password, By waitElement)
+        public void LoginWithPasswordAndWaiting(string password, By waitElement = null)
         {
             Logger.LogInfo("Need to repeat the password...");
             try

@@ -23,5 +23,13 @@ namespace SeleniumDataBrowser.GenerationReportsTrigger.PageActions
         public static By DropdownItem = By.CssSelector("li > a");
 
         public static By CreateReportButton = By.CssSelector("span[data-e2e-id='createReportButton']");
+
+        public static By ChooseEntityText = By.XPath("//h1[contains(text(),'Choose an entity')]");
+
+        public static By EntitiesPageMainContainer = By.CssSelector("section#main-container");
+
+        public static By EntitiesPageRow = By.CssSelector("div.a-row > div.a-column > a");
+
+        public static By OtherMarketplace = By.CssSelector("li[data-e2e-id='other-marketplace']");
     }
 }

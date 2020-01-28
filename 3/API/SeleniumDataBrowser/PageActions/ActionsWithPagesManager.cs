@@ -330,8 +330,6 @@ namespace SeleniumDataBrowser.PageActions
         {
             WaitElementClickable(dropdownElement);
             ClickElement(dropdownElement);
-            //MoveToElementAndClick(dropdownElement);
-            //WaitElementClickable(dropdownItemListElement);
             return GetChildrenElements(dropdownItemListElement, dropdownItem);
         }
 

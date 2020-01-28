@@ -12,7 +12,7 @@ namespace SeleniumDataBrowser.PDA.PageActions
     /// </summary>
     public class AmazonPdaActionsWithPagesManager : AmazonLoginActionsWithPagesManager
     {
-        private const string HrefAttribute = "href";
+        protected const string HrefAttribute = "href";
 
         /// <inheritdoc cref="AmazonLoginActionsWithPagesManager"/>
         /// <summary>
