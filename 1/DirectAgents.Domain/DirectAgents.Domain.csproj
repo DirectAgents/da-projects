@@ -865,6 +865,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Seed\TDSeeder.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\YAM\YamWebPortalDataService.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\YAM\IYamWebPortalDataService.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\YAM\Models\YamLatestsInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(SolutionDir)CodeAnalysis\stylecop.json">
