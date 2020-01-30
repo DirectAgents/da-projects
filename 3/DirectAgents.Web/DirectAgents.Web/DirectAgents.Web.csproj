@@ -258,8 +258,10 @@
     <Compile Include="Areas\ClientAdmin\ClientAdminAreaRegistration.cs" />
     <Compile Include="Areas\ClientAdmin\Controllers\ClientReportsController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\ActionsController.cs" />
+    <Compile Include="Areas\ProgAdmin\Controllers\Adform\AdformController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\CampStatsController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\DailySummariesController.cs" />
+    <Compile Include="Areas\ProgAdmin\Controllers\DBM\DbmController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\ExtAccountsController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\AdvertisersController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\BudgetInfosController.cs" />
@@ -275,10 +277,13 @@
     <Compile Include="Areas\ProgAdmin\Controllers\ReportsController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\StatsController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\TDadsController.cs" />
+    <Compile Include="Areas\ProgAdmin\Controllers\YAM\YamController.cs" />
     <Compile Include="Areas\ProgAdmin\Models\AccountMaintenanceVM.cs" />
+    <Compile Include="Areas\ProgAdmin\Models\Adform\AdformLatestsInfoVm.cs" />
     <Compile Include="Areas\ProgAdmin\Models\CampaignPacingVM.cs" />
     <Compile Include="Areas\ProgAdmin\Models\DailySummariesVM.cs" />
     <Compile Include="Areas\ProgAdmin\Models\DashboardVM.cs" />
+    <Compile Include="Areas\ProgAdmin\Models\DBM\DbmLatestsInfoVm.cs" />
     <Compile Include="Areas\ProgAdmin\Models\ExtraItemsVM.cs" />
     <Compile Include="Areas\ProgAdmin\Models\FacebookActionsTotalsVm.cs" />
     <Compile Include="Areas\ProgAdmin\Models\FacebookTotalsInfoVm.cs" />
@@ -287,6 +292,7 @@
     <Compile Include="Areas\ProgAdmin\Models\SpecialPlatformSummariesVm.cs" />
     <Compile Include="Areas\ProgAdmin\Models\StatsGaugeVM.cs" />
     <Compile Include="Areas\ProgAdmin\Models\TDStatsVM.cs" />
+    <Compile Include="Areas\ProgAdmin\Models\YAM\YamLatestsInfoVm.cs" />
     <Compile Include="Areas\ProgAdmin\ProgAdminAreaRegistration.cs" />
     <Content Include="Areas\ProgAdmin\Views\Campaigns\Dashboard.cshtml" />
     <Content Include="Areas\ProgAdmin\Views\Reports\ReportViewer.cshtml" />
@@ -1214,6 +1220,9 @@
     <Content Include="Areas\ProgAdmin\Views\Shared\DatePicker.cshtml" />
     <Content Include="Areas\ProgAdmin\Views\Facebook\ActionTotals.cshtml" />
     <Content Include="Areas\Cake\Views\Advertisers\ShowStats.cshtml" />
+    <Content Include="Areas\ProgAdmin\Views\DBM\Latests.cshtml" />
+    <Content Include="Areas\ProgAdmin\Views\YAM\Latests.cshtml" />
+    <Content Include="Areas\ProgAdmin\Views\Adform\Latests.cshtml" />
     <None Include="Properties\PublishProfiles\dagents_vm_staging.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\DayOfWeek.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
