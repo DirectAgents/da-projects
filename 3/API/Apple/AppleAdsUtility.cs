@@ -23,7 +23,8 @@ namespace Apple
 
         // --- Logging ---
         private Action<string> _LogInfo;
-        private Action<string> _LogError;
+        private Action<Exception> _LogError;
+        private Action<string> _LogWarn;
 
         private void LogInfo(string message)
         {
@@ -36,9 +37,22 @@ namespace Apple
         private void LogError(string message)
         {
             if (_LogError == null)
+            {
+                Console.WriteLine(message);
+            }
+            else
+            {
+                var exception = new Exception("[AppleAdsUtility] " + message);
+                _LogError(exception);
+            }
+        }
+
+        private void LogWarn(string message)
+        {
+            if (_LogWarn == null)
                 Console.WriteLine(message);
             else
-                _LogError("[AppleAdsUtility] " + message);
+                _LogWarn("[AppleAdsUtility] " + message);
         }
 
         // --- Constructors ---
@@ -46,12 +60,15 @@ namespace Apple
         {
             Setup();
         }
-        public AppleAdsUtility(Action<string> logInfo, Action<string> logError)
+
+        public AppleAdsUtility(Action<string> logInfo, Action<string> logWarn, Action<Exception> logError)
             : this()
         {
             _LogInfo = logInfo;
             _LogError = logError;
+            _LogWarn = logWarn;
         }
+
         private void Setup()
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
@@ -69,8 +86,11 @@ namespace Apple
             var filename = String.Format(AppleP12Location, certificateCode);
             //LogInfo("certificate location: " + filename);
             var certificate = new X509Certificate2();
-            certificate.Import(filename, AppleP12Password, X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable);
-            restClient.ClientCertificates = new X509CertificateCollection() { certificate };
+
+            certificate.Import(filename, AppleP12Password,
+                X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable);
+            restClient.ClientCertificates = new X509CertificateCollection() {certificate};
+            CheckСertificateValidity(certificate.NotAfter);
 
             var response = restClient.Execute<T>(restRequest);
             return response;
@@ -102,7 +122,7 @@ namespace Apple
             {
                 var response = GetReport(requestBody, orgId, certificateCode);
                 if (response != null && response.error != null)
-                    LogError("response.error: " + response.error);
+                    LogWarn("response.error: " + response.error);
                 done = true;
                 if (response != null && response.data != null && response.data.reportingDataResponse != null && response.data.reportingDataResponse.row != null)
                 {
@@ -118,6 +138,7 @@ namespace Apple
                 }
             }
         }
+
         private AppleReportResponse GetReport(ReportRequest requestBody, string orgId, string certificateCode)
         {
             var request = new RestRequest("reports/campaigns", Method.POST);
@@ -129,6 +150,29 @@ namespace Apple
                 return restResponse.Data;
             else
                 return null;
+        }
+
+        private void CheckСertificateValidity(DateTime certificateExpirationDate)
+        {
+            const int numberOfDaysOfWarnings = 7; //7 days
+            var dateNow = DateTime.Now;
+            var dateForCertificateVerification = dateNow.AddDays(numberOfDaysOfWarnings);
+
+            var DateNowTest = new DateTime(2021, 5, 30);
+            var dateForCertificateVerificationTest = DateNowTest.AddDays(numberOfDaysOfWarnings);
+
+            if (dateForCertificateVerificationTest > certificateExpirationDate)
+            {
+                if (DateNowTest > certificateExpirationDate)
+                {
+                    LogError("Certificate has expired");
+                }
+                else
+                {
+                    var numberOfDaysBeforeCertificate = Convert.ToInt32((certificateExpirationDate - DateNowTest).TotalDays);
+                    LogWarn("Certificate expires in " + numberOfDaysBeforeCertificate + " days");
+                }
+            }
         }
     }
 }
