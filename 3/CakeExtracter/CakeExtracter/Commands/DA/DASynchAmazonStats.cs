@@ -108,30 +108,7 @@ namespace CakeExtracter.Commands
             Parallel.ForEach(accounts, account =>
             {
                 Logger.Info(account.Id, "Commencing ETL for Amazon account ({0}) {1}", account.Id, account.Name);
-                var amazonUtility = CreateUtility(account);
-                try
-                {
-                    if (statsType.Creative && !NeedUpdateKeywordsAndSearchTerms)
-                    {
-                        DoETL_Creative(dateRange, account, amazonUtility);
-                    }
-                    if (statsType.Keyword || NeedUpdateKeywordsAndSearchTerms)
-                    {
-                        DoETL_Keyword(dateRange, account, amazonUtility);
-                    }
-                    if (statsType.Daily && !NeedUpdateKeywordsAndSearchTerms)
-                    {
-                        DoETL_DailyFromKeywordsDatabaseData(dateRange, account); // need to update keywords stats first
-                    }
-                    if ((statsType.SearchTerm && !statsType.All) || NeedUpdateKeywordsAndSearchTerms)
-                    {
-                        DoETL_SearchTerm(dateRange, account, amazonUtility); // need to update keywords stats first
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error(account.Id, ex);
-                }
+                DoEtl(account, dateRange, statsType);
                 AmazonTimeTracker.Instance.LogTrackingData(account.Id);
                 Logger.Info(account.Id, "Finished ETL for Amazon account ({0}) {1}", account.Id, account.Name);
             });
@@ -213,6 +190,34 @@ namespace CakeExtracter.Commands
             amazonUtility.KeepReports = KeepAmazonReports;
             amazonUtility.ReportPrefix = account.Id.ToString();
             return amazonUtility;
+        }
+
+        private void DoEtl(ExtAccount account, DateRange dateRange, StatsTypeAgg statsType)
+        {
+            var amazonUtility = CreateUtility(account);
+            try
+            {
+                if (statsType.Creative && !NeedUpdateKeywordsAndSearchTerms)
+                {
+                    DoETL_Creative(dateRange, account, amazonUtility);
+                }
+                if (statsType.Keyword || NeedUpdateKeywordsAndSearchTerms)
+                {
+                    DoETL_Keyword(dateRange, account, amazonUtility);
+                }
+                if (statsType.Daily && !NeedUpdateKeywordsAndSearchTerms)
+                {
+                    DoETL_DailyFromKeywordsDatabaseData(dateRange, account); // need to update keywords stats first
+                }
+                if ((statsType.SearchTerm && !statsType.All) || NeedUpdateKeywordsAndSearchTerms)
+                {
+                    DoETL_SearchTerm(dateRange, account, amazonUtility); // need to update keywords stats first
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(account.Id, ex);
+            }
         }
 
         private void DoETL_DailyFromKeywordsDatabaseData(DateRange dateRange, ExtAccount account)
