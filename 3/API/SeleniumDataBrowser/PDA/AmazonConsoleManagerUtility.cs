@@ -210,15 +210,15 @@ namespace SeleniumDataBrowser.PDA
 
         private bool AreProfileNameAndAccountNameEqual(string profileName)
         {
-            return IsProfileNameCarharttWomenCollection(profileName)
+            return IsAccountNameCarharttWomenCollection()
                 ? IsCarharttWomenCollectionMatch(profileName)
                 : IsProfileNameMatch(profileName);
         }
 
-        private bool IsProfileNameCarharttWomenCollection(string profileName)
+        private bool IsAccountNameCarharttWomenCollection()
         {
-            const string beginOfProfileName = "Carhartt Women";
-            return profileName.StartsWith(beginOfProfileName, StringComparison.OrdinalIgnoreCase);
+            const string beginOfAccountName = "Carhartt Women";
+            return accountName.StartsWith(beginOfAccountName, StringComparison.OrdinalIgnoreCase);
         }
 
         private bool IsCarharttWomenCollectionMatch(string carharttWomenCollectionProfileName)
