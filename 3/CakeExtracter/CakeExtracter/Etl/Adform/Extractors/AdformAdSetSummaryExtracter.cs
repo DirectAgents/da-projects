@@ -7,6 +7,7 @@ using Adform.Entities.ReportEntities.ReportParameters;
 using Adform.Enums;
 using Adform.Utilities;
 using CakeExtracter.Common;
+using CakeExtracter.Etl.Adform.Exceptions;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.Adform;
 using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
@@ -46,11 +47,14 @@ namespace CakeExtracter.Etl.Adform.Extractors
                 var sums = GroupSummaries(data);
                 Add(sums);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Logger.Error(AccountId, ex);
+                ProcessFailedStatsExtraction(e, DateRange.FromDate, DateRange.ToDate);
             }
-            End();
+            finally
+            {
+                End();
+            }
         }
 
         private IEnumerable<AdformReportSummary> ExtractData()
@@ -119,6 +123,13 @@ namespace CakeExtracter.Etl.Adform.Extractors
             };
             SetDimensionsForReportSettings(dimensions, settings);
             return AfUtility.CreateReportParams(settings);
+        }
+
+        private void ProcessFailedStatsExtraction(Exception e, DateTime fromDate, DateTime toDate)
+        {
+            Logger.Error(AccountId, e);
+            var exception = new AdformFailedStatsLoadingException(fromDate, toDate, AccountId, e, byLineItem: true);
+            InvokeProcessFailedExtractionHandlers(exception);
         }
     }
 }
