@@ -159,19 +159,15 @@ namespace Apple
             const int numberOfDaysOfWarnings = 7; //7 days
             var dateNow = DateTime.Now;
             var dateForCertificateVerification = dateNow.AddDays(numberOfDaysOfWarnings);
-
-            var DateNowTest = new DateTime(2021, 5, 30);
-            var dateForCertificateVerificationTest = DateNowTest.AddDays(numberOfDaysOfWarnings);
-
-            if (dateForCertificateVerificationTest > certificateExpirationDate)
+            if (dateForCertificateVerification > certificateExpirationDate)
             {
-                if (DateNowTest > certificateExpirationDate)
+                if (dateNow > certificateExpirationDate)
                 {
                     LogError("Certificate has expired");
                 }
                 else
                 {
-                    var numberOfDaysBeforeCertificate = Convert.ToInt32((certificateExpirationDate - DateNowTest).TotalDays);
+                    var numberOfDaysBeforeCertificate = Convert.ToInt32((certificateExpirationDate - dateNow).TotalDays);
                     LogWarn("Certificate expires in " + numberOfDaysBeforeCertificate + " days");
                 }
             }
