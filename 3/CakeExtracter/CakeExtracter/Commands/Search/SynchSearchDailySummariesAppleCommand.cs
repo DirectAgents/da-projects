@@ -5,7 +5,6 @@ using System.Linq;
 using Apple;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Exceptions;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Etl.Apple.Exceptions;
 using CakeExtracter.Etl.Apple.Extractors;

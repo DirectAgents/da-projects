@@ -42,7 +42,7 @@ namespace SeleniumDataBrowser.PDA.Helpers
             field = "CAMPAIGN_PROGRAM_TYPE",
             not = false,
             @operator = "EXACT",
-            values = new[] { "PDA", "SPARK" },
+            values = new[] { "DA", "DA_SDP", "PDA" },
         };
 
         private static readonly string[] CampaignFieldsForRequest =
@@ -72,9 +72,9 @@ namespace SeleniumDataBrowser.PDA.Helpers
             var parameters = new AmazonCmApiParams
             {
                 period = "CUSTOM",
-                interval = "SUMMARY",
+                timeSeriesInterval = "DAY",
                 programType = "SP",
-                queries = new string[0],
+                queries = Array.Empty<string>(),
                 fields = fields,
                 filters = CampaignPdaFilters,
             };
