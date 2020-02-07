@@ -90,7 +90,9 @@ namespace Apple
             certificate.Import(filename, AppleP12Password,
                 X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable);
             restClient.ClientCertificates = new X509CertificateCollection() {certificate};
-            CheckСertificateValidity(certificate.NotAfter);
+
+            var certificateExpirationDate = certificate.NotAfter;
+            CheckСertificateValidity(certificateExpirationDate);
 
             var response = restClient.Execute<T>(restRequest);
             return response;
