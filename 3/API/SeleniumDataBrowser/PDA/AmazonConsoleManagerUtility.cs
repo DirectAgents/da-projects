@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
 using SeleniumDataBrowser.Helpers;
@@ -48,7 +49,7 @@ namespace SeleniumDataBrowser.PDA
             TimeSpan pauseBetweenAttempts,
             SeleniumLogger logger)
         {
-            this.accountName = accountName;
+            this.accountName = accountName.Trim();
             this.authorizationModel = authorizationModel;
             this.availableProfileUrls = availableProfileUrls;
             this.maxRetryAttempts = maxRetryAttempts;
@@ -106,9 +107,7 @@ namespace SeleniumDataBrowser.PDA
 
         private string GetAvailableProfileUrl()
         {
-            var profileName = accountName.Trim();
-            var availableProfileUrl = availableProfileUrls.FirstOrDefault(x =>
-                string.Equals(x.Key, profileName, StringComparison.OrdinalIgnoreCase));
+            var availableProfileUrl = availableProfileUrls.FirstOrDefault(x => AreProfileNameAndAccountNameEqual(x.Key));
             var profileUrl = availableProfileUrl.Value;
             if (string.IsNullOrEmpty(profileUrl))
             {
@@ -207,6 +206,31 @@ namespace SeleniumDataBrowser.PDA
             logger.LogWaiting(
                 $"Requesting a campaign info for {date.ToShortDateString()}. " + "Waiting {0} ...", pauseBetweenAttempts, null);
             Thread.Sleep(pauseBetweenAttempts);
+        }
+
+        private bool AreProfileNameAndAccountNameEqual(string profileName)
+        {
+            return IsAccountNameCarharttWomenCollection()
+                ? IsCarharttWomenCollectionMatch(profileName)
+                : IsProfileNameMatch(profileName);
+        }
+
+        private bool IsAccountNameCarharttWomenCollection()
+        {
+            const string beginOfAccountName = "Carhartt Women";
+            return accountName.StartsWith(beginOfAccountName, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private bool IsCarharttWomenCollectionMatch(string carharttWomenCollectionProfileName)
+        {
+            const string pattern = "^Carhartt Women(.*)Collection$";
+            var reg = new Regex(pattern);
+            return reg.Match(carharttWomenCollectionProfileName).Success;
+        }
+
+        private bool IsProfileNameMatch(string profileName)
+        {
+            return string.Equals(profileName, accountName, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

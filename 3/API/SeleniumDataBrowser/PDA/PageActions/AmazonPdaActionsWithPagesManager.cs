@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SeleniumDataBrowser.PageActions;
 using SeleniumDataBrowser.Drivers;
@@ -36,7 +37,17 @@ namespace SeleniumDataBrowser.PDA.PageActions
             MoveToElementAndClick(AmazonPdaPageObjects.CurrentProfileButton);
             WaitElementClickable(AmazonPdaPageObjects.ProfilesMenu);
             var menuItems = GetChildrenElements(AmazonPdaPageObjects.ProfilesMenu, AmazonPdaPageObjects.ProfilesMenuItem);
-            return menuItems.ToDictionary(x => x.Text.Trim(), x => x.GetAttribute(HrefAttribute));
+            return menuItems.ToDictionary(x => GetProfileName(x.Text), x => x.GetAttribute(HrefAttribute));
+        }
+
+        private string GetProfileName(string unchangedMenuItemText)
+        {
+            const int startIndex = 0;
+            var menuItemText = unchangedMenuItemText.Trim();
+            var newLineIndex = menuItemText.IndexOf("\r\n", StringComparison.Ordinal);
+            return newLineIndex < 0
+                ? menuItemText
+                : menuItemText.Substring(startIndex, newLineIndex);
         }
     }
 }
