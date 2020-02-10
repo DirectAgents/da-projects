@@ -20,6 +20,9 @@ using Ninject.Web.Common;
 using Ninject.Web.Common.WebHost;
 using CakeExtracter.Common.Email;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Repositories;
+using DirectAgents.Domain.SpecialPlatformsDataProviders.DBM;
+using DirectAgents.Domain.SpecialPlatformsDataProviders.YAM;
+using DirectAgents.Domain.SpecialPlatformsDataProviders.Adform;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(DirectAgents.Web.App_Start.NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(DirectAgents.Web.App_Start.NinjectWebCommon), "Stop")]
@@ -93,7 +96,10 @@ namespace DirectAgents.Web.App_Start
             kernel.Bind<ISuperRepository>().To<SuperRepository>();
             kernel.Bind<ISpecialPlatformRepository>().To<SpecialPlatformRepository>();
 
+            kernel.Bind<IYamWebPortalDataService>().To<YamWebPortalDataService>();
             kernel.Bind<IFacebookWebPortalDataService>().To<FacebookWebPortalDataService>();
+            kernel.Bind<IDbmWebPortalDataService>().To<DbmWebPortalDataService>();
+            kernel.Bind<IAdformWebPortalDataService>().To<AdformWebPortalDataService>();
             kernel.Bind<IPlatformAccountRepository>().To<PlatformAccountRepository>();
 
             kernel.Bind<IJobHistoryDataProvider>().To<JobHistoryDataProvider>();

@@ -19,11 +19,14 @@ namespace CakeExtracter.Etl.Amazon.Loaders
         where TSummaryLevelEntity : DatedStatsSummary
         where TSummaryMetricLevelEntity : SummaryMetric, new()
     {
-        private const int LoadingBatchesSize = 500;
-
-        private readonly AmazonSummaryMetricLoader<TSummaryMetricLevelEntity> summaryMetricsItemsLoader;
+        private const int DefaultLoadingBatchesSize = 500;
 
         public event Action<FailedStatsLoadingException> ProcessFailedExtraction;
+
+        private static readonly int LoadingBatchesSize =
+            ConfigurationHelper.GetIntConfigurationValue("AmazonLoadingBatchSize", DefaultLoadingBatchesSize);
+
+        private readonly AmazonSummaryMetricLoader<TSummaryMetricLevelEntity> summaryMetricsItemsLoader;
 
         /// <summary>
         /// Gets the name of amazon job information level.
