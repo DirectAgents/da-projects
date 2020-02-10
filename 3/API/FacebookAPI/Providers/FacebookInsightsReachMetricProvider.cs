@@ -31,7 +31,7 @@ namespace FacebookAPI.Providers
         /// <returns>List of Reach metrics.</returns>
         public IEnumerable<FbReachRow> GetReachMetricStats(string accountId)
         {
-            var converter = new FacebookReachMetricConverter();
+            var converter = new FacebookReachMetricConverter(LogError);
             return GetReachMetricsLoop(accountId, converter);
         }
 
