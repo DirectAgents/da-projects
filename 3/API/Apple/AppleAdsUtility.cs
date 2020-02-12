@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
+using Apple.Logger;
 using RestSharp;
 using RestSharp.Deserializers;
 
@@ -15,7 +16,6 @@ namespace Apple
     public class AppleAdsUtility
     {
         public const int RowsReturnedAtATime = 20;
-        private const string PrefixLogString = "[AppleAdsUtility] ";
 
         private string AppleBaseUrl { get; set; }
 
@@ -32,7 +32,7 @@ namespace Apple
             Setup();
         }
 
-        public AppleAdsUtility(Action<string> logWarn,Action<Exception> logError)
+        public AppleAdsUtility(Action<string> logWarn, Action<Exception> logError)
             : this()
         {
             appleLogger = new AppleLogger(logWarn, logError);
@@ -134,10 +134,6 @@ namespace Apple
         private void CheckСertificateValidity(DateTime certificateExpirationDateTime)
         {
             const int numberOfDaysForWarnings = 7;
-
-            //var startOfPotentialWarningPeriodTest = new DateTime(2021, 07, 01);
-            //var finishOfPotentialWarningPeriodTest = startOfPotentialWarningPeriodTest.AddDays(numberOfDaysForWarnings);
-
             var startOfPotentialWarningPeriod = DateTime.Now;
             var finishOfPotentialWarningPeriod = startOfPotentialWarningPeriod.AddDays(numberOfDaysForWarnings);
             if (!DoesPeriodOfWarningsBegin(finishOfPotentialWarningPeriod, certificateExpirationDateTime))
@@ -172,17 +168,12 @@ namespace Apple
 
         private bool IsCertificateExpired(DateTime certificateExpirationDateTime)
         {
-            //var startOfPotentialWarningPeriodTest = new DateTime(2021, 07, 01);
-            //return DateTime.Compare(startOfPotentialWarningPeriodTest, certificateExpirationDateTime) >= 0;
             return DateTime.Compare(DateTime.Now, certificateExpirationDateTime) >= 0;
         }
 
         private int GetNumberOfDaysBeforeCertificateExpires(DateTime certificateExpirationDateTime)
         {
             var timeUntilCertificateExpiration = certificateExpirationDateTime - DateTime.Now;
-           // var startOfPotentialWarningPeriodTest = new DateTime(2021, 07, 01);
-            //var timeUntilCertificateExpiration = certificateExpirationDateTime - startOfPotentialWarningPeriodTest ;
-
             return Convert.ToInt32(timeUntilCertificateExpiration.TotalDays);
         }
     }
