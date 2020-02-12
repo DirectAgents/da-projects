@@ -12,56 +12,19 @@ namespace Apple
     // For clients under DA, use "DA". For others, use the same 'code' as in the p12 certificate's filename.
     // Need to create a new certificate for non-DA clients. (Name the file "AppleCertificate[CODE].p12" and place in the 'AppleP12Location'.)
     // https://developer.apple.com/library/content/documentation/General/Conceptual/AppStoreSearchAdsAPIReference/API_Overview.html
-
     public class AppleAdsUtility
     {
         public const int RowsReturnedAtATime = 20;
-        public const string PrefixLogString = "[AppleAdsUtility] ";
+        private const string PrefixLogString = "[AppleAdsUtility] ";
+
         private string AppleBaseUrl { get; set; }
+
         private string AppleP12Location { get; set; }
+
         private string AppleP12Password { get; set; }
 
         // --- Logging ---
-        private Action<string> _LogInfo;
-        private Action<Exception> _LogError;
-        private Action<string> _LogWarn;
-
-        private void LogInfo(string message)
-        {
-            if (_LogInfo == null)
-            {
-                Console.WriteLine(message);
-            }
-            else
-            {
-                _LogInfo(PrefixLogString + message);
-            }
-        }
-
-        private void LogError(string message)
-        {
-            if (_LogError == null)
-            {
-                Console.WriteLine(message);
-            }
-            else
-            {
-                var exception = new Exception(PrefixLogString + message);
-                _LogError(exception);
-            }
-        }
-
-        private void LogWarn(string message)
-        {
-            if (_LogWarn == null)
-            {
-                Console.WriteLine(message);
-            }
-            else
-            {
-                _LogWarn(PrefixLogString + message);
-            }
-        }
+        private AppleLogger appleLogger;
 
         // --- Constructors ---
         public AppleAdsUtility()
@@ -69,12 +32,10 @@ namespace Apple
             Setup();
         }
 
-        public AppleAdsUtility(Action<string> logInfo, Action<string> logWarn, Action<Exception> logError)
+        public AppleAdsUtility(Action<string> logWarn,Action<Exception> logError)
             : this()
         {
-            _LogInfo = logInfo;
-            _LogError = logError;
-            _LogWarn = logWarn;
+            appleLogger = new AppleLogger(logWarn, logError);
         }
 
         private void Setup()
@@ -134,7 +95,9 @@ namespace Apple
             {
                 var response = GetReport(requestBody, orgId, certificateCode);
                 if (response != null && response.error != null)
-                    LogWarn("response.error: " + response.error);
+                {
+                    appleLogger.LogWarn("response.error: " + response.error);
+                }
                 done = true;
                 if (response != null && response.data != null && response.data.reportingDataResponse != null && response.data.reportingDataResponse.row != null)
                 {
@@ -168,30 +131,59 @@ namespace Apple
             }
         }
 
-        private void CheckСertificateValidity(DateTime certificateExpirationDate)
+        private void CheckСertificateValidity(DateTime certificateExpirationDateTime)
         {
-            const int numberOfDaysOfWarnings = 7; //7 days
-            var dateToday = DateTime.Today;
-            var dateForCertificateVerification = dateToday.AddDays(numberOfDaysOfWarnings);
-            var result = DateTime.Compare(dateForCertificateVerification, certificateExpirationDate);
-            if (result >= 0)
+            const int numberOfDaysForWarnings = 7;
+
+            //var startOfPotentialWarningPeriodTest = new DateTime(2021, 07, 01);
+            //var finishOfPotentialWarningPeriodTest = startOfPotentialWarningPeriodTest.AddDays(numberOfDaysForWarnings);
+
+            var startOfPotentialWarningPeriod = DateTime.Now;
+            var finishOfPotentialWarningPeriod = startOfPotentialWarningPeriod.AddDays(numberOfDaysForWarnings);
+            if (!DoesPeriodOfWarningsBegin(finishOfPotentialWarningPeriod, certificateExpirationDateTime))
             {
-                 result = DateTime.Compare(dateToday, certificateExpirationDate);
-                 if (result >= 0)
-                 {
-                    LogError("Certificate has expired");
-                 }
-                 else
-                 {
-                     var numberOfDaysBeforeCertificate = GetDayBeforeCertificate(certificateExpirationDate, dateToday);
-                     LogWarn("Certificate expires in " + numberOfDaysBeforeCertificate + " days");
-                 }
+                return; 
+            }
+            WarningPeriodHasBegun(certificateExpirationDateTime);
+        }
+
+        private bool DoesPeriodOfWarningsBegin(DateTime endOfPotentialWarningPeriod, DateTime certificateExpirationDateTime)
+        {
+            return DateTime.Compare(endOfPotentialWarningPeriod, certificateExpirationDateTime) >= 0;
+        }
+
+        private void WarningPeriodHasBegun(DateTime certificateExpirationDateTime)
+        {
+            if (IsCertificateExpired(certificateExpirationDateTime))
+            {
+                appleLogger.LogError("Certificate has expired");
+            }
+            else
+            {
+                CertificateHasNotExpired(certificateExpirationDateTime);
             }
         }
 
-        private static int GetDayBeforeCertificate(DateTime certificateExpirationDate, DateTime dateToday)
+        private void CertificateHasNotExpired(DateTime certificateExpirationDateTime)
         {
-            return Convert.ToInt32((certificateExpirationDate - dateToday).TotalDays);
+            var numberOfDaysBeforeCerExpires = GetNumberOfDaysBeforeCertificateExpires(certificateExpirationDateTime);
+            appleLogger.LogWarn($"Certificate expires in {numberOfDaysBeforeCerExpires} days");
+        }
+
+        private bool IsCertificateExpired(DateTime certificateExpirationDateTime)
+        {
+            //var startOfPotentialWarningPeriodTest = new DateTime(2021, 07, 01);
+            //return DateTime.Compare(startOfPotentialWarningPeriodTest, certificateExpirationDateTime) >= 0;
+            return DateTime.Compare(DateTime.Now, certificateExpirationDateTime) >= 0;
+        }
+
+        private int GetNumberOfDaysBeforeCertificateExpires(DateTime certificateExpirationDateTime)
+        {
+            var timeUntilCertificateExpiration = certificateExpirationDateTime - DateTime.Now;
+           // var startOfPotentialWarningPeriodTest = new DateTime(2021, 07, 01);
+            //var timeUntilCertificateExpiration = certificateExpirationDateTime - startOfPotentialWarningPeriodTest ;
+
+            return Convert.ToInt32(timeUntilCertificateExpiration.TotalDays);
         }
     }
 }

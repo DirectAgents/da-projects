@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppleAdsUtility.cs" />
+    <Compile Include="AppleLogger.cs" />
     <Compile Include="Entities\AppleReportingResponse.cs" />
     <Compile Include="HelperClasses.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
