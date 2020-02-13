@@ -26,7 +26,7 @@ namespace FacebookAPI.Converters
         /// <returns>Facebook Reach metric.</returns>
         public FbReachRow ParseSummaryFromRow(dynamic row)
         {
-            if (IsNullRichMetric(row.reach))
+            if (IsNullReachMetric(row.reach))
             {
                 LogWarn("Reach metric is null");
             }
@@ -39,9 +39,9 @@ namespace FacebookAPI.Converters
             };
         }
 
-        private bool IsNullRichMetric(dynamic rich)
+        private bool IsNullReachMetric(dynamic reach)
         {
-            return object.ReferenceEquals(null, rich);
+            return object.ReferenceEquals(null, reach);
         }
 
         private void LogWarn(string message)
