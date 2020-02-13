@@ -18,9 +18,9 @@ namespace FacebookAPI.Providers
         /// Initializes a new instance of the <see cref="FacebookInsightsReachMetricProvider"/> class.
         /// </summary>
         /// <param name="logInfo">Action for logging (the info level).</param>
-        /// <param name="logError">Action for logging (the error level).</param>
-        public FacebookInsightsReachMetricProvider(Action<string> logInfo, Action<string> logError)
-            : base(logInfo, logError)
+        /// <param name="logWarn">Action for logging (the warn level).</param>
+        public FacebookInsightsReachMetricProvider(Action<string> logInfo, Action<string> logWarn)
+            : base(logInfo, logWarn)
         {
         }
 
@@ -31,7 +31,7 @@ namespace FacebookAPI.Providers
         /// <returns>List of Reach metrics.</returns>
         public IEnumerable<FbReachRow> GetReachMetricStats(string accountId)
         {
-            var converter = new FacebookReachMetricConverter();
+            var converter = new FacebookReachMetricConverter(LogWarn);
             return GetReachMetricsLoop(accountId, converter);
         }
 
@@ -39,7 +39,7 @@ namespace FacebookAPI.Providers
         {
             var clientParametersList = new List<FacebookJobRequest>();
             var clientParameters = PrepareReachMetricExtractingRequest(accountId);
-            clientParameters.ResetAndGetRunId_withRetry(LogInfo, LogError);
+            clientParameters.ResetAndGetRunId_withRetry(LogInfo, LogWarn);
             clientParametersList.Add(clientParameters);
             Thread.Sleep(InitialWaitMillisecs);
             foreach (var clientParms in clientParametersList)
