@@ -16,29 +16,51 @@ namespace Apple
     public class AppleAdsUtility
     {
         public const int RowsReturnedAtATime = 20;
-
+        public const string PrefixLogString = "[AppleAdsUtility] ";
         private string AppleBaseUrl { get; set; }
         private string AppleP12Location { get; set; }
         private string AppleP12Password { get; set; }
 
         // --- Logging ---
         private Action<string> _LogInfo;
-        private Action<string> _LogError;
+        private Action<Exception> _LogError;
+        private Action<string> _LogWarn;
 
         private void LogInfo(string message)
         {
             if (_LogInfo == null)
+            {
                 Console.WriteLine(message);
+            }
             else
-                _LogInfo("[AppleAdsUtility] " + message);
+            {
+                _LogInfo(PrefixLogString + message);
+            }
         }
 
         private void LogError(string message)
         {
             if (_LogError == null)
+            {
                 Console.WriteLine(message);
+            }
             else
-                _LogError("[AppleAdsUtility] " + message);
+            {
+                var exception = new Exception(PrefixLogString + message);
+                _LogError(exception);
+            }
+        }
+
+        private void LogWarn(string message)
+        {
+            if (_LogWarn == null)
+            {
+                Console.WriteLine(message);
+            }
+            else
+            {
+                _LogWarn(PrefixLogString + message);
+            }
         }
 
         // --- Constructors ---
@@ -46,12 +68,15 @@ namespace Apple
         {
             Setup();
         }
-        public AppleAdsUtility(Action<string> logInfo, Action<string> logError)
+
+        public AppleAdsUtility(Action<string> logInfo, Action<string> logWarn, Action<Exception> logError)
             : this()
         {
             _LogInfo = logInfo;
             _LogError = logError;
+            _LogWarn = logWarn;
         }
+
         private void Setup()
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
@@ -65,15 +90,22 @@ namespace Apple
         {
             var restClient = new RestClient(AppleBaseUrl);
             restClient.AddHandler("application/json", new JsonDeserializer());
+            var certificate = CreateCertificate(certificateCode);
+            restClient.ClientCertificates = new X509CertificateCollection() { certificate };
+            var certificateExpirationDate = certificate.NotAfter;
+            CheckСertificateValidity(certificateExpirationDate);
+            var response = restClient.Execute<T>(restRequest);
+            return response;
+        }
 
+        private X509Certificate2 CreateCertificate(string certificateCode)
+        {
             var filename = String.Format(AppleP12Location, certificateCode);
             //LogInfo("certificate location: " + filename);
             var certificate = new X509Certificate2();
-            certificate.Import(filename, AppleP12Password, X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable);
-            restClient.ClientCertificates = new X509CertificateCollection() { certificate };
-
-            var response = restClient.Execute<T>(restRequest);
-            return response;
+            certificate.Import(filename, AppleP12Password,
+                X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable);
+            return certificate;
         }
 
         public void Test()
@@ -102,7 +134,7 @@ namespace Apple
             {
                 var response = GetReport(requestBody, orgId, certificateCode);
                 if (response != null && response.error != null)
-                    LogError("response.error: " + response.error);
+                    LogWarn("response.error: " + response.error);
                 done = true;
                 if (response != null && response.data != null && response.data.reportingDataResponse != null && response.data.reportingDataResponse.row != null)
                 {
@@ -118,6 +150,7 @@ namespace Apple
                 }
             }
         }
+
         private AppleReportResponse GetReport(ReportRequest requestBody, string orgId, string certificateCode)
         {
             var request = new RestRequest("reports/campaigns", Method.POST);
@@ -126,9 +159,39 @@ namespace Apple
             var restResponse = ProcessRequest<AppleReportResponse>(request, certificateCode);
 
             if (restResponse != null)
+            {
                 return restResponse.Data;
+            }
             else
+            {
                 return null;
+            }
+        }
+
+        private void CheckСertificateValidity(DateTime certificateExpirationDate)
+        {
+            const int numberOfDaysOfWarnings = 7; //7 days
+            var dateToday = DateTime.Today;
+            var dateForCertificateVerification = dateToday.AddDays(numberOfDaysOfWarnings);
+            var result = DateTime.Compare(dateForCertificateVerification, certificateExpirationDate);
+            if (result >= 0)
+            {
+                 result = DateTime.Compare(dateToday, certificateExpirationDate);
+                 if (result >= 0)
+                 {
+                    LogError("Certificate has expired");
+                 }
+                 else
+                 {
+                     var numberOfDaysBeforeCertificate = GetDayBeforeCertificate(certificateExpirationDate, dateToday);
+                     LogWarn("Certificate expires in " + numberOfDaysBeforeCertificate + " days");
+                 }
+            }
+        }
+
+        private static int GetDayBeforeCertificate(DateTime certificateExpirationDate, DateTime dateToday)
+        {
+            return Convert.ToInt32((certificateExpirationDate - dateToday).TotalDays);
         }
     }
 }
