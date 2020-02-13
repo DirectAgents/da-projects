@@ -44,7 +44,7 @@ namespace FacebookAPI.Providers
             }
             catch
             {
-                LogError("Failed Fetch Ads Metadata values");
+                LogWarn("Failed Fetch Ads Metadata values");
             }
             return allAdsMetadata;
         }

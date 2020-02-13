@@ -10,16 +10,11 @@ namespace FacebookAPI.Converters
     {
         private Action<string> _LogWarn;
 
-        private void LogWarn(string message)
-        {
-            _LogWarn(message);
-        }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="FacebookReachMetricConverter"/> class.
         /// </summary>
         /// <param name="logWarn">Action for logging (the warn level).</param>
-        public FacebookReachMetricConverter( Action<string> logWarn)
+        public FacebookReachMetricConverter(Action<string> logWarn)
         {
             _LogWarn = logWarn;
         }
@@ -31,12 +26,8 @@ namespace FacebookAPI.Converters
         /// <returns>Facebook Reach metric.</returns>
         public FbReachRow ParseSummaryFromRow(dynamic row)
         {
-            var richMetric = row.reach;
-
-            if (string.IsNullOrEmpty(row.reach))
+            if (IsNullRichMetric(row.reach))
             {
-                const string defaultReachMetricString = "0";
-                richMetric = defaultReachMetricString;
                 LogWarn("Reach metric is null");
             }
 
@@ -44,8 +35,18 @@ namespace FacebookAPI.Converters
             {
                 StartDate = DateTime.Parse(row.date_start),
                 EndDate = DateTime.Parse(row.date_stop),
-                Reach = int.Parse(richMetric),
+                Reach = Convert.ToInt32(row.reach),
             };
+        }
+
+        private bool IsNullRichMetric(dynamic rich)
+        {
+            return object.ReferenceEquals(null, rich);
+        }
+
+        private void LogWarn(string message)
+        {
+            _LogWarn(message);
         }
     }
 }
