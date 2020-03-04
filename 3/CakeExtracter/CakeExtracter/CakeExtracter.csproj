@@ -438,6 +438,7 @@
     <Compile Include="Commands\DA\DASynchKochavaStats.cs" />
     <Compile Include="Commands\DA\DaSynchYamStats.cs" />
     <Compile Include="Commands\DA\DASynchYAMStats_Outdated.cs" />
+    <Compile Include="Commands\DPA\DPAProcessOrganicKeywordsData.cs" />
     <Compile Include="Commands\Selenium\SyncAmazonPdaCommand.cs" />
     <Compile Include="Commands\Selenium\SyncAmazonVcdCommand.cs" />
     <Compile Include="Common\CommandAutoStopWatcher.cs" />
