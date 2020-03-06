@@ -117,7 +117,7 @@ namespace CakeExtracter.Commands.Search
                 var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
                 Logger.Info("Apple ETL. DateRange {0}.", dateRange);
 
-                var appleAdsUtility = new AppleAdsUtility(m => Logger.Info(m), m => Logger.Warn(m));
+                var appleAdsUtility = new AppleAdsUtility(m => Logger.Warn(m), m => Logger.Error(m));
                 var searchAccounts = GetSearchAccounts();
 
                 foreach (var searchAccount in searchAccounts)
