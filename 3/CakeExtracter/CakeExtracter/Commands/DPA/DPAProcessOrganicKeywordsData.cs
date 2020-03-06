@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using System.Configuration;
-
 using CakeExtracter.Common;
 using SeleniumDataBrowser.Helpers;
 
@@ -32,26 +31,13 @@ namespace CakeExtracter.Commands.DPA
             sqlScriptsExecutor = new SqlScriptsExecutor(DaDataConnectionStringName);
         }
 
-        /// <summary>
-        /// Gets a relative path to sql script to process data.
-        /// </summary>
-        public string SqlScriptRelativePath
-        {
-            get
-            {
-                var path = ConfigurationManager.AppSettings[DPAScriptPathConfigurationKey];
-                var name = ConfigurationManager.AppSettings[scriptName];
-                return PathToFileDirectoryHelper.GetAssemblyRelativePath(PathToFileDirectoryHelper.CombinePath(path, name));
-            }
-        }
-
         /// <inheritdoc/>
         public override int Execute(string[] remainingArguments)
         {
             Logger.Info($"DPAProcessOrganicKeywordsData start execute a {scriptName} sql script at {DateTime.Now}");
             try
             {
-                sqlScriptsExecutor.ExecuteScriptWithParams(SqlScriptRelativePath, Array.Empty<string>());
+                sqlScriptsExecutor.ExecuteScriptWithParams(GetSqlScriptRelativePath(), Array.Empty<string>());
             }
             catch (Exception e)
             {
@@ -60,6 +46,14 @@ namespace CakeExtracter.Commands.DPA
 
             Logger.Info($"DPAProcessOrganicKeywordsData finished execute a {scriptName} sql script at {DateTime.Now}");
             return 0;
+        }
+
+        private string GetSqlScriptRelativePath()
+        {
+            var path = ConfigurationManager.AppSettings[DPAScriptPathConfigurationKey];
+            var name = ConfigurationManager.AppSettings[scriptName];
+            var filePath = PathToFileDirectoryHelper.CombinePath(path, name);
+            return PathToFileDirectoryHelper.GetAssemblyRelativePath(filePath);
         }
     }
 }
