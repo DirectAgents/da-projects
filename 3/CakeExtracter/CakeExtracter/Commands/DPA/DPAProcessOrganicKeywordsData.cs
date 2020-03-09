@@ -31,13 +31,18 @@ namespace CakeExtracter.Commands.DPA
             sqlScriptsExecutor = new SqlScriptsExecutor(DaDataConnectionStringName);
         }
 
+        /// <summary>
+        /// Gets relative path of the sql script.
+        /// </summary>
+        public string SqlScriptRelativePath => GetSqlScriptRelativePath();
+
         /// <inheritdoc/>
         public override int Execute(string[] remainingArguments)
         {
             Logger.Info($"DPAProcessOrganicKeywordsData start execute a {scriptName} sql script at {DateTime.Now}");
             try
             {
-                sqlScriptsExecutor.ExecuteScriptWithParams(GetSqlScriptRelativePath(), Array.Empty<string>());
+                sqlScriptsExecutor.ExecuteScriptWithParams(SqlScriptRelativePath, Array.Empty<string>());
             }
             catch (Exception e)
             {
