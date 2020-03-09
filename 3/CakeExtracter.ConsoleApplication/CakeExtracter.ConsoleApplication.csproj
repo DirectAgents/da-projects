@@ -246,7 +246,7 @@
     <Content Include="SQL\DPA\EnrichBrandVolumes.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL\DPA\EnrichProdactVolumes.sql">
+    <Content Include="SQL\DPA\EnrichProductVolumes.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="SQL\DPA\EnrichTotalVolumes.sql">
