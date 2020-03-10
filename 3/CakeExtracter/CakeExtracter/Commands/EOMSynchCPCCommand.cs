@@ -15,12 +15,13 @@ namespace CakeExtracter.Commands
         {
             AutoMapperBootstrapper.CheckRunSetup();
             var cmd = new EOMSynchCPCCommand
-                {
-                    OfferId = offerid,
-                    mainRepo = mainRepository,
-                    StartDate = start,
-                    EndDate = end
-                };
+            {
+                OfferId = offerid,
+                mainRepo = mainRepository,
+                StartDate = start,
+                EndDate = end,
+                ExecuteWithoutContext = true,
+            };
 
             return cmd.Run();
         }
