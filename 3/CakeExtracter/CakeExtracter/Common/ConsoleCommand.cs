@@ -46,6 +46,11 @@ namespace CakeExtracter.Common
         protected bool IsAutoShutDownMechanismEnabled { get; set; } = true;
 
         /// <summary>
+        /// Gets or sets a value indicating whether to execute the command without using a CommandExecutionContext.
+        /// </summary>
+        protected bool ExecuteWithoutContext { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ConsoleCommand"/> class.
         /// The constructor sets base command arguments names and provides a description for them.
         /// </summary>
@@ -75,7 +80,14 @@ namespace CakeExtracter.Common
             Logger.Info("Executing command: {0}", commandName);
             using (new LogElapsedTime("for " + commandName))
             {
-                return ExecuteJobWithContext(remainingArguments);
+                if (ExecuteWithoutContext)
+                {
+                    return Execute(remainingArguments);
+                }
+                else
+                {
+                    return ExecuteJobWithContext(remainingArguments);
+                }
             }
         }
 
