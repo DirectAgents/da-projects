@@ -5,5 +5,7 @@
         public string KeywordId { get; set; }
 
         public string KeywordText { get; set; }
+
+        public string MatchType { get; set; }
     }
 }

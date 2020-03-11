@@ -148,6 +148,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
             var keywordSums = ExtractKeywordSummaries(date);
             var keywordItems = TransformSummaries(keywordSums, date, campaignsData);
             var targetSums = ExtractTargetSummaries(date);
+            var test = keywordItems.Where(x => !string.IsNullOrWhiteSpace(x.Keyword.MediaType));
             var targetItems = TransformSummaries(targetSums, date, campaignsData);
             var items = keywordItems.Concat(targetItems);
             return items.ToList();
@@ -199,7 +200,17 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
             var sum = CreateSummary(keywordStat as AmazonStatSummary, date, relatedCampaign);
             sum.KeywordEid = keywordStat.KeywordId;
             sum.KeywordName = keywordStat.KeywordText;
+            if (IsSponsoredBrands(keywordStat.CampaignType))
+            {
+                sum.Keyword.MediaType = keywordStat.MatchType;
+            }
+
             return sum;
+        }
+
+        private bool IsSponsoredBrands(string campaign)
+        {
+            return campaign.Equals(CampaignType.SponsoredBrands.ToString(), StringComparison.OrdinalIgnoreCase);
         }
 
         private KeywordSummary CreateSummary(
@@ -223,6 +234,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
                 StrategyName = stat.CampaignName,
                 StrategyType = stat.CampaignType,
                 StrategyTargetingType = relatedCampaign?.TargetingType,
+                Keyword = new Keyword(),
             };
             SetCPProgStats(sum, stat, date);
             return sum;

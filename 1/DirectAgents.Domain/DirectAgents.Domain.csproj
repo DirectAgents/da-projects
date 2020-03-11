@@ -141,6 +141,10 @@
     <Compile Include="MigrationsTD\201911291635045_Mig_FacebookAddSeparatedReachMetric.Designer.cs">
       <DependentUpon>201911291635045_Mig_FacebookAddSeparatedReachMetric.cs</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsTD\202003091059530_Mig_AmazonAddMediaType.cs" />
+    <Compile Include="MigrationsTD\202003091059530_Mig_AmazonAddMediaType.Designer.cs">
+      <DependentUpon>202003091059530_Mig_AmazonAddMediaType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\201909270822065_Mig_Affiliate_AccountManager.cs" />
     <Compile Include="Migrations\201909270822065_Mig_Affiliate_AccountManager.Designer.cs">
       <DependentUpon>201909270822065_Mig_Affiliate_AccountManager.cs</DependentUpon>
@@ -1188,6 +1192,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201911291635045_Mig_FacebookAddSeparatedReachMetric.resx">
       <DependentUpon>201911291635045_Mig_FacebookAddSeparatedReachMetric.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\202003091059530_Mig_AmazonAddMediaType.resx">
+      <DependentUpon>202003091059530_Mig_AmazonAddMediaType.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

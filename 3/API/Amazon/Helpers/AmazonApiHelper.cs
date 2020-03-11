@@ -20,6 +20,7 @@ namespace Amazon.Helpers
         private const string AdGroupIdMetric = "adGroupId";
         private const string AdGroupNameMetric = "adGroupName";
         private const string KeywordTextMetric = "keywordText";
+        private const string KeywordMatchTypeFilter = "matchType";
         private const string TargetTextMetric = "targetingText";
         private const string AsinMetric = "asin";
         private const string OtherAsinMetric = "otherAsin";
@@ -323,7 +324,17 @@ namespace Amazon.Helpers
             var dependentEntityMetrics = DependentEntityTypeMetrics[entitiesType];
             metrics.AddRange(dependentCampaignMetrics);
             metrics.AddRange(dependentEntityMetrics);
+            if (IsSponsoredBrands(campaignType))
+            {
+                metrics.Add(KeywordMatchTypeFilter);
+            }
+
             return metrics;
+        }
+
+        private static bool IsSponsoredBrands(CampaignType campaignType)
+        {
+            return campaignType.Equals(CampaignType.SponsoredBrands);
         }
 
         private static IEnumerable<string> GetAsinReportMetrics()
