@@ -329,6 +329,16 @@ namespace Amazon
 
         #endregion
 
+        /// <summary>
+        /// Checks company type with Sponsored Brands type.
+        /// </summary>
+        /// <param name="campaignType">Type of campaign.</param>
+        /// <returns>Result of checking.</returns>
+        public static bool IsSponsoredBrands(string campaignType)
+        {
+            return campaignType.Equals(CampaignType.SponsoredBrands.ToString(), StringComparison.OrdinalIgnoreCase);
+        }
+
         // for alternative credentials...
         public void SetWhichAlt(string accountId)
         {

@@ -324,17 +324,12 @@ namespace Amazon.Helpers
             var dependentEntityMetrics = DependentEntityTypeMetrics[entitiesType];
             metrics.AddRange(dependentCampaignMetrics);
             metrics.AddRange(dependentEntityMetrics);
-            if (IsSponsoredBrands(campaignType))
+            if (AmazonUtility.IsSponsoredBrands(campaignType.ToString()))
             {
                 metrics.Add(KeywordMatchTypeFilter);
             }
 
             return metrics;
-        }
-
-        private static bool IsSponsoredBrands(CampaignType campaignType)
-        {
-            return campaignType.Equals(CampaignType.SponsoredBrands);
         }
 
         private static IEnumerable<string> GetAsinReportMetrics()
