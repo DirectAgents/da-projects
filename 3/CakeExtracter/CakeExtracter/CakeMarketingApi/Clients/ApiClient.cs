@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using CakeExtracter.Helpers;
 using Polly;
 using RestSharp;
@@ -8,8 +9,8 @@ namespace CakeExtracter.CakeMarketingApi.Clients
 {
     public abstract class ApiClient
     {
-        protected const string ApiKey = "FCjdYAcwQE";
         protected const string Domain = "login.directagents.com";
+        protected readonly string ApiKey = ConfigurationManager.AppSettings["CakeApiKey"];
         protected readonly string BaseUrl;
 
         private int maxRetryAttempt;
