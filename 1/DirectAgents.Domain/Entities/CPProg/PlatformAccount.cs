@@ -103,6 +103,10 @@ namespace DirectAgents.Domain.Entities.CPProg
         public string KeywordName { get; set; }
         [NotMapped]
         public string KeywordEid { get; set; }
+
+        [NotMapped]
+        public string KeywordMediaType { get; set; }
+
         [NotMapped]
         public string SearchTermName { get; set; }
         public string Month { get; set; }
@@ -119,6 +123,7 @@ namespace DirectAgents.Domain.Entities.CPProg
             SiteName = "Website";
             KeywordName = "";
             KeywordEid = "";
+            KeywordMediaType = "";
             SearchTermName = "";
             Month = "Month";
         }

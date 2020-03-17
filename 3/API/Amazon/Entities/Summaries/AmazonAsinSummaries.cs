@@ -6,6 +6,8 @@
 
         public string KeywordText { get; set; }
 
+        public string MatchType { get; set; }
+
         public string Asin { get; set; }
 
         public string OtherAsin { get; set; }

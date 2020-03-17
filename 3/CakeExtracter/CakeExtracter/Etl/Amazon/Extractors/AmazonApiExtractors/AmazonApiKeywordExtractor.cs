@@ -201,7 +201,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
             sum.KeywordName = keywordStat.KeywordText;
             if (AmazonUtility.IsSponsoredBrands(keywordStat.CampaignType))
             {
-                sum.Keyword.MediaType = keywordStat.MatchType;
+                sum.KeywordMediaType = keywordStat.MatchType;
             }
 
             return sum;
@@ -228,7 +228,6 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
                 StrategyName = stat.CampaignName,
                 StrategyType = stat.CampaignType,
                 StrategyTargetingType = relatedCampaign?.TargetingType,
-                Keyword = new Keyword(),
             };
             SetCPProgStats(sum, stat, date);
             return sum;
