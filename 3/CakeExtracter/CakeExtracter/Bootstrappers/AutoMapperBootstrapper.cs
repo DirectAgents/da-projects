@@ -90,7 +90,7 @@ namespace CakeExtracter.Bootstrappers
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.KeywordSummary, DirectAgents.Domain.Entities.CPProg.Keyword>()
                     .ForMember(d => d.Id, opt => opt.MapFrom(s => s.KeywordId))
                     .ForMember(d => d.Name, opt => opt.MapFrom(s => s.KeywordName))
-                    .ForMember(d => d.MediaType, opt => opt.MapFrom(s => s.KeywordMediaType))//update
+                    .ForMember(d => d.MediaType, opt => opt.MapFrom(s => s.KeywordMediaType))
                     .ForMember(d => d.ExternalId, opt => opt.MapFrom(s => s.KeywordEid))
                     .ForMember(d => d.Strategy, opt => opt.MapFrom(s => new Strategy
                     {
