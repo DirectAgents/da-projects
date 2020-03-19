@@ -330,13 +330,13 @@ namespace Amazon
         #endregion
 
         /// <summary>
-        /// Checks company type with Sponsored Brands type.
+        /// Checks compaign type with Sponsored Brands type.
         /// </summary>
         /// <param name="campaignType">Type of campaign.</param>
         /// <returns>Result of checking.</returns>
-        public static bool IsSponsoredBrands(string campaignType)
+        public bool IsSponsoredBrands(string campaignType)
         {
-            return campaignType.Equals(CampaignType.SponsoredBrands.ToString(), StringComparison.OrdinalIgnoreCase);
+            return AmazonApiHelper.IsSponsoredBrands(campaignType);
         }
 
         // for alternative credentials...
