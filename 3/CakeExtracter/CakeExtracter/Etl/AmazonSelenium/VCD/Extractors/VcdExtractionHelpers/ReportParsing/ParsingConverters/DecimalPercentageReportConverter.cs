@@ -1,23 +1,37 @@
 ﻿using System.Globalization;
-using CsvHelper.TypeConversion;
 
 namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing.ParsingConverters
 {
-    internal sealed class DecimalPercentageReportConverter : StringConverter
+    /// <inheritdoc />
+    /// <summary>
+    /// VCD Report Converter for decimal values for monetary amounts.
+    /// </summary>
+    internal sealed class DecimalPercentageReportConverter : DecimalReportConverter
     {
-        private const string EmptyValue = "—";
+        private const char PercentSymbol = '%';
         private const decimal ValueForEmpty = -0.000001M;
 
-        public override object ConvertFromString(TypeConverterOptions options, string text)
+        /// <inheritdoc />
+        protected override decimal GetValueWhenEmpty()
         {
-            if (text == EmptyValue)
-            {
-                return ValueForEmpty;
-            }
-            var preparedTextValue = text.TrimEnd('%');
-            var value = decimal.Parse(
-                preparedTextValue,
-                NumberStyles.AllowCurrencySymbol | NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowThousands);
+            return ValueForEmpty;
+        }
+
+        /// <inheritdoc />
+        protected override string PrepareTextValue(string textValue)
+        {
+            return textValue.TrimEnd(PercentSymbol);
+        }
+
+        /// <inheritdoc />
+        protected override decimal ConvertValueToDecimal(string value)
+        {
+            return decimal.Parse(value, NumberStyles.AllowCurrencySymbol | NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowThousands);
+        }
+
+        /// <inheritdoc />
+        protected override decimal CalculateValue(decimal value)
+        {
             return value / 100M;
         }
     }

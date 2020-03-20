@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Amazon.Helpers;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing.ParsingConverters;
+using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing.RowMaps;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Models;
 using CsvHelper;
 using CsvHelper.Configuration;
