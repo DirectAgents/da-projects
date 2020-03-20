@@ -18,6 +18,8 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.Constants
 
         public const string OrderedRevenueMetricName = "vendorOrderedRevenue";
 
+        public const string LostBuyBoxMetricName = "vendorLostBuyBox";
+
         public const int VendorMetricsDaysInterval = 1;
 
         public static readonly List<string> VendorMetricTypeNames = new List<string>
@@ -29,6 +31,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.Constants
             FreeReplacementMetricName,
             CustomerReturnsMetricName,
             OrderedRevenueMetricName,
+            LostBuyBoxMetricName,
         };
     }
 }
