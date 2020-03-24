@@ -17,12 +17,12 @@ LEFT JOIN [dbo].[organic_position_page_multiplier] AS multi ON TRY_CAST([org].[i
 WHERE   [org].[spons] != 'Sponsored'
     AND [org].[title] != 'sb'
     AND [org].[index] != 'sb'
-    AND [org].[IsTotalsProcessed] = 0
+    AND [org].[IsTotalExtracted] = 0
 GROUP BY [org].[phrase], [org].[page], [org].[datetime]
 
 UPDATE  [dbo].[Organic_newKeywords_130]
-SET     [IsTotalsProcessed] = 1
+SET     [IsTotalExtracted] = 1
 WHERE   [spons] != 'Sponsored'
     AND [title] != 'sb'
     AND [index] != 'sb'
-    AND [IsTotalsProcessed] = 0
+    AND [IsTotalExtracted] = 0

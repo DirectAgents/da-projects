@@ -28,14 +28,14 @@ WHERE   [org].[spons] != 'Sponsored'
     AND ([org].[brand] LIKE 'Carhartt%'
        OR [org].[brand] LIKE 'Dickies%'
        OR [org].[brand] LIKE 'Amazon%')
-    AND [org].[IsProductsProcessed] = 0
+    AND [org].[IsProductExtracted] = 0
 
 UPDATE  [dbo].[Organic_newKeywords_130]
-SET     [IsProductsProcessed] = 1
+SET     [IsProductExtracted] = 1
 WHERE   [spons] != 'Sponsored'
     AND [title] != 'sb'
     AND [index] != 'sb'
     AND ([brand] LIKE 'Carhartt%'
        OR [brand] LIKE 'Dickies%'
        OR [brand] LIKE 'Amazon%')
-    AND [IsProductsProcessed] = 0
+    AND [IsProductExtracted] = 0

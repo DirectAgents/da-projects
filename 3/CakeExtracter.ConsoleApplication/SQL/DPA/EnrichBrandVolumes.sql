@@ -19,12 +19,12 @@ LEFT JOIN [dbo].[organic_position_page_multiplier] AS multi ON TRY_CAST([org].[i
 WHERE   [org].[spons] != 'Sponsored'
     AND [org].[title] != 'sb'
     AND [org].[index] != 'sb'
-    AND [org].[IsBrandsProcessed] = 0
+    AND [org].[IsBrandExtracted] = 0
 GROUP BY [org].[phrase], [org].[page], [org].[brand], [org].[datetime]
 
 UPDATE  [dbo].[Organic_newKeywords_130]
-SET     [IsBrandsProcessed] = 1
+SET     [IsBrandExtracted] = 1
 WHERE   [spons] != 'Sponsored'
     AND [title] != 'sb'
     AND [index] != 'sb'
-    AND [IsBrandsProcessed] = 0
+    AND [IsBrandExtracted] = 0
