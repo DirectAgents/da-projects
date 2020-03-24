@@ -1,6 +1,4 @@
-﻿DECLARE @dateStart DATE = GETDATE();
-
-INSERT INTO [dbo].[VolumesProduct]
+﻿INSERT INTO [dbo].[VolumesProduct]
 (
     [phrase],
     [brand],
@@ -30,4 +28,14 @@ WHERE   [org].[spons] != 'Sponsored'
     AND ([org].[brand] LIKE 'Carhartt%'
        OR [org].[brand] LIKE 'Dickies%'
        OR [org].[brand] LIKE 'Amazon%')
-    AND TRY_CAST([org].[datetime] AS DATE) >= TRY_CAST(@dateStart AS DATE)
+    AND [org].[IsProductsProcessed] = 0
+
+UPDATE  [dbo].[Organic_newKeywords_130]
+SET     [IsProductsProcessed] = 1
+WHERE   [spons] != 'Sponsored'
+    AND [title] != 'sb'
+    AND [index] != 'sb'
+    AND ([brand] LIKE 'Carhartt%'
+       OR [brand] LIKE 'Dickies%'
+       OR [brand] LIKE 'Amazon%')
+    AND [IsProductsProcessed] = 0
