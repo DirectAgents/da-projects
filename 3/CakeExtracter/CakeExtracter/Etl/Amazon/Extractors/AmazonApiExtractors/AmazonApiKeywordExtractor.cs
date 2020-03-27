@@ -199,11 +199,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
             var sum = CreateSummary(keywordStat as AmazonStatSummary, date, relatedCampaign);
             sum.KeywordEid = keywordStat.KeywordId;
             sum.KeywordName = keywordStat.KeywordText;
-            if (_amazonUtility.IsSponsoredBrands(keywordStat.CampaignType))
-            {
-                sum.KeywordMediaType = keywordStat.MatchType;
-            }
-
+            sum.KeywordMediaType = keywordStat.MatchType;
             return sum;
         }
 

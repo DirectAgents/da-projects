@@ -292,14 +292,9 @@ namespace Amazon.Helpers
             return apiEndpointUrl ?? ApiEndpointUrl.NorthAmerica;
         }
 
-        /// <summary>
-        /// Checks campaign type with Sponsored Brands type.
-        /// </summary>
-        /// <param name="campaignType">Type of campaign.</param>
-        /// <returns>Result of checking.</returns>
-        public static bool IsSponsoredBrands(string campaignType)
+        private static bool IsKeywords(EntitesType entitiesType)
         {
-            return campaignType.Equals(CampaignTypeReadableNames[CampaignType.SponsoredBrands], StringComparison.OrdinalIgnoreCase);
+            return entitiesType == EntitesType.Keywords;
         }
 
         private static string GetBaseEntitiesPath(EntitesType entitiesType, CampaignType campaignType)
@@ -334,7 +329,7 @@ namespace Amazon.Helpers
             var dependentEntityMetrics = DependentEntityTypeMetrics[entitiesType];
             metrics.AddRange(dependentCampaignMetrics);
             metrics.AddRange(dependentEntityMetrics);
-            if (IsSponsoredBrands(campaignType.ToString()))
+            if (IsKeywords(entitiesType))
             {
                 metrics.Add(KeywordMatchTypeFilter);
             }
