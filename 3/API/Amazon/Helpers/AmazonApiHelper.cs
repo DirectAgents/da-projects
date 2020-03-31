@@ -292,7 +292,7 @@ namespace Amazon.Helpers
             return apiEndpointUrl ?? ApiEndpointUrl.NorthAmerica;
         }
 
-        private static bool IsKeywords(EntitesType entitiesType)
+        private static bool IsEntitiesTypeKeywords(EntitesType entitiesType)
         {
             return entitiesType == EntitesType.Keywords;
         }
@@ -329,7 +329,7 @@ namespace Amazon.Helpers
             var dependentEntityMetrics = DependentEntityTypeMetrics[entitiesType];
             metrics.AddRange(dependentCampaignMetrics);
             metrics.AddRange(dependentEntityMetrics);
-            if (IsKeywords(entitiesType))
+            if (IsEntitiesTypeKeywords(entitiesType))
             {
                 metrics.Add(KeywordMatchTypeFilter);
             }
