@@ -53,6 +53,12 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Models
             set;
         }
 
+        public decimal LostBuyBox
+        {
+            get;
+            set;
+        }
+
         public void SetMetrics<T>(IEnumerable<T> items)
             where T : ShippingItem
         {
@@ -63,6 +69,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Models
             FreeReplacements = items.Sum(p => p.FreeReplacements);
             ShippedCogs = items.Sum(p => p.ShippedCogs);
             OrderedRevenue = items.Sum(p => p.OrderedRevenue);
+            LostBuyBox = items.Sum(p => p.LostBuyBox);
         }
     }
 }

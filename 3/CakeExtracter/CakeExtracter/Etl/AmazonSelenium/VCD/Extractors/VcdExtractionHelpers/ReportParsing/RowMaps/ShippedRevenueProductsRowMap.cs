@@ -1,4 +1,6 @@
-﻿namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing.ParsingConverters
+﻿using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing.ParsingConverters;
+
+namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing.RowMaps
 {
     /// <inheritdoc />
     /// <summary>
@@ -28,6 +30,7 @@
             Map(m => m.ShippedRevenue).Name("shippedrevenue").TypeConverter<DecimalAmountReportConverter>();
             Map(m => m.ShippedUnits).Name("shippedunits").TypeConverter<IntNumberReportConverter>();
             Map(m => m.OrderedUnits).Name("orderedunits").TypeConverter<IntNumberReportConverter>();
+            Map(m => m.LostBuyBox).Name("lostbuybox").TypeConverter<DecimalPercentageReportConverter>();
         }
     }
 }

@@ -84,13 +84,14 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
         {
             var metricEntities = new List<TSummaryMetricEntity>
             {
-                InitMetricValue(dbEntity.Id, date, reportEntity.ShippedUnits, metricTypes[VendorCentralDataLoadingConstants.ShippedUnitsMetricName]),
-                InitMetricValue(dbEntity.Id, date, reportEntity.OrderedUnits, metricTypes[VendorCentralDataLoadingConstants.OrderedUnitsMetricName]),
-                InitMetricValue(dbEntity.Id, date, reportEntity.ShippedRevenue, metricTypes[VendorCentralDataLoadingConstants.ShippedRevenueMetricName]),
-                InitMetricValue(dbEntity.Id, date, reportEntity.CustomerReturns, metricTypes[VendorCentralDataLoadingConstants.CustomerReturnsMetricName]),
-                InitMetricValue(dbEntity.Id, date, reportEntity.FreeReplacements, metricTypes[VendorCentralDataLoadingConstants.FreeReplacementMetricName]),
-                InitMetricValue(dbEntity.Id, date, reportEntity.ShippedCogs, metricTypes[VendorCentralDataLoadingConstants.ShippedCogsMetricName]),
-                InitMetricValue(dbEntity.Id, date, reportEntity.OrderedRevenue, metricTypes[VendorCentralDataLoadingConstants.OrderedRevenueMetricName]),
+                InitMetricValue(dbEntity.Id, date, reportEntity.ShippedUnits, VendorCentralDataLoadingConstants.ShippedUnitsMetricName),
+                InitMetricValue(dbEntity.Id, date, reportEntity.OrderedUnits, VendorCentralDataLoadingConstants.OrderedUnitsMetricName),
+                InitMetricValue(dbEntity.Id, date, reportEntity.ShippedRevenue, VendorCentralDataLoadingConstants.ShippedRevenueMetricName),
+                InitMetricValue(dbEntity.Id, date, reportEntity.CustomerReturns, VendorCentralDataLoadingConstants.CustomerReturnsMetricName),
+                InitMetricValue(dbEntity.Id, date, reportEntity.FreeReplacements, VendorCentralDataLoadingConstants.FreeReplacementMetricName),
+                InitMetricValue(dbEntity.Id, date, reportEntity.ShippedCogs, VendorCentralDataLoadingConstants.ShippedCogsMetricName),
+                InitMetricValue(dbEntity.Id, date, reportEntity.OrderedRevenue, VendorCentralDataLoadingConstants.OrderedRevenueMetricName),
+                InitMetricValue(dbEntity.Id, date, reportEntity.LostBuyBox, VendorCentralDataLoadingConstants.LostBuyBoxMetricName),
             };
             metricEntities.RemoveAll(item => item == null);
             return metricEntities;
@@ -153,19 +154,27 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
             return actualAccountDailySummaries;
         }
 
-        private TSummaryMetricEntity InitMetricValue(int entityId, DateTime date, decimal value, int metricTypeId)
+        private TSummaryMetricEntity InitMetricValue(int entityId, DateTime date, decimal value, string metricType)
         {
-            if (value != 0)
+            return metricType == VendorCentralDataLoadingConstants.LostBuyBoxMetricName
+                ? InitMetricValue(entityId, date, value, metricTypes[metricType], false)
+                : InitMetricValue(entityId, date, value, metricTypes[metricType]);
+        }
+
+        private TSummaryMetricEntity InitMetricValue(int entityId, DateTime date, decimal value, int metricTypeId, bool setZeroValueToNull = true)
+        {
+            const decimal emptyValueForComparison = -0.000001M;
+            if ((setZeroValueToNull && value == 0) || (!setZeroValueToNull && value == emptyValueForComparison))
             {
-                return new TSummaryMetricEntity
-                {
-                    EntityId = entityId,
-                    MetricTypeId = metricTypeId,
-                    Date = date,
-                    Value = value,
-                };
+                return null;
             }
-            return null;
+            return new TSummaryMetricEntity
+            {
+                EntityId = entityId,
+                MetricTypeId = metricTypeId,
+                Date = date,
+                Value = value,
+            };
         }
     }
 }
