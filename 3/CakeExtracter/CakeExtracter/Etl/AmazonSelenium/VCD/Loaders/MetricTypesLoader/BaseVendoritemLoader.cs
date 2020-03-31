@@ -92,6 +92,9 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
                 InitMetricValue(dbEntity.Id, date, reportEntity.ShippedCogs, VendorCentralDataLoadingConstants.ShippedCogsMetricName),
                 InitMetricValue(dbEntity.Id, date, reportEntity.OrderedRevenue, VendorCentralDataLoadingConstants.OrderedRevenueMetricName),
                 InitMetricValue(dbEntity.Id, date, reportEntity.LostBuyBox, VendorCentralDataLoadingConstants.LostBuyBoxMetricName),
+                InitMetricValue(dbEntity.Id, date, reportEntity.RepOos, VendorCentralDataLoadingConstants.RepOosMetricName),
+                InitMetricValue(dbEntity.Id, date, reportEntity.RepOosPercentOfTotal, VendorCentralDataLoadingConstants.RepOosPercentOfTotalMetricName),
+                InitMetricValue(dbEntity.Id, date, reportEntity.RepOosPriorPeriodPercentChange, VendorCentralDataLoadingConstants.RepOosPriorPeriodPercentChangeMetricName),
             };
             metricEntities.RemoveAll(item => item == null);
             return metricEntities;
@@ -156,7 +159,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
 
         private TSummaryMetricEntity InitMetricValue(int entityId, DateTime date, decimal value, string metricType)
         {
-            return metricType == VendorCentralDataLoadingConstants.LostBuyBoxMetricName
+            return VendorCentralDataLoadingConstants.AllowedZeroValueMetricTypeNames.Contains(metricType)
                 ? InitMetricValue(entityId, date, value, metricTypes[metricType], false)
                 : InitMetricValue(entityId, date, value, metricTypes[metricType]);
         }

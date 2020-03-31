@@ -488,6 +488,9 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.CustomerReturns).HasPrecision(18, 6);
             modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.OrderedRevenue).HasPrecision(18, 6);
             modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.LBB).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.RepOos).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.RepOosPercentOfTotal).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.RepOosPriorPeriodPercentChange).HasPrecision(18, 6);
         }
 
         private void SetupDailyMetricModelValues<TDailyMetricValues>(DbModelBuilder modelBuilder, string entityColumnName)

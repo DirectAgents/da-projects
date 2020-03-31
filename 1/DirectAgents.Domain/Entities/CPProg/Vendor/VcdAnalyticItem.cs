@@ -60,5 +60,11 @@ namespace DirectAgents.Domain.Entities.CPProg.Vendor
         public decimal? OrderedRevenue { get; set; }
 
         public decimal? LBB { get; set; }
+
+        public decimal? RepOos { get; set; }
+
+        public decimal? RepOosPercentOfTotal { get; set; }
+
+        public decimal? RepOosPriorPeriodPercentChange { get; set; }
     }
 }
