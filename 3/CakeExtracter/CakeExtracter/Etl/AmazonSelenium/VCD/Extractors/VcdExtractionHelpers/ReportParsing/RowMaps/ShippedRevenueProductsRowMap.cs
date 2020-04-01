@@ -31,6 +31,9 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
             Map(m => m.ShippedUnits).Name("shippedunits").TypeConverter<IntNumberReportConverter>();
             Map(m => m.OrderedUnits).Name("orderedunits").TypeConverter<IntNumberReportConverter>();
             Map(m => m.LostBuyBox).Name("lostbuybox").TypeConverter<DecimalPercentageReportConverter>();
+            Map(m => m.RepOos).Name("repoos").TypeConverter<DecimalPercentageReportConverter>();
+            Map(m => m.RepOosPercentOfTotal).Name("repoospercentoftotal").TypeConverter<DecimalPercentageReportConverter>();
+            Map(m => m.RepOosPriorPeriodPercentChange).Name("repoospriorperiodpercentchange").TypeConverter<DecimalPercentageReportConverter>();
         }
     }
 }
