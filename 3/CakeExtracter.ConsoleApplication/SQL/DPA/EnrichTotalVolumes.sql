@@ -1,4 +1,6 @@
-﻿INSERT INTO [dbo].[VolumesTotal]
+﻿DECLARE @dateStart DATE = GETDATE();
+
+INSERT INTO [dbo].[VolumesTotal]
 (
     [Search Volume],
     [Phrase],
@@ -17,12 +19,5 @@ LEFT JOIN [dbo].[organic_position_page_multiplier] AS multi ON TRY_CAST([org].[i
 WHERE   [org].[spons] != 'Sponsored'
     AND [org].[title] != 'sb'
     AND [org].[index] != 'sb'
-    AND [org].[IsTotalExtracted] = 0
+    AND TRY_CAST([org].[datetime] AS DATE) >= TRY_CAST(@dateStart AS DATE)
 GROUP BY [org].[phrase], [org].[page], [org].[datetime]
-
-UPDATE  [dbo].[Organic_newKeywords_130]
-SET     [IsTotalExtracted] = 1
-WHERE   [spons] != 'Sponsored'
-    AND [title] != 'sb'
-    AND [index] != 'sb'
-    AND [IsTotalExtracted] = 0
