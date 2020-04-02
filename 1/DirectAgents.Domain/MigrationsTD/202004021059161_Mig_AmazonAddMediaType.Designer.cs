@@ -13,7 +13,7 @@ namespace DirectAgents.Domain.MigrationsTD
         
         string IMigrationMetadata.Id
         {
-            get { return "202003091059530_Mig_AmazonAddMediaType"; }
+            get { return "202004021059161_Mig_AmazonAddMediaType"; }
         }
         
         string IMigrationMetadata.Source
