@@ -196,9 +196,9 @@ namespace Amazon.Helpers
                 {
                     CampaignType.ProductDisplay, new[]
                     {
-                      /* AttributedMetrics[AttributedMetricType.attributedDPV][AttributedMetricDaysInterval.Days14],
+                       AttributedMetrics[AttributedMetricType.attributedDPV][AttributedMetricDaysInterval.Days14],
                        AttributedMetrics[AttributedMetricType.attributedUnitsSold][AttributedMetricDaysInterval.Days14],
-                       AttributedMetrics[AttributedMetricType.attributedSales][AttributedMetricDaysInterval.Days14],*/
+                       AttributedMetrics[AttributedMetricType.attributedSales][AttributedMetricDaysInterval.Days14],
                        AttributedMetrics[AttributedMetricType.attributedUnitsOrdered][AttributedMetricDaysInterval.Days1],
                        AttributedMetrics[AttributedMetricType.attributedUnitsOrdered][AttributedMetricDaysInterval.Days7],
                        AttributedMetrics[AttributedMetricType.attributedUnitsOrdered][AttributedMetricDaysInterval.Days14],
