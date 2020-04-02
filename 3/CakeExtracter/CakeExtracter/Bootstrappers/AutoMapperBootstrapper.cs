@@ -140,7 +140,7 @@ namespace CakeExtracter.Bootstrappers
                 cfg.CreateMap<CommissionJunction.Entities.Item, CjAdvertiserCommissionItem>();
                 cfg.CreateMap<KochavaReportItem, KochavaItem>();
                 cfg.CreateMap<VcdAnalyticItem, VcdAnalyticItem>();
-                
+
                 CreateYamMaps(cfg);
             });
         }

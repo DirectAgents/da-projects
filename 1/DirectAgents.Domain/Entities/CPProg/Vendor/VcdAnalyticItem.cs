@@ -21,7 +21,7 @@ namespace DirectAgents.Domain.Entities.CPProg.Vendor
         public string ParentProductAsin { get; set; }
 
         public string BrandName { get; set; }
-        
+
         public string Ean { get; set; }
 
         public string Upc { get; set; }
@@ -41,6 +41,7 @@ namespace DirectAgents.Domain.Entities.CPProg.Vendor
         public string Name { get; set; }
 
         public int? AccountId { get; set; }
+
         [NotMapped]
         public ExtAccount Account { get; set; }
 
@@ -57,5 +58,13 @@ namespace DirectAgents.Domain.Entities.CPProg.Vendor
         public decimal? CustomerReturns { get; set; }
 
         public decimal? OrderedRevenue { get; set; }
+
+        public decimal? LBB { get; set; }
+
+        public decimal? RepOos { get; set; }
+
+        public decimal? RepOosPercentOfTotal { get; set; }
+
+        public decimal? RepOosPriorPeriodPercentChange { get; set; }
     }
 }

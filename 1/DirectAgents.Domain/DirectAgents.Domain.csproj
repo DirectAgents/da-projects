@@ -141,6 +141,14 @@
     <Compile Include="MigrationsTD\201911291635045_Mig_FacebookAddSeparatedReachMetric.Designer.cs">
       <DependentUpon>201911291635045_Mig_FacebookAddSeparatedReachMetric.cs</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsTD\202003221524241_Mig_VcdAddLbbMetric.cs" />
+    <Compile Include="MigrationsTD\202003221524241_Mig_VcdAddLbbMetric.Designer.cs">
+      <DependentUpon>202003221524241_Mig_VcdAddLbbMetric.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\202003311500168_Mig_VcdAddRepOosMetrics.cs" />
+    <Compile Include="MigrationsTD\202003311500168_Mig_VcdAddRepOosMetrics.Designer.cs">
+      <DependentUpon>202003311500168_Mig_VcdAddRepOosMetrics.cs</DependentUpon>
+    </Compile>
     <Compile Include="MigrationsTD\202003091059530_Mig_AmazonAddMediaType.cs" />
     <Compile Include="MigrationsTD\202003091059530_Mig_AmazonAddMediaType.Designer.cs">
       <DependentUpon>202003091059530_Mig_AmazonAddMediaType.cs</DependentUpon>
@@ -1192,6 +1200,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201911291635045_Mig_FacebookAddSeparatedReachMetric.resx">
       <DependentUpon>201911291635045_Mig_FacebookAddSeparatedReachMetric.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\202003221524241_Mig_VcdAddLbbMetric.resx">
+      <DependentUpon>202003221524241_Mig_VcdAddLbbMetric.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\202003311500168_Mig_VcdAddRepOosMetrics.resx">
+      <DependentUpon>202003311500168_Mig_VcdAddRepOosMetrics.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\202003091059530_Mig_AmazonAddMediaType.resx">
       <DependentUpon>202003091059530_Mig_AmazonAddMediaType.cs</DependentUpon>
