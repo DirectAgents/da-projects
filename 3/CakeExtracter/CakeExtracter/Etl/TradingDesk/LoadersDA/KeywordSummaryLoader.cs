@@ -135,7 +135,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             notNullableItems.ForEach(x => x.AccountId = AccountId);
             var keywords = notNullableItems
                 .Where(x => !string.IsNullOrWhiteSpace(x.Name) || !string.IsNullOrWhiteSpace(x.ExternalId))
-                .GroupBy(x => new { x.AccountId, x.AdSetId, x.StrategyId, x.Name, x.ExternalId })
+                .GroupBy(x => new { x.AccountId, x.AdSetId, x.StrategyId, x.Name, x.ExternalId, x.MediaType })
                 .Select(x => x.First())
                 .ToList();
             AddUpdateDependentKeywordsInDb(keywords);
@@ -319,7 +319,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 AdSetId = keywordProps.AdSetId,
                 StrategyId = keywordProps.StrategyId,
                 ExternalId = keywordProps.ExternalId,
-                Name = keywordProps.Name
+                Name = keywordProps.Name,
+                MediaType = keywordProps.MediaType,
             };
             db.Keywords.Add(keyword);
             SafeContextWrapper.TrySaveChanges(db);
@@ -345,6 +346,10 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 if (keywordProps.StrategyId.HasValue)
                 {
                     keyword.StrategyId = keywordProps.StrategyId;
+                }
+                if (!string.IsNullOrWhiteSpace(keywordProps.MediaType))
+                {
+                    keyword.MediaType = keywordProps.MediaType;
                 }
             }
             return SafeContextWrapper.TrySaveChanges(db);

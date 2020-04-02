@@ -103,6 +103,10 @@ namespace DirectAgents.Domain.Entities.CPProg
         public string KeywordName { get; set; }
         [NotMapped]
         public string KeywordEid { get; set; }
+
+        [NotMapped]
+        public string KeywordMediaType { get; set; }
+
         [NotMapped]
         public string SearchTermName { get; set; }
         public string Month { get; set; }
@@ -119,6 +123,7 @@ namespace DirectAgents.Domain.Entities.CPProg
             SiteName = "Website";
             KeywordName = "";
             KeywordEid = "";
+            KeywordMediaType = "";
             SearchTermName = "";
             Month = "Month";
         }
@@ -296,7 +301,7 @@ namespace DirectAgents.Domain.Entities.CPProg
         public int Id { get; set; }
         public string Name { get; set; }
         public string ExternalId { get; set; }
-
+        public string MediaType { get; set; }
         public int AccountId { get; set; }
         [ForeignKey("AccountId")]
         public virtual ExtAccount ExtAccount { get; set; }
