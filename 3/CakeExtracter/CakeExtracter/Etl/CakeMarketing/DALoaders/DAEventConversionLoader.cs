@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using Apple;
 using CakeExtracter.CakeMarketingApi.Entities;
+using CakeExtracter.Etl.CakeMarketing.Exceptions;
 using DirectAgents.Domain.Contexts;
 
 namespace CakeExtracter.Etl.CakeMarketing.DALoaders
@@ -11,15 +13,28 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
     {
         private DateTime MinDate = new DateTime(1900, 1, 1);
 
+        /// <summary>
+        /// Action for exception of failed loading.
+        /// </summary>
+        public event Action<CakeFailedEtlException> ProcessFailedLoading;
+
         protected override int Load(List<EventConversion> items)
         {
-            Logger.Info("Loading {0} EventConversions..", items.Count);
-            AddMissingOffers(items);
-            AddMissingAffiliates(items);
-            AddUpdateDependentEvents(items);
-            AddUpdateDependentPriceFormats(items);
-            var count = UpsertEventConversions(items);
-            return count;
+            try
+            {
+                Logger.Info("Loading {0} EventConversions..", items.Count);
+                AddMissingOffers(items);
+                AddMissingAffiliates(items);
+                AddUpdateDependentEvents(items);
+                AddUpdateDependentPriceFormats(items);
+                var count = UpsertEventConversions(items);
+                return count;
+            }
+            catch (Exception e)
+            {
+                ProcessFailedStatsLoading(e, items);
+                return items.Count;
+            }
         }
 
         private int UpsertEventConversions(List<EventConversion> items)
@@ -126,6 +141,7 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                 }
             }
         }
+
         public static void AddUpdateDependentPriceFormats(List<EventConversion> items)
         {
             using (var db = new DAContext())
@@ -150,6 +166,23 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                     }
                 }
             }
+        }
+
+        private void ProcessFailedStatsLoading(Exception e, List<EventConversion> items)
+        {
+            Logger.Error(e);
+            var exception = GetFailedLoadingException(e, items);
+            ProcessFailedLoading?.Invoke(exception);
+        }
+
+        protected virtual CakeFailedEtlException GetFailedLoadingException(Exception e, List<EventConversion> items)
+        {
+            var fromDate = items.Min(x => x.EventConversionDate);
+            var toDate = items.Max(x => x.EventConversionDate);
+            var fromDateArg = fromDate == default(DateTime) ? null : (DateTime?)fromDate;
+            var toDateArg = toDate == default(DateTime) ? null : (DateTime?)toDate;
+            var exception = new CakeFailedEtlException(fromDateArg, toDateArg, null, null, e);
+            return exception;
         }
     }
 }

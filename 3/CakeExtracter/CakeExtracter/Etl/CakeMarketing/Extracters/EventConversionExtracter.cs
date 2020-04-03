@@ -1,6 +1,8 @@
-﻿using CakeExtracter.CakeMarketingApi;
+﻿using System;
+using CakeExtracter.CakeMarketingApi;
 using CakeExtracter.CakeMarketingApi.Entities;
 using CakeExtracter.Common;
+using CakeExtracter.Etl.CakeMarketing.Exceptions;
 
 namespace CakeExtracter.Etl.CakeMarketing.Extracters
 {
@@ -9,6 +11,8 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
         private readonly DateRange dateRange;
         private readonly int advertiserId;
         private readonly int offerId;
+
+        public event Action<CakeFailedEtlException> ProcessFailedExtraction;
 
         public EventConversionExtracter(DateRange dateRange, int advertiserId, int offerId)
         {
@@ -19,16 +23,29 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
 
         protected override void Extract()
         {
-            Logger.Info("Extracting EventConversions from {0:d} to {1:d}, AdvId {2} OffId {3}",
-                        dateRange.FromDate, dateRange.ToDate, advertiserId, offerId);
+            Logger.Info($"Extracting EventConversions from {dateRange.FromDate:d} to {dateRange.ToDate:d}, AdvId {advertiserId} OffId {offerId}");
             foreach (var date in dateRange.Dates)
+            {
+                Extract(date);
+            }
+            End();
+        }
+
+        private void Extract(DateTime date)
+        {
+            try
             {
                 Logger.Info($"Extracting EventConversions for {date.ToShortDateString()}.");
                 var singleDate = new DateRange(date, date.AddDays(1));
                 var eventConvs = CakeMarketingUtility.EventConversions(singleDate, advertiserId, offerId);
                 Add(eventConvs);
             }
-            End();
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                var exception = new CakeFailedEtlException(date, date, advertiserId, offerId, e);
+                ProcessFailedExtraction?.Invoke(exception);
+            }
         }
     }
 }

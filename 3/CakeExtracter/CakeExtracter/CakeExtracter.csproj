@@ -566,6 +566,7 @@
     <Compile Include="Etl\CakeMarketing\DALoaders\DAEventConversionLoader.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Etl\CakeMarketing\Exceptions\CakeFailedEtlException.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\AffiliatesExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\EventConversionExtracter.cs">
       <SubType>Code</SubType>
