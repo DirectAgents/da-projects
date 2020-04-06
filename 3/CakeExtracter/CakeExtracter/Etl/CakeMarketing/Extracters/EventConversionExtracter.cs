@@ -12,7 +12,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
         private readonly int advertiserId;
         private readonly int offerId;
 
-        public event Action<CakeFailedEtlException> ProcessFailedExtraction;
+        public event Action<CakeEventConversionsFailedEtlException> ProcessFailedExtraction;
 
         public EventConversionExtracter(DateRange dateRange, int advertiserId, int offerId)
         {
@@ -43,7 +43,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
             catch (Exception e)
             {
                 Logger.Error(e);
-                var exception = new CakeFailedEtlException(date, date, advertiserId, offerId, e);
+                var exception = new CakeEventConversionsFailedEtlException(date, date, advertiserId, offerId, e);
                 ProcessFailedExtraction?.Invoke(exception);
             }
         }

@@ -16,7 +16,7 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
         /// <summary>
         /// Action for exception of failed loading.
         /// </summary>
-        public event Action<CakeFailedEtlException> ProcessFailedLoading;
+        public event Action<CakeEventConversionsFailedEtlException> ProcessFailedLoading;
 
         protected override int Load(List<EventConversion> items)
         {
@@ -175,13 +175,13 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
             ProcessFailedLoading?.Invoke(exception);
         }
 
-        protected virtual CakeFailedEtlException GetFailedLoadingException(Exception e, List<EventConversion> items)
+        protected virtual CakeEventConversionsFailedEtlException GetFailedLoadingException(Exception e, List<EventConversion> items)
         {
             var fromDate = items.Min(x => x.EventConversionDate);
             var toDate = items.Max(x => x.EventConversionDate);
             var fromDateArg = fromDate == default(DateTime) ? null : (DateTime?)fromDate;
             var toDateArg = toDate == default(DateTime) ? null : (DateTime?)toDate;
-            var exception = new CakeFailedEtlException(fromDateArg, toDateArg, null, null, e);
+            var exception = new CakeEventConversionsFailedEtlException(fromDateArg, toDateArg, null, null, e);
             return exception;
         }
     }

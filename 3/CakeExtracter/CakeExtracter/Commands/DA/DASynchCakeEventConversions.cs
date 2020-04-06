@@ -90,7 +90,7 @@ namespace CakeExtracter.Commands.DA
             var commandsGroupedByAccount = commands.GroupBy(x =>
             {
                 var command = x.Command as DASynchCakeEventConversions;
-                return new {command?.AdvertiserId, command?.OfferId};
+                return new { command?.AdvertiserId, command?.OfferId };
             });
             foreach (var commandsGroup in commandsGroupedByAccount)
             {
@@ -165,7 +165,7 @@ namespace CakeExtracter.Commands.DA
                 ScheduleNewCommandLaunch<DASynchCakeEventConversions>(command => { });
         }
 
-        private void UpdateCommandParameters(DASynchCakeEventConversions command, CakeFailedEtlException exception)
+        private void UpdateCommandParameters(DASynchCakeEventConversions command, CakeEventConversionsFailedEtlException exception)
         {
             command.StartDate = exception.StartDate;
             command.EndDate = exception.EndDate;

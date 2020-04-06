@@ -1,10 +1,11 @@
-﻿using CakeExtracter.CakeMarketingApi.Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using CakeExtracter.Etl.CakeMarketing.Exceptions;
+using CakeExtracter.CakeMarketingApi.Entities;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.Cake;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace CakeExtracter.Etl.CakeMarketing.DALoaders
 {
@@ -14,6 +15,8 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
         private Dictionary<int, Dictionary<string, int>> affSubIdLookupByName = new Dictionary<int, Dictionary<string, int>>();
         // (outer dictionary by affId, inner dictionary by AffSub.Name)
 
+        public event Action<CakeAffSubSumsFailedEtlException> ProcessFailedLoading;
+
         public DAAffSubSummaryLoader()
         {
             this.KeepFunc = sum => !sum.AllZeros();
@@ -21,10 +24,18 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
 
         protected override int Load(List<SubIdSummary> items)
         {
-            Logger.Info("Loading {0} SubIdSums..", items.Count);
-            AddMissingAffSubs(items);
-            var count = UpsertAffSubSums(items);
-            return count;
+            try
+            {
+                Logger.Info("Loading {0} SubIdSums..", items.Count);
+                AddMissingAffSubs(items);
+                var count = UpsertAffSubSums(items);
+                return count;
+            }
+            catch (Exception e)
+            {
+                ProcessFailedStatsLoading(e, items);
+                return items.Count;
+            }
         }
 
         private int UpsertAffSubSums(IEnumerable<SubIdSummary> items)
@@ -132,6 +143,23 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
         {
             var affSubs = db.AffSubs.Where(x => x.AffiliateId == affId).ToList();
             affSubIdLookupByName[affId] = affSubs.GroupBy(x => x.Name).ToDictionary(x => x.Key, x => x.First().Id);
+        }
+
+        private void ProcessFailedStatsLoading(Exception e, List<SubIdSummary> items)
+        {
+            Logger.Error(e);
+            var exception = GetFailedLoadingException(e, items);
+            ProcessFailedLoading?.Invoke(exception);
+        }
+
+        protected virtual CakeAffSubSumsFailedEtlException GetFailedLoadingException(Exception e, List<SubIdSummary> items)
+        {
+            var fromDate = items.Min(x => x.Date);
+            var toDate = items.Max(x => x.Date);
+            var fromDateArg = fromDate == default(DateTime) ? null : (DateTime?)fromDate;
+            var toDateArg = toDate == default(DateTime) ? null : (DateTime?)toDate;
+            var exception = new CakeAffSubSumsFailedEtlException(fromDateArg, toDateArg, null, null, null, e);
+            return exception;
         }
     }
 }

@@ -5,9 +5,9 @@ namespace CakeExtracter.Etl.CakeMarketing.Exceptions
 {
     /// <inheritdoc />
     /// <summary>
-    /// The common exception for cases where something is wrong in Cake ETL.
+    /// The common exception for cases where something is wrong in CakeEventConversions ETL.
     /// </summary>
-    public class CakeFailedEtlException : FailedEtlException
+    public class CakeEventConversionsFailedEtlException : FailedEtlException
     {
         /// <summary>
         /// Gets or sets AdvertiserId in the database for which statistics was extracted.
@@ -21,14 +21,14 @@ namespace CakeExtracter.Etl.CakeMarketing.Exceptions
 
         /// <inheritdoc cref="FailedEtlException"/>
         /// <summary>
-        /// Initializes a new instance of the <see cref="CakeFailedEtlException"/> class.
+        /// Initializes a new instance of the <see cref="CakeEventConversionsFailedEtlException"/> class.
         /// </summary>
         /// <param name="startDate">Start date from which statistics was extracted.</param>
         /// <param name="endDate">End date to which statistics was extracted.</param>
         /// <param name="advertiserId">AdvertiserId in the database for which statistics was extracted.</param>
         /// <param name="offerId">OfferId in the database for which statistics was extracted.</param>
         /// <param name="innerException">The source exception.</param>
-        public CakeFailedEtlException(DateTime? startDate, DateTime? endDate, int? advertiserId, int? offerId, Exception innerException)
+        public CakeEventConversionsFailedEtlException(DateTime? startDate, DateTime? endDate, int? advertiserId, int? offerId, Exception innerException)
             : base(startDate, endDate, null, innerException)
         {
             AdvertiserId = advertiserId;
