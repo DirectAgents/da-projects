@@ -20,6 +20,7 @@ namespace Amazon.Helpers
         private const string AdGroupIdMetric = "adGroupId";
         private const string AdGroupNameMetric = "adGroupName";
         private const string KeywordTextMetric = "keywordText";
+        private const string KeywordMatchTypeFilter = "matchType";
         private const string TargetTextMetric = "targetingText";
         private const string AsinMetric = "asin";
         private const string OtherAsinMetric = "otherAsin";
@@ -335,6 +336,11 @@ namespace Amazon.Helpers
             return apiEndpointUrl ?? ApiEndpointUrl.NorthAmerica;
         }
 
+        private static bool IsEntitiesTypeKeywords(EntitesType entitiesType)
+        {
+            return entitiesType == EntitesType.Keywords;
+        }
+
         private static string GetBaseEntitiesPath(EntitesType entitiesType, CampaignType campaignType)
         {
             var campaignTypePath = campaignType == CampaignType.Empty || entitiesType == EntitesType.Asins
@@ -380,6 +386,10 @@ namespace Amazon.Helpers
             var dependentEntityMetrics = DependentEntityTypeMetrics[entitiesType];
             metrics.AddRange(dependentCampaignMetrics);
             metrics.AddRange(dependentEntityMetrics);
+            if (IsEntitiesTypeKeywords(entitiesType))
+            {
+                metrics.Add(KeywordMatchTypeFilter);
+            }
             return metrics;
         }
 

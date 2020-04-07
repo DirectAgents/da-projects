@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
+using Apple.Logger;
 using RestSharp;
 using RestSharp.Deserializers;
 
@@ -12,46 +13,31 @@ namespace Apple
     // For clients under DA, use "DA". For others, use the same 'code' as in the p12 certificate's filename.
     // Need to create a new certificate for non-DA clients. (Name the file "AppleCertificate[CODE].p12" and place in the 'AppleP12Location'.)
     // https://developer.apple.com/library/content/documentation/General/Conceptual/AppStoreSearchAdsAPIReference/API_Overview.html
-
     public class AppleAdsUtility
     {
         public const int RowsReturnedAtATime = 20;
 
         private string AppleBaseUrl { get; set; }
+
         private string AppleP12Location { get; set; }
+
         private string AppleP12Password { get; set; }
 
         // --- Logging ---
-        private Action<string> _LogInfo;
-        private Action<string> _LogError;
-
-        private void LogInfo(string message)
-        {
-            if (_LogInfo == null)
-                Console.WriteLine(message);
-            else
-                _LogInfo("[AppleAdsUtility] " + message);
-        }
-
-        private void LogError(string message)
-        {
-            if (_LogError == null)
-                Console.WriteLine(message);
-            else
-                _LogError("[AppleAdsUtility] " + message);
-        }
+        private AppleLogger appleLogger;
 
         // --- Constructors ---
         public AppleAdsUtility()
         {
             Setup();
         }
-        public AppleAdsUtility(Action<string> logInfo, Action<string> logError)
+
+        public AppleAdsUtility(Action<string> logWarn, Action<Exception> logError)
             : this()
         {
-            _LogInfo = logInfo;
-            _LogError = logError;
+            appleLogger = new AppleLogger(logWarn, logError);
         }
+
         private void Setup()
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
@@ -65,15 +51,22 @@ namespace Apple
         {
             var restClient = new RestClient(AppleBaseUrl);
             restClient.AddHandler("application/json", new JsonDeserializer());
+            var certificate = CreateCertificate(certificateCode);
+            restClient.ClientCertificates = new X509CertificateCollection() { certificate };
+            var certificateExpirationDate = certificate.NotAfter;
+            CheckСertificateValidity(certificateExpirationDate);
+            var response = restClient.Execute<T>(restRequest);
+            return response;
+        }
 
+        private X509Certificate2 CreateCertificate(string certificateCode)
+        {
             var filename = String.Format(AppleP12Location, certificateCode);
             //LogInfo("certificate location: " + filename);
             var certificate = new X509Certificate2();
-            certificate.Import(filename, AppleP12Password, X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable);
-            restClient.ClientCertificates = new X509CertificateCollection() { certificate };
-
-            var response = restClient.Execute<T>(restRequest);
-            return response;
+            certificate.Import(filename, AppleP12Password,
+                X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable);
+            return certificate;
         }
 
         public void Test()
@@ -102,7 +95,9 @@ namespace Apple
             {
                 var response = GetReport(requestBody, orgId, certificateCode);
                 if (response != null && response.error != null)
-                    LogError("response.error: " + response.error);
+                {
+                    appleLogger.LogWarn("response.error: " + response.error);
+                }
                 done = true;
                 if (response != null && response.data != null && response.data.reportingDataResponse != null && response.data.reportingDataResponse.row != null)
                 {
@@ -118,6 +113,7 @@ namespace Apple
                 }
             }
         }
+
         private AppleReportResponse GetReport(ReportRequest requestBody, string orgId, string certificateCode)
         {
             var request = new RestRequest("reports/campaigns", Method.POST);
@@ -126,9 +122,59 @@ namespace Apple
             var restResponse = ProcessRequest<AppleReportResponse>(request, certificateCode);
 
             if (restResponse != null)
+            {
                 return restResponse.Data;
+            }
             else
+            {
                 return null;
+            }
+        }
+
+        private void CheckСertificateValidity(DateTime certificateExpirationDateTime)
+        {
+            const int numberOfDaysForWarnings = 7;
+            var startOfPotentialWarningPeriod = DateTime.Now;
+            var finishOfPotentialWarningPeriod = startOfPotentialWarningPeriod.AddDays(numberOfDaysForWarnings);
+            if (!DoesPeriodOfWarningsBegin(finishOfPotentialWarningPeriod, certificateExpirationDateTime))
+            {
+                return; 
+            }
+            WarningPeriodHasBegun(certificateExpirationDateTime);
+        }
+
+        private bool DoesPeriodOfWarningsBegin(DateTime endOfPotentialWarningPeriod, DateTime certificateExpirationDateTime)
+        {
+            return DateTime.Compare(endOfPotentialWarningPeriod, certificateExpirationDateTime) >= 0;
+        }
+
+        private void WarningPeriodHasBegun(DateTime certificateExpirationDateTime)
+        {
+            if (IsCertificateExpired(certificateExpirationDateTime))
+            {
+                appleLogger.LogError("Certificate has expired");
+            }
+            else
+            {
+                CertificateHasNotExpired(certificateExpirationDateTime);
+            }
+        }
+
+        private void CertificateHasNotExpired(DateTime certificateExpirationDateTime)
+        {
+            var numberOfDaysBeforeCerExpires = GetNumberOfDaysBeforeCertificateExpires(certificateExpirationDateTime);
+            appleLogger.LogWarn($"Certificate expires in {numberOfDaysBeforeCerExpires} days");
+        }
+
+        private bool IsCertificateExpired(DateTime certificateExpirationDateTime)
+        {
+            return DateTime.Compare(DateTime.Now, certificateExpirationDateTime) >= 0;
+        }
+
+        private int GetNumberOfDaysBeforeCertificateExpires(DateTime certificateExpirationDateTime)
+        {
+            var timeUntilCertificateExpiration = certificateExpirationDateTime - DateTime.Now;
+            return Convert.ToInt32(timeUntilCertificateExpiration.TotalDays);
         }
     }
 }

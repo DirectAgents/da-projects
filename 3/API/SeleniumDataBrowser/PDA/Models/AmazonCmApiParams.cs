@@ -10,7 +10,7 @@
 
         public Filter[] filters { get; set; }
 
-        public string interval { get; set; }
+        public string timeSeriesInterval { get; set; }
 
         public string period { get; set; }
 

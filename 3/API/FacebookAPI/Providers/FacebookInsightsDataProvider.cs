@@ -64,8 +64,8 @@ namespace FacebookAPI.Providers
         private string clickAttribution = GetAttributionName(AttributionWindowType.Click, AttributionWindowValue.Days28);
         private string viewAttribution = GetAttributionName(AttributionWindowType.View, AttributionWindowValue.Day1);
 
-        public FacebookInsightsDataProvider(Action<string> logInfo, Action<string> logError)
-            : base(logInfo, logError)
+        public FacebookInsightsDataProvider(Action<string> logInfo, Action<string> logWarn)
+            : base(logInfo, logWarn)
         {
             SetupConfigurableValues();
         }
@@ -193,12 +193,12 @@ namespace FacebookAPI.Providers
                     tempEnd = end;
 
                 var clientParms = PrepareSummaryExtractingRequest(accountId, start, tempEnd, byCampaign: byCampaign, byAdSet: byAdSet, byAd: byAd);
-                clientParms.ResetAndGetRunId_withRetry(LogInfo, LogError);
+                clientParms.ResetAndGetRunId_withRetry(LogInfo, LogWarn);
                 clientParmsList.Add(clientParms);
                 if (getArchived)
                 {
                     var clientParmsArchived = PrepareSummaryExtractingRequest(accountId, start, tempEnd, byCampaign: byCampaign, byAdSet: byAdSet, byAd: byAd, getArchived: true);
-                    clientParmsArchived.ResetAndGetRunId_withRetry(LogInfo, LogError);
+                    clientParmsArchived.ResetAndGetRunId_withRetry(LogInfo, LogWarn);
                     clientParmsList.Add(clientParmsArchived);
                 }
 
@@ -239,7 +239,7 @@ namespace FacebookAPI.Providers
             {
                 levelVal = "adset";
                 fieldsVal += ",adset_id,adset_name";
-                fieldsVal += ",video_10_sec_watched_actions,video_p100_watched_actions";
+                fieldsVal += ",video_thruplay_watched_actions,video_p100_watched_actions";
             }
             if (byAd)
             {
@@ -297,7 +297,7 @@ namespace FacebookAPI.Providers
                     }
                     catch (Exception ex)
                     {
-                        LogError(ex.Message);
+                        LogWarn(ex.Message);
                         int secondsToWait = SecondsToWaitIfLimitReached;
                         tryNumber++;
                         if (tryNumber < MaxRetries)
@@ -332,7 +332,7 @@ namespace FacebookAPI.Providers
                 .Handle<Exception>()
                 .WaitAndRetry(asyncJobFailureRetriesNumber, GetPauseBetweenFailureAttempts, (exception, timeSpan, retryCount, context) =>
                 {
-                    asyncJobRequest.ResetAndGetRunId_withRetry(LogInfo, LogError);
+                    asyncJobRequest.ResetAndGetRunId_withRetry(LogInfo, LogWarn);
                     LogInfo($"Waiting job request completion failed. Trying again.");
                 })
                 .Execute(() => WaitForAsyncJobRequestCompletion(asyncJobRequest));

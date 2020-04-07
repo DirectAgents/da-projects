@@ -5,6 +5,7 @@ using Adform.Entities;
 using Adform.Enums;
 using Adform.Utilities;
 using CakeExtracter.Common;
+using CakeExtracter.Etl.Adform.Exceptions;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
 
@@ -17,6 +18,11 @@ namespace CakeExtracter.Etl.Adform.Extractors
     public abstract class AdformApiBaseExtractor<T> : Extracter<T>
         where T : AdfBaseSummary
     {
+        /// <summary>
+        /// Action for exception of process failed extraction.
+        /// </summary>
+        public event Action<AdformFailedStatsLoadingException> ProcessFailedExtraction;
+
         protected readonly AdformUtility AfUtility;
         protected readonly DateRange DateRange;
         protected readonly int ClientId;
@@ -51,6 +57,15 @@ namespace CakeExtracter.Etl.Adform.Extractors
             {
                 SetMonthlyCostMultipliers(account, dateRange);
             }
+        }
+
+        /// <summary>
+        /// Invokes exception of process failed extraction.
+        /// </summary>
+        /// <param name="exception">Exception.</param>
+        protected void InvokeProcessFailedExtractionHandlers(AdformFailedStatsLoadingException exception)
+        {
+            ProcessFailedExtraction?.Invoke(exception);
         }
 
         protected ReportSettings GetBaseSettings()

@@ -15,17 +15,17 @@ namespace FacebookAPI.Providers
 
         private Action<string> _LogInfo;
 
-        private Action<string> _LogError;
+        private Action<string> _LogWarn;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseFacebookDataProvider"/> class.
         /// </summary>
         /// <param name="logInfo">The log information.</param>
         /// <param name="logError">The log error.</param>
-        public BaseFacebookDataProvider(Action<string> logInfo, Action<string> logError)
+        public BaseFacebookDataProvider(Action<string> logInfo, Action<string> logWarn)
         {
             _LogInfo = logInfo;
-            _LogError = logError;
+            _LogWarn = logWarn;
             SetupAccessTokens();
         }
 
@@ -52,15 +52,15 @@ namespace FacebookAPI.Providers
         }
 
         /// <summary>
-        /// Logs the error.
+        /// Logs the warning.
         /// </summary>
         /// <param name="message">The message.</param>
-        protected void LogError(string message)
+        protected void LogWarn(string message)
         {
-            if (_LogError == null)
+            if (_LogWarn == null)
                 Console.WriteLine(message);
             else
-                _LogError("[FacebookUtility] " + message);
+                _LogWarn("[FacebookUtility] " + message);
         }
 
         private void SetupAccessTokens()

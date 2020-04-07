@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.Etl.Adform.Exceptions;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.CPProg.Adform;
 using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
@@ -19,6 +20,12 @@ namespace CakeExtracter.Etl.Adform.Loaders
         where TSummary : AdfBaseSummary
     {
         private const int DefaultBatchSize = 1000;
+
+        /// <summary>
+        /// Action for exception of process failed extraction.
+        /// </summary>
+        public event Action<AdformFailedStatsLoadingException> ProcessFailedExtraction;
+
         private readonly AdfMediaTypeLoader mediaTypeLoader;
         private readonly IBaseRepository<TEntity> entityRepository;
         private readonly IBaseRepository<TSummary> summaryRepository;
@@ -109,6 +116,22 @@ namespace CakeExtracter.Etl.Adform.Loaders
         }
 
         /// <summary>
+        /// Gets exception with information for relaunch logic.
+        /// </summary>
+        /// <param name="e">Inner exception.</param>
+        /// <param name="items">Loaded summary items.</param>
+        /// <returns>Exception for relaunch logic.</returns>
+        protected virtual AdformFailedStatsLoadingException GetFailedStatsLoadingException(Exception e, List<TSummary> items)
+        {
+            var fromDate = items.Min(x => x.Date);
+            var toDate = items.Max(x => x.Date);
+            var fromDateArg = fromDate == default(DateTime) ? null : (DateTime?)fromDate;
+            var toDateArg = toDate == default(DateTime) ? null : (DateTime?)toDate;
+            var exception = new AdformFailedStatsLoadingException(fromDateArg, toDateArg, accountId, e);
+            return exception;
+        }
+
+        /// <summary>
         /// Merges (inserts or updates) dependent media types with existed in DB.
         /// </summary>
         /// <param name="mediaTypes">Media types for merge.</param>
@@ -116,6 +139,15 @@ namespace CakeExtracter.Etl.Adform.Loaders
         protected bool MergeDependentMediaTypesWithExisted(IEnumerable<AdfMediaType> mediaTypes)
         {
             return mediaTypeLoader.MergeDependentEntitiesWithExisted(mediaTypes);
+        }
+
+        /// <summary>
+        /// Invokes exception of process failed extraction.
+        /// </summary>
+        /// <param name="exception">Exception.</param>
+        protected void InvokeProcessFailedExtractionHandlers(AdformFailedStatsLoadingException exception)
+        {
+            ProcessFailedExtraction?.Invoke(exception);
         }
 
         private void LogMergedEntities(IEnumerable<object> items, string entitiesName)

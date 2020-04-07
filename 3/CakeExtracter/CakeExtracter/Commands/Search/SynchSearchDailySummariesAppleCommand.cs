@@ -5,7 +5,6 @@ using System.Linq;
 using Apple;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Exceptions;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Etl.Apple.Exceptions;
 using CakeExtracter.Etl.Apple.Extractors;
@@ -118,7 +117,7 @@ namespace CakeExtracter.Commands.Search
                 var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
                 Logger.Info("Apple ETL. DateRange {0}.", dateRange);
 
-                var appleAdsUtility = new AppleAdsUtility(m => Logger.Info(m), m => Logger.Warn(m));
+                var appleAdsUtility = new AppleAdsUtility(m => Logger.Warn(m), m => Logger.Error(m));
                 var searchAccounts = GetSearchAccounts();
 
                 foreach (var searchAccount in searchAccounts)

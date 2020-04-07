@@ -92,7 +92,7 @@
                     <td>@gauge.ExtAccount.Name</td>
                     <td style="text-align: center">@(gauge.ExtAccount.Disabled ? "X" : "")</td>
                     <td style="text-align: right">@gauge.Daily.EarliestDisp</td>
-                    @if (gauge.Daily.Latest == yesterday)
+                    @if (gauge.Daily.Latest != null && DateTime.Compare(gauge.Daily.Latest.Value, yesterday) >= 0)
                     {
                         <td style="text-align: right; background-color: lightgreen">@gauge.Daily.LatestDisp</td>
                     }
@@ -101,7 +101,7 @@
                         <td style="text-align: right">@gauge.Daily.LatestDisp</td>
                     }
                     <td style="text-align: right">@gauge.Strategy.EarliestDisp</td>
-                    @if (gauge.Strategy.Latest == yesterday)
+                    @if (gauge.Strategy.Latest != null && DateTime.Compare(gauge.Strategy.Latest.Value, yesterday) >= 0)
                     {
                         <td style="text-align: right; background-color: lightgreen">@gauge.Strategy.LatestDisp</td>
                     }
@@ -110,7 +110,7 @@
                         <td style="text-align: right">@gauge.Strategy.LatestDisp</td>
                     }
                     <td style="text-align: right">@gauge.AdSet.EarliestDisp</td>
-                    @if (gauge.AdSet.Latest == yesterday)
+                    @if (gauge.AdSet.Latest != null && DateTime.Compare(gauge.AdSet.Latest.Value, yesterday) >= 0)
                     {
                         <td style="text-align: right; background-color: lightgreen">@gauge.AdSet.LatestDisp</td>
                     }
@@ -119,7 +119,7 @@
                         <td style="text-align: right">@gauge.AdSet.LatestDisp</td>
                     }
                     <td style="text-align: right">@gauge.Action.EarliestDisp</td>
-                    @if (gauge.Action.Latest == yesterday)
+                    @if (gauge.Action.Latest != null && DateTime.Compare(gauge.Action.Latest.Value, yesterday) >= 0)
                     {
                         <td style="text-align: right; background-color: lightgreen">@gauge.Action.LatestDisp</td>
                     }
@@ -128,7 +128,7 @@
                         <td style="text-align: right">@gauge.Action.LatestDisp</td>
                     }
                     <td style="text-align: right">@gauge.Creative.EarliestDisp</td>
-                    @if (gauge.Creative.Latest == yesterday)
+                    @if (gauge.Creative.Latest != null && DateTime.Compare(gauge.Creative.Latest.Value, yesterday) >= 0)
                     {
                         <td style="text-align: right; background-color: lightgreen">@gauge.Creative.LatestDisp</td>
                     }
@@ -137,7 +137,7 @@
                         <td style="text-align: right">@gauge.Creative.LatestDisp</td>
                     }
                     <td style="text-align: right">@gauge.Keyword.EarliestDisp</td>
-                    @if (gauge.Keyword.Latest == yesterday)
+                    @if (gauge.Keyword.Latest != null && DateTime.Compare(gauge.Keyword.Latest.Value, yesterday) >= 0)
                     {
                         <td style="text-align: right; background-color: lightgreen">@gauge.Keyword.LatestDisp</td>
                     }
@@ -146,7 +146,7 @@
                         <td style="text-align: right">@gauge.Keyword.LatestDisp</td>
                     }
                     <td style="text-align: right">@gauge.SearchTerm.EarliestDisp</td>
-                    @if (gauge.SearchTerm.Latest == yesterday)
+                    @if (gauge.SearchTerm.Latest != null && DateTime.Compare(gauge.SearchTerm.Latest.Value, yesterday) >= 0)
                     {
                         <td style="text-align: right; background-color: lightgreen">@gauge.SearchTerm.LatestDisp</td>
                     }
@@ -157,7 +157,7 @@
                     @if (Model.Extended)
                     {
                         <td style="text-align: right">@gauge.Site.EarliestDisp</td>
-                        if (gauge.Site.Latest == yesterday)
+                        if (gauge.Site.Latest != null && DateTime.Compare(gauge.Site.Latest.Value, yesterday) >= 0)
                         {
                             <td style="text-align: right; background-color: lightgreen">@gauge.Site.LatestDisp</td>
                         }
@@ -166,7 +166,7 @@
                             <td style="text-align: right">@gauge.Site.LatestDisp</td>
                         }
                         <td style="text-align: right">@gauge.Conv.EarliestDisp</td>
-                        if (gauge.Conv.Latest == yesterday)
+                        if (gauge.Conv.Latest != null && DateTime.Compare(gauge.Conv.Latest.Value, yesterday) >= 0)
                         {
                             <td style="text-align: right; background-color: lightgreen">@gauge.Conv.LatestDisp</td>
                         }

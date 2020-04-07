@@ -19,6 +19,9 @@ namespace DirectAgents.Domain.Entities.CPProg
         }
 
         [NotMapped]
+        public string KeywordMediaType { get; set; }
+
+        [NotMapped]
         public string KeywordName { get; set; }
 
         [NotMapped]
