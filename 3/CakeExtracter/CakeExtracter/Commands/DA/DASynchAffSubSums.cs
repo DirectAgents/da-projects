@@ -93,12 +93,12 @@ namespace CakeExtracter.Commands
             IEnumerable<CommandWithSchedule> commands)
         {
             var broadCommands = new List<CommandWithSchedule>();
-            var commandsGroupedByAccount = commands.GroupBy(x =>
+            var groupedCommands = commands.GroupBy(x =>
             {
                 var command = x.Command as DASynchAffSubSums;
-                return new { command?.AdvertiserId, command?.OfferId, command.AffiliateId };
+                return new { command?.AdvertiserId, command?.OfferId, command?.AffiliateId };
             });
-            foreach (var commandsGroup in commandsGroupedByAccount)
+            foreach (var commandsGroup in groupedCommands)
             {
                 var accountBroadCommands = GetUniqueBroadAccountCommands(commandsGroup);
                 broadCommands.AddRange(accountBroadCommands);

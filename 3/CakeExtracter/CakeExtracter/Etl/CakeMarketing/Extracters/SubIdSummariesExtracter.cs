@@ -17,6 +17,9 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
         private readonly int? offerId;
         private readonly bool getDailyStats;
 
+        /// <summary>
+        /// Action for exception of failed extraction.
+        /// </summary>
         public event Action<CakeAffSubSumsFailedEtlException> ProcessFailedExtraction;
 
         public SubIdSummariesExtracter(DateRange dateRange, int? affiliateId = null, int? advertiserId = null, int? offerId = null, bool getDailyStats = false)

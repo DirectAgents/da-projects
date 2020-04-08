@@ -4,7 +4,6 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Exceptions;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Etl.CakeMarketing.Cleaners;
 using CakeExtracter.Etl.CakeMarketing.DALoaders;
@@ -87,12 +86,12 @@ namespace CakeExtracter.Commands.DA
             IEnumerable<CommandWithSchedule> commands)
         {
             var broadCommands = new List<CommandWithSchedule>();
-            var commandsGroupedByAccount = commands.GroupBy(x =>
+            var commandsGroupedByAdvertiserAndOffer = commands.GroupBy(x =>
             {
                 var command = x.Command as DASynchCakeEventConversions;
                 return new { command?.AdvertiserId, command?.OfferId };
             });
-            foreach (var commandsGroup in commandsGroupedByAccount)
+            foreach (var commandsGroup in commandsGroupedByAdvertiserAndOffer)
             {
                 var accountBroadCommands = GetUniqueBroadAccountCommands(commandsGroup);
                 broadCommands.AddRange(accountBroadCommands);

@@ -12,6 +12,9 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
         private readonly int advertiserId;
         private readonly int offerId;
 
+        /// <summary>
+        /// Action for exception of failed extraction.
+        /// </summary>
         public event Action<CakeEventConversionsFailedEtlException> ProcessFailedExtraction;
 
         public EventConversionExtracter(DateRange dateRange, int advertiserId, int offerId)

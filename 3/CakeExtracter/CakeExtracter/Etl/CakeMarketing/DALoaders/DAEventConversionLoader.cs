@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using Apple;
 using CakeExtracter.CakeMarketingApi.Entities;
 using CakeExtracter.Etl.CakeMarketing.Exceptions;
 using DirectAgents.Domain.Contexts;
@@ -175,7 +174,7 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
             ProcessFailedLoading?.Invoke(exception);
         }
 
-        protected virtual CakeEventConversionsFailedEtlException GetFailedLoadingException(Exception e, List<EventConversion> items)
+        private CakeEventConversionsFailedEtlException GetFailedLoadingException(Exception e, List<EventConversion> items)
         {
             var fromDate = items.Min(x => x.EventConversionDate);
             var toDate = items.Max(x => x.EventConversionDate);

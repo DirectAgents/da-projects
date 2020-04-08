@@ -15,6 +15,9 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
         private Dictionary<int, Dictionary<string, int>> affSubIdLookupByName = new Dictionary<int, Dictionary<string, int>>();
         // (outer dictionary by affId, inner dictionary by AffSub.Name)
 
+        /// <summary>
+        /// Action for exception of failed loading.
+        /// </summary>
         public event Action<CakeAffSubSumsFailedEtlException> ProcessFailedLoading;
 
         public DAAffSubSummaryLoader()
@@ -152,7 +155,7 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
             ProcessFailedLoading?.Invoke(exception);
         }
 
-        protected virtual CakeAffSubSumsFailedEtlException GetFailedLoadingException(Exception e, List<SubIdSummary> items)
+        private CakeAffSubSumsFailedEtlException GetFailedLoadingException(Exception e, List<SubIdSummary> items)
         {
             var fromDate = items.Min(x => x.Date);
             var toDate = items.Max(x => x.Date);
