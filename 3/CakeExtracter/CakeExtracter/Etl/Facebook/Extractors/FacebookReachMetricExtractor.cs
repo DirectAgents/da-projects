@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using CakeExtracter.Commands;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.Facebook;
@@ -39,6 +40,12 @@ namespace CakeExtracter.Etl.Facebook.Extractors
             }
             catch (Exception ex)
             {
+                OnProcessFailedExtraction(
+                    this.DateRange?.FromDate,
+                    this.DateRange?.ToDate,
+                    this.AccountId,
+                    StatsTypeAgg.ReachArg,
+                    ex);
                 Logger.Error(AccountId, ex);
             }
             End();

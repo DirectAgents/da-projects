@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.Commands;
 using CakeExtracter.Common;
+using CakeExtracter.Etl.Facebook.Exceptions;
+using CakeExtracter.Etl.Facebook.Interfaces;
 using CakeExtracter.Etl.Facebook.Loaders.EntitiesLoaders;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
@@ -10,10 +13,10 @@ using DirectAgents.Domain.Entities.CPProg.Facebook.Ad;
 namespace CakeExtracter.Etl.Facebook.Loaders
 {
     /// <summary>
-    /// Facebook Ad Summary loader
+    /// Facebook Ad Summary loader.
     /// </summary>
     /// <seealso cref="CakeExtracter.Etl.Loader{DirectAgents.Domain.Entities.CPProg.Facebook.Ad.FbAdSummary}" />
-    public class FacebookAdSummaryLoaderV2 : Loader<FbAdSummary>
+    public class FacebookAdSummaryLoaderV2 : Loader<FbAdSummary>, IFacebookLoadingErrorHandler
     {
         private readonly FacebookAdsLoader fbAdsLoader;
         private readonly FacebookAdSetsLoader fbAdSetsLoader;
@@ -28,6 +31,9 @@ namespace CakeExtracter.Etl.Facebook.Loaders
         private static object lockObj = new object();
 
         private const int batchSize = 1000;
+
+        /// <inheritdoc/>
+        public event Action<FacebookFailedEtlException> ProcessFailedLoading;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FacebookAdSummaryLoaderV2"/> class.
@@ -66,7 +72,7 @@ namespace CakeExtracter.Etl.Facebook.Loaders
             }
             catch (Exception ex)
             {
-                Logger.Error(accountId, ex);
+                OnProcessFailedLoading(ex, summaries);
                 return 0;
             }
         }
@@ -149,6 +155,23 @@ namespace CakeExtracter.Etl.Facebook.Loaders
             {
                 db.BulkInsert(actions);
             }, lockObj, "BulkInsert");
+        }
+
+        private void OnProcessFailedLoading(Exception e, List<FbAdSummary> items)
+        {
+            Logger.Error(accountId, e);
+            var exception = GetFailedLoadingException(e, items);
+            ProcessFailedLoading?.Invoke(exception);
+        }
+
+        private FacebookFailedEtlException GetFailedLoadingException(Exception e, List<FbAdSummary> items)
+        {
+            var fromDate = items.Min(x => x.Date);
+            var toDate = items.Max(x => x.Date);
+            var fromDateArg = fromDate == default(DateTime) ? null : (DateTime?)fromDate;
+            var toDateArg = toDate == default(DateTime) ? null : (DateTime?)toDate;
+            var exception = new FacebookFailedEtlException(fromDateArg, toDateArg, accountId, StatsTypeAgg.CreativeArg, e);
+            return exception;
         }
     }
 }

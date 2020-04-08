@@ -11,6 +11,7 @@
         public const string ConversionArg = "CONV";
         public const string KeywordArg = "KEY";
         public const string SearchTermArg = "STERM";
+        public const string ReachArg = "REACH";
 
         public bool Daily { get; set; }
 
@@ -27,6 +28,8 @@
         public bool Keyword { get; set; }
 
         public bool SearchTerm { get; set; }
+
+        public bool Reach { get; set; }
 
         public bool All => Daily && Strategy && AdSet && Creative && Site && Conv && Keyword && SearchTerm;
 
@@ -73,6 +76,10 @@
             {
                 SearchTerm = true;
             }
+            else if (statsTypeUpper.StartsWith(ReachArg))
+            {
+                Reach = true;
+            }
         }
 
         public void SetAllTrue()
@@ -85,6 +92,7 @@
             Conv = true;
             Keyword = true;
             SearchTerm = true;
+            Reach = true;
         }
 
         public string GetStatsTypeString()
