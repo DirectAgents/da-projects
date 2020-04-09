@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Linq;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Etl.CakeMarketing.DALoaders;
+using CakeExtracter.Etl.CakeMarketing.Exceptions;
 using CakeExtracter.Etl.CakeMarketing.Extracters;
+using CakeExtracter.Helpers;
 
 namespace CakeExtracter.Commands
 {
@@ -27,10 +32,15 @@ namespace CakeExtracter.Commands
         }
 
         public int? AffiliateId { get; set; }
+
         public int? AdvertiserId { get; set; }
+
         public int? OfferId { get; set; }
+
         public DateTime? StartDate { get; set; }
+
         public DateTime? EndDate { get; set; }
+
         public int? DaysAgoToStart { get; set; }
         //public bool ClearFirst { get; set; }
 
@@ -70,11 +80,93 @@ namespace CakeExtracter.Commands
 
             var extracter = new SubIdSummariesExtracter(dateRange, affiliateId: AffiliateId, advertiserId: AdvertiserId, offerId: OfferId, getDailyStats: true);
             var loader = new DAAffSubSummaryLoader();
+            InitEtlEvents(extracter, loader);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();
             loaderThread.Join();
             return 0;
+        }
+
+        /// <inheritdoc />
+        public override IEnumerable<CommandWithSchedule> GetUniqueBroadCommands(
+            IEnumerable<CommandWithSchedule> commands)
+        {
+            var broadCommands = new List<CommandWithSchedule>();
+            var groupedCommands = commands.GroupBy(x =>
+            {
+                var command = x.Command as DASynchAffSubSums;
+                return new { command?.AdvertiserId, command?.OfferId, command?.AffiliateId };
+            });
+            foreach (var commandsGroup in groupedCommands)
+            {
+                var accountBroadCommands = GetUniqueBroadAccountCommands(commandsGroup);
+                broadCommands.AddRange(accountBroadCommands);
+            }
+
+            return broadCommands;
+        }
+
+        private List<CommandWithSchedule> GetUniqueBroadAccountCommands(IEnumerable<CommandWithSchedule> commandsWithSchedule)
+        {
+            var accountCommands = new List<Tuple<DASynchAffSubSums, DateRange, CommandWithSchedule>>();
+            foreach (var commandWithSchedule in commandsWithSchedule)
+            {
+                var command = (DASynchAffSubSums)commandWithSchedule.Command;
+                var commandDateRange = CommandHelper.GetDateRange(command.StartDate, command.EndDate, command.DaysAgoToStart, 0);
+                var crossCommands = accountCommands.Where(x => commandDateRange.IsCrossDateRange(x.Item2)).ToList();
+                foreach (var crossCommand in crossCommands)
+                {
+                    commandDateRange = commandDateRange.MergeDateRange(crossCommand.Item2);
+                    commandWithSchedule.ScheduledTime =
+                        crossCommand.Item3.ScheduledTime > commandWithSchedule.ScheduledTime
+                            ? crossCommand.Item3.ScheduledTime
+                            : commandWithSchedule.ScheduledTime;
+                    accountCommands.Remove(crossCommand);
+                }
+
+                accountCommands.Add(new Tuple<DASynchAffSubSums, DateRange, CommandWithSchedule>(command, commandDateRange, commandWithSchedule));
+            }
+
+            var broadCommands = accountCommands.Select(GetCommandWithCorrectDateRange).ToList();
+            return broadCommands;
+        }
+
+        private CommandWithSchedule GetCommandWithCorrectDateRange(Tuple<DASynchAffSubSums, DateRange, CommandWithSchedule> setting)
+        {
+            setting.Item1.StartDate = setting.Item2.FromDate;
+            setting.Item1.EndDate = setting.Item2.ToDate;
+            setting.Item1.DaysAgoToStart = null;
+            setting.Item3.Command = setting.Item1;
+            return setting.Item3;
+        }
+
+        private void InitEtlEvents(SubIdSummariesExtracter extractor, DAAffSubSummaryLoader loader)
+        {
+            GeneralInitEtlEvents(extractor, loader);
+            extractor.ProcessFailedExtraction += exception =>
+                ScheduleNewCommandLaunch<DASynchAffSubSums>(command =>
+                    UpdateCommandParameters(command, exception));
+            loader.ProcessFailedLoading += exception =>
+                ScheduleNewCommandLaunch<DASynchAffSubSums>(command =>
+                    UpdateCommandParameters(command, exception));
+        }
+
+        private void GeneralInitEtlEvents(SubIdSummariesExtracter extractor, DAAffSubSummaryLoader loader)
+        {
+            extractor.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewCommandLaunch<DASynchAffSubSums>(command => { });
+            loader.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewCommandLaunch<DASynchAffSubSums>(command => { });
+        }
+
+        private void UpdateCommandParameters(DASynchAffSubSums command, CakeAffSubSumsFailedEtlException exception)
+        {
+            command.StartDate = exception.StartDate;
+            command.EndDate = exception.EndDate;
+            command.AffiliateId = exception.AffiliateId;
+            command.AdvertiserId = exception.AdvertiserId;
+            command.OfferId = exception.OfferId;
         }
     }
 }
