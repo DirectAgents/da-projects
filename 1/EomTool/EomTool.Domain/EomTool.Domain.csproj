@@ -282,6 +282,7 @@
     <Compile Include="Entities\UnitType.cs">
       <DependentUpon>EomModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\UnitTypePartial.cs" />
     <Compile Include="Entities\Util.cs" />
     <Compile Include="GlobalSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

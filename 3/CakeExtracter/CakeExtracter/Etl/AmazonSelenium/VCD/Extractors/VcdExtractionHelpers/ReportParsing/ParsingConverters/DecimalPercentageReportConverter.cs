@@ -6,18 +6,21 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
     /// <summary>
     /// VCD Report Converter for decimal values for monetary amounts.
     /// </summary>
-    internal sealed class DecimalAmountReportConverter : DecimalReportConverter
+    internal sealed class DecimalPercentageReportConverter : DecimalReportConverter
     {
+        private const char PercentSymbol = '%';
+        private const decimal ValueForEmpty = -0.000001M;
+
         /// <inheritdoc />
         protected override decimal GetValueWhenEmpty()
         {
-            return 0M;
+            return ValueForEmpty;
         }
 
         /// <inheritdoc />
         protected override string PrepareTextValue(string textValue)
         {
-            return textValue;
+            return textValue.TrimEnd(PercentSymbol);
         }
 
         /// <inheritdoc />
@@ -29,7 +32,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
         /// <inheritdoc />
         protected override decimal CalculateValue(decimal value)
         {
-            return value;
+            return value / 100M;
         }
     }
 }
