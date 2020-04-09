@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Commands;
+using CakeExtracter.Common;
 using CakeExtracter.Etl.Facebook.Exceptions;
 using CakeExtracter.Etl.Facebook.Interfaces;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
@@ -76,7 +77,7 @@ namespace CakeExtracter.Etl.Facebook.Loaders
         private void OnProcessFailedLoading(Exception e)
         {
             Logger.Error(accountId, e);
-            var exception = new FacebookFailedEtlException(null, null, accountId, StatsTypeAgg.ReachArg, e);
+            var exception = new FacebookFailedEtlException(null, null, accountId, FbStatsTypeAgg.ReachArg, e);
             ProcessFailedLoading?.Invoke(exception);
         }
     }

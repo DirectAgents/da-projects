@@ -58,7 +58,7 @@ namespace CakeExtracter.Etl.Facebook.Extractors
                     this.DateRange?.FromDate,
                     this.DateRange?.ToDate,
                     AccountId,
-                    StatsTypeAgg.CreativeArg,
+                    FbStatsTypeAgg.CreativeArg,
                     ex);
                 Logger.Error(AccountId, ex);
             }

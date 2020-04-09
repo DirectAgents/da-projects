@@ -444,6 +444,7 @@
     <Compile Include="Common\CommandAutoStopWatcher.cs" />
     <Compile Include="Common\Email\EmailNotificationsService.cs" />
     <Compile Include="Common\Email\IEmailNotificationsService.cs" />
+    <Compile Include="Common\FbStatsTypeAgg.cs" />
     <Compile Include="Common\FileUtils.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Constants\EmailConfigConstants.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Models\ErrorInJobNotificationModel.cs" />

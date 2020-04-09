@@ -139,7 +139,7 @@ namespace CakeExtracter.Commands
             var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info("Facebook ETL. DateRange {0}.", dateRange);
 
-            var statsType = new StatsTypeAgg(StatsType);
+            var statsType = new FbStatsTypeAgg(StatsType);
             var accounts = GetAccounts();
 
             var fbAdMetadataProvider = new FacebookAdMetadataProvider(null, null);
@@ -171,7 +171,7 @@ namespace CakeExtracter.Commands
         private void DoEtl(
             ExtAccount account,
             DateRange dateRange,
-            StatsTypeAgg statsType,
+            FbStatsTypeAgg statsType,
             FacebookAdMetadataExtractor metadataExtractor)
         {
             CommandExecutionContext.Current.SetJobExecutionStateInHistory("Started", account.Id);
@@ -237,7 +237,7 @@ namespace CakeExtracter.Commands
             return false;
         }
 
-        private bool IsDailyOnlyAccountsMode(StatsTypeAgg statsType, ExtAccount account, DateRange acctDateRange)
+        private bool IsDailyOnlyAccountsMode(FbStatsTypeAgg statsType, ExtAccount account, DateRange acctDateRange)
         {
             var dailyOnlyAccounts = !AccountId.HasValue || statsType.All
                                         ? ConfigurationHelper.ExtractEnumerableFromConfig("FB_DailyStatsOnly").ToArray()

@@ -49,7 +49,7 @@ namespace CakeExtracter.Etl.Facebook.Extractors
                     this.DateRange?.FromDate,
                     this.DateRange?.ToDate,
                     this.AccountId,
-                    StatsTypeAgg.DailyArg,
+                    FbStatsTypeAgg.DailyArg,
                     ex);
                 Logger.Error(AccountId, ex);
             }

@@ -44,7 +44,7 @@ namespace CakeExtracter.Etl.Facebook.Extractors
                     this.DateRange?.FromDate,
                     this.DateRange?.ToDate,
                     this.AccountId,
-                    StatsTypeAgg.ReachArg,
+                    FbStatsTypeAgg.ReachArg,
                     ex);
                 Logger.Error(AccountId, ex);
             }

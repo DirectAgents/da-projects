@@ -128,7 +128,7 @@ namespace CakeExtracter.Etl.Facebook.Loaders
             var toDate = items.Max(x => x.Date);
             var fromDateArg = fromDate == default(DateTime) ? null : (DateTime?)fromDate;
             var toDateArg = toDate == default(DateTime) ? null : (DateTime?)toDate;
-            var exception = new FacebookFailedEtlException(fromDateArg, toDateArg, accountId, StatsTypeAgg.StrategyArg, e);
+            var exception = new FacebookFailedEtlException(fromDateArg, toDateArg, accountId, FbStatsTypeAgg.StrategyArg, e);
             return exception;
         }
     }
