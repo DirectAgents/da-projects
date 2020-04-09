@@ -51,7 +51,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
                 ProcessFailedExtraction?.Invoke(exception);
             }
         }
-        
+
         private void LogInfoAboutCurrentDate(DateTime date)
         {
             var logMessage = $"Extracting EventConversions for {date.ToShortDateString()}.";
