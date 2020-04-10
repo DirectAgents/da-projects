@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.Commands;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.Facebook;
@@ -36,8 +37,9 @@ namespace CakeExtracter.Etl.Facebook.Extractors
         /// </summary>
         protected override void Extract()
         {
-            Logger.Info(AccountId, "Extracting AdSet Summaries from Facebook API for ({0}) from {1:d} to {2:d}",
-                        this.FbAccountId, this.DateRange.Value.FromDate, this.DateRange.Value.ToDate);
+            Logger.Info(
+                AccountId,
+                $"Extracting AdSet Summaries from Facebook API for ({FbAccountId}) from {DateRange?.FromDate:d} to {DateRange?.ToDate:d}");
             try
             {
                 var fbSums = FbUtility.GetDailyAdSetStats("act_" + FbAccountId, DateRange.Value.FromDate, DateRange.Value.ToDate);
@@ -46,6 +48,12 @@ namespace CakeExtracter.Etl.Facebook.Extractors
             }
             catch (Exception ex)
             {
+                OnProcessFailedExtraction(
+                    this.DateRange?.FromDate,
+                    this.DateRange?.ToDate,
+                    this.AccountId,
+                    FbStatsTypeAgg.AdSetArg,
+                    ex);
                 Logger.Error(AccountId, ex);
             }
             End();

@@ -444,6 +444,7 @@
     <Compile Include="Common\CommandAutoStopWatcher.cs" />
     <Compile Include="Common\Email\EmailNotificationsService.cs" />
     <Compile Include="Common\Email\IEmailNotificationsService.cs" />
+    <Compile Include="Common\FbStatsTypeAgg.cs" />
     <Compile Include="Common\FileUtils.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Constants\EmailConfigConstants.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Models\ErrorInJobNotificationModel.cs" />
@@ -619,7 +620,9 @@
     <Compile Include="Etl\DSP\Models\ReportEntities\DspReportEntity.cs" />
     <Compile Include="Etl\DSP\Models\ReportEntities\ReportOrder.cs" />
     <Compile Include="Etl\Facebook\Builders\FacebookInsightsReachMetricProviderBuilder.cs" />
+    <Compile Include="Etl\Facebook\Exceptions\FacebookFailedEtlException.cs" />
     <Compile Include="Etl\Facebook\Extractors\FacebookReachMetricExtractor.cs" />
+    <Compile Include="Etl\Facebook\Interfaces\IFacebookLoadingErrorHandler.cs" />
     <Compile Include="Etl\Facebook\Loaders\FacebookReachMetricLoader.cs" />
     <Compile Include="Etl\Facebook\Repositories\FacebookReachMetricDatabaseRepository.cs" />
     <Compile Include="Etl\Kochava\Configuration\KochavaConfigurationProvider.cs" />
