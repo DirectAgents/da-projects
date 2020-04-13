@@ -235,7 +235,6 @@
     <Compile Include="Concrete\TDRepository.cs" />
     <Compile Include="Contexts\ABContext.cs" />
     <Compile Include="Contexts\ClientPortalSearchContext.cs" />
-    <Compile Include="Contexts\Configurations\AzureConfiguration.cs" />
     <Compile Include="Contexts\RevTrackContext.cs" />
     <Compile Include="Contexts\HistoryContext.cs" />
     <Compile Include="Contexts\ClientPortalProgContext.cs" />

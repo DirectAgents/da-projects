@@ -498,6 +498,8 @@
     <Compile Include="Common\StorageCollection.cs" />
     <Compile Include="Common\TextUtils.cs" />
     <Compile Include="Common\DIKernel.cs" />
+    <Compile Include="Data\Configurations\AzureConfiguration.cs" />
+    <Compile Include="Data\Configurations\DaExecutionStrategy.cs" />
     <Compile Include="Etl\Adform\Exceptions\AdformFailedStatsLoadingException.cs" />
     <Compile Include="Etl\Adform\Loaders\AdfBannerSummaryLoader.cs" />
     <Compile Include="Etl\Adform\Loaders\AdfBaseSummaryLoader.cs" />
