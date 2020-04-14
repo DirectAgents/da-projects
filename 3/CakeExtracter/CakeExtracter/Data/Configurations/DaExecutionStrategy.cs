@@ -41,16 +41,17 @@ namespace CakeExtracter.Data.Configurations
                 int[] errorsToRetry = { SqlErrorDeadlockNumber, SqlErrorTimeoutNumber };
                 if (sqlException.Errors.Cast<SqlError>().Any(x => errorsToRetry.Contains(x.Number)))
                 {
-                    Logger.Warn($"Retry database request for {ex.Message}");
+                    Logger.Warn($"[DaExecutionStrategy]: Retry database request for {ex.Message}");
                     isRetryRequest = true;
                 }
                 else
                 {
-                    Logger.Warn($"{ex.Message} doesn't support db request retry strategy.");
+                    Logger.Warn($"[DaExecutionStrategy]: {ex.Message} doesn't support db request retry strategy.");
                 }
             }
             if (ex is TimeoutException)
             {
+                Logger.Warn($"[DaExecutionStrategy]: Retry database request for {ex.Message}");
                 isRetryRequest = true;
             }
             return isRetryRequest;
