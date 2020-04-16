@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Linq;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Etl.CakeMarketing.Cleaners;
 using CakeExtracter.Etl.CakeMarketing.DALoaders;
+using CakeExtracter.Etl.CakeMarketing.Exceptions;
 using CakeExtracter.Etl.CakeMarketing.Extracters;
 using CakeExtracter.Helpers;
 
@@ -72,8 +76,28 @@ namespace CakeExtracter.Commands.DA
             }
             var extractor = new EventConversionExtracter(dateRange, AdvertiserId ?? 0, OfferId ?? 0);
             var loader = new DAEventConversionLoader();
+            InitEtlEvents(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
             return 0;
+        }
+
+        /// <inheritdoc />
+        public override IEnumerable<CommandWithSchedule> GetUniqueBroadCommands(
+            IEnumerable<CommandWithSchedule> commands)
+        {
+            var broadCommands = new List<CommandWithSchedule>();
+            var commandsGroupedByAdvertiserAndOffer = commands.GroupBy(x =>
+            {
+                var command = x.Command as DASynchCakeEventConversions;
+                return new { command?.AdvertiserId, command?.OfferId };
+            });
+            foreach (var commandsGroup in commandsGroupedByAdvertiserAndOffer)
+            {
+                var accountBroadCommands = GetUniqueBroadAccountCommands(commandsGroup);
+                broadCommands.AddRange(accountBroadCommands);
+            }
+
+            return broadCommands;
         }
 
         private DateRange GetDateRange()
@@ -85,6 +109,67 @@ namespace CakeExtracter.Commands.DA
         {
             var cleaner = new DaEventConversionCleaner(AdvertiserId, OfferId, dateRange);
             cleaner.ClearEventConversions();
+        }
+
+        private List<CommandWithSchedule> GetUniqueBroadAccountCommands(IEnumerable<CommandWithSchedule> commandsWithSchedule)
+        {
+            var accountCommands = new List<Tuple<DASynchCakeEventConversions, DateRange, CommandWithSchedule>>();
+            foreach (var commandWithSchedule in commandsWithSchedule)
+            {
+                var command = (DASynchCakeEventConversions)commandWithSchedule.Command;
+                var commandDateRange = CommandHelper.GetDateRange(command.StartDate, command.EndDate, command.DaysAgoToStart, 0);
+                var crossCommands = accountCommands.Where(x => commandDateRange.IsCrossDateRange(x.Item2)).ToList();
+                foreach (var crossCommand in crossCommands)
+                {
+                    commandDateRange = commandDateRange.MergeDateRange(crossCommand.Item2);
+                    commandWithSchedule.ScheduledTime =
+                        crossCommand.Item3.ScheduledTime > commandWithSchedule.ScheduledTime
+                            ? crossCommand.Item3.ScheduledTime
+                            : commandWithSchedule.ScheduledTime;
+                    accountCommands.Remove(crossCommand);
+                }
+
+                accountCommands.Add(new Tuple<DASynchCakeEventConversions, DateRange, CommandWithSchedule>(command, commandDateRange, commandWithSchedule));
+            }
+
+            var broadCommands = accountCommands.Select(GetCommandWithCorrectDateRange).ToList();
+            return broadCommands;
+        }
+
+        private CommandWithSchedule GetCommandWithCorrectDateRange(Tuple<DASynchCakeEventConversions, DateRange, CommandWithSchedule> setting)
+        {
+            setting.Item1.StartDate = setting.Item2.FromDate;
+            setting.Item1.EndDate = setting.Item2.ToDate;
+            setting.Item1.DaysAgoToStart = null;
+            setting.Item3.Command = setting.Item1;
+            return setting.Item3;
+        }
+
+        private void InitEtlEvents(EventConversionExtracter extractor, DAEventConversionLoader loader)
+        {
+            GeneralInitEtlEvents(extractor, loader);
+            extractor.ProcessFailedExtraction += exception =>
+                ScheduleNewCommandLaunch<DASynchCakeEventConversions>(command =>
+                    UpdateCommandParameters(command, exception));
+            loader.ProcessFailedLoading += exception =>
+                ScheduleNewCommandLaunch<DASynchCakeEventConversions>(command =>
+                    UpdateCommandParameters(command, exception));
+        }
+
+        private void GeneralInitEtlEvents(EventConversionExtracter extractor, DAEventConversionLoader loader)
+        {
+            extractor.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewCommandLaunch<DASynchCakeEventConversions>(command => { });
+            loader.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewCommandLaunch<DASynchCakeEventConversions>(command => { });
+        }
+
+        private void UpdateCommandParameters(DASynchCakeEventConversions command, CakeEventConversionsFailedEtlException exception)
+        {
+            command.StartDate = exception.StartDate;
+            command.EndDate = exception.EndDate;
+            command.AdvertiserId = exception.AdvertiserId;
+            command.OfferId = exception.OfferId;
         }
     }
 }

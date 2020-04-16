@@ -28,7 +28,7 @@
 
         public bool SearchTerm { get; set; }
 
-        public bool All => Daily && Strategy && AdSet && Creative && Site && Conv && Keyword && SearchTerm;
+        public virtual bool All => Daily && Strategy && AdSet && Creative && Site && Conv && Keyword && SearchTerm;
 
         public StatsTypeAgg()
         {
@@ -75,7 +75,7 @@
             }
         }
 
-        public void SetAllTrue()
+        public virtual void SetAllTrue()
         {
             Daily = true;
             Strategy = true;

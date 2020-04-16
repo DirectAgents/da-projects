@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.CakeMarketingApi;
 using CakeExtracter.CakeMarketingApi.Entities;
 using CakeExtracter.Common;
+using CakeExtracter.Etl.CakeMarketing.Exceptions;
 using DirectAgents.Domain.Contexts;
 
 namespace CakeExtracter.Etl.CakeMarketing.Extracters
@@ -14,6 +16,11 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
         private readonly int? advertiserId;
         private readonly int? offerId;
         private readonly bool getDailyStats;
+
+        /// <summary>
+        /// Action for exception of failed extraction.
+        /// </summary>
+        public event Action<CakeAffSubSumsFailedEtlException> ProcessFailedExtraction;
 
         public SubIdSummariesExtracter(DateRange dateRange, int? affiliateId = null, int? advertiserId = null, int? offerId = null, bool getDailyStats = false)
         {
@@ -59,15 +66,29 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
                 var offerIds = affOfferIds[affId];
                 foreach (var offId in offerIds)
                 {
-                    var sums = CakeMarketingUtility.SubIdSummaries(dateRangeForCake, affId, offerId: offId);
-                    foreach (var sum in sums)
-                    {
-                        sum.Date = dateRange.FromDate; // for MTD stats, should be the 1st of month
-                        sum.affiliateId = affId;
-                        sum.offerId = offId;
-                        Add(sum);
-                    }
+                    ExtractSubIdSums(dateRange, dateRangeForCake, affId, offId);
                 }
+            }
+        }
+
+        private void ExtractSubIdSums(DateRange dateRange, DateRange dateRangeForCake, int affId, int offId)
+        {
+            try
+            {
+                var sums = CakeMarketingUtility.SubIdSummaries(dateRangeForCake, affId, offerId: offId);
+                foreach (var sum in sums)
+                {
+                    sum.Date = dateRange.FromDate; // for MTD stats, should be the 1st of month
+                    sum.affiliateId = affId;
+                    sum.offerId = offId;
+                    Add(sum);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                var exception = new CakeAffSubSumsFailedEtlException(dateRange.FromDate, dateRange.ToDate, affId, advertiserId, offId, e);
+                ProcessFailedExtraction?.Invoke(exception);
             }
         }
 

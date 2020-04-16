@@ -215,7 +215,7 @@ namespace CakeExtracter.Commands
                 }
                 if (statsType.Strategy && !NeedUpdateKeywordsAndSearchTerms)
                 {
-                    DoETL_Campaign(dateRange, account, amazonUtility); // need to update keywords stats first
+                    DoETL_Campaign(dateRange, account, amazonUtility); 
                 }
             }
             catch (Exception ex)
@@ -248,14 +248,14 @@ namespace CakeExtracter.Commands
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
                 () =>
                 {
-                    var extractor = DIKernel.Get<AmazonApiSponsoredDisplayExtractor>(
+                    var extractor = DIKernel.Get<AmazonApiCampaignExtractor>(
                         ("amazonUtility", amazonUtility),
                         ("dateRange", dateRange),
                         ("account", account),
                         ("campaignFilter", account.Filter),
                         ("campaignFilterOut", null));
                     var loader = DIKernel.Get<BaseAmazonLevelLoader<StrategySummary, StrategySummaryMetric>>(("accountId", account.Id));
-                    InitEtlEvents<StrategySummary, StrategySummaryMetric, AmazonApiSponsoredDisplayExtractor,
+                    InitEtlEvents<StrategySummary, StrategySummaryMetric, AmazonApiCampaignExtractor,
                         BaseAmazonLevelLoader<StrategySummary, StrategySummaryMetric>>(extractor, loader);
                     CommandHelper.DoEtl(extractor, loader);
                 },

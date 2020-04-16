@@ -400,7 +400,7 @@ namespace Amazon
         public virtual List<AmazonStrategyDailySummary> ReportStrategy(DateTime date, string profileId, bool includeCampaignName)
         {
             const CampaignType campaignType = CampaignType.ProductDisplay;
-             var param = AmazonApiHelper.CreateReportSdParams(EntitesType.Campaigns, campaignType, date, includeCampaignName);
+            var param = AmazonApiHelper.CreateReportSdParams(EntitesType.Campaigns, campaignType, date, includeCampaignName);
             return GetReportInfoManyTimes<AmazonStrategyDailySummary, AmazonApiReportSdParams>(EntitesType.Campaigns, campaignType, param, profileId);
         }
 

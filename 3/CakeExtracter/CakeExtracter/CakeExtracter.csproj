@@ -444,6 +444,7 @@
     <Compile Include="Common\CommandAutoStopWatcher.cs" />
     <Compile Include="Common\Email\EmailNotificationsService.cs" />
     <Compile Include="Common\Email\IEmailNotificationsService.cs" />
+    <Compile Include="Common\FbStatsTypeAgg.cs" />
     <Compile Include="Common\FileUtils.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Constants\EmailConfigConstants.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Models\ErrorInJobNotificationModel.cs" />
@@ -554,8 +555,6 @@
     <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonApiAdExtractor.cs" />
     <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonApiCampaignExtractor.cs" />
     <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonApiSearchTermExtractor.cs" />
-    <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonApiSponsoredDisplayExtractor.cs" />
-    <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonSponsoredDisplayMetadataExtractor.cs" />
     <Compile Include="Etl\Amazon\Loaders\AmazonSearchTermSummaryLoader.cs" />
     <Compile Include="Etl\Apple\Exceptions\AppleFailedEtlException.cs" />
     <Compile Include="Etl\Amazon\Exceptions\FailedStatsLoadingException.cs" />
@@ -569,6 +568,8 @@
     <Compile Include="Etl\CakeMarketing\DALoaders\DAEventConversionLoader.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Etl\CakeMarketing\Exceptions\CakeAffSubSumsFailedEtlException.cs" />
+    <Compile Include="Etl\CakeMarketing\Exceptions\CakeEventConversionsFailedEtlException.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\AffiliatesExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\EventConversionExtracter.cs">
       <SubType>Code</SubType>
@@ -618,7 +619,9 @@
     <Compile Include="Etl\DSP\Models\ReportEntities\DspReportEntity.cs" />
     <Compile Include="Etl\DSP\Models\ReportEntities\ReportOrder.cs" />
     <Compile Include="Etl\Facebook\Builders\FacebookInsightsReachMetricProviderBuilder.cs" />
+    <Compile Include="Etl\Facebook\Exceptions\FacebookFailedEtlException.cs" />
     <Compile Include="Etl\Facebook\Extractors\FacebookReachMetricExtractor.cs" />
+    <Compile Include="Etl\Facebook\Interfaces\IFacebookLoadingErrorHandler.cs" />
     <Compile Include="Etl\Facebook\Loaders\FacebookReachMetricLoader.cs" />
     <Compile Include="Etl\Facebook\Repositories\FacebookReachMetricDatabaseRepository.cs" />
     <Compile Include="Etl\Kochava\Configuration\KochavaConfigurationProvider.cs" />
