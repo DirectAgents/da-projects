@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Auth.OAuth2.Flows;
 using Google.Apis.Auth.OAuth2.Responses;
-using Google.Apis.DoubleClickBidManager.v1;
+using Google.Apis.DoubleClickBidManager.v1_1;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
 
