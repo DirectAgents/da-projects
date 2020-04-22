@@ -6,6 +6,7 @@ using Adform.Entities.ReportEntities;
 using Adform.Entities.ReportEntities.ReportParameters;
 using Adform.Enums;
 using Adform.Utilities;
+using CakeExtracter.Commands;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.Adform.Exceptions;
 using DirectAgents.Domain.Entities.CPProg;
@@ -20,6 +21,8 @@ namespace CakeExtracter.Etl.Adform.Extractors
     /// </summary>
     public class AdformDailySummaryExtractor : AdformApiBaseExtractor<AdfDailySummary>
     {
+        private readonly bool isAllStatsTypesRetry;
+
         /// <inheritdoc cref="AdformApiBaseExtractor{T}"/>
         /// <summary>
         /// Initializes a new instance of the <see cref="AdformDailySummaryExtractor" /> class.
@@ -27,9 +30,11 @@ namespace CakeExtracter.Etl.Adform.Extractors
         /// <param name="adformUtility">API utility.</param>
         /// <param name="dateRange">Date range.</param>
         /// <param name="account">Account.</param>
-        public AdformDailySummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account)
+        /// <param name="isAllStatsTypesRetry">Indicate stats type level to retry when an exception occur.</param>
+        public AdformDailySummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account, bool isAllStatsTypesRetry)
             : base(adformUtility, dateRange, account)
         {
+            this.isAllStatsTypesRetry = isAllStatsTypesRetry;
         }
 
         /// <inheritdoc />
@@ -101,7 +106,12 @@ namespace CakeExtracter.Etl.Adform.Extractors
         private void ProcessFailedStatsExtraction(Exception e, DateTime fromDate, DateTime toDate)
         {
             Logger.Error(AccountId, e);
-            var exception = new AdformFailedStatsLoadingException(fromDate, toDate, AccountId, e, byDaily: true);
+            var exception = new AdformFailedStatsLoadingException(
+                fromDate,
+                toDate,
+                AccountId,
+                e,
+                isAllStatsTypesRetry ? StatsTypeAgg.AllArg : StatsTypeAgg.DailyArg);
             InvokeProcessFailedExtractionHandlers(exception);
         }
     }

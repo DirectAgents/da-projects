@@ -121,13 +121,13 @@ namespace CakeExtracter.Etl.Adform.Loaders
         /// <param name="e">Inner exception.</param>
         /// <param name="items">Loaded summary items.</param>
         /// <returns>Exception for relaunch logic.</returns>
-        protected virtual AdformFailedStatsLoadingException GetFailedStatsLoadingException(Exception e, List<TSummary> items)
+        protected virtual AdformFailedStatsLoadingException GetFailedStatsLoadingException(Exception e, List<TSummary> items, string statsType)
         {
             var fromDate = items.Min(x => x.Date);
             var toDate = items.Max(x => x.Date);
             var fromDateArg = fromDate == default(DateTime) ? null : (DateTime?)fromDate;
             var toDateArg = toDate == default(DateTime) ? null : (DateTime?)toDate;
-            var exception = new AdformFailedStatsLoadingException(fromDateArg, toDateArg, accountId, e);
+            var exception = new AdformFailedStatsLoadingException(fromDateArg, toDateArg, accountId, e, statsType);
             return exception;
         }
 

@@ -6,6 +6,7 @@ using Adform.Entities.ReportEntities;
 using Adform.Entities.ReportEntities.ReportParameters;
 using Adform.Enums;
 using Adform.Utilities;
+using CakeExtracter.Commands;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.Adform.Exceptions;
 using DirectAgents.Domain.Entities.CPProg;
@@ -117,7 +118,7 @@ namespace CakeExtracter.Etl.Adform.Extractors
         private void ProcessFailedStatsExtraction(Exception e, DateTime fromDate, DateTime toDate)
         {
             Logger.Error(AccountId, e);
-            var exception = new AdformFailedStatsLoadingException(fromDate, toDate, AccountId, e, byBanner: true);
+            var exception = new AdformFailedStatsLoadingException(fromDate, toDate, AccountId, e, StatsTypeAgg.CreativeArg);
             InvokeProcessFailedExtractionHandlers(exception);
         }
     }
