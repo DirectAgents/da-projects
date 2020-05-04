@@ -438,6 +438,7 @@
     <Compile Include="Commands\DA\DASynchKochavaStats.cs" />
     <Compile Include="Commands\DA\DaSynchYamStats.cs" />
     <Compile Include="Commands\DA\DASynchYAMStats_Outdated.cs" />
+    <Compile Include="Commands\DA\DASynchRokuStats.cs" />
     <Compile Include="Commands\DPA\DPAProcessOrganicKeywordsData.cs" />
     <Compile Include="Commands\Selenium\SyncAmazonPdaCommand.cs" />
     <Compile Include="Commands\Selenium\SyncAmazonVcdCommand.cs" />
@@ -635,6 +636,8 @@
     <Compile Include="Etl\Kochava\Loaders\KochavaLoader.cs" />
     <Compile Include="Etl\Kochava\Models\KochavaReportItem.cs" />
     <Compile Include="Etl\Apple\Extractors\AppleApiExtracter.cs" />
+    <Compile Include="Etl\Roku\Extractors\RokuApiExtractor.cs" />
+    <Compile Include="Etl\Roku\Loaders\RokuLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingConvSummaryExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingDailyNonShoppingSummaryExtractor.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingDailyShoppingSummaryExtractor.cs" />
@@ -1053,6 +1056,10 @@
     <ProjectReference Include="..\..\DirectAgents.Web\CommissionJunction\CommissionJunction.csproj">
       <Project>{0038b6b4-357a-4721-99bc-7659ad00dd3a}</Project>
       <Name>CommissionJunction</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DirectAgents.Web\Roku\RokuAPI.csproj">
+      <Project>{2cee6c2e-79ee-4792-a3df-f7c1483c0bfd}</Project>
+      <Name>RokuAPI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

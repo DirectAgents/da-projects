@@ -63,6 +63,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeleniumDataBrowser", "..\API\SeleniumDataBrowser\SeleniumDataBrowser.csproj", "{09800C2E-2D96-495B-9F32-B461B38D015B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RokuAPI", "Roku\RokuAPI.csproj", "{2CEE6C2E-79EE-4792-A3DF-F7C1483C0BFD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -157,6 +159,10 @@ Global
 		{09800C2E-2D96-495B-9F32-B461B38D015B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09800C2E-2D96-495B-9F32-B461B38D015B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09800C2E-2D96-495B-9F32-B461B38D015B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CEE6C2E-79EE-4792-A3DF-F7C1483C0BFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CEE6C2E-79EE-4792-A3DF-F7C1483C0BFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CEE6C2E-79EE-4792-A3DF-F7C1483C0BFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CEE6C2E-79EE-4792-A3DF-F7C1483C0BFD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -175,6 +181,7 @@ Global
 		{7156F062-4A23-40CE-8051-60B20BCB5E99} = {E50AC5E7-2AD7-4474-BF30-E15FB62F8675}
 		{0038B6B4-357A-4721-99BC-7659AD00DD3A} = {9CADCD2F-2E1D-4D0D-BA87-D9A94D3F8CB7}
 		{09800C2E-2D96-495B-9F32-B461B38D015B} = {9CADCD2F-2E1D-4D0D-BA87-D9A94D3F8CB7}
+		{2CEE6C2E-79EE-4792-A3DF-F7C1483C0BFD} = {9CADCD2F-2E1D-4D0D-BA87-D9A94D3F8CB7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6B7C6F6C-1C50-4207-B5CC-52B64CEFF119}
