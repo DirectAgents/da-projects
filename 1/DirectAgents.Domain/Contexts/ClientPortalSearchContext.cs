@@ -19,6 +19,7 @@
         public virtual DbSet<SearchConvSummary> SearchConvSummaries { get; set; }
         public virtual DbSet<SearchConvType> SearchConvTypes { get; set; }
         public virtual DbSet<SearchDailySummary> SearchDailySummaries { get; set; }
+        public virtual DbSet<SearchVideoDailySummary> SearchVideoDailySummaries { get; set; }
         public virtual DbSet<SearchProfile> SearchProfiles { get; set; }
         public virtual DbSet<CallDailySummary> CallDailySummaries { get; set; }
 
@@ -80,6 +81,14 @@
                 .IsFixedLength();
 
             modelBuilder.Entity<SearchDailySummary>()
+                .Property(e => e.Device)
+                .IsFixedLength();
+
+            modelBuilder.Entity<SearchVideoDailySummary>()
+                .Property(e => e.Network)
+                .IsFixedLength();
+
+            modelBuilder.Entity<SearchVideoDailySummary>()
                 .Property(e => e.Device)
                 .IsFixedLength();
         }

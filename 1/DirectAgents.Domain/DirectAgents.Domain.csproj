@@ -109,6 +109,7 @@
     <Compile Include="Entities\CPProg\Adform\AdfMediaType.cs" />
     <Compile Include="Entities\CPProg\Adform\Summaries\AdfLineItemSummary.cs" />
     <Compile Include="Entities\CPProg\Facebook\FbReachMetric.cs" />
+    <Compile Include="Entities\CPSearch\SearchVideoDailySummary.cs" />
     <Compile Include="MigrationsTD\201905311144009_Mig_ErrorEmailSentProperty.cs" />
     <Compile Include="MigrationsTD\201905311144009_Mig_ErrorEmailSentProperty.Designer.cs">
       <DependentUpon>201905311144009_Mig_ErrorEmailSentProperty.cs</DependentUpon>
