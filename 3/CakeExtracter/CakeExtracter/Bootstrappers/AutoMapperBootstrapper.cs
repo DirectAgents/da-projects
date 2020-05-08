@@ -11,6 +11,11 @@ using DirectAgents.Domain.Entities.CPProg.Kochava;
 using DirectAgents.Domain.Entities.CPProg.Vendor;
 using DirectAgents.Domain.Entities.CPProg.YAM;
 using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
+using DirectAgents.Domain.Entities.CPSearch;
+
+using CallDailySummary = ClientPortal.Data.Contexts.CallDailySummary;
+using SearchConvSummary = ClientPortal.Data.Contexts.SearchConvSummary;
+using SearchDailySummary = ClientPortal.Data.Contexts.SearchDailySummary;
 
 namespace CakeExtracter.Bootstrappers
 {
@@ -28,6 +33,7 @@ namespace CakeExtracter.Bootstrappers
             {
                 cfg.CreateMap<SearchDailySummary, SearchDailySummary>();
                 cfg.CreateMap<SearchDailySummary2, SearchDailySummary2>();
+                cfg.CreateMap<SearchVideoDailySummary, SearchVideoDailySummary>();
                 cfg.CreateMap<GoogleAnalyticsSummary, GoogleAnalyticsSummary>();
                 cfg.CreateMap<CallDailySummary, CallDailySummary>();
                 cfg.CreateMap<SearchConvSummary, SearchConvSummary>();

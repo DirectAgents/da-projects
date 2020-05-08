@@ -5,6 +5,13 @@ using System.Linq;
 using CakeExtracter.Helpers;
 using ClientPortal.Data.Contexts;
 
+using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Entities.CPSearch;
+
+using SearchAccount = ClientPortal.Data.Contexts.SearchAccount;
+using SearchCampaign = ClientPortal.Data.Contexts.SearchCampaign;
+using SearchDailySummary = ClientPortal.Data.Contexts.SearchDailySummary;
+
 namespace CakeExtracter.Etl.SearchMarketing.Loaders
 {
     public class AdWordsApiLoader : Loader<Dictionary<string, string>>
@@ -30,17 +37,24 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             AddUpdateDependentSearchAccounts(items, this.searchAccountId);
             AddUpdateDependentSearchCampaigns(items, this.searchAccountId);
             var count = UpsertSearchDailySummaries(items);
+            if (!clickAssistConvStats && !includeClickType)
+            {
+                UpsertSearchVideoDailySummaries(items);
+            }
+
             return count;
         }
 
         public static string Network_StringToLetter(string network)
         {
-            if (network == null)
-                return null;
-            else if (network == "YouTube Videos")
-                return "V"; // Y will be for "YouTube Search"
-            else
-                return network.Substring(0, 1);
+            switch (network) {
+                case null:
+                    return null;
+                case "YouTube Videos":
+                    return "V"; // Y will be for "YouTube Search"
+                default:
+                    return network.Substring(0, 1);
+            }
         }
 
         public static string Device_StringToLetter(string device)
@@ -87,6 +101,34 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             return progress.ItemCount;
         }
 
+        private int UpsertSearchVideoDailySummaries(List<Dictionary<string, string>> items)
+        {
+            var progress = new LoadingProgress();
+            using (var db = new ClientPortalSearchContext())
+            {
+                var searchAccount = db.SearchAccounts.Find(this.searchAccountId);
+                foreach (var item in items)
+                {
+                    try
+                    {
+                        UpsertSearchVideoDailySummary(item, searchAccount, db, progress);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Warn($"Failed to load search daily summary for customer ID [{item["customerID"]}] ({item["day"]})");
+                        progress.SkippedCount++;
+                    }
+                    finally
+                    {
+                        progress.ItemCount++;
+                    }
+                }
+                Logger.Info($"Saving {progress.ItemCount} SearchVideoDailySummaries ({progress.UpdatedCount} updates, {progress.AddedCount} additions)");
+                db.SaveChanges();
+            }
+            return progress.ItemCount;
+        }
+
         private void UpsertSearchDailySummary(
             Dictionary<string, string> item,
             SearchAccount searchAccount,
@@ -122,6 +164,31 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             }
         }
 
+        private void UpsertSearchVideoDailySummary(
+            Dictionary<string, string> item,
+            DirectAgents.Domain.Entities.CPSearch.SearchAccount searchAccount,
+            ClientPortalSearchContext db,
+            LoadingProgress progress)
+        {
+            var customerId = item["customerID"];
+            var campaignId = item["campaignID"];
+            if (searchAccount.ExternalId != customerId)
+            {
+                searchAccount = searchAccount.SearchProfile.SearchAccounts.Single(sa => sa.ExternalId == customerId && sa.Channel == GoogleChannel);
+            }
+            var searchVideoDailySummary = CreateSearchVideoDailySummary(item, searchAccount, campaignId);
+
+            var isAdded = UpsertSearchVideoDailySummary(db, searchVideoDailySummary);
+            if (isAdded)
+            {
+                progress.AddedCount++;
+            }
+            else
+            {
+                progress.UpdatedCount++;
+            }
+        }
+
         private SearchDailySummary CreateBaseSearchDailySummary(
             Dictionary<string, string> item,
             SearchAccount searchAccount,
@@ -132,12 +199,35 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             var currencyId = (!item.Keys.Contains("currency") || item["currency"] == "USD") ? 1 : -1; // NOTE: non USD (if exists) -1 for now
             var network = Network_StringToLetter(item["network"]);
             return new SearchDailySummary
-            {   // the basic fields
+            {
+                // the basic fields
                 SearchCampaignId = searchCampaignId,
                 Date = date,
                 CurrencyId = currencyId,
                 Network = network,
             };
+        }
+
+        private SearchVideoDailySummary CreateSearchVideoDailySummary(
+            IReadOnlyDictionary<string, string> item,
+            DirectAgents.Domain.Entities.CPSearch.SearchAccount searchAccount,
+            string campaignId)
+        {
+            var searchCampaignId = searchAccount.SearchCampaigns.Single(c => c.ExternalId == campaignId).SearchCampaignId;
+            var date = DateTime.Parse(item["day"].Replace('-', '/'));
+            return new SearchVideoDailySummary
+                   {
+                       SearchCampaignId = searchCampaignId,
+                       Date = date,
+                       Device = Device_StringToLetter(item["device"]),
+                       Network = Network_StringToLetter(item["network"]),
+                       VideoPlayedTo25 = double.Parse(item["videoPlayedTo25"].Replace("%", string.Empty)),
+                       VideoPlayedTo50 = double.Parse(item["videoPlayedTo50"].Replace("%", string.Empty)),
+                       VideoPlayedTo75 = double.Parse(item["videoPlayedTo75"].Replace("%", string.Empty)),
+                       VideoPlayedTo100 = double.Parse(item["videoPlayedTo100"].Replace("%", string.Empty)),
+                       Views = int.Parse(item["views"]),
+                       ViewableImpressions = double.Parse(item["activeViewViewableImprMeasurableImpr"].Replace("%", string.Empty)),
+                   };
         }
 
         private void SetFieldsForClickAssistConvSummary(SearchDailySummary summary, Dictionary<string, string> item)
@@ -188,7 +278,8 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     var toUSDmult = currencyMultipliers[code][firstOfMonth];
                     summary.Revenue = summary.Revenue * toUSDmult;
                     summary.Cost = summary.Cost * toUSDmult;
-                    //TODO? Do for CassConVal as well?
+
+                    // TODO? Do for CassConVal as well?
                 }
             }
         }
@@ -206,11 +297,27 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             {
                 db.Entry(target).State = EntityState.Detached;
 
-                ////For Megabus conversions fix. Also comment out sds.Cost/Clicks/Impressions assignments above.
-                //sds.Impressions = target.Impressions;
-                //sds.Clicks = target.Clicks;
-                //sds.Cost = target.Cost;
+                // For Megabus conversions fix. Also comment out sds.Cost/Clicks/Impressions assignments above.
+                // sds.Impressions = target.Impressions;
+                // sds.Clicks = target.Clicks;
+                // sds.Cost = target.Cost;
+                target = AutoMapper.Mapper.Map(sds, target);
+                db.Entry(target).State = EntityState.Modified;
+                return false;
+            }
+        }
 
+        private bool UpsertSearchVideoDailySummary(ClientPortalSearchContext db, SearchVideoDailySummary sds)
+        {
+            var target = db.Set<SearchVideoDailySummary>().Find(sds.SearchCampaignId, sds.Date, sds.Network, sds.Device);
+            if (target == null)
+            {
+                db.SearchVideoDailySummaries.Add(sds);
+                return true;
+            }
+            else
+            {
+                db.Entry(target).State = EntityState.Detached;
                 target = AutoMapper.Mapper.Map(sds, target);
                 db.Entry(target).State = EntityState.Modified;
                 return false;
@@ -233,7 +340,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                 Clicks = sds.Clicks,
                 // HACK: ignoring impressions for rows that do not have H or C as click type
                 Impressions = (clickTypeAbbrev == "H" || clickTypeAbbrev == "C") ? sds.Impressions : 0,
-                CurrencyId = sds.CurrencyId
+                CurrencyId = sds.CurrencyId,
             };
 
             var target = db.Set<SearchDailySummary2>().Find(sds2.SearchCampaignId, sds2.Date, sds2.Network, sds2.Device, sds2.ClickType);
@@ -255,7 +362,9 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             Dictionary<string, Dictionary<DateTime, decimal>> currencyMultipliers)
         {
             if (!items.Any() || !items[0].Keys.Contains("currency"))
+            {
                 return;
+            }
 
             var currencyTuples1 = items.Where(i => i["currency"] != "USD")
                 .Select(i => Tuple.Create(i["currency"], DateTime.Parse(i["day"].Replace('-', '/')))).Distinct();
@@ -271,7 +380,9 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     var monthsWithoutMultiplier =
                         currencyGroup.Where(t => !currencyMultipliers[currencyGroup.Key].ContainsKey(t.Item2));
                     if (!monthsWithoutMultiplier.Any())
+                    {
                         continue; // they're all there already
+                    }
                 }
                 else
                 {
@@ -288,7 +399,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             {
                 var searchAccount = db.SearchAccounts.Find(searchAccountId);
 
-                var accountTuples = items.Select(i => Tuple.Create(i["account"], i["customerID"])).Distinct();
+                var accountTuples = items.Select(i => Tuple.Create(i["account"], i["customerID"])).Distinct().ToList();
                 bool multipleAccounts = accountTuples.Count() > 1;
 
                 foreach (var tuple in accountTuples)
