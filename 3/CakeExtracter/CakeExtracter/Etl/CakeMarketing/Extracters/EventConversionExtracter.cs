@@ -3,6 +3,7 @@ using CakeExtracter.CakeMarketingApi;
 using CakeExtracter.CakeMarketingApi.Entities;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.CakeMarketing.Exceptions;
+using CakeExtracter.Common.JobExecutionManagement;
 
 namespace CakeExtracter.Etl.CakeMarketing.Extracters
 {
@@ -38,7 +39,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
         {
             try
             {
-                Logger.Info($"Extracting EventConversions for {date.ToShortDateString()}.");
+                LogInfoAboutCurrentDate(date);
                 var singleDate = new DateRange(date, date.AddDays(1));
                 var eventConvs = CakeMarketingUtility.EventConversions(singleDate, advertiserId, offerId);
                 Add(eventConvs);
@@ -49,6 +50,13 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
                 var exception = new CakeEventConversionsFailedEtlException(date, date, advertiserId, offerId, e);
                 ProcessFailedExtraction?.Invoke(exception);
             }
+        }
+
+        private void LogInfoAboutCurrentDate(DateTime date)
+        {
+            var logMessage = $"Extracting EventConversions for {date.ToShortDateString()}.";
+            Logger.Info(logMessage);
+            CommandExecutionContext.Current.SetJobExecutionStateInHistory(logMessage);
         }
     }
 }

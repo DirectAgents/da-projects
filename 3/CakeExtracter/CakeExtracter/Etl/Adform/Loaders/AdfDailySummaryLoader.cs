@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.Commands;
 using CakeExtracter.Etl.Adform.Exceptions;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.CPProg.Adform;
@@ -82,8 +83,7 @@ namespace CakeExtracter.Etl.Adform.Loaders
         private void ProcessFailedStatsExtraction(Exception e, List<AdfDailySummary> items)
         {
             Logger.Error(accountId, e);
-            var exception = GetFailedStatsLoadingException(e, items);
-            exception.ByDaily = true;
+            var exception = GetFailedStatsLoadingException(e, items, StatsTypeAgg.DailyArg);
             InvokeProcessFailedExtractionHandlers(exception);
         }
     }

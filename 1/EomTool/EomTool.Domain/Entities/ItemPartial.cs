@@ -78,10 +78,10 @@ namespace EomTool.Domain.Entities
         }
         public void SetDefaultStatuses()
         {
-            this.item_accounting_status_id = 1;
-            this.item_reporting_status_id = 1;
-            this.campaign_status_id = 1;
-            this.media_buyer_approval_status_id = 1;
+            this.item_accounting_status_id = ItemAccountingStatus.Default;
+            this.item_reporting_status_id = ItemReportingStatus.Default;
+            this.campaign_status_id = CampaignStatus.Default;
+            this.media_buyer_approval_status_id = MediaBuyerApprovalStatus.Default;
         }
 
         public void SetDefaultTypes()
@@ -91,10 +91,9 @@ namespace EomTool.Domain.Entities
             this.source_id = Source.Other;
             this.unit_type_id = UnitType.CPA;
         }
-        // source_id, unit_type_id, revenue_currency_id, cost_currency_id
 
         // returns null if success
-        public string SetProperty(string prop, string value, IMainRepository mainRepo = null)
+        public string SetProperty(string prop, string value)
         {
             prop = prop.ToLower().Trim();
             if (value != null)

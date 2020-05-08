@@ -29,7 +29,11 @@ INSERT INTO td.VcdAnalytic
              shippedcogs,
              freereplacements,
              customerreturns,
-             orderedrevenue)
+             orderedrevenue,
+             lbb,
+             repoos,
+             repoospercentoftotal,
+             repoospriorperiodpercentchange)
 SELECT summarymetrics.date AS 'Date - PRODUCT',
        brand.NAME          AS 'Brand',
        category.NAME       AS 'Category',
@@ -46,28 +50,42 @@ SELECT summarymetrics.date AS 'Date - PRODUCT',
        product.binding,
        product.color,
        product.modelstylenumber,
-       summarymetrics.[52] AS 'Shipped Revenue',
-       summarymetrics.[54] AS 'Shipped Units',
-       summarymetrics.[53] AS 'Ordered Units',
-       summarymetrics.[55] AS 'Shipped COGS',
-       summarymetrics.[56] AS 'Free Replacements',
-       summarymetrics.[57] AS 'Customer Returns',
-       summarymetrics.[58] AS 'Ordered Revenue'
+       summarymetrics.[vendorShippedRevenue] AS 'Shipped Revenue',
+       summarymetrics.[vendorShippedUnits] AS 'Shipped Units',
+       summarymetrics.[vendorOrderedUnits] AS 'Ordered Units',
+       summarymetrics.[vendorShippedCogs] AS 'Shipped COGS',
+       summarymetrics.[vendorFreeReplacement] AS 'Free Replacements',
+       summarymetrics.[vendorCustomerReturns] AS 'Customer Returns',
+       summarymetrics.[vendorOrderedRevenue] AS 'Ordered Revenue',
+       summaryMetrics.[vendorLostBuyBox] AS 'LBB',
+       summaryMetrics.[vendorRepOos] AS 'Rep OOS',
+       summaryMetrics.[vendorRepOosPercentOfTotal] AS 'Rep OOS - % Of Total',
+       summaryMetrics.[vendorRepOosPriorPeriodPercentChange] AS 'Rep OOS - Prior Period'
 FROM   (SELECT productSummaryMetric.date,
                productSummaryMetric.productid,
-               productSummaryMetric.metrictypeid,
+               metricType.Name AS 'MetricTypeName',
                productSummaryMetric.value
         FROM   td.VProductSummaryMetric productSummaryMetric
+        JOIN   td.MetricType metricType
+            ON productSummaryMetric.MetricTypeId = metricType.Id 
         WHERE  productSummaryMetric.date BETWEEN @startDate AND @endDate) AS
        metrics
        PIVOT ( Avg(metrics.value)
-             FOR metrics.metrictypeid IN ( [52],
-                                           [54],
-                                           [53],
-                                           [55],
-                                           [56],
-                                           [57],
-                                           [58] ) ) AS summarymetrics
+                 FOR metrics.MetricTypeName IN
+                 (
+                     [vendorShippedRevenue],
+                     [vendorShippedUnits],
+                     [vendorOrderedUnits],
+                     [vendorShippedCogs],
+                     [vendorFreeReplacement],
+                     [vendorCustomerReturns],
+                     [vendorOrderedRevenue],
+                     [vendorLostBuyBox],
+                     [vendorRepOos],
+                     [vendorRepOosPercentOfTotal],
+                     [vendorRepOosPriorPeriodPercentChange]
+                 )
+             ) AS summarymetrics
        JOIN td.VProduct product
          ON summarymetrics.productid = product.id
        JOIN td.VSubcategory subcategory
@@ -79,4 +97,4 @@ FROM   (SELECT productSummaryMetric.date,
        JOIN td.VBrand brand
          ON product.brandid = brand.id
             AND brand.accountid = @accountId
-ORDER  BY summarymetrics.date DESC; 
+ORDER  BY summarymetrics.date DESC;
