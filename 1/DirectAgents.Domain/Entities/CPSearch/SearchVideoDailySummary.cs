@@ -26,7 +26,7 @@ namespace DirectAgents.Domain.Entities.CPSearch
 
         public int Views { get; set; }
 
-        public double ViewableImpressions { get; set; }
+        public int ActiveViewImpressions { get; set; }
 
         [Key]
         [Column(Order = 2)]
