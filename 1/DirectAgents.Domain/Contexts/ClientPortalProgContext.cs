@@ -118,6 +118,7 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<FbDailySummary>().ToTable("FbDailySummary", tdSchema);
             modelBuilder.Entity<FbActionType>().ToTable("FbActionType", tdSchema);
             modelBuilder.Entity<FbReachMetric>().ToTable("FbReachMetric", tdSchema);
+            modelBuilder.Entity<FbCampaignReachMetric>().ToTable("FbCampaignReachMetric", tdSchema);
 
             //TD Adform
             modelBuilder.Entity<AdfDailySummary>().ToTable("AdfDailySummary", tdSchema);
@@ -536,6 +537,7 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<FbCampaignAction>()
                 .HasKey(x => new { x.Date, x.CampaignId, x.ActionTypeId });
             modelBuilder.Entity<FbReachMetric>().HasKey(x => new { x.AccountId, x.Period });
+            modelBuilder.Entity<FbCampaignReachMetric>().HasKey(x => new { x.CampaignId, x.Period });
         }
 
         private void SetupFacebookSummaryMetricModelValues<TSummary>(DbModelBuilder modelBuilder)

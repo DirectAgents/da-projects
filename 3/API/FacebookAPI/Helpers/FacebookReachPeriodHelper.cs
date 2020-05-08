@@ -23,6 +23,16 @@ namespace FacebookAPI.Helpers
         }
 
         /// <summary>
+        /// Gets the key-name of reach month period by start date of period.
+        /// </summary>
+        /// <param name="startDateOfPeriod">Start date of period.</param>
+        /// <returns>Key-name of reach period.</returns>
+        public static string GetMonthPeriodName(DateTime startDateOfPeriod)
+        {
+            return $"{startDateOfPeriod.Year}. {GetFullNameOfMonth(startDateOfPeriod)}";
+        }
+
+        /// <summary>
         /// Gets array of periods for the API request of the Reach metric.
         /// </summary>
         /// <returns>Array of periods.</returns>
@@ -38,7 +48,21 @@ namespace FacebookAPI.Helpers
                 var secondPartOfMonthPeriod = GetPeriodOfSecondPartOfCurrentMonth();
                 requestedPeriods.Add(secondPartOfMonthPeriod);
             }
+
             return requestedPeriods.ToArray();
+        }
+
+        /// <summary>
+        /// Gets array of monthly periods for the API request of the Reach metric.
+        /// </summary>
+        /// <returns>Array of periods.</returns>
+        public static object[] GetMonthlyPeriodsForApiRequest()
+        {
+            return new[]
+            {
+                GetPeriodOfCurrentMonth(),
+                GetPeriodOfLastMonth(),
+            };
         }
 
         private static object GetPeriodOfFirstPartOfCurrentMonth()
@@ -66,6 +90,15 @@ namespace FacebookAPI.Helpers
             {
                 since = FacebookRequestUtils.GetDateString(startOfSecondPart),
                 until = FacebookRequestUtils.GetDateString(endOfSecondPart),
+            };
+        }
+
+        private static object GetPeriodOfCurrentMonth()
+        {
+            return new
+            {
+                since = FacebookRequestUtils.GetDateString(GetBeginOfCurrentMonth()),
+                until = FacebookRequestUtils.GetDateString(DateTime.Today),
             };
         }
 

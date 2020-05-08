@@ -623,9 +623,12 @@
     <Compile Include="Etl\DSP\Models\ReportEntities\ReportOrder.cs" />
     <Compile Include="Etl\Facebook\Builders\FacebookInsightsReachMetricProviderBuilder.cs" />
     <Compile Include="Etl\Facebook\Exceptions\FacebookFailedEtlException.cs" />
+    <Compile Include="Etl\Facebook\Extractors\FacebookCampaignReachMetricExtractor.cs" />
     <Compile Include="Etl\Facebook\Extractors\FacebookReachMetricExtractor.cs" />
     <Compile Include="Etl\Facebook\Interfaces\IFacebookLoadingErrorHandler.cs" />
+    <Compile Include="Etl\Facebook\Loaders\FacebookCampaignReachMetricLoader.cs" />
     <Compile Include="Etl\Facebook\Loaders\FacebookReachMetricLoader.cs" />
+    <Compile Include="Etl\Facebook\Repositories\FacebookCampaignReachMetricDatabaseRepository.cs" />
     <Compile Include="Etl\Facebook\Repositories\FacebookReachMetricDatabaseRepository.cs" />
     <Compile Include="Etl\Kochava\Configuration\KochavaConfigurationProvider.cs" />
     <Compile Include="Etl\Kochava\Extractors\KochavaExtractor.cs" />
