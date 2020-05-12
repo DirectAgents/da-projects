@@ -14,6 +14,8 @@ namespace CakeExtracter.Data.Configurations
 
         private const int SqlErrorTimeoutNumber = -2;
 
+        private const int SqlErrorConnectionClosed = 19;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DaExecutionStrategy"/> class.
         /// </summary>
@@ -38,10 +40,15 @@ namespace CakeExtracter.Data.Configurations
 
             if (ex is SqlException sqlException)
             {
-                int[] errorsToRetry = { SqlErrorDeadlockNumber, SqlErrorTimeoutNumber };
+                int[] errorsToRetry = { SqlErrorDeadlockNumber, SqlErrorTimeoutNumber, SqlErrorConnectionClosed };
                 if (sqlException.Errors.Cast<SqlError>().Any(x => errorsToRetry.Contains(x.Number)))
                 {
                     Logger.Warn($"[DaExecutionStrategy]: Retry database request for {ex.Message}");
+                    isRetryRequest = true;
+                }
+                else if (base.ShouldRetryOn(ex))
+                {
+                    Logger.Warn($"[DaExecutionStrategy]: Retry database request by base Azure Execution strategy for {ex.Message}");
                     isRetryRequest = true;
                 }
                 else
@@ -49,11 +56,13 @@ namespace CakeExtracter.Data.Configurations
                     Logger.Warn($"[DaExecutionStrategy]: {ex.Message} doesn't support db request retry strategy.");
                 }
             }
+
             if (ex is TimeoutException)
             {
                 Logger.Warn($"[DaExecutionStrategy]: Retry database request for {ex.Message}");
                 isRetryRequest = true;
             }
+
             return isRetryRequest;
         }
     }

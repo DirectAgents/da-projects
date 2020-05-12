@@ -2,6 +2,8 @@
 using System.Linq;
 using CakeExtracter.Commands;
 using CakeExtracter.Common;
+using CakeExtracter.Etl.Facebook.Loaders.EntitiesLoaders;
+
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.Facebook.Campaign;
 using FacebookAPI.Entities;
