@@ -110,6 +110,7 @@
     <Compile Include="Entities\CPProg\Adform\Summaries\AdfLineItemSummary.cs" />
     <Compile Include="Entities\CPProg\Facebook\FbCampaignReachMetric.cs" />
     <Compile Include="Entities\CPProg\Facebook\FbReachMetric.cs" />
+    <Compile Include="Entities\CPProg\Roku\RokuSummary.cs" />
     <Compile Include="Entities\CPSearch\SearchVideoDailySummary.cs" />
     <Compile Include="MigrationsTD\201905311144009_Mig_ErrorEmailSentProperty.cs" />
     <Compile Include="MigrationsTD\201905311144009_Mig_ErrorEmailSentProperty.Designer.cs">
@@ -162,6 +163,10 @@
     <Compile Include="MigrationsTD\202005081530121_UpdateFrequencyTypeCampaignReach.cs" />
     <Compile Include="MigrationsTD\202005081530121_UpdateFrequencyTypeCampaignReach.Designer.cs">
       <DependentUpon>202005081530121_UpdateFrequencyTypeCampaignReach.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\202005121552273_AddRokuSummaryEntity.cs" />
+    <Compile Include="MigrationsTD\202005121552273_AddRokuSummaryEntity.Designer.cs">
+      <DependentUpon>202005121552273_AddRokuSummaryEntity.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201909270822065_Mig_Affiliate_AccountManager.cs" />
     <Compile Include="Migrations\201909270822065_Mig_Affiliate_AccountManager.Designer.cs">
@@ -1224,6 +1229,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\202005081530121_UpdateFrequencyTypeCampaignReach.resx">
       <DependentUpon>202005081530121_UpdateFrequencyTypeCampaignReach.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\202005121552273_AddRokuSummaryEntity.resx">
+      <DependentUpon>202005121552273_AddRokuSummaryEntity.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>
