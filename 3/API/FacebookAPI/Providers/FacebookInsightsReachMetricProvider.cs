@@ -107,11 +107,9 @@ namespace FacebookAPI.Providers
         {
             var levelVal = "campaign";
             var fieldsVal = "campaign_id,campaign_name,reach,frequency";
-            var filters = GetRequestFilters();
             var timeRanges = FacebookReachPeriodHelper.GetMonthlyPeriodsForApiRequest();
             return new
             {
-                filtering = filters,
                 level = levelVal,
                 fields = fieldsVal,
                 time_ranges = timeRanges,

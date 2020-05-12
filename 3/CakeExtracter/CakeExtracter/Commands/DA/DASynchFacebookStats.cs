@@ -216,7 +216,9 @@ namespace CakeExtracter.Commands
                 DoETL_Reach(acctDateRange, account, fbReachMetricUtility);
             }
 
-            if (statsType.CampaignReach && (numDailyItems == null || numDailyItems.Value > 0))
+            if (statsType.CampaignReach
+                && account.NetworkId == Network.ID_Facebook
+                && (numDailyItems == null || numDailyItems.Value > 0))
             {
                 var fbReachMetricUtility = insightsReachMetricProviderBuilder.BuildInsightsReachMetricProvider(account);
                 DoETL_CampaignReach(acctDateRange, account, fbReachMetricUtility);
