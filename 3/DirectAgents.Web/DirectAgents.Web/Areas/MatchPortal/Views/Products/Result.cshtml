@@ -1,0 +1,133 @@
+﻿@using DirectAgents.Web.Areas.MatchPortal.Helpers
+@model DirectAgents.Web.Areas.MatchPortal.Models.ResultFilterVM
+
+@{
+    ViewBag.Title = "Product Data QA";
+}
+
+<h3>Product Data QA</h3>
+<script>
+    $(document).ready(function() {
+        $(".chosen-select").chosen();
+        $(".datepicker").datepicker({});
+    })
+</script>
+<div class="row">
+    @using (Html.BeginForm("Result", "Products", FormMethod.Post))
+    {
+        <hr />
+        <div class="row">
+            <div class="col-md-4">
+                @Html.LabelFor(m => m.Categories, new { @class = "col-md-4 font-weight-bold" })
+                <div class="col-md-8">
+                    @Html.ListBoxFor(m => m.Categories, new MultiSelectList(DropDownProvider.GetCategories(), "Text", "Text"), new { @class = "form-control chosen-select" })
+                </div>
+            </div>
+            <div class="col-md-4">
+                @Html.LabelFor(m => m.ProductId, new { @class = "col-md-4 font-weight-bold" })
+                <div class="col-md-8">
+                    @Html.EditorFor(m => m.ProductId, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+            <div class="col-md-4">
+                @Html.LabelFor(m => m.DateRangeFrom, new { @class = "col-md-6 font-weight-bold" })
+                <div class="col-md-6">
+                    @Html.EditorFor(m => m.DateRangeFrom, new { htmlAttributes = new { @class = "form-control datepicker" } })
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-md-4">
+                @Html.LabelFor(m => m.Brands, new { @class = "col-md-4 font-weight-bold" })
+                <div class="col-md-8">
+                    @Html.ListBoxFor(m => m.Brands, new MultiSelectList(DropDownProvider.GetBrands(), "Text", "Text"), new { @class = "form-control chosen-select" })
+                </div>
+            </div>
+            <div class="col-md-4">
+                @Html.LabelFor(m => m.ProductTitle, new { @class = "col-md-4 font-weight-bold" })
+                <div class="col-md-8">
+                    @Html.EditorFor(m => m.ProductTitle, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+            <div class="col-md-4">
+                @Html.LabelFor(m => m.DateRangeTo, new { @class = "col-md-6 font-weight-bold" })
+                <div class="col-md-6">
+                    @Html.EditorFor(m => m.DateRangeTo, new { htmlAttributes = new { @class = "form-control datepicker" } })
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-md-4">
+                @Html.LabelFor(m => m.MatchedStatus, new { @class = "col-md-4 font-weight-bold" })
+                <div class="col-md-8">
+                    @Html.ListBoxFor(m => m.MatchedStatus, new MultiSelectList(DropDownProvider.GetBrands(), "Text", "Text"), new { @class = "form-control chosen-select" })
+                </div>
+            </div>
+            <div class="col-md-4">
+                @Html.LabelFor(m => m.NumberOfResults, new { @class = "col-md-4 font-weight-bold" })
+                <div class="col-md-8">
+                    @Html.DisplayFor(m => m.NumberOfResults, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+            <div class="col-md-4">
+                @Html.LabelFor(m => m.PercentMatched, new { @class = "col-md-6 font-weight-bold" })
+                <div class="col-md-6">
+                    @Html.DisplayFor(m => m.PercentMatched, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-md-4">
+                <button name="action" value="filter" class="btn btn-default btn-lg btn-block">Apply Filters</button>
+            </div>
+            <div class="col-md-4">
+                <button type="button" class="btn btn-default btn-lg btn-block">Export Full Data frame</button>
+            </div>
+            <div class="col-md-4">
+                <button type="button" class="btn btn-default btn-lg btn-block">Export Client Data frame</button>
+            </div>
+        </div>
+    }
+<hr />
+<div class="row">
+    <table class="table table-striped">
+    <thead>
+    <tr>
+        <th scope="col">Product Image</th>
+        <th scope="col">Old Product Title</th>
+        <th scope="col">New Product Title</th>
+        <th scope="col">Product Description</th>
+        <th scope="col">Product ID</th>
+        <th scope="col">Brand</th>
+        <th scope="col">Matching Status</th>
+        <th scope="col">Matching Date</th>
+        <th scope="col">Url</th>
+    </tr>
+    </thead>
+    <tbody>
+    @if (Model != null && Model.Results != null && Model.Results.Any())
+    {
+
+                <tr>
+                    @foreach (var item in Model.Results)
+                    {
+                        <td><img src="@item.ProductImage" height="75px"/></td>
+                        <td>@item.OldProductTitle</td>
+                        <td>@item.NewProductTitle</td>
+                        <td>@item.ProductDescription</td>
+                        <td>@item.ProductId</td>
+                        <td>@item.Brand</td>
+                        <td>@item.MatchedStatus</td>
+                        <td>@item.MatchingDate.ToString("MM/dd/yyyy")</td>
+                        <td><a href="@item.Url">@item.Url</a></td>
+                    }
+                </tr>
+
+    }
+    </tbody>
+    </table>
+    </div>
+</div>

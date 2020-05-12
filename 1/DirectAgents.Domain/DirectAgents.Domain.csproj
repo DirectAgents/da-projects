@@ -98,6 +98,7 @@
     <Compile Include="Abstract\IDepartmentRepository.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Contexts\MatchPortalContext.cs" />
     <Compile Include="Entities\CPProg\Adform\AdfBanner.cs" />
     <Compile Include="Entities\CPProg\Adform\AdfCampaign.cs" />
     <Compile Include="Entities\CPProg\Adform\AdfLineItem.cs" />
@@ -110,6 +111,12 @@
     <Compile Include="Entities\CPProg\Adform\Summaries\AdfLineItemSummary.cs" />
     <Compile Include="Entities\CPProg\Facebook\FbReachMetric.cs" />
     <Compile Include="Entities\CPSearch\SearchVideoDailySummary.cs" />
+    <Compile Include="Entities\MatchPortal\BuymaHandbags.cs" />
+    <Compile Include="MigrationsMP\202005242334139_InitialMigration.cs" />
+    <Compile Include="MigrationsMP\202005242334139_InitialMigration.Designer.cs">
+      <DependentUpon>202005242334139_InitialMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsMP\Configuration.cs" />
     <Compile Include="MigrationsTD\201905311144009_Mig_ErrorEmailSentProperty.cs" />
     <Compile Include="MigrationsTD\201905311144009_Mig_ErrorEmailSentProperty.Designer.cs">
       <DependentUpon>201905311144009_Mig_ErrorEmailSentProperty.cs</DependentUpon>
@@ -153,6 +160,10 @@
     <Compile Include="MigrationsTD\202004021059161_Mig_AmazonAddMediaType.cs" />
     <Compile Include="MigrationsTD\202004021059161_Mig_AmazonAddMediaType.Designer.cs">
       <DependentUpon>202004021059161_Mig_AmazonAddMediaType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\202005110930460_MatchPortalTable.cs" />
+    <Compile Include="MigrationsTD\202005110930460_MatchPortalTable.Designer.cs">
+      <DependentUpon>202005110930460_MatchPortalTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201909270822065_Mig_Affiliate_AccountManager.cs" />
     <Compile Include="Migrations\201909270822065_Mig_Affiliate_AccountManager.Designer.cs">
@@ -985,6 +996,9 @@
     <EmbeddedResource Include="MigrationsAB\201703101941100_Mig_Payment.resx">
       <DependentUpon>201703101941100_Mig_Payment.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsMP\202005242334139_InitialMigration.resx">
+      <DependentUpon>202005242334139_InitialMigration.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MigrationsRT\201611292020284_InitialCreate.resx">
       <DependentUpon>201611292020284_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
@@ -1209,6 +1223,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\202004021059161_Mig_AmazonAddMediaType.resx">
       <DependentUpon>202004021059161_Mig_AmazonAddMediaType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\202005110930460_MatchPortalTable.resx">
+      <DependentUpon>202005110930460_MatchPortalTable.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

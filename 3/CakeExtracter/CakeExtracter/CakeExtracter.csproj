@@ -454,6 +454,7 @@
     <Compile Include="Common\JobExecutionManagement\JobRequests\Repositories\IJobRequestsRepository.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Services\RetryRequestsHolder.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\CommandSchedulingUtils.cs" />
+    <Compile Include="Common\MatchingPortal\Repositories\MatchPortalRepository.cs" />
     <Compile Include="Common\StatsTypeAgg.cs" />
     <Compile Include="Commands\EOMSynchCPCCommand.cs" />
     <Compile Include="Commands\DA\DASeed.cs" />
@@ -1073,7 +1074,9 @@
     <Analyzer Include="..\..\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\..\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Common\MatchingPortal\Services\Interfaces\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

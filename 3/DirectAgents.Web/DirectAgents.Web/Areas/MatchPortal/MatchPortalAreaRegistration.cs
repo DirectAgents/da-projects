@@ -4,13 +4,7 @@ namespace DirectAgents.Web.Areas.MatchPortal
 {
     public class MatchPortalAreaRegistration : AreaRegistration
     {
-        public override string AreaName
-        {
-            get
-            {
-                return "MatchPortal";
-            }
-        }
+        public override string AreaName => "MatchPortal";
 
         public override void RegisterArea(AreaRegistrationContext context)
         {
