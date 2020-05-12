@@ -993,7 +993,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\1\DirectAgents.Domain\DirectAgents.Domain.csproj">
-      <Project>{278911ab-cb92-4316-843e-4571cd0c3410}</Project>
+      <Project>{278911AB-CB92-4316-843E-4571CD0C3410}</Project>
       <Name>DirectAgents.Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\1\EomTool\EomTool.Domain\EomTool.Domain.csproj">

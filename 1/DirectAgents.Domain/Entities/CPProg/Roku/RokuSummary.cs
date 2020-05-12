@@ -1,4 +1,6 @@
-﻿namespace DirectAgents.Domain.Entities.CPProg.Roku
+﻿using System;
+
+namespace DirectAgents.Domain.Entities.CPProg.Roku
 {
     /// <summary>
     /// Roku  summary metric entity.
@@ -78,5 +80,13 @@
         /// Date.
         /// </value>
         public string OrderDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the extracting date.
+        /// </summary>
+        /// <value>
+        /// Date.
+        /// </value>
+        public DateTime ExtractingDate { get; set; }
     }
 }

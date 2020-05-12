@@ -13,7 +13,7 @@ namespace DirectAgents.Domain.MigrationsTD
         
         string IMigrationMetadata.Id
         {
-            get { return "202004291522109_AddRokuSummaryEntity"; }
+            get { return "202005121552273_AddRokuSummaryEntity"; }
         }
         
         string IMigrationMetadata.Source

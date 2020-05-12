@@ -63,6 +63,7 @@ namespace CakeExtracter.Etl.Roku.Extractors
                     Spend = orderStat?.Spend ?? string.Empty,
                     Budget = order.Budget,
                     OrderDate = order.OrderDate,
+                    ExtractingDate = DateTime.Today.AddDays(-1),
                 };
 
             return result.ToList();

@@ -20,6 +20,7 @@ namespace DirectAgents.Domain.MigrationsTD
                         Spend = c.String(),
                         Budget = c.String(),
                         OrderDate = c.String(),
+                        ExtractingDate = c.DateTime(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);
             

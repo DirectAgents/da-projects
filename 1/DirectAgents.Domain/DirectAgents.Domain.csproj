@@ -159,13 +159,14 @@
     <Compile Include="MigrationsTD\202005081449565_CreateReachCampaignEntity.cs" />
     <Compile Include="MigrationsTD\202005081449565_CreateReachCampaignEntity.Designer.cs">
       <DependentUpon>202005081449565_CreateReachCampaignEntity.cs</DependentUpon>
-    <Compile Include="MigrationsTD\202004291522109_AddRokuSummaryEntity.cs" />
-    <Compile Include="MigrationsTD\202004291522109_AddRokuSummaryEntity.Designer.cs">
-      <DependentUpon>202004291522109_AddRokuSummaryEntity.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsTD\202005081530121_UpdateFrequencyTypeCampaignReach.cs" />
     <Compile Include="MigrationsTD\202005081530121_UpdateFrequencyTypeCampaignReach.Designer.cs">
       <DependentUpon>202005081530121_UpdateFrequencyTypeCampaignReach.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\202005121552273_AddRokuSummaryEntity.cs" />
+    <Compile Include="MigrationsTD\202005121552273_AddRokuSummaryEntity.Designer.cs">
+      <DependentUpon>202005121552273_AddRokuSummaryEntity.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201909270822065_Mig_Affiliate_AccountManager.cs" />
     <Compile Include="Migrations\201909270822065_Mig_Affiliate_AccountManager.Designer.cs">
@@ -1223,14 +1224,14 @@
     <EmbeddedResource Include="MigrationsTD\202004021059161_Mig_AmazonAddMediaType.resx">
       <DependentUpon>202004021059161_Mig_AmazonAddMediaType.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MigrationsTD\202004291522109_AddRokuSummaryEntity.resx">
-      <DependentUpon>202004291522109_AddRokuSummaryEntity.cs</DependentUpon>
-    </EmbeddedResource> 
     <EmbeddedResource Include="MigrationsTD\202005081449565_CreateReachCampaignEntity.resx">
       <DependentUpon>202005081449565_CreateReachCampaignEntity.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\202005081530121_UpdateFrequencyTypeCampaignReach.resx">
       <DependentUpon>202005081530121_UpdateFrequencyTypeCampaignReach.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\202005121552273_AddRokuSummaryEntity.resx">
+      <DependentUpon>202005121552273_AddRokuSummaryEntity.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>
