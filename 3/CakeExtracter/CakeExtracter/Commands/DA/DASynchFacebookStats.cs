@@ -186,11 +186,7 @@ namespace CakeExtracter.Commands
             int? numDailyItems = null;
             if (statsType.Daily)
             {
-<<<<<<< HEAD
-                numDailyItems = DoETL_Daily(acctDateRange, account, fbUtility);
-=======
                 numDailyItems = DoETL_Daily(acctDateRange, account, fbUtility, statsType.All);
->>>>>>> master
             }
 
             if (IsDailyOnlyAccountsMode(statsType, account, acctDateRange))

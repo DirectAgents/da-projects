@@ -15,6 +15,8 @@ namespace CakeExtracter.Etl.Facebook.Extractors
     /// </summary>
     public class FacebookDailySummaryExtractor : FacebookApiExtractor<FbDailySummary, FacebookInsightsDataProvider>
     {
+        private readonly bool isAllStatsTypesRetry;
+
         /// <inheritdoc cref="FacebookApiExtractor{T,TProvider}"/>
         /// <summary>
         /// Initializes a new instance of the <see cref="FacebookDailySummaryExtractor"/> class.
@@ -22,9 +24,11 @@ namespace CakeExtracter.Etl.Facebook.Extractors
         /// <param name="dateRange">The date range.</param>
         /// <param name="account">The account.</param>
         /// <param name="fbUtility">The fb utility.</param>
-        public FacebookDailySummaryExtractor(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
+        /// <param name="isAllStatsTypesRetry">Indicate stats type level to retry when an exception occur.</param>
+        public FacebookDailySummaryExtractor(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility, bool isAllStatsTypesRetry = false)
             : base(fbUtility, dateRange, account)
         {
+            this.isAllStatsTypesRetry = isAllStatsTypesRetry;
         }
 
         /// <inheritdoc />
@@ -49,7 +53,7 @@ namespace CakeExtracter.Etl.Facebook.Extractors
                     this.DateRange?.FromDate,
                     this.DateRange?.ToDate,
                     this.AccountId,
-                    FbStatsTypeAgg.DailyArg,
+                    isAllStatsTypesRetry ? FbStatsTypeAgg.AllArg : FbStatsTypeAgg.DailyArg,
                     ex);
                 Logger.Error(AccountId, ex);
             }
