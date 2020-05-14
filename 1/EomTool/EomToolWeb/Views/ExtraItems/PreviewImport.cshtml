@@ -33,6 +33,7 @@ Accounting Period: *** @currentEomDate.ToString("MMMyyyy") ***
         <th>Cost/Unit</th>
         <th>Notes</th>
         <th>ERRORS</th>
+        <th>Verify?</th>
     </tr>
 @foreach (var row in Model.Rows)
 {
@@ -51,9 +52,11 @@ Accounting Period: *** @currentEomDate.ToString("MMMyyyy") ***
         <td>@item.CostCurrencyName @item.cost_per_unit</td>
         <td>@item.notes</td>
         <td></td>
+        <td>@(item.campaign_status_id == CampaignStatus.Verified ? "yes" : "")</td>
     }
     else // error in row...
     {
+        var item = row.Object;
         <td></td>
         <td>@row.DataFor("pid")</td>
         <td></td>
@@ -70,6 +73,7 @@ Accounting Period: *** @currentEomDate.ToString("MMMyyyy") ***
                 <text>@error</text><br />
             }
         </td>
+        <td>@(item.campaign_status_id == CampaignStatus.Verified ? "yes" : "")</td>
     }
     </tr>
 }

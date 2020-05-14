@@ -131,7 +131,7 @@ namespace CakeExtracter.Commands
                 int? numberOfAddedDailyItems = null;
                 if (statsType.Daily)
                 {
-                    numberOfAddedDailyItems = DoETL_Daily(dateRange, account, adformUtility);
+                    numberOfAddedDailyItems = DoETL_Daily(dateRange, account, adformUtility, statsType.All);
                 }
                 if (numberOfAddedDailyItems == null || numberOfAddedDailyItems.Value > 0)
                 {
@@ -193,10 +193,10 @@ namespace CakeExtracter.Commands
         }
 
         // ---
-        private int DoETL_Daily(DateRange dateRange, ExtAccount account, AdformUtility adformUtility)
+        private int DoETL_Daily(DateRange dateRange, ExtAccount account, AdformUtility adformUtility, bool isAllStatsTypesRetry)
         {
             CommandExecutionContext.Current.SetJobExecutionStateInHistory("Daily level.", account.Id);
-            var extractor = new AdformDailySummaryExtractor(adformUtility, dateRange, account);
+            var extractor = new AdformDailySummaryExtractor(adformUtility, dateRange, account, isAllStatsTypesRetry);
             var loader = CreateDailyLoader(account.Id);
             InitEtlEvents<AdfDailySummary, AdfBaseEntity, AdformDailySummaryExtractor, AdfDailySummaryLoader>(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
@@ -329,14 +329,7 @@ namespace CakeExtracter.Commands
             command.StartDate = exception.StartDate ?? command.StartDate;
             command.EndDate = exception.EndDate ?? command.EndDate;
             command.AccountId = exception.AccountId ?? command.AccountId;
-            var statsTypeAgg = new StatsTypeAgg
-            {
-                Daily = exception.ByDaily,
-                Strategy = exception.ByCampaign,
-                AdSet = exception.ByLineItem,
-                Creative = exception.ByBanner,
-            };
-            command.StatsType = statsTypeAgg.GetStatsTypeString();
+            command.StatsType = exception.StatsType ?? command.StatsType;
         }
 
         private IEnumerable<CommandWithSchedule> GetUniqueBroadAccountLevelCommands(IEnumerable<CommandWithSchedule> commandsWithSchedule)

@@ -11,7 +11,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
 {
     public class AdWordsApiExtracter : Extracter<Dictionary<string, string>>
     {
-        const string VERSION = "v201809";
+        private const string VERSION = "v201809";
         private readonly string reportFilePath = ConfigurationManager.AppSettings["AdWordsReportFilePath"];
 
         private readonly string clientCustomerId;
@@ -22,38 +22,50 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
         private readonly bool clickAssistConvStats;
         private readonly bool conversionTypeStats;
 
-        public AdWordsApiExtracter(string clientCustomerId, CakeExtracter.Common.DateRange dateRange, bool includeClickType,
-            bool clickAssistConvStats = false, bool conversionTypeStats = false) // choose zero or one of these
+        public AdWordsApiExtracter(
+            string clientCustomerId,
+            Common.DateRange dateRange,
+            bool includeClickType,
+            bool clickAssistConvStats = false,
+            bool conversionTypeStats = false) // choose zero or one of these
         {
             this.clientCustomerId = clientCustomerId;
             this.beginDate = dateRange.FromDate;
             this.endDate = dateRange.ToDate;
             this.includeClickType = includeClickType;
 
-            //The first one that's true will be used; if none, it'll be a standard report
+            // The first one that's true will be used; if none, it'll be a standard report
             this.clickAssistConvStats = clickAssistConvStats;
             this.conversionTypeStats = conversionTypeStats;
         }
 
+        /// <inheritdoc/>
         protected override void Extract()
         {
-            string extra = "";
+            var extra = string.Empty;
             if (clickAssistConvStats || conversionTypeStats || includeClickType)
-                extra = String.Format(" [{0}{1}]",
-                            clickAssistConvStats ? "ClickAssistConvStats" : (conversionTypeStats ? "ConversionTypeStats" : ""),
-                            includeClickType ? " w/ClickType" : "");
-            Logger.Info("Extracting SearchDailySummaries{0} from AdWords API for {1} from {2} to {3}",
-                extra, this.clientCustomerId, this.beginDate.ToShortDateString(), this.endDate.ToShortDateString());
+            {
+                extra = $" [{(clickAssistConvStats ? "ClickAssistConvStats" : (conversionTypeStats ? "ConversionTypeStats" : ""))}{(includeClickType ? " w/ClickType" : "")}]";
+            }
+
+            Logger.Info(
+                $"Extracting SearchDailySummaries{extra} from AdWords API for {clientCustomerId} from {beginDate.ToShortDateString()} to {endDate.ToShortDateString()}");
 
             try
             {
                 string[] fields;
                 if (clickAssistConvStats)
+                {
                     fields = GetFields_ClickAssistedConversions();
+                }
                 else if (conversionTypeStats)
+                {
                     fields = GetFields_ConversionTypeStats();
+                }
                 else
+                {
                     fields = GetFields_StandardReport();
+                }
 
                 DownloadAdWordsXmlReport(fields);
                 var reportRows = EnumerateAdWordsXmlReportRows(this.reportFilePath);
@@ -68,8 +80,8 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
 
         private string[] GetFields_StandardReport()
         {
-            var fieldsList = new List<string>(new string[]
-            {                             // "XML ATTRIBUTE"
+            var fieldsList = new List<string>(new[]
+            { // "XML ATTRIBUTE"
                 "AccountDescriptiveName", // account
                 "AccountCurrencyCode", // currency
                 "ExternalCustomerId",  // customerID
@@ -81,23 +93,38 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 "Date",        // day
                 "Impressions", // impressions
                 "Clicks",      // clicks
-                //"ConvertedClicks", // convertedClicks
+                // "ConvertedClicks", // convertedClicks
                 "Conversions", // conversions
                 "Cost", // cost
                 "ConversionValue", // totalConvValue
                 "AdNetworkType1", // network
                 "Device", // device
-                "ViewThroughConversions" // viewThroughConv
+                "ViewThroughConversions", // viewThroughConv
+                
             });
             if (includeClickType)
             {
                 fieldsList.Add("ClickType"); // clickType
             }
+            else
+            {
+                fieldsList.AddRange(
+                    new[]
+                    {
+                        "VideoQuartile100Rate",
+                        "VideoQuartile75Rate",
+                        "VideoQuartile50Rate",
+                        "VideoQuartile25Rate",
+                        "ActiveViewViewability",
+                        "VideoViews",
+                    });
+            }
             return fieldsList.ToArray();
         }
+
         private string[] GetFields_ClickAssistedConversions()
         {
-            var fieldsList = new List<string>(new string[]
+            var fieldsList = new List<string>(new[]
             {
                 "AccountDescriptiveName",
                 "AccountCurrencyCode",
@@ -107,7 +134,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 "Date",
                 "AdNetworkType1",
                 "ClickAssistedConversions", // clickAssistedConv
-                "ClickAssistedConversionValue" // clickAssistedConvValue
+                "ClickAssistedConversionValue", // clickAssistedConvValue
             });
             if (includeClickType)
             {
@@ -115,9 +142,10 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             }
             return fieldsList.ToArray();
         }
+
         private string[] GetFields_ConversionTypeStats()
         {
-            var fieldsList = new List<string>(new string[]
+            var fieldsList = new List<string>(new[]
             {
                 "AccountDescriptiveName",
                 "AccountCurrencyCode",
@@ -132,12 +160,13 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 "ConversionValue",
                 "AllConversions", // allConv
                 "AllConversionValue", // allConvValue
-                //"ViewThroughConversions" // viewThroughConv
+                // "ViewThroughConversions" // viewThroughConv
             });
-            //if (includeClickType)
-            //{
+
+            // if (includeClickType)
+            // {
             //    fieldsList.Add("ClickType"); // clickType
-            //}
+            // }
             return fieldsList.ToArray();
         }
 
@@ -151,36 +180,42 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 dateRangeType = ReportDefinitionDateRangeType.CUSTOM_DATE,
                 selector = new Selector
                 {
-                    dateRange = new DateRange {
+                    dateRange = new DateRange
+                    {
                         min = this.beginDate.ToString("yyyyMMdd"),
-                        max = this.endDate.ToString("yyyyMMdd")
+                        max = this.endDate.ToString("yyyyMMdd"),
                     },
                     fields = fieldsList,
-                    predicates = new Predicate[] {
-                        new Predicate {
+                    predicates = new[]
+                    {
+                        new Predicate
+                        {
                             field = "CampaignStatus",
                             @operator = PredicateOperator.IN,
-                            values = new string[] { "ENABLED","PAUSED","REMOVED" }
+                            values = new[] { "ENABLED", "PAUSED", "REMOVED" },
                         },
-                        new Predicate {
+                        new Predicate
+                        {
                             field = "AdvertisingChannelSubType",
                             @operator = PredicateOperator.NOT_IN,
-                            values = new string[] { "SEARCH_EXPRESS","DISPLAY_EXPRESS" }
-                        }
-                        ////For Megabus conversion fix. Also comment out Impressions, Clicks and Cost above
-                        //new Predicate {
+                            values = new[] { "SEARCH_EXPRESS", "DISPLAY_EXPRESS" },
+                        },
+
+                        // For Megabus conversion fix. Also comment out Impressions, Clicks and Cost above
+                        // new Predicate
+                        // {
                         //    field = "ConversionTypeName",
                         //    @operator = PredicateOperator.NOT_EQUALS,
                         //    values = new string[] { "Transactions (us.megabus.com)" }
-                        //}
-                    }
-                }
+                        // }
+                    },
+                },
             };
 
             try
             {
                 var user = new AdWordsUser();
-                ((AdWordsAppConfig)user.Config).ClientCustomerId = this.clientCustomerId; //"999-213-1770" is RamJet
+                ((AdWordsAppConfig)user.Config).ClientCustomerId = this.clientCustomerId; // "999-213-1770" is RamJet
                 var utilities = new ReportUtilities(user, VERSION, definition);
                 using (ReportResponse response = utilities.GetResponse())
                 {
@@ -232,6 +267,5 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 }
             }
         }
-
     }
 }

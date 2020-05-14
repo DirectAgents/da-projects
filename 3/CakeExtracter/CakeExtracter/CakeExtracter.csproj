@@ -498,6 +498,8 @@
     <Compile Include="Common\StorageCollection.cs" />
     <Compile Include="Common\TextUtils.cs" />
     <Compile Include="Common\DIKernel.cs" />
+    <Compile Include="Data\Configurations\AzureConfiguration.cs" />
+    <Compile Include="Data\Configurations\DaExecutionStrategy.cs" />
     <Compile Include="Etl\Adform\Exceptions\AdformFailedStatsLoadingException.cs" />
     <Compile Include="Etl\Adform\Loaders\AdfBannerSummaryLoader.cs" />
     <Compile Include="Etl\Adform\Loaders\AdfBaseSummaryLoader.cs" />
@@ -523,6 +525,8 @@
     <Compile Include="Etl\AmazonSelenium\PDA\Models\AmazonPdaCampaignSummary.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\PdaDataProviderBuilder.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\AmazonVcdExtractor.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\DecimalPercentageReportConverter.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\DecimalReportConverter.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Loaders\AmazonVcdLoader.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Loaders\Constants\VendorCentralDataLoadingConstants.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Loaders\MetricTypesLoader\BaseVendoritemLoader.cs" />
@@ -544,12 +548,12 @@
     <Compile Include="Etl\AmazonSelenium\VCD\Configuration\VcdExecutionProfileManager.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Synchers\VcdAnalyticTablesSyncher.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportDataComposer\VcdReportComposer.cs" />
-    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\BaseProductRowMap.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\RowMaps\BaseProductRowMap.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\DecimalAmountReportConverter.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\IntNumberReportConverter.cs" />
-    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\OrderedRevenueProductsRowMap.cs" />
-    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\ShippedCogsProductsRowMap.cs" />
-    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\ShippedRevenueProductsRowMap.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\RowMaps\OrderedRevenueProductsRowMap.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\RowMaps\ShippedCogsProductsRowMap.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\RowMaps\ShippedRevenueProductsRowMap.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\VcdReportCsvParser.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\VcdDataProviderBuilder.cs" />
     <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonApiAdExtractor.cs" />

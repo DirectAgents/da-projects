@@ -186,7 +186,11 @@ namespace CakeExtracter.Commands
             int? numDailyItems = null;
             if (statsType.Daily)
             {
+<<<<<<< HEAD
                 numDailyItems = DoETL_Daily(acctDateRange, account, fbUtility);
+=======
+                numDailyItems = DoETL_Daily(acctDateRange, account, fbUtility, statsType.All);
+>>>>>>> master
             }
 
             if (IsDailyOnlyAccountsMode(statsType, account, acctDateRange))
@@ -280,14 +284,14 @@ namespace CakeExtracter.Commands
             return acctDateRange;
         }
 
-        private int DoETL_Daily(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
+        private int DoETL_Daily(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility, bool isAllStatsTypesRetry)
         {
             CommandExecutionContext.Current.SetJobExecutionStateInHistory("Daily level.", account.Id);
             var dateRangesToProcess = dateRange.GetDaysChunks(ProcessingChunkSize).ToList();
             int addedCount = 0;
             dateRangesToProcess.ForEach(rangeToProcess =>
             {
-                var extractor = new FacebookDailySummaryExtractor(rangeToProcess, account, fbUtility);
+                var extractor = new FacebookDailySummaryExtractor(rangeToProcess, account, fbUtility, isAllStatsTypesRetry);
                 var loader = new FacebookDailySummaryLoader(account.Id, rangeToProcess);
                 InitEtlEvents(extractor, loader);
                 CommandHelper.DoEtl(extractor, loader);

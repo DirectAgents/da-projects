@@ -1,7 +1,7 @@
 ﻿using CakeExtracter.Etl.AmazonSelenium.VCD.Models;
 using CsvHelper.Configuration;
 
-namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing.ParsingConverters
+namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing.RowMaps
 {
     /// <inheritdoc />
     /// <summary>

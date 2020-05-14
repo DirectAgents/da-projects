@@ -32,8 +32,8 @@ namespace EomToolWeb.Controllers
         {
             if (uploadFile == null || uploadFile.ContentLength <= 0)
                 return Content("Content was empty");
-            if (uploadFile.ContentType != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                return Content("Must be a valid excel file of version 2007 and above");
+            //if (uploadFile.ContentType != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            //    return Content("Must be a valid excel file of version 2007 and above");
 
             var data = SLExcelReader.ReadExcel(uploadFile.InputStream);
             if (!data.Status.Success)
@@ -107,6 +107,7 @@ namespace EomToolWeb.Controllers
             int numHeaders = data.Headers.Count;
             var rowsConverter = new RowsConverter<Item>(data.Headers);
             var settableProps = Item.SettableProperties;
+            var unitTypesToAutoVerify = UnitType.NonPerformanceMarketing;
             foreach (var dataRow in data.DataRows)
             {
                 if (!dataRow.Any(c => !String.IsNullOrWhiteSpace(c)))
@@ -123,7 +124,7 @@ namespace EomToolWeb.Controllers
                     var colName = data.Headers[i].ToLower();
                     if (settableProps.Contains(colName))
                     {
-                        var error = item.SetProperty(colName, dataRow[i], mainRepo);
+                        var error = item.SetProperty(colName, dataRow[i]);
                         if (error != null)
                             rowWithObj.Errors.Add(error);
                     }
@@ -131,6 +132,11 @@ namespace EomToolWeb.Controllers
                 var errors = item.VerifyAndFinalizeProperties(mainRepo);
                 if (errors.Count > 0)
                     rowWithObj.Errors.AddRange(errors);
+
+                if (unitTypesToAutoVerify.Contains(item.unit_type_id))
+                {
+                    item.campaign_status_id = CampaignStatus.Verified;
+                }
 
                 if (rowWithObj.Errors.Count == 0)
                 {
