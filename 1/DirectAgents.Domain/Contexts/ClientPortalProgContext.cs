@@ -21,6 +21,7 @@ using DirectAgents.Domain.Entities.CPProg.Facebook;
 using DirectAgents.Domain.Entities.CPProg.Facebook.AdSet;
 using DirectAgents.Domain.Entities.CPProg.Facebook.Campaign;
 using DirectAgents.Domain.Entities.CPProg.Facebook.Daily;
+using DirectAgents.Domain.Entities.CPProg.Roku;
 using DirectAgents.Domain.Entities.CPProg.YAM;
 using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
 
@@ -118,6 +119,7 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<FbDailySummary>().ToTable("FbDailySummary", tdSchema);
             modelBuilder.Entity<FbActionType>().ToTable("FbActionType", tdSchema);
             modelBuilder.Entity<FbReachMetric>().ToTable("FbReachMetric", tdSchema);
+            modelBuilder.Entity<FbCampaignReachMetric>().ToTable("FbCampaignReachMetric", tdSchema);
 
             //TD Adform
             modelBuilder.Entity<AdfDailySummary>().ToTable("AdfDailySummary", tdSchema);
@@ -158,6 +160,9 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<YamAdSummary>().ToTable("YamAdSummary", tdSchema);
             modelBuilder.Entity<YamCreativeSummary>().ToTable("YamCreativeSummary", tdSchema);
             modelBuilder.Entity<YamPixelSummary>().ToTable("YamPixelSummary", tdSchema);
+
+            // Roku
+            modelBuilder.Entity<RokuSummary>().ToTable("RokuSummary", tdSchema);
 
             modelBuilder.Entity<Campaign>().Property(c => c.BaseFee).HasPrecision(14, 2);
             modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudgetInfo.MediaSpend).HasPrecision(14, 2).HasColumnName("MediaSpend");
@@ -447,7 +452,10 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<DbmLineItemSummary> DbmLineItemSummaries { get; set; }
         public DbSet<DbmCreative> DbmCreatives { get; set; }
         public DbSet<DbmCreativeSummary> DbmCreativeSummaries { get; set; }
-        
+
+        // Roku
+        public DbSet<RokuSummary> RokuSummaries { get; set; }
+
         private void SetupCjModelValues(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CjAdvertiserCommission>().Property(t => t.AdvCommissionAmountUsd).HasPrecision(18, 6);
@@ -536,6 +544,7 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<FbCampaignAction>()
                 .HasKey(x => new { x.Date, x.CampaignId, x.ActionTypeId });
             modelBuilder.Entity<FbReachMetric>().HasKey(x => new { x.AccountId, x.Period });
+            modelBuilder.Entity<FbCampaignReachMetric>().HasKey(x => new { x.CampaignId, x.Period });
         }
 
         private void SetupFacebookSummaryMetricModelValues<TSummary>(DbModelBuilder modelBuilder)

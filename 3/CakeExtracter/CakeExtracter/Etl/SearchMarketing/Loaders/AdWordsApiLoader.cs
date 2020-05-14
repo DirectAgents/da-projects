@@ -226,7 +226,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                        VideoPlayedTo75 = double.Parse(item["videoPlayedTo75"].Replace("%", string.Empty)),
                        VideoPlayedTo100 = double.Parse(item["videoPlayedTo100"].Replace("%", string.Empty)),
                        Views = int.Parse(item["views"]),
-                       ViewableImpressions = double.Parse(item["activeViewViewableImprMeasurableImpr"].Replace("%", string.Empty)),
+                       ActiveViewImpressions = int.Parse(item["activeViewViewableImpressions"]),
                    };
         }
 

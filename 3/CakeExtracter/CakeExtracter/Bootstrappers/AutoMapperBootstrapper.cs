@@ -8,6 +8,7 @@ using CommissionJunction.Entities;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.CJ;
 using DirectAgents.Domain.Entities.CPProg.Kochava;
+using DirectAgents.Domain.Entities.CPProg.Roku;
 using DirectAgents.Domain.Entities.CPProg.Vendor;
 using DirectAgents.Domain.Entities.CPProg.YAM;
 using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
@@ -146,6 +147,7 @@ namespace CakeExtracter.Bootstrappers
                 cfg.CreateMap<CommissionJunction.Entities.Item, CjAdvertiserCommissionItem>();
                 cfg.CreateMap<KochavaReportItem, KochavaItem>();
                 cfg.CreateMap<VcdAnalyticItem, VcdAnalyticItem>();
+                cfg.CreateMap<RokuSummary, RokuSummary>();
 
                 CreateYamMaps(cfg);
             });

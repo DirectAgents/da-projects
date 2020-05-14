@@ -115,7 +115,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                         "VideoQuartile75Rate",
                         "VideoQuartile50Rate",
                         "VideoQuartile25Rate",
-                        "ActiveViewViewability",
+                        "ActiveViewImpressions",
                         "VideoViews",
                     });
             }

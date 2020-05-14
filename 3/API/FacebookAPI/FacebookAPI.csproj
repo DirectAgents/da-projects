@@ -60,6 +60,7 @@
     <Compile Include="Converters\AdInsigthsFacebookSummaryConverter.cs" />
     <Compile Include="Converters\AdSetInsigthsFacebookSummaryConverter.cs" />
     <Compile Include="Converters\DailyInsigthsFacebookSummaryConverter.cs" />
+    <Compile Include="Converters\FacebookCampaignReachMetricConverter.cs" />
     <Compile Include="Converters\FacebookReachMetricConverter.cs" />
     <Compile Include="Converters\FacebookSummaryConverter.cs" />
     <Compile Include="Converters\IFacebookConverter.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Entities\FBAction.cs" />
     <Compile Include="Api\FacebookJobRequest.cs" />
     <Compile Include="Api\Filter.cs" />
+    <Compile Include="Entities\FbCampaignReachRow.cs" />
     <Compile Include="Enums\ReachPeriod.cs" />
     <Compile Include="Providers\BaseFacebookDataProvider.cs" />
     <Compile Include="Entities\AdDataEntities\AdCreativeData.cs" />
