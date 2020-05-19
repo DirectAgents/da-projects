@@ -11,15 +11,15 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
     /// <summary>
     /// Amazon campaign metadata extractor
     /// </summary>
-    public class AmazonCampaignMetadataExtractor
+    public class AmazonSdMetadataExtractor
     {
         protected readonly AmazonUtility AmazonUtility;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AmazonCampaignMetadataExtractor"/> class.
+        /// Initializes a new instance of the <see cref="AmazonSdMetadataExtractor"/> class.
         /// </summary>
         /// <param name="amazonUtility">The amazon utility.</param>
-        public AmazonCampaignMetadataExtractor(AmazonUtility amazonUtility)
+        public AmazonSdMetadataExtractor(AmazonUtility amazonUtility)
         {
             AmazonUtility = amazonUtility;
         }
@@ -38,10 +38,8 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
 
         private IEnumerable<AmazonCampaign> LoadCampaignsFromAmazonApi(string accountExternalId)
         {
-            var spCampaigns = AmazonUtility.GetCampaigns(CampaignType.SponsoredProducts, accountExternalId);
-            var sbCampaigns = AmazonUtility.GetCampaigns(CampaignType.SponsoredBrands, accountExternalId);
-            var campaigns = spCampaigns.Concat(sbCampaigns);
-            return campaigns.ToList();
+           var sdCampaigns = AmazonUtility.GetCampaigns(CampaignType.ProductDisplay, accountExternalId);
+           return sdCampaigns.ToList();
         }
     }
 }

@@ -20,7 +20,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
     /// </summary>
     internal class AmazonApiCampaignExtractor : BaseAmazonExtractor<StrategySummary>
     {
-        private readonly AmazonCampaignMetadataExtractor campaignMetadataExtractor;
+        private readonly AmazonSdMetadataExtractor campaignMetadataExtractor;
 
         /// <inheritdoc cref="BaseAmazonExtractor{CampaignSummary}"/>
         /// <summary>
@@ -39,7 +39,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
             string campaignFilterOut = null)
             : base(amazonUtility, dateRange, account, campaignFilter, campaignFilterOut)
         {
-            campaignMetadataExtractor = new AmazonCampaignMetadataExtractor(amazonUtility);
+            campaignMetadataExtractor = new AmazonSdMetadataExtractor(amazonUtility);
         }
 
         /// <summary>

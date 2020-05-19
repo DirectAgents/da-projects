@@ -560,6 +560,7 @@
     <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonApiAdExtractor.cs" />
     <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonApiCampaignExtractor.cs" />
     <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonApiSearchTermExtractor.cs" />
+    <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonSdMetadataExtractor.cs" />
     <Compile Include="Etl\Amazon\Loaders\AmazonSearchTermSummaryLoader.cs" />
     <Compile Include="Etl\Apple\Exceptions\AppleFailedEtlException.cs" />
     <Compile Include="Etl\Amazon\Exceptions\FailedStatsLoadingException.cs" />

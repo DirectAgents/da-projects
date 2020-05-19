@@ -201,21 +201,29 @@ namespace CakeExtracter.Commands
                 {
                     DoETL_Creative(dateRange, account, amazonUtility);
                 }
+
                 if (statsType.Keyword || NeedUpdateKeywordsAndSearchTerms)
                 {
                     DoETL_Keyword(dateRange, account, amazonUtility);
                 }
+
                 if (statsType.Daily && !NeedUpdateKeywordsAndSearchTerms)
                 {
                     DoETL_DailyFromKeywordsDatabaseData(dateRange, account); // need to update keywords stats first
                 }
+
                 if ((statsType.SearchTerm && !statsType.All) || NeedUpdateKeywordsAndSearchTerms)
                 {
                     DoETL_SearchTerm(dateRange, account, amazonUtility); // need to update keywords stats first
                 }
+
                 if (statsType.Strategy && !NeedUpdateKeywordsAndSearchTerms)
                 {
-                    DoETL_Campaign(dateRange, account, amazonUtility); 
+                    var dailyOnlyAccounts = ConfigurationHelper.ExtractEnumerableFromConfig("AmazonPdaAccounts").ToArray();
+                    if (dailyOnlyAccounts.Contains(account.ExternalId))
+                    {
+                        DoETL_Campaign(dateRange, account, amazonUtility);
+                    }
                 }
             }
             catch (Exception ex)
