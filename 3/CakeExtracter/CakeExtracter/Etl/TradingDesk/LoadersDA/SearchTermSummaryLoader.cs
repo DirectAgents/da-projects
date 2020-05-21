@@ -153,7 +153,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             var notNullableItems = items.Where(x => x != null).ToList();
             notNullableItems.ForEach(x => x.AccountId = AccountId);
             var searchTerms = notNullableItems
-                .GroupBy(x => new { x.AccountId, x.KeywordId, x.Name })
+                .GroupBy(x => new { x.AccountId, x.KeywordId, x.Name, x.MediaType })
                 .Select(x => x.First())
                 .ToList();
             AddUpdateDependentSearchTermsInDb(searchTerms);
@@ -308,19 +308,27 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         private List<SearchTerm> GetSearchTerms(ClientPortalProgContext db, SearchTerm term)
         {
-            IQueryable<SearchTerm> termsInDb;
+            var termsInDb = db.SearchTerms.Where(x => x.AccountId == term.AccountId && x.Name == term.Name);
+
             if (term.KeywordId.HasValue)
             {
-                termsInDb = db.SearchTerms.Where(a => a.AccountId == term.AccountId && a.KeywordId == term.KeywordId && a.Name == term.Name);
-                if (!termsInDb.Any())
+                var termsWithKeywordInDb = termsInDb.Where(a => a.KeywordId == term.KeywordId);
+                if (!termsWithKeywordInDb.Any())
                 {
-                    termsInDb = db.SearchTerms.Where(x => x.AccountId == term.AccountId && x.KeywordId == null && x.Name == term.Name);
+                    termsWithKeywordInDb = termsInDb.Where(x => x.KeywordId == null);
                 }
+                termsInDb = termsWithKeywordInDb;
             }
-            else
+            if (!string.IsNullOrWhiteSpace(term.MediaType))
             {
-                termsInDb = db.SearchTerms.Where(x => x.AccountId == term.AccountId && x.Name == term.Name);
+                var termsWithMatchTypeInDb = termsInDb.Where(a => a.MediaType == term.MediaType);
+                if (!termsWithMatchTypeInDb.Any())
+                {
+                    termsWithMatchTypeInDb = termsInDb.Where(x => x.MediaType == null || x.MediaType == "");
+                }
+                termsInDb = termsWithMatchTypeInDb;
             }
+
             return termsInDb.ToList();
         }
 
@@ -330,7 +338,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             {
                 AccountId = termProps.AccountId,
                 KeywordId = termProps.KeywordId,
-                Name = termProps.Name
+                Name = termProps.Name,
+                MediaType = termProps.MediaType,
             };
             db.SearchTerms.Add(term);
             SafeContextWrapper.TrySaveChanges(db);
@@ -345,9 +354,15 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 {
                     term.KeywordId = termProps.KeywordId;
                 }
+
                 if (!string.IsNullOrWhiteSpace(termProps.Name))
                 {
                     term.Name = termProps.Name;
+                }
+
+                if (!string.IsNullOrWhiteSpace(termProps.MediaType))
+                {
+                    term.MediaType = termProps.MediaType;
                 }
             }
             return SafeContextWrapper.TrySaveChanges(db);

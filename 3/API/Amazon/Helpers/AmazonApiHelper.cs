@@ -146,9 +146,7 @@ namespace Amazon.Helpers
                     CampaignType.SponsoredBrands, new[]
                     {
                         AttributedMetrics[AttributedMetricType.attributedSales][AttributedMetricDaysInterval.Days14],
-                        AttributedMetrics[AttributedMetricType.attributedSalesSameSKU][AttributedMetricDaysInterval.Days14],
                         AttributedMetrics[AttributedMetricType.attributedConversions][AttributedMetricDaysInterval.Days14],
-                        AttributedMetrics[AttributedMetricType.attributedConversionsSameSKU][AttributedMetricDaysInterval.Days14],
                     }
                 },
                 {
@@ -297,6 +295,11 @@ namespace Amazon.Helpers
             return entitiesType == EntitesType.Keywords;
         }
 
+        private static bool IsEntitiesTypeSearchTerms(EntitesType entitiesType)
+        {
+            return entitiesType == EntitesType.SearchTerm;
+        }
+
         private static string GetBaseEntitiesPath(EntitesType entitiesType, CampaignType campaignType)
         {
             var campaignTypePath = campaignType == CampaignType.Empty || entitiesType == EntitesType.Asins
@@ -329,10 +332,17 @@ namespace Amazon.Helpers
             var dependentEntityMetrics = DependentEntityTypeMetrics[entitiesType];
             metrics.AddRange(dependentCampaignMetrics);
             metrics.AddRange(dependentEntityMetrics);
-            if (IsEntitiesTypeKeywords(entitiesType))
+            if (IsEntitiesTypeKeywords(entitiesType) || IsEntitiesTypeSearchTerms(entitiesType))
             {
                 metrics.Add(KeywordMatchTypeFilter);
             }
+
+            if (IsEntitiesTypeKeywords(entitiesType))
+            {
+                metrics.Add(AttributedMetrics[AttributedMetricType.attributedSalesSameSKU][AttributedMetricDaysInterval.Days14]);
+                metrics.Add(AttributedMetrics[AttributedMetricType.attributedConversionsSameSKU][AttributedMetricDaysInterval.Days14]);
+            }
+
             return metrics;
         }
 

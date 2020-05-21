@@ -317,7 +317,7 @@ namespace DirectAgents.Domain.Entities.CPProg
     {
         public int Id { get; set; }
         public string Name { get; set; }
-
+        public string MediaType { get; set; }
         public int? KeywordId { get; set; }
         public virtual Keyword Keyword { get; set; }
 

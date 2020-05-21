@@ -4,6 +4,7 @@ using System.Linq;
 using Amazon;
 using Amazon.Entities;
 using Amazon.Entities.Summaries;
+using Amazon.Enums;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Etl.Amazon.Exceptions;
@@ -150,15 +151,41 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
         {
             var searchTermSums = ExtractSearchTermSummaries(date);
             var searchTermItems = TransformSummaries(searchTermSums, date, campaignsData);
+            searchTermItems = searchTermItems
+                .GroupBy(p => new { p.Date, p.AdSetEid, p.AdSetName, p.KeywordEid, p.KeywordName, p.SearchTermName, p.StrategyEid, p.StrategyName, p.StrategyTargetingType, p.StrategyType, p.SearchTermMediaType })
+                .Select(g => new SearchTermSummary
+                {
+                    Date = g.Key.Date,
+                    AdSetEid = g.Key.AdSetEid,
+                    AdSetName = g.Key.AdSetName,
+                    KeywordEid = g.Key.KeywordEid,
+                    KeywordName = g.Key.KeywordName,
+                    SearchTermName = g.Key.SearchTermName,
+                    StrategyEid = g.Key.StrategyEid,
+                    StrategyName = g.Key.StrategyName,
+                    StrategyTargetingType = g.Key.StrategyTargetingType,
+                    StrategyType = g.Key.StrategyType,
+                    SearchTermMediaType = g.Key.SearchTermMediaType,
+                    Impressions = g.Sum(p => p.Impressions),
+                    Clicks = g.Sum(p => p.Clicks),
+                    Cost = g.Sum(p => p.Cost),
+                    AllClicks = g.Sum(p => p.AllClicks),
+                    PostClickConv = g.Sum(p => p.AllClicks),
+                    PostClickRev = g.Sum(p => p.PostClickRev),
+                    PostViewConv = g.Sum(p => p.PostViewConv),
+                    PostViewRev = g.Sum(p => p.PostViewRev),
+                }).ToList();
             var targetSums = ExtractTargetSummaries(date);
             var targetItems = TransformSummaries(targetSums, date, campaignsData);
-            var items = searchTermItems.Concat(targetItems);
+            var items = searchTermItems.Concat(targetItems).ToList();
             return items.ToList();
         }
 
         private IEnumerable<AmazonSearchTermDailySummary> ExtractSearchTermSummaries(DateTime date)
         {
-            var sums = _amazonUtility.ReportSearchTerms(date, clientId, true);
+            var spSums = _amazonUtility.ReportSearchTerms(CampaignType.SponsoredProducts, date, clientId, true);
+            var sbSums = _amazonUtility.ReportSearchTerms(CampaignType.SponsoredBrands, date, clientId, true);
+            var sums = spSums.Concat(sbSums);
             var filteredSums = FilterByCampaigns(sums, x => x.CampaignName);
             return filteredSums.ToList();
         }
@@ -201,6 +228,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
             sum.KeywordEid = searchTermStats.KeywordId;
             sum.KeywordName = searchTermStats.KeywordText;
             sum.SearchTermName = searchTermStats.Query;
+            sum.SearchTermMediaType = searchTermStats.MatchType;
             return sum;
         }
 
