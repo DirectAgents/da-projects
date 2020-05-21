@@ -152,7 +152,20 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
             var searchTermSums = ExtractSearchTermSummaries(date);
             var searchTermItems = TransformSummaries(searchTermSums, date, campaignsData);
             searchTermItems = searchTermItems
-                .GroupBy(p => new { p.Date, p.AdSetEid, p.AdSetName, p.KeywordEid, p.KeywordName, p.SearchTermName, p.StrategyEid, p.StrategyName, p.StrategyTargetingType, p.StrategyType, p.SearchTermMediaType })
+                .GroupBy(p => new
+                {
+                    p.Date,
+                    p.AdSetEid,
+                    p.AdSetName,
+                    p.KeywordEid,
+                    p.KeywordName,
+                    p.SearchTermName,
+                    p.StrategyEid,
+                    p.StrategyName,
+                    p.StrategyTargetingType,
+                    p.StrategyType,
+                    p.SearchTermMediaType,
+                })
                 .Select(g => new SearchTermSummary
                 {
                     Date = g.Key.Date,
@@ -174,10 +187,10 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
                     PostClickRev = g.Sum(p => p.PostClickRev),
                     PostViewConv = g.Sum(p => p.PostViewConv),
                     PostViewRev = g.Sum(p => p.PostViewRev),
-                }).ToList();
+                });
             var targetSums = ExtractTargetSummaries(date);
             var targetItems = TransformSummaries(targetSums, date, campaignsData);
-            var items = searchTermItems.Concat(targetItems).ToList();
+            var items = searchTermItems.Concat(targetItems);
             return items.ToList();
         }
 
