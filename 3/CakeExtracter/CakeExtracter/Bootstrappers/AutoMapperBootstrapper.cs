@@ -116,9 +116,11 @@ namespace CakeExtracter.Bootstrappers
                     .ForMember(s => s.Keyword, map => map.AllowNull());
 
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SearchTermSummary, DirectAgents.Domain.Entities.CPProg.SearchTermSummary>();
-                cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SearchTermSummary, DirectAgents.Domain.Entities.CPProg.SearchTerm>()
+                cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SearchTermSummary,
+                        DirectAgents.Domain.Entities.CPProg.SearchTerm>()
                     .ForMember(d => d.Id, opt => opt.MapFrom(s => s.SearchTermId))
-                    .ForMember(d => d.Name, opt => opt.MapFrom(s => s.SearchTermName));
+                    .ForMember(d => d.Name, opt => opt.MapFrom(s => s.SearchTermName))
+                    .ForMember(d => d.MediaType, opt => opt.MapFrom(s => s.SearchTermMediaType));
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SearchTermSummary,
                         DirectAgents.Domain.Entities.CPProg.Keyword>()
                     .ForMember(d => d.Name, opt => opt.MapFrom(s => s.KeywordName))

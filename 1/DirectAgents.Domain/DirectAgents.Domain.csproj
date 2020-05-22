@@ -168,6 +168,10 @@
     <Compile Include="MigrationsTD\202005121552273_AddRokuSummaryEntity.Designer.cs">
       <DependentUpon>202005121552273_AddRokuSummaryEntity.cs</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsTD\202005191104096_AddMatchTypeSearchTerm.cs" />
+    <Compile Include="MigrationsTD\202005191104096_AddMatchTypeSearchTerm.Designer.cs">
+      <DependentUpon>202005191104096_AddMatchTypeSearchTerm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\201909270822065_Mig_Affiliate_AccountManager.cs" />
     <Compile Include="Migrations\201909270822065_Mig_Affiliate_AccountManager.Designer.cs">
       <DependentUpon>201909270822065_Mig_Affiliate_AccountManager.cs</DependentUpon>
@@ -1232,6 +1236,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\202005121552273_AddRokuSummaryEntity.resx">
       <DependentUpon>202005121552273_AddRokuSummaryEntity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\202005191104096_AddMatchTypeSearchTerm.resx">
+      <DependentUpon>202005191104096_AddMatchTypeSearchTerm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>
