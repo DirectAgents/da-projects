@@ -11,6 +11,6 @@
         attributedUnitsOrdered,
         attributedUnitsOrderedOtherSKU,
         attributedDPV,
-        attributedUnitsSold
+        attributedUnitsSold,
     }
 }

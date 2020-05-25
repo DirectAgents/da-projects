@@ -16,7 +16,7 @@ using DirectAgents.Domain.Entities.CPProg;
 namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
 {
     /// <summary>
-    /// API extractor for the Search term level.
+    /// API extractor for the Campaign  level.
     /// </summary>
     internal class AmazonApiCampaignExtractor : BaseAmazonExtractor<StrategySummary>
     {
@@ -74,7 +74,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
 
         /// <inheritdoc/>
         /// <summary>
-        /// Extracting data of the Search term level from API.
+        /// Extracting data of the Campaign level from API.
         /// </summary>
         protected override void Extract()
         {
