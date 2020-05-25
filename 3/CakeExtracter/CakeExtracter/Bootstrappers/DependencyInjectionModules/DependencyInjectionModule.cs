@@ -46,6 +46,7 @@ namespace CakeExtracter.Bootstrappers
             Bind<BaseAmazonLevelLoader<TDadSummary, TDadSummaryMetric>>().To<AmazonAdSummaryLoader>();
             Bind<BaseAmazonLevelLoader<KeywordSummary, KeywordSummaryMetric>>().To<AmazonKeywordSummaryLoader>();
             Bind<BaseAmazonLevelLoader<SearchTermSummary, SearchTermSummaryMetric>>().To<AmazonSearchTermSummaryLoader>();
+            Bind<BaseAmazonLevelLoader<StrategySummary, StrategySummaryMetric>>().To<AmazonCampaignSummaryLoader>();
         }
 
         private void BindServices()
