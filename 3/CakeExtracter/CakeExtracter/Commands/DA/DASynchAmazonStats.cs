@@ -197,6 +197,16 @@ namespace CakeExtracter.Commands
             var amazonUtility = CreateUtility(account);
             try
             {
+
+                if (statsType.Strategy && !NeedUpdateKeywordsAndSearchTerms)
+                {
+                    var dailyOnlyAccounts = ConfigurationHelper.ExtractEnumerableFromConfig("AmazonPdaAccounts").ToArray();
+                    if (dailyOnlyAccounts.Contains(account.ExternalId))
+                    {
+                        DoETL_Campaign(dateRange, account, amazonUtility);
+                    }
+                }
+
                 if (statsType.Creative && !NeedUpdateKeywordsAndSearchTerms)
                 {
                     DoETL_Creative(dateRange, account, amazonUtility);
@@ -215,15 +225,6 @@ namespace CakeExtracter.Commands
                 if ((statsType.SearchTerm && !statsType.All) || NeedUpdateKeywordsAndSearchTerms)
                 {
                     DoETL_SearchTerm(dateRange, account, amazonUtility); // need to update keywords stats first
-                }
-
-                if (statsType.Strategy && !NeedUpdateKeywordsAndSearchTerms)
-                {
-                    var dailyOnlyAccounts = ConfigurationHelper.ExtractEnumerableFromConfig("AmazonPdaAccounts").ToArray();
-                    if (dailyOnlyAccounts.Contains(account.ExternalId))
-                    {
-                        DoETL_Campaign(dateRange, account, amazonUtility);
-                    }
                 }
             }
             catch (Exception ex)
