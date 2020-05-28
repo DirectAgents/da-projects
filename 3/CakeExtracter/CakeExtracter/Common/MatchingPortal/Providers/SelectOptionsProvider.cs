@@ -52,9 +52,11 @@ namespace CakeExtracter.Common.MatchingPortal.Providers
             return results;
         }
 
+
+        public const string MatchedStatusValue = "Matched";
         public static IEnumerable<string> GetMatchedStatuses()
         {
-            return new[] { "Matched", "No Match" };
+            return new[] { MatchedStatusValue, "No Match" };
         }
     }
 }

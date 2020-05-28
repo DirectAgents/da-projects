@@ -442,6 +442,7 @@
     <Compile Include="Commands\Selenium\SyncAmazonPdaCommand.cs" />
     <Compile Include="Commands\Selenium\SyncAmazonVcdCommand.cs" />
     <Compile Include="Common\CommandAutoStopWatcher.cs" />
+    <Compile Include="Common\Constants\DataExportConstants.cs" />
     <Compile Include="Common\Email\EmailNotificationsService.cs" />
     <Compile Include="Common\Email\IEmailNotificationsService.cs" />
     <Compile Include="Common\FbStatsTypeAgg.cs" />
@@ -458,6 +459,7 @@
     <Compile Include="Common\MatchingPortal\Models\MatchFilter.cs" />
     <Compile Include="Common\MatchingPortal\Models\MatchResult.cs" />
     <Compile Include="Common\MatchingPortal\Models\Product.cs" />
+    <Compile Include="Common\MatchingPortal\Models\ReportColumnProvider.cs" />
     <Compile Include="Common\MatchingPortal\Models\ResultFilter.cs" />
     <Compile Include="Common\MatchingPortal\Models\SearchResult.cs" />
     <Compile Include="Common\MatchingPortal\Providers\SelectOptionsProvider.cs" />

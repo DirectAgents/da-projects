@@ -2,8 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-
+using CakeExtracter.Common.Constants;
 using CakeExtracter.Common.MatchingPortal.Models;
+using CakeExtracter.Common.MatchingPortal.Providers;
 using CakeExtracter.Common.MatchingPortal.Services.Interfaces;
 
 namespace DirectAgents.Web.Areas.MatchPortal.Controllers
@@ -76,8 +77,16 @@ namespace DirectAgents.Web.Areas.MatchPortal.Controllers
         [HttpPost]
         public async Task<ActionResult> ExportFullFrame(ResultFilter filter)
         {
-            var report = await _exportService.ExportDataFrame(filter).ConfigureAwait(false);
-            return File(report.Content, report.ContentType, $"{report.Timestamp:yyyy-MM-dd-HH-mm-ss}.csv");
+            var report = await _exportService.ExportDataFrame(DataExportConstants.FullFrameExportColumns, filter).ConfigureAwait(false);
+            return File(report.Content, report.ContentType, $"Full-{report.Timestamp:yyyyMMdd-HHmmss}.csv");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ExportClientFrame(ResultFilter filter)
+        {
+            filter.MatchedStatus = new[] { SelectOptionsProvider.MatchedStatusValue };
+            var report = await _exportService.ExportDataFrame(DataExportConstants.ClientFrameExportColumns, filter).ConfigureAwait(false);
+            return File(report.Content, report.ContentType, $"Client-{report.Timestamp:yyyyMMdd-HHmmss}.csv");
         }
 
         private static int GetNextId(int id, IEnumerable<int> productIds)
