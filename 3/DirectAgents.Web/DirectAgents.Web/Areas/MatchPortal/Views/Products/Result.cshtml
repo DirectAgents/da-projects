@@ -13,7 +13,7 @@
     })
 </script>
 <div class="row">
-    @using (Html.BeginForm("Result", "Products", FormMethod.Post))
+    @using (Html.BeginForm())
     {
         <hr />
         <div class="row">
@@ -81,54 +81,54 @@
         <hr />
         <div class="row">
             <div class="col-md-4">
-                <button name="action" value="filter" class="btn btn-default btn-lg btn-block">Apply Filters</button>
+                <input type="submit" value="Apply Filters" class="btn btn-default btn-lg btn-block" formaction="@Url.Action("Result")" formmethod="post" />
             </div>
             <div class="col-md-4">
-                <button type="button" class="btn btn-default btn-lg btn-block">Export Full Data frame</button>
+                <input type="submit" value="Export Full Data frame" class="btn btn-default btn-lg btn-block" formaction="@Url.Action("ExportFullFrame")" formmethod="post" />
             </div>
             <div class="col-md-4">
-                <button type="button" class="btn btn-default btn-lg btn-block">Export Client Data frame</button>
+                <input type="submit" value="Export Client Data frame" class="btn btn-default btn-lg btn-block" formaction="@Url.Action("ExportFullFrame")" formmethod="post" />
             </div>
         </div>
     }
-<hr />
-<div class="row">
-    <table class="table table-striped">
-    <thead>
-    <tr>
-        <th scope="col">Product Image</th>
-        <th scope="col">Old Product Title</th>
-        <th scope="col">New Product Title</th>
-        <th scope="col">Product Description</th>
-        <th scope="col">Product ID</th>
-        <th scope="col">Brand</th>
-        <th scope="col">Matching Status</th>
-        <th scope="col">Matching Date</th>
-        <th scope="col">Url</th>
-    </tr>
-    </thead>
-    <tbody>
-    @if (Model != null && Model.Results != null && Model.Results.Any())
-    {
-        foreach (var item in Model.Results)
-        {
-             <tr>
+    <hr />
+    <div class="row">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Product Image</th>
+                    <th scope="col">Old Product Title</th>
+                    <th scope="col">New Product Title</th>
+                    <th scope="col">Product Description</th>
+                    <th scope="col">Product ID</th>
+                    <th scope="col">Brand</th>
+                    <th scope="col">Matching Status</th>
+                    <th scope="col">Matching Date</th>
+                    <th scope="col">Url</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Results != null && Model.Results.Any())
+                {
+                    foreach (var item in Model.Results)
+                    {
+                        <tr>
 
-                 <td><img src="@item.ProductImage" height="75px"/></td>
-                 <td>@item.OldProductTitle</td>
-                 <td>@item.NewProductTitle</td>
-                 <td>@item.ProductDescription</td>
-                 <td>@item.ProductId</td>
-                 <td>@item.Brand</td>
-                 <td>@item.MatchedStatus</td>
-                 <td>@item.MatchingDate.ToString("MM/dd/yyyy")</td>
-                 <td><a href="@item.Url">@item.Url</a></td>
+                            <td><img src="@item.ProductImage" height="75px" /></td>
+                            <td>@item.OldProductTitle</td>
+                            <td>@item.NewProductTitle</td>
+                            <td>@item.ProductDescription</td>
+                            <td>@item.ProductId</td>
+                            <td>@item.Brand</td>
+                            <td>@item.MatchedStatus</td>
+                            <td>@item.MatchingDate.ToString("MM/dd/yyyy")</td>
+                            <td><a href="@item.Url">@item.Url</a></td>
 
-             </tr>
-        }
+                        </tr>
+                    }
 
-    }
-    </tbody>
-    </table>
+                }
+            </tbody>
+        </table>
     </div>
 </div>

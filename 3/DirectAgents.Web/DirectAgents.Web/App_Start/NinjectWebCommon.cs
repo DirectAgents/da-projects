@@ -123,6 +123,7 @@ namespace DirectAgents.Web.App_Start
 
             kernel.Bind<IFilterService>().To<FilterService>();
             kernel.Bind<IProductMatchingService>().To<ProductMatchingService>();
+            kernel.Bind<IExportService>().To<CsvDataExportService>();
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 
 using CakeExtracter.Common.MatchingPortal.Models;
@@ -13,10 +14,13 @@ namespace DirectAgents.Web.Areas.MatchPortal.Controllers
 
         private readonly IProductMatchingService _productMatchingService;
 
-        public ProductsController(IFilterService filterService, IProductMatchingService productMatchingService)
+        private readonly IExportService _exportService;
+
+        public ProductsController(IFilterService filterService, IProductMatchingService productMatchingService, IExportService exportService)
         {
             _filterService = filterService;
             _productMatchingService = productMatchingService;
+            _exportService = exportService;
         }
 
         public ActionResult Index()
@@ -67,6 +71,13 @@ namespace DirectAgents.Web.Areas.MatchPortal.Controllers
             filter.Results = filterResults;
             Session["ProductsController.ResultsFilter"] = filter;
             return View(filter);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ExportFullFrame(ResultFilter filter)
+        {
+            var report = await _exportService.ExportDataFrame(filter).ConfigureAwait(false);
+            return File(report.Content, report.ContentType, $"{report.Timestamp:yyyy-MM-dd-HH-mm-ss}.csv");
         }
 
         private static int GetNextId(int id, IEnumerable<int> productIds)
