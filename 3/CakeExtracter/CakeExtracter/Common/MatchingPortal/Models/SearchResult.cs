@@ -1,8 +1,8 @@
-﻿namespace DirectAgents.Web.Areas.MatchPortal.Models
+﻿namespace CakeExtracter.Common.MatchingPortal.Models
 {
-    public class SearchResultVM
+    public class SearchResult
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         public string ImageLink { get; set; }
 

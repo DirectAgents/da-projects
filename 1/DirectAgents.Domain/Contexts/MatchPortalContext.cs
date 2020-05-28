@@ -22,9 +22,13 @@ namespace DirectAgents.Domain.Contexts
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
-            modelBuilder.Entity<BuymaHandbag>().HasKey(x => x.Index).ToTable("buyma_handbags", dboScheme);
+            modelBuilder.Entity<BuymaHandbag>().ToTable("buyma_handbags", dboScheme);
         }
 
         public DbSet<BuymaHandbag> BuymaHandbags { get; set; }
+
+        public DbSet<MatchingResult> MatchingResults { get; set; }
+
+        public DbSet<MatchingProduct> MatchingProducts { get; set; }
     }
 }

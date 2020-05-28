@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace DirectAgents.Web.Areas.MatchPortal.Models
+namespace CakeExtracter.Common.MatchingPortal.Models
 {
-    public class ResultFilterVM
+    public class ResultFilter
     {
         [Display(Name = "Number of Results:")]
         public int? NumberOfResults { get; set; }
@@ -22,17 +22,17 @@ namespace DirectAgents.Web.Areas.MatchPortal.Models
         public string[] MatchedStatus { get; set; }
 
         [Display(Name = "Product ID:")]
-        public int? ProductId { get; set; }
+        public string ProductId { get; set; }
 
         [Display(Name = "Product title:")]
         public string ProductTitle { get; set; }
 
         [Display(Name = "Product Updated Date Range From:")]
-        public DateTime DateRangeFrom { get; set; }
+        public DateTime? DateRangeFrom { get; set; }
 
         [Display(Name = "Product Updated Date Range To:")]
-        public DateTime DateRangeTo { get; set; }
+        public DateTime? DateRangeTo { get; set; }
 
-        public IReadOnlyCollection<MatchResultVM> Results { get; set; }
+        public IReadOnlyCollection<MatchResult> Results { get; set; }
     }
 }

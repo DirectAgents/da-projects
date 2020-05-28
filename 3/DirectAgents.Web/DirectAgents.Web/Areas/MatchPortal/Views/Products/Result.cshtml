@@ -1,5 +1,5 @@
-﻿@using DirectAgents.Web.Areas.MatchPortal.Helpers
-@model DirectAgents.Web.Areas.MatchPortal.Models.ResultFilterVM
+﻿@using CakeExtracter.Common.MatchingPortal.Providers
+@model CakeExtracter.Common.MatchingPortal.Models.ResultFilter
 
 @{
     ViewBag.Title = "Product Data QA";
@@ -20,7 +20,7 @@
             <div class="col-md-4">
                 @Html.LabelFor(m => m.Categories, new { @class = "col-md-4 font-weight-bold" })
                 <div class="col-md-8">
-                    @Html.ListBoxFor(m => m.Categories, new MultiSelectList(DropDownProvider.GetCategories(), "Text", "Text"), new { @class = "form-control chosen-select" })
+                    @Html.ListBoxFor(m => m.Categories, new MultiSelectList(SelectOptionsProvider.GetCategories()), new { @class = "form-control chosen-select" })
                 </div>
             </div>
             <div class="col-md-4">
@@ -41,7 +41,7 @@
             <div class="col-md-4">
                 @Html.LabelFor(m => m.Brands, new { @class = "col-md-4 font-weight-bold" })
                 <div class="col-md-8">
-                    @Html.ListBoxFor(m => m.Brands, new MultiSelectList(DropDownProvider.GetBrands(), "Text", "Text"), new { @class = "form-control chosen-select" })
+                    @Html.ListBoxFor(m => m.Brands, new MultiSelectList(SelectOptionsProvider.GetBrands()), new { @class = "form-control chosen-select" })
                 </div>
             </div>
             <div class="col-md-4">
@@ -62,7 +62,7 @@
             <div class="col-md-4">
                 @Html.LabelFor(m => m.MatchedStatus, new { @class = "col-md-4 font-weight-bold" })
                 <div class="col-md-8">
-                    @Html.ListBoxFor(m => m.MatchedStatus, new MultiSelectList(DropDownProvider.GetBrands(), "Text", "Text"), new { @class = "form-control chosen-select" })
+                    @Html.ListBoxFor(m => m.MatchedStatus, new MultiSelectList(SelectOptionsProvider.GetMatchedStatuses()), new { @class = "form-control chosen-select" })
                 </div>
             </div>
             <div class="col-md-4">
@@ -110,21 +110,22 @@
     <tbody>
     @if (Model != null && Model.Results != null && Model.Results.Any())
     {
+        foreach (var item in Model.Results)
+        {
+             <tr>
 
-                <tr>
-                    @foreach (var item in Model.Results)
-                    {
-                        <td><img src="@item.ProductImage" height="75px"/></td>
-                        <td>@item.OldProductTitle</td>
-                        <td>@item.NewProductTitle</td>
-                        <td>@item.ProductDescription</td>
-                        <td>@item.ProductId</td>
-                        <td>@item.Brand</td>
-                        <td>@item.MatchedStatus</td>
-                        <td>@item.MatchingDate.ToString("MM/dd/yyyy")</td>
-                        <td><a href="@item.Url">@item.Url</a></td>
-                    }
-                </tr>
+                 <td><img src="@item.ProductImage" height="75px"/></td>
+                 <td>@item.OldProductTitle</td>
+                 <td>@item.NewProductTitle</td>
+                 <td>@item.ProductDescription</td>
+                 <td>@item.ProductId</td>
+                 <td>@item.Brand</td>
+                 <td>@item.MatchedStatus</td>
+                 <td>@item.MatchingDate.ToString("MM/dd/yyyy")</td>
+                 <td><a href="@item.Url">@item.Url</a></td>
+
+             </tr>
+        }
 
     }
     </tbody>

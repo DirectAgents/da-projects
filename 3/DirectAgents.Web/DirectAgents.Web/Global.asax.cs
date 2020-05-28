@@ -3,6 +3,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
 using CakeExtracter;
+
 using KendoGridBinder.ModelBinder.Mvc;
 
 namespace DirectAgents.Web
@@ -18,7 +19,7 @@ namespace DirectAgents.Web
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-
+            AutoMapperConfig.CreateMaps();
             ModelBinders.Binders.Add(typeof(KendoGridMvcRequest), new KendoGridMvcModelBinder());
         }
 

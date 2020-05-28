@@ -21,6 +21,8 @@ using Ninject.Web.Common;
 using Ninject.Web.Common.WebHost;
 using CakeExtracter.Common.Email;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Repositories;
+using CakeExtracter.Common.MatchingPortal.Services;
+using CakeExtracter.Common.MatchingPortal.Services.Interfaces;
 using CakeExtracter.Logging.Loggers;
 using DirectAgents.Domain.SpecialPlatformsDataProviders.DBM;
 using DirectAgents.Domain.SpecialPlatformsDataProviders.YAM;
@@ -118,6 +120,9 @@ namespace DirectAgents.Web.App_Start
             kernel.Bind<SpecialPlatformProvider>().To<VcdProvider>();
             kernel.Bind<SpecialPlatformProvider>().To<KochavaProvider>();
             kernel.Bind<SpecialPlatformProvider>().To<CommissionJunctionProvider>();
+
+            kernel.Bind<IFilterService>().To<FilterService>();
+            kernel.Bind<IProductMatchingService>().To<ProductMatchingService>();
         }
 
         /// <summary>

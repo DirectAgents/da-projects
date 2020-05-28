@@ -1,5 +1,5 @@
-﻿@using DirectAgents.Web.Areas.MatchPortal.Helpers
-@model DirectAgents.Web.Areas.MatchPortal.Models.MatchFilterVM
+﻿@using CakeExtracter.Common.MatchingPortal.Providers
+@model CakeExtracter.Common.MatchingPortal.Models.MatchFilter
 
 <div class="well">
     <script>
@@ -22,7 +22,7 @@
                 <div class="col-md-4">
                     @Html.LabelFor(m => m.Categories, new { @class = "col-md-4 font-weight-bold" })
                     <div class="col-md-8">
-                        @Html.ListBoxFor(m => m.Categories, new MultiSelectList(DropDownProvider.GetCategories(), "Text", "Text"), new { @class = "form-control chosen-select" })
+                        @Html.ListBoxFor(m => m.Categories, new MultiSelectList(SelectOptionsProvider.GetCategories()), new { @class = "form-control chosen-select" })
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -43,7 +43,7 @@
                 <div class="col-md-4">
                     @Html.LabelFor(m => m.Brands, new { @class = "col-md-4 font-weight-bold" })
                     <div class="col-md-8">
-                        @Html.ListBoxFor(m => m.Brands, new MultiSelectList(DropDownProvider.GetBrands(), "Text", "Text"), new { @class = "form-control chosen-select" })
+                        @Html.ListBoxFor(m => m.Brands, new MultiSelectList(SelectOptionsProvider.GetBrands()), new { @class = "form-control chosen-select" })
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -56,10 +56,10 @@
             <hr/>
             <div class="btn-group btn-group-justified" role="group" aria-label="...">
                 <div class="btn-group" role="group">
-                    <button name="action" value="filter" class="btn btn-default">Apply Filter</button>
+                    <button type="submit" class="btn btn-default">Apply Filter</button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button name="action" value="match" class="btn btn-default" @(Model.IsFilterApplied ? string.Empty : "disabled")>Start Matching</button>
+                    <a href="@Url.Action("Match", "Products", new { id = (Model.Results != null ? Model.Results.FirstOrDefault() : 0)})" role="button" class="btn btn-default" @(Model.IsFilterApplied ? string.Empty : "disabled")>Start Matching</a>
                 </div>
             </div>
         }

@@ -233,6 +233,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\AutoMapperConfig.cs" />
     <Compile Include="App_Start\MVCGridConfig.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="Areas\AB\ABAreaRegistration.cs" />
@@ -264,14 +265,7 @@
     <Compile Include="Areas\ClientAdmin\ClientAdminAreaRegistration.cs" />
     <Compile Include="Areas\ClientAdmin\Controllers\ClientReportsController.cs" />
     <Compile Include="Areas\MatchPortal\Controllers\ProductsController.cs" />
-    <Compile Include="Areas\MatchPortal\Helpers\DropDownProvider.cs" />
     <Compile Include="Areas\MatchPortal\MatchPortalAreaRegistration.cs" />
-    <Compile Include="Areas\MatchPortal\Helpers\MpTempDataContext.cs" />
-    <Compile Include="Areas\MatchPortal\Models\MatchFilterVM.cs" />
-    <Compile Include="Areas\MatchPortal\Models\MatchProductVM.cs" />
-    <Compile Include="Areas\MatchPortal\Models\MatchResultVM.cs" />
-    <Compile Include="Areas\MatchPortal\Models\ResultFilterVM.cs" />
-    <Compile Include="Areas\MatchPortal\Models\SearchResultVM.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\ActionsController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\Adform\AdformController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\CampStatsController.cs" />

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DirectAgents.Web.Areas.MatchPortal.Models
+namespace CakeExtracter.Common.MatchingPortal.Models
 {
-    public class MatchProductVM
+    public class Product
     {
         public int Id { get; set; }
 
@@ -21,6 +21,8 @@ namespace DirectAgents.Web.Areas.MatchPortal.Models
         [Display(Name = "Product Description:")]
         public string ProductDescription { get; set; }
 
-        public int? MatchedResultId { get; set; }
+        public string ProductId { get; set; }
+
+        public long? MatchedResultId { get; set; }
     }
 }
