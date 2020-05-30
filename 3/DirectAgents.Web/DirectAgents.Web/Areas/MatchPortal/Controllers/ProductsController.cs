@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+
 using CakeExtracter.Common.Constants;
 using CakeExtracter.Common.MatchingPortal.Models;
 using CakeExtracter.Common.MatchingPortal.Providers;
@@ -38,7 +39,7 @@ namespace DirectAgents.Web.Areas.MatchPortal.Controllers
             return View(filter);
         }
 
-        public ActionResult Match(int id)
+        public ActionResult Match(int id, bool? returnToResults)
         {
             var product = _productMatchingService.GetProduct(id);
             var productIds = ((MatchFilter)Session["ProductsController.MatchFilter"] ?? new MatchFilter()).Results?.ToList() ?? new List<int>();
@@ -51,23 +52,37 @@ namespace DirectAgents.Web.Areas.MatchPortal.Controllers
         }
 
         [HttpPost]
-        public ActionResult Match(Product model, int id)
+        public ActionResult Match(Product model, int id, bool? returnToResults)
         {
             _productMatchingService.SaveMatch(model);
+            if (returnToResults.HasValue && returnToResults.Value)
+            {
+                return RedirectToAction("Result", "Products", new { isFilterApplied = true });
+            }
+
             var productIds = ((MatchFilter)Session["ProductsController.MatchFilter"] ?? new MatchFilter()).Results?.ToList() ?? new List<int>();
             var newId = GetNextId(id, productIds);
+
             return RedirectToAction("Match", "Products", new { id = newId });
         }
 
-        public ActionResult Result()
+        public ActionResult Result(bool? isFilterApplied)
         {
+            if (isFilterApplied.HasValue && isFilterApplied.Value)
+            {
+                var filter = (ResultFilter)Session["ProductsController.ResultsFilter"];
+                if (filter != null)
+                {
+                    return Result(filter);
+                }
+            }
+
             return View();
         }
 
         [HttpPost]
         public ActionResult Result(ResultFilter filter)
         {
-            // TODO: Get results from db
             var filterResults = _filterService.ApplyResultsFilter(filter);
             filter.Results = filterResults;
             Session["ProductsController.ResultsFilter"] = filter;
@@ -86,7 +101,7 @@ namespace DirectAgents.Web.Areas.MatchPortal.Controllers
         {
             filter.MatchedStatus = new[] { SelectOptionsProvider.MatchedStatusValue };
             var report = await _exportService.ExportDataFrame(DataExportConstants.ClientFrameExportColumns, filter).ConfigureAwait(false);
-            return File(report.Content, report.ContentType, $"Client-{report.Timestamp:yyyyMMdd-HHmmss}.csv");
+            return File(report.Content, report.ContentType, $"{report.Timestamp:yyyyMMdd}.csv");
         }
 
         private static int GetNextId(int id, IEnumerable<int> productIds)

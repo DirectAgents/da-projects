@@ -4,16 +4,17 @@ using System.Linq;
 using CakeExtracter.Common.MatchingPortal.Models;
 using CakeExtracter.Common.MatchingPortal.Services.Interfaces;
 using CakeExtracter.Helpers;
-
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.MatchPortal;
 
 namespace CakeExtracter.Common.MatchingPortal.Services
 {
+    /// <inheritdoc />
     public class ProductMatchingService : IProductMatchingService
     {
         private static readonly object RequestLocker = new object();
 
+        /// <inheritdoc />
         public void SaveMatch(Product product)
         {
             var matchingResult = AutoMapper.Mapper.Map<MatchingResult>(product);
@@ -26,7 +27,8 @@ namespace CakeExtracter.Common.MatchingPortal.Services
             UpsertMatchingResult(matchingResult);
         }
 
-        public Product GetProduct(double id)
+        /// <inheritdoc />
+        public Product GetProduct(int id)
         {
             Product results = null;
             SafeContextWrapper.TryMakeTransactionWithLock<MatchPortalContext>(
@@ -36,9 +38,9 @@ namespace CakeExtracter.Common.MatchingPortal.Services
             return results;
         }
 
-        private Product GetProductById(MatchPortalContext dbContext, double id)
+        private Product GetProductById(MatchPortalContext dbContext, int id)
         {
-            var product = dbContext.MatchingProducts.FirstOrDefault(x => x.UId == id);
+            var product = dbContext.MatchingProducts.FirstOrDefault(x => (int)x.UId == id);
             var result = AutoMapper.Mapper.Map<Product>(product);
             return result;
         }

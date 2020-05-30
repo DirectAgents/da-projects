@@ -36,7 +36,6 @@ namespace DirectAgents.Domain.Contexts
         public ClientPortalProgContext()
         {
             var adapter = (IObjectContextAdapter)this;
-            
             var objectContext = adapter.ObjectContext;
             objectContext.CommandTimeout = 5 * 60; // value in seconds
         }

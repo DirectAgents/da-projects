@@ -113,10 +113,16 @@
                     foreach (var item in Model.Results)
                     {
                         <tr>
-
+                            @{
+                                var redirectUrl = Url.Action("Match", "Products", new { id = item.RedirectId, returnToResults = true });
+                            }
                             <td><img src="@item.ProductImage" height="75px" /></td>
-                            <td>@item.OldProductTitle</td>
-                            <td>@item.NewProductTitle</td>
+                            <td>
+                                <a href="@redirectUrl">@item.OldProductTitle</a>
+                            </td>
+                            <td>
+                                <a href="@redirectUrl">@item.NewProductTitle</a>
+                            </td>
                             <td>@item.ProductDescription</td>
                             <td>@item.ProductId</td>
                             <td>@item.Brand</td>

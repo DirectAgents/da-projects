@@ -1,9 +1,4 @@
 ﻿using CakeExtracter.Common.MatchingPortal.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CakeExtracter.Common.Constants
 {
@@ -25,9 +20,8 @@ namespace CakeExtracter.Common.Constants
         public static ReportColumnProvider[] ClientFrameExportColumns = new[]
         {
             new ReportColumnProvider { ColumnName = "product_id", ValueExtractor = x => x.ProductId },
-            new ReportColumnProvider { ColumnName = "new_product_title", ValueExtractor = x => x.NewProductTitle },
-            new ReportColumnProvider { ColumnName = "product_description", ValueExtractor = x => x.ProductDescription },
-            new ReportColumnProvider { ColumnName = "product_updated_date", ValueExtractor = x => x.MatchingDate.ToString("s") },
+            new ReportColumnProvider { ColumnName = "title", ValueExtractor = x => x.NewProductTitle },
+            new ReportColumnProvider { ColumnName = "description", ValueExtractor = x => x.ProductDescription },
         };
     }
 }

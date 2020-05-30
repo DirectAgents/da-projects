@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+
 using CakeExtracter.Common.MatchingPortal.Models;
 using CakeExtracter.Common.MatchingPortal.Services.Interfaces;
 
@@ -16,7 +16,7 @@ namespace CakeExtracter.Common.MatchingPortal.Services
 
         private const string CsvDelimiter = ",";
 
-        private IFilterService _filterService;
+        private readonly IFilterService _filterService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CsvDataExportService"/> class.
@@ -28,7 +28,7 @@ namespace CakeExtracter.Common.MatchingPortal.Services
         }
 
         /// <inheritdoc/>
-        public Task<DataFrameExport> ExportDataFrame(IEnumerable<ReportColumnProvider> reportColumnProviders, ResultFilter filter = null)
+        public Task<DataFrameExport> ExportDataFrame(IReadOnlyCollection<ReportColumnProvider> reportColumnProviders, ResultFilter filter = null)
         {
             var dataFrame = new DataFrameExport() { ContentType = ContentType, Timestamp = DateTime.UtcNow };
             var items = _filterService.ApplyResultsFilter(filter ?? new ResultFilter());
@@ -40,15 +40,17 @@ namespace CakeExtracter.Common.MatchingPortal.Services
         {
             try
             {
-                return provider.ValueExtractor(item);
+                var data = provider.ValueExtractor(item);
+                return data.Replace(",", string.Empty);
             }
-            catch
+            catch(Exception ex)
             {
+                Logger.Error(ex);
                 return string.Empty;
             }
         }
 
-        private byte[] BuildCsvFile(IReadOnlyCollection<MatchResult> items, IEnumerable<ReportColumnProvider> reportColumnProviders)
+        private byte[] BuildCsvFile(IEnumerable<MatchResult> items, IReadOnlyCollection<ReportColumnProvider> reportColumnProviders)
         {
             using (var buffer = new MemoryStream())
             {

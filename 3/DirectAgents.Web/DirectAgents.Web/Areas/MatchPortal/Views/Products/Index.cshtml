@@ -1,13 +1,20 @@
 ﻿@using CakeExtracter.Common.MatchingPortal.Providers
 @model CakeExtracter.Common.MatchingPortal.Models.MatchFilter
 
+@{
+    var matchUrl = "#";
+    if (Model.Results != null && Model.Results.Any())
+    {
+        matchUrl = Url.Action("Match", "Products", new { id = Model.Results.First() });
+    }
+}
 <div class="well">
     <script>
         $(document).ready(function() {
             $(".chosen-select").chosen();
         })
     </script>
-    <h3>Entry to Product Matching Interface</h3>
+    <h3>Entry to Product Matching</h3>
     <div class="row">
         @using (Html.BeginForm("Index", "Products", FormMethod.Post))
         {
@@ -54,12 +61,17 @@
                 </div>
             </div>
             <hr/>
-            <div class="btn-group btn-group-justified" role="group" aria-label="...">
-                <div class="btn-group" role="group">
-                    <button type="submit" class="btn btn-default">Apply Filter</button>
+            <div class="row">
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-default btn-lg btn-block">Apply Filter</button>
                 </div>
-                <div class="btn-group" role="group">
-                    <a href="@Url.Action("Match", "Products", new { id = (Model.Results != null ? Model.Results.FirstOrDefault() : 0)})" role="button" class="btn btn-default" @(Model.IsFilterApplied ? string.Empty : "disabled")>Start Matching</a>
+                <div class="col-md-6">
+                    <a href="@matchUrl"
+                       role="button"
+                       class="btn btn-default btn-lg btn-block"
+                       @(Model.IsFilterApplied && !string.IsNullOrWhiteSpace(matchUrl) ? string.Empty : "disabled")>
+                        Start Matching
+                    </a>
                 </div>
             </div>
         }

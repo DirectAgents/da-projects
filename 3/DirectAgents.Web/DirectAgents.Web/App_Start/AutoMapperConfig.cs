@@ -12,7 +12,7 @@ namespace DirectAgents.Web
             Mapper.Initialize(cfg =>
             {
                 cfg.CreateMap<MatchingProduct, Product>()
-                    .ForMember(d => d.Id, opt => opt.MapFrom(s => s.UId))
+                    .ForMember(d => d.Id, opt => opt.MapFrom(s => (int)s.UId))
                     .ForMember(d => d.ProductImageLink, opt => opt.MapFrom(s => s.BuymaImageUrl))
                     .ForMember(d => d.OriginalProductTitle, opt => opt.MapFrom(s => s.OldTitle))
                     .ForMember(d => d.ProductId, opt => opt.MapFrom(s => s.BuymaId));

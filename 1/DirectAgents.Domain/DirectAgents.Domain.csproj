@@ -111,32 +111,11 @@
     <Compile Include="Entities\CPProg\Adform\Summaries\AdfLineItemSummary.cs" />
     <Compile Include="Entities\CPProg\Facebook\FbReachMetric.cs" />
     <Compile Include="Entities\CPSearch\SearchVideoDailySummary.cs" />
-    <Compile Include="Entities\MatchPortal\BuymaHandbags.cs" />
     <Compile Include="Entities\MatchPortal\MatchingProduct.cs" />
     <Compile Include="Entities\MatchPortal\MatchingResult.cs" />
-    <Compile Include="MigrationsMP\202005242334139_InitialMigration.cs" />
-    <Compile Include="MigrationsMP\202005242334139_InitialMigration.Designer.cs">
-      <DependentUpon>202005242334139_InitialMigration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MigrationsMP\202005271251259_Update buyma table.cs" />
-    <Compile Include="MigrationsMP\202005271251259_Update buyma table.Designer.cs">
-      <DependentUpon>202005271251259_Update buyma table.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MigrationsMP\202005271528246_AddMatchedResultEntity.cs" />
-    <Compile Include="MigrationsMP\202005271528246_AddMatchedResultEntity.Designer.cs">
-      <DependentUpon>202005271528246_AddMatchedResultEntity.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MigrationsMP\202005271608316_UpdateMatchedResultEntity.cs" />
-    <Compile Include="MigrationsMP\202005271608316_UpdateMatchedResultEntity.Designer.cs">
-      <DependentUpon>202005271608316_UpdateMatchedResultEntity.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MigrationsMP\202005271947000_AddNewProductEntity.cs" />
-    <Compile Include="MigrationsMP\202005271947000_AddNewProductEntity.Designer.cs">
-      <DependentUpon>202005271947000_AddNewProductEntity.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MigrationsMP\202005272051417_AddForeignKeySearchResult.cs" />
-    <Compile Include="MigrationsMP\202005272051417_AddForeignKeySearchResult.Designer.cs">
-      <DependentUpon>202005272051417_AddForeignKeySearchResult.cs</DependentUpon>
+    <Compile Include="MigrationsMP\202005291358121_InitialMigration.cs" />
+    <Compile Include="MigrationsMP\202005291358121_InitialMigration.Designer.cs">
+      <DependentUpon>202005291358121_InitialMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsMP\Configuration.cs" />
     <Compile Include="MigrationsTD\201905311144009_Mig_ErrorEmailSentProperty.cs" />
@@ -1018,23 +997,8 @@
     <EmbeddedResource Include="MigrationsAB\201703101941100_Mig_Payment.resx">
       <DependentUpon>201703101941100_Mig_Payment.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MigrationsMP\202005242334139_InitialMigration.resx">
-      <DependentUpon>202005242334139_InitialMigration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MigrationsMP\202005271251259_Update buyma table.resx">
-      <DependentUpon>202005271251259_Update buyma table.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MigrationsMP\202005271528246_AddMatchedResultEntity.resx">
-      <DependentUpon>202005271528246_AddMatchedResultEntity.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MigrationsMP\202005271608316_UpdateMatchedResultEntity.resx">
-      <DependentUpon>202005271608316_UpdateMatchedResultEntity.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MigrationsMP\202005271947000_AddNewProductEntity.resx">
-      <DependentUpon>202005271947000_AddNewProductEntity.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MigrationsMP\202005272051417_AddForeignKeySearchResult.resx">
-      <DependentUpon>202005272051417_AddForeignKeySearchResult.cs</DependentUpon>
+    <EmbeddedResource Include="MigrationsMP\202005291358121_InitialMigration.resx">
+      <DependentUpon>202005291358121_InitialMigration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsRT\201611292020284_InitialCreate.resx">
       <DependentUpon>201611292020284_InitialCreate.cs</DependentUpon>

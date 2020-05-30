@@ -463,7 +463,6 @@
     <Compile Include="Common\MatchingPortal\Models\ResultFilter.cs" />
     <Compile Include="Common\MatchingPortal\Models\SearchResult.cs" />
     <Compile Include="Common\MatchingPortal\Providers\SelectOptionsProvider.cs" />
-    <Compile Include="Common\MatchingPortal\Repositories\MatchPortalRepository.cs" />
     <Compile Include="Common\MatchingPortal\Services\CsvDataExportService.cs" />
     <Compile Include="Common\MatchingPortal\Services\FilterService.cs" />
     <Compile Include="Common\MatchingPortal\Services\Interfaces\IExportService.cs" />
@@ -983,7 +982,6 @@
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>SearchReportRuntimeTextTemplate.cs</LastGenOutput>
     </None>
-    <None Include="stylecop1.json" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
