@@ -13,22 +13,22 @@ namespace RokuAPI.Helpers
 
         public static string GetRokuAuthKey => WebConfigurationManager.AppSettings["RokuAuthKey"];
 
-        public static string GetOrderListUrl(DateTime starDate, DateTime endDate)
+        public static string GetOrderListUrl(DateTime date)
         {
-            return string.Format(RokuConstants.OrderListUrlFormat, starDate.ToString(DataFormat), endDate.ToString(DataFormat));
+            return string.Format(RokuConstants.OrderListUrlFormat, date.ToString(DataFormat), date.ToString(DataFormat));
         }
 
-        public static string GetOrderStatsUrl(string orderIds, DateTime starDate, DateTime endDate)
+        public static string GetOrderStatsUrl(string orderIds, DateTime date)
         {
-            return string.Format(RokuConstants.OrdersStatsUrlFormat, orderIds, starDate.ToString(DataFormat), endDate.ToString(DataFormat));
+            return string.Format(RokuConstants.OrdersStatsUrlFormat, orderIds, date.ToString(DataFormat), date.ToString(DataFormat));
         }
 
-        public static string GetReferHeader(DateTime starDate, DateTime endDate)
+        public static string GetReferHeader(DateTime date)
         {
-            return string.Format(RokuConstants.ReferHeaderFormat, starDate.ToString(DataFormat), endDate.ToString(DataFormat));
+            return string.Format(RokuConstants.ReferHeaderFormat, date.ToString(DataFormat), date.ToString(DataFormat));
         }
 
-        public static IReadOnlyCollection<OrderItem> GetOrderItemsFromResponse(dynamic response)
+        public static IReadOnlyList<OrderItem> GetOrderItemsFromResponse(dynamic response)
         {
             var orders = new List<OrderItem>();
 
@@ -50,7 +50,7 @@ namespace RokuAPI.Helpers
             return orders;
         }
 
-        public static IReadOnlyCollection<OrderStats> GetOrderStatsFromResponse(dynamic response, string[] orderIds)
+        public static IReadOnlyList<OrderStats> GetOrderStatsFromResponse(dynamic response, string[] orderIds)
         {
             var statsList = new List<OrderStats>();
 
