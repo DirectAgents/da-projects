@@ -29,9 +29,10 @@ namespace CakeExtracter.Etl.Roku.Extractors
         {
             try
             {
-                var orderList = rokuUtility.GetOrderList(dateRange.FromDate, dateRange.ToDate);
-                var rokuSummaries = GetSummariesByOrders(orderList);
-                Add(rokuSummaries);
+                foreach (var date in dateRange.Dates)
+                {
+                    ExtractDaily(date);
+                }
             }
             catch (Exception e)
             {
@@ -41,12 +42,23 @@ namespace CakeExtracter.Etl.Roku.Extractors
             End();
         }
 
-        private IReadOnlyCollection<RokuSummary> GetSummariesByOrders(IReadOnlyCollection<OrderItem> orders)
+        private void ExtractDaily(DateTime date)
         {
-            var stats = rokuUtility.GetOrderStats(
-                orders.Select(x => x.Id).ToArray(),
-                dateRange.FromDate,
-                dateRange.ToDate);
+            try
+            {
+                var orderList = rokuUtility.GetOrderList(date);
+                var rokuSummaries = GetSummariesByOrders(orderList, date);
+                Add(rokuSummaries);
+            }
+            catch (Exception e)
+            {
+                Logger.Warn(e.Message);
+            }
+        }
+
+        private IReadOnlyList<RokuSummary> GetSummariesByOrders(IReadOnlyList<OrderItem> orders, DateTime date)
+        {
+            var stats = rokuUtility.GetOrderStats(orders.Select(x => x.Id).ToArray(), date);
 
             var result =
                 from order in orders
@@ -63,7 +75,7 @@ namespace CakeExtracter.Etl.Roku.Extractors
                     Spend = orderStat?.Spend ?? string.Empty,
                     Budget = order.Budget,
                     OrderDate = order.OrderDate,
-                    ExtractingDate = DateTime.Today.AddDays(-1),
+                    ExtractingDate = date,
                 };
 
             return result.ToList();

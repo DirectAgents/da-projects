@@ -28,7 +28,7 @@ namespace CakeExtracter.Etl.Roku.Loaders
             {
                 foreach (var rokuStat in rokuSummaries)
                 {
-                    var target = db.Set<RokuSummary>().Find(rokuStat.Id);
+                    var target = db.Set<RokuSummary>().Find(rokuStat.Id, rokuStat.ExtractingDate);
                     if (target == null)
                     {
                         db.RokuSummaries.Add(rokuStat);

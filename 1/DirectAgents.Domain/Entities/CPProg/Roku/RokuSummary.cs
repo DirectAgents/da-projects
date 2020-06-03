@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DirectAgents.Domain.Entities.CPProg.Roku
 {
@@ -14,6 +16,8 @@ namespace DirectAgents.Domain.Entities.CPProg.Roku
         /// <value>
         ///  Id.
         /// </value>
+        [Key]
+        [Column(Order = 0)]
         public string Id { get; set; }
 
         /// <summary>
@@ -87,6 +91,8 @@ namespace DirectAgents.Domain.Entities.CPProg.Roku
         /// <value>
         /// Date.
         /// </value>
+        [Key]
+        [Column(Order = 1)]
         public DateTime ExtractingDate { get; set; }
     }
 }
