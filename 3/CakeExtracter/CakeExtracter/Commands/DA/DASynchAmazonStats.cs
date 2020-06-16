@@ -252,7 +252,7 @@ namespace CakeExtracter.Commands
                 AmazonJobOperations.Total);
         }
 
-        private void DoETL_Campaign(DateRange dateRange, ExtAccount account,AmazonUtility amazonUtility)
+        private void DoETL_Campaign(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
                 () =>

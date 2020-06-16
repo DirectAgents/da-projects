@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Amazon.Enums;
 using CakeExtracter.Helpers;
 using CakeExtracter.SimpleRepositories.RepositoriesWithStorage.Interfaces;
 using DirectAgents.Domain.Contexts;
@@ -95,7 +96,7 @@ namespace CakeExtracter.SimpleRepositories.RepositoriesWithStorage
             {
                 targetItemInDb.TargetingTypeId = sourceItem.TargetingTypeId;
             }
-            if (sourceItem.TypeId.HasValue)
+            if (sourceItem.TypeId.HasValue && (targetItemInDb.Type?.Name != CampaignType.ProductDisplay.ToString()))
             {
                 targetItemInDb.TypeId = sourceItem.TypeId;
             }
