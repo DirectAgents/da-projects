@@ -13,6 +13,8 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
     /// </summary>
     public class AmazonCampaignMetadataExtractor
     {
+        private const string SdCompaignMark = "offAmazon";
+
         protected readonly AmazonUtility AmazonUtility;
 
         /// <summary>
@@ -41,7 +43,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
             var spCampaigns = AmazonUtility.GetCampaigns(CampaignType.SponsoredProducts, accountExternalId);
             var sbCampaigns = AmazonUtility.GetCampaigns(CampaignType.SponsoredBrands, accountExternalId);
             var campaigns = spCampaigns.Concat(sbCampaigns);
-            return campaigns.ToList();
+            return campaigns.Where(c => !c.Networks?.Contains(SdCompaignMark) ?? true).ToList();
         }
     }
 }

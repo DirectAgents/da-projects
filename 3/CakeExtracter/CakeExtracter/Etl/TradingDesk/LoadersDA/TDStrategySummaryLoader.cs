@@ -1,14 +1,15 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using AutoMapper;
+using CakeExtracter.Common;
 using CakeExtracter.Helpers;
+using CakeExtracter.SimpleRepositories.RepositoriesWithStorage;
+using CakeExtracter.SimpleRepositories.RepositoriesWithStorage.Interfaces;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using CakeExtracter.Common;
-using CakeExtracter.SimpleRepositories.RepositoriesWithStorage;
-using CakeExtracter.SimpleRepositories.RepositoriesWithStorage.Interfaces;
+
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {

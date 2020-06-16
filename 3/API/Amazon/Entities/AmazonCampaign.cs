@@ -1,4 +1,6 @@
-﻿namespace Amazon.Entities
+﻿using System.Collections.Generic;
+
+namespace Amazon.Entities
 {
     public class AmazonCampaign
     {
@@ -11,5 +13,6 @@
         public string StartDate { get; set; }
         public string EndDate { get; set; }
         public string State { get; set; }
+        public List<string> Networks { get; set; }
     }
 }
