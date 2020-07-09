@@ -18,6 +18,7 @@ namespace SeleniumDataBrowser.VCD.PageActions
     {
         private const string SalesDiagnosticPageUrl = "https://vendorcentral.amazon.com/analytics/dashboard/salesDiagnostic";
         private const string SwitchAccountPageUrl = "https://vendorcentral.amazon.com/account/choose";
+        private const string SnapshotPageUrl = "https://vendorcentral.amazon.com/analytics/dashboard/snapshot";
 
         /// <inheritdoc cref="AmazonLoginActionsWithPagesManager"/>
         /// <summary>
@@ -60,13 +61,11 @@ namespace SeleniumDataBrowser.VCD.PageActions
         /// <param name="waitingElement">Element for waiting if needed.</param>
         public void NavigateToSalesDiagnosticPage(By waitingElement = null)
         {
+            NavigateToUrl(SalesDiagnosticPageUrl);
+            AvoidRedirectToSnapshotPage();
             if (waitingElement != null)
             {
-                NavigateToUrl(SalesDiagnosticPageUrl, waitingElement);
-            }
-            else
-            {
-                NavigateToUrl(SalesDiagnosticPageUrl);
+                WaitElementClickable(waitingElement);
             }
         }
 
@@ -132,6 +131,16 @@ namespace SeleniumDataBrowser.VCD.PageActions
             var pattern = $@"\s{accountName}";
             var regex = new Regex(pattern);
             return regex.IsMatch(accountElementText);
+        }
+
+        private void AvoidRedirectToSnapshotPage()
+        {
+            var isRedirectedToSnapshotPage = string.Equals(GetCurrentWindowUrl(), SnapshotPageUrl, StringComparison.OrdinalIgnoreCase);
+            if (isRedirectedToSnapshotPage)
+            {
+                WaitElementClickable(AmazonVcdPageObjects.SalesDiagnosticLink);
+                ClickElement(AmazonVcdPageObjects.SalesDiagnosticLink);
+            }
         }
     }
 }
