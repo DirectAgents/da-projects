@@ -20,6 +20,11 @@ namespace SeleniumDataBrowser.VCD.PageActions
         public static By DetailViewDataContainer = By.Id("salesDiagnosticDetail");
 
         /// <summary>
+        /// Link to Sales Diagnostic page.
+        /// </summary>
+        public static By SalesDiagnosticLink = By.LinkText("Sales Diagnostic");
+
+        /// <summary>
         /// Form of switch VCD accounts.
         /// </summary>
         public static By SwitchAccountForm = By.Id("vendor-group-switch-account-form");
