@@ -4,6 +4,7 @@ using System.IO;
 using Amazon;
 using CakeExtracter.Common.Extractors.ArchiveExctractors.Contract;
 using CakeExtracter.Etl.Kochava.Configuration;
+using CakeExtracter.Etl.Kochava.Exceptions;
 using CakeExtracter.Etl.Kochava.Extractors.Parsers;
 using CakeExtracter.Etl.Kochava.Models;
 using DirectAgents.Domain.Entities.CPProg;
@@ -21,6 +22,11 @@ namespace CakeExtracter.Etl.Kochava.Extractors
         private readonly IArchiveExtractor reportArchiveExtractor;
 
         private const string KochavaReportPrefixForm = "{0}_query_da";
+
+        /// <summary>
+        /// Action for exception of failed extraction.
+        /// </summary>
+        public event Action<KochavaFailedEtlException> ProcessFailedExtraction;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KochavaExtractor"/> class.
@@ -63,6 +69,7 @@ namespace CakeExtracter.Etl.Kochava.Extractors
             catch (Exception ex)
             {
                 Logger.Error(account.Id, ex);
+                ProcessFailedStatsExtraction(ex, account);
                 return null;
             }
         }
@@ -79,6 +86,13 @@ namespace CakeExtracter.Etl.Kochava.Extractors
         private string GetReportPrefixName(ExtAccount account)
         {
             return string.Format(KochavaReportPrefixForm, account.ExternalId);
+        }
+
+        private void ProcessFailedStatsExtraction(Exception e, ExtAccount account)
+        {
+            Logger.Error(e);
+            var exception = new KochavaFailedEtlException(null, null, account.Id, e);
+            ProcessFailedExtraction?.Invoke(exception);
         }
     }
 }

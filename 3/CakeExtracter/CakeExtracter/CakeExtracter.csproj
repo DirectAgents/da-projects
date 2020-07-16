@@ -634,6 +634,7 @@
     <Compile Include="Etl\Facebook\Repositories\FacebookCampaignReachMetricDatabaseRepository.cs" />
     <Compile Include="Etl\Facebook\Repositories\FacebookReachMetricDatabaseRepository.cs" />
     <Compile Include="Etl\Kochava\Configuration\KochavaConfigurationProvider.cs" />
+    <Compile Include="Etl\Kochava\Exceptions\KochavaFailedEtlException.cs" />
     <Compile Include="Etl\Kochava\Extractors\KochavaExtractor.cs" />
     <Compile Include="Etl\Kochava\Extractors\Parsers\KochavaReportParser.cs" />
     <Compile Include="Etl\Kochava\Extractors\Parsers\ParsingConverters\KochavaReportEntityRowMap.cs" />
