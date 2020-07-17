@@ -128,7 +128,7 @@ namespace SeleniumDataBrowser.VCD.PageActions
 
         private bool IsMatchAccountItemToName(string accountElementText, string accountName)
         {
-            var pattern = $@"\s{accountName}";
+            var pattern = $@"\s{Regex.Escape(accountName)}";
             var regex = new Regex(pattern);
             return regex.IsMatch(accountElementText);
         }
