@@ -8,9 +8,15 @@ using CommissionJunction.Entities;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.CJ;
 using DirectAgents.Domain.Entities.CPProg.Kochava;
+using DirectAgents.Domain.Entities.CPProg.Roku;
 using DirectAgents.Domain.Entities.CPProg.Vendor;
 using DirectAgents.Domain.Entities.CPProg.YAM;
 using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
+using DirectAgents.Domain.Entities.CPSearch;
+
+using CallDailySummary = ClientPortal.Data.Contexts.CallDailySummary;
+using SearchConvSummary = ClientPortal.Data.Contexts.SearchConvSummary;
+using SearchDailySummary = ClientPortal.Data.Contexts.SearchDailySummary;
 
 namespace CakeExtracter.Bootstrappers
 {
@@ -28,6 +34,7 @@ namespace CakeExtracter.Bootstrappers
             {
                 cfg.CreateMap<SearchDailySummary, SearchDailySummary>();
                 cfg.CreateMap<SearchDailySummary2, SearchDailySummary2>();
+                cfg.CreateMap<SearchVideoDailySummary, SearchVideoDailySummary>();
                 cfg.CreateMap<GoogleAnalyticsSummary, GoogleAnalyticsSummary>();
                 cfg.CreateMap<CallDailySummary, CallDailySummary>();
                 cfg.CreateMap<SearchConvSummary, SearchConvSummary>();
@@ -109,9 +116,11 @@ namespace CakeExtracter.Bootstrappers
                     .ForMember(s => s.Keyword, map => map.AllowNull());
 
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SearchTermSummary, DirectAgents.Domain.Entities.CPProg.SearchTermSummary>();
-                cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SearchTermSummary, DirectAgents.Domain.Entities.CPProg.SearchTerm>()
+                cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SearchTermSummary,
+                        DirectAgents.Domain.Entities.CPProg.SearchTerm>()
                     .ForMember(d => d.Id, opt => opt.MapFrom(s => s.SearchTermId))
-                    .ForMember(d => d.Name, opt => opt.MapFrom(s => s.SearchTermName));
+                    .ForMember(d => d.Name, opt => opt.MapFrom(s => s.SearchTermName))
+                    .ForMember(d => d.MediaType, opt => opt.MapFrom(s => s.SearchTermMediaType));
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SearchTermSummary,
                         DirectAgents.Domain.Entities.CPProg.Keyword>()
                     .ForMember(d => d.Name, opt => opt.MapFrom(s => s.KeywordName))
@@ -140,7 +149,8 @@ namespace CakeExtracter.Bootstrappers
                 cfg.CreateMap<CommissionJunction.Entities.Item, CjAdvertiserCommissionItem>();
                 cfg.CreateMap<KochavaReportItem, KochavaItem>();
                 cfg.CreateMap<VcdAnalyticItem, VcdAnalyticItem>();
-                
+                cfg.CreateMap<RokuSummary, RokuSummary>();
+
                 CreateYamMaps(cfg);
             });
         }

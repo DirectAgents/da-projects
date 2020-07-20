@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Amazon.Helpers;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing.ParsingConverters;
+using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing.RowMaps;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Models;
 using CsvHelper;
 using CsvHelper.Configuration;
@@ -71,14 +72,17 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
         {
             try
             {
+                var products = new List<Product>();
                 Logger.Info(accountId, "Started parsing csv report");
                 using (TextReader sr = new StringReader(reportCsvText))
                 {
-                    var csvHelper = new CsvReader(sr);
-                    csvHelper.Configuration.SkipEmptyRecords = true;
-                    csvHelper.Configuration.Delimiter = ValueDelimiter;
-                    csvHelper.Configuration.RegisterClassMap<T>();
-                    var products = csvHelper.GetRecords<Product>().ToList();
+                    using (var csvHelper = new CsvReader(sr))
+                    {
+                        csvHelper.Configuration.SkipEmptyRecords = true;
+                        csvHelper.Configuration.Delimiter = ValueDelimiter;
+                        csvHelper.Configuration.RegisterClassMap<T>();
+                        products = csvHelper.GetRecords<Product>().ToList();
+                    }
                     return products;
                 }
             }

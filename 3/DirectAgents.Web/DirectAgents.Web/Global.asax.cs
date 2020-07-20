@@ -1,6 +1,8 @@
-﻿using System.Web.Http;
+﻿using System;
+using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
+using CakeExtracter;
 using KendoGridBinder.ModelBinder.Mvc;
 
 namespace DirectAgents.Web
@@ -18,6 +20,17 @@ namespace DirectAgents.Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 
             ModelBinders.Binders.Add(typeof(KendoGridMvcRequest), new KendoGridMvcModelBinder());
+        }
+
+        protected void Application_Error(object sender, EventArgs e)
+        {
+            var exception = Server.GetLastError();
+            if (exception != null)
+            {
+                Logger.Error(exception);
+                Server.ClearError();
+            }
+            Response.Redirect("~/Error");
         }
     }
 }

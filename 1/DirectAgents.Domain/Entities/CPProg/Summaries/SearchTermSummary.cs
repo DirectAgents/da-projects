@@ -44,5 +44,8 @@ namespace DirectAgents.Domain.Entities.CPProg
 
         [NotMapped]
         public string SearchTermName { get; set; }
+
+        [NotMapped]
+        public string SearchTermMediaType { get; set; }
     }
 }

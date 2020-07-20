@@ -35,10 +35,39 @@ namespace FacebookAPI.Providers
             return GetReachMetricsLoop(accountId, converter);
         }
 
+        /// <summary>
+        /// Gets list of Campaign Reach metrics from API.
+        /// </summary>
+        /// <param name="accountId">External identifier of account.</param>
+        /// <returns>List of Reach metrics.</returns>
+        public IEnumerable<FbCampaignReachRow> GetCampaignReachMetricStats(string accountId)
+        {
+            var converter = new FacebookCampaignReachMetricConverter(LogWarn);
+            return GetCampaignReachMetricsLoop(accountId, converter);
+        }
+
         private IEnumerable<FbReachRow> GetReachMetricsLoop(string accountId, FacebookReachMetricConverter converter)
         {
+            var parameters = CreateRequestParameters();
+            foreach (var fbCampaignReachRow in GetMetricsLoop(converter, parameters, accountId))
+            {
+                yield return fbCampaignReachRow;
+            }
+        }
+
+        private IEnumerable<FbCampaignReachRow> GetCampaignReachMetricsLoop(string accountId, FacebookCampaignReachMetricConverter converter)
+        {
+            var parameters = CreateCampaignReachRequestParameters();
+            foreach (var fbCampaignReachRow in GetMetricsLoop(converter, parameters, accountId))
+            {
+                yield return fbCampaignReachRow;
+            }
+        }
+
+        private IEnumerable<T> GetMetricsLoop<T>(IFacebookConverter<T> converter, object parameters, string accountId)
+        {
             var clientParametersList = new List<FacebookJobRequest>();
-            var clientParameters = PrepareReachMetricExtractingRequest(accountId);
+            var clientParameters = PrepareExtractingRequestBase(parameters, accountId);
             clientParameters.ResetAndGetRunId_withRetry(LogInfo, LogWarn);
             clientParametersList.Add(clientParameters);
             Thread.Sleep(InitialWaitMillisecs);
@@ -52,11 +81,11 @@ namespace FacebookAPI.Providers
             }
         }
 
-        private FacebookJobRequest PrepareReachMetricExtractingRequest(string accountId)
+
+        private FacebookJobRequest PrepareExtractingRequestBase(object parameters, string accountId)
         {
             var facebookClient = CreateFBClient();
             var path = accountId + "/insights";
-            var parameters = CreateRequestParameters();
             var logMessage = $"Get FB Reach metrics ({accountId})";
             return CreateFacebookJobRequest(facebookClient, path, parameters, logMessage);
         }
@@ -69,6 +98,19 @@ namespace FacebookAPI.Providers
             return new
             {
                 filtering = filters,
+                fields = fieldsVal,
+                time_ranges = timeRanges,
+            };
+        }
+
+        private object CreateCampaignReachRequestParameters()
+        {
+            var levelVal = "campaign";
+            var fieldsVal = "campaign_id,campaign_name,reach,frequency";
+            var timeRanges = FacebookReachPeriodHelper.GetMonthlyPeriodsForApiRequest();
+            return new
+            {
+                level = levelVal,
                 fields = fieldsVal,
                 time_ranges = timeRanges,
             };

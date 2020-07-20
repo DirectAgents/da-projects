@@ -1,7 +1,6 @@
 using System;
 using System.Web;
 using CakeExtracter.Common;
-using CakeExtracter.Common.JobExecutionManagement.JobExecution;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestSchedulers;
@@ -15,11 +14,14 @@ using DirectAgents.Domain.SpecialPlatformProviders.Implementation;
 using DirectAgents.Domain.SpecialPlatformsDataProviders.Facebook;
 using DirectAgents.Web.Areas.Admin.Grids.JobHistory;
 using Microsoft.Web.Infrastructure.DynamicModuleHelper;
+using Microsoft.Practices.EnterpriseLibrary.Common.Configuration;
+using Microsoft.Practices.EnterpriseLibrary.Logging;
 using Ninject;
 using Ninject.Web.Common;
 using Ninject.Web.Common.WebHost;
 using CakeExtracter.Common.Email;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Repositories;
+using CakeExtracter.Logging.Loggers;
 using DirectAgents.Domain.SpecialPlatformsDataProviders.DBM;
 using DirectAgents.Domain.SpecialPlatformsDataProviders.YAM;
 using DirectAgents.Domain.SpecialPlatformsDataProviders.Adform;
@@ -45,6 +47,7 @@ namespace DirectAgents.Web.App_Start
             var kernel = CreateKernel();
             bootstrapper.Initialize(() => kernel);
             DIKernel.SetKernel(kernel);
+            InitializeLogging();
         }
 
         /// <summary>
@@ -115,6 +118,17 @@ namespace DirectAgents.Web.App_Start
             kernel.Bind<SpecialPlatformProvider>().To<VcdProvider>();
             kernel.Bind<SpecialPlatformProvider>().To<KochavaProvider>();
             kernel.Bind<SpecialPlatformProvider>().To<CommissionJunctionProvider>();
+        }
+
+        /// <summary>
+        /// Initializes the logging.
+        /// </summary>
+        private static void InitializeLogging()
+        {
+            var configurationSource = ConfigurationSourceFactory.Create();
+            var logWriterFactory = new LogWriterFactory(configurationSource);
+            Logger.SetLogWriter(logWriterFactory.Create());
+            CakeExtracter.Logger.Instance = new EnterpriseLibraryLogger("AdminWebPortal");
         }
     }
 }

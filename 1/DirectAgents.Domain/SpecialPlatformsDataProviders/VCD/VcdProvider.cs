@@ -29,7 +29,7 @@ namespace DirectAgents.Domain.SpecialPlatformProviders.Implementation
                 {
                     AccountId = x.Key,
                     EarliestDate = x.Min(z => z.Date),
-                    LatestDate = x.Max(z => z.Date)
+                    LatestDate = x.Max(z => z.Date),
                 });
         }
     }

@@ -186,7 +186,7 @@ namespace CakeExtracter.Commands
             int? numDailyItems = null;
             if (statsType.Daily)
             {
-                numDailyItems = DoETL_Daily(acctDateRange, account, fbUtility);
+                numDailyItems = DoETL_Daily(acctDateRange, account, fbUtility, statsType.All);
             }
 
             if (IsDailyOnlyAccountsMode(statsType, account, acctDateRange))
@@ -216,6 +216,13 @@ namespace CakeExtracter.Commands
                 DoETL_Reach(acctDateRange, account, fbReachMetricUtility);
             }
 
+            if (statsType.CampaignReach
+                && account.NetworkId == Network.ID_Facebook
+                && (numDailyItems == null || numDailyItems.Value > 0))
+            {
+                var fbReachMetricUtility = insightsReachMetricProviderBuilder.BuildInsightsReachMetricProvider(account);
+                DoETL_CampaignReach(acctDateRange, account, fbReachMetricUtility);
+            }
             Logger.Info(account.Id, $"Finished Facebook ETL. Account {account.Id} - {account.Name}. DateRange {acctDateRange}.");
             CommandExecutionContext.Current.SetJobExecutionStateInHistory("Finished", account.Id);
         }
@@ -280,14 +287,14 @@ namespace CakeExtracter.Commands
             return acctDateRange;
         }
 
-        private int DoETL_Daily(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
+        private int DoETL_Daily(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility, bool isAllStatsTypesRetry)
         {
             CommandExecutionContext.Current.SetJobExecutionStateInHistory("Daily level.", account.Id);
             var dateRangesToProcess = dateRange.GetDaysChunks(ProcessingChunkSize).ToList();
             int addedCount = 0;
             dateRangesToProcess.ForEach(rangeToProcess =>
             {
-                var extractor = new FacebookDailySummaryExtractor(rangeToProcess, account, fbUtility);
+                var extractor = new FacebookDailySummaryExtractor(rangeToProcess, account, fbUtility, isAllStatsTypesRetry);
                 var loader = new FacebookDailySummaryLoader(account.Id, rangeToProcess);
                 InitEtlEvents(extractor, loader);
                 CommandHelper.DoEtl(extractor, loader);
@@ -346,6 +353,16 @@ namespace CakeExtracter.Commands
             var metricRepository = new FacebookReachMetricDatabaseRepository();
             var extractor = new FacebookReachMetricExtractor(dateRange, account, fbReachMetricUtility);
             var loader = new FacebookReachMetricLoader(account.Id, metricRepository);
+            InitEtlEvents(extractor, loader);
+            CommandHelper.DoEtl(extractor, loader);
+        }
+
+        private void DoETL_CampaignReach(DateRange dateRange, ExtAccount account, FacebookInsightsReachMetricProvider fbReachMetricUtility)
+        {
+            CommandExecutionContext.Current.SetJobExecutionStateInHistory("Campaign Reach Metric level.", account.Id);
+            var metricRepository = new FacebookCampaignReachMetricDatabaseRepository();
+            var extractor = new FacebookCampaignReachMetricExtractor(dateRange, account, fbReachMetricUtility);
+            var loader = new FacebookCampaignReachMetricLoader(account.Id, metricRepository);
             InitEtlEvents(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
         }

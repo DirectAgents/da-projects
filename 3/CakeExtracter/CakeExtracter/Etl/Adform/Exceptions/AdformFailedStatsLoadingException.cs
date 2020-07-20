@@ -10,24 +10,9 @@ namespace CakeExtracter.Etl.Adform.Exceptions
     public class AdformFailedStatsLoadingException : FailedEtlException
     {
         /// <summary>
-        /// Gets or sets a value indicating whether exception for the Daily dimension.
+        /// Gets or sets StatsType level for which statistics was extracted.
         /// </summary>
-        public bool ByDaily { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether exception for the Campaign dimension.
-        /// </summary>
-        public bool ByCampaign { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether exception for the Line Item dimension.
-        /// </summary>
-        public bool ByLineItem { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether exception for the Banner dimension.
-        /// </summary>
-        public bool ByBanner { get; set; }
+        public string StatsType { get; set; }
 
         /// <inheritdoc cref="FailedEtlException"/>
         /// <summary>
@@ -38,16 +23,10 @@ namespace CakeExtracter.Etl.Adform.Exceptions
             DateTime? endDate,
             int? accountId,
             Exception innerException,
-            bool byDaily = false,
-            bool byCampaign = false,
-            bool byLineItem = false,
-            bool byBanner = false)
+            string statsType)
             : base(startDate, endDate, accountId, innerException)
         {
-            ByDaily = byDaily;
-            ByCampaign = byCampaign;
-            ByLineItem = byLineItem;
-            ByBanner = byBanner;
+            StatsType = statsType;
         }
     }
 }

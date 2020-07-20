@@ -440,6 +440,7 @@
     <Compile Include="Commands\DA\DASynchKochavaStats.cs" />
     <Compile Include="Commands\DA\DaSynchYamStats.cs" />
     <Compile Include="Commands\DA\DASynchYAMStats_Outdated.cs" />
+    <Compile Include="Commands\DA\DASynchRokuStats.cs" />
     <Compile Include="Commands\DPA\DPAProcessOrganicKeywordsData.cs" />
     <Compile Include="Commands\Selenium\SyncAmazonPdaCommand.cs" />
     <Compile Include="Commands\Selenium\SyncAmazonVcdCommand.cs" />
@@ -500,6 +501,8 @@
     <Compile Include="Common\StorageCollection.cs" />
     <Compile Include="Common\TextUtils.cs" />
     <Compile Include="Common\DIKernel.cs" />
+    <Compile Include="Data\Configurations\AzureConfiguration.cs" />
+    <Compile Include="Data\Configurations\DaExecutionStrategy.cs" />
     <Compile Include="Etl\Adform\Exceptions\AdformFailedStatsLoadingException.cs" />
     <Compile Include="Etl\Adform\Loaders\AdfBannerSummaryLoader.cs" />
     <Compile Include="Etl\Adform\Loaders\AdfBaseSummaryLoader.cs" />
@@ -525,6 +528,8 @@
     <Compile Include="Etl\AmazonSelenium\PDA\Models\AmazonPdaCampaignSummary.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\PdaDataProviderBuilder.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\AmazonVcdExtractor.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\DecimalPercentageReportConverter.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\DecimalReportConverter.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Loaders\AmazonVcdLoader.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Loaders\Constants\VendorCentralDataLoadingConstants.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Loaders\MetricTypesLoader\BaseVendoritemLoader.cs" />
@@ -546,16 +551,18 @@
     <Compile Include="Etl\AmazonSelenium\VCD\Configuration\VcdExecutionProfileManager.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Synchers\VcdAnalyticTablesSyncher.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportDataComposer\VcdReportComposer.cs" />
-    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\BaseProductRowMap.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\RowMaps\BaseProductRowMap.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\DecimalAmountReportConverter.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\IntNumberReportConverter.cs" />
-    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\OrderedRevenueProductsRowMap.cs" />
-    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\ShippedCogsProductsRowMap.cs" />
-    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\ShippedRevenueProductsRowMap.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\RowMaps\OrderedRevenueProductsRowMap.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\RowMaps\ShippedCogsProductsRowMap.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\RowMaps\ShippedRevenueProductsRowMap.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\VcdReportCsvParser.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\VcdDataProviderBuilder.cs" />
     <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonApiAdExtractor.cs" />
+    <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonApiCampaignExtractor.cs" />
     <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonApiSearchTermExtractor.cs" />
+    <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonSdMetadataExtractor.cs" />
     <Compile Include="Etl\Amazon\Loaders\AmazonSearchTermSummaryLoader.cs" />
     <Compile Include="Etl\Apple\Exceptions\AppleFailedEtlException.cs" />
     <Compile Include="Etl\Amazon\Exceptions\FailedStatsLoadingException.cs" />
@@ -621,9 +628,12 @@
     <Compile Include="Etl\DSP\Models\ReportEntities\ReportOrder.cs" />
     <Compile Include="Etl\Facebook\Builders\FacebookInsightsReachMetricProviderBuilder.cs" />
     <Compile Include="Etl\Facebook\Exceptions\FacebookFailedEtlException.cs" />
+    <Compile Include="Etl\Facebook\Extractors\FacebookCampaignReachMetricExtractor.cs" />
     <Compile Include="Etl\Facebook\Extractors\FacebookReachMetricExtractor.cs" />
     <Compile Include="Etl\Facebook\Interfaces\IFacebookLoadingErrorHandler.cs" />
+    <Compile Include="Etl\Facebook\Loaders\FacebookCampaignReachMetricLoader.cs" />
     <Compile Include="Etl\Facebook\Loaders\FacebookReachMetricLoader.cs" />
+    <Compile Include="Etl\Facebook\Repositories\FacebookCampaignReachMetricDatabaseRepository.cs" />
     <Compile Include="Etl\Facebook\Repositories\FacebookReachMetricDatabaseRepository.cs" />
     <Compile Include="Etl\Kochava\Configuration\KochavaConfigurationProvider.cs" />
     <Compile Include="Etl\Kochava\Extractors\KochavaExtractor.cs" />
@@ -633,6 +643,8 @@
     <Compile Include="Etl\Kochava\Loaders\KochavaLoader.cs" />
     <Compile Include="Etl\Kochava\Models\KochavaReportItem.cs" />
     <Compile Include="Etl\Apple\Extractors\AppleApiExtracter.cs" />
+    <Compile Include="Etl\Roku\Extractors\RokuApiExtractor.cs" />
+    <Compile Include="Etl\Roku\Loaders\RokuLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingConvSummaryExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingDailyNonShoppingSummaryExtractor.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingDailyShoppingSummaryExtractor.cs" />
@@ -985,7 +997,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\1\DirectAgents.Domain\DirectAgents.Domain.csproj">
-      <Project>{278911ab-cb92-4316-843e-4571cd0c3410}</Project>
+      <Project>{278911AB-CB92-4316-843E-4571CD0C3410}</Project>
       <Name>DirectAgents.Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\1\EomTool\EomTool.Domain\EomTool.Domain.csproj">
@@ -1051,6 +1063,10 @@
     <ProjectReference Include="..\..\DirectAgents.Web\CommissionJunction\CommissionJunction.csproj">
       <Project>{0038b6b4-357a-4721-99bc-7659ad00dd3a}</Project>
       <Name>CommissionJunction</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DirectAgents.Web\Roku\RokuAPI.csproj">
+      <Project>{2cee6c2e-79ee-4792-a3df-f7c1483c0bfd}</Project>
+      <Name>RokuAPI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

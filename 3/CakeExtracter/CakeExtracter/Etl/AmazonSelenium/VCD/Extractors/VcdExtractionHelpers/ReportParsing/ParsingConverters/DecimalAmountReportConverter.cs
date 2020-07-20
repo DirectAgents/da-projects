@@ -1,22 +1,35 @@
 ﻿using System.Globalization;
-using CsvHelper.TypeConversion;
 
 namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing.ParsingConverters
 {
-    internal sealed class DecimalAmountReportConverter : StringConverter
+    /// <inheritdoc />
+    /// <summary>
+    /// VCD Report Converter for decimal values for monetary amounts.
+    /// </summary>
+    internal sealed class DecimalAmountReportConverter : DecimalReportConverter
     {
-        private const string EmptyValue = "—";
-
-        public override object ConvertFromString(TypeConverterOptions options, string text)
+        /// <inheritdoc />
+        protected override decimal GetValueWhenEmpty()
         {
-            if (text == EmptyValue)
-            {
-                return (decimal)0;
-            }
-            var d = decimal.Parse(
-                text,
-                NumberStyles.AllowCurrencySymbol | NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowThousands);
-            return d;
+            return 0M;
+        }
+
+        /// <inheritdoc />
+        protected override string PrepareTextValue(string textValue)
+        {
+            return textValue;
+        }
+
+        /// <inheritdoc />
+        protected override decimal ConvertValueToDecimal(string value)
+        {
+            return decimal.Parse(value, NumberStyles.AllowCurrencySymbol | NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowThousands);
+        }
+
+        /// <inheritdoc />
+        protected override decimal CalculateValue(decimal value)
+        {
+            return value;
         }
     }
 }

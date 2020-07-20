@@ -4,9 +4,13 @@
     {
         public const string ReachArg = "REACH";
 
+        public const string CampaignReachArg = "CAMPREACH";
+
         public bool Reach { get; set; }
 
-        public override bool All => base.All && Reach;
+        public bool CampaignReach { get; set; }
+
+        public override bool All => base.All && Reach && CampaignReach;
 
         public FbStatsTypeAgg(string statsTypeString)
             : base(statsTypeString)
@@ -16,11 +20,16 @@
             {
                 Reach = true;
             }
+            if (statsTypeUpper.StartsWith(CampaignReachArg))
+            {
+                CampaignReach = true;
+            }
         }
 
         public override void SetAllTrue()
         {
             Reach = true;
+            CampaignReach = true;
             base.SetAllTrue();
         }
     }

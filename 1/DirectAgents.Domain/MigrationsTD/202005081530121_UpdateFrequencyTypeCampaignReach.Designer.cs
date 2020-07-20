@@ -7,13 +7,13 @@ namespace DirectAgents.Domain.MigrationsTD
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class Mig_AmazonAddMediaType : IMigrationMetadata
+    public sealed partial class UpdateFrequencyTypeCampaignReach : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Mig_AmazonAddMediaType));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(UpdateFrequencyTypeCampaignReach));
         
         string IMigrationMetadata.Id
         {
-            get { return "202003091059530_Mig_AmazonAddMediaType"; }
+            get { return "202005081530121_UpdateFrequencyTypeCampaignReach"; }
         }
         
         string IMigrationMetadata.Source
