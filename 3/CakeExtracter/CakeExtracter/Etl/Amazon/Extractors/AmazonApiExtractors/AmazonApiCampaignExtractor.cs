@@ -5,7 +5,6 @@ using Amazon;
 using Amazon.Entities;
 using Amazon.Entities.Summaries;
 using CakeExtracter.Common;
-using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Etl.Amazon.Exceptions;
 using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors;
 using CakeExtracter.Helpers;
@@ -21,6 +20,9 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
     internal class AmazonApiCampaignExtractor : BaseAmazonExtractor<StrategySummary>
     {
         private readonly AmazonSdMetadataExtractor campaignMetadataExtractor;
+
+        /// <inheritdoc/>
+        protected override string AmazonJobLevel => AmazonJobLevels.Strategy;
 
         /// <inheritdoc cref="BaseAmazonExtractor{CampaignSummary}"/>
         /// <summary>
@@ -46,7 +48,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
         /// Removing old data before insert fresh data.
         /// </summary>
         /// <param name="date">Date for removing.</param>
-        public virtual void RemoveOldData(DateTime date)
+        public override void RemoveOldData(DateTime date)
         {
             const int productDisplayCampaignTypeId = 8;
             Logger.Info(accountId, "The cleaning of CampaignSummaries for account ({0}) has begun - {1}.", accountId, date);
@@ -67,7 +69,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
                         }, "DeleteFromQuery");
                 },
                 accountId,
-                AmazonJobLevels.Strategy,
+                AmazonJobLevel,
                 AmazonJobOperations.CleanExistingData);
             Logger.Info(accountId, "The cleaning of StrategySummaries for account ({0}) is over - {1}.", accountId, date);
         }
@@ -99,32 +101,20 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
             }
         }
 
-        private void ExtractDataForDays(List<AmazonCampaign> campaignsData)
+        /// <inheritdoc/>
+        protected override IEnumerable<StrategySummary> GetDataFromApi(DateTime date, List<AmazonCampaign> campaignsData)
         {
-            foreach (var date in dateRange.Dates)
-            {
-                try
-                {
-                    ExtractDaily(date, campaignsData);
-                }
-                catch (Exception e)
-                {
-                    ProcessFailedStatsExtraction(e, date, date);
-                }
-            }
+            var strategySums = ExtractStrategySummaries(date);
+            var strategyItems = TransformSummaries(strategySums, date, campaignsData);
+            return strategyItems.ToList();
         }
 
-        private void ExtractDaily(DateTime date, List<AmazonCampaign> campaignsData)
+        /// <inheritdoc/>
+        protected override void ProcessFailedStatsExtraction(Exception e, DateTime fromDate, DateTime toDate)
         {
-            CommandExecutionContext.Current?.SetJobExecutionStateInHistory($"Strategy Level- {date.ToString()}", accountId);
-            IEnumerable<StrategySummary> items = null;
-            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
-                () => { items = GetStrategyFromApi(date, campaignsData); },
-                accountId,
-                AmazonJobLevels.Strategy,
-                AmazonJobOperations.ReportExtracting);
-            RemoveOldData(date);
-            Add(items);
+            Logger.Error(accountId, e);
+            var exception = new FailedStatsLoadingException(fromDate, toDate, accountId, e, byCampaign: true);
+            InvokeProcessFailedExtractionHandlers(exception);
         }
 
         private List<AmazonCampaign> GetCampaignInfo()
@@ -136,23 +126,9 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
                     campaignsData = campaignMetadataExtractor.LoadCampaignsMetadata(accountId, clientId).ToList();
                 },
                 accountId,
-                AmazonJobLevels.Strategy,
+                AmazonJobLevel,
                 AmazonJobOperations.LoadCampaignMetadata);
             return campaignsData;
-        }
-
-        private void ProcessFailedStatsExtraction(Exception e, DateTime fromDate, DateTime toDate)
-        {
-            Logger.Error(accountId, e);
-            var exception = new FailedStatsLoadingException(fromDate, toDate, accountId, e, byCampaign: true);
-            InvokeProcessFailedExtractionHandlers(exception);
-        }
-
-        private IEnumerable<StrategySummary> GetStrategyFromApi(DateTime date, List<AmazonCampaign> campaignsData)
-        {
-            var strategySums = ExtractStrategySummaries(date);
-            var strategyItems = TransformSummaries(strategySums, date, campaignsData);
-            return strategyItems.ToList();
         }
 
         private IEnumerable<AmazonStrategyDailySummary> ExtractStrategySummaries(DateTime date)
