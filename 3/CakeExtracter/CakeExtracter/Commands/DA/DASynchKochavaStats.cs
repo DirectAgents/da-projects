@@ -12,17 +12,13 @@ using System.ComponentModel.Composition;
 using CakeExtracter.Common.Extractors.ArchiveExctractors;
 using System.Collections.Generic;
 using System.Linq;
-using CakeExtracter.Commands.Search;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
-using CakeExtracter.Etl.Apple.Extractors;
-using CakeExtracter.Etl.Apple.Loaders;
 using CakeExtracter.Etl.Kochava.Exceptions;
-using CakeExtracter.Helpers;
 
 namespace CakeExtracter.Commands.DA
 {
     /// <summary>
-    /// Command for Kochava ETL Job
+    /// Command for Kochava ETL Job.
     /// </summary>
     /// <seealso cref="CakeExtracter.Common.ConsoleCommand" />
     [Export(typeof(ConsoleCommand))]
@@ -82,7 +78,6 @@ namespace CakeExtracter.Commands.DA
         {
             try
             {
-                InitEtlEvents(extractor, loader, account);
                 Logger.Info(account.Id, $"Started processing Kochava ETL for account - {account.Id}");
                 var accountData = extractor.ExtractLatestAccountData(account);
                 if (accountData != null && accountData.Count > 0)
@@ -110,6 +105,24 @@ namespace CakeExtracter.Commands.DA
             AccountId = null;
         }
 
+        /// <inheritdoc/>
+        public override IEnumerable<CommandWithSchedule> GetUniqueBroadCommands(
+            IEnumerable<CommandWithSchedule> commands)
+        {
+            var broadCommands = new List<CommandWithSchedule>();
+            var commandsGroupedByAccountAndLevel = commands.GroupBy(x =>
+            {
+                var command = x.Command as DASynchAdformStats;
+                return new { command?.AccountId, command?.StatsType };
+            });
+            foreach (var commandsGroup in commandsGroupedByAccountAndLevel)
+            {
+                var accountLevelBroadCommands = GetUniqueBroadAccountCommands(commandsGroup);
+                broadCommands.AddRange(accountLevelBroadCommands);
+            }
+            return broadCommands;
+        }
+
         private IEnumerable<CommandWithSchedule> GetUniqueBroadAccountCommands(IEnumerable<CommandWithSchedule> commandsWithSchedule)
         {
             var accountCommands =
@@ -133,23 +146,6 @@ namespace CakeExtracter.Commands.DA
             loader.ProcessFailedLoading += exception =>
                 ScheduleNewCommandLaunch<DASynchKochavaStats>(command =>
                     UpdateCommandParameters(command, exception));
-        }
-
-        public override IEnumerable<CommandWithSchedule> GetUniqueBroadCommands(
-            IEnumerable<CommandWithSchedule> commands)
-        {
-            var broadCommands = new List<CommandWithSchedule>();
-            var commandsGroupedByAccountAndLevel = commands.GroupBy(x =>
-            {
-                var command = x.Command as DASynchAdformStats;
-                return new { command?.AccountId, command?.StatsType };
-            });
-            foreach (var commandsGroup in commandsGroupedByAccountAndLevel)
-            {
-                var accountLevelBroadCommands = GetUniqueBroadAccountCommands(commandsGroup);
-                broadCommands.AddRange(accountLevelBroadCommands);
-            }
-            return broadCommands;
         }
 
         private CommandWithSchedule GetCommandWithCorrectDateRange(Tuple<DASynchKochavaStats,CommandWithSchedule> setting)
