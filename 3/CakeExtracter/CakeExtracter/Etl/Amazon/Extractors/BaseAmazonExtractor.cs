@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Amazon;
+using Amazon.Entities;
 using Amazon.Entities.Summaries;
 using Amazon.Enums;
 using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Etl.Amazon.Exceptions;
+using CakeExtracter.Logging.TimeWatchers.Amazon;
 using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
@@ -24,6 +28,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
 
         public event Action<FailedStatsLoadingException> ProcessFailedExtraction;
 
+        protected abstract string AmazonJobLevel { get; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseAmazonExtractor{T}"/> class.
         /// </summary>
@@ -41,6 +47,42 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
             this.campaignFilter = campaignFilter;
             this.campaignFilterOut = campaignFilterOut;
         }
+
+        public abstract void RemoveOldData(DateTime date);
+
+        protected void ExtractDataForDays(List<AmazonCampaign> campaignsData)
+        {
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
+                () =>
+                {
+                    Parallel.ForEach(dateRange.Dates, date => ExtractDaily(date, campaignsData));
+                },
+                accountId,
+                AmazonJobLevel,
+                AmazonJobOperations.ReportExtracting);
+        }
+
+        protected void ExtractDaily(DateTime date, List<AmazonCampaign> campaignsData)
+        {
+            try
+            {
+                CommandExecutionContext.Current?.SetJobExecutionStateInHistory($"{AmazonJobLevel} Level- {date}", accountId);
+                var items = GetDataFromApi(date, campaignsData);
+                if (items.Any())
+                {
+                    RemoveOldData(date);
+                    Add(items);
+                }
+            }
+            catch (Exception e)
+            {
+                ProcessFailedStatsExtraction(e, date, date);
+            }
+        }
+
+        protected abstract IEnumerable<T> GetDataFromApi(DateTime date, List<AmazonCampaign> campaignsData);
+
+        protected abstract void ProcessFailedStatsExtraction(Exception e, DateTime fromDate, DateTime toDate);
 
         protected void InvokeProcessFailedExtractionHandlers(FailedStatsLoadingException exception)
         {

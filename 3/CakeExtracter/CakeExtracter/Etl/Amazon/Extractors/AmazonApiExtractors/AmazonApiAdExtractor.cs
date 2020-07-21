@@ -6,7 +6,6 @@ using Amazon.Entities;
 using Amazon.Entities.Summaries;
 using Amazon.Enums;
 using CakeExtracter.Common;
-using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Etl.Amazon.Exceptions;
 using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors;
 using CakeExtracter.Helpers;
@@ -20,6 +19,9 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
     public class AmazonApiAdExtractor : BaseAmazonExtractor<TDadSummary>
     {
         private readonly AmazonCampaignMetadataExtractor campaignMetadataExtractor;
+
+        /// <inheritdoc/>
+        protected override string AmazonJobLevel => AmazonJobLevels.Creative;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AmazonApiAdExtractor"/> class.
@@ -40,7 +42,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
             campaignMetadataExtractor = new AmazonCampaignMetadataExtractor(amazonUtility);
         }
 
-        public virtual void RemoveOldData(DateTime date)
+        public override void RemoveOldData(DateTime date)
         {
             Logger.Info(accountId, "The cleaning of AdSummaries for account ({0}) has begun - {1}.", accountId, date);
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
@@ -56,7 +58,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
                         }, "DeleteFromQuery");
                 },
                 accountId,
-                AmazonJobLevels.Creative,
+                AmazonJobLevel,
                 AmazonJobOperations.CleanExistingData);
             Logger.Info(accountId, "The cleaning of AdSummaries for account ({0}) is over - {1}.", accountId, date);
         }
@@ -84,40 +86,15 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
             }
         }
 
-        private void ExtractDataForDays(List<AmazonCampaign> campaignsData)
+        protected override IEnumerable<TDadSummary> GetDataFromApi(DateTime date, List<AmazonCampaign> campaignsData)
         {
-            foreach (var date in dateRange.Dates)
-            {
-                try
-                {
-                    Extract(date, campaignsData);
-                }
-                catch (Exception e)
-                {
-                    ProcessFailedStatsExtraction(e, dateRange.FromDate, dateRange.ToDate);
-                }
-            }
+            var productAdSums = ExtractProductAdSummaries(date);
+            var asinSums = ExtractAsinSummaries(date);
+            var tdAdItems = TransformSummaries(productAdSums, asinSums, date, campaignsData);
+            return tdAdItems.ToList();
         }
 
-        private void Extract(DateTime date, List<AmazonCampaign> campaignInfo)
-        {
-            CommandExecutionContext.Current?.SetJobExecutionStateInHistory($"Ad Level - {date.ToString()}", accountId);
-            IEnumerable<TDadSummary> items = null;
-            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
-                () =>
-                {
-                    var productAdSums = ExtractProductAdSummaries(date);
-                    var asinSums = ExtractAsinSummaries(date);
-                    items = TransformSummaries(productAdSums, asinSums, date, campaignInfo);
-                },
-                accountId,
-                AmazonJobLevels.Creative,
-                AmazonJobOperations.ReportExtracting);
-            RemoveOldData(date);
-            Add(items);
-        }
-
-        private void ProcessFailedStatsExtraction(Exception e, DateTime fromDate, DateTime toDate)
+        protected override void ProcessFailedStatsExtraction(Exception e, DateTime fromDate, DateTime toDate)
         {
             Logger.Error(accountId, e);
             var exception = new FailedStatsLoadingException(fromDate, toDate, accountId, e, byAd: true);
@@ -133,7 +110,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
                     campaignsData = campaignMetadataExtractor.LoadCampaignsMetadata(accountId, clientId).ToList();
                 },
                 accountId,
-                AmazonJobLevels.Creative,
+                AmazonJobLevel,
                 AmazonJobOperations.LoadCampaignMetadata);
             return campaignsData;
         }

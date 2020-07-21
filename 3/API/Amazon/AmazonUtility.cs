@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
+using System.Threading;
 using Amazon.Constants;
 using Amazon.Entities;
 using Amazon.Entities.HelperEntities;
@@ -34,10 +35,12 @@ namespace Amazon
         private const int UnauthorizedAttemptsNumberDefault = 3;
         private const int FailedRequestAttemptsNumberDefault = 2;
         private const int ReportGenerationAttemptsNumberDefault = 2;
+        private const int MillisecondsFactor = 1000;
 
         private const string AuthorizationHeader = "Authorization";
         private const string AmazonHeaderProfile = "Amazon-Advertising-API-Scope";
         private const string AmazonHeaderClient = "Amazon-Advertising-API-ClientId";
+        private const string RetryAfterHeader = "Retry-After";
 
         private static readonly object RequestLock = new object();
         private static readonly object FileLock = new object();
@@ -685,6 +688,14 @@ namespace Amazon
             lock (RequestLock)
             {
                 response = ProcessRequest<T>(restClient, restRequest, isPostMethod);
+                if ((int)response.StatusCode == 429)
+                {
+                    var secondsToWait = response.Headers.FirstOrDefault(x => string.Equals(x.Name, RetryAfterHeader, StringComparison.InvariantCultureIgnoreCase))?.Value;
+                    var millisecondsToWait = (int)(secondsToWait ?? default(int)) * MillisecondsFactor;
+                    LogInfo($"Waiting {millisecondsToWait} milliseconds because of the Amazon API throttling.");
+                    Thread.Sleep(millisecondsToWait);
+                    return ProcessRequest<T>(restRequest, isPostMethod);
+                }
             }
 
             if (response.IsSuccessful)

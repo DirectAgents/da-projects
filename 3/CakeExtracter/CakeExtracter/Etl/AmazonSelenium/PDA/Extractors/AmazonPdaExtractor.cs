@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Amazon.Entities;
 using Amazon.Enums;
 using Amazon.Helpers;
 using CakeExtracter.Common;
@@ -27,6 +29,9 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
         /// </summary>
         public virtual string SummariesDisplayName { get; } = "Pda Summaries";
 
+        /// <inheritdoc/>
+        protected override string AmazonJobLevel => throw new NotImplementedException();
+
         /// <inheritdoc cref="BaseAmazonExtractor{T}"/>
         /// <summary>
         /// Initializes a new instance of the <see cref="AmazonPdaExtractor{T}"/> class.
@@ -53,6 +58,24 @@ namespace CakeExtracter.Etl.AmazonSelenium.PDA.Extractors
             AssignCampaignType(apiCampaignSummaries);
             var items = TransformSummaries(apiCampaignSummaries);
             return items;
+        }
+
+        /// <inheritdoc/>
+        public override void RemoveOldData(DateTime date)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        protected override IEnumerable<T> GetDataFromApi(DateTime date, List<AmazonCampaign> campaignsData)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        protected override void ProcessFailedStatsExtraction(Exception e, DateTime fromDate, DateTime toDate)
+        {
+            throw new NotImplementedException();
         }
 
         private void AssignCampaignType(IEnumerable<AmazonCmApiCampaignSummary> apiCampaignSummaries)
