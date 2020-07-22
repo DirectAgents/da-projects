@@ -1,19 +1,19 @@
-﻿using Amazon;
+﻿using System;
+using System.ComponentModel.Composition;
+using System.Collections.Generic;
+using System.Linq;
+using Amazon;
 using CakeExtracter.Common;
+using CakeExtracter.Common.Extractors.ArchiveExctractors;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Etl;
 using CakeExtracter.Etl.Kochava.Configuration;
+using CakeExtracter.Etl.Kochava.Exceptions;
 using CakeExtracter.Etl.Kochava.Extractors;
 using CakeExtracter.Etl.Kochava.Extractors.Parsers;
 using CakeExtracter.Etl.Kochava.Loaders;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
-using System;
-using System.ComponentModel.Composition;
-using CakeExtracter.Common.Extractors.ArchiveExctractors;
-using System.Collections.Generic;
-using System.Linq;
-using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
-using CakeExtracter.Etl.Kochava.Exceptions;
 
 namespace CakeExtracter.Commands.DA
 {
@@ -54,18 +54,25 @@ namespace CakeExtracter.Commands.DA
         /// <returns></returns>
         public override int Execute(string[] remainingArguments)
         {
-            var accounts = accountsProvider.GetAccountsToProcess(Platform.Code_Kochava, AccountId);
-            if (accounts != null && accounts.Count > 0)
+            try
             {
-                accounts.ForEach(account =>
+                var accounts = accountsProvider.GetAccountsToProcess(Platform.Code_Kochava, AccountId);
+                if(accounts != null && accounts.Count > 0)
                 {
-                    InitEtlEvents(extractor, loader, account);
-                    ProcessDailyEtlForAccount(account);
-                });
+                    accounts.ForEach(account =>
+                    {
+                        InitEtlEvents();
+                        ProcessDailyEtlForAccount(account);
+                    });
+                }
+                else
+                {
+                    Logger.Warn("No Kochava accounts were found to process");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Logger.Warn("No Kochava accounts were found to process");
+                Logger.Error(ex);
             }
             return 0;
         }
@@ -80,7 +87,7 @@ namespace CakeExtracter.Commands.DA
             {
                 Logger.Info(account.Id, $"Started processing Kochava ETL for account - {account.Id}");
                 var accountData = extractor.ExtractLatestAccountData(account);
-                if (accountData != null && accountData.Count > 0)
+                if(accountData != null && accountData.Count > 0)
                 {
                     loader.LoadData(accountData, account);
                 }
@@ -126,19 +133,22 @@ namespace CakeExtracter.Commands.DA
         private IEnumerable<CommandWithSchedule> GetUniqueBroadAccountCommands(IEnumerable<CommandWithSchedule> commandsWithSchedule)
         {
             var accountCommands =
-                new List<Tuple<DASynchKochavaStats,CommandWithSchedule>>();
+                new List<Tuple<DASynchKochavaStats, CommandWithSchedule>>();
             foreach (var commandWithSchedule in commandsWithSchedule)
             {
                 var command = (DASynchKochavaStats)commandWithSchedule.Command;
                 accountCommands.Add(
                     new Tuple<DASynchKochavaStats, CommandWithSchedule>(command, commandWithSchedule));
             }
-
-            var broadCommands = accountCommands.Select(GetCommandWithCorrectDateRange).ToList();
+            var broadCommands = accountCommands.Select(x => new CommandWithSchedule
+            {
+                Command = x.Item1,
+                ScheduledTime = x.Item2.ScheduledTime,
+            }).ToList();
             return broadCommands;
         }
 
-        private void InitEtlEvents(KochavaExtractor extractor, KochavaLoader loader, ExtAccount account)
+        private void InitEtlEvents()
         {
             extractor.ProcessFailedExtraction += exception =>
                 ScheduleNewCommandLaunch<DASynchKochavaStats>(command =>
@@ -146,12 +156,6 @@ namespace CakeExtracter.Commands.DA
             loader.ProcessFailedLoading += exception =>
                 ScheduleNewCommandLaunch<DASynchKochavaStats>(command =>
                     UpdateCommandParameters(command, exception));
-        }
-
-        private CommandWithSchedule GetCommandWithCorrectDateRange(Tuple<DASynchKochavaStats,CommandWithSchedule> setting)
-        {
-            setting.Item2.Command = setting.Item1;
-            return setting.Item2;
         }
 
         private void UpdateCommandParameters(DASynchKochavaStats command, KochavaFailedEtlException exception)

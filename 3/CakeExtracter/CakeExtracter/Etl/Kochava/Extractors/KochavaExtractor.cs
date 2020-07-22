@@ -12,7 +12,7 @@ using DirectAgents.Domain.Entities.CPProg;
 namespace CakeExtracter.Etl.Kochava.Extractors
 {
     /// <summary>
-    /// Kochava Data Extractor
+    /// Kochava Data Extractor.
     /// </summary>
     internal class KochavaExtractor
     {
