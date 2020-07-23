@@ -645,6 +645,7 @@
     <Compile Include="Etl\Apple\Extractors\AppleApiExtracter.cs" />
     <Compile Include="Etl\Roku\Extractors\RokuApiExtractor.cs" />
     <Compile Include="Etl\Roku\Loaders\RokuLoader.cs" />
+    <Compile Include="Etl\SearchMarketing\Exceptions\CriteoFailedEtlException.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingConvSummaryExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingDailyNonShoppingSummaryExtractor.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingDailyShoppingSummaryExtractor.cs" />

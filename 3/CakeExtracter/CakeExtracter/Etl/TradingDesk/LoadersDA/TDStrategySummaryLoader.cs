@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using AutoMapper;
+using CakeExtracter.Commands;
 using CakeExtracter.Common;
+using CakeExtracter.Etl.Criteo.Exceptions;
 using CakeExtracter.Helpers;
 using CakeExtracter.SimpleRepositories.RepositoriesWithStorage;
 using CakeExtracter.SimpleRepositories.RepositoriesWithStorage.Interfaces;
@@ -16,6 +19,10 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
     public class TDStrategySummaryLoader : Loader<StrategySummary>
     {
         public static EntityIdStorage<Strategy> DefaultStrategyStorage = StorageCollection.StrategyWithEidStorage;
+        /// <summary>
+        /// Action for exception of failed loading.
+        /// </summary>
+        public event Action<CriteoFailedEtlException> ProcessFailedLoading;
 
         // Note accountId is only used in AddUpdateDependentStrategies() (i.e. not by AdrollCampaignSummaryLoader)
         public readonly int AccountId;
@@ -285,6 +292,23 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             {
                 Logger.Warn(accountId, "Multiple entities in db ({0})", numUpdates);
             }
+        }
+
+        private void ProcessFailedStatsLoading(Exception e, List<DASynchCriteoStats> items)
+        {
+            Logger.Error(e);
+            var exception = GetFailedStatsLoadingException(e, items);
+            ProcessFailedLoading?.Invoke(exception);
+        }
+
+        protected virtual CriteoFailedEtlException GetFailedStatsLoadingException(Exception e, List<DASynchCriteoStats> items)
+        {
+            var fromDate = items.Min(x => x.StartDate);
+            var toDate = items.Max(x => x.EndDate);
+            var fromDateArg = fromDate == default(DateTime) ? null : (DateTime?)fromDate;
+            var toDateArg = toDate == default(DateTime) ? null : (DateTime?)toDate;
+            var exception = new CriteoFailedEtlException(fromDateArg, toDateArg, e);
+            return exception;
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Common;
+using CakeExtracter.Etl.Criteo.Exceptions;
 using CakeExtracter.Etl.SearchMarketing.Extracters;
 using Criteo;
 using DirectAgents.Domain.Entities.CPProg;
@@ -56,21 +57,36 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
     public class CriteoStrategySummaryExtracter : CriteoApiExtracter<StrategySummary>
     {
+
+        /// <summary>
+        /// Action for exception of failed extraction.
+        /// </summary>
+        public event Action<CriteoFailedEtlException> ProcessFailedExtraction;
+
         public CriteoStrategySummaryExtracter(CriteoUtility criteoUtility, string accountCode, DateRange dateRange, int timezoneOffset)
             : base(criteoUtility, accountCode, dateRange, timezoneOffset)
         { }
 
         protected override void Extract()
         {
-            Logger.Info("Extracting StrategySummaries from Criteo API for {0} from {1:d} to {2:d}",
-                AccountCode, DateRange.FromDate, DateRange.ToDate);
-            if (TimezoneOffset == 0)
+            try
             {
-                Extract_Daily();
+
+
+                Logger.Info("Extracting StrategySummaries from Criteo API for {0} from {1:d} to {2:d}",
+                    AccountCode, DateRange.FromDate, DateRange.ToDate);
+                if (TimezoneOffset == 0)
+                {
+                    Extract_Daily();
+                }
+                else
+                {
+                    Extract_Hourly();
+                }
             }
-            else
+            catch (Exception e)
             {
-                Extract_Hourly();
+                ProcessFailedStatsExtraction(e, DateRange.FromDate, DateRange.ToDate, AccountCode);
             }
         }
 
@@ -121,6 +137,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             //Only using Eids in the lookup because that's what the loader will use later (the extracter doesn't get campaign names)
             var strategies = campaigns.Select(x => new Strategy {ExternalId = x.campaignID.ToString()});
             return strategies;
+        }
+
+        private void ProcessFailedStatsExtraction(Exception e, DateTime fromDate, DateTime toDate)
+        {
+            Logger.Error(e);
+            var exception = new CriteoFailedEtlException(fromDate, toDate, e);
+            ProcessFailedExtraction?.Invoke(exception);
         }
     }
 }
