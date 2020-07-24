@@ -1,13 +1,12 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using AutoMapper;
 using CakeExtracter.Etl.Kochava.Configuration;
+using CakeExtracter.Etl.Kochava.Exceptions;
 using CakeExtracter.Etl.Kochava.Models;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.Kochava;
-using System;
-using System.Collections.Generic;
-using System.Data.SqlTypes;
-using System.Linq;
-using CakeExtracter.Etl.Kochava.Exceptions;
 
 namespace CakeExtracter.Etl.Kochava.Loaders
 {
@@ -21,6 +20,7 @@ namespace CakeExtracter.Etl.Kochava.Loaders
         private readonly KochavaConfigurationProvider configurationProvider;
 
         public event Action<KochavaFailedEtlException> ProcessFailedLoading;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="KochavaLoader"/> class.
         /// </summary>

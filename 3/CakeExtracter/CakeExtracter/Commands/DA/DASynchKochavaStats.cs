@@ -54,26 +54,17 @@ namespace CakeExtracter.Commands.DA
         /// <returns></returns>
         public override int Execute(string[] remainingArguments)
         {
-            try
+            var accounts = accountsProvider.GetAccountsToProcess(Platform.Code_Kochava, AccountId);
+            if (accounts != null && accounts.Count > 0)
             {
-                var accounts = accountsProvider.GetAccountsToProcess(Platform.Code_Kochava, AccountId);
-                if(accounts != null && accounts.Count > 0)
-                {
-                    accounts.ForEach(account =>
-                    {
-                        InitEtlEvents();
-                        ProcessDailyEtlForAccount(account);
-                    });
-                }
-                else
-                {
-                    Logger.Warn("No Kochava accounts were found to process");
-                }
+                InitEtlEvents();
+                accounts.ForEach(ProcessDailyEtlForAccount);
             }
-            catch (Exception ex)
+            else
             {
-                Logger.Error(ex);
+                Logger.Warn("No Kochava accounts were found to process");
             }
+
             return 0;
         }
 
@@ -87,7 +78,7 @@ namespace CakeExtracter.Commands.DA
             {
                 Logger.Info(account.Id, $"Started processing Kochava ETL for account - {account.Id}");
                 var accountData = extractor.ExtractLatestAccountData(account);
-                if(accountData != null && accountData.Count > 0)
+                if (accountData != null && accountData.Count > 0)
                 {
                     loader.LoadData(accountData, account);
                 }
