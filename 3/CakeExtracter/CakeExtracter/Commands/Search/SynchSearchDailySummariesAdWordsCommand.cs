@@ -4,8 +4,8 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
-using CakeExtracter.Etl.SearchMarketing.Extracters;
-using CakeExtracter.Etl.SearchMarketing.Loaders;
+using CakeExtracter.Etl.AdWords.Extractors;
+using CakeExtracter.Etl.AdWords.Loaders;
 using CakeExtracter.Helpers;
 using ClientPortal.Data.Contexts;
 
@@ -99,21 +99,21 @@ namespace CakeExtracter.Commands
                 bool getAll = (GetAllStats == "true" || GetAllStats == "yes" || GetAllStats == "both");
                 if (GetStandardStats || getAll)
                 {
-                    var extractor = new AdWordsApiExtracter(searchAccount.AccountCode, revisedDateRange, IncludeClickType);
-                    var loader = new AdWordsApiLoader(searchAccount.SearchAccountId, IncludeClickType);
+                    var extractor = new AdWordsStandartExtractor(searchAccount.AccountCode, revisedDateRange);
+                    var loader = new AdWordsStandartLoader(searchAccount.SearchAccountId);
                     CommandHelper.DoEtl(extractor, loader);
                 }
                 if (GetClickAssistConvStats || getAll)
                 {
-                    var extractor = new AdWordsApiExtracter(searchAccount.AccountCode, revisedDateRange, IncludeClickType, clickAssistConvStats: true);
-                    var loader = new AdWordsApiLoader(searchAccount.SearchAccountId, IncludeClickType, clickAssistConvStats: true);
+                    var extractor = new AdWordsAssistConvExtractor(searchAccount.AccountCode, revisedDateRange);
+                    var loader = new AdWordsAssistConvLoader(searchAccount.SearchAccountId);
                     CommandHelper.DoEtl(extractor, loader);
                 }
                 if (GetConversionTypeStats || getAll)
                 {
                     // Note: IncludeClickType==true is not implemented
-                    var extractor = new AdWordsApiExtracter(searchAccount.AccountCode, revisedDateRange, IncludeClickType, conversionTypeStats: true);
-                    var loader = new AdWordsConvSummaryLoader(searchAccount.SearchAccountId);
+                    var extractor = new AdWordsConversionTypeExtractor(searchAccount.AccountCode, revisedDateRange);
+                    var loader = new AdWordsConversionTypeLoader(searchAccount.SearchAccountId);
                     CommandHelper.DoEtl(extractor, loader);
                 }
             }

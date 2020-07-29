@@ -111,6 +111,7 @@
     <Compile Include="Entities\CPProg\Facebook\FbCampaignReachMetric.cs" />
     <Compile Include="Entities\CPProg\Facebook\FbReachMetric.cs" />
     <Compile Include="Entities\CPProg\Roku\RokuSummary.cs" />
+    <Compile Include="Entities\CPSearch\DailySummaryBase.cs" />
     <Compile Include="Entities\CPSearch\SearchVideoDailySummary.cs" />
     <Compile Include="MigrationsTD\201905311144009_Mig_ErrorEmailSentProperty.cs" />
     <Compile Include="MigrationsTD\201905311144009_Mig_ErrorEmailSentProperty.Designer.cs">
