@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using CakeExtracter.Helpers;
 using ClientPortal.Data.Contexts;
+using DirectAgents.Domain.Contexts;
 
 namespace CakeExtracter.Etl.SearchMarketing.Loaders
 {
@@ -142,7 +143,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
         protected void AddUpdateDependentConvTypes(List<Dictionary<string, string>> items, string convTypePropName)
         {
-            using (var db = new ClientPortalContext())
+            using (var db = new ClientPortalSearchContext())
             {
                 var convTypeNames = items.Select(i => i[convTypePropName]).Distinct(); //TODO? make lower?
                 foreach (var convTypeName in convTypeNames)
@@ -155,7 +156,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
                     if (!convTypesInDb.Any())
                     {   // SearchConvType doesn't exist in the db; so create it and put an entry in the lookup
-                        var searchConvType = new SearchConvType
+                        var searchConvType = new DirectAgents.Domain.Entities.CPSearch.SearchConvType
                         {
                             Name = convTypeName,
                             Alias = convTypeName

@@ -7,7 +7,8 @@ using CakeExtracter.Common;
 using CakeExtracter.Etl.AdWords.Extractors;
 using CakeExtracter.Etl.AdWords.Loaders;
 using CakeExtracter.Helpers;
-using ClientPortal.Data.Contexts;
+using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Entities.CPSearch;
 
 namespace CakeExtracter.Commands
 {
@@ -34,16 +35,23 @@ namespace CakeExtracter.Commands
         }
 
         public int? SearchProfileId { get; set; }
+
         public string ClientId { get; set; }
+
         public DateTime? StartDate { get; set; }
+
         public DateTime? EndDate { get; set; }
+
         public int? DaysAgoToStart { get; set; }
+
         public bool IncludeClickType { get; set; }
+
         public int? MinSearchAccountId { get; set; }
 
-        //TODO: make GetAllStats be bool. (change scheduled task on gogrid to use g=true)
-        public string GetAllStats { get; set; } // "true" overrides the other get-stats properties
+        public string GetAllStats { get; set; }
+
         public bool GetClickAssistConvStats { get; set; }
+
         public bool GetConversionTypeStats { get; set; }
 
         // If all are false, will get standard stats
@@ -129,7 +137,7 @@ namespace CakeExtracter.Commands
         {
             var searchAccounts = new List<SearchAccount>();
 
-            using (var db = new ClientPortalContext())
+            using (var db = new ClientPortalSearchContext())
             {
                 if (accountCode == null) // AccountCode not specified
                 {

@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 
-using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPSearch;
-using Google.Apis.Analytics.v3.Data;
 
 namespace CakeExtracter.Etl.AdWords.Loaders
 {
@@ -36,15 +33,11 @@ namespace CakeExtracter.Etl.AdWords.Loaders
 
         protected static string NetworkStringToLetter(string network)
         {
-            switch (network)
+            if (string.Equals(network, "YouTube Videos", StringComparison.InvariantCultureIgnoreCase))
             {
-                case null:
-                    return null;
-                case "YouTube Videos":
-                    return "V"; // Y will be for "YouTube Search"
-                default:
-                    return network.Substring(0, 1);
+                return "V";
             }
+            return network?.Substring(0, 1);
         }
 
         protected static string DeviceStringToLetter(string device)
@@ -54,15 +47,17 @@ namespace CakeExtracter.Etl.AdWords.Loaders
 
         protected static string ClickTypeStringToLetter(string clickType)
         {
-            var clickTypeAbbrev = clickType.Substring(0, 1);
-            var ctLower = clickType.ToLower();
-            if (ctLower == "product listing ad - coupon") // started on 10/18/14 for Folica|Search (conflict with "Product listing ad")
-                clickTypeAbbrev = "Q";
-            else if (ctLower == "phone calls") // noticed for The Credit Pros -> "DA Spanish Mobile" on 11/11/17
-                clickTypeAbbrev = "C";
-            return clickTypeAbbrev;
-        }
+            if (string.Equals(clickType, "product listing ad - coupon", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return "Q";
+            }
+            else if (string.Equals(clickType, "phone calls", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return "C";
+            }
 
+            return clickType.Substring(0, 1);
+        }
 
         private void UpdateDependentSearchAccount(List<Dictionary<string, string>> items)
         {

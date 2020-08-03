@@ -10,7 +10,7 @@ using CakeExtracter.Etl.Apple.Exceptions;
 using CakeExtracter.Etl.Apple.Extractors;
 using CakeExtracter.Etl.Apple.Loaders;
 using CakeExtracter.Helpers;
-using ClientPortal.Data.Contexts;
+using DirectAgents.Domain.Entities.CPSearch;
 
 namespace CakeExtracter.Commands.Search
 {
