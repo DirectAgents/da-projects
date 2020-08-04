@@ -17,6 +17,9 @@ namespace CakeExtracter.Etl.AdWords.Loaders
         {
         }
 
+        /// <inheritdoc/>
+        protected override string StatsType => string.Empty;
+
         protected override int UpsertSummaryItems(List<Dictionary<string, string>> items)
         {
             UpsertSearchVideoDailySummaries(items);
@@ -37,7 +40,7 @@ namespace CakeExtracter.Etl.AdWords.Loaders
                     }
                     catch (Exception ex)
                     {
-                        Logger.Warn($"Failed to load search daily summary for customer ID [{item["customerID"]}] ({item["day"]}) - {ex.Message}");
+                        ProcessFailedStatsLoading(ex, item, searchAccount);
                         progress.SkippedCount++;
                     }
                     finally
@@ -65,7 +68,7 @@ namespace CakeExtracter.Etl.AdWords.Loaders
                     }
                     catch (Exception ex)
                     {
-                        Logger.Warn($"Failed to load search daily summary for customer ID [{item["customerID"]}] ({item["day"]}) - {ex.Message}");
+                        ProcessFailedStatsLoading(ex, item, searchAccount);
                         progress.SkippedCount++;
                     }
                     finally

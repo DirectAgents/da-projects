@@ -518,6 +518,7 @@
     <Compile Include="Etl\Adform\Repositories\Summaries\AdfCampaignSummaryDatabaseRepository.cs" />
     <Compile Include="Etl\Adform\Repositories\Summaries\AdfDailySummaryDatabaseRepository.cs" />
     <Compile Include="Etl\Adform\Repositories\Summaries\AdfLineItemSummaryDatabaseRepository.cs" />
+    <Compile Include="Etl\AdWords\Exceptions\AdwordsFailedEtlException.cs" />
     <Compile Include="Etl\AdWords\Extractors\AdWordsStandartExtractor.cs" />
     <Compile Include="Etl\AdWords\Extractors\AdWordsAssistConvExtractor.cs" />
     <Compile Include="Etl\AdWords\Extractors\AdWordsBaseApiExtractor.cs" />

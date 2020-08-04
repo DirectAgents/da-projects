@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Xml;
-
+using CakeExtracter.Etl.AdWords.Exceptions;
 using Google.Api.Ads.AdWords.Lib;
 using Google.Api.Ads.AdWords.Util.Reports;
 using Google.Api.Ads.AdWords.v201809;
@@ -26,6 +26,11 @@ namespace CakeExtracter.Etl.AdWords.Extractors
         private readonly DateTime beginDate;
 
         private readonly DateTime endDate;
+
+        /// <summary>
+        /// Action for exception of failed extraction.
+        /// </summary>
+        public event Action<AdwordsFailedEtlException> ProcessFailedExtraction;
 
         /// <summary>
         /// Gets exact extracted stats type.
@@ -59,7 +64,7 @@ namespace CakeExtracter.Etl.AdWords.Extractors
             }
             catch (Exception ex)
             {
-                Logger.Warn("Extraction error: {0}", ex.Message);
+                ProcessFailedStatsExtraction(ex);
             }
             finally
             {
@@ -169,6 +174,13 @@ namespace CakeExtracter.Etl.AdWords.Extractors
                     }
                 }
             }
+        }
+
+        private void ProcessFailedStatsExtraction(Exception e)
+        {
+            Logger.Warn("Extraction error: {0}", e.Message);
+            var exception = new AdwordsFailedEtlException(beginDate, endDate, clientCustomerId, StatsType, e);
+            ProcessFailedExtraction?.Invoke(exception);
         }
     }
 }

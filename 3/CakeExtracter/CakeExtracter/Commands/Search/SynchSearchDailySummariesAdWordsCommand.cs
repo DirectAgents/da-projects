@@ -4,6 +4,8 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
+using CakeExtracter.Etl.AdWords.Exceptions;
 using CakeExtracter.Etl.AdWords.Extractors;
 using CakeExtracter.Etl.AdWords.Loaders;
 using CakeExtracter.Helpers;
@@ -99,33 +101,60 @@ namespace CakeExtracter.Commands
             var searchAccounts = GetSearchAccounts();
             foreach (var searchAccount in searchAccounts)
             {
-                DateTime startDate = dateRange.FromDate;
-                if (searchAccount.MinSynchDate.HasValue && (startDate < searchAccount.MinSynchDate.Value))
-                    startDate = searchAccount.MinSynchDate.Value;
-                var revisedDateRange = new DateRange(startDate, dateRange.ToDate);
-
-                bool getAll = (GetAllStats == "true" || GetAllStats == "yes" || GetAllStats == "both");
-                if (GetStandardStats || getAll)
-                {
-                    var extractor = new AdWordsStandartExtractor(searchAccount.AccountCode, revisedDateRange);
-                    var loader = new AdWordsStandartLoader(searchAccount.SearchAccountId);
-                    CommandHelper.DoEtl(extractor, loader);
-                }
-                if (GetClickAssistConvStats || getAll)
-                {
-                    var extractor = new AdWordsAssistConvExtractor(searchAccount.AccountCode, revisedDateRange);
-                    var loader = new AdWordsAssistConvLoader(searchAccount.SearchAccountId);
-                    CommandHelper.DoEtl(extractor, loader);
-                }
-                if (GetConversionTypeStats || getAll)
-                {
-                    // Note: IncludeClickType==true is not implemented
-                    var extractor = new AdWordsConversionTypeExtractor(searchAccount.AccountCode, revisedDateRange);
-                    var loader = new AdWordsConversionTypeLoader(searchAccount.SearchAccountId);
-                    CommandHelper.DoEtl(extractor, loader);
-                }
+                dateRange = DoEtl(dateRange, searchAccount);
             }
             return 0;
+        }
+
+        private DateRange DoEtl(DateRange dateRange, SearchAccount searchAccount)
+        {
+            DateTime startDate = dateRange.FromDate;
+            if (searchAccount.MinSynchDate.HasValue && (startDate < searchAccount.MinSynchDate.Value))
+            {
+                startDate = searchAccount.MinSynchDate.Value;
+            }
+
+            var revisedDateRange = new DateRange(startDate, dateRange.ToDate);
+
+            bool getAll = GetAllStats == "true" || GetAllStats == "yes" || GetAllStats == "both";
+
+            if (GetStandardStats || getAll)
+            {
+                var extractor = new AdWordsStandartExtractor(searchAccount.AccountCode, revisedDateRange);
+                var loader = new AdWordsStandartLoader(searchAccount.SearchAccountId);
+                InitEtlEvents(extractor, loader);
+                CommandHelper.DoEtl(extractor, loader);
+            }
+            if (GetClickAssistConvStats || getAll)
+            {
+                var extractor = new AdWordsAssistConvExtractor(searchAccount.AccountCode, revisedDateRange);
+                var loader = new AdWordsAssistConvLoader(searchAccount.SearchAccountId);
+                InitEtlEvents(extractor, loader);
+                CommandHelper.DoEtl(extractor, loader);
+            }
+            if (GetConversionTypeStats || getAll)
+            {
+                var extractor = new AdWordsConversionTypeExtractor(searchAccount.AccountCode, revisedDateRange);
+                var loader = new AdWordsConversionTypeLoader(searchAccount.SearchAccountId);
+                InitEtlEvents(extractor, loader);
+                CommandHelper.DoEtl(extractor, loader);
+            }
+
+            return dateRange;
+        }
+
+        /// <inheritdoc />
+        public override IEnumerable<CommandWithSchedule> GetUniqueBroadCommands(IEnumerable<CommandWithSchedule> commands)
+        {
+            var broadCommands = new List<CommandWithSchedule>();
+            var commandsGroupedByAccount = commands.GroupBy(x => (x.Command as SynchSearchDailySummariesAdWordsCommand)?.ClientId);
+            foreach (var commandsGroup in commandsGroupedByAccount)
+            {
+                var accountBroadCommands = GetUniqueBroadAccountCommands(commandsGroup);
+                broadCommands.AddRange(accountBroadCommands);
+            }
+
+            return broadCommands;
         }
 
         public IEnumerable<SearchAccount> GetSearchAccounts()
@@ -197,5 +226,78 @@ namespace CakeExtracter.Commands
             return searchAccounts;
         }
 
+        private void InitEtlEvents(AdWordsBaseApiExtractor extractor, AdWordsBaseApiLoader loader)
+        {
+            GeneralInitEtlEvents(extractor, loader);
+            extractor.ProcessFailedExtraction += exception =>
+                ScheduleNewCommandLaunch<SynchSearchDailySummariesAdWordsCommand>(command =>
+                    UpdateCommandParameters(command, exception));
+            loader.ProcessFailedLoading += exception =>
+                ScheduleNewCommandLaunch<SynchSearchDailySummariesAdWordsCommand>(command =>
+                    UpdateCommandParameters(command, exception));
+        }
+
+        private void GeneralInitEtlEvents(AdWordsBaseApiExtractor extractor, AdWordsBaseApiLoader loader)
+        {
+            extractor.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewCommandLaunch<SynchSearchDailySummariesAdWordsCommand>(command => { });
+            loader.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewCommandLaunch<SynchSearchDailySummariesAdWordsCommand>(command => { });
+        }
+
+        private IEnumerable<CommandWithSchedule> GetUniqueBroadAccountCommands(IEnumerable<CommandWithSchedule> commandsWithSchedule)
+        {
+            var accountCommands =
+                new List<Tuple<SynchSearchDailySummariesAdWordsCommand, DateRange, CommandWithSchedule>>();
+            foreach (var commandWithSchedule in commandsWithSchedule)
+            {
+                var command = (SynchSearchDailySummariesAdWordsCommand)commandWithSchedule.Command;
+                var commandDateRange = CommandHelper.GetDateRange(command.StartDate, command.EndDate, command.DaysAgoToStart, DefaultDaysAgo);
+                var crossCommands = accountCommands.Where(x => commandDateRange.IsCrossDateRange(x.Item2)).ToList();
+                foreach (var crossCommand in crossCommands)
+                {
+                    commandDateRange = commandDateRange.MergeDateRange(crossCommand.Item2);
+                    commandWithSchedule.ScheduledTime =
+                        crossCommand.Item3.ScheduledTime > commandWithSchedule.ScheduledTime
+                            ? crossCommand.Item3.ScheduledTime
+                            : commandWithSchedule.ScheduledTime;
+                    accountCommands.Remove(crossCommand);
+                }
+
+                accountCommands.Add(
+                    new Tuple<SynchSearchDailySummariesAdWordsCommand, DateRange, CommandWithSchedule>(command, commandDateRange, commandWithSchedule));
+            }
+
+            var broadCommands = accountCommands.Select(GetCommandWithCorrectDateRange).ToList();
+            return broadCommands;
+        }
+
+        private CommandWithSchedule GetCommandWithCorrectDateRange(Tuple<SynchSearchDailySummariesAdWordsCommand, DateRange, CommandWithSchedule> setting)
+        {
+            setting.Item1.StartDate = setting.Item2.FromDate;
+            setting.Item1.EndDate = setting.Item2.ToDate;
+            setting.Item1.DaysAgoToStart = null;
+            setting.Item3.Command = setting.Item1;
+            return setting.Item3;
+        }
+
+        private void UpdateCommandParameters(SynchSearchDailySummariesAdWordsCommand command, AdwordsFailedEtlException exception)
+        {
+            command.StartDate = exception.StartDate;
+            command.EndDate = exception.EndDate;
+            command.ClientId = exception.ClientId;
+            command.GetAllStats = null;
+            command.IncludeClickType = false;
+
+            switch (exception.StatsType)
+            {
+                case "ClickAssistConvStats":
+                    command.GetClickAssistConvStats = true;
+                    break;
+                case "ConversionTypeStats":
+                    command.GetConversionTypeStats = true;
+                    break;
+            }
+        }
     }
 }
