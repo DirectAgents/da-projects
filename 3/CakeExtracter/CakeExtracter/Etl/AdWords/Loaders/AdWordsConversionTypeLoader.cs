@@ -13,6 +13,9 @@ namespace CakeExtracter.Etl.AdWords.Loaders
     {
         private readonly Dictionary<string, int> convTypeIdLookupByName = new Dictionary<string, int>();
 
+        /// <inheritdoc/>
+        protected override string StatsType => "ConversionTypeStats";
+
         public AdWordsConversionTypeLoader(int searchAccountId)
             : base(searchAccountId)
         {
@@ -38,7 +41,7 @@ namespace CakeExtracter.Etl.AdWords.Loaders
                     }
                     catch (Exception ex)
                     {
-                        Logger.Warn($"Failed to load search conv summary for customer ID [{item["customerID"]}] ({item["day"]}) - {ex}");
+                        ProcessFailedStatsLoading(ex, item, searchAccount);
                         progress.SkippedCount++;
                     }
                     finally

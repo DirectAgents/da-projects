@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using CakeExtracter.Etl.AdWords.Exceptions;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPSearch;
 
@@ -10,6 +10,17 @@ namespace CakeExtracter.Etl.AdWords.Loaders
     internal abstract class AdWordsBaseApiLoader : Loader<Dictionary<string, string>>
     {
         protected readonly int searchAccountId;
+
+        /// <summary>
+        /// Action for exception of failed loading.
+        /// </summary>
+        public event Action<AdwordsFailedEtlException> ProcessFailedLoading;
+
+        /// <summary>
+        /// Gets exact extracted stats type.
+        /// </summary>
+        protected abstract string StatsType { get; }
+
 
         public AdWordsBaseApiLoader(int searchAccountId)
         {
@@ -30,6 +41,13 @@ namespace CakeExtracter.Etl.AdWords.Loaders
         }
 
         protected abstract int UpsertSummaryItems(List<Dictionary<string, string>> items);
+
+        protected void ProcessFailedStatsLoading(Exception e, Dictionary<string, string> item, SearchAccount account)
+        {
+            Logger.Warn($"Failed to load {StatsType} summary for customer ID [{item["customerID"]}] ({item["day"]}) - {e.Message}");
+            var exception = GetFailedStatsLoadingException(e, item, account);
+            ProcessFailedLoading?.Invoke(exception);
+        }
 
         protected static string NetworkStringToLetter(string network)
         {
@@ -119,6 +137,14 @@ namespace CakeExtracter.Etl.AdWords.Loaders
                     Logger.Warn($"Failed to add or update search campaign: {campaignTuple} - {ex.Message}");
                 }
             }
+        }
+
+        private AdwordsFailedEtlException GetFailedStatsLoadingException(Exception e, Dictionary<string, string> item, SearchAccount account)
+        {
+            var fromDate = DateTime.Parse(item["day"].Replace('-', '/'));
+            var toDate = DateTime.Parse(item["day"].Replace('-', '/'));
+            var exception = new AdwordsFailedEtlException(fromDate, toDate, account.AccountCode, StatsType, e);
+            return exception;
         }
     }
 }

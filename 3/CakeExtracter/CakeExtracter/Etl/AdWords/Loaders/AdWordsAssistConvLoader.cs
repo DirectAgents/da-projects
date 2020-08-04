@@ -11,6 +11,8 @@ namespace CakeExtracter.Etl.AdWords.Loaders
 {
     internal class AdWordsAssistConvLoader : AdWordsBaseApiLoader
     {
+        protected override string StatsType => "ClickAssistConvStats";
+
         public AdWordsAssistConvLoader(int searchAccountId)
         : base(searchAccountId)
         {
@@ -28,9 +30,9 @@ namespace CakeExtracter.Etl.AdWords.Loaders
                     {
                         UpsertSearchDailySummary(item, searchAccount, db, progress);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        Logger.Warn($"Failed to load search daily summary for customer ID [{item["customerID"]}] ({item["day"]})");
+                        ProcessFailedStatsLoading(ex, item, searchAccount);
                         progress.SkippedCount++;
                     }
                     finally
