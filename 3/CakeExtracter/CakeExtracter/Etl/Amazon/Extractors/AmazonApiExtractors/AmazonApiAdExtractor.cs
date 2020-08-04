@@ -102,7 +102,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
         }
 
         private List<AmazonCampaign> GetCampaignInfo()
-        {
+         {
             List<AmazonCampaign> campaignsData = null;
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
                 () =>

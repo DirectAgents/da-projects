@@ -363,7 +363,13 @@ namespace Amazon
 
         public virtual List<AmazonCampaign> GetCampaigns(CampaignType campaignType, string profileId)
         {
-            return GetEntities<AmazonCampaign>(EntitesType.Campaigns, campaignType, null, profileId);
+            var parameters = new Dictionary<string, string>();
+
+            if (campaignType == CampaignType.SponsoredBrandsVideo)
+            {
+                parameters.Add("creativeType", "VIDEO");
+            }
+            return GetEntities<AmazonCampaign>(EntitesType.Campaigns, campaignType, parameters, profileId);
         }
 
         /// Only for Sponsored Product
@@ -372,7 +378,7 @@ namespace Amazon
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = AmazonApiHelper.CreateReportSbAndSpParams(EntitesType.ProductAds, campaignType, date, includeCampaignName);
-            return GetReportInfoManyTimes<AmazonAdDailySummary, AmazonApiReportSbAndSpParams>(EntitesType.ProductAds, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonAdDailySummary, AmazonApiReportSpParams>(EntitesType.ProductAds, campaignType, param, profileId);
         }
 
         /// For Sponsored Brands only the following attributed metrics are available:
@@ -380,7 +386,7 @@ namespace Amazon
         public virtual List<AmazonKeywordDailySummary> ReportKeywords(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
         {
             var param = AmazonApiHelper.CreateReportSbAndSpParams(EntitesType.Keywords, campaignType, date, includeCampaignName);
-            return GetReportInfoManyTimes<AmazonKeywordDailySummary, AmazonApiReportSbAndSpParams>(EntitesType.Keywords, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonKeywordDailySummary, AmazonApiReportSpParams>(EntitesType.Keywords, campaignType, param, profileId);
         }
 
         /// Only for Sponsored Product
@@ -388,13 +394,13 @@ namespace Amazon
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = AmazonApiHelper.CreateReportSbAndSpParams(EntitesType.TargetKeywords, campaignType, date, includeCampaignName);
-            return GetReportInfoManyTimes<AmazonTargetKeywordDailySummary, AmazonApiReportSbAndSpParams>(EntitesType.TargetKeywords, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonTargetKeywordDailySummary, AmazonApiReportSpParams>(EntitesType.TargetKeywords, campaignType, param, profileId);
         }
 
         public virtual List<AmazonSearchTermDailySummary> ReportSearchTerms(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
         {
             var param = AmazonApiHelper.CreateReportSbAndSpParams(EntitesType.SearchTerm, campaignType, date, includeCampaignName);
-            return GetReportInfoManyTimes<AmazonSearchTermDailySummary, AmazonApiReportSbAndSpParams>(EntitesType.SearchTerm, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonSearchTermDailySummary, AmazonApiReportSpParams>(EntitesType.SearchTerm, campaignType, param, profileId);
         }
 
         // Only for Product Display
@@ -410,7 +416,7 @@ namespace Amazon
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = AmazonApiHelper.CreateReportSbAndSpParams(EntitesType.TargetSearchTerm, campaignType, date, includeCampaignName);
-            return GetReportInfoManyTimes<AmazonTargetSearchTermDailySummary, AmazonApiReportSbAndSpParams>(EntitesType.TargetSearchTerm, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonTargetSearchTermDailySummary, AmazonApiReportSpParams>(EntitesType.TargetSearchTerm, campaignType, param, profileId);
         }
 
         // Only for Sponsored Product
@@ -418,11 +424,14 @@ namespace Amazon
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = AmazonApiHelper.CreateAsinReportSbAndSpParams(date);
-            return GetReportInfoManyTimes<AmazonAsinSummaries, AmazonApiReportSbAndSpParams>(EntitesType.Asins, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonAsinSummaries, AmazonApiReportSpParams>(EntitesType.Asins, campaignType, param, profileId);
         }
 
-        private List<T> GetEntities<T>(EntitesType entitiesType, CampaignType campaignType = CampaignType.Empty,
-            Dictionary<string, string> parameters = null, string profileId = null)
+        private List<T> GetEntities<T>(
+            EntitesType entitiesType,
+            CampaignType campaignType = CampaignType.Empty,
+            Dictionary<string, string> parameters = null,
+            string profileId = null)
         {
             try
             {
@@ -580,11 +589,40 @@ namespace Amazon
         private IRestResponse<T> SubmitRequestForPreparedData<T>(string dataType, object requestParams, CampaignType campaignType, EntitesType entitiesType, string profileId)
             where T : PreparedDataRequestResponse, new()
         {
-            var resourcePath = AmazonApiHelper.GetDataRequestRelativePath(entitiesType, campaignType, dataType);
+            var resourcePath = ResolveResourcePath(dataType, campaignType, entitiesType);
             var request = CreateRestRequest(resourcePath, profileId);
+            requestParams = UpdateParameters(campaignType, requestParams);
             request.AddJsonBody(requestParams);
             var response = ProcessRequest<T>(request, true);
             return response;
+        }
+
+        private static object UpdateParameters(CampaignType campaignType, object requestParams)
+        {
+            if (campaignType == CampaignType.SponsoredBrandsVideo)
+            {
+                var sbParans = new AmazonApiReportSbParams()
+                {
+                    campaignType = ((AmazonApiReportSpParams)requestParams).campaignType,
+                    metrics = ((AmazonApiReportSpParams)requestParams).metrics,
+                    reportDate = ((AmazonApiReportSpParams)requestParams).reportDate,
+                    segment = ((AmazonApiReportSpParams)requestParams).segment,
+                    creativeType = "video",
+                };
+                return sbParans;
+            }
+
+            return requestParams;
+        }
+
+        private static string ResolveResourcePath(string dataType, CampaignType campaignType, EntitesType entitiesType)
+        {
+            if (campaignType == CampaignType.SponsoredBrandsVideo)
+            {
+                return AmazonApiHelper.GetDataRequestRelativePath(entitiesType, CampaignType.SponsoredBrands, dataType);
+            }
+
+            return AmazonApiHelper.GetDataRequestRelativePath(entitiesType, campaignType, dataType);
         }
 
         private List<TEntity> DownloadPreparedData<T, TEntity>(string dataType, string dataId, string profileId, string reportName)
@@ -740,6 +778,8 @@ namespace Amazon
             request.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
             request.AddHeader(AmazonHeaderProfile, profileId);
             request.AddHeader(AmazonHeaderClient, amazonClientId);
+            //request.AddHeader("Accept", "application/vnd.sblistcampaignsresponse.v3+json, application/json");
+            request.AddHeader("Accept", "*/*");
             return request;
         }
 
