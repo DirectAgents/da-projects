@@ -1,8 +1,9 @@
 ﻿namespace Amazon.Entities.HelperEntities
 {
-    public class AmazonApiReportSbAndSpParams : AmazonApiReportParams
+    public class AmazonApiReportSpParams : AmazonApiReportParams
     {
         public string segment { get; set; }
+
         public string campaignType { get; set; }
     }
 }

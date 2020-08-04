@@ -41,6 +41,7 @@ namespace Amazon.Helpers
             {
                 {CampaignType.SponsoredProducts, "sp"},
                 {CampaignType.SponsoredBrands, "hsa"},
+                {CampaignType.SponsoredBrandsVideo, "sb"},
                 {CampaignType.ProductDisplay, "sd"},
                 {CampaignType.Empty, string.Empty},
             };
@@ -50,6 +51,7 @@ namespace Amazon.Helpers
             {
                 {CampaignType.SponsoredProducts, CampaignType.SponsoredProducts.ToString()},
                 {CampaignType.SponsoredBrands, CampaignType.SponsoredBrands.ToString()},
+                {CampaignType.SponsoredBrandsVideo, CampaignType.SponsoredBrandsVideo.ToString()},
                 {CampaignType.ProductDisplay, CampaignType.ProductDisplay.ToString()},
             };
 
@@ -161,6 +163,13 @@ namespace Amazon.Helpers
             {
                 {
                     CampaignType.SponsoredBrands, new[]
+                    {
+                        AttributedMetrics[AttributedMetricType.attributedSales][AttributedMetricDaysInterval.Days14],
+                        AttributedMetrics[AttributedMetricType.attributedConversions][AttributedMetricDaysInterval.Days14],
+                    }
+                },
+                {
+                    CampaignType.SponsoredBrandsVideo, new[]
                     {
                         AttributedMetrics[AttributedMetricType.attributedSales][AttributedMetricDaysInterval.Days14],
                         AttributedMetrics[AttributedMetricType.attributedConversions][AttributedMetricDaysInterval.Days14],
@@ -285,15 +294,18 @@ namespace Amazon.Helpers
             return $"{ApiVersion}/{dataType}/{dataId}";
         }
 
-        public static AmazonApiReportSbAndSpParams CreateReportSbAndSpParams(EntitesType entitiesType, CampaignType campaignType,
-            DateTime date, bool includeCampaignName)
+        public static AmazonApiReportSpParams CreateReportSbAndSpParams(
+            EntitesType entitiesType,
+            CampaignType campaignType,
+            DateTime date,
+            bool includeCampaignName)
         {
             var metrics = GetReportMetrics(entitiesType, campaignType, includeCampaignName);
             var reportParams = CreateReportSbAndSpParams(entitiesType, date, metrics);
             return reportParams;
         }
 
-        public static AmazonApiReportSbAndSpParams CreateAsinReportSbAndSpParams(DateTime date)
+        public static AmazonApiReportSpParams CreateAsinReportSbAndSpParams(DateTime date)
         {
             var metrics = GetAsinReportMetrics();
             var reportParams = CreateReportSbAndSpParams(EntitesType.Asins, date, metrics);
@@ -354,15 +366,15 @@ namespace Amazon.Helpers
             var campaignTypePath = campaignType == CampaignType.Empty || entitiesType == EntitesType.Asins
                 ? string.Empty
                 : CampaignTypeNames[campaignType] + "/";
-            var resourcePath = campaignType == CampaignType.ProductDisplay
+            var resourcePath = campaignType == CampaignType.ProductDisplay || campaignType == CampaignType.SponsoredBrandsVideo
                ? $"{campaignTypePath}{EntitiesTypeNames[entitiesType]}"
                : $"{ApiVersion}/{campaignTypePath}{EntitiesTypeNames[entitiesType]}";
             return resourcePath;
         }
 
-        private static AmazonApiReportSbAndSpParams CreateReportSbAndSpParams(EntitesType entitiesType, DateTime date, IEnumerable<string> metrics)
+        private static AmazonApiReportSpParams CreateReportSbAndSpParams(EntitesType entitiesType, DateTime date, IEnumerable<string> metrics)
         {
-            var reportParams = new AmazonApiReportSbAndSpParams
+            var reportParams = new AmazonApiReportSpParams
             {
                 reportDate = date.ToString(DateFormat),
                 metrics = TransformItemsForRequest(metrics),
