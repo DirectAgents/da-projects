@@ -1,20 +1,24 @@
-﻿using Amazon;
+﻿using System;
+using System.ComponentModel.Composition;
+using System.Collections.Generic;
+using System.Linq;
+using Amazon;
 using CakeExtracter.Common;
+using CakeExtracter.Common.Extractors.ArchiveExctractors;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Etl;
 using CakeExtracter.Etl.Kochava.Configuration;
+using CakeExtracter.Etl.Kochava.Exceptions;
 using CakeExtracter.Etl.Kochava.Extractors;
 using CakeExtracter.Etl.Kochava.Extractors.Parsers;
 using CakeExtracter.Etl.Kochava.Loaders;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
-using System;
-using System.ComponentModel.Composition;
-using CakeExtracter.Common.Extractors.ArchiveExctractors;
 
 namespace CakeExtracter.Commands.DA
 {
     /// <summary>
-    /// Command for Kochava ETL Job
+    /// Command for Kochava ETL Job.
     /// </summary>
     /// <seealso cref="CakeExtracter.Common.ConsoleCommand" />
     [Export(typeof(ConsoleCommand))]
@@ -53,15 +57,14 @@ namespace CakeExtracter.Commands.DA
             var accounts = accountsProvider.GetAccountsToProcess(Platform.Code_Kochava, AccountId);
             if (accounts != null && accounts.Count > 0)
             {
-                accounts.ForEach(account =>
-                {
-                    ProcessDailyEtlForAccount(account);
-                });
+                InitEtlEvents();
+                accounts.ForEach(ProcessDailyEtlForAccount);
             }
             else
             {
                 Logger.Warn("No Kochava accounts were found to process");
             }
+
             return 0;
         }
 
@@ -98,6 +101,57 @@ namespace CakeExtracter.Commands.DA
         public override void ResetProperties()
         {
             AccountId = null;
+        }
+
+        /// <inheritdoc/>
+        public override IEnumerable<CommandWithSchedule> GetUniqueBroadCommands(
+            IEnumerable<CommandWithSchedule> commands)
+        {
+            var broadCommands = new List<CommandWithSchedule>();
+            var commandsGroupedByAccountAndLevel = commands.GroupBy(x =>
+            {
+                var command = x.Command as DASynchAdformStats;
+                return new { command?.AccountId, command?.StatsType };
+            });
+            foreach (var commandsGroup in commandsGroupedByAccountAndLevel)
+            {
+                var accountLevelBroadCommands = GetUniqueBroadAccountCommands(commandsGroup);
+                broadCommands.AddRange(accountLevelBroadCommands);
+            }
+            return broadCommands;
+        }
+
+        private IEnumerable<CommandWithSchedule> GetUniqueBroadAccountCommands(IEnumerable<CommandWithSchedule> commandsWithSchedule)
+        {
+            var accountCommands =
+                new List<Tuple<DASynchKochavaStats, CommandWithSchedule>>();
+            foreach (var commandWithSchedule in commandsWithSchedule)
+            {
+                var command = (DASynchKochavaStats)commandWithSchedule.Command;
+                accountCommands.Add(
+                    new Tuple<DASynchKochavaStats, CommandWithSchedule>(command, commandWithSchedule));
+            }
+            var broadCommands = accountCommands.Select(x => new CommandWithSchedule
+            {
+                Command = x.Item1,
+                ScheduledTime = x.Item2.ScheduledTime,
+            }).ToList();
+            return broadCommands;
+        }
+
+        private void InitEtlEvents()
+        {
+            extractor.ProcessFailedExtraction += exception =>
+                ScheduleNewCommandLaunch<DASynchKochavaStats>(command =>
+                    UpdateCommandParameters(command, exception));
+            loader.ProcessFailedLoading += exception =>
+                ScheduleNewCommandLaunch<DASynchKochavaStats>(command =>
+                    UpdateCommandParameters(command, exception));
+        }
+
+        private void UpdateCommandParameters(DASynchKochavaStats command, KochavaFailedEtlException exception)
+        {
+            command.AccountId = exception.AccountId;
         }
     }
 }
