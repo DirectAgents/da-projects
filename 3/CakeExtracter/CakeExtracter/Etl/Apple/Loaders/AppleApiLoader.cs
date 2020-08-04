@@ -5,7 +5,8 @@ using System.Linq;
 using Apple;
 using CakeExtracter.Etl.Apple.Exceptions;
 using CakeExtracter.Helpers;
-using ClientPortal.Data.Contexts;
+using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Entities.CPSearch;
 
 namespace CakeExtracter.Etl.Apple.Loaders
 {
@@ -73,7 +74,7 @@ namespace CakeExtracter.Etl.Apple.Loaders
             const string networkValue = ".";
             const string deviceValue = ".";
             var progress = new LoadingProgress();
-            using (var db = new ClientPortalContext())
+            using (var db = new ClientPortalSearchContext())
             {
                 foreach (var statGroup in statGroups)
                 {
@@ -132,7 +133,7 @@ namespace CakeExtracter.Etl.Apple.Loaders
 
         private void AddUpdateDependentSearchCampaigns(List<AppleStatGroup> statGroups)
         {
-            using (var db = new ClientPortalContext())
+            using (var db = new ClientPortalSearchContext())
             {
                 var existingSearchAccount = db.SearchAccounts.Find(searchAccount.SearchAccountId);
                 foreach (var statGroup in statGroups)

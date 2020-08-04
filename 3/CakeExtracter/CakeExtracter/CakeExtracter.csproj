@@ -518,6 +518,14 @@
     <Compile Include="Etl\Adform\Repositories\Summaries\AdfCampaignSummaryDatabaseRepository.cs" />
     <Compile Include="Etl\Adform\Repositories\Summaries\AdfDailySummaryDatabaseRepository.cs" />
     <Compile Include="Etl\Adform\Repositories\Summaries\AdfLineItemSummaryDatabaseRepository.cs" />
+    <Compile Include="Etl\AdWords\Extractors\AdWordsStandartExtractor.cs" />
+    <Compile Include="Etl\AdWords\Extractors\AdWordsAssistConvExtractor.cs" />
+    <Compile Include="Etl\AdWords\Extractors\AdWordsBaseApiExtractor.cs" />
+    <Compile Include="Etl\AdWords\Extractors\AdWordsConversionTypeExtractor.cs" />
+    <Compile Include="Etl\AdWords\Loaders\AdWordsAssistConvLoader.cs" />
+    <Compile Include="Etl\AdWords\Loaders\AdWordsBaseApiLoader.cs" />
+    <Compile Include="Etl\AdWords\Loaders\AdWordsConversionTypeLoader.cs" />
+    <Compile Include="Etl\AdWords\Loaders\AdWordsStandartLoader.cs" />
     <Compile Include="Etl\AmazonSelenium\Configuration\SeleniumCommandConfigurationManager.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Configuration\PdaCommandConfigurationManager.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Enums\AmazonCmApiMetrics.cs" />

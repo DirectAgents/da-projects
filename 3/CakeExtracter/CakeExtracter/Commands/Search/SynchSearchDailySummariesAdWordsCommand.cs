@@ -4,10 +4,11 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
-using CakeExtracter.Etl.SearchMarketing.Extracters;
-using CakeExtracter.Etl.SearchMarketing.Loaders;
+using CakeExtracter.Etl.AdWords.Extractors;
+using CakeExtracter.Etl.AdWords.Loaders;
 using CakeExtracter.Helpers;
-using ClientPortal.Data.Contexts;
+using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Entities.CPSearch;
 
 namespace CakeExtracter.Commands
 {
@@ -34,16 +35,23 @@ namespace CakeExtracter.Commands
         }
 
         public int? SearchProfileId { get; set; }
+
         public string ClientId { get; set; }
+
         public DateTime? StartDate { get; set; }
+
         public DateTime? EndDate { get; set; }
+
         public int? DaysAgoToStart { get; set; }
+
         public bool IncludeClickType { get; set; }
+
         public int? MinSearchAccountId { get; set; }
 
-        //TODO: make GetAllStats be bool. (change scheduled task on gogrid to use g=true)
-        public string GetAllStats { get; set; } // "true" overrides the other get-stats properties
+        public string GetAllStats { get; set; }
+
         public bool GetClickAssistConvStats { get; set; }
+
         public bool GetConversionTypeStats { get; set; }
 
         // If all are false, will get standard stats
@@ -99,21 +107,21 @@ namespace CakeExtracter.Commands
                 bool getAll = (GetAllStats == "true" || GetAllStats == "yes" || GetAllStats == "both");
                 if (GetStandardStats || getAll)
                 {
-                    var extractor = new AdWordsApiExtracter(searchAccount.AccountCode, revisedDateRange, IncludeClickType);
-                    var loader = new AdWordsApiLoader(searchAccount.SearchAccountId, IncludeClickType);
+                    var extractor = new AdWordsStandartExtractor(searchAccount.AccountCode, revisedDateRange);
+                    var loader = new AdWordsStandartLoader(searchAccount.SearchAccountId);
                     CommandHelper.DoEtl(extractor, loader);
                 }
                 if (GetClickAssistConvStats || getAll)
                 {
-                    var extractor = new AdWordsApiExtracter(searchAccount.AccountCode, revisedDateRange, IncludeClickType, clickAssistConvStats: true);
-                    var loader = new AdWordsApiLoader(searchAccount.SearchAccountId, IncludeClickType, clickAssistConvStats: true);
+                    var extractor = new AdWordsAssistConvExtractor(searchAccount.AccountCode, revisedDateRange);
+                    var loader = new AdWordsAssistConvLoader(searchAccount.SearchAccountId);
                     CommandHelper.DoEtl(extractor, loader);
                 }
                 if (GetConversionTypeStats || getAll)
                 {
                     // Note: IncludeClickType==true is not implemented
-                    var extractor = new AdWordsApiExtracter(searchAccount.AccountCode, revisedDateRange, IncludeClickType, conversionTypeStats: true);
-                    var loader = new AdWordsConvSummaryLoader(searchAccount.SearchAccountId);
+                    var extractor = new AdWordsConversionTypeExtractor(searchAccount.AccountCode, revisedDateRange);
+                    var loader = new AdWordsConversionTypeLoader(searchAccount.SearchAccountId);
                     CommandHelper.DoEtl(extractor, loader);
                 }
             }
@@ -129,7 +137,7 @@ namespace CakeExtracter.Commands
         {
             var searchAccounts = new List<SearchAccount>();
 
-            using (var db = new ClientPortalContext())
+            using (var db = new ClientPortalSearchContext())
             {
                 if (accountCode == null) // AccountCode not specified
                 {

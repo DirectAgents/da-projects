@@ -39,6 +39,9 @@ namespace CakeExtracter.Bootstrappers
                 cfg.CreateMap<CallDailySummary, CallDailySummary>();
                 cfg.CreateMap<SearchConvSummary, SearchConvSummary>();
 
+                cfg.CreateMap<DirectAgents.Domain.Entities.CPSearch.SearchDailySummary, DirectAgents.Domain.Entities.CPSearch.SearchDailySummary>();
+                cfg.CreateMap<DirectAgents.Domain.Entities.CPSearch.SearchConvSummary, DirectAgents.Domain.Entities.CPSearch.SearchConvSummary>();
+
                 cfg.CreateMap<ClientPortal.Data.Entities.TD.AdRoll.AdDailySummary, ClientPortal.Data.Entities.TD.AdRoll.AdDailySummary>();
 
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.DailySummary, DirectAgents.Domain.Entities.CPProg.DailySummary>();
