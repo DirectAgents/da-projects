@@ -85,9 +85,10 @@
   <ItemGroup>
     <Compile Include="AwsFilesDownloader.cs" />
     <Compile Include="Entities\AmazonProfile.cs" />
+    <Compile Include="Entities\HelperEntities\AmazonApiReportSbParams.cs" />
     <Compile Include="Entities\HelperEntities\AmazonApiReportSdParams.cs" />
     <Compile Include="Entities\HelperEntities\AmazonApiReportParams.cs" />
-    <Compile Include="Entities\HelperEntities\AmazonApiReportSbAndSpParams.cs" />
+    <Compile Include="Entities\HelperEntities\AmazonApiReportSpParams.cs" />
     <Compile Include="Entities\HelperEntities\AmazonApiSnapshotParams.cs" />
     <Compile Include="Entities\Summaries\AmazonAsinSummaries.cs" />
     <Compile Include="Entities\HelperEntities\GetTokenResponse.cs" />
