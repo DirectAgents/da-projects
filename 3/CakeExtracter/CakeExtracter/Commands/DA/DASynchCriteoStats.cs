@@ -7,8 +7,6 @@ using CakeExtracter.Commands.Search;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Etl.Criteo.Exceptions;
-using CakeExtracter.Etl.Criteo.Extractors;
-using CakeExtracter.Etl.Criteo.Loaders;
 using CakeExtracter.Etl.SearchMarketing.Loaders;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
@@ -17,6 +15,7 @@ using ClientPortal.Data.Contexts;
 using Criteo;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
 
 namespace CakeExtracter.Commands
 {
@@ -120,7 +119,7 @@ namespace CakeExtracter.Commands
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account)
         {
             //Logger.Info("Criteo ETL - hourly. DateRange {0}.", dateRange); // account...
-            var extractor = new CriteoStrategySummaryExtracter(criteoUtility, account.ExternalId, dateRange, TimeZoneOffset);
+            var extractor = new CriteoStrategySummaryExtracter(criteoUtility, account.ExternalId, account.Id, dateRange, TimeZoneOffset);
             var loader = new TDStrategySummaryLoader(account.Id);
             InitEtlEvents(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
@@ -238,6 +237,8 @@ namespace CakeExtracter.Commands
             command.StartDate = exception.StartDate;
             command.EndDate = exception.EndDate;
             command.AccountId = exception.AccountId;
+            command.TimeZoneOffset = TimeZoneOffset;
+            command.DisabledOnly = DisabledOnly;
         }
     }
 }

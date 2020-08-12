@@ -9,10 +9,6 @@ namespace CakeExtracter.Etl.Criteo.Exceptions
     /// </summary>
     public class CriteoFailedEtlException : FailedEtlException
     {
-        /// <summary>
-        /// Gets or sets account code in the database for which statistics was extracted.
-        /// </summary>
-        public string AccountCode { get; set; }
         /// <inheritdoc cref="FailedEtlException"/>
         /// <summary>
         /// Initializes a new instance of the <see cref="CriteoFailedEtlException"/> class.
@@ -21,8 +17,8 @@ namespace CakeExtracter.Etl.Criteo.Exceptions
         /// <param name="endDate">End date to which statistics was extracted.</param>
         /// <param name="accountCode">Account code in the database for which statistics was extracted.</param>
         /// <param name="innerException">The source exception.</param>
-        public CriteoFailedEtlException(DateTime? startDate, DateTime? endDate, Exception innerException)
-            : base(startDate, endDate, null, innerException)
+        public CriteoFailedEtlException(DateTime? startDate, DateTime? endDate, int accountId, Exception innerException)
+            : base(startDate, endDate, accountId, innerException)
         {
         }
     }

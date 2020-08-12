@@ -15,12 +15,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         protected readonly string AccountCode;
         protected readonly DateRange DateRange;
         protected readonly int TimezoneOffset;
+        protected readonly int AccountId;
 
         protected CriteoUtility CriteoUtility;
         //TODO: make it so that within the criteoUtility, it doesn't need to open and close the service for every call
 
-        protected CriteoApiExtracter(CriteoUtility criteoUtility, string accountCode, DateRange dateRange, int timezoneOffset = 0)
+        protected CriteoApiExtracter(CriteoUtility criteoUtility, string accountCode, int accountId, DateRange dateRange, int timezoneOffset = 0)
         {
+            AccountId = accountId;
             AccountCode = accountCode;
             DateRange = dateRange;
             TimezoneOffset = timezoneOffset;
@@ -63,16 +65,16 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         /// </summary>
         public event Action<CriteoFailedEtlException> ProcessFailedExtraction;
 
-        public CriteoStrategySummaryExtracter(CriteoUtility criteoUtility, string accountCode, DateRange dateRange, int timezoneOffset)
-            : base(criteoUtility, accountCode, dateRange, timezoneOffset)
-        { }
+        public CriteoStrategySummaryExtracter(CriteoUtility criteoUtility, string accountCode, int accountId,
+            DateRange dateRange, int timezoneOffset)
+            : base(criteoUtility, accountCode, accountId, dateRange, timezoneOffset)
+            {
+            }
 
         protected override void Extract()
         {
             try
             {
-
-
                 Logger.Info("Extracting StrategySummaries from Criteo API for {0} from {1:d} to {2:d}",
                     AccountCode, DateRange.FromDate, DateRange.ToDate);
                 if (TimezoneOffset == 0)
@@ -86,16 +88,27 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             }
             catch (Exception e)
             {
-                ProcessFailedStatsExtraction(e, DateRange.FromDate, DateRange.ToDate, AccountCode);
+                ProcessFailedStatsExtraction(e, DateRange.FromDate, DateRange.ToDate, AccountId);
+            }
+            finally
+            {
+                End();
             }
         }
 
         private void Extract_Daily()
         {
-            var reportUrl = CriteoUtility.GetCampaignReport(DateRange.FromDate, DateRange.ToDate);
-            var reportRows = EnumerateXmlReportRows(reportUrl);
-            Add(reportRows);
-            End();
+            try
+            {
+                var reportUrl = CriteoUtility.GetCampaignReport(DateRange.FromDate, DateRange.ToDate);
+                var reportRows = EnumerateXmlReportRows(reportUrl);
+                Add(reportRows);
+                End();
+            }
+            catch (Exception e)
+            {
+                ProcessFailedStatsExtraction(e, DateRange.FromDate, DateRange.ToDate, AccountId);
+            }
         }
 
         private void Extract_Hourly()
@@ -139,10 +152,10 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             return strategies;
         }
 
-        private void ProcessFailedStatsExtraction(Exception e, DateTime fromDate, DateTime toDate)
+        private void ProcessFailedStatsExtraction(Exception e, DateTime fromDate, DateTime toDate, int accountCode)
         {
             Logger.Error(e);
-            var exception = new CriteoFailedEtlException(fromDate, toDate, e);
+            var exception = new CriteoFailedEtlException(fromDate, toDate, accountCode, e);
             ProcessFailedExtraction?.Invoke(exception);
         }
     }

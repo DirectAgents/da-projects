@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using AutoMapper;
-using CakeExtracter.Commands;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.Criteo.Exceptions;
 using CakeExtracter.Helpers;
@@ -40,12 +39,20 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         protected override int Load(List<StrategySummary> items)
         {
-            Logger.Info(AccountId, "Loading {0} DA-TD StrategySummaries..", items.Count);
-            PrepareData(items);
-            AddUpdateDependentStrategies(items);
-            AssignStrategyIdToItems(items);
-            var count = UpsertDailySummaries(items);
-            return count;
+            try
+            {   throw new Exception();
+                Logger.Info(AccountId, "Loading {0} DA-TD StrategySummaries..", items.Count);
+                PrepareData(items);
+                AddUpdateDependentStrategies(items);
+                AssignStrategyIdToItems(items);
+                var count = UpsertDailySummaries(items);
+                return count;
+            }
+            catch (Exception e)
+            {
+                ProcessFailedStatsLoading(e, items);
+                return items.Count;
+            }
         }
 
         public void PrepareData(List<StrategySummary> items)
@@ -287,28 +294,22 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 return;
             }
 
-            Logger.Info(accountId, "Updated Strategy: {0}, Eid={1}", strategyProps.Name, strategyProps.ExternalId);
+            Logger.Info(AccountId, "Updated Strategy: {0}, Eid={1}", strategyProps.Name, strategyProps.ExternalId);
             if (numUpdates > 1)
             {
-                Logger.Warn(accountId, "Multiple entities in db ({0})", numUpdates);
+                Logger.Warn(AccountId, "Multiple entities in db ({0})", numUpdates);
             }
         }
 
-        private void ProcessFailedStatsLoading(Exception e, List<DASynchCriteoStats> items)
+        private void ProcessFailedStatsLoading(Exception e, List<StrategySummary> items)
         {
             Logger.Error(e);
-            var exception = GetFailedStatsLoadingException(e, items);
-            ProcessFailedLoading?.Invoke(exception);
-        }
-
-        protected virtual CriteoFailedEtlException GetFailedStatsLoadingException(Exception e, List<DASynchCriteoStats> items)
-        {
-            var fromDate = items.Min(x => x.StartDate);
-            var toDate = items.Max(x => x.EndDate);
+            var fromDate = items.Min(x => x.Date);
+            var toDate = items.Max(x => x.Date);
             var fromDateArg = fromDate == default(DateTime) ? null : (DateTime?)fromDate;
             var toDateArg = toDate == default(DateTime) ? null : (DateTime?)toDate;
-            var exception = new CriteoFailedEtlException(fromDateArg, toDateArg, e);
-            return exception;
+            var exception = new CriteoFailedEtlException(fromDateArg, toDateArg, AccountId, e);
+            ProcessFailedLoading?.Invoke(exception);
         }
     }
 }
