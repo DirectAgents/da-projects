@@ -9,6 +9,7 @@ using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Etl.Criteo.Exceptions;
 using CakeExtracter.Etl.SearchMarketing.Loaders;
 using CakeExtracter.Etl.TradingDesk.Extracters;
+using CakeExtracter.Etl.TradingDesk.Loaders;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using CakeExtracter.Helpers;
 using ClientPortal.Data.Contexts;
@@ -120,7 +121,8 @@ namespace CakeExtracter.Commands
         {
             //Logger.Info("Criteo ETL - hourly. DateRange {0}.", dateRange); // account...
             var extractor = new CriteoStrategySummaryExtracter(criteoUtility, account.ExternalId, account.Id, dateRange, TimeZoneOffset);
-            var loader = new TDStrategySummaryLoader(account.Id);
+            //var loader = new TDStrategySummaryLoader(account.Id);
+            var loader = new CriteoLoaders();
             InitEtlEvents(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
         }

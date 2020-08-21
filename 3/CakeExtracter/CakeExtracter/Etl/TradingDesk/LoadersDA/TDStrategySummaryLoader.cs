@@ -37,22 +37,16 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             strategyRepositoryWithStorage = new StrategyRepositoryWithStorage(strategyStorage ?? DefaultStrategyStorage);
         }
 
+        /// <inheritdoc/>
         protected override int Load(List<StrategySummary> items)
         {
-            try
-            {   throw new Exception();
-                Logger.Info(AccountId, "Loading {0} DA-TD StrategySummaries..", items.Count);
-                PrepareData(items);
-                AddUpdateDependentStrategies(items);
-                AssignStrategyIdToItems(items);
-                var count = UpsertDailySummaries(items);
-                return count;
-            }
-            catch (Exception e)
-            {
-                ProcessFailedStatsLoading(e, items);
-                return items.Count;
-            }
+           // throw new Exception();
+            Logger.Info(AccountId, "Loading {0} DA-TD StrategySummaries..", items.Count);
+            PrepareData(items);
+            AddUpdateDependentStrategies(items);
+            AssignStrategyIdToItems(items);
+            var count = UpsertDailySummaries(items);
+            return count;
         }
 
         public void PrepareData(List<StrategySummary> items)
@@ -301,15 +295,15 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             }
         }
 
-        private void ProcessFailedStatsLoading(Exception e, List<StrategySummary> items)
+        protected void ProcessFailedStatsLoading(Exception e, List<StrategySummary> items)
         {
-            Logger.Error(e);
+            /*Logger.Error(e);
             var fromDate = items.Min(x => x.Date);
             var toDate = items.Max(x => x.Date);
             var fromDateArg = fromDate == default(DateTime) ? null : (DateTime?)fromDate;
             var toDateArg = toDate == default(DateTime) ? null : (DateTime?)toDate;
             var exception = new CriteoFailedEtlException(fromDateArg, toDateArg, AccountId, e);
-            ProcessFailedLoading?.Invoke(exception);
+            ProcessFailedLoading?.Invoke(exception);*/
         }
     }
 }

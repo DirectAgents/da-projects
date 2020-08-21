@@ -711,6 +711,7 @@
     <Compile Include="Etl\TradingDesk\Extracters\TDConvExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\TDSiteSummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\TDStrategySummaryExtracter.cs" />
+    <Compile Include="Etl\TradingDesk\Loaders\CriteoLoaders.cs" />
     <Compile Include="Etl\YAM\Extractors\ApiExtractors\YamCampaignSummaryExtractor.cs" />
     <Compile Include="Etl\YAM\Extractors\ApiExtractors\BaseYamApiExtractor.cs" />
     <Compile Include="Etl\YAM\Extractors\ApiExtractors\YamDailySummaryExtractor.cs" />
