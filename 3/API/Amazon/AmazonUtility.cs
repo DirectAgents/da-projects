@@ -392,10 +392,8 @@ namespace Amazon
             return GetReportInfoManyTimes<AmazonKeywordDailySummary, AmazonApiReportSpParams>(EntitesType.Keywords, campaignType, param, profileId);
         }
 
-        /// Only for Sponsored Product
-        public virtual List<AmazonTargetKeywordDailySummary> ReportTargetKeywords(DateTime date, string profileId, bool includeCampaignName)
+        public virtual List<AmazonTargetKeywordDailySummary> ReportTargetKeywords(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
         {
-            const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = AmazonApiHelper.CreateReportSbAndSpParams(EntitesType.TargetKeywords, campaignType, date, includeCampaignName);
             return GetReportInfoManyTimes<AmazonTargetKeywordDailySummary, AmazonApiReportSpParams>(EntitesType.TargetKeywords, campaignType, param, profileId);
         }

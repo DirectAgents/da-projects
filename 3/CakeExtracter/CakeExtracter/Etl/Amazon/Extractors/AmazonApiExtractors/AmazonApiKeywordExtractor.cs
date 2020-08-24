@@ -100,10 +100,42 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
             var keywordItems = TransformSummaries(keywordSums, date, campaignsData);
             var targetSums = ExtractTargetSummaries(date);
             var targetItems = TransformSummaries(targetSums, date, campaignsData);
+            targetItems = targetItems
+                .GroupBy(p => new
+                {
+                    p.Date,
+                    p.AdSetEid,
+                    p.AdSetName,
+                    p.KeywordEid,
+                    p.KeywordName,
+                    p.StrategyEid,
+                    p.StrategyName,
+                    p.StrategyTargetingType,
+                    p.StrategyType,
+                })
+                .Select(g => new KeywordSummary
+                {
+                    Date = g.Key.Date,
+                    AdSetEid = g.Key.AdSetEid,
+                    AdSetName = g.Key.AdSetName,
+                    KeywordEid = g.Key.KeywordEid,
+                    KeywordName = g.Key.KeywordName,
+                    StrategyEid = g.Key.StrategyEid,
+                    StrategyName = g.Key.StrategyName,
+                    StrategyTargetingType = g.Key.StrategyTargetingType,
+                    StrategyType = g.Key.StrategyType,
+                    Impressions = g.Sum(p => p.Impressions),
+                    Clicks = g.Sum(p => p.Clicks),
+                    Cost = g.Sum(p => p.Cost),
+                    AllClicks = g.Sum(p => p.AllClicks),
+                    PostClickConv = g.Sum(p => p.AllClicks),
+                    PostClickRev = g.Sum(p => p.PostClickRev),
+                    PostViewConv = g.Sum(p => p.PostViewConv),
+                    PostViewRev = g.Sum(p => p.PostViewRev),
+                });
             var items = keywordItems.Concat(targetItems);
             return items.ToList();
         }
-
 
         /// <inheritdoc/>
         protected override void ProcessFailedStatsExtraction(Exception e, DateTime fromDate, DateTime toDate)
@@ -139,7 +171,9 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
 
         private IEnumerable<AmazonTargetKeywordDailySummary> ExtractTargetSummaries(DateTime date)
         {
-            var sums = _amazonUtility.ReportTargetKeywords(date, clientId, true);
+            var spSums = _amazonUtility.ReportTargetKeywords(CampaignType.SponsoredProducts, date, clientId, true);
+            var sbSums = _amazonUtility.ReportTargetKeywords(CampaignType.SponsoredBrands, date, clientId, true);
+            var sums = spSums.Concat(spSums).Concat(sbSums);
             var filteredSums = FilterByCampaigns(sums, x => x.CampaignName);
             return filteredSums.ToList();
         }
