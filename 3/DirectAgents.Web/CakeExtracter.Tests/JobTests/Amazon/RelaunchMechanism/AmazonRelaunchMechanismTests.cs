@@ -147,7 +147,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
             utilityMock.Setup(m => m.GetCampaigns(It.IsAny<CampaignType>(), It.IsAny<string>())).Returns(new List<AmazonCampaign>());
             utilityMock.Setup(m => m.ReportKeywords(It.IsAny<CampaignType>(), It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<bool>()))
                 .Returns(new List<AmazonKeywordDailySummary>());
-            utilityMock.Setup(m => m.ReportTargetKeywords(It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<bool>())).Throws(exception).Verifiable();
+            utilityMock.Setup(m => m.ReportTargetKeywords(It.IsAny<CampaignType>(), It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<bool>())).Throws(exception).Verifiable();
             commandMock.Setup(m => m.CreateUtility(It.IsAny<ExtAccount>())).Returns(utilityMock.Object);
             commandMock.Object.Run();
             AssertRelaunchIsValid(commandMock, false);
@@ -174,7 +174,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
             utilityMock.Setup(m => m.GetCampaigns(It.IsAny<CampaignType>(), It.IsAny<string>())).Returns(new List<AmazonCampaign>());
             utilityMock.Setup(m => m.ReportKeywords(It.IsAny<CampaignType>(), It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<bool>()))
                 .Throws(exception).Verifiable();
-            utilityMock.Setup(m => m.ReportTargetKeywords(It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<bool>()))
+            utilityMock.Setup(m => m.ReportTargetKeywords(It.IsAny<CampaignType>(), It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<bool>()))
                 .Returns(new List<AmazonTargetKeywordDailySummary>());
             commandMock.Setup(m => m.CreateUtility(It.IsAny<ExtAccount>())).Returns(utilityMock.Object);
             commandMock.Object.Run();
@@ -196,7 +196,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
             utilityMock.Setup(m => m.GetCampaigns(It.IsAny<CampaignType>(), It.IsAny<string>())).Returns(new List<AmazonCampaign>());
             utilityMock.Setup(m => m.ReportKeywords(It.IsAny<CampaignType>(), It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<bool>()))
                 .Returns(new List<AmazonKeywordDailySummary>());
-            utilityMock.Setup(m => m.ReportTargetKeywords(It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<bool>()))
+           utilityMock.Setup(m => m.ReportTargetKeywords(It.IsAny<CampaignType>(), It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<bool>()))
                 .Returns(new List<AmazonTargetKeywordDailySummary>());
             commandMock.Setup(m => m.CreateUtility(It.IsAny<ExtAccount>())).Returns(utilityMock.Object);
             commandMock.Object.Run();
@@ -218,7 +218,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
             utilityMock.Setup(m => m.GetCampaigns(It.IsAny<CampaignType>(), It.IsAny<string>())).Returns(new List<AmazonCampaign>());
             utilityMock.Setup(m => m.ReportKeywords(It.IsAny<CampaignType>(), It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<bool>()))
                 .Returns(new List<AmazonKeywordDailySummary> { new AmazonKeywordDailySummary { Clicks = 1 } });
-            utilityMock.Setup(m => m.ReportTargetKeywords(It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<bool>()))
+            utilityMock.Setup(m => m.ReportTargetKeywords(It.IsAny<CampaignType>(), It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<bool>()))
                 .Returns(new List<AmazonTargetKeywordDailySummary>());
             commandMock.Setup(m => m.CreateUtility(It.IsAny<ExtAccount>())).Returns(utilityMock.Object);
             commandMock.Object.Run();

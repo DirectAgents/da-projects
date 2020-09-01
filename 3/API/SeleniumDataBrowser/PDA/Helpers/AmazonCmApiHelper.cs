@@ -12,6 +12,7 @@ namespace SeleniumDataBrowser.PDA.Helpers
     {
         public const string AmazonAdvertisingPortalUrl = "https://advertising.amazon.com";
         public const string CampaignsApiRelativePath = "/cm/api/campaigns";
+        public const string CampaignsApiPathWithMainPagePath = "/cm/campaigns";
         public const string EntityIdArgName = "entityId";
         private const string CampaignNameField = "CAMPAIGN_NAME";
         private const string ImpressionsField = "IMPRESSIONS";
