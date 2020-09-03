@@ -18,6 +18,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
         where T : DatedStatsSummary
     {
         private const int collectionBoundedCapacity = 20000;
+        private const int MaxParallelThreads = 10;
 
         protected readonly AmazonUtility _amazonUtility;
         protected readonly DateRange dateRange;
@@ -55,7 +56,10 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
                 () =>
                 {
-                    Parallel.ForEach(dateRange.Dates, date => ExtractDaily(date, campaignsData));
+                    Parallel.ForEach(
+                        dateRange.Dates,
+                        new ParallelOptions { MaxDegreeOfParallelism = MaxParallelThreads },
+                        date => ExtractDaily(date, campaignsData));
                 },
                 accountId,
                 AmazonJobLevel,
