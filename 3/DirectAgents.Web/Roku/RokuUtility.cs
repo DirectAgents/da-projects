@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Net;
 using RestSharp;
 using RokuAPI.Constants;
 using RokuAPI.Helpers;
@@ -10,6 +10,19 @@ namespace RokuAPI
 {
     public class RokuUtility
     {
+        private readonly Dictionary<string, string> baseHeaders =
+            new Dictionary<string, string>()
+            {
+                { "Sec-Fetch-Site", "cross-site" },
+                { "Sec-Fetch-Mode", "cors" },
+                { "Sec-Fetch-Dest", "empty" },
+                { "Authorization", RokuApiHelper.GetRokuAuthKey },
+                { "Origin", "https://selfserve.roku.com" },
+                { "accept", "*/*" },
+                { "accept-encoding", "gzip, deflate, br" },
+                { "accept-language", "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7" },
+            };
+
         private readonly RestClient restClient;
 
         public RokuUtility()
@@ -34,16 +47,14 @@ namespace RokuAPI
         private dynamic ExecuteGetRequest(IRestRequest request, DateTime date)
         {
             request.Method = Method.GET;
-            request.AddHeader("Sec-Fetch-Site", "cross-site");
-            request.AddHeader("Sec-Fetch-Mode", "cors");
-            request.AddHeader("Sec-Fetch-Dest", "empty");
-            request.AddHeader("Authorization", RokuApiHelper.GetRokuAuthKey);
-            request.AddHeader("Origin", "https://selfserve.roku.com");
+            request.AddHeaders(baseHeaders);
             request.AddHeader("Refer", RokuApiHelper.GetReferHeader(date));
-            request.AddHeader("accept", "*/*");
-            request.AddHeader("accept-encoding", "gzip, deflate, br");
-            request.AddHeader("accept-language", "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7");
-            return restClient.Execute<dynamic>(request);
+            var response = restClient.Execute<dynamic>(request);
+            if(response.StatusCode == HttpStatusCode.Forbidden)
+            {
+                throw new Exception(response.ErrorMessage);
+            }
+            return response;
         }
     }
 }
