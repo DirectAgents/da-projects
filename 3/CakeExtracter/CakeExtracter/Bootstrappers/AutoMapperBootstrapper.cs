@@ -1,11 +1,15 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using System.Globalization;
+
+using Amazon.Entities.Summaries;
 using AutoMapper;
 using CakeExtracter.Etl.Kochava.Models;
 using CakeExtracter.Etl.YAM.Extractors.CsvExtractors.RowModels;
 using ClientPortal.Data.Contexts;
 using CommissionJunction.Entities;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.CPProg.AmazonAttribution;
 using DirectAgents.Domain.Entities.CPProg.CJ;
 using DirectAgents.Domain.Entities.CPProg.Kochava;
 using DirectAgents.Domain.Entities.CPProg.Roku;
@@ -153,6 +157,11 @@ namespace CakeExtracter.Bootstrappers
                 cfg.CreateMap<KochavaReportItem, KochavaItem>();
                 cfg.CreateMap<VcdAnalyticItem, VcdAnalyticItem>();
                 cfg.CreateMap<RokuSummary, RokuSummary>();
+                cfg.CreateMap<AmazonAttributionSummary, AttributionSummary>()
+                    .ForMember(d => d.CampaignName, opt => opt.MapFrom(s => s.CampaignId))
+                    .ForMember(d => d.AdGroupName, opt => opt.MapFrom(s => s.AdGroupId))
+                    .ForMember(d => d.CreativeName, opt => opt.MapFrom(s => s.CreativeId))
+                    .ForMember(d => d.Date, opt => opt.MapFrom(s => DateTime.ParseExact(s.Date, "yyyyMMdd", CultureInfo.InvariantCulture)));
 
                 CreateYamMaps(cfg);
             });

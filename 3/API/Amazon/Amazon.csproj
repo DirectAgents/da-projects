@@ -65,6 +65,9 @@
       <HintPath>..\..\DirectAgents.Web\packages\RestSharp.106.3.1\lib\net452\RestSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RestSharp.Serializers.Newtonsoft.Json, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\DirectAgents.Web\packages\RestSharp.Newtonsoft.Json.1.5.0\lib\net452\RestSharp.Serializers.Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -84,12 +87,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AwsFilesDownloader.cs" />
+    <Compile Include="Entities\AmazonAdvertiser.cs" />
+    <Compile Include="Entities\AmazonAdvertisersReport.cs" />
     <Compile Include="Entities\AmazonProfile.cs" />
     <Compile Include="Entities\HelperEntities\AmazonApiReportSbParams.cs" />
     <Compile Include="Entities\HelperEntities\AmazonApiReportSdParams.cs" />
     <Compile Include="Entities\HelperEntities\AmazonApiReportParams.cs" />
     <Compile Include="Entities\HelperEntities\AmazonApiReportSpParams.cs" />
     <Compile Include="Entities\HelperEntities\AmazonApiSnapshotParams.cs" />
+    <Compile Include="Entities\HelperEntities\AmazonAttributionApiReportParams.cs" />
+    <Compile Include="Entities\HelperEntities\AmazonAttributionReport.cs" />
     <Compile Include="Entities\Summaries\AmazonAsinSummaries.cs" />
     <Compile Include="Entities\HelperEntities\GetTokenResponse.cs" />
     <Compile Include="Entities\HelperEntities\PreparedDataResponses\PreparedDataRequestResponse.cs" />
@@ -100,6 +107,7 @@
     <Compile Include="Entities\HelperEntities\PreparedDataResponses\SnapshotRequestResponse.cs" />
     <Compile Include="Entities\HelperEntities\DownloadInfoResponses\SnapshotResponseDownloadInfo.cs" />
     <Compile Include="Entities\Summaries\AmazonAdDailySummary.cs" />
+    <Compile Include="Entities\Summaries\AmazonAttributionSummary.cs" />
     <Compile Include="Entities\Summaries\AmazonKeywordDailySummary.cs" />
     <Compile Include="Entities\Summaries\AmazonSearchTermDailySummary.cs" />
     <Compile Include="Entities\Summaries\AmazonStatSummary.cs" />

@@ -20,6 +20,9 @@ using Polly;
 using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Deserializers;
+using RestSharp.Serializers.Newtonsoft.Json;
+
+using RestRequest = RestSharp.RestRequest;
 
 namespace Amazon
 {
@@ -364,6 +367,26 @@ namespace Amazon
             return GetEntities<AmazonProfile>(EntitesType.Profiles);
         }
 
+        /// <summary>
+        /// Gets list of available advertisers for selected profile id.
+        /// </summary>
+        /// <param name="profileId">Profile id to retrieve advertisers.</param>
+        /// <returns>List of available advertisers.</returns>
+        public List<AmazonAdvertiser> GetAdvertisers(string profileId)
+        {
+            try
+            {
+                var resourcePath = AmazonApiHelper.GetEntityListRelativePath(EntitesType.Advertiser, CampaignType.Empty);
+                var request = CreateRestRequest(resourcePath, profileId);
+                var response = ProcessRequest<AmazonAdvertisersReport>(request);
+                return response.Data?.Advertisers;
+            }
+            catch (Exception e)
+            {
+                throw new ExtractDataException(e, "load items", EntitesType.Advertiser, CampaignType.Empty, profileId);
+            }
+        }
+
         public virtual List<AmazonCampaign> GetCampaigns(CampaignType campaignType, string profileId)
         {
             var parameters = new Dictionary<string, string>();
@@ -428,6 +451,21 @@ namespace Amazon
             return GetReportInfoManyTimes<AmazonAsinSummaries, AmazonApiReportSpParams>(EntitesType.Asins, campaignType, param, profileId);
         }
 
+        /// <summary>
+        /// Gets Amazon Attribution statistics for the selected profile Id and advertisers.
+        /// </summary>
+        /// <param name="advertisers">List of advertisers.</param>
+        /// <param name="startDate">Start Date for statistics.</param>
+        /// <param name="endDate">End Date for statistics.</param>
+        /// <param name="profileId">Profile Id of the selected account.</param>
+        /// <returns>List of Amazon Attribution Summaries.</returns>
+        public List<AmazonAttributionSummary> GetAmazonAttributionSummaries(IEnumerable<AmazonAdvertiser> advertisers, DateTime startDate, DateTime endDate, string profileId)
+        {
+            var advertiserIds = advertisers.Select(x => x.AdvertiserId);
+            var param = AmazonApiHelper.CreateAttributionApiReportParams(startDate, endDate, advertiserIds);
+            return GetReportByParts(param, profileId);
+        }
+
         private List<T> GetEntities<T>(EntitesType entitiesType, CampaignType campaignType = CampaignType.Empty,
             Dictionary<string, string> parameters = null, string profileId = null)
         {
@@ -458,6 +496,55 @@ namespace Amazon
             {
                 throw new ExtractDataException(e, snapshotName, entitiesType, campaignType, profileId);
             }
+        }
+
+        private List<AmazonAttributionSummary> GetReportByParts(AmazonAttributionApiReportParams reportParams, string profileId)
+        {
+            var data = new List<AmazonAttributionSummary>();
+
+            do
+            {
+                var report = GetReportPartWithRetry(reportParams, profileId);
+                data.AddRange(report.Reports);
+                reportParams.CursorId = report.CursorId;
+            }
+            while (reportParams.CursorId != null);
+
+            return data;
+        }
+
+        private AmazonAttributionReport GetReportPartWithRetry(
+            AmazonAttributionApiReportParams reportParams,
+            string profileId)
+        {
+            const string ReportName = "amazon attribution report";
+            try
+            {
+                return Policy
+                    .Handle<Exception>()
+                    .Retry(reportGenerationAttemptsNumber, (exception, retryCount, context) => LogGenerationError(ReportName, exception, retryCount))
+                    .Execute(() => GetReportPart(reportParams, profileId));
+            }
+            catch (Exception e)
+            {
+                throw new ExtractDataException(e, ReportName, EntitesType.Attribution, CampaignType.Empty, profileId);
+            }
+        }
+
+        private AmazonAttributionReport GetReportPart(AmazonAttributionApiReportParams reportParams, string profileId)
+        {
+            const string DataType = "report";
+
+            var path = AmazonApiHelper.GetDataRequestRelativePath(
+                EntitesType.Attribution,
+                CampaignType.Empty,
+                DataType);
+            var request = CreateRestRequest(path, profileId);
+            request.AddJsonBody(reportParams);
+
+            var response = ProcessRequest<AmazonAttributionReport>(request, true);
+
+            return response.Data;
         }
 
         private List<TStat> GetReportInfoManyTimes<TStat, TAmazonApiReportParams>(
@@ -721,6 +808,8 @@ namespace Amazon
         {
             IRestResponse<T> response;
             var restClient = new RestClient(CurrentApiEndpointUrl);
+            restClient.AddHandler("application/json", new NewtonsoftJsonSerializer());
+
             lock (RequestLock)
             {
                 response = ProcessRequest<T>(restClient, restRequest, isPostMethod);
@@ -777,6 +866,7 @@ namespace Amazon
             request.AddHeader(AmazonHeaderProfile, profileId);
             request.AddHeader(AmazonHeaderClient, amazonClientId);
             request.AddHeader("Accept", "*/*");
+            request.JsonSerializer = new NewtonsoftJsonSerializer();
             return request;
         }
 

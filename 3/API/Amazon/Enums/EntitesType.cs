@@ -10,6 +10,8 @@
         Asins,
         Profiles,
         SearchTerm,
-        TargetSearchTerm
+        TargetSearchTerm,
+        Advertiser,
+        Attribution,
     }
 }

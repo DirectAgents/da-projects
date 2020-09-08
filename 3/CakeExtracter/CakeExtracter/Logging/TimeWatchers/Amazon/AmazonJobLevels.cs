@@ -11,5 +11,6 @@
         public const string Keyword = "Amazon Keyword";
         public const string SearchTerm = "Amazon SearchTerm";
         public const string AdSet = "Amazon AdSet";
+        public const string Attribution = "Amazon Attribution";
     }
 }
