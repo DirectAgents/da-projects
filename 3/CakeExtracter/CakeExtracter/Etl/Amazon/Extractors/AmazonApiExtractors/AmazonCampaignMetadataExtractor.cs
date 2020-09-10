@@ -39,8 +39,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
         }
 
         private IEnumerable<AmazonCampaign> LoadCampaignsFromAmazonApi(string accountExternalId)
-         {
-
+        {
             var sbCampaigns = AmazonUtility.GetCampaigns(CampaignType.SponsoredBrands, accountExternalId);
             var sbVideoCampaigns = AmazonUtility.GetCampaigns(CampaignType.SponsoredBrandsVideo, accountExternalId);
             var spCampaigns = AmazonUtility.GetCampaigns(CampaignType.SponsoredProducts, accountExternalId);
