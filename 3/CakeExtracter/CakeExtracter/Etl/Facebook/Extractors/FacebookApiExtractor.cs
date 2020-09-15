@@ -2,6 +2,8 @@
 using CakeExtracter.Common;
 using CakeExtracter.Etl.Facebook.Exceptions;
 using DirectAgents.Domain.Entities.CPProg;
+
+using FacebookAPI.Exceptions;
 using FacebookAPI.Providers;
 
 namespace CakeExtracter.Etl.Facebook.Extractors
@@ -46,6 +48,11 @@ namespace CakeExtracter.Etl.Facebook.Extractors
             Exception e)
         {
             Logger.Error(e);
+            if (e is FbPermissionDeniedException)
+            {
+                return;
+            }
+
             var exception = new FacebookFailedEtlException(startDate, endDate, accountId, statsType, e);
             ProcessFailedExtraction?.Invoke(exception);
         }
