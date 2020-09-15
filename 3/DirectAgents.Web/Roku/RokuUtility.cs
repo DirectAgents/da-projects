@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 using RestSharp;
 using RokuAPI.Constants;
 using RokuAPI.Helpers;
@@ -47,10 +48,10 @@ namespace RokuAPI
         private dynamic ExecuteGetRequest(IRestRequest request, DateTime date)
         {
             request.Method = Method.GET;
-            request.AddHeaders(baseHeaders);
+            baseHeaders.ForEach(x => request.AddHeader(x.Key, x.Value));
             request.AddHeader("Refer", RokuApiHelper.GetReferHeader(date));
             var response = restClient.Execute<dynamic>(request);
-            if(response.StatusCode == HttpStatusCode.Forbidden)
+            if (response.StatusCode == HttpStatusCode.Forbidden)
             {
                 throw new Exception(response.ErrorMessage);
             }
