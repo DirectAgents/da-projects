@@ -2,6 +2,8 @@
 using System.Threading;
 using Facebook;
 
+using FacebookAPI.Exceptions;
+
 namespace FacebookAPI.Api
 {
     /// <summary>
@@ -9,15 +11,32 @@ namespace FacebookAPI.Api
     /// </summary>
     public class FacebookJobRequest
     {
+        private readonly Action<string> logInfo;
+
+        private readonly Action<string> logError;
+
         public FacebookClient fbClient;
         public string path;
         public object parms;
         public string logMessage;
 
+        private const int UnsupportedRequestCode = 100;
+        private const int PermissionsDeniedSubCode = 33;
         private const int SecondsToWaitIfLimitReached = 61;
         private const int MaxRetries = 20; //??reduce??
 
         private string runId;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FacebookJobRequest"/> class.
+        /// </summary>
+        /// <param name="logInfo"></param>
+        /// <param name="logError"></param>
+        public FacebookJobRequest(Action<string> logInfo, Action<string> logError)
+        {
+            this.logInfo = logInfo;
+            this.logError = logError;
+        }
 
         /// <summary>
         /// Gets the job request identifier.
@@ -38,38 +57,58 @@ namespace FacebookAPI.Api
         /// <summary>
         /// Resets Run id if exists. Gets the job request identifier with retry.
         /// </summary>
-        /// <param name="logInfo">The log information.</param>
-        /// <param name="logError">The log error.</param>
         /// <returns> Updated run Id.</returns>
-        public string ResetAndGetRunId_withRetry(Action<string> logInfo, Action<string> logError)
+        public string ResetAndGetRunIdWithRetry()
         {
-            int tryNumber = 0;
+            var tryNumber = 0;
             runId = null;
-            do
-            {
-                try
-                {
-                    runId = GetRunId();
-                    tryNumber = 0; // mark as call succeeded (no exception)
-                }
-                catch (Exception ex)
-                {
-                    logError(ex.Message);
-                    int secondsToWait = 2;
-                    if (ex.Message.Contains("request limit") || ex.Message.Contains("rate limit"))
-                        secondsToWait = SecondsToWaitIfLimitReached;
 
-                    tryNumber++;
-                    if (tryNumber < MaxRetries)
-                    {
-                        logInfo(string.Format("Waiting {0} seconds before trying again.", secondsToWait));
-                        Thread.Sleep(secondsToWait * 1000);
-                    }
+            while (!TryGetRunId(out runId))
+            {
+                tryNumber++;
+                if (tryNumber >= MaxRetries)
+                {
+                    throw new Exception($"Tried {tryNumber} times. Aborting GetRunId_withRetry.");
                 }
-            } while (tryNumber > 0 && tryNumber < MaxRetries);
-            if (tryNumber >= MaxRetries)
-                throw new Exception(String.Format("Tried {0} times. Aborting GetRunId_withRetry.", tryNumber));
+            }
+
             return runId;
+        }
+
+        private bool TryGetRunId(out string id)
+        {
+            id = null;
+
+            try
+            {
+                id = GetRunId();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return ProcessException(ex);
+            }
+        }
+
+        private bool ProcessException(Exception ex)
+        {
+            logError(ex.Message);
+            var secondsToWait = 2;
+            var apiException = ex as FacebookApiException;
+
+            if (apiException?.ErrorCode == UnsupportedRequestCode && apiException.ErrorSubcode == PermissionsDeniedSubCode)
+            {
+                throw new FbPermissionDeniedException(apiException.Message);
+            }
+
+            if (ex.Message.Contains("request limit") || ex.Message.Contains("rate limit"))
+            {
+                secondsToWait = SecondsToWaitIfLimitReached;
+            }
+
+            logInfo($"Waiting {secondsToWait} seconds before trying again.");
+            Thread.Sleep(secondsToWait * 1000);
+            return false;
         }
     }
 }

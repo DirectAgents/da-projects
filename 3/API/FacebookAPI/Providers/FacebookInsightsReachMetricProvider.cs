@@ -68,7 +68,7 @@ namespace FacebookAPI.Providers
         {
             var clientParametersList = new List<FacebookJobRequest>();
             var clientParameters = PrepareExtractingRequestBase(parameters, accountId);
-            clientParameters.ResetAndGetRunId_withRetry(LogInfo, LogWarn);
+            clientParameters.ResetAndGetRunIdWithRetry();
             clientParametersList.Add(clientParameters);
             Thread.Sleep(InitialWaitMillisecs);
             foreach (var clientParms in clientParametersList)

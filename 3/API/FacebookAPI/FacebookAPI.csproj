@@ -70,6 +70,7 @@
     <Compile Include="Api\Filter.cs" />
     <Compile Include="Entities\FbCampaignReachRow.cs" />
     <Compile Include="Enums\ReachPeriod.cs" />
+    <Compile Include="Exceptions\FbPermissionDeniedException.cs" />
     <Compile Include="Providers\BaseFacebookDataProvider.cs" />
     <Compile Include="Entities\AdDataEntities\AdCreativeData.cs" />
     <Compile Include="Entities\AdDataEntities\Creative.cs" />
