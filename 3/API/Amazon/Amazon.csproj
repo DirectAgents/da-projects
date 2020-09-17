@@ -108,6 +108,7 @@
     <Compile Include="Constants\ReportGenerationStatus.cs" />
     <Compile Include="Constants\ApiEndpointUrl.cs" />
     <Compile Include="Entities\Summaries\AmazonTargetSearchTermDailySummary.cs" />
+    <Compile Include="Enums\Tactics.cs" />
     <Compile Include="Exceptions\ExtractDataException.cs" />
     <Compile Include="Exceptions\ReportGenerationTimedOutException.cs" />
     <Compile Include="Helpers\AmazonApiHelper.cs" />

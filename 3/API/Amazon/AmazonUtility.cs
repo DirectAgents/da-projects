@@ -404,12 +404,28 @@ namespace Amazon
             return GetReportInfoManyTimes<AmazonSearchTermDailySummary, AmazonApiReportSpParams>(EntitesType.SearchTerm, campaignType, param, profileId);
         }
 
-        // Only for Product Display
-        public virtual List<AmazonStrategyDailySummary> ReportStrategy(DateTime date, string profileId, bool includeCampaignName)
+        /// <summary>
+        /// Retrieve the Stragy level data for Sponsored Display campaigns.
+        /// </summary>
+        /// <param name="date">Date to get statistic.</param>
+        /// <param name="profileId">Profile Id for selected account.</param>
+        /// <returns>List of statistics for the strategy level.</returns>
+        public virtual List<AmazonStrategyDailySummary> ReportStrategy(DateTime date, string profileId)
         {
-            const CampaignType campaignType = CampaignType.ProductDisplay;
-            var param = AmazonApiHelper.CreateReportSdParams(EntitesType.Campaigns, campaignType, date, includeCampaignName);
-            return GetReportInfoManyTimes<AmazonStrategyDailySummary, AmazonApiReportSdParams>(EntitesType.Campaigns, campaignType, param, profileId);
+            var summaries = new List<AmazonStrategyDailySummary>();
+
+            foreach (Tactic tactic in Enum.GetValues(typeof(Tactic)))
+            {
+                var param = AmazonApiHelper.CreateReportSdParams(date, tactic);
+                var sums = GetReportInfoManyTimes<AmazonStrategyDailySummary, AmazonApiReportSdParams>(
+                    EntitesType.Campaigns,
+                    CampaignType.ProductDisplay,
+                    param,
+                    profileId);
+                summaries.AddRange(sums);
+            }
+
+            return summaries;
         }
 
         // Only for Sponsored Product
@@ -465,7 +481,7 @@ namespace Amazon
             where TAmazonApiReportParams : AmazonApiReportParams
             where TStat : AmazonStatSummary
         {
-            var reportName = GetReportName(parameters.reportDate, reportType, campaignType);
+            var reportName = GetReportName(parameters, reportType, campaignType);
             try
             {
                 return Policy
@@ -479,9 +495,16 @@ namespace Amazon
             }
         }
 
-        private string GetReportName(string date, EntitesType entitiesType, CampaignType campaignType)
+        private string GetReportName(AmazonApiReportParams reportParams, EntitesType entitiesType, CampaignType campaignType)
         {
-            return $"AmazonReport_{ReportPrefix}_{date}_{entitiesType}_{campaignType}";
+            var reportName = $"AmazonReport_{ReportPrefix}_{reportParams.reportDate}_{entitiesType}_{campaignType}";
+
+            if (reportParams is AmazonApiReportSdParams reportSdParams)
+            {
+                reportName += $"_{reportSdParams.tactic}";
+            }
+
+            return reportName;
         }
 
         private string GetSnapshotName(EntitesType entitiesType, CampaignType campaignType)

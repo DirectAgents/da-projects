@@ -197,15 +197,14 @@ namespace CakeExtracter.Commands
             var amazonUtility = CreateUtility(account);
             try
             {
-                // remarking amazon ticket.
-                /*if (statsType.Strategy && !NeedUpdateKeywordsAndSearchTerms)
+                if (statsType.Strategy && !NeedUpdateKeywordsAndSearchTerms)
                 {
                     var dailyOnlyAccounts = ConfigurationHelper.ExtractEnumerableFromConfig("AmazonPdaAccounts").ToArray();
                     if (dailyOnlyAccounts.Contains(account.ExternalId))
                     {
                         DoETL_Campaign(dateRange, account, amazonUtility);
                     }
-                }*/
+                }
 
                 if (statsType.Creative && !NeedUpdateKeywordsAndSearchTerms)
                 {

@@ -133,7 +133,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
 
         private IEnumerable<AmazonStrategyDailySummary> ExtractStrategySummaries(DateTime date)
         {
-            var sums = _amazonUtility.ReportStrategy(date, clientId, true);
+            var sums = _amazonUtility.ReportStrategy(date, clientId);
             var filteredSums = FilterByCampaigns(sums, x => x.CampaignName);
             return filteredSums.ToList();
         }
