@@ -428,6 +428,7 @@
     <Compile Include="Commands\DA\DASynchAdformStats_Outdated.cs" />
     <Compile Include="Commands\DA\DASynchAffiliates.cs" />
     <Compile Include="Commands\DA\DASynchAffSubSums.cs" />
+    <Compile Include="Commands\DA\DASynchAmazonAttributionStats.cs" />
     <Compile Include="Commands\DA\DASynchAmazonStats.cs" />
     <Compile Include="Commands\DA\DASynchCakeEventConversions.cs">
       <SubType>Code</SubType>
@@ -527,6 +528,8 @@
     <Compile Include="Etl\AdWords\Loaders\AdWordsBaseApiLoader.cs" />
     <Compile Include="Etl\AdWords\Loaders\AdWordsConversionTypeLoader.cs" />
     <Compile Include="Etl\AdWords\Loaders\AdWordsStandartLoader.cs" />
+    <Compile Include="Etl\AmazonAttribution\Extractors\AmazonAttributionExtractor.cs" />
+    <Compile Include="Etl\AmazonAttribution\Loaders\AmazonAttributionLoader.cs" />
     <Compile Include="Etl\AmazonSelenium\Configuration\SeleniumCommandConfigurationManager.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Configuration\PdaCommandConfigurationManager.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Enums\AmazonCmApiMetrics.cs" />
@@ -1097,7 +1100,9 @@
     <Analyzer Include="..\..\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\..\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Etl\AmazonAttribution\Exceptions\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

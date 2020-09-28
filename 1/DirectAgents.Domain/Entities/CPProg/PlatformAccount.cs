@@ -24,6 +24,7 @@ namespace DirectAgents.Domain.Entities.CPProg
         public const string Code_Adform = "adf";
         public const string Code_AdRoll = "adr";
         public const string Code_Amazon = "amzn";
+        public const string Code_AttributionAmazon = "attramzn";
         public const string Code_Criteo = "crit";
         public const string Code_DBM = "dbm";
         public const string Code_FB = "fb";
