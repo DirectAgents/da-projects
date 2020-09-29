@@ -558,7 +558,7 @@ namespace Amazon
             var request = CreateRestRequest(path, profileId);
             request.AddJsonBody(reportParams);
 
-            var response = ProcessRequest<AmazonAttributionReport>(request, true);
+            var response = ProcessRequest<AmazonAttributionReport>(request, true, true);
 
             return response.Data;
         }
@@ -826,12 +826,15 @@ namespace Amazon
             return response;
         }
 
-        private IRestResponse<T> ProcessRequest<T>(IRestRequest restRequest, bool isPostMethod = false)
+        private IRestResponse<T> ProcessRequest<T>(IRestRequest restRequest, bool isPostMethod = false, bool useCustomSerializer = false)
             where T : new()
         {
             IRestResponse<T> response;
             var restClient = new RestClient(CurrentApiEndpointUrl);
-            restClient.AddHandler("application/json", new NewtonsoftJsonSerializer());
+            if (useCustomSerializer)
+            {
+                restClient.AddHandler("application/json", new NewtonsoftJsonSerializer());
+            }
 
             lock (RequestLock)
             {
