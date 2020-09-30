@@ -122,7 +122,7 @@ namespace CakeExtracter.Commands
             //Logger.Info("Criteo ETL - hourly. DateRange {0}.", dateRange); // account...
             var extractor = new CriteoStrategySummaryExtracter(criteoUtility, account.ExternalId, account.Id, dateRange, TimeZoneOffset);
             //var loader = new TDStrategySummaryLoader(account.Id);
-            var loader = new CriteoLoaders();
+            var loader = new CriteoLoaders(account.Id);
             InitEtlEvents(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
         }

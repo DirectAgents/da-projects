@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CakeExtracter.Common;
 using CakeExtracter.Etl.Criteo.Exceptions;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
+using CakeExtracter.Helpers;
+using CakeExtracter.SimpleRepositories.RepositoriesWithStorage;
 using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.TradingDesk.Loaders
@@ -15,12 +18,18 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
         /// Action for exception of failed loading.
         /// </summary>
         public event Action<CriteoFailedEtlException> ProcessFailedLoading;
+        //public readonly int AccountId;
+
+        public CriteoLoaders (int accountId = -1)
+        {
+            AccountId = accountId;
+        }
 
         protected override int Load(List<StrategySummary> items)
         {
             try
             {
-                //throw new Exception();
+                throw new Exception();
                 Logger.Info(AccountId, "Loading {0} DA-TD StrategySummaries..", items.Count);
                 PrepareData(items);
                 AddUpdateDependentStrategies(items);

@@ -24,7 +24,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         public event Action<CriteoFailedEtlException> ProcessFailedLoading;
 
         // Note accountId is only used in AddUpdateDependentStrategies() (i.e. not by AdrollCampaignSummaryLoader)
-        public readonly int AccountId;
+        public int AccountId;
         private readonly SummaryMetricLoader metricLoader;
         private readonly IRepositoryWithStorage<EntityType, ClientPortalProgContext> typeRepositoryWithStorage;
         private readonly IRepositoryWithStorage<Strategy, ClientPortalProgContext> strategyRepositoryWithStorage;
