@@ -36,13 +36,14 @@ namespace Amazon.Helpers
         private const string CampaignEnabledState = "enabled";
         private const string CampaignPausedState = "paused";
         private const string CampaignArchivedState = "archived";
+        private const string CampaignSbPath = "sb/";
 
         private static readonly Dictionary<CampaignType, string> CampaignTypeNames =
             new Dictionary<CampaignType, string>
             {
                 {CampaignType.SponsoredProducts, "sp"},
                 {CampaignType.SponsoredBrands, "hsa"},
-                {CampaignType.SponsoredBrandsVideo, "sb"},
+                {CampaignType.SponsoredBrandsVideo, "hsa"},
                 {CampaignType.ProductDisplay, "sd"},
                 {CampaignType.Empty, string.Empty},
             };
@@ -513,6 +514,11 @@ namespace Amazon.Helpers
             var campaignTypePath = campaignType == CampaignType.Empty || entitiesType == EntitesType.Asins
                                        ? string.Empty
                                        : $"{CampaignTypeNames[campaignType]}/";
+            if (entitiesType == EntitesType.Campaigns && campaignType == CampaignType.SponsoredBrands)
+            {
+                campaignTypePath = CampaignSbPath;
+            }
+
             var entityName = EntitiesTypeNames[entitiesType];
 
             return $"{apiVersion}{campaignTypePath}{entityName}";
@@ -525,7 +531,8 @@ namespace Amazon.Helpers
                 return AttributionApi;
             }
 
-            if (campaignType == CampaignType.ProductDisplay || campaignType == CampaignType.SponsoredBrandsVideo)
+            if (campaignType == CampaignType.ProductDisplay ||
+                (campaignType == CampaignType.SponsoredBrands && entityType == EntitesType.Campaigns))
             {
                 return string.Empty;
             }
