@@ -282,10 +282,10 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 return;
             }
 
-            Logger.Info(AccountId, "Updated Strategy: {0}, Eid={1}", strategyProps.Name, strategyProps.ExternalId);
+            Logger.Info(accountId, "Updated Strategy: {0}, Eid={1}", strategyProps.Name, strategyProps.ExternalId);
             if (numUpdates > 1)
             {
-                Logger.Warn(AccountId, "Multiple entities in db ({0})", numUpdates);
+                Logger.Warn(accountId, "Multiple entities in db ({0})", numUpdates);
             }
         }
 

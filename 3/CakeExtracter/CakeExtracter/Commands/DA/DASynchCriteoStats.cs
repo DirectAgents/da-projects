@@ -3,20 +3,16 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using CakeExtracter.Bootstrappers;
-using CakeExtracter.Commands.Search;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Etl.Criteo.Exceptions;
-using CakeExtracter.Etl.SearchMarketing.Loaders;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.Loaders;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using CakeExtracter.Helpers;
-using ClientPortal.Data.Contexts;
 using Criteo;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
 
 namespace CakeExtracter.Commands
 {
