@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
+using System.Threading;
 using Amazon.Constants;
 using Amazon.Entities;
 using Amazon.Entities.HelperEntities;
@@ -19,6 +20,9 @@ using Polly;
 using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Deserializers;
+using RestSharp.Serializers.Newtonsoft.Json;
+
+using RestRequest = RestSharp.RestRequest;
 
 namespace Amazon
 {
@@ -34,10 +38,15 @@ namespace Amazon
         private const int UnauthorizedAttemptsNumberDefault = 3;
         private const int FailedRequestAttemptsNumberDefault = 2;
         private const int ReportGenerationAttemptsNumberDefault = 2;
+        private const int MillisecondsFactor = 1000;
 
         private const string AuthorizationHeader = "Authorization";
         private const string AmazonHeaderProfile = "Amazon-Advertising-API-Scope";
         private const string AmazonHeaderClient = "Amazon-Advertising-API-ClientId";
+        private const string RetryAfterHeader = "Retry-After";
+
+        private const string CreativeTypeParam = "creativeType";
+        private const string CreativeTypeVideo = "video";
 
         private static readonly object RequestLock = new object();
         private static readonly object FileLock = new object();
@@ -358,9 +367,35 @@ namespace Amazon
             return GetEntities<AmazonProfile>(EntitesType.Profiles);
         }
 
+        /// <summary>
+        /// Gets list of available advertisers for selected profile id.
+        /// </summary>
+        /// <param name="profileId">Profile id to retrieve advertisers.</param>
+        /// <returns>List of available advertisers.</returns>
+        public List<AmazonAdvertiser> GetAdvertisers(string profileId)
+        {
+            try
+            {
+                var resourcePath = AmazonApiHelper.GetEntityListRelativePath(EntitesType.Advertiser, CampaignType.Empty);
+                var request = CreateRestRequest(resourcePath, profileId);
+                var response = ProcessRequest<AmazonAdvertisersReport>(request);
+                return response.Data?.Advertisers;
+            }
+            catch (Exception e)
+            {
+                throw new ExtractDataException(e, "load items", EntitesType.Advertiser, CampaignType.Empty, profileId);
+            }
+        }
+
         public virtual List<AmazonCampaign> GetCampaigns(CampaignType campaignType, string profileId)
         {
-            return GetEntities<AmazonCampaign>(EntitesType.Campaigns, campaignType, null, profileId);
+            var parameters = new Dictionary<string, string>();
+
+            if (campaignType == CampaignType.SponsoredBrandsVideo)
+            {
+                parameters.Add(CreativeTypeParam, CreativeTypeVideo);
+            }
+            return GetEntities<AmazonCampaign>(EntitesType.Campaigns, campaignType, parameters, profileId);
         }
 
         /// Only for Sponsored Product
@@ -369,7 +404,7 @@ namespace Amazon
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = AmazonApiHelper.CreateReportSbAndSpParams(EntitesType.ProductAds, campaignType, date, includeCampaignName);
-            return GetReportInfoManyTimes<AmazonAdDailySummary, AmazonApiReportSbAndSpParams>(EntitesType.ProductAds, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonAdDailySummary, AmazonApiReportSpParams>(EntitesType.ProductAds, campaignType, param, profileId);
         }
 
         /// For Sponsored Brands only the following attributed metrics are available:
@@ -377,29 +412,43 @@ namespace Amazon
         public virtual List<AmazonKeywordDailySummary> ReportKeywords(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
         {
             var param = AmazonApiHelper.CreateReportSbAndSpParams(EntitesType.Keywords, campaignType, date, includeCampaignName);
-            return GetReportInfoManyTimes<AmazonKeywordDailySummary, AmazonApiReportSbAndSpParams>(EntitesType.Keywords, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonKeywordDailySummary, AmazonApiReportSpParams>(EntitesType.Keywords, campaignType, param, profileId);
         }
 
-        /// Only for Sponsored Product
-        public virtual List<AmazonTargetKeywordDailySummary> ReportTargetKeywords(DateTime date, string profileId, bool includeCampaignName)
+        public virtual List<AmazonTargetKeywordDailySummary> ReportTargetKeywords(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
         {
-            const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = AmazonApiHelper.CreateReportSbAndSpParams(EntitesType.TargetKeywords, campaignType, date, includeCampaignName);
-            return GetReportInfoManyTimes<AmazonTargetKeywordDailySummary, AmazonApiReportSbAndSpParams>(EntitesType.TargetKeywords, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonTargetKeywordDailySummary, AmazonApiReportSpParams>(EntitesType.TargetKeywords, campaignType, param, profileId);
         }
 
         public virtual List<AmazonSearchTermDailySummary> ReportSearchTerms(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
         {
             var param = AmazonApiHelper.CreateReportSbAndSpParams(EntitesType.SearchTerm, campaignType, date, includeCampaignName);
-            return GetReportInfoManyTimes<AmazonSearchTermDailySummary, AmazonApiReportSbAndSpParams>(EntitesType.SearchTerm, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonSearchTermDailySummary, AmazonApiReportSpParams>(EntitesType.SearchTerm, campaignType, param, profileId);
         }
 
-        // Only for Product Display
-        public virtual List<AmazonStrategyDailySummary> ReportStrategy(DateTime date, string profileId, bool includeCampaignName)
+        /// <summary>
+        /// Retrieve the Stragy level data for Sponsored Display campaigns.
+        /// </summary>
+        /// <param name="date">Date to get statistic.</param>
+        /// <param name="profileId">Profile Id for selected account.</param>
+        /// <returns>List of statistics for the strategy level.</returns>
+        public virtual List<AmazonStrategyDailySummary> ReportStrategy(DateTime date, string profileId)
         {
-            const CampaignType campaignType = CampaignType.ProductDisplay;
-            var param = AmazonApiHelper.CreateReportSdParams(EntitesType.Campaigns, campaignType, date, includeCampaignName);
-            return GetReportInfoManyTimes<AmazonStrategyDailySummary, AmazonApiReportSdParams>(EntitesType.Campaigns, campaignType, param, profileId);
+            var summaries = new List<AmazonStrategyDailySummary>();
+
+            foreach (Tactic tactic in Enum.GetValues(typeof(Tactic)))
+            {
+                var param = AmazonApiHelper.CreateReportSdParams(date, tactic);
+                var sums = GetReportInfoManyTimes<AmazonStrategyDailySummary, AmazonApiReportSdParams>(
+                    EntitesType.Campaigns,
+                    CampaignType.ProductDisplay,
+                    param,
+                    profileId);
+                summaries.AddRange(sums);
+            }
+
+            return summaries;
         }
 
         // Only for Sponsored Product
@@ -407,7 +456,7 @@ namespace Amazon
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = AmazonApiHelper.CreateReportSbAndSpParams(EntitesType.TargetSearchTerm, campaignType, date, includeCampaignName);
-            return GetReportInfoManyTimes<AmazonTargetSearchTermDailySummary, AmazonApiReportSbAndSpParams>(EntitesType.TargetSearchTerm, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonTargetSearchTermDailySummary, AmazonApiReportSpParams>(EntitesType.TargetSearchTerm, campaignType, param, profileId);
         }
 
         // Only for Sponsored Product
@@ -415,7 +464,22 @@ namespace Amazon
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = AmazonApiHelper.CreateAsinReportSbAndSpParams(date);
-            return GetReportInfoManyTimes<AmazonAsinSummaries, AmazonApiReportSbAndSpParams>(EntitesType.Asins, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonAsinSummaries, AmazonApiReportSpParams>(EntitesType.Asins, campaignType, param, profileId);
+        }
+
+        /// <summary>
+        /// Gets Amazon Attribution statistics for the selected profile Id and advertisers.
+        /// </summary>
+        /// <param name="advertisers">List of advertisers.</param>
+        /// <param name="startDate">Start Date for statistics.</param>
+        /// <param name="endDate">End Date for statistics.</param>
+        /// <param name="profileId">Profile Id of the selected account.</param>
+        /// <returns>List of Amazon Attribution Summaries.</returns>
+        public List<AmazonAttributionSummary> GetAmazonAttributionSummaries(IEnumerable<AmazonAdvertiser> advertisers, DateTime startDate, DateTime endDate, string profileId)
+        {
+            var advertiserIds = advertisers.Select(x => x.AdvertiserId);
+            var param = AmazonApiHelper.CreateAttributionApiReportParams(startDate, endDate, advertiserIds);
+            return GetReportByParts(param, profileId);
         }
 
         private List<T> GetEntities<T>(EntitesType entitiesType, CampaignType campaignType = CampaignType.Empty,
@@ -450,12 +514,61 @@ namespace Amazon
             }
         }
 
+        private List<AmazonAttributionSummary> GetReportByParts(AmazonAttributionApiReportParams reportParams, string profileId)
+        {
+            var data = new List<AmazonAttributionSummary>();
+
+            do
+            {
+                var report = GetReportPartWithRetry(reportParams, profileId);
+                data.AddRange(report.Reports);
+                reportParams.CursorId = report.CursorId;
+            }
+            while (reportParams.CursorId != null);
+
+            return data;
+        }
+
+        private AmazonAttributionReport GetReportPartWithRetry(
+            AmazonAttributionApiReportParams reportParams,
+            string profileId)
+        {
+            const string ReportName = "amazon attribution report";
+            try
+            {
+                return Policy
+                    .Handle<Exception>()
+                    .Retry(reportGenerationAttemptsNumber, (exception, retryCount, context) => LogGenerationError(ReportName, exception, retryCount))
+                    .Execute(() => GetReportPart(reportParams, profileId));
+            }
+            catch (Exception e)
+            {
+                throw new ExtractDataException(e, ReportName, EntitesType.Attribution, CampaignType.Empty, profileId);
+            }
+        }
+
+        private AmazonAttributionReport GetReportPart(AmazonAttributionApiReportParams reportParams, string profileId)
+        {
+            const string DataType = "report";
+
+            var path = AmazonApiHelper.GetDataRequestRelativePath(
+                EntitesType.Attribution,
+                CampaignType.Empty,
+                DataType);
+            var request = CreateRestRequest(path, profileId);
+            request.AddJsonBody(reportParams);
+
+            var response = ProcessRequest<AmazonAttributionReport>(request, true, true);
+
+            return response.Data;
+        }
+
         private List<TStat> GetReportInfoManyTimes<TStat, TAmazonApiReportParams>(
             EntitesType reportType, CampaignType campaignType, TAmazonApiReportParams parameters, string profileId)
             where TAmazonApiReportParams : AmazonApiReportParams
             where TStat : AmazonStatSummary
         {
-            var reportName = GetReportName(parameters.reportDate, reportType, campaignType);
+            var reportName = GetReportName(parameters, reportType, campaignType);
             try
             {
                 return Policy
@@ -469,9 +582,16 @@ namespace Amazon
             }
         }
 
-        private string GetReportName(string date, EntitesType entitiesType, CampaignType campaignType)
+        private string GetReportName(AmazonApiReportParams reportParams, EntitesType entitiesType, CampaignType campaignType)
         {
-            return $"AmazonReport_{ReportPrefix}_{date}_{entitiesType}_{campaignType}";
+            var reportName = $"AmazonReport_{ReportPrefix}_{reportParams.reportDate}_{entitiesType}_{campaignType}";
+
+            if (reportParams is AmazonApiReportSdParams reportSdParams)
+            {
+                reportName += $"_{reportSdParams.tactic}";
+            }
+
+            return reportName;
         }
 
         private string GetSnapshotName(EntitesType entitiesType, CampaignType campaignType)
@@ -577,11 +697,40 @@ namespace Amazon
         private IRestResponse<T> SubmitRequestForPreparedData<T>(string dataType, object requestParams, CampaignType campaignType, EntitesType entitiesType, string profileId)
             where T : PreparedDataRequestResponse, new()
         {
-            var resourcePath = AmazonApiHelper.GetDataRequestRelativePath(entitiesType, campaignType, dataType);
+            var resourcePath = ResolveResourcePath(dataType, campaignType, entitiesType);
             var request = CreateRestRequest(resourcePath, profileId);
+            requestParams = UpdateParameters(campaignType, requestParams);
             request.AddJsonBody(requestParams);
             var response = ProcessRequest<T>(request, true);
             return response;
+        }
+
+        private static object UpdateParameters(CampaignType campaignType, object requestParams)
+        {
+            if (campaignType == CampaignType.SponsoredBrandsVideo)
+            {
+                var sbParans = new AmazonApiReportSbParams()
+                {
+                    campaignType = ((AmazonApiReportSpParams)requestParams).campaignType,
+                    metrics = ((AmazonApiReportSpParams)requestParams).metrics,
+                    reportDate = ((AmazonApiReportSpParams)requestParams).reportDate,
+                    segment = ((AmazonApiReportSpParams)requestParams).segment,
+                    creativeType = CreativeTypeVideo,
+                };
+                return sbParans;
+            }
+
+            return requestParams;
+        }
+
+        private static string ResolveResourcePath(string dataType, CampaignType campaignType, EntitesType entitiesType)
+        {
+            if (campaignType == CampaignType.SponsoredBrandsVideo)
+            {
+                return AmazonApiHelper.GetDataRequestRelativePath(entitiesType, CampaignType.SponsoredBrands, dataType);
+            }
+
+            return AmazonApiHelper.GetDataRequestRelativePath(entitiesType, campaignType, dataType);
         }
 
         private List<TEntity> DownloadPreparedData<T, TEntity>(string dataType, string dataId, string profileId, string reportName)
@@ -677,14 +826,27 @@ namespace Amazon
             return response;
         }
 
-        private IRestResponse<T> ProcessRequest<T>(IRestRequest restRequest, bool isPostMethod = false)
+        private IRestResponse<T> ProcessRequest<T>(IRestRequest restRequest, bool isPostMethod = false, bool useCustomSerializer = false)
             where T : new()
         {
             IRestResponse<T> response;
             var restClient = new RestClient(CurrentApiEndpointUrl);
+            if (useCustomSerializer)
+            {
+                restClient.AddHandler("application/json", new NewtonsoftJsonSerializer());
+            }
+
             lock (RequestLock)
             {
                 response = ProcessRequest<T>(restClient, restRequest, isPostMethod);
+                if ((int)response.StatusCode == 429)
+                {
+                    var secondsToWait = response.Headers.FirstOrDefault(x => string.Equals(x.Name, RetryAfterHeader, StringComparison.InvariantCultureIgnoreCase))?.Value;
+                    var millisecondsToWait = (int)(secondsToWait ?? default(int)) * MillisecondsFactor;
+                    LogInfo($"Waiting {millisecondsToWait} milliseconds because of the Amazon API throttling.");
+                    Thread.Sleep(millisecondsToWait);
+                    return ProcessRequest<T>(restRequest, isPostMethod);
+                }
             }
 
             if (response.IsSuccessful)
@@ -729,6 +891,8 @@ namespace Amazon
             request.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
             request.AddHeader(AmazonHeaderProfile, profileId);
             request.AddHeader(AmazonHeaderClient, amazonClientId);
+            request.AddHeader("Accept", "*/*");
+            request.JsonSerializer = new NewtonsoftJsonSerializer();
             return request;
         }
 

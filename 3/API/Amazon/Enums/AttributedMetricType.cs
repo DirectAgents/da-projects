@@ -12,5 +12,14 @@
         attributedUnitsOrderedOtherSKU,
         attributedDPV,
         attributedUnitsSold,
+        attributedDetailPageViewsClicks,
+        attributedAddToCartClicks,
+        attributedPurchases,
+        unitsSold,
+        attributedTotalDetailPageViewsClicks,
+        attributedTotalAddToCartClicks,
+        attributedTotalPurchases,
+        totalUnitsSold,
+        totalAttributedSales,
     }
 }

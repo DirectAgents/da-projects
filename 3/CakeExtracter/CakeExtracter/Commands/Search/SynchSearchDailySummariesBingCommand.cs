@@ -10,8 +10,9 @@ using CakeExtracter.Etl;
 using CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors;
 using CakeExtracter.Etl.SearchMarketing.Loaders;
 using CakeExtracter.Helpers;
-using ClientPortal.Data.Contexts;
+using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.CPSearch;
 
 namespace CakeExtracter.Commands.Search
 {
@@ -110,7 +111,7 @@ namespace CakeExtracter.Commands.Search
         {
             var searchAccounts = new List<SearchAccount>();
 
-            using (var db = new ClientPortalContext())
+            using (var db = new ClientPortalSearchContext())
             {
                 if (this.AccountId == 0) // AccountId not specified
                 {

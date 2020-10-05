@@ -428,6 +428,7 @@
     <Compile Include="Commands\DA\DASynchAdformStats_Outdated.cs" />
     <Compile Include="Commands\DA\DASynchAffiliates.cs" />
     <Compile Include="Commands\DA\DASynchAffSubSums.cs" />
+    <Compile Include="Commands\DA\DASynchAmazonAttributionStats.cs" />
     <Compile Include="Commands\DA\DASynchAmazonStats.cs" />
     <Compile Include="Commands\DA\DASynchCakeEventConversions.cs">
       <SubType>Code</SubType>
@@ -518,6 +519,17 @@
     <Compile Include="Etl\Adform\Repositories\Summaries\AdfCampaignSummaryDatabaseRepository.cs" />
     <Compile Include="Etl\Adform\Repositories\Summaries\AdfDailySummaryDatabaseRepository.cs" />
     <Compile Include="Etl\Adform\Repositories\Summaries\AdfLineItemSummaryDatabaseRepository.cs" />
+    <Compile Include="Etl\AdWords\Exceptions\AdwordsFailedEtlException.cs" />
+    <Compile Include="Etl\AdWords\Extractors\AdWordsStandartExtractor.cs" />
+    <Compile Include="Etl\AdWords\Extractors\AdWordsAssistConvExtractor.cs" />
+    <Compile Include="Etl\AdWords\Extractors\AdWordsBaseApiExtractor.cs" />
+    <Compile Include="Etl\AdWords\Extractors\AdWordsConversionTypeExtractor.cs" />
+    <Compile Include="Etl\AdWords\Loaders\AdWordsAssistConvLoader.cs" />
+    <Compile Include="Etl\AdWords\Loaders\AdWordsBaseApiLoader.cs" />
+    <Compile Include="Etl\AdWords\Loaders\AdWordsConversionTypeLoader.cs" />
+    <Compile Include="Etl\AdWords\Loaders\AdWordsStandartLoader.cs" />
+    <Compile Include="Etl\AmazonAttribution\Extractors\AmazonAttributionExtractor.cs" />
+    <Compile Include="Etl\AmazonAttribution\Loaders\AmazonAttributionLoader.cs" />
     <Compile Include="Etl\AmazonSelenium\Configuration\SeleniumCommandConfigurationManager.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Configuration\PdaCommandConfigurationManager.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Enums\AmazonCmApiMetrics.cs" />
@@ -636,6 +648,7 @@
     <Compile Include="Etl\Facebook\Repositories\FacebookCampaignReachMetricDatabaseRepository.cs" />
     <Compile Include="Etl\Facebook\Repositories\FacebookReachMetricDatabaseRepository.cs" />
     <Compile Include="Etl\Kochava\Configuration\KochavaConfigurationProvider.cs" />
+    <Compile Include="Etl\Kochava\Exceptions\KochavaFailedEtlException.cs" />
     <Compile Include="Etl\Kochava\Extractors\KochavaExtractor.cs" />
     <Compile Include="Etl\Kochava\Extractors\Parsers\KochavaReportParser.cs" />
     <Compile Include="Etl\Kochava\Extractors\Parsers\ParsingConverters\KochavaReportEntityRowMap.cs" />
@@ -1089,7 +1102,9 @@
     <Analyzer Include="..\..\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\..\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Etl\AmazonAttribution\Exceptions\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
@@ -158,6 +159,12 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             {
                 var nextPartOfProductsRows =
                     GetNextPartOfProductRows(reportDay, reportLevel, reportId, ++currentPageIndex);
+                if (!nextPartOfProductsRows.Any())
+                {
+                    logger.LogWarning($"GetReportRows: No records extracted from {downloadedRowCount} to {totalReportRowCount} for {reportDay.ToShortDateString()}");
+                    break;
+                }
+
                 allProductsRows.AddRange(nextPartOfProductsRows);
                 downloadedRowCount += nextPartOfProductsRows.Count;
             }

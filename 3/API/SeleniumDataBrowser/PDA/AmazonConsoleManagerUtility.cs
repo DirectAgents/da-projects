@@ -160,18 +160,19 @@ namespace SeleniumDataBrowser.PDA
             Dictionary<string, string> queryParams, AmazonCmApiParams parameters)
         {
             var resultData = new List<AmazonCmApiCampaignSummary>();
-            var data = TryProcessRequest(queryParams, parameters);
+            var token = GetXcrsfTtoken(queryParams);
+            var data = TryProcessRequest(queryParams, parameters, token);
             AddDynamicCampaignDataToResultData(resultData, data);
             var numberOfRecords = AmazonCmApiHelper.GetNumberOfRecords(data);
             for (parameters.pageOffset = 1; numberOfRecords > parameters.pageSize * parameters.pageOffset; parameters.pageOffset++)
             {
-                data = TryProcessRequest(queryParams, parameters);
+                data = TryProcessRequest(queryParams, parameters, token);
                 AddDynamicCampaignDataToResultData(resultData, data);
             }
             return resultData;
         }
 
-        private dynamic TryProcessRequest(Dictionary<string, string> queryParams, AmazonCmApiParams body)
+        private string GetXcrsfTtoken(Dictionary<string, string> queryParams)
         {
             var response = Policy
                 .Handle<Exception>()
@@ -181,14 +182,49 @@ namespace SeleniumDataBrowser.PDA
                     i => pauseBetweenAttempts,
                     (exception, timeSpan, retryCount, context) =>
                         logger.LogWaiting("Failed to process request. Waiting {0} ...", timeSpan, retryCount))
-                .Execute(() => ProcessRequest<dynamic>(queryParams, body));
+                .Execute(() => ProcessRequestGetResponse<dynamic>(queryParams));
+            return GetTokenFromContent(response.Content);
+        }
+
+        private IRestResponse<T> ProcessRequestGetResponse<T>(Dictionary<string, string> queryParams)
+            where T : new()
+        {
+            var request = RestRequestHelper.CreateRestRequest(AmazonCmApiHelper.CampaignsApiPathWithMainPagePath, cookies, queryParams);
+            var response = RestRequestHelper.SendGetRequest<T>(AmazonCmApiHelper.AmazonAdvertisingPortalUrl, request);
+            return response;
+        }
+
+        private string GetTokenFromContent(string response)
+        {
+            var pattern = @"csrfToken: ""(.*)""";
+            var token = "";
+            Regex regex = new Regex(pattern);
+            MatchCollection matches = regex.Matches(response);
+            foreach (Match match in matches)
+            {
+                token = match.Groups[1].Value;
+            }
+            return token;
+        }
+
+        private dynamic TryProcessRequest(Dictionary<string, string> queryParams, AmazonCmApiParams body, string token = null)
+        {
+            var response = Policy
+                .Handle<Exception>()
+                .OrResult<IRestResponse<dynamic>>(resp => resp.StatusCode != HttpStatusCode.OK)
+                .WaitAndRetry(
+                    maxRetryAttempts,
+                    i => pauseBetweenAttempts,
+                    (exception, timeSpan, retryCount, context) =>
+                        logger.LogWaiting("Failed to process request. Waiting {0} ...", timeSpan, retryCount))
+                .Execute(() => ProcessRequest<dynamic>(queryParams, body, token));
             return response.Data;
         }
 
-        private IRestResponse<T> ProcessRequest<T>(Dictionary<string, string> queryParams, AmazonCmApiParams body)
+        private IRestResponse<T> ProcessRequest<T>(Dictionary<string, string> queryParams, AmazonCmApiParams body, string token = null)
             where T : new()
         {
-            var request = RestRequestHelper.CreateRestRequest(AmazonCmApiHelper.CampaignsApiRelativePath, cookies, queryParams, body);
+            var request = RestRequestHelper.CreateRestRequest(AmazonCmApiHelper.CampaignsApiRelativePath, cookies, queryParams, body, token);
             var response = RestRequestHelper.SendPostRequest<T>(AmazonCmApiHelper.AmazonAdvertisingPortalUrl, request);
             if (response.IsSuccessful)
             {

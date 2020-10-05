@@ -8,6 +8,7 @@ using DirectAgents.Domain.Entities.DBM;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.Adform;
 using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
+using DirectAgents.Domain.Entities.CPProg.AmazonAttribution;
 using DirectAgents.Domain.Entities.CPProg.Vendor;
 using DirectAgents.Domain.Entities.CPProg.Vendor.SummaryMetrics;
 using DirectAgents.Domain.Entities.CPProg.DSP;
@@ -91,6 +92,9 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<TDadSummaryMetric>().ToTable("AdSummaryMetric", tdSchema);
             modelBuilder.Entity<KeywordSummaryMetric>().ToTable("KeywordSummaryMetric", tdSchema);
             modelBuilder.Entity<SearchTermSummaryMetric>().ToTable("SearchTermSummaryMetric", tdSchema);
+
+            //TD Amazon Attribution
+            modelBuilder.Entity<AttributionSummary>().ToTable("AttributionSummary", tdSchema);
 
             //TD Vendor
             modelBuilder.Entity<VendorProduct>().ToTable("VProduct", tdSchema);
@@ -367,6 +371,9 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<TDadSummaryMetric> TDadSummaryMetrics { get; set; }
         public DbSet<KeywordSummaryMetric> KeywordSummaryMetrics { get; set; }
         public DbSet<SearchTermSummaryMetric> SearchTermSummaryMetrics { get; set; }
+
+        //TD Amazon Attribution
+        public DbSet<AttributionSummary> AmazonAttributionSummaries { get; set; }
 
         //TD Vendor
         public DbSet<VendorProduct> VendorProducts { get; set; }

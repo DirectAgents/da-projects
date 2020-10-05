@@ -4,12 +4,15 @@ using System.Data.Entity;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg.Roku;
-using Quartz.Util;
 
 namespace CakeExtracter.Etl.Roku.Loaders
 {
+    /// <summary>
+    /// Roku loader for daily summaries.
+    /// </summary>
     public class RokuLoader : Loader<RokuSummary>
     {
+        /// <inheritdoc/>
         protected override int Load(List<RokuSummary> items)
         {
             Logger.Info($"Loading {items.Count} RokuSummaries (to add)...");
@@ -28,34 +31,39 @@ namespace CakeExtracter.Etl.Roku.Loaders
             {
                 foreach (var rokuStat in rokuSummaries)
                 {
-                    var target = db.Set<RokuSummary>().Find(rokuStat.Id, rokuStat.ExtractingDate);
-                    if (target == null)
-                    {
-                        db.RokuSummaries.Add(rokuStat);
-                        progress.AddedCount++;
-                    }
-                    else
-                    {
-                        var entry = db.Entry(target);
-                        if (entry.State != EntityState.Unchanged)
-                        {
-                            Logger.Warn($"Encountered duplicate for {rokuStat.Id} - {rokuStat.OrderName}");
-                            progress.DuplicateCount++;
-                        }
-                        else
-                        {
-                            entry.State = EntityState.Detached;
-                            AutoMapper.Mapper.Map(rokuStat, target);
-                            entry.State = EntityState.Modified;
-                            progress.UpdatedCount++;
-                        }
-                    }
-                    progress.ItemCount++;
+                    UpsertSummaryItem(progress, db, rokuStat);
                 }
                 SafeContextWrapper.TrySaveChanges(db);
             }
             Logger.Info($"Saving {progress.ItemCount} RokuSummaries ({progress.UpdatedCount} updates, {progress.AddedCount} additions, {progress.DuplicateCount} duplicates)");
             return rokuSummaries.Count;
+        }
+
+        private static void UpsertSummaryItem(LoadingProgress progress, ClientPortalProgContext db, RokuSummary rokuStat)
+        {
+            var target = db.Set<RokuSummary>().Find(rokuStat.Id, rokuStat.ExtractingDate);
+            if (target == null)
+            {
+                db.RokuSummaries.Add(rokuStat);
+                progress.AddedCount++;
+            }
+            else
+            {
+                var entry = db.Entry(target);
+                if (entry.State != EntityState.Unchanged)
+                {
+                    Logger.Warn($"Encountered duplicate for {rokuStat.Id} - {rokuStat.OrderName}");
+                    progress.DuplicateCount++;
+                }
+                else
+                {
+                    entry.State = EntityState.Detached;
+                    AutoMapper.Mapper.Map(rokuStat, target);
+                    entry.State = EntityState.Modified;
+                    progress.UpdatedCount++;
+                }
+            }
+            progress.ItemCount++;
         }
     }
 }

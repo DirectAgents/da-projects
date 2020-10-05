@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using CakeExtracter.Helpers;
-using ClientPortal.Data.Contexts;
+using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Entities.CPSearch;
 
 namespace CakeExtracter.Etl.SearchMarketing.Loaders
 {
@@ -41,7 +42,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             const string device = ".";
             var progress = new LoadingProgress();
 
-            using (var db = new ClientPortalContext())
+            using (var db = new ClientPortalSearchContext())
             {
                 var passedInAccount = db.SearchAccounts.Find(this.searchAccountId);
 
@@ -115,7 +116,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
         public static void AddUpdateDependentSearchAccounts(List<Dictionary<string, string>> items, int searchAccountId)
         {
-            using (var db = new ClientPortalContext())
+            using (var db = new ClientPortalSearchContext())
             {
                 var searchAccount = db.SearchAccounts.Find(searchAccountId);
 
@@ -173,7 +174,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
         {
             bool itemsHaveAccountId = items[0].ContainsKey("AccountId");
 
-            using (var db = new ClientPortalContext())
+            using (var db = new ClientPortalSearchContext())
             {
                 var passedInAccount = db.SearchAccounts.Find(searchAccountId);
 

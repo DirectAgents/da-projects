@@ -20,7 +20,7 @@ namespace CakeExtracter.Extensions
             {
                 return false;
             }
-            return string.Equals(a, b, StringComparison.InvariantCulture);
+            return string.Equals(a, b, StringComparison.Ordinal);
         }
 
         /// <inheritdoc/>

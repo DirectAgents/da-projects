@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using CakeExtracter.Helpers;
-using ClientPortal.Data.Contexts;
+using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Entities.CPSearch;
 
 namespace CakeExtracter.Etl.SearchMarketing.Loaders
 {
@@ -39,7 +40,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
         private int UpsertConvSummaries(List<Dictionary<string, string>> items)
         {
             var progress = new LoadingProgress();
-            using (var db = new ClientPortalContext())
+            using (var db = new ClientPortalSearchContext())
             {
                 var passedInAccount = db.SearchAccounts.Find(this.searchAccountId);
 

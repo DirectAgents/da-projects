@@ -197,7 +197,6 @@ namespace CakeExtracter.Commands
             var amazonUtility = CreateUtility(account);
             try
             {
-
                 if (statsType.Strategy && !NeedUpdateKeywordsAndSearchTerms)
                 {
                     var dailyOnlyAccounts = ConfigurationHelper.ExtractEnumerableFromConfig("AmazonPdaAccounts").ToArray();

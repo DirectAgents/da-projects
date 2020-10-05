@@ -9,6 +9,9 @@ using RokuAPI.Models;
 
 namespace CakeExtracter.Etl.Roku.Extractors
 {
+    /// <summary>
+    /// Roku extractor to get daily stats from Roku API.
+    /// </summary>
     public class RokuApiExtractor : Extracter<RokuSummary>
     {
         private readonly RokuUtility rokuUtility;
@@ -25,6 +28,7 @@ namespace CakeExtracter.Etl.Roku.Extractors
             this.dateRange = dateRange;
         }
 
+        /// <inheritdoc/>
         protected override void Extract()
         {
             try
@@ -52,7 +56,7 @@ namespace CakeExtracter.Etl.Roku.Extractors
             }
             catch (Exception e)
             {
-                Logger.Warn(e.Message);
+                Logger.Error(e);
             }
         }
 

@@ -6,7 +6,6 @@ using Amazon.Entities;
 using Amazon.Entities.Summaries;
 using Amazon.Enums;
 using CakeExtracter.Common;
-using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Etl.Amazon.Exceptions;
 using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors;
 using CakeExtracter.Helpers;
@@ -22,6 +21,9 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
     internal class AmazonApiSearchTermExtractor : BaseAmazonExtractor<SearchTermSummary>
     {
         private readonly AmazonCampaignMetadataExtractor campaignMetadataExtractor;
+
+        /// <inheritdoc/>
+        protected override string AmazonJobLevel => AmazonJobLevels.SearchTerm;
 
         /// <inheritdoc cref="BaseAmazonExtractor{SearchTermSummary}"/>
         /// <summary>
@@ -47,7 +49,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
         /// Removing old data before insert fresh data.
         /// </summary>
         /// <param name="date">Date for removing.</param>
-        public virtual void RemoveOldData(DateTime date)
+        public override void RemoveOldData(DateTime date)
         {
             Logger.Info(accountId, "The cleaning of SearchTermSummaries for account ({0}) has begun - {1}.", accountId, date);
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
@@ -63,7 +65,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
                         }, "DeleteFromQuery");
                 },
                 accountId,
-                AmazonJobLevels.SearchTerm,
+                AmazonJobLevel,
                 AmazonJobOperations.CleanExistingData);
             Logger.Info(accountId, "The cleaning of SearchTermSummaries for account ({0}) is over - {1}.", accountId, date);
         }
@@ -95,59 +97,16 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
             }
         }
 
-        private void ExtractDataForDays(List<AmazonCampaign> campaignsData)
-        {
-            foreach (var date in dateRange.Dates)
-            {
-                try
-                {
-                    ExtractDaily(date, campaignsData);
-                }
-                catch (Exception e)
-                {
-                    ProcessFailedStatsExtraction(e, date, date);
-                }
-            }
-        }
-
-        private void ExtractDaily(DateTime date, List<AmazonCampaign> campaignsData)
-        {
-            CommandExecutionContext.Current?.SetJobExecutionStateInHistory($"SearchTerm Level- {date.ToString()}", accountId);
-            IEnumerable<SearchTermSummary> items = null;
-            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
-                () =>
-                {
-                    items = GetSearchTermSummariesFromApi(date, campaignsData);
-                },
-                accountId,
-                AmazonJobLevels.SearchTerm,
-                AmazonJobOperations.ReportExtracting);
-            RemoveOldData(date);
-            Add(items);
-        }
-
-        private List<AmazonCampaign> GetCampaignInfo()
-        {
-            List<AmazonCampaign> campaignsData = null;
-            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
-                () =>
-                {
-                    campaignsData = campaignMetadataExtractor.LoadCampaignsMetadata(accountId, clientId).ToList();
-                },
-                accountId,
-                AmazonJobLevels.SearchTerm,
-                AmazonJobOperations.LoadCampaignMetadata);
-            return campaignsData;
-        }
-
-        private void ProcessFailedStatsExtraction(Exception e, DateTime fromDate, DateTime toDate)
+        /// <inheritdoc/>
+        protected override void ProcessFailedStatsExtraction(Exception e, DateTime fromDate, DateTime toDate)
         {
             Logger.Error(accountId, e);
             var exception = new FailedStatsLoadingException(fromDate, toDate, accountId, e, bySearchTerm: true);
             InvokeProcessFailedExtractionHandlers(exception);
         }
 
-        private IEnumerable<SearchTermSummary> GetSearchTermSummariesFromApi(DateTime date, List<AmazonCampaign> campaignsData)
+        /// <inheritdoc/>
+        protected override IEnumerable<SearchTermSummary> GetDataFromApi(DateTime date, List<AmazonCampaign> campaignsData)
         {
             var searchTermSums = ExtractSearchTermSummaries(date);
             var searchTermItems = TransformSummaries(searchTermSums, date, campaignsData);
@@ -194,11 +153,26 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
             return items.ToList();
         }
 
+        private List<AmazonCampaign> GetCampaignInfo()
+        {
+            List<AmazonCampaign> campaignsData = null;
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
+                () =>
+                {
+                    campaignsData = campaignMetadataExtractor.LoadCampaignsMetadata(accountId, clientId).ToList();
+                },
+                accountId,
+                AmazonJobLevel,
+                AmazonJobOperations.LoadCampaignMetadata);
+            return campaignsData;
+        }
+
         private IEnumerable<AmazonSearchTermDailySummary> ExtractSearchTermSummaries(DateTime date)
         {
             var spSums = _amazonUtility.ReportSearchTerms(CampaignType.SponsoredProducts, date, clientId, true);
             var sbSums = _amazonUtility.ReportSearchTerms(CampaignType.SponsoredBrands, date, clientId, true);
-            var sums = spSums.Concat(sbSums);
+            var sbvSums = _amazonUtility.ReportSearchTerms(CampaignType.SponsoredBrandsVideo, date, clientId, true);
+            var sums = spSums.Concat(sbSums).Concat(sbvSums);
             var filteredSums = FilterByCampaigns(sums, x => x.CampaignName);
             return filteredSums.ToList();
         }

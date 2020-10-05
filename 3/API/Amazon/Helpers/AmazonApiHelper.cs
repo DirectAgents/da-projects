@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using Amazon.Constants;
 using Amazon.Entities.HelperEntities;
 using Amazon.Enums;
@@ -8,7 +9,9 @@ namespace Amazon.Helpers
 {
     public static class AmazonApiHelper
     {
-        private const string ApiVersion = "v2";
+        private const int DefaultRecordsCount = 10000;
+        private const string AttributionApi = "attribution/";
+        private const string ApiVersion = "v2/";
         private const string DateFormat = "yyyyMMdd";
         private const string ItemsSeparator = ",";
 
@@ -24,13 +27,11 @@ namespace Amazon.Helpers
         private const string TargetTextMetric = "targetingText";
         private const string AsinMetric = "asin";
         private const string OtherAsinMetric = "otherAsin";
+        private const string ClickThroughs = "Click-throughs";
         //only for non-vendor profiles
         private const string SkuMetric = "sku";
 
         private const string SegmentDimensionalQuery = "query";
-        //Tactic parametr, Choose one of them 
-        private const string TacticDimensionalQuery = "remarketing";
-
         private const string SponsoredProductsCampaignType = "sponsoredProducts";
         private const string CampaignEnabledState = "enabled";
         private const string CampaignPausedState = "paused";
@@ -41,6 +42,7 @@ namespace Amazon.Helpers
             {
                 {CampaignType.SponsoredProducts, "sp"},
                 {CampaignType.SponsoredBrands, "hsa"},
+                {CampaignType.SponsoredBrandsVideo, "sb"},
                 {CampaignType.ProductDisplay, "sd"},
                 {CampaignType.Empty, string.Empty},
             };
@@ -50,6 +52,7 @@ namespace Amazon.Helpers
             {
                 {CampaignType.SponsoredProducts, CampaignType.SponsoredProducts.ToString()},
                 {CampaignType.SponsoredBrands, CampaignType.SponsoredBrands.ToString()},
+                {CampaignType.SponsoredBrandsVideo, CampaignType.SponsoredBrandsVideo.ToString()},
                 {CampaignType.ProductDisplay, CampaignType.ProductDisplay.ToString()},
             };
 
@@ -63,7 +66,9 @@ namespace Amazon.Helpers
             {EntitesType.Asins, "asins"},
             {EntitesType.Profiles, "profiles"},
             {EntitesType.TargetSearchTerm, "targets"},
-            {EntitesType.TargetKeywords, "targets"}
+            {EntitesType.TargetKeywords, "targets"},
+            {EntitesType.Advertiser, "advertisers"},
+            {EntitesType.Attribution, string.Empty},
         };
 
         private static readonly Dictionary<AttributedMetricType, Dictionary<AttributedMetricDaysInterval, string>>
@@ -152,6 +157,69 @@ namespace Amazon.Helpers
                             {AttributedMetricDaysInterval.Days14, "attributedDPV14d"},
                         }
                     },
+                    {
+                        AttributedMetricType.attributedDetailPageViewsClicks,
+                        new Dictionary<AttributedMetricDaysInterval, string>
+                        {
+                            {AttributedMetricDaysInterval.Days14, "attributedDetailPageViewsClicks14d"},
+                        }
+                    },
+                    {
+                        AttributedMetricType.attributedAddToCartClicks,
+                        new Dictionary<AttributedMetricDaysInterval, string>
+                        {
+                            {AttributedMetricDaysInterval.Days14, "attributedAddToCartClicks14d"},
+                        }
+                    },
+                    {
+                        AttributedMetricType.attributedPurchases,
+                        new Dictionary<AttributedMetricDaysInterval, string>
+                        {
+                            {AttributedMetricDaysInterval.Days14, "attributedPurchases14d"},
+                        }
+                    },
+                    {
+                        AttributedMetricType.unitsSold,
+                        new Dictionary<AttributedMetricDaysInterval, string>
+                        {
+                            {AttributedMetricDaysInterval.Days14, "unitsSold14d"},
+                        }
+                    },
+                    {
+                        AttributedMetricType.attributedTotalDetailPageViewsClicks,
+                        new Dictionary<AttributedMetricDaysInterval, string>
+                        {
+                            {AttributedMetricDaysInterval.Days14, "attributedTotalDetailPageViewsClicks14d"},
+                        }
+                    },
+                    {
+                        AttributedMetricType.attributedTotalAddToCartClicks,
+                        new Dictionary<AttributedMetricDaysInterval, string>
+                        {
+                            {AttributedMetricDaysInterval.Days14, "attributedTotalAddToCartClicks14d"},
+                        }
+                    },
+                    {
+                        AttributedMetricType.attributedTotalPurchases,
+                        new Dictionary<AttributedMetricDaysInterval, string>
+                        {
+                            {AttributedMetricDaysInterval.Days14, "attributedTotalPurchases14d"},
+                        }
+                    },
+                    {
+                        AttributedMetricType.totalUnitsSold,
+                        new Dictionary<AttributedMetricDaysInterval, string>
+                        {
+                            {AttributedMetricDaysInterval.Days14, "totalUnitsSold14d"},
+                        }
+                    },
+                    {
+                        AttributedMetricType.totalAttributedSales,
+                        new Dictionary<AttributedMetricDaysInterval, string>
+                        {
+                            {AttributedMetricDaysInterval.Days14, "totalAttributedSales14d"},
+                        }
+                    },
                 };
 
         private static readonly IEnumerable<string> CommonMetrics = new[] {CostMetric, ImpressionsMetric, ClicksMetric};
@@ -161,6 +229,13 @@ namespace Amazon.Helpers
             {
                 {
                     CampaignType.SponsoredBrands, new[]
+                    {
+                        AttributedMetrics[AttributedMetricType.attributedSales][AttributedMetricDaysInterval.Days14],
+                        AttributedMetrics[AttributedMetricType.attributedConversions][AttributedMetricDaysInterval.Days14],
+                    }
+                },
+                {
+                    CampaignType.SponsoredBrandsVideo, new[]
                     {
                         AttributedMetrics[AttributedMetricType.attributedSales][AttributedMetricDaysInterval.Days14],
                         AttributedMetrics[AttributedMetricType.attributedConversions][AttributedMetricDaysInterval.Days14],
@@ -213,7 +288,7 @@ namespace Amazon.Helpers
             new Dictionary<EntitesType, IEnumerable<string>>
             {
                 {
-                    EntitesType.Campaigns, Array.Empty<string>()
+                    EntitesType.Campaigns, new[] {CampaignIdMetric}
                 },
                 {
                     EntitesType.AdGroups, new[] {CampaignIdMetric, AdGroupNameMetric}
@@ -245,6 +320,70 @@ namespace Amazon.Helpers
                         AttributedMetrics[AttributedMetricType.attributedSalesOtherSKU][AttributedMetricDaysInterval.Days7],
                         AttributedMetrics[AttributedMetricType.attributedSalesOtherSKU][AttributedMetricDaysInterval.Days14],
                         AttributedMetrics[AttributedMetricType.attributedSalesOtherSKU][AttributedMetricDaysInterval.Days30],
+                    }
+                },
+                {
+                    EntitesType.Attribution, new[]
+                    {
+                        ClickThroughs,
+                        AttributedMetrics[AttributedMetricType.attributedDetailPageViewsClicks][AttributedMetricDaysInterval.Days14],
+                        AttributedMetrics[AttributedMetricType.attributedAddToCartClicks][AttributedMetricDaysInterval.Days14],
+                        AttributedMetrics[AttributedMetricType.attributedPurchases][AttributedMetricDaysInterval.Days14],
+                        AttributedMetrics[AttributedMetricType.unitsSold][AttributedMetricDaysInterval.Days14],
+                        AttributedMetrics[AttributedMetricType.attributedSales][AttributedMetricDaysInterval.Days14],
+                        AttributedMetrics[AttributedMetricType.attributedTotalDetailPageViewsClicks][AttributedMetricDaysInterval.Days14],
+                        AttributedMetrics[AttributedMetricType.attributedTotalAddToCartClicks][AttributedMetricDaysInterval.Days14],
+                        AttributedMetrics[AttributedMetricType.attributedTotalPurchases][AttributedMetricDaysInterval.Days14],
+                        AttributedMetrics[AttributedMetricType.totalUnitsSold][AttributedMetricDaysInterval.Days14],
+                        AttributedMetrics[AttributedMetricType.totalAttributedSales][AttributedMetricDaysInterval.Days14],
+                    }
+                },
+            };
+
+        private static readonly Dictionary<Tactic, IEnumerable<string>> DependentTacticTypeMetrics =
+            new Dictionary<Tactic, IEnumerable<string>>
+            {
+                {
+                    Tactic.T00001,
+                    new[]
+                    {
+                        AttributedMetrics[AttributedMetricType.attributedDPV][AttributedMetricDaysInterval.Days14],
+                        AttributedMetrics[AttributedMetricType.attributedUnitsSold][AttributedMetricDaysInterval.Days14],
+                        AttributedMetrics[AttributedMetricType.attributedSales][AttributedMetricDaysInterval.Days14],
+                    }
+                },
+                {
+                    Tactic.T00020,
+                    new[]
+                    {
+                        AttributedMetrics[AttributedMetricType.attributedSalesSameSKU][AttributedMetricDaysInterval.Days14],
+                        AttributedMetrics[AttributedMetricType.attributedSales][AttributedMetricDaysInterval.Days14],
+                        AttributedMetrics[AttributedMetricType.attributedUnitsOrdered][AttributedMetricDaysInterval.Days14],
+                        AttributedMetrics[AttributedMetricType.attributedConversions][AttributedMetricDaysInterval.Days1],
+                        AttributedMetrics[AttributedMetricType.attributedConversions][AttributedMetricDaysInterval.Days7],
+                        AttributedMetrics[AttributedMetricType.attributedConversions][AttributedMetricDaysInterval.Days14],
+                        AttributedMetrics[AttributedMetricType.attributedConversions][AttributedMetricDaysInterval.Days30],
+                        AttributedMetrics[AttributedMetricType.attributedConversionsSameSKU][AttributedMetricDaysInterval.Days1],
+                        AttributedMetrics[AttributedMetricType.attributedConversionsSameSKU][AttributedMetricDaysInterval.Days7],
+                        AttributedMetrics[AttributedMetricType.attributedConversionsSameSKU][AttributedMetricDaysInterval.Days14],
+                        AttributedMetrics[AttributedMetricType.attributedConversionsSameSKU][AttributedMetricDaysInterval.Days30],
+                    }
+                },
+                {
+                    Tactic.remarketing,
+                    new[]
+                    {
+                        AttributedMetrics[AttributedMetricType.attributedSalesSameSKU][AttributedMetricDaysInterval.Days14],
+                        AttributedMetrics[AttributedMetricType.attributedSales][AttributedMetricDaysInterval.Days14],
+                        AttributedMetrics[AttributedMetricType.attributedUnitsOrdered][AttributedMetricDaysInterval.Days14],
+                        AttributedMetrics[AttributedMetricType.attributedConversions][AttributedMetricDaysInterval.Days1],
+                        AttributedMetrics[AttributedMetricType.attributedConversions][AttributedMetricDaysInterval.Days7],
+                        AttributedMetrics[AttributedMetricType.attributedConversions][AttributedMetricDaysInterval.Days14],
+                        AttributedMetrics[AttributedMetricType.attributedConversions][AttributedMetricDaysInterval.Days30],
+                        AttributedMetrics[AttributedMetricType.attributedConversionsSameSKU][AttributedMetricDaysInterval.Days1],
+                        AttributedMetrics[AttributedMetricType.attributedConversionsSameSKU][AttributedMetricDaysInterval.Days7],
+                        AttributedMetrics[AttributedMetricType.attributedConversionsSameSKU][AttributedMetricDaysInterval.Days14],
+                        AttributedMetrics[AttributedMetricType.attributedConversionsSameSKU][AttributedMetricDaysInterval.Days30],
                     }
                 },
             };
@@ -282,18 +421,21 @@ namespace Amazon.Helpers
 
         public static string GetPreparedDataRelativePath(string dataType, string dataId)
         {
-            return $"{ApiVersion}/{dataType}/{dataId}";
+            return $"{ApiVersion}{dataType}/{dataId}";
         }
 
-        public static AmazonApiReportSbAndSpParams CreateReportSbAndSpParams(EntitesType entitiesType, CampaignType campaignType,
-            DateTime date, bool includeCampaignName)
+        public static AmazonApiReportSpParams CreateReportSbAndSpParams(
+            EntitesType entitiesType,
+            CampaignType campaignType,
+            DateTime date,
+            bool includeCampaignName)
         {
             var metrics = GetReportMetrics(entitiesType, campaignType, includeCampaignName);
             var reportParams = CreateReportSbAndSpParams(entitiesType, date, metrics);
             return reportParams;
         }
 
-        public static AmazonApiReportSbAndSpParams CreateAsinReportSbAndSpParams(DateTime date)
+        public static AmazonApiReportSpParams CreateAsinReportSbAndSpParams(DateTime date)
         {
             var metrics = GetAsinReportMetrics();
             var reportParams = CreateReportSbAndSpParams(EntitesType.Asins, date, metrics);
@@ -302,19 +444,16 @@ namespace Amazon.Helpers
             return reportParams;
         }
 
-        public static AmazonApiReportSdParams CreateReportSdParams(EntitesType entitiesType, CampaignType campaignType,
-            DateTime date, bool includeCampaignName)
+        /// <summary>
+        /// Prepare params for Sponsored Display campaign reports.
+        /// </summary>
+        /// <param name="date">Requested date.</param>
+        /// <param name="tactic">Requested tactic.</param>
+        /// <returns>Report params for Sponsored Display campaign.</returns>
+        public static AmazonApiReportSdParams CreateReportSdParams(DateTime date, Tactic tactic)
         {
-            var metrics = GetReportMetrics(entitiesType, campaignType, includeCampaignName);
-            var reportParams = CreateReportSdParams(entitiesType, date, metrics);
-            return reportParams;
-        }
-
-        public static AmazonApiReportSdParams CreateAsinReportSdParams(DateTime date)
-        {
-            var metrics = GetAsinReportMetrics();
-            var reportParams = CreateReportSdParams(EntitesType.Asins, date, metrics);
-            // The Amazon team has promised that it will be exploring a change to not require a campaign type for ASIN reports.
+            var metrics = GetReportMetricsByTactic(tactic);
+            var reportParams = CreateReportSdParams(date, metrics, tactic.ToString());
             return reportParams;
         }
 
@@ -326,6 +465,25 @@ namespace Amazon.Helpers
                 stateFilter = TransformItemsForRequest(states)
             };
             return snapshotParams;
+        }
+
+        public static AmazonAttributionApiReportParams CreateAttributionApiReportParams(
+            DateTime startDate,
+            DateTime endDate,
+            IEnumerable<string> advertisersIds,
+            string cursorId = null)
+        {
+            var metrics = GetAttributionMetrics();
+            var reportParams = new AmazonAttributionApiReportParams
+            {
+                AdvertiserIds = TransformItemsForRequest(advertisersIds),
+                Count = DefaultRecordsCount,
+                StartDate = startDate.ToString(DateFormat),
+                EndDate = endDate.ToString(DateFormat),
+                Metrics = TransformItemsForRequest(metrics),
+                CursorId = cursorId,
+            };
+            return reportParams;
         }
 
         /// <summary>
@@ -351,18 +509,33 @@ namespace Amazon.Helpers
 
         private static string GetBaseEntitiesPath(EntitesType entitiesType, CampaignType campaignType)
         {
+            var apiVersion = GetApiVersion(entitiesType, campaignType);
             var campaignTypePath = campaignType == CampaignType.Empty || entitiesType == EntitesType.Asins
-                ? string.Empty
-                : CampaignTypeNames[campaignType] + "/";
-            var resourcePath = campaignType == CampaignType.ProductDisplay
-               ? $"{campaignTypePath}{EntitiesTypeNames[entitiesType]}"
-               : $"{ApiVersion}/{campaignTypePath}{EntitiesTypeNames[entitiesType]}";
-            return resourcePath;
+                                       ? string.Empty
+                                       : $"{CampaignTypeNames[campaignType]}/";
+            var entityName = EntitiesTypeNames[entitiesType];
+
+            return $"{apiVersion}{campaignTypePath}{entityName}";
         }
 
-        private static AmazonApiReportSbAndSpParams CreateReportSbAndSpParams(EntitesType entitiesType, DateTime date, IEnumerable<string> metrics)
+        private static string GetApiVersion(EntitesType entityType, CampaignType campaignType)
         {
-            var reportParams = new AmazonApiReportSbAndSpParams
+            if (entityType == EntitesType.Advertiser || entityType == EntitesType.Attribution)
+            {
+                return AttributionApi;
+            }
+
+            if (campaignType == CampaignType.ProductDisplay || campaignType == CampaignType.SponsoredBrandsVideo)
+            {
+                return string.Empty;
+            }
+
+            return ApiVersion;
+        }
+
+        private static AmazonApiReportSpParams CreateReportSbAndSpParams(EntitesType entitiesType, DateTime date, IEnumerable<string> metrics)
+        {
+            var reportParams = new AmazonApiReportSpParams
             {
                 reportDate = date.ToString(DateFormat),
                 metrics = TransformItemsForRequest(metrics),
@@ -371,24 +544,28 @@ namespace Amazon.Helpers
             return reportParams;
         }
 
-        private static AmazonApiReportSdParams CreateReportSdParams(EntitesType entitiesType, DateTime date, IEnumerable<string> metrics)
+        private static AmazonApiReportSdParams CreateReportSdParams(DateTime date, IEnumerable<string> metrics, string tactic = null)
         {
             var reportParams = new AmazonApiReportSdParams
             {
                 reportDate = date.ToString(DateFormat),
                 metrics = TransformItemsForRequest(metrics),
-                tactic = GetTacticQuery(entitiesType),
+                tactic = tactic ?? string.Empty,
             };
             return reportParams;
         }
 
+        private static IEnumerable<string> GetReportMetricsByTactic(Tactic tactic)
+        {
+            var metrics = GetCommonReportMetrics(true);
+            metrics.AddRange(DependentEntityTypeMetrics[EntitesType.Campaigns]);
+            metrics.AddRange(DependentTacticTypeMetrics[tactic]);
+            return metrics;
+        }
+
         private static IEnumerable<string> GetReportMetrics(EntitesType entitiesType, CampaignType campaignType, bool includeCampaignName)
         {
-            var metrics = new List<string>(CommonMetrics);
-            if (includeCampaignName)
-            {
-                metrics.Add(CampaignNameMetric);
-            }
+            var metrics = GetCommonReportMetrics(includeCampaignName);
 
             var dependentCampaignMetrics = DependentCampaignTypeMetrics[campaignType];
             var dependentEntityMetrics = DependentEntityTypeMetrics[entitiesType];
@@ -408,9 +585,25 @@ namespace Amazon.Helpers
             return metrics;
         }
 
+        private static List<string> GetCommonReportMetrics(bool includeCampaignName)
+        {
+            var metrics = new List<string>(CommonMetrics);
+            if (includeCampaignName)
+            {
+                metrics.Add(CampaignNameMetric);
+            }
+
+            return metrics;
+        }
+
         private static IEnumerable<string> GetAsinReportMetrics()
         {
             return DependentEntityTypeMetrics[EntitesType.Asins];
+        }
+
+        private static IEnumerable<string> GetAttributionMetrics()
+        {
+            return DependentEntityTypeMetrics[EntitesType.Attribution];
         }
 
         private static string TransformItemsForRequest(IEnumerable<string> items)
@@ -425,14 +618,6 @@ namespace Amazon.Helpers
                 ? SegmentDimensionalQuery
                 : default(string);
             return segment;
-        }
-
-        private static string GetTacticQuery(EntitesType entitiesType)
-        {
-            var tactic = entitiesType == EntitesType.Campaigns
-                ? TacticDimensionalQuery
-                : default(string);
-            return tactic;
         }
     }
 }

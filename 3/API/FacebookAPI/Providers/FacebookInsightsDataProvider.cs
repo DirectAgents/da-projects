@@ -135,10 +135,10 @@ namespace FacebookAPI.Providers
         /// <param name="parameters">Parameters for request.</param>
         /// <param name="logMessage">Message for logging.</param>
         /// <returns>Facebook job request.</returns>
-        protected static FacebookJobRequest CreateFacebookJobRequest(
+        protected FacebookJobRequest CreateFacebookJobRequest(
             FacebookClient facebookClient, string path, object parameters, string logMessage)
         {
-            return new FacebookJobRequest
+            return new FacebookJobRequest(LogInfo, LogWarn)
             {
                 fbClient = facebookClient,
                 path = path,
@@ -170,12 +170,22 @@ namespace FacebookAPI.Providers
             return $"{(int)window}d_{AttributionPostfixNames[attribution]}";
         }
 
-        private IEnumerable<FBSummary> GetFBSummariesLoop(string accountId, DateTime start, DateTime end, FacebookSummaryConverter converter,
-            bool byCampaign = false, bool byAdSet = false, bool byAd = false, bool getArchived = false)
+        private IEnumerable<FBSummary> GetFBSummariesLoop(
+            string accountId,
+            DateTime start,
+            DateTime end,
+            FacebookSummaryConverter converter,
+            bool byCampaign = false,
+            bool byAdSet = false,
+            bool byAd = false,
+            bool getArchived = false)
         {
-            int daysPerCall = 365; // default
+            var daysPerCall = 365; // default
+
             if (DaysPerCall_Override.HasValue)
+            {
                 daysPerCall = DaysPerCall_Override.Value;
+            }
             else
             {
                 if (byCampaign)
@@ -185,29 +195,33 @@ namespace FacebookAPI.Providers
                 if (byAd)
                     daysPerCall = DaysPerCall_Ad;
             }
-            var clientParmsList = new List<FacebookJobRequest>();
+
+            var clientParamsList = new List<FacebookJobRequest>();
             while (start <= end)
             {
                 var tempEnd = start.AddDays(daysPerCall - 1);
                 if (tempEnd > end)
+                {
                     tempEnd = end;
+                }
 
-                var clientParms = PrepareSummaryExtractingRequest(accountId, start, tempEnd, byCampaign: byCampaign, byAdSet: byAdSet, byAd: byAd);
-                clientParms.ResetAndGetRunId_withRetry(LogInfo, LogWarn);
-                clientParmsList.Add(clientParms);
+                var clientParams = PrepareSummaryExtractingRequest(accountId, start, tempEnd, byCampaign: byCampaign, byAdSet: byAdSet, byAd: byAd);
+                clientParams.ResetAndGetRunIdWithRetry();
+                clientParamsList.Add(clientParams);
                 if (getArchived)
                 {
-                    var clientParmsArchived = PrepareSummaryExtractingRequest(accountId, start, tempEnd, byCampaign: byCampaign, byAdSet: byAdSet, byAd: byAd, getArchived: true);
-                    clientParmsArchived.ResetAndGetRunId_withRetry(LogInfo, LogWarn);
-                    clientParmsList.Add(clientParmsArchived);
+                    var clientParamsArchived = PrepareSummaryExtractingRequest(accountId, start, tempEnd, byCampaign: byCampaign, byAdSet: byAdSet, byAd: byAd, getArchived: true);
+                    clientParamsArchived.ResetAndGetRunIdWithRetry();
+                    clientParamsList.Add(clientParamsArchived);
                 }
 
                 start = start.AddDays(daysPerCall);
             }
+
             Thread.Sleep(InitialWaitMillisecs);
-            foreach (var clientParms in clientParmsList)
+            foreach (var clientParams in clientParamsList)
             {
-                var fbSummaries = ProcessJobRequest(clientParms, converter);
+                var fbSummaries = ProcessJobRequest(clientParams, converter);
                 foreach (var fbSum in fbSummaries)
                 {
                     yield return fbSum;
@@ -332,7 +346,7 @@ namespace FacebookAPI.Providers
                 .Handle<Exception>()
                 .WaitAndRetry(asyncJobFailureRetriesNumber, GetPauseBetweenFailureAttempts, (exception, timeSpan, retryCount, context) =>
                 {
-                    asyncJobRequest.ResetAndGetRunId_withRetry(LogInfo, LogWarn);
+                    asyncJobRequest.ResetAndGetRunIdWithRetry();
                     LogInfo($"Waiting job request completion failed. Trying again.");
                 })
                 .Execute(() => WaitForAsyncJobRequestCompletion(asyncJobRequest));
