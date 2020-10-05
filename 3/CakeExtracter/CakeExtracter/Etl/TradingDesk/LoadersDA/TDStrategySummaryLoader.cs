@@ -4,7 +4,6 @@ using System.Data.Entity;
 using System.Linq;
 using AutoMapper;
 using CakeExtracter.Common;
-using CakeExtracter.Etl.Criteo.Exceptions;
 using CakeExtracter.Helpers;
 using CakeExtracter.SimpleRepositories.RepositoriesWithStorage;
 using CakeExtracter.SimpleRepositories.RepositoriesWithStorage.Interfaces;
@@ -18,10 +17,6 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
     public class TDStrategySummaryLoader : Loader<StrategySummary>
     {
         public static EntityIdStorage<Strategy> DefaultStrategyStorage = StorageCollection.StrategyWithEidStorage;
-        /// <summary>
-        /// Action for exception of failed loading.
-        /// </summary>
-        public event Action<CriteoFailedEtlException> ProcessFailedLoading;
 
         // Note accountId is only used in AddUpdateDependentStrategies() (i.e. not by AdrollCampaignSummaryLoader)
         public int AccountId;
@@ -40,7 +35,6 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         /// <inheritdoc/>
         protected override int Load(List<StrategySummary> items)
         {
-           // throw new Exception();
             Logger.Info(AccountId, "Loading {0} DA-TD StrategySummaries..", items.Count);
             PrepareData(items);
             AddUpdateDependentStrategies(items);
@@ -297,13 +291,6 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         protected void ProcessFailedStatsLoading(Exception e, List<StrategySummary> items)
         {
-            /*Logger.Error(e);
-            var fromDate = items.Min(x => x.Date);
-            var toDate = items.Max(x => x.Date);
-            var fromDateArg = fromDate == default(DateTime) ? null : (DateTime?)fromDate;
-            var toDateArg = toDate == default(DateTime) ? null : (DateTime?)toDate;
-            var exception = new CriteoFailedEtlException(fromDateArg, toDateArg, AccountId, e);
-            ProcessFailedLoading?.Invoke(exception);*/
         }
     }
 }

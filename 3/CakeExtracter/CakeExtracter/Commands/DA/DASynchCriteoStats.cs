@@ -121,7 +121,6 @@ namespace CakeExtracter.Commands
         {
             //Logger.Info("Criteo ETL - hourly. DateRange {0}.", dateRange); // account...
             var extractor = new CriteoStrategySummaryExtracter(criteoUtility, account.ExternalId, account.Id, dateRange, TimeZoneOffset);
-            //var loader = new TDStrategySummaryLoader(account.Id);
             var loader = new CriteoLoaders(account.Id);
             InitEtlEvents(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
@@ -167,7 +166,7 @@ namespace CakeExtracter.Commands
             return broadCommands;
         }
 
-        private void InitEtlEvents(CriteoStrategySummaryExtracter extractor, TDStrategySummaryLoader loader)
+        private void InitEtlEvents(CriteoStrategySummaryExtracter extractor, CriteoLoaders loader)
         {
             GeneralInitEtlEvents(extractor, loader);
             extractor.ProcessFailedExtraction += exception =>
@@ -178,24 +177,12 @@ namespace CakeExtracter.Commands
                     UpdateCommandParameters(command, exception));
         }
 
-        private void GeneralInitEtlEvents(CriteoStrategySummaryExtracter extractor, TDStrategySummaryLoader loader)
+        private void GeneralInitEtlEvents(CriteoStrategySummaryExtracter extractor, CriteoLoaders loader)
         {
             extractor.ProcessEtlFailedWithoutInformation += exception =>
                 ScheduleNewCommandLaunch<DASynchCriteoStats>(command => { });
             loader.ProcessEtlFailedWithoutInformation += exception =>
                 ScheduleNewCommandLaunch<DASynchCriteoStats>(command => { });
-        }
-
-        private DateRange ReviseDateRange(DateRange dateRange, SearchAccount searchAccount)
-        {
-            var startDate = dateRange.FromDate;
-            if (searchAccount.MinSynchDate.HasValue && startDate < searchAccount.MinSynchDate.Value)
-            {
-                startDate = searchAccount.MinSynchDate.Value;
-            }
-
-            var revisedDateRange = new DateRange(startDate, dateRange.ToDate);
-            return revisedDateRange;
         }
 
         private IEnumerable<CommandWithSchedule> GetUniqueBroadAccountCommands(IEnumerable<CommandWithSchedule> commandsWithSchedule)

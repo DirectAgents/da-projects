@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CakeExtracter.Common;
 using CakeExtracter.Etl.Criteo.Exceptions;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
-using CakeExtracter.Helpers;
-using CakeExtracter.SimpleRepositories.RepositoriesWithStorage;
 using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.TradingDesk.Loaders
@@ -29,7 +24,6 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
         {
             try
             {
-                throw new Exception();
                 Logger.Info(AccountId, "Loading {0} DA-TD StrategySummaries..", items.Count);
                 PrepareData(items);
                 AddUpdateDependentStrategies(items);
