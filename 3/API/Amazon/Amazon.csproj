@@ -135,6 +135,7 @@
     <None Include="$(SolutionDir)CodeAnalysis\stylecop.json">
       <Link>stylecop.json</Link>
     </None>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

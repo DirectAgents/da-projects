@@ -1,4 +1,5 @@
-﻿using CakeExtracter.Etl.DSP.Loaders.ReportEntriesDataLoaders;
+﻿using CakeExtracter.Etl.DSP.Exceptions;
+using CakeExtracter.Etl.DSP.Loaders.ReportEntriesDataLoaders;
 using CakeExtracter.Etl.DSP.Models;
 using DirectAgents.Domain.Entities.CPProg;
 using System;
@@ -10,6 +11,11 @@ namespace CakeExtracter.Etl.DSP.Loaders
     /// <summary>Dsp data loader.</summary>
     internal class AmazonDspDataLoader
     {
+        /// <summary>
+        /// Action for exception of failed loading.
+        /// </summary>
+        public event Action<DspFailedEtlException> ProcessFailedLoading;
+
         /// <summary>Initializes a new instance of the <see cref="AmazonDspDataLoader"/> class.</summary>
         public AmazonDspDataLoader()
         {
@@ -34,16 +40,24 @@ namespace CakeExtracter.Etl.DSP.Loaders
             {
                 Logger.Warn("DSP: Failed to load dsp data.");
                 Logger.Error(ex);
-                throw ex;
+                ProcessFailedStatsLoading(ex, null);
+                //throw ex;
             }
         }
 
         private void LoadAccountData(AmazonDspAccountReportData accountReportData)
         {
-            LoadAdvertisersData(accountReportData.Account, accountReportData.DailyDataCollection);
-            LoadOrdersData(accountReportData.Account, accountReportData.DailyDataCollection);
-            LoadLineItemsData(accountReportData.Account, accountReportData.DailyDataCollection);
-            LoadCreativesData(accountReportData.Account, accountReportData.DailyDataCollection);
+            try
+            {
+                LoadAdvertisersData(accountReportData.Account, accountReportData.DailyDataCollection);
+                LoadOrdersData(accountReportData.Account, accountReportData.DailyDataCollection);
+                LoadLineItemsData(accountReportData.Account, accountReportData.DailyDataCollection);
+                LoadCreativesData(accountReportData.Account, accountReportData.DailyDataCollection);
+            }
+            catch (Exception ex)
+            {
+                ProcessFailedStatsLoading(ex, accountReportData);
+            }
         }
 
         private void LoadAdvertisersData(ExtAccount account, List<AmazonDspDailyReportData> accountDailyData)
@@ -92,6 +106,12 @@ namespace CakeExtracter.Etl.DSP.Loaders
                 creativesDataLoader.UpdateAccountSummaryMetricsDataForDate(dailyData.Creatives, dbCreatives, dailyData.Date, account);
             });
             Logger.Info("DSP, Finished loading creatives data. Loaded metrics of {0} creatives", dbCreatives.Count);
+        }
+
+        private void ProcessFailedStatsLoading(Exception e, AmazonDspAccountReportData accountReportData)
+        {
+            Logger.Error(e);
+            var exception = new DspFailedEtlException(null, null, accountReportData.Account.Id, e);
         }
     }
 }

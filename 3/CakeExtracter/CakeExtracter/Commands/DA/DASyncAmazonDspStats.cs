@@ -1,6 +1,8 @@
 ﻿using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Etl;
 using CakeExtracter.Etl.DSP.Configuration;
+using CakeExtracter.Etl.DSP.Exceptions;
 using CakeExtracter.Etl.DSP.Extractors;
 using CakeExtracter.Etl.DSP.Loaders;
 using CakeExtracter.Etl.DSP.Models;
@@ -9,6 +11,7 @@ using DirectAgents.Domain.Entities.CPProg;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Linq;
 
 namespace CakeExtracter.Commands.DA
 {
@@ -30,7 +33,7 @@ namespace CakeExtracter.Commands.DA
             IsCommand("daSyncAmazonDspStats", "Synch Amazon DSP Stats");
             HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
             configurationProvider = new AmazonDspConfigurationProvider();
-            extractor = new AmazonDspExtractor(configurationProvider);
+            extractor = new AmazonDspExtractor(configurationProvider, AccountId);
             loader = new AmazonDspDataLoader();
             accountsProvider = new CommandsExecutionAccountsProvider(new PlatformAccountRepository());
         }
@@ -46,15 +49,52 @@ namespace CakeExtracter.Commands.DA
         /// <returns>Execution status.</returns>
         public override int Execute(string[] remainingArguments)
         {
+            InitEtlEvents();
             ProcessDailyEtl();
             return 0;
+        }
+
+        /// <inheritdoc/>
+        public override IEnumerable<CommandWithSchedule> GetUniqueBroadCommands(
+            IEnumerable<CommandWithSchedule> commands)
+        {
+            var broadCommands = new List<CommandWithSchedule>();
+            var groupedCommands = commands.GroupBy(x =>
+            {
+                var command = x.Command as DASyncAmazonDspStats;  // Check
+                return new { command?.AccountId };
+            });
+            foreach (var commandsGroup in groupedCommands)
+            {
+                var accountLevelBroadCommands = GetUniqueBroadAccountCommands(commandsGroup);
+                broadCommands.AddRange(accountLevelBroadCommands);
+            }
+            return broadCommands;
+        }
+
+        private IEnumerable<CommandWithSchedule> GetUniqueBroadAccountCommands(IEnumerable<CommandWithSchedule> commandsWithSchedule)
+        {
+            var accountCommands = new List<Tuple<DASyncAmazonDspStats, CommandWithSchedule>>();
+
+            foreach (var commandWithSchedule in commandsWithSchedule)
+            {
+                var command = (DASyncAmazonDspStats)commandWithSchedule.Command;
+                accountCommands.Add(
+                    new Tuple<DASyncAmazonDspStats, CommandWithSchedule>(command, commandWithSchedule));
+            }
+            var broadCommands = accountCommands.Select(x => new CommandWithSchedule
+            {
+                Command = x.Item1,
+                ScheduledTime = x.Item2.ScheduledTime,
+            }).ToList();
+            return broadCommands;
         }
 
         private void ProcessDailyEtl()
         {
             try
             {
-                var accounts = accountsProvider.GetAccountsToProcess(Platform.Code_DspAmazon,  AccountId);
+                var accounts = accountsProvider.GetAccountsToProcess(Platform.Code_DspAmazon, AccountId);
                 var reportData = ProcessDailyDataExtraction(accounts);
                 if (reportData != null)
                 {
@@ -83,6 +123,21 @@ namespace CakeExtracter.Commands.DA
                 Logger.Error(ex);
                 return null;
             }
+        }
+
+        private void InitEtlEvents()
+        {
+            extractor.ProcessFailedExtraction += exception =>
+                ScheduleNewCommandLaunch<DASyncAmazonDspStats>(command =>
+                    UpdateCommandParameters(command, exception));
+            loader.ProcessFailedLoading += exception =>
+                 ScheduleNewCommandLaunch<DASyncAmazonDspStats>(command =>
+                    UpdateCommandParameters(command, exception));
+        }
+
+        private void UpdateCommandParameters(DASyncAmazonDspStats command, DspFailedEtlException exception)
+        {
+            command.AccountId = exception.AccountId;
         }
     }
 }
