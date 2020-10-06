@@ -10,6 +10,7 @@ using Polly;
 using RestSharp;
 using SeleniumDataBrowser.Helpers;
 using SeleniumDataBrowser.Models;
+using SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Configurations;
 using SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants;
 using SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Models;
 using SeleniumDataBrowser.VCD.Models;
@@ -21,18 +22,13 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
     /// <summary>
     /// Downloader of Vendor Central reports.
     /// </summary>
-    public class VcdReportDownloader
+    internal class VcdReportDownloader
     {
         private const string AmazonBaseUrl = "https://vendorcentral.amazon.com";
         private const string AmazonCsvDownloadReportUrl = "/analytics/data/dashboard/salesDiagnostic/report/salesDiagnosticDetail";
 
         private static int delayEqualizer;
-
-        private readonly int reportDownloadingStartedDelayInSeconds;
-        private readonly int minDelayBetweenReportDownloadingInSeconds;
-        private readonly int maxDelayBetweenReportDownloadingInSeconds;
-        private readonly int reportDownloadingAttemptCount;
-        private readonly int maxPageSizeForReport;
+        private readonly VcdReportDownloaderSettings reportDownloaderSettings;
         private readonly AmazonVcdActionsWithPagesManager pageActions;
         private readonly AuthorizationModel authorizationModel;
         private readonly VcdAccountInfo accountInfo;
@@ -45,31 +41,19 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         /// <param name="pageActions">Manager of page actions.</param>
         /// <param name="authorizationModel">Authorization settings.</param>
         /// <param name="logger">Selenium data browser logger.</param>
-        /// <param name="reportDownloadingStartedDelayInSeconds">Number of seconds delay before first attempt downloading reports.</param>
-        /// <param name="minDelayBetweenReportDownloadingInSeconds">Number of seconds minimum delay between attempts downloading reports.</param>
-        /// <param name="maxDelayBetweenReportDownloadingInSeconds">Number of seconds maximum delay between attempts downloading reports.</param>
-        /// <param name="reportDownloadingAttemptCount">Count of attempts downloading reports.</param>
-        /// <param name="maxPageSizeForReport">Number of report rows that will be return in one response.</param>
+        /// <param name="reportDownloaderSettings">Configuration settings.</param>
         public VcdReportDownloader(
             VcdAccountInfo accountInfo,
             AmazonVcdActionsWithPagesManager pageActions,
             AuthorizationModel authorizationModel,
             SeleniumLogger logger,
-            int reportDownloadingStartedDelayInSeconds,
-            int minDelayBetweenReportDownloadingInSeconds,
-            int maxDelayBetweenReportDownloadingInSeconds,
-            int reportDownloadingAttemptCount,
-            int maxPageSizeForReport)
+            VcdReportDownloaderSettings reportDownloaderSettings)
         {
             this.accountInfo = accountInfo;
             this.pageActions = pageActions;
             this.authorizationModel = authorizationModel;
             this.logger = logger;
-            this.reportDownloadingStartedDelayInSeconds = reportDownloadingStartedDelayInSeconds;
-            this.minDelayBetweenReportDownloadingInSeconds = minDelayBetweenReportDownloadingInSeconds;
-            this.maxDelayBetweenReportDownloadingInSeconds = maxDelayBetweenReportDownloadingInSeconds;
-            this.reportDownloadingAttemptCount = reportDownloadingAttemptCount;
-            this.maxPageSizeForReport = maxPageSizeForReport;
+            this.reportDownloaderSettings = reportDownloaderSettings;
         }
 
         /// <summary>
@@ -186,7 +170,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
                 .Handle<Exception>()
                 .OrResult<IRestResponse<dynamic>>(resp => !IsSuccessfulResponse(resp))
                 .WaitAndRetry(
-                    reportDownloadingAttemptCount,
+                    reportDownloaderSettings.ReportDownloadingAttemptCount,
                     retryCount => GetTimeSpanForWaiting(),
                     (exception, timeSpan, retryCount, context) =>
                     {
@@ -325,7 +309,10 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
 
         private ReportPaginationWithOrderParameter GetReportPaginationWithOrderParameter(string reportId, int pageIndex)
         {
-            var reportPaginationWithOrderParameter = RequestBodyConstants.GetReportPaginationWithOrderParameter(reportId, pageIndex, maxPageSizeForReport);
+            var reportPaginationWithOrderParameter = RequestBodyConstants.GetReportPaginationWithOrderParameter(
+                reportId,
+                pageIndex,
+                reportDownloaderSettings.MaxPageSizeForReport);
             return reportPaginationWithOrderParameter;
         }
 
@@ -348,9 +335,11 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
 
         private TimeSpan GetTimeSpanForWaiting()
         {
+            var expectedDelay = reportDownloaderSettings.MinDelayBetweenReportDownloadingInSeconds
+                                + (reportDownloaderSettings.ReportDownloadingStartedDelayInSeconds * delayEqualizer);
             var waitTime = Math.Min(
-                maxDelayBetweenReportDownloadingInSeconds,
-                minDelayBetweenReportDownloadingInSeconds + reportDownloadingStartedDelayInSeconds * delayEqualizer);
+                reportDownloaderSettings.MaxDelayBetweenReportDownloadingInSeconds,
+                expectedDelay);
             return TimeSpan.FromSeconds(waitTime);
         }
 

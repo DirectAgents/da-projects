@@ -539,6 +539,7 @@
     <Compile Include="Etl\AmazonSelenium\PDA\Extractors\AmazonPdaExtractor.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Models\AmazonPdaCampaignSummary.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\PdaDataProviderBuilder.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCD\Configuration\VcdWorkflowHelper.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\AmazonVcdExtractor.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\DecimalPercentageReportConverter.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\DecimalReportConverter.cs" />
@@ -570,7 +571,6 @@
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\RowMaps\ShippedCogsProductsRowMap.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\RowMaps\ShippedRevenueProductsRowMap.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\VcdReportCsvParser.cs" />
-    <Compile Include="Etl\AmazonSelenium\VCD\VcdDataProviderBuilder.cs" />
     <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonApiAdExtractor.cs" />
     <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonApiCampaignExtractor.cs" />
     <Compile Include="Etl\Amazon\Extractors\AmazonApiExtractors\AmazonApiSearchTermExtractor.cs" />

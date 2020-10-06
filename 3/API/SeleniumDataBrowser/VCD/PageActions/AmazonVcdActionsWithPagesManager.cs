@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using OpenQA.Selenium;
-using SeleniumDataBrowser.PageActions;
 using SeleniumDataBrowser.Drivers;
 using SeleniumDataBrowser.Helpers;
 using SeleniumDataBrowser.Models;
+using SeleniumDataBrowser.PageActions;
 using SeleniumDataBrowser.VCD.Helpers;
 
 namespace SeleniumDataBrowser.VCD.PageActions
@@ -14,7 +14,7 @@ namespace SeleniumDataBrowser.VCD.PageActions
     /// <summary>
     /// Class for managing actions with web-pages of Amazon Vendor Central Portal.
     /// </summary>
-    public class AmazonVcdActionsWithPagesManager : AmazonLoginActionsWithPagesManager
+    internal class AmazonVcdActionsWithPagesManager : AmazonLoginActionsWithPagesManager
     {
         private const string SalesDiagnosticPageUrl = "https://vendorcentral.amazon.com/analytics/dashboard/salesDiagnostic";
         private const string SwitchAccountPageUrl = "https://vendorcentral.amazon.com/account/choose";

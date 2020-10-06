@@ -1,90 +1,158 @@
 ﻿using System;
+
+using SeleniumDataBrowser.Helpers;
+using SeleniumDataBrowser.Models;
+using SeleniumDataBrowser.VCD.Configuration;
 using SeleniumDataBrowser.VCD.Helpers;
 using SeleniumDataBrowser.VCD.Helpers.ReportDownloading;
+using SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Configurations;
+using SeleniumDataBrowser.VCD.Models;
+using SeleniumDataBrowser.VCD.PageActions;
 
 namespace SeleniumDataBrowser.VCD
 {
     /// <summary>
     /// Data provider for Vendor Central.
     /// </summary>
-    public class VcdDataProvider
+    public class VcdDataProvider : IDisposable
     {
-        private static VcdDataProvider vcdDataProviderInstance;
+        private readonly AmazonVcdActionsWithPagesManager pagesManager;
 
-        private readonly VcdLoginManager loginProcessManager;
-        private VcdReportDownloader currentReportDownloader;
+        private readonly VcdLoginManager vcdLoginManager;
 
-        private VcdDataProvider(VcdLoginManager loginProcessManager)
+        private readonly AuthorizationModel authorizationModel;
+
+        private readonly SeleniumLogger logger;
+
+        private readonly VcdReportDownloaderSettings reportDownloaderSettings;
+
+        private bool disposedValue;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VcdDataProvider"/> class.
+        /// </summary>
+        /// <param name="waitPageTimeOutInMinutes">Waiting time out for a page in minutes.</param>
+        /// <param name="isHidingBrowser">Indicates whether to hide the browser window.</param>
+        /// <param name="logger">Selenium data browser logger.</param>
+        /// <param name="authorizationModel">Authorization settings.</param>
+        public VcdDataProvider(int waitPageTimeOutInMinutes, bool isHidingBrowser, SeleniumLogger logger, AuthorizationModel authorizationModel)
         {
-            this.loginProcessManager = loginProcessManager;
+            pagesManager = new AmazonVcdActionsWithPagesManager(waitPageTimeOutInMinutes, isHidingBrowser, logger);
+            this.logger = logger;
+            this.authorizationModel = authorizationModel;
+            reportDownloaderSettings = GetReportDownloaderSettings();
+            vcdLoginManager = new VcdLoginManager(authorizationModel, pagesManager, logger);
+            LoginToPortal();
         }
 
         /// <summary>
-        /// Gets single instance (new or current) of the VCD data provider.
+        /// Finalizes an instance of the <see cref="VcdDataProvider"/> class.
         /// </summary>
-        /// <param name="loginProcessManager">Manager of login process.</param>
-        /// <returns>Single instance (new or current) of the VCD data provider.</returns>
-        public static VcdDataProvider GetVcdDataProviderInstance(VcdLoginManager loginProcessManager)
+        ~VcdDataProvider()
         {
-            if (vcdDataProviderInstance == null)
-            {
-                vcdDataProviderInstance = new VcdDataProvider(loginProcessManager);
-            }
-            return vcdDataProviderInstance;
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(false);
         }
 
         /// <summary>
-        /// Sets the specified report downloader current for the VCD data provider instance.
+        /// Gets or sets Selenium logger with account id.
         /// </summary>
-        /// <param name="reportDownloader">Downloader of reports.</param>
-        public void SetReportDownloaderCurrentForDataProvider(VcdReportDownloader reportDownloader)
-        {
-            currentReportDownloader = reportDownloader;
-        }
-
-        /// <summary>
-        /// Login to the Amazon Advertiser Portal and saving cookies.
-        /// </summary>
-        public void LoginToPortal()
-        {
-            try
-            {
-                loginProcessManager.LoginToAmazonPortal();
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Failed to login to Amazon Advertiser Portal.", e);
-            }
-        }
+        public SeleniumLogger LoggerWithAccountId { get; set; }
 
         /// <summary>
         /// Downloads the CSV Shipped Revenue report.
         /// </summary>
+        /// <param name="accountInfo">Selected account for a report.</param>
         /// <param name="reportDay">Day for report.</param>
         /// <returns>Text of report content.</returns>
-        public string DownloadShippedRevenueCsvReport(DateTime reportDay)
+        public string DownloadShippedRevenueCsvReport(VcdAccountInfo accountInfo, DateTime reportDay)
         {
-            return currentReportDownloader.DownloadShippedRevenueCsvReport(reportDay);
+            var reportDownloader = new VcdReportDownloader(accountInfo, pagesManager, authorizationModel, LoggerWithAccountId ?? logger, reportDownloaderSettings);
+            return reportDownloader.DownloadShippedRevenueCsvReport(reportDay);
         }
 
         /// <summary>
         /// Downloads the CSV Shipped COGS report.
         /// </summary>
+        /// <param name="accountInfo">Selected account for a report.</param>
         /// <param name="reportDay">Day for report.</param>
         /// <returns>Text of report content.</returns>
-        public string DownloadShippedCogsCsvReport(DateTime reportDay)
+        public string DownloadShippedCogsCsvReport(VcdAccountInfo accountInfo, DateTime reportDay)
         {
-            return currentReportDownloader.DownloadShippedCogsCsvReport(reportDay);
+            var reportDownloader = new VcdReportDownloader(accountInfo, pagesManager, authorizationModel, LoggerWithAccountId ?? logger, reportDownloaderSettings);
+            return reportDownloader.DownloadShippedCogsCsvReport(reportDay);
         }
 
         /// <summary>
         /// Downloads the CSV Ordered Revenue report.
         /// </summary>
+        /// <param name="accountInfo">Selected account for a report.</param>
         /// <param name="reportDay">Day for report.</param>
         /// <returns>Text of report content.</returns>
-        public string DownloadOrderedRevenueCsvReport(DateTime reportDay)
+        public string DownloadOrderedRevenueCsvReport(VcdAccountInfo accountInfo, DateTime reportDay)
         {
-            return currentReportDownloader.DownloadOrderedRevenueCsvReport(reportDay);
+            var reportDownloader = new VcdReportDownloader(accountInfo, pagesManager, authorizationModel, LoggerWithAccountId ?? logger, reportDownloaderSettings);
+            return reportDownloader.DownloadOrderedRevenueCsvReport(reportDay);
+        }
+
+        /// <summary>
+        /// Returns user info in JSON format.
+        /// </summary>
+        /// <returns>User info.</returns>
+        public string GetUserInfoJson()
+        {
+            return pagesManager.GetUserInfoJson();
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Dispose managed and unmanaged resources.
+        /// </summary>
+        /// <param name="disposing">Indicates whether to dispose manages resources.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                }
+
+                pagesManager.Dispose();
+                disposedValue = true;
+            }
+        }
+
+        private static VcdReportDownloaderSettings GetReportDownloaderSettings()
+        {
+            var reportSettings = new VcdReportDownloaderSettings
+            {
+                MaxDelayBetweenReportDownloadingInSeconds = VcdConfigurationManager.GetMaxDelayBetweenReportDownloading(),
+                MaxPageSizeForReport = VcdConfigurationManager.GetMaxPageSizeForReport(),
+                MinDelayBetweenReportDownloadingInSeconds = VcdConfigurationManager.GetMinDelayBetweenReportDownloading(),
+                ReportDownloadingAttemptCount = VcdConfigurationManager.GetReportDownloadingAttemptCount(),
+                ReportDownloadingStartedDelayInSeconds = VcdConfigurationManager.GetReportDownloadingStartedDelay(),
+            };
+            return reportSettings;
+        }
+
+        private void LoginToPortal()
+        {
+            try
+            {
+                vcdLoginManager.LoginToAmazonPortal();
+            }
+            catch (Exception e)
+            {
+                const string LoginToPortalErrorMessage = "Failed to login to Amazon Advertiser Portal.";
+                throw new Exception(LoginToPortalErrorMessage, e);
+            }
         }
     }
 }

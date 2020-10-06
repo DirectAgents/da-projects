@@ -4,6 +4,8 @@ using System.Linq;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.Constants;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Models;
+using CakeExtracter.Logging.TimeWatchers.Amazon;
+
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.Vendor;
@@ -50,18 +52,26 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders
         /// <returns>Count of loading items.</returns>
         protected override int Load(List<VcdReportData> items)
         {
-            foreach (var item in items)
-            {
-                try
-                {
-                    LoadDailyData(item);
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(
-                        extAccount.Id, new Exception($"Could not load data for date {item.Date}. Details: {e}", e));
-                }
-            }
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
+                () =>
+                    {
+                        foreach (var item in items)
+                        {
+                            try
+                            {
+                                LoadDailyData(item);
+                            }
+                            catch (Exception e)
+                            {
+                                Logger.Error(
+                                    extAccount.Id,
+                                    new Exception($"Could not load data for date {item.Date}. Details: {e}", e));
+                            }
+                        }
+                    },
+                extAccount.Id,
+                "VCD Data Loader",
+                AmazonJobOperations.LoadSummaryItemsData);
             return items.Count;
         }
 
