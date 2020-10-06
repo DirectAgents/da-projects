@@ -96,6 +96,9 @@
     <Compile Include="PDA\PageActions\AmazonPdaPageObjects.cs" />
     <Compile Include="PDA\PdaDataProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VCD\Configuration\VcdConfigurationManager.cs" />
+    <Compile Include="VCD\VcdDataProvider.cs" />
+    <Compile Include="VCD\Helpers\ReportDownloading\Configurations\VcdReportDownloaderSettings.cs" />
     <Compile Include="VCD\Helpers\ReportDownloading\Constants\ResponseDataConstants.cs" />
     <Compile Include="VCD\Helpers\ReportDownloading\VcdComposingReportDataHelper.cs" />
     <Compile Include="VCD\Helpers\VcdLoginManager.cs" />
@@ -111,7 +114,6 @@
     <Compile Include="VCD\Models\VcdAccountInfo.cs" />
     <Compile Include="VCD\PageActions\AmazonVcdActionsWithPagesManager.cs" />
     <Compile Include="VCD\PageActions\AmazonVcdPageObjects.cs" />
-    <Compile Include="VCD\VcdDataProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(SolutionDir)CodeAnalysis\stylecop.json">
@@ -142,7 +144,7 @@
     <Error Condition="!Exists('..\..\DirectAgents.Web\packages\Microsoft.NetCore.Analyzers.2.9.3\build\Microsoft.NetCore.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\DirectAgents.Web\packages\Microsoft.NetCore.Analyzers.2.9.3\build\Microsoft.NetCore.Analyzers.props'))" />
     <Error Condition="!Exists('..\..\DirectAgents.Web\packages\Microsoft.NetFramework.Analyzers.2.9.3\build\Microsoft.NetFramework.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\DirectAgents.Web\packages\Microsoft.NetFramework.Analyzers.2.9.3\build\Microsoft.NetFramework.Analyzers.props'))" />
     <Error Condition="!Exists('..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.3\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\DirectAgents.Web\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.3\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
-    <Error Condition="!Exists('..\..\DirectAgents.Web\packages\Selenium.Chrome.WebDriver.83.0.0\build\Selenium.Chrome.WebDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\DirectAgents.Web\packages\Selenium.Chrome.WebDriver.83.0.0\build\Selenium.Chrome.WebDriver.targets'))" />
+    <Error Condition="!Exists('..\..\DirectAgents.Web\packages\Selenium.Chrome.WebDriver.85.0.0\build\Selenium.Chrome.WebDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\DirectAgents.Web\packages\Selenium.Chrome.WebDriver.85.0.0\build\Selenium.Chrome.WebDriver.targets'))" />
   </Target>
-  <Import Project="..\..\DirectAgents.Web\packages\Selenium.Chrome.WebDriver.83.0.0\build\Selenium.Chrome.WebDriver.targets" Condition="Exists('..\..\DirectAgents.Web\packages\Selenium.Chrome.WebDriver.83.0.0\build\Selenium.Chrome.WebDriver.targets')" />
+  <Import Project="..\..\DirectAgents.Web\packages\Selenium.Chrome.WebDriver.85.0.0\build\Selenium.Chrome.WebDriver.targets" Condition="Exists('..\..\DirectAgents.Web\packages\Selenium.Chrome.WebDriver.85.0.0\build\Selenium.Chrome.WebDriver.targets')" />
 </Project>

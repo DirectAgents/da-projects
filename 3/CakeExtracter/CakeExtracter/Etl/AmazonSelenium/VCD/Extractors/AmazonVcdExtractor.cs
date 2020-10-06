@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportDataComposer;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Models;
+using CakeExtracter.Logging.TimeWatchers.Amazon;
 using DirectAgents.Domain.Entities.CPProg;
 using Polly;
 using SeleniumDataBrowser.VCD;
+using SeleniumDataBrowser.VCD.Models;
 
 namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
 {
@@ -21,17 +24,20 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
         private readonly VcdReportComposer reportComposer;
         private readonly ExtAccount account;
         private readonly DateRange dateRange;
+        private readonly VcdAccountInfo accountInfo;
         private readonly int maxRetryAttemptsForExtractData;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AmazonVcdExtractor"/> class.
         /// </summary>
         /// <param name="account">Current account.</param>
+        /// <param name="accountInfo">VCD info for a current account.</param>
         /// <param name="dateRange">Date range for extracting.</param>
         /// <param name="vcdDataProvider">VCD data provider instance.</param>
         /// <param name="maxRetryAttemptsForExtractData">Count of maximum attempts for extracting daily data.</param>
         public AmazonVcdExtractor(
             ExtAccount account,
+            VcdAccountInfo accountInfo,
             DateRange dateRange,
             VcdDataProvider vcdDataProvider,
             int maxRetryAttemptsForExtractData)
@@ -40,6 +46,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
             this.dateRange = dateRange;
             this.vcdDataProvider = vcdDataProvider;
             this.maxRetryAttemptsForExtractData = maxRetryAttemptsForExtractData;
+            this.accountInfo = accountInfo;
             reportParser = new VcdReportCsvParser(account.Id);
             reportComposer = new VcdReportComposer();
         }
@@ -50,18 +57,31 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
         /// </summary>
         protected override void Extract()
         {
-            foreach (var date in dateRange.Dates)
+            try
             {
-                Extract(date);
+                AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
+                    () =>
+                        {
+                            foreach (var date in dateRange.Dates)
+                            {
+                                Extract(date);
+                            }
+                        },
+                    account.Id,
+                    "VCD Data Extractor",
+                    AmazonJobOperations.ReportExtracting);
             }
-            End();
+            finally
+            {
+                End();
+            }
         }
 
         private void Extract(DateTime date)
         {
             try
             {
-                CommandExecutionContext.Current.SetJobExecutionStateInHistory($"Date - {date.ToString()}", account.Id);
+                CommandExecutionContext.Current.SetJobExecutionStateInHistory($"Date - {date}", account.Id);
                 Logger.Info(account.Id, $"Amazon VCD, ETL for {date} started. Account {account.Name} - {account.Id}");
                 var data = TryExtractData(date, "daily reports", ExtractDailyData);
                 Add(data);
@@ -90,7 +110,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
             return GetReportData(
                 "Shipped Revenue",
                 reportDay,
-                () => vcdDataProvider.DownloadShippedRevenueCsvReport(reportDay),
+                () => vcdDataProvider.DownloadShippedRevenueCsvReport(accountInfo, reportDay),
                 reportParser.ParseShippedRevenueReportData);
         }
 
@@ -99,7 +119,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
             return GetReportData(
                 "Shipped COGS",
                 reportDay,
-                () => vcdDataProvider.DownloadShippedCogsCsvReport(reportDay),
+                () => vcdDataProvider.DownloadShippedCogsCsvReport(accountInfo, reportDay),
                 reportParser.ParseShippedCogsReportData);
         }
 
@@ -108,7 +128,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
             return GetReportData(
                 "Ordered Revenue",
                 reportDay,
-                () => vcdDataProvider.DownloadOrderedRevenueCsvReport(reportDay),
+                () => vcdDataProvider.DownloadOrderedRevenueCsvReport(accountInfo, reportDay),
                 reportParser.ParseOrderedRevenueReportData);
         }
 

@@ -5,15 +5,18 @@ using System.Linq;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
-using CakeExtracter.Etl.AmazonSelenium.VCD;
+using CakeExtracter.Etl.AmazonSelenium.Configuration;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Configuration;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Loaders;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Synchers;
 using CakeExtracter.Helpers;
+using CakeExtracter.Logging.TimeWatchers.Amazon;
 using DirectAgents.Domain.Entities.CPProg;
 using SeleniumDataBrowser.Helpers;
+using SeleniumDataBrowser.Models;
 using SeleniumDataBrowser.VCD;
+using SeleniumDataBrowser.VCD.Models;
 
 namespace CakeExtracter.Commands.Selenium
 {
@@ -25,8 +28,6 @@ namespace CakeExtracter.Commands.Selenium
     public class SyncAmazonVcdCommand : ConsoleCommand
     {
         private const int DefaultDaysAgo = 60;
-
-        private VcdDataProviderBuilder vcdDataProviderBuilder;
 
         /// <summary>
         /// Gets or sets the command argument: a number of execution profile (default = 1).
@@ -94,8 +95,11 @@ namespace CakeExtracter.Commands.Selenium
         {
             IntervalBetweenUnsuccessfulAndNewRequestInMinutes =
                 VcdCommandConfigurationManager.GetIntervalBetweenUnsuccessfulAndNewRequest();
-            var vcdDataProvider = BuildVcdDataProvider();
-            RunEtls(vcdDataProvider);
+            using (var vcdDataProvider = BuildVcdDataProvider())
+            {
+                RunEtls(vcdDataProvider);
+            }
+
             return 0;
         }
 
@@ -116,9 +120,15 @@ namespace CakeExtracter.Commands.Selenium
         {
             try
             {
+                VcdExecutionProfileManager.Current.SetExecutionProfileNumber(ProfileNumber);
+                var authModel = GetAuthorizationModel();
                 var loggerWithoutAccountId = GetLoggerWithoutAccountId();
-                vcdDataProviderBuilder = new VcdDataProviderBuilder(ProfileNumber, IsHidingBrowserWindow);
-                var vcdDataProvider = vcdDataProviderBuilder.BuildDataProvider(loggerWithoutAccountId);
+                var waitPageTimeoutInMinutes = SeleniumCommandConfigurationManager.GetWaitPageTimeout();
+                var vcdDataProvider = new VcdDataProvider(
+                    waitPageTimeoutInMinutes,
+                    IsHidingBrowserWindow,
+                    loggerWithoutAccountId,
+                    authModel);
                 return vcdDataProvider;
             }
             catch (Exception e)
@@ -127,11 +137,60 @@ namespace CakeExtracter.Commands.Selenium
             }
         }
 
+        private AuthorizationModel GetAuthorizationModel()
+        {
+            try
+            {
+                return new AuthorizationModel
+                           {
+                               Login = VcdExecutionProfileManager.Current.ProfileConfiguration.LoginEmail,
+                               Password = VcdExecutionProfileManager.Current.ProfileConfiguration.LoginPassword,
+                               SignInUrl = VcdExecutionProfileManager.Current.ProfileConfiguration.SignInUrl,
+                               CookiesDir = VcdExecutionProfileManager.Current.ProfileConfiguration.CookiesDirectory,
+                           };
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to initialize authorization settings.", e);
+            }
+        }
+
         private void RunEtls(VcdDataProvider vcdDataProvider)
         {
-            var accounts = vcdDataProviderBuilder.GetAccounts();
-            SetInfoAboutAllAccountsInHistory(accounts);
+            var vcdWorkflowHelper = new VcdWorkflowHelper(vcdDataProvider);
+            var accounts = vcdWorkflowHelper.VcdAccountsInfo;
+            SetInfoAboutAllAccountsInHistory(accounts.Keys.ToList());
             RunForAccounts(accounts, vcdDataProvider);
+        }
+
+        private void RunForAccounts(Dictionary<ExtAccount, VcdAccountInfo> accounts, VcdDataProvider vcdDataProvider)
+        {
+            var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
+            Logger.Info($"Amazon VCD ETL. DateRange {dateRange}.");
+            foreach (var account in accounts)
+            {
+                try
+                {
+                    DoEtlForAccount(account, dateRange, vcdDataProvider);
+                    SyncAccountDataToAnalyticTable(account.Key.Id, dateRange);
+                    AmazonTimeTracker.Instance.LogTrackingData(account.Key.Id);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(account.Key.Id, ex);
+                }
+            }
+        }
+
+        private void DoEtlForAccount(KeyValuePair<ExtAccount, VcdAccountInfo> account, DateRange dateRange, VcdDataProvider vcdDataProvider)
+        {
+            Logger.Info(account.Key.Id, $"Amazon VCD, ETL for account {account.Key.Name} ({account.Key.Id}) started.");
+            ConfigureDataProviderForCurrentAccount(account.Key, vcdDataProvider);
+            var extractor = GetDailyDataExtractor(account, dateRange, vcdDataProvider);
+            var loader = new AmazonVcdLoader(account.Key);
+            InitEtlEvents(extractor, loader);
+            CommandHelper.DoEtl(extractor, loader);
+            Logger.Info(account.Key.Id, $"Amazon VCD, ETL for account {account.Key.Name} ({account.Key.Id}) finished.");
         }
 
         private void SetInfoAboutAllAccountsInHistory(IEnumerable<ExtAccount> accounts)
@@ -143,45 +202,16 @@ namespace CakeExtracter.Commands.Selenium
             }
         }
 
-        private void RunForAccounts(IEnumerable<ExtAccount> accounts, VcdDataProvider vcdDataProvider)
-        {
-            var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
-            Logger.Info($"Amazon VCD ETL. DateRange {dateRange}.");
-            foreach (var account in accounts)
-            {
-                try
-                {
-                    DoEtlForAccount(account, dateRange, vcdDataProvider);
-                    SyncAccountDataToAnalyticTable(account.Id, dateRange);
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error(account.Id, ex);
-                }
-            }
-        }
-
-        private void DoEtlForAccount(ExtAccount account, DateRange dateRange, VcdDataProvider vcdDataProvider)
-        {
-            Logger.Info(account.Id, $"Amazon VCD, ETL for account {account.Name} ({account.Id}) started.");
-            ConfigureDataProviderForCurrentAccount(account);
-            var extractor = GetDailyDataExtractor(account, dateRange, vcdDataProvider);
-            var loader = new AmazonVcdLoader(account);
-            InitEtlEvents(extractor, loader);
-            CommandHelper.DoEtl(extractor, loader);
-            Logger.Info(account.Id, $"Amazon VCD, ETL for account {account.Name} ({account.Id}) finished.");
-        }
-
-        private void ConfigureDataProviderForCurrentAccount(ExtAccount account)
+        private void ConfigureDataProviderForCurrentAccount(ExtAccount account, VcdDataProvider vcdDataProvider)
         {
             var loggerWithAccountId = GetLoggerWithAccountId(account.Id);
-            vcdDataProviderBuilder.InitializeReportDownloader(account, loggerWithAccountId);
+            vcdDataProvider.LoggerWithAccountId = loggerWithAccountId;
         }
 
-        private AmazonVcdExtractor GetDailyDataExtractor(ExtAccount account, DateRange dateRange, VcdDataProvider vcdDataProvider)
+        private AmazonVcdExtractor GetDailyDataExtractor(KeyValuePair<ExtAccount, VcdAccountInfo> account, DateRange dateRange, VcdDataProvider vcdDataProvider)
         {
             var maxRetryAttemptsForExtractData = VcdCommandConfigurationManager.GetExtractDailyDataAttemptCount();
-            var extractor = new AmazonVcdExtractor(account, dateRange, vcdDataProvider, maxRetryAttemptsForExtractData);
+            var extractor = new AmazonVcdExtractor(account.Key, account.Value, dateRange, vcdDataProvider, maxRetryAttemptsForExtractData);
             return extractor;
         }
 
