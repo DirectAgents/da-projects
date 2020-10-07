@@ -41,7 +41,6 @@ namespace CakeExtracter.Etl.DSP.Loaders
                 Logger.Warn("DSP: Failed to load dsp data.");
                 Logger.Error(ex);
                 ProcessFailedStatsLoading(ex, null);
-                //throw ex;
             }
         }
 
