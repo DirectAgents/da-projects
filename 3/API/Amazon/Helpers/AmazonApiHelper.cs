@@ -36,14 +36,13 @@ namespace Amazon.Helpers
         private const string CampaignEnabledState = "enabled";
         private const string CampaignPausedState = "paused";
         private const string CampaignArchivedState = "archived";
-        private const string CampaignSbPath = "sb/";
 
         private static readonly Dictionary<CampaignType, string> CampaignTypeNames =
             new Dictionary<CampaignType, string>
             {
                 {CampaignType.SponsoredProducts, "sp"},
                 {CampaignType.SponsoredBrands, "hsa"},
-                {CampaignType.SponsoredBrandsVideo, "hsa"},
+                {CampaignType.SponsoredBrandsVideo, "sb"},
                 {CampaignType.ProductDisplay, "sd"},
                 {CampaignType.Empty, string.Empty},
             };
@@ -511,17 +510,22 @@ namespace Amazon.Helpers
         private static string GetBaseEntitiesPath(EntitesType entitiesType, CampaignType campaignType)
         {
             var apiVersion = GetApiVersion(entitiesType, campaignType);
+            var entityName = EntitiesTypeNames[entitiesType];
+            var campaignTypePath = GetCampaignTypePath(entitiesType, campaignType);
+            return $"{apiVersion}{campaignTypePath}{entityName}";
+        }
+
+        private static string GetCampaignTypePath(EntitesType entitiesType, CampaignType campaignType)
+        {
+            const string campaignSbPath = "sb/";
             var campaignTypePath = campaignType == CampaignType.Empty || entitiesType == EntitesType.Asins
-                                       ? string.Empty
-                                       : $"{CampaignTypeNames[campaignType]}/";
+                ? string.Empty
+                : $"{CampaignTypeNames[campaignType]}/";
             if (entitiesType == EntitesType.Campaigns && campaignType == CampaignType.SponsoredBrands)
             {
-                campaignTypePath = CampaignSbPath;
+                campaignTypePath = campaignSbPath;
             }
-
-            var entityName = EntitiesTypeNames[entitiesType];
-
-            return $"{apiVersion}{campaignTypePath}{entityName}";
+            return campaignTypePath;
         }
 
         private static string GetApiVersion(EntitesType entityType, CampaignType campaignType)
