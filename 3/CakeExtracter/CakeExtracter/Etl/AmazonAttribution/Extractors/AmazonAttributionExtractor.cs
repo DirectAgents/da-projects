@@ -5,6 +5,7 @@ using Amazon;
 using Amazon.Entities.Summaries;
 using AutoMapper;
 using CakeExtracter.Common;
+using CakeExtracter.Etl.AmazonAttribution.Exceptions;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.AmazonAttribution;
 
@@ -18,6 +19,11 @@ namespace CakeExtracter.Etl.AmazonAttribution.Extractors
         private readonly AmazonUtility amazonUtility;
         private readonly DateRange dateRange;
         private readonly ExtAccount account;
+
+        /// <summary>
+        /// Action for exception of failed extraction.
+        /// </summary>
+        public event Action<AttributionFailedEtlException> ProcessFailedExtraction;
 
         public AmazonAttributionExtractor(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account)
         {
@@ -42,6 +48,7 @@ namespace CakeExtracter.Etl.AmazonAttribution.Extractors
             catch (Exception e)
             {
                 Logger.Error(account.Id, e);
+                ProcessFailedStatsExtraction(e, dateRange.FromDate, dateRange.ToDate, account.Id);
             }
             finally
             {
@@ -54,6 +61,13 @@ namespace CakeExtracter.Etl.AmazonAttribution.Extractors
             var item = Mapper.Map<AmazonAttributionSummary, AttributionSummary>(summary);
             item.AccountId = account.Id;
             return item;
+        }
+
+        private void ProcessFailedStatsExtraction(Exception e, DateTime? startDate, DateTime? endDate, int accountId)
+        {
+            Logger.Error(e);
+            var exception = new AttributionFailedEtlException(startDate, endDate, accountId, e);
+            ProcessFailedExtraction?.Invoke(exception);
         }
     }
 }
