@@ -1,35 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.Commands;
 using CakeExtracter.Etl.Criteo.Exceptions;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.TradingDesk.Loaders
 {
-    public class CriteoLoaders : TDStrategySummaryLoader
+    public class CriteoDailySummaryLoader : TDDailySummaryLoader
     {
         /// <summary>
         /// Action for exception of failed loading.
         /// </summary>
         public event Action<CriteoFailedEtlException> ProcessFailedLoading;
-        //public readonly int AccountId;
 
-        public CriteoLoaders (int accountId = -1)
+        public CriteoDailySummaryLoader( int accountId = -1)
+            : base(accountId)
         {
-            AccountId = accountId;
         }
 
-        protected override int Load(List<StrategySummary> items)
+        protected override int Load(List<DailySummary> items)
         {
             try
             {
-                Logger.Info(AccountId, "Loading {0} DA-TD StrategySummaries..", items.Count);
-                PrepareData(items);
-                AddUpdateDependentStrategies(items);
-                AssignStrategyIdToItems(items);
-                var count = UpsertDailySummaries(items);
-                return count;
+                return base.Load(items);
             }
             catch (Exception e)
             {
@@ -38,14 +33,14 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
             }
         }
 
-        private void ProcessFailedStatsLoading(Exception e, List<StrategySummary> items)
+        private void ProcessFailedStatsLoading(Exception e, List<DailySummary> items)
         {
             Logger.Error(e);
             var fromDate = items.Min(x => x.Date);
             var toDate = items.Max(x => x.Date);
             var fromDateArg = fromDate == default(DateTime) ? null : (DateTime?)fromDate;
             var toDateArg = toDate == default(DateTime) ? null : (DateTime?)toDate;
-            var exception = new CriteoFailedEtlException(fromDateArg, toDateArg, AccountId, e);
+            var exception = new CriteoFailedEtlException(fromDateArg, toDateArg, accountId, e, StatsTypeAgg.DailyArg);
             ProcessFailedLoading?.Invoke(exception);
         }
     }

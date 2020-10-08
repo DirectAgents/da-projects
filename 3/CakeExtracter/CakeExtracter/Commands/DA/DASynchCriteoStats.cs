@@ -7,8 +7,8 @@ using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Etl.Criteo.Exceptions;
 using CakeExtracter.Etl.TradingDesk.Extracters;
+using CakeExtracter.Etl.TradingDesk.Extracters.CriteoExtractors;
 using CakeExtracter.Etl.TradingDesk.Loaders;
-using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using CakeExtracter.Helpers;
 using Criteo;
 using DirectAgents.Domain.Contexts;
@@ -83,7 +83,6 @@ namespace CakeExtracter.Commands
             Logger.Info("Criteo ETL. DateRange {0}.", dateRange);
 
             var statsType = new StatsTypeAgg(this.StatsType);
-
             foreach (var account in GetAccounts())
             {
                 criteoUtility = new CriteoUtility(m => Logger.Info(m), m => Logger.Warn(m));
@@ -107,8 +106,8 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Daily(DateRange dateRange, ExtAccount account)
         {
-            var extractor = new DatabaseStrategyToDailySummaryExtractor(dateRange, account.Id);
-            var loader = new TDDailySummaryLoader(account.Id);
+            var extractor = new CriteoDatabaseStrategyToDailySummaryExtractor(dateRange, account.Id);
+            var loader = new CriteoDailySummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
 
@@ -117,7 +116,7 @@ namespace CakeExtracter.Commands
         {
             //Logger.Info("Criteo ETL - hourly. DateRange {0}.", dateRange); // account...
             var extractor = new CriteoStrategySummaryExtracter(criteoUtility, account.ExternalId, account.Id, dateRange, TimeZoneOffset);
-            var loader = new CriteoLoaders(account.Id);
+            var loader = new CriteoStrategySummaryLoader(account.Id);
             InitEtlEvents(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
         }
@@ -162,7 +161,7 @@ namespace CakeExtracter.Commands
             return broadCommands;
         }
 
-        private void InitEtlEvents(CriteoStrategySummaryExtracter extractor, CriteoLoaders loader)
+        private void InitEtlEvents(CriteoStrategySummaryExtracter extractor, CriteoStrategySummaryLoader loader)
         {
             GeneralInitEtlEvents(extractor, loader);
             extractor.ProcessFailedExtraction += exception =>
@@ -173,7 +172,7 @@ namespace CakeExtracter.Commands
                     UpdateCommandParameters(command, exception));
         }
 
-        private void GeneralInitEtlEvents(CriteoStrategySummaryExtracter extractor, CriteoLoaders loader)
+        private void GeneralInitEtlEvents(CriteoStrategySummaryExtracter extractor, CriteoStrategySummaryLoader loader)
         {
             extractor.ProcessEtlFailedWithoutInformation += exception =>
                 ScheduleNewCommandLaunch<DASynchCriteoStats>(command => { });
@@ -224,6 +223,7 @@ namespace CakeExtracter.Commands
             command.AccountId = exception.AccountId;
             command.TimeZoneOffset = TimeZoneOffset;
             command.DisabledOnly = DisabledOnly;
+            command.StatsType = exception.StatsType;
         }
     }
 }

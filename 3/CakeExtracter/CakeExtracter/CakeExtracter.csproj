@@ -708,7 +708,9 @@
     <Compile Include="Etl\TradingDesk\Extracters\AdrollSiteStatsCsvExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\CPCExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\CommissionJunctionExtractors\CommissionJunctionAdvertiserExtractor.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\CriteoExtracters.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\CriteoExtractors\CriteoDatabaseStrategyToDailySummaryExtractor.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\CriteoExtractors\CriteoApiExtracters.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\CriteoExtractors\CriteoStrategySummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DataBaseSourceExtractors\DatabaseKeywordsToDailySummaryExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DataBaseSourceExtractors\DatabaseStrategyToDailySummaryExtractor.cs" />
     <Compile Include="Etl\DBM\Downloader\DbmReportDownloader.cs" />
@@ -724,7 +726,8 @@
     <Compile Include="Etl\TradingDesk\Extracters\TDConvExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\TDSiteSummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\TDStrategySummaryExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\Loaders\CriteoLoaders.cs" />
+    <Compile Include="Etl\TradingDesk\Loaders\CriteoDailySummaryLoader.cs" />
+    <Compile Include="Etl\TradingDesk\Loaders\CriteoStrategySummaryLoader.cs" />
     <Compile Include="Etl\YAM\Extractors\ApiExtractors\YamCampaignSummaryExtractor.cs" />
     <Compile Include="Etl\YAM\Extractors\ApiExtractors\BaseYamApiExtractor.cs" />
     <Compile Include="Etl\YAM\Extractors\ApiExtractors\YamDailySummaryExtractor.cs" />

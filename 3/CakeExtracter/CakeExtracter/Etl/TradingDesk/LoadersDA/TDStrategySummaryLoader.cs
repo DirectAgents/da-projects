@@ -11,7 +11,6 @@ using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 
-
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     public class TDStrategySummaryLoader : Loader<StrategySummary>
@@ -19,7 +18,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         public static EntityIdStorage<Strategy> DefaultStrategyStorage = StorageCollection.StrategyWithEidStorage;
 
         // Note accountId is only used in AddUpdateDependentStrategies() (i.e. not by AdrollCampaignSummaryLoader)
-        public int AccountId;
+        public readonly int AccountId;
         private readonly SummaryMetricLoader metricLoader;
         private readonly IRepositoryWithStorage<EntityType, ClientPortalProgContext> typeRepositoryWithStorage;
         private readonly IRepositoryWithStorage<Strategy, ClientPortalProgContext> strategyRepositoryWithStorage;
@@ -287,10 +286,6 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             {
                 Logger.Warn(accountId, "Multiple entities in db ({0})", numUpdates);
             }
-        }
-
-        protected void ProcessFailedStatsLoading(Exception e, List<StrategySummary> items)
-        {
         }
     }
 }
