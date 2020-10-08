@@ -32,7 +32,6 @@ namespace CakeExtracter.Etl.DSP.Extractors
         /// <summary>Initializes a new instance of the <see cref="AmazonDspExtractor"/> class.</summary>
         /// <param name="configurationProvider">The configuration provider.</param>
         /// <param name="accountId">The account Id.</param>
-
         public AmazonDspExtractor(AmazonDspConfigurationProvider configurationProvider, int? accountId)
         {
             this.configurationProvider = configurationProvider;

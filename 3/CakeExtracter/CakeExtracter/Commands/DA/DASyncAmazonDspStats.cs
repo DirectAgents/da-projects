@@ -1,4 +1,8 @@
-﻿using CakeExtracter.Common;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.Linq;
+using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Etl;
 using CakeExtracter.Etl.DSP.Configuration;
@@ -8,10 +12,6 @@ using CakeExtracter.Etl.DSP.Loaders;
 using CakeExtracter.Etl.DSP.Models;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Linq;
 
 namespace CakeExtracter.Commands.DA
 {
@@ -61,7 +61,7 @@ namespace CakeExtracter.Commands.DA
             var broadCommands = new List<CommandWithSchedule>();
             var groupedCommands = commands.GroupBy(x =>
             {
-                var command = x.Command as DASyncAmazonDspStats;  // Check
+                var command = x.Command as DASyncAmazonDspStats; 
                 return new { command?.AccountId };
             });
             foreach (var commandsGroup in groupedCommands)

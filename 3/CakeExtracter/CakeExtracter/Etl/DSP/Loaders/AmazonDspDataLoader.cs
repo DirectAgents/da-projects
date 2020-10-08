@@ -46,17 +46,10 @@ namespace CakeExtracter.Etl.DSP.Loaders
 
         private void LoadAccountData(AmazonDspAccountReportData accountReportData)
         {
-            try
-            {
                 LoadAdvertisersData(accountReportData.Account, accountReportData.DailyDataCollection);
                 LoadOrdersData(accountReportData.Account, accountReportData.DailyDataCollection);
                 LoadLineItemsData(accountReportData.Account, accountReportData.DailyDataCollection);
                 LoadCreativesData(accountReportData.Account, accountReportData.DailyDataCollection);
-            }
-            catch (Exception ex)
-            {
-                ProcessFailedStatsLoading(ex, accountReportData);
-            }
         }
 
         private void LoadAdvertisersData(ExtAccount account, List<AmazonDspDailyReportData> accountDailyData)

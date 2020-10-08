@@ -9,11 +9,6 @@ namespace CakeExtracter.Etl.DSP.Exceptions
     /// </summary>
     public class DspFailedEtlException : FailedEtlException
     {
-        /// <summary>
-        /// Gets or sets StatsType level for which statistics was extracted.
-        /// </summary>
-        public string StatsType { get; set; }
-
         /// <inheritdoc cref="FailedEtlException"/>
         /// <summary>
         /// Initializes a new instance of the <see cref="DspFailedEtlException"/> class.
