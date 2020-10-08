@@ -104,6 +104,7 @@ namespace CakeExtracter.Etl.DSP.Loaders
         {
             Logger.Error(e);
             var exception = new DspFailedEtlException(null, null, accountReportData.Account.Id, e);
+            ProcessFailedLoading?.Invoke(exception);
         }
     }
 }
