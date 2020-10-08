@@ -61,7 +61,7 @@ namespace CakeExtracter.Commands.DA
             var broadCommands = new List<CommandWithSchedule>();
             var groupedCommands = commands.GroupBy(x =>
             {
-                var command = x.Command as DASyncAmazonDspStats; 
+                var command = x.Command as DASyncAmazonDspStats;
                 return new { command?.AccountId };
             });
             foreach (var commandsGroup in groupedCommands)

@@ -1,10 +1,10 @@
-﻿using CakeExtracter.Etl.DSP.Exceptions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using CakeExtracter.Etl.DSP.Exceptions;
 using CakeExtracter.Etl.DSP.Loaders.ReportEntriesDataLoaders;
 using CakeExtracter.Etl.DSP.Models;
 using DirectAgents.Domain.Entities.CPProg;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace CakeExtracter.Etl.DSP.Loaders
 {
@@ -46,10 +46,10 @@ namespace CakeExtracter.Etl.DSP.Loaders
 
         private void LoadAccountData(AmazonDspAccountReportData accountReportData)
         {
-                LoadAdvertisersData(accountReportData.Account, accountReportData.DailyDataCollection);
-                LoadOrdersData(accountReportData.Account, accountReportData.DailyDataCollection);
-                LoadLineItemsData(accountReportData.Account, accountReportData.DailyDataCollection);
-                LoadCreativesData(accountReportData.Account, accountReportData.DailyDataCollection);
+            LoadAdvertisersData(accountReportData.Account, accountReportData.DailyDataCollection);
+            LoadOrdersData(accountReportData.Account, accountReportData.DailyDataCollection);
+            LoadLineItemsData(accountReportData.Account, accountReportData.DailyDataCollection);
+            LoadCreativesData(accountReportData.Account, accountReportData.DailyDataCollection);
         }
 
         private void LoadAdvertisersData(ExtAccount account, List<AmazonDspDailyReportData> accountDailyData)

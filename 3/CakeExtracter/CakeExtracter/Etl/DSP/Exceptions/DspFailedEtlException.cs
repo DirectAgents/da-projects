@@ -1,5 +1,5 @@
-﻿using CakeExtracter.Common.JobExecutionManagement.JobRequests.Exceptions;
-using System;
+﻿using System;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Exceptions;
 
 namespace CakeExtracter.Etl.DSP.Exceptions
 {
