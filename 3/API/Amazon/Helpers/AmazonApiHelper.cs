@@ -518,14 +518,14 @@ namespace Amazon.Helpers
         private static string GetCampaignTypePath(EntitesType entitiesType, CampaignType campaignType)
         {
             const string campaignSbPath = "sb/";
-            var campaignTypePath = campaignType == CampaignType.Empty || entitiesType == EntitesType.Asins
-                ? string.Empty
-                : $"{CampaignTypeNames[campaignType]}/";
             if (entitiesType == EntitesType.Campaigns && campaignType == CampaignType.SponsoredBrands)
             {
-                campaignTypePath = campaignSbPath;
+                return campaignSbPath;
             }
-            return campaignTypePath;
+
+            return campaignType == CampaignType.Empty || entitiesType == EntitesType.Asins
+                ? string.Empty
+                : $"{CampaignTypeNames[campaignType]}/";
         }
 
         private static string GetApiVersion(EntitesType entityType, CampaignType campaignType)
