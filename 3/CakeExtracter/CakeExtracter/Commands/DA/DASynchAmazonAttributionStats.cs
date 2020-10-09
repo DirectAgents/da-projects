@@ -7,8 +7,10 @@ using Amazon;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
+using CakeExtracter.Etl;
 using CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors;
 using CakeExtracter.Etl.Amazon.Loaders;
+using CakeExtracter.Etl.AmazonAttribution.Exceptions;
 using CakeExtracter.Etl.AmazonAttribution.Extractors;
 using CakeExtracter.Etl.AmazonAttribution.Loaders;
 using CakeExtracter.Helpers;
@@ -95,20 +97,52 @@ namespace CakeExtracter.Commands.DA
             return setting.Item3;
         }
 
+        private void InitEtlEvents(AmazonAttributionExtractor extractor, AmazonAttributionLoader loader)
+        {
+            GeneralInitEtlEvents(extractor, loader);
+            extractor.ProcessFailedExtraction += exception =>
+                ScheduleNewCommandLaunch<DASynchAmazonAttributionStats>(command =>
+                    UpdateCommandParameters(command, exception));
+            loader.ProcessFailedLoading += exception =>
+                ScheduleNewCommandLaunch<DASynchAmazonAttributionStats>(command =>
+                    UpdateCommandParameters(command, exception));
+        }
+
+        private void GeneralInitEtlEvents<T>(Extracter<T> extractor, Loader<T> loader)
+        {
+            extractor.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewCommandLaunch<DASynchFacebookStats>(command => { });
+            loader.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewCommandLaunch<DASynchFacebookStats>(command => { });
+        }
+
+        private void UpdateCommandParameters(DASynchAmazonAttributionStats command, AttributionFailedEtlException exception)
+        {
+            command.StartDate = exception.StartDate;
+            command.EndDate = exception.EndDate;
+            command.AccountId = exception.AccountId;
+        }
 
         private void DoEtl(ExtAccount account, DateRange dateRange)
         {
-            var amazonUtility = CreateUtility(account);
-            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
-                () =>
-                    {
-                        var extractor = new AmazonAttributionExtractor(amazonUtility, dateRange, account);
-                        var loader = new AmazonAttributionLoader(account.Id);
-                        CommandHelper.DoEtl(extractor, loader);
-                    },
-                account.Id,
-                AmazonJobLevels.Attribution,
-                AmazonJobOperations.Total);
+            try
+            {
+                var amazonUtility = CreateUtility(account);
+                AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
+                    () =>
+                        {
+                            var extractor = new AmazonAttributionExtractor(amazonUtility, dateRange, account);
+                            var loader = new AmazonAttributionLoader(account.Id);
+                            CommandHelper.DoEtl(extractor, loader);
+                        },
+                    account.Id,
+                    AmazonJobLevels.Attribution,
+                    AmazonJobOperations.Total);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+            }
         }
 
         private IEnumerable<ExtAccount> GetAccounts()
