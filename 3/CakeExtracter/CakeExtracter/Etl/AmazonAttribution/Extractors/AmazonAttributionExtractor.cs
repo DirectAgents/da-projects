@@ -36,7 +36,6 @@ namespace CakeExtracter.Etl.AmazonAttribution.Extractors
         {
             try
             {
-                //throw new Exception();
                 var advertisers = amazonUtility.GetAdvertisers(account.ExternalId);
                 var data = amazonUtility.GetAmazonAttributionSummaries(
                     advertisers,

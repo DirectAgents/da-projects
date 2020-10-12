@@ -22,6 +22,8 @@ namespace CakeExtracter.Etl.AmazonAttribution.Exceptions
         /// <param name="accountId">Account Id in the database for which statistics was extracted.</param>
         /// <param name="innerException">The source exception.</param>
         public AttributionFailedEtlException(DateTime? startDate, DateTime? endDate, int? accountId, Exception innerException)
-            : base(startDate, endDate, accountId, innerException) { }
+            : base(startDate, endDate, accountId, innerException)
+        {
+        }
     }
 }
