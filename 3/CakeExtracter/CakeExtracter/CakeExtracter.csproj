@@ -195,7 +195,6 @@
     </Reference>
     <Reference Include="RestSharp, Version=106.3.1.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
       <HintPath>..\..\DirectAgents.Web\packages\RestSharp.106.3.1\lib\net452\RestSharp.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="SendGrid, Version=9.11.0.0, Culture=neutral, PublicKeyToken=4f047e93159395ca, processorArchitecture=MSIL">
       <HintPath>..\..\DirectAgents.Web\packages\Sendgrid.9.11.0\lib\net452\SendGrid.dll</HintPath>
@@ -618,6 +617,7 @@
     <Compile Include="Etl\DBM\Models\DbmAccountCreativeReportData.cs" />
     <Compile Include="Etl\DSP\Configuration\AmazonDspConfigurationProvider.cs" />
     <Compile Include="Etl\CommandsExecutionAccountsProvider.cs" />
+    <Compile Include="Etl\DSP\Exceptions\DspFailedEtlException.cs" />
     <Compile Include="Etl\DSP\Extractors\AmazonDspExtractor.cs" />
     <Compile Include="Etl\DSP\Extractors\Composer\DspReportDataComposer.cs" />
     <Compile Include="Etl\DSP\Extractors\Parser\DspReportCsvParser.cs" />
