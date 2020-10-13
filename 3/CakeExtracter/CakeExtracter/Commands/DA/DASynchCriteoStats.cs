@@ -4,8 +4,11 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
+using CakeExtracter.Etl.Criteo.Exceptions;
 using CakeExtracter.Etl.TradingDesk.Extracters;
-using CakeExtracter.Etl.TradingDesk.LoadersDA;
+using CakeExtracter.Etl.TradingDesk.Extracters.CriteoExtractors;
+using CakeExtracter.Etl.TradingDesk.Loaders;
 using CakeExtracter.Helpers;
 using Criteo;
 using DirectAgents.Domain.Contexts;
@@ -80,7 +83,6 @@ namespace CakeExtracter.Commands
             Logger.Info("Criteo ETL. DateRange {0}.", dateRange);
 
             var statsType = new StatsTypeAgg(this.StatsType);
-
             foreach (var account in GetAccounts())
             {
                 criteoUtility = new CriteoUtility(m => Logger.Info(m), m => Logger.Warn(m));
@@ -104,8 +106,8 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Daily(DateRange dateRange, ExtAccount account)
         {
-            var extractor = new DatabaseStrategyToDailySummaryExtractor(dateRange, account.Id);
-            var loader = new TDDailySummaryLoader(account.Id);
+            var extractor = new CriteoDatabaseStrategyToDailySummaryExtractor(dateRange, account.Id);
+            var loader = new CriteoDailySummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
 
@@ -113,8 +115,9 @@ namespace CakeExtracter.Commands
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account)
         {
             //Logger.Info("Criteo ETL - hourly. DateRange {0}.", dateRange); // account...
-            var extractor = new CriteoStrategySummaryExtracter(criteoUtility, account.ExternalId, dateRange, TimeZoneOffset);
-            var loader = new TDStrategySummaryLoader(account.Id);
+            var extractor = new CriteoStrategySummaryExtracter(criteoUtility, account.ExternalId, account.Id, dateRange, TimeZoneOffset);
+            var loader = new CriteoStrategySummaryLoader(account.Id);
+            InitEtlEvents(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
         }
 
@@ -142,6 +145,85 @@ namespace CakeExtracter.Commands
 
                 return accounts.ToList().Where(a => !string.IsNullOrWhiteSpace(a.ExternalId));
             }
+        }
+
+        /// <inheritdoc />
+        public override IEnumerable<CommandWithSchedule> GetUniqueBroadCommands(IEnumerable<CommandWithSchedule> commands)
+        {
+            var broadCommands = new List<CommandWithSchedule>();
+            var commandsGroupedByAccount = commands.GroupBy(x => (x.Command as DASynchCriteoStats)?.AccountId);
+            foreach (var commandsGroup in commandsGroupedByAccount)
+            {
+                var accountBroadCommands = GetUniqueBroadAccountCommands(commandsGroup);
+                broadCommands.AddRange(accountBroadCommands);
+            }
+
+            return broadCommands;
+        }
+
+        private void InitEtlEvents(CriteoStrategySummaryExtracter extractor, CriteoStrategySummaryLoader loader)
+        {
+            GeneralInitEtlEvents(extractor, loader);
+            extractor.ProcessFailedExtraction += exception =>
+                ScheduleNewCommandLaunch<DASynchCriteoStats>(command =>
+                    UpdateCommandParameters(command, exception));
+            loader.ProcessFailedLoading += exception =>
+                ScheduleNewCommandLaunch<DASynchCriteoStats>(command =>
+                    UpdateCommandParameters(command, exception));
+        }
+
+        private void GeneralInitEtlEvents(CriteoStrategySummaryExtracter extractor, CriteoStrategySummaryLoader loader)
+        {
+            extractor.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewCommandLaunch<DASynchCriteoStats>(command => { });
+            loader.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewCommandLaunch<DASynchCriteoStats>(command => { });
+        }
+
+        private IEnumerable<CommandWithSchedule> GetUniqueBroadAccountCommands(IEnumerable<CommandWithSchedule> commandsWithSchedule)
+        {
+            var accountCommands =
+                new List<Tuple<DASynchCriteoStats, DateRange, CommandWithSchedule>>();
+            foreach (var commandWithSchedule in commandsWithSchedule)
+            {
+                var command = (DASynchCriteoStats)commandWithSchedule.Command;
+                var commandDateRange = CommandHelper.GetDateRange(command.StartDate, command.EndDate, command.DaysAgoToStart, command.TimeZoneOffset, command.DisabledOnly);
+                var crossCommands = accountCommands.Where(x => commandDateRange.IsCrossDateRange(x.Item2)).ToList();
+                foreach (var crossCommand in crossCommands)
+                {
+                    commandDateRange = commandDateRange.MergeDateRange(crossCommand.Item2);
+                    commandWithSchedule.ScheduledTime =
+                        crossCommand.Item3.ScheduledTime > commandWithSchedule.ScheduledTime
+                            ? crossCommand.Item3.ScheduledTime
+                            : commandWithSchedule.ScheduledTime;
+                    accountCommands.Remove(crossCommand);
+                }
+
+                accountCommands.Add(
+                    new Tuple<DASynchCriteoStats, DateRange, CommandWithSchedule>(command, commandDateRange, commandWithSchedule));
+            }
+
+            var broadCommands = accountCommands.Select(GetCommandWithCorrectDateRange).ToList();
+            return broadCommands;
+        }
+
+        private CommandWithSchedule GetCommandWithCorrectDateRange(Tuple<DASynchCriteoStats, DateRange, CommandWithSchedule> setting)
+        {
+            setting.Item1.StartDate = setting.Item2.FromDate;
+            setting.Item1.EndDate = setting.Item2.ToDate;
+            setting.Item1.DaysAgoToStart = null;
+            setting.Item3.Command = setting.Item1;
+            return setting.Item3;
+        }
+
+        private void UpdateCommandParameters(DASynchCriteoStats command, CriteoFailedEtlException exception)
+        {
+            command.StartDate = exception.StartDate;
+            command.EndDate = exception.EndDate;
+            command.AccountId = exception.AccountId;
+            command.TimeZoneOffset = TimeZoneOffset;
+            command.DisabledOnly = DisabledOnly;
+            command.StatsType = exception.StatsType;
         }
     }
 }
