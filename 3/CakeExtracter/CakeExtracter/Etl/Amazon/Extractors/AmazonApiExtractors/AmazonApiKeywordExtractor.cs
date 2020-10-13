@@ -173,7 +173,7 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
         {
             var spSums = _amazonUtility.ReportTargetKeywords(CampaignType.SponsoredProducts, date, clientId, true);
             var sbSums = _amazonUtility.ReportTargetKeywords(CampaignType.SponsoredBrands, date, clientId, true);
-            var sums = spSums.Concat(spSums).Concat(sbSums);
+            var sums = spSums.Concat(sbSums);
             var filteredSums = FilterByCampaigns(sums, x => x.CampaignName);
             return filteredSums.ToList();
         }

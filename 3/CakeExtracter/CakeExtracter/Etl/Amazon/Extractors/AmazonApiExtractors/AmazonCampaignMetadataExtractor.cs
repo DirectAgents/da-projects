@@ -41,9 +41,8 @@ namespace CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors
         private IEnumerable<AmazonCampaign> LoadCampaignsFromAmazonApi(string accountExternalId)
         {
             var sbCampaigns = AmazonUtility.GetCampaigns(CampaignType.SponsoredBrands, accountExternalId);
-            var sbVideoCampaigns = AmazonUtility.GetCampaigns(CampaignType.SponsoredBrandsVideo, accountExternalId);
             var spCampaigns = AmazonUtility.GetCampaigns(CampaignType.SponsoredProducts, accountExternalId);
-            var campaigns = spCampaigns.Concat(sbCampaigns).Concat(sbVideoCampaigns);
+            var campaigns = spCampaigns.Concat(sbCampaigns);
             return campaigns.Where(c => !c.Networks?.Contains(SdCompaignMark) ?? true).ToList();
         }
     }

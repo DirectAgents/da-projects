@@ -510,12 +510,22 @@ namespace Amazon.Helpers
         private static string GetBaseEntitiesPath(EntitesType entitiesType, CampaignType campaignType)
         {
             var apiVersion = GetApiVersion(entitiesType, campaignType);
-            var campaignTypePath = campaignType == CampaignType.Empty || entitiesType == EntitesType.Asins
-                                       ? string.Empty
-                                       : $"{CampaignTypeNames[campaignType]}/";
             var entityName = EntitiesTypeNames[entitiesType];
-
+            var campaignTypePath = GetCampaignTypePath(entitiesType, campaignType);
             return $"{apiVersion}{campaignTypePath}{entityName}";
+        }
+
+        private static string GetCampaignTypePath(EntitesType entitiesType, CampaignType campaignType)
+        {
+            const string campaignSbPath = "sb/";
+            if (entitiesType == EntitesType.Campaigns && campaignType == CampaignType.SponsoredBrands)
+            {
+                return campaignSbPath;
+            }
+
+            return campaignType == CampaignType.Empty || entitiesType == EntitesType.Asins
+                ? string.Empty
+                : $"{CampaignTypeNames[campaignType]}/";
         }
 
         private static string GetApiVersion(EntitesType entityType, CampaignType campaignType)
@@ -525,7 +535,8 @@ namespace Amazon.Helpers
                 return AttributionApi;
             }
 
-            if (campaignType == CampaignType.ProductDisplay || campaignType == CampaignType.SponsoredBrandsVideo)
+            if (campaignType == CampaignType.ProductDisplay ||
+                (campaignType == CampaignType.SponsoredBrands && entityType == EntitesType.Campaigns))
             {
                 return string.Empty;
             }
