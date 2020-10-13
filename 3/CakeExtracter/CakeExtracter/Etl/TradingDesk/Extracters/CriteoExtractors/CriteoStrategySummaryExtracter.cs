@@ -61,12 +61,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 var adjustedBeginDate = DateRange.FromDate;
                 var adjustedEndDate = DateRange.ToDate;
                 if (TimezoneOffset < 0)
+                {
                     adjustedEndDate = adjustedEndDate.AddDays(1);
+                }
                 else if (TimezoneOffset > 0)
+                {
                     adjustedBeginDate = adjustedBeginDate.AddDays(-1);
-
+                }
                 var reportUrl = CriteoUtility.GetCampaignReport(adjustedBeginDate, adjustedEndDate, hourly: true);
-
                 var dailySummaries = EnumerateRows_Hourly(reportUrl);
                 Add(dailySummaries);
                 End();
@@ -79,7 +81,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         private IEnumerable<StrategySummary> EnumerateRows_Hourly(string reportUrl)
         {
-            IEnumerable<StrategySummary> hourlySummaries = EnumerateXmlReportRows(reportUrl).ToList();
+            var hourlySummaries = EnumerateXmlReportRows(reportUrl);
             hourlySummaries = hourlySummaries.Where(s => s.Date >= DateRange.FromDate && s.Date <= DateRange.ToDate);
             var dailyGroups = hourlySummaries.GroupBy(s => new { s.StrategyEid, s.Date });
             foreach (var group in dailyGroups)
@@ -87,7 +89,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 var sum = new StrategySummary
                 {
                     StrategyEid = group.Key.StrategyEid,
-                    Date = group.Key.Date
+                    Date = group.Key.Date,
                 };
                 sum.SetStats(group);
                 yield return sum;
