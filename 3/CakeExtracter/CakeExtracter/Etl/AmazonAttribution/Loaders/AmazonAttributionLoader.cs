@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CakeExtracter.Etl.AmazonAttribution.Exceptions;
 using CakeExtracter.Helpers;
 using CakeExtracter.Logging.TimeWatchers.Amazon;
@@ -45,16 +46,26 @@ namespace CakeExtracter.Etl.AmazonAttribution.Loaders
             catch (Exception e)
             {
                 Logger.Error(accountId, e);
-                ProcessFailedStatsLoading(e, null, null, accountId);
+                ProcessFailedStatsLoading(e, items);
                 return 0;
             }
         }
 
-        private void ProcessFailedStatsLoading(Exception e, DateTime? startDate, DateTime? endDate, int accountId)
+        private void ProcessFailedStatsLoading(Exception e, List<AttributionSummary> items)
         {
             Logger.Error(e);
-            var exception = new AttributionFailedEtlException(startDate, endDate, accountId, e);
+            var exception = GetFailedStatsLoadingException(e, items);
             ProcessFailedLoading?.Invoke(exception);
+        }
+
+        private AttributionFailedEtlException GetFailedStatsLoadingException(Exception e, List<AttributionSummary> items)
+        {
+            var fromDate = items.Min(x => x.Date);
+            var toDate = items.Max(x => x.Date);
+            var fromDateArg = fromDate == default(DateTime) ? null : (DateTime?)fromDate;
+            var toDateArg = toDate == default(DateTime) ? null : (DateTime?)toDate;
+            var exception = new AttributionFailedEtlException(fromDateArg, toDateArg, accountId, e);
+            return exception;
         }
     }
 }

@@ -82,25 +82,18 @@ namespace CakeExtracter.Commands.DA
 
         private void DoEtl(ExtAccount account, DateRange dateRange)
         {
-            try
-            {
-                var amazonUtility = CreateUtility(account);
-                AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
-                    () =>
-                        {
-                            var extractor = new AmazonAttributionExtractor(amazonUtility, dateRange, account);
-                            var loader = new AmazonAttributionLoader(account.Id);
-                            InitEtlEvents(extractor, loader);
-                            CommandHelper.DoEtl(extractor, loader);
-                        },
-                    account.Id,
-                    AmazonJobLevels.Attribution,
-                    AmazonJobOperations.Total);
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e);
-            }
+            var amazonUtility = CreateUtility(account);
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(
+                () =>
+                    {
+                        var extractor = new AmazonAttributionExtractor(amazonUtility, dateRange, account);
+                        var loader = new AmazonAttributionLoader(account.Id);
+                        InitEtlEvents(extractor, loader);
+                        CommandHelper.DoEtl(extractor, loader);
+                    },
+                account.Id,
+                AmazonJobLevels.Attribution,
+                AmazonJobOperations.Total);
         }
 
         private IEnumerable<ExtAccount> GetAccounts()
