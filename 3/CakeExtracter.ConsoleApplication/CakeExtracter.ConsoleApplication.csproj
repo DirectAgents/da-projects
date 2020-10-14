@@ -184,6 +184,7 @@
     <None Include="Properties\app.manifest" />
     <None Include="Properties\PublishProfiles\dagents_vm_staging.pubxml" />
     <None Include="Properties\PublishProfiles\dagents_vm_prod.pubxml" />
+    <None Include="Properties\PublishProfiles\dagents_vm_vcd.pubxml" />
     <None Include="Properties\webjob-publish-settings.json" />
     <None Include="VcdExecutionProfiles\Profile_1.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
