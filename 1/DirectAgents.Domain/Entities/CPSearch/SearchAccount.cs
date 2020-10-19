@@ -66,5 +66,9 @@
         public DateTime? MinCallSum { get; set; }
         [NotMapped]
         public DateTime? MaxCallSum { get; set; }
+        [NotMapped]
+        public DateTime? MinVidSum { get; set; }
+        [NotMapped]
+        public DateTime? MaxVidSum { get; set; }
     }
 }

@@ -72,7 +72,8 @@ namespace DirectAgents.Domain.Concrete
             var allSds = DailySummaries().Where(x => x.SearchCampaign.SearchAccountId.HasValue);
             var allScs = ConvSummaries().Where(x => x.SearchCampaign.SearchAccountId.HasValue);
             var allCds = CallSummaries().Where(x => x.SearchCampaign.SearchAccountId.HasValue);
-            var searchAccounts = channels.Select(x => CreateAccountWithStatsGauge(x, allSds, allScs, allCds)).ToList();
+            var allVds = VideoDailySummaries().Where(x => x.SearchCampaign.SearchAccountId.HasValue);
+            var searchAccounts = channels.Select(x => CreateAccountWithStatsGauge(x, allSds, allScs, allCds, allVds)).ToList();
             return searchAccounts;
         }
 
@@ -226,6 +227,28 @@ namespace DirectAgents.Domain.Concrete
             return cds;
         }
 
+        public IQueryable<SearchVideoDailySummary> VideoDailySummaries(int? spId = null, int? searchAccountId = null,
+            int? searchCampaignId = null)
+        {
+            var vds = context.SearchVideoDailySummaries.AsQueryable();
+            if (searchCampaignId.HasValue)
+            {
+                vds = vds.Where(x => x.SearchCampaign.SearchCampaignId == searchCampaignId.Value);
+            }
+
+            if (searchAccountId.HasValue)
+            {
+                vds = vds.Where(x => x.SearchCampaign.SearchAccountId == searchAccountId.Value);
+            }
+
+            if (spId.HasValue)
+            {
+                vds = vds.Where(x => x.SearchCampaign.SearchAccount.SearchProfileId == spId.Value);
+            }
+
+            return vds;
+        }
+
         public IEnumerable<SearchConvType> GetConvTypes(int? spId = null, int? searchAccountId = null,
             int? searchCampaignId = null, bool includeGauges = false)
         {
@@ -247,13 +270,14 @@ namespace DirectAgents.Domain.Concrete
         }
 
         private SearchAccount CreateAccountWithStatsGauge(string channel, IQueryable<SearchDailySummary> allSds,
-            IQueryable<SearchConvSummary> allScs, IQueryable<CallDailySummary> allCds)
+            IQueryable<SearchConvSummary> allScs, IQueryable<CallDailySummary> allCds, IQueryable<SearchVideoDailySummary> allVds)
         {
             var searchAccount = new SearchAccount { Channel = channel };
             var sds = allSds.Where(x => x.SearchCampaign.SearchAccount.Channel == channel);
             var scs = allScs.Where(x => x.SearchCampaign.SearchAccount.Channel == channel);
             var cds = allCds.Where(x => x.SearchCampaign.SearchAccount.Channel == channel);
-            SetGauges(searchAccount, sds, scs, cds);
+            var vds = allVds.Where(x => x.SearchCampaign.SearchAccount.Channel == channel);
+            SetGauges(searchAccount, sds, scs, cds, vds);
             return searchAccount;
         }
 
@@ -275,7 +299,8 @@ namespace DirectAgents.Domain.Concrete
                 var sds = DailySummaries(searchAccountId: sa.SearchAccountId);
                 var scs = ConvSummaries(searchAccountId: sa.SearchAccountId);
                 var cds = CallSummaries(searchAccountId: sa.SearchAccountId);
-                SetGauges(sa, sds, scs, cds);
+                var vds = VideoDailySummaries(searchAccountId: sa.SearchAccountId);
+                SetGauges(sa, sds, scs, cds, vds);
             }
         }
 
@@ -286,7 +311,8 @@ namespace DirectAgents.Domain.Concrete
                 var sds = DailySummaries(spId: sp.SearchProfileId);
                 var scs = ConvSummaries(spId: sp.SearchProfileId);
                 var cds = CallSummaries(spId: sp.SearchProfileId);
-                SetGauges(sp, sds, scs, cds);
+                var vds = VideoDailySummaries(spId: sp.SearchProfileId);
+                SetGauges(sp, sds, scs, cds, vds);
             }
         }
 
@@ -297,12 +323,13 @@ namespace DirectAgents.Domain.Concrete
                 var sds = DailySummaries(searchCampaignId: sc.SearchCampaignId);
                 var scs = ConvSummaries(searchCampaignId: sc.SearchCampaignId);
                 var cds = CallSummaries(searchCampaignId: sc.SearchCampaignId);
-                SetGauges(sc, sds, scs, cds);
+                var vds = VideoDailySummaries(searchCampaignId: sc.SearchCampaignId);
+                SetGauges(sc, sds, scs, cds, vds);
             }
         }
 
         private void SetGauges(ISearchGauge searchGauge, IQueryable<SearchDailySummary> sds,
-            IQueryable<SearchConvSummary> scs, IQueryable<CallDailySummary> cds)
+            IQueryable<SearchConvSummary> scs, IQueryable<CallDailySummary> cds, IQueryable<SearchVideoDailySummary> vds)
         {
             if (sds != null && sds.Any())
             {
@@ -320,6 +347,12 @@ namespace DirectAgents.Domain.Concrete
             {
                 searchGauge.MinCallSum = cds.Min(x => x.Date);
                 searchGauge.MaxCallSum = cds.Max(x => x.Date);
+            }
+
+            if (vds != null && vds.Any())
+            {
+                searchGauge.MinVidSum = vds.Min(x => x.Date);
+                searchGauge.MaxVidSum = vds.Max(x => x.Date);
             }
         }
 
