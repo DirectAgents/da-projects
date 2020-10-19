@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<DirectAgents.Domain.Entities.CPSearch.SearchAccount>
 @{
-     var spId = Request.Params["spid"];
+    var spId = Request.Params["spid"];
     var oneProfile = !string.IsNullOrWhiteSpace(spId);
     var channel = Request.Params["channel"];
     var oneChannel = !string.IsNullOrWhiteSpace(channel);
