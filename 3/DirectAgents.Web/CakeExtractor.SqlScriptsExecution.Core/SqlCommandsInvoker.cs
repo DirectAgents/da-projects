@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -6,10 +7,14 @@ using System.Text.RegularExpressions;
 namespace CakeExtractor.SqlScriptsExecution.Core
 {
     /// <summary>
-    /// Sql commands invoker. 
+    /// Sql commands invoker.
     /// </summary>
     public class SqlCommandsInvoker
     {
+        private const string ScriptSplittingPattern = @"^\s*GO\s*$";
+
+        private const int DefaultBatchSize = 10000;
+
         private string sqlConnectionString;
 
         /// <summary>
@@ -48,13 +53,55 @@ namespace CakeExtractor.SqlScriptsExecution.Core
             return true;
         }
 
-        private List<string> SplitScriptOnCommands(string sourceScriptContent)
+        /// <summary>
+        /// Runs sql query and put result into DataTable.
+        /// </summary>
+        /// <param name="commandText">Sql query.</param>
+        /// <returns>Selected data.</returns>
+        public DataTable SelectSqlDataAsDataTable(string commandText)
         {
-            return Regex.Split(sourceScriptContent, @"^\s*GO\s*$",
-                                      RegexOptions.Multiline | RegexOptions.IgnoreCase).ToList();
+            var dataTable = new DataTable();
+            using (var connection = new SqlConnection(sqlConnectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(commandText, connection))
+                {
+                    command.CommandTimeout = GetCommandTimeOutInSeconds();
+                    var dataReader = command.ExecuteReader();
+                    dataTable.Load(dataReader);
+                }
+                connection.Close();
+            }
+
+            return dataTable;
         }
 
-        private int GetCommandTimeOutInSeconds()
+        /// <summary>
+        /// Runs the data saving using bulk operation.
+        /// </summary>
+        /// <param name="data">The data to save.</param>
+        /// <param name="targetTable">The target table name.</param>
+        public void RunBulkSave(DataTable data, string targetTable)
+        {
+            using (var bulkOperation = new SqlBulkCopy(sqlConnectionString))
+            {
+                bulkOperation.BatchSize = DefaultBatchSize;
+                bulkOperation.BulkCopyTimeout = GetCommandTimeOutInSeconds();
+                bulkOperation.DestinationTableName = targetTable;
+                bulkOperation.WriteToServer(data);
+            }
+        }
+
+        private static List<string> SplitScriptOnCommands(string sourceScriptContent)
+        {
+            return Regex.Split(
+                    sourceScriptContent,
+                    ScriptSplittingPattern,
+                    RegexOptions.Multiline | RegexOptions.IgnoreCase)
+                .ToList();
+        }
+
+        private static int GetCommandTimeOutInSeconds()
         {
             return 120 * 60; //120 min timeout
         }
