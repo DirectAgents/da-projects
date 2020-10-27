@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+
+using CakeExtracter.Analytic.AdWords;
+using CakeExtracter.Analytic.Common;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Etl.AdWords.Exceptions;
 using CakeExtracter.Etl.AdWords.Extractors;
@@ -103,6 +107,9 @@ namespace CakeExtracter.Commands
             {
                 dateRange = DoEtl(dateRange, searchAccount);
             }
+            SyncDailyAnalyticData(dateRange);
+            SyncConversionsAnalyticData(dateRange);
+
             return 0;
         }
 
@@ -297,6 +304,31 @@ namespace CakeExtracter.Commands
                 case "ConversionTypeStats":
                     command.GetConversionTypeStats = true;
                     break;
+            }
+        }
+
+        private void SyncDailyAnalyticData(DateRange dateRange)
+        {
+            SyncDataToAnalyticTable(dateRange, new AdWordsDailySummarySynchronizer(dateRange.FromDate, dateRange.ToDate));
+        }
+
+        private void SyncConversionsAnalyticData(DateRange dateRange)
+        {
+            SyncDataToAnalyticTable(dateRange, new AdWordsSearchConveriosnsSynchronizer(dateRange.FromDate, dateRange.ToDate));
+        }
+
+        private void SyncDataToAnalyticTable(DateRange dateRange, BaseAnalyticSynchronizer synchronizer)
+        {
+            try
+            {
+                CommandExecutionContext.Current.SetJobExecutionStateInHistory("Sync analytic table data.");
+                Logger.Info("Sync analytic table data.");
+                synchronizer.RunSynchronizer();
+            }
+            catch (Exception ex)
+            {
+                var exception = new Exception("Error occurred while sync AdWords data to analytic table", ex);
+                Logger.Error(exception);
             }
         }
     }
