@@ -31,5 +31,6 @@ LEFT JOIN SearchConvSummary scs ON scs.searchcampaignid = sds.searchcampaignid
 INNER JOIN SearchAccount sa ON sa.searchaccountid=sc.searchaccountid
 WHERE   sds.Date >= @startDate
     AND sds.Date <= @endDate
+    AND sa.Channel = 'Google'
 GROUP BY sa.Name, sds.Date, sc.SearchCampaignName
 ORDER BY [SearchAccountName], [Date], [SearchCampaignName]

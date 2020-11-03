@@ -16,5 +16,6 @@ INNER JOIN dbo.SearchConvType sct ON scs.SearchConvTypeId = sct.SearchConvTypeId
 INNER JOIN dbo.SearchAccount sa ON sa.SearchAccountId = sc.SearchAccountId
 WHERE   scs.Date >= @startDate
     AND scs.Date <= @endDate
+    AND sa.Channel = 'Google'
 ORDER BY [SearchAccountName], [Date], [SearchCampaignName]
 
