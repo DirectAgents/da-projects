@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using Apple;
+using CakeExtracter.Analytic.Apple;
+using CakeExtracter.Analytic.Common;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Etl.Apple.Exceptions;
 using CakeExtracter.Etl.Apple.Extractors;
@@ -128,6 +131,7 @@ namespace CakeExtracter.Commands.Search
                     InitEtlEvents(extractor, loader);
                     CommandHelper.DoEtl(extractor, loader);
                 }
+                SyncDailyAnalyticData(dateRange);
             }
             catch (Exception ex)
             {
@@ -168,6 +172,26 @@ namespace CakeExtracter.Commands.Search
                 ScheduleNewCommandLaunch<SynchSearchDailySummariesAppleCommand>(command => { });
             loader.ProcessEtlFailedWithoutInformation += exception =>
                 ScheduleNewCommandLaunch<SynchSearchDailySummariesAppleCommand>(command => { });
+        }
+
+        private void SyncDailyAnalyticData(DateRange dateRange)
+        {
+            SyncDataToAnalyticTable(dateRange, new AppleDailySummarySynchronizer(dateRange.FromDate, dateRange.ToDate));
+        }
+
+        private void SyncDataToAnalyticTable(DateRange dateRange, BaseAnalyticSynchronizer synchronizer)
+        {
+            try
+            {
+                CommandExecutionContext.Current.SetJobExecutionStateInHistory("Sync analytic table data.");
+                Logger.Info("Sync analytic table data.");
+                synchronizer.RunSynchronizer();
+            }
+            catch (Exception ex)
+            {
+                var exception = new Exception("Error occured whyle sync Apple data to analytic table", ex);
+                Logger.Error(exception);
+            }
         }
 
         private DateRange ReviseDateRange(DateRange dateRange, SearchAccount searchAccount)

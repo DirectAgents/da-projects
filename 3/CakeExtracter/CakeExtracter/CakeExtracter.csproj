@@ -352,6 +352,10 @@
   <ItemGroup>
     <Compile Include="Analytic\AdWords\AdWordsDailySummarySynchronizer.cs" />
     <Compile Include="Analytic\AdWords\AdWordsSearchConveriosnsSynchronizer.cs" />
+    <Compile Include="Analytic\Apple\AppleDailySummarySynchronizer.cs" />
+    <Compile Include="Analytic\Bing\BingCallDailySummarySynchronizer.cs" />
+    <Compile Include="Analytic\Bing\BingDailySummarySynchronizer.cs" />
+    <Compile Include="Analytic\Bing\BingSearchConversionsSynchronizer.cs" />
     <Compile Include="Analytic\Common\BaseAnalyticSynchronizer.cs" />
     <Compile Include="Analytic\Common\SynchronizerParamsProvider.cs" />
     <Compile Include="Bootstrappers\AutoMapperBootstrapper.cs" />
