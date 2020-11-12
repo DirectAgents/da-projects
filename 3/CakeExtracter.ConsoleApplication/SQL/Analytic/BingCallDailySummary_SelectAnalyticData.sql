@@ -1,7 +1,7 @@
 DECLARE @startDate DATETIME = '@@param_0',
         @endDate DATETIME = '@@param_1';
 
-SELECT TOP (10)
+SELECT 
 	sa.Name AS [SearchAccountName],
 	sc.SearchCampaignName,
 	cds.Date,

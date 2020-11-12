@@ -250,6 +250,10 @@
     <Content Include="SQL\Analytic\AdWordsDailySummary_SelectAnalyticData.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="SQL\Analytic\AppleDailySummary_SelectAnalyticData.sql" />
+    <Content Include="SQL\Analytic\BingCallDailySummary_SelectAnalyticData.sql" />
+    <Content Include="SQL\Analytic\BingDailySummary_SelectAnalyticData.sql" />
+    <Content Include="SQL\Analytic\BingSearchConverions_SelectAnalyticData.sql" />
     <Content Include="SQL\DPA\EnrichBrandVolumes.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
