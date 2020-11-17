@@ -106,9 +106,9 @@ namespace CakeExtracter.Commands.Search
                     Logger.Info("AccountCode should be an int. Skipping: {0}", searchAccount.AccountCode);
                 }
             }
-            //SyncDailyAnalyticData(dateRange);
-            //SyncConversionsAnalyticData(dateRange);
-            //SyncCallAnalyticData(dateRange);
+            SyncDailyAnalyticData(dateRange);
+            SyncConversionsAnalyticData(dateRange);
+            SyncCallAnalyticData(dateRange);
             SaveTokens(BingUtility.RefreshTokens);
             return 0;
         }
