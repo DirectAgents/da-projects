@@ -4,7 +4,7 @@ using CakeExtracter.Analytic.Common;
 namespace CakeExtracter.Analytic.Bing
 {
     /// <summary>
-    /// Synchronizer for AdWords Daily Summary level.
+    /// Synchronizer for Bing Daily Summary level.
     /// </summary>
     internal class BingDailySummarySynchronizer : BaseAnalyticSynchronizer
     {
