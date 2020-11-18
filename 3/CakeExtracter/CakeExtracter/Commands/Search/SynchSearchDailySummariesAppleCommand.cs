@@ -176,11 +176,7 @@ namespace CakeExtracter.Commands.Search
 
         private void SyncDailyAnalyticData(DateRange dateRange)
         {
-            SyncDataToAnalyticTable(dateRange, new AppleDailySummarySynchronizer(dateRange.FromDate, dateRange.ToDate));
-        }
-
-        private void SyncDataToAnalyticTable(DateRange dateRange, BaseAnalyticSynchronizer synchronizer)
-        {
+            var synchronizer = new AppleDailySummarySynchronizer(dateRange.FromDate, dateRange.ToDate);
             try
             {
                 CommandExecutionContext.Current.SetJobExecutionStateInHistory("Sync analytic table data.");
