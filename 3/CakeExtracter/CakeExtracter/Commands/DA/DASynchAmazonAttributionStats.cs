@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-
+using System.Linq;
 using Amazon;
 
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
+using CakeExtracter.Etl;
 using CakeExtracter.Etl.Amazon.Extractors.AmazonApiExtractors;
 using CakeExtracter.Etl.Amazon.Loaders;
+using CakeExtracter.Etl.AmazonAttribution.Exceptions;
 using CakeExtracter.Etl.AmazonAttribution.Extractors;
 using CakeExtracter.Etl.AmazonAttribution.Loaders;
 using CakeExtracter.Helpers;
@@ -61,6 +64,24 @@ namespace CakeExtracter.Commands.DA
             return 0;
         }
 
+        /// <inheritdoc/>
+        public override IEnumerable<CommandWithSchedule> GetUniqueBroadCommands(
+            IEnumerable<CommandWithSchedule> commands)
+        {
+            var broadCommands = new List<CommandWithSchedule>();
+            var commandsGroupedByAccountAndLevel = commands.GroupBy(x =>
+            {
+                var command = x.Command as DASynchAmazonAttributionStats;
+                return new { command?.StartDate, command?.EndDate, command?.AccountId };
+            });
+            foreach (var commandsGroup in commandsGroupedByAccountAndLevel)
+            {
+                var accountLevelBroadCommands = GetUniqueBroadAccountCommands(commandsGroup);
+                broadCommands.AddRange(accountLevelBroadCommands);
+            }
+            return broadCommands;
+        }
+
         private void DoEtl(ExtAccount account, DateRange dateRange)
         {
             var amazonUtility = CreateUtility(account);
@@ -69,6 +90,7 @@ namespace CakeExtracter.Commands.DA
                     {
                         var extractor = new AmazonAttributionExtractor(amazonUtility, dateRange, account);
                         var loader = new AmazonAttributionLoader(account.Id);
+                        InitEtlEvents(extractor, loader);
                         CommandHelper.DoEtl(extractor, loader);
                     },
                 account.Id,
@@ -97,14 +119,55 @@ namespace CakeExtracter.Commands.DA
             return amazonUtility;
         }
 
+        private IEnumerable<CommandWithSchedule> GetUniqueBroadAccountCommands(IEnumerable<CommandWithSchedule> commandsWithSchedule)
         private string[] GetTokens()
         {
+            var accountCommands =
+                new List<Tuple<DASynchAmazonAttributionStats, CommandWithSchedule>>();
+            foreach (var commandWithSchedule in commandsWithSchedule)
+            {
+                var command = (DASynchAmazonAttributionStats)commandWithSchedule.Command;
+                accountCommands.Add(
             return Platform.GetPlatformTokens(Platform.Code_AttributionAmazon);
         }
 
         private void SaveTokens(string[] tokens)
         {
             Platform.SavePlatformTokens(Platform.Code_AttributionAmazon, tokens);
+                    new Tuple<DASynchAmazonAttributionStats, CommandWithSchedule>(command, commandWithSchedule));
+            }
+            var broadCommands = accountCommands.Select(x => new CommandWithSchedule
+            {
+                Command = x.Item1,
+                ScheduledTime = x.Item2.ScheduledTime,
+            }).ToList();
+            return broadCommands;
+        }
+
+        private void InitEtlEvents(AmazonAttributionExtractor extractor, AmazonAttributionLoader loader)
+        {
+            GeneralInitEtlEvents(extractor, loader);
+            extractor.ProcessFailedExtraction += exception =>
+                ScheduleNewCommandLaunch<DASynchAmazonAttributionStats>(command =>
+                    UpdateCommandParameters(command, exception));
+            loader.ProcessFailedLoading += exception =>
+                ScheduleNewCommandLaunch<DASynchAmazonAttributionStats>(command =>
+                    UpdateCommandParameters(command, exception));
+        }
+
+        private void GeneralInitEtlEvents<T>(Extracter<T> extractor, Loader<T> loader)
+        {
+            extractor.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewCommandLaunch<DASynchAmazonAttributionStats>(command => { });
+            loader.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewCommandLaunch<DASynchAmazonAttributionStats>(command => { });
+        }
+
+        private void UpdateCommandParameters(DASynchAmazonAttributionStats command, AttributionFailedEtlException exception)
+        {
+            command.StartDate = exception.StartDate;
+            command.EndDate = exception.EndDate;
+            command.AccountId = exception.AccountId;
         }
     }
 }
