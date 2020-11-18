@@ -48,6 +48,7 @@ namespace CakeExtracter.Commands.DA
         {
             var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             var accounts = GetAccounts();
+            AmazonUtility.TokenSets = GetTokens();
 
             foreach (var account in accounts)
             {
@@ -56,6 +57,7 @@ namespace CakeExtracter.Commands.DA
                 DoEtl(account, dateRange);
                 CommandExecutionContext.Current.SetJobExecutionStateInHistory("Finished", account.Id);
             }
+            SaveTokens(AmazonUtility.TokenSets);
             return 0;
         }
 
@@ -89,11 +91,20 @@ namespace CakeExtracter.Commands.DA
 
         private AmazonUtility CreateUtility(ExtAccount account)
         {
-            AmazonUtility.TokenSets = Platform.GetPlatformTokens(Platform.Code_AttributionAmazon);
             var amazonUtility = new AmazonUtility(m => Logger.Info(account.Id, m), m => Logger.Warn(account.Id, m));
             amazonUtility.SetWhichAlt(account.ExternalId);
             amazonUtility.SetApiEndpointUrl(account.Name);
             return amazonUtility;
+        }
+
+        private string[] GetTokens()
+        {
+            return Platform.GetPlatformTokens(Platform.Code_AttributionAmazon);
+        }
+
+        private void SaveTokens(string[] tokens)
+        {
+            Platform.SavePlatformTokens(Platform.Code_AttributionAmazon, tokens);
         }
     }
 }
