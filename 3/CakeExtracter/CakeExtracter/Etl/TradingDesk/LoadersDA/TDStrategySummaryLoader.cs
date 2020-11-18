@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using AutoMapper;
@@ -9,7 +10,6 @@ using CakeExtracter.SimpleRepositories.RepositoriesWithStorage.Interfaces;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
-
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
@@ -31,6 +31,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             strategyRepositoryWithStorage = new StrategyRepositoryWithStorage(strategyStorage ?? DefaultStrategyStorage);
         }
 
+        /// <inheritdoc/>
         protected override int Load(List<StrategySummary> items)
         {
             Logger.Info(AccountId, "Loading {0} DA-TD StrategySummaries..", items.Count);

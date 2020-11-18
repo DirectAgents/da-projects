@@ -1,5 +1,7 @@
 ﻿using CakeExtractor.SqlScriptsExecution.Core;
 using System;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace CakeExtracter.Common
 {
@@ -35,6 +37,37 @@ namespace CakeExtracter.Common
         {
             var scriptContent = scriptFileContentProvider.GetSqlScriptFileContent(scriptPath, scriptParams);
             sqlCommandsInvoker.RunSqlCommands(scriptContent);
+        }
+
+        /// <summary>
+        /// Executes the select script with replaced parameters and put result into DataTable.
+        /// </summary>
+        /// <param name="scriptPath">The script path.</param>
+        /// <param name="scriptParams">The script parameters.</param>
+        /// <returns>Selected data.</returns>
+        public DataTable ExecuteSelectScript(string scriptPath, string[] scriptParams)
+        {
+            var scriptContent = scriptFileContentProvider.GetSqlScriptFileContent(scriptPath, scriptParams);
+            return sqlCommandsInvoker.SelectSqlDataAsDataTable(scriptContent);
+        }
+
+        /// <summary>
+        /// Executes the sql command.
+        /// </summary>
+        /// <param name="sqlCommand">The sql command.</param>
+        public void ExecuteSqlCommand(string sqlCommand)
+        {
+            sqlCommandsInvoker.RunSqlCommands(sqlCommand);
+        }
+
+        /// <summary>
+        /// Saves the data into the target table using bulk operation.
+        /// </summary>
+        /// <param name="data">The data to save.</param>
+        /// <param name="targetTable">The target table name.</param>
+        public void BulkSaveDataTable(DataTable data, string targetTable)
+        {
+            sqlCommandsInvoker.RunBulkSave(data, targetTable);
         }
 
         private string GetScriptContent(string scriptFullPath, string[] scriptParams)

@@ -195,7 +195,6 @@
     </Reference>
     <Reference Include="RestSharp, Version=106.3.1.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
       <HintPath>..\..\DirectAgents.Web\packages\RestSharp.106.3.1\lib\net452\RestSharp.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="SendGrid, Version=9.11.0.0, Culture=neutral, PublicKeyToken=4f047e93159395ca, processorArchitecture=MSIL">
       <HintPath>..\..\DirectAgents.Web\packages\Sendgrid.9.11.0\lib\net452\SendGrid.dll</HintPath>
@@ -351,6 +350,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analytic\AdWords\AdWordsDailySummarySynchronizer.cs" />
+    <Compile Include="Analytic\AdWords\AdWordsSearchConveriosnsSynchronizer.cs" />
+    <Compile Include="Analytic\Apple\AppleDailySummarySynchronizer.cs" />
+    <Compile Include="Analytic\Bing\BingCallDailySummarySynchronizer.cs" />
+    <Compile Include="Analytic\Bing\BingDailySummarySynchronizer.cs" />
+    <Compile Include="Analytic\Bing\BingSearchConversionsSynchronizer.cs" />
+    <Compile Include="Analytic\Common\BaseAnalyticSynchronizer.cs" />
+    <Compile Include="Analytic\Common\SynchronizerParamsProvider.cs" />
     <Compile Include="Bootstrappers\AutoMapperBootstrapper.cs" />
     <Compile Include="Bootstrappers\DependencyInjectionBootstrapper.cs" />
     <Compile Include="Bootstrappers\DependencyInjectionModules\DependencyInjectionModule.cs" />
@@ -619,6 +626,7 @@
     <Compile Include="Etl\DBM\Models\DbmAccountCreativeReportData.cs" />
     <Compile Include="Etl\DSP\Configuration\AmazonDspConfigurationProvider.cs" />
     <Compile Include="Etl\CommandsExecutionAccountsProvider.cs" />
+    <Compile Include="Etl\DSP\Exceptions\DspFailedEtlException.cs" />
     <Compile Include="Etl\DSP\Extractors\AmazonDspExtractor.cs" />
     <Compile Include="Etl\DSP\Extractors\Composer\DspReportDataComposer.cs" />
     <Compile Include="Etl\DSP\Extractors\Parser\DspReportCsvParser.cs" />
@@ -659,6 +667,7 @@
     <Compile Include="Etl\Apple\Extractors\AppleApiExtracter.cs" />
     <Compile Include="Etl\Roku\Extractors\RokuApiExtractor.cs" />
     <Compile Include="Etl\Roku\Loaders\RokuLoader.cs" />
+    <Compile Include="Etl\SearchMarketing\Exceptions\CriteoFailedEtlException.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingConvSummaryExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingDailyNonShoppingSummaryExtractor.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingDailyShoppingSummaryExtractor.cs" />
@@ -708,7 +717,9 @@
     <Compile Include="Etl\TradingDesk\Extracters\AdrollSiteStatsCsvExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\CPCExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\CommissionJunctionExtractors\CommissionJunctionAdvertiserExtractor.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\CriteoExtracters.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\CriteoExtractors\CriteoDatabaseStrategyToDailySummaryExtractor.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\CriteoExtractors\CriteoApiExtracters.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\CriteoExtractors\CriteoStrategySummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DataBaseSourceExtractors\DatabaseKeywordsToDailySummaryExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DataBaseSourceExtractors\DatabaseStrategyToDailySummaryExtractor.cs" />
     <Compile Include="Etl\DBM\Downloader\DbmReportDownloader.cs" />
@@ -724,6 +735,8 @@
     <Compile Include="Etl\TradingDesk\Extracters\TDConvExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\TDSiteSummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\TDStrategySummaryExtracter.cs" />
+    <Compile Include="Etl\TradingDesk\Loaders\CriteoDailySummaryLoader.cs" />
+    <Compile Include="Etl\TradingDesk\Loaders\CriteoStrategySummaryLoader.cs" />
     <Compile Include="Etl\YAM\Extractors\ApiExtractors\YamCampaignSummaryExtractor.cs" />
     <Compile Include="Etl\YAM\Extractors\ApiExtractors\BaseYamApiExtractor.cs" />
     <Compile Include="Etl\YAM\Extractors\ApiExtractors\YamDailySummaryExtractor.cs" />

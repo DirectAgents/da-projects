@@ -10,15 +10,17 @@
         <th style="text-align:center">DaySums</th>
         <th style="text-align:center">ConvSums</th>
         <th style="text-align:center">CallSums</th>
+        <th style="text-align:center">VideoSums</th>
     </tr>
     @foreach(var sp in Model)
     {
-        <tr>
-            <td style="text-align:right">@sp.SearchProfileId</td>
-            <td>@Html.ActionLink(sp.SearchProfileName, "IndexGauge", "SearchAccounts", new { spId = sp.SearchProfileId }, null)</td>
-            <td style="text-align:center">@sp.MinDaySum.ToShortDateString() - @sp.MaxDaySum.ToShortDateString()</td>
-            <td style="text-align:center">@sp.MinConvSum.ToShortDateString() - @sp.MaxConvSum.ToShortDateString()</td>
-            <td style="text-align:center">@sp.MinCallSum.ToShortDateString() - @sp.MaxCallSum.ToShortDateString()</td>
-        </tr>
+    <tr>
+        <td style="text-align:right">@sp.SearchProfileId</td>
+        <td>@Html.ActionLink(sp.SearchProfileName, "IndexGauge", "SearchAccounts", new { spId = sp.SearchProfileId }, null)</td>
+        <td style="text-align:center">@sp.MinDaySum.ToShortDateString() - @sp.MaxDaySum.ToShortDateString()</td>
+        <td style="text-align:center">@sp.MinConvSum.ToShortDateString() - @sp.MaxConvSum.ToShortDateString()</td>
+        <td style="text-align:center">@sp.MinCallSum.ToShortDateString() - @sp.MaxCallSum.ToShortDateString()</td>
+        <td style="text-align: center">@sp.MinVidSum.ToShortDateString() - @sp.MaxVidSum.ToShortDateString()</td>
+    </tr>
     }
 </table>

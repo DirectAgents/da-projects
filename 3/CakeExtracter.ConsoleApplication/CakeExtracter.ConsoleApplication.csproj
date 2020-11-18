@@ -184,6 +184,7 @@
     <None Include="Properties\app.manifest" />
     <None Include="Properties\PublishProfiles\dagents_vm_staging.pubxml" />
     <None Include="Properties\PublishProfiles\dagents_vm_prod.pubxml" />
+    <None Include="Properties\PublishProfiles\dagents_vm_vcd.pubxml" />
     <None Include="Properties\webjob-publish-settings.json" />
     <None Include="VcdExecutionProfiles\Profile_1.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -243,6 +244,24 @@
     <Content Include="SQL\AMS\SyncAsinAnalyticTable.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="SQL\Analytic\AdWordsSearchConveriosns_SelectAnalyticData.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\Analytic\AdWordsDailySummary_SelectAnalyticData.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\Analytic\AppleDailySummary_SelectAnalyticData.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\Analytic\BingCallDailySummary_SelectAnalyticData.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\Analytic\BingDailySummary_SelectAnalyticData.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\Analytic\BingSearchConverions_SelectAnalyticData.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="SQL\DPA\EnrichBrandVolumes.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -277,6 +296,7 @@
     <Analyzer Include="..\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\DirectAgents.Web\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\ClientPortal.Web\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\ClientPortal.Web\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

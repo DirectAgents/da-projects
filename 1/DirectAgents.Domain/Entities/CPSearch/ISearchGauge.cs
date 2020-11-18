@@ -10,5 +10,7 @@ namespace DirectAgents.Domain.Entities.CPSearch
         DateTime? MaxConvSum { get; set; }
         DateTime? MinCallSum { get; set; }
         DateTime? MaxCallSum { get; set; }
+        DateTime? MinVidSum { get; set; }
+        DateTime? MaxVidSum { get; set; }
     }
 }
