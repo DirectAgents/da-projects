@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using BingAds.Utilities;
+using CakeExtracter.Analytic.Bing;
+using CakeExtracter.Analytic.Common;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Etl;
 using CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors;
@@ -103,6 +106,9 @@ namespace CakeExtracter.Commands.Search
                     Logger.Info("AccountCode should be an int. Skipping: {0}", searchAccount.AccountCode);
                 }
             }
+            SyncDailyAnalyticData(dateRange);
+            SyncConversionsAnalyticData(dateRange);
+            SyncCallAnalyticData(dateRange);
             SaveTokens(BingUtility.RefreshTokens);
             return 0;
         }
@@ -269,6 +275,36 @@ namespace CakeExtracter.Commands.Search
             setting.Item1.DaysAgoToStart = null;
             setting.Item3.Command = setting.Item1;
             return setting.Item3;
+        }
+
+        private void SyncDailyAnalyticData(DateRange dateRange)
+        {
+            SyncDataToAnalyticTable(dateRange, new BingDailySummarySynchronizer(dateRange.FromDate, dateRange.ToDate));
+        }
+
+        private void SyncConversionsAnalyticData(DateRange dateRange)
+        {
+            SyncDataToAnalyticTable(dateRange, new BingSearchConversionsSynchronizer(dateRange.FromDate, dateRange.ToDate));
+        }
+
+        private void SyncCallAnalyticData(DateRange dateRange)
+        {
+            SyncDataToAnalyticTable(dateRange, new BingCallDailySummarySynchronizer(dateRange.FromDate, dateRange.ToDate));
+        }
+
+        private void SyncDataToAnalyticTable(DateRange dateRange, BaseAnalyticSynchronizer synchronizer)
+        {
+            try
+            {
+                CommandExecutionContext.Current.SetJobExecutionStateInHistory("Sync analytic table data.");
+                Logger.Info("Sync analytic table data.");
+                synchronizer.RunSynchronizer();
+            }
+            catch (Exception ex)
+            {
+                var exception = new Exception("Error occured whyle sync Bing data to analytic table", ex);
+                Logger.Error(exception);
+            }
         }
     }
 }
