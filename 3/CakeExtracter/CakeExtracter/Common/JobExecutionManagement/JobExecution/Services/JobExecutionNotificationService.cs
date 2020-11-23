@@ -79,6 +79,24 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
             }
         }
 
+        public void NotifyAboutProcessingJobs(List<string> filter)
+        {
+            try
+            {
+                var processingJobs = GetProcessingJobsForNotifying(filter);
+                if (processingJobs?.Count > 0)
+                {
+                    NotifyAboutProcessingJobs(processingJobs);
+                    MarkJobProcessingItemsAsEmailSent(processingJobs);
+                    CommandExecutionContext.Current.AppendJobExecutionStateInHistory($"Sent {processingJobs.Count} processing jobs notifications.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+        }
+
         private List<JobRequestExecution> GetExecutionItemsForErrorNotifying()
         {
             return jobRequestExecutionRepository.GetItemsWithIncludes(
@@ -94,6 +112,16 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
                     item.Status == JobRequestStatus.Failed &&
                     item.ParentJobRequestId == null && // Emails should be not sent for child(retries) requests.
                     item.CommandName != FailedJobsNotifierCommand.CommandName);
+        }
+
+        private List<JobRequest> GetProcessingJobsForNotifying(List<string> filter)
+        {
+            return jobRequestsRepository.GetItems(
+                item => item.ProcessingEmailSent == false &&
+                item.Status == JobRequestStatus.Processing &&
+                item.ParentJobRequestId == null && // Emails should be not sent for child(retries) requests.
+                item.CommandName != ProcessingJobsNotifierCommand.CommandName &&
+                !filter.Contains(item.CommandName));
         }
 
         private void NotifyAboutErrorsInJobExecutionItems(List<JobRequestExecution> jobExecutionsToNotify)
@@ -118,6 +146,17 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
             });
         }
 
+        private void NotifyAboutProcessingJobs(List<JobRequest> jobsToNotify)
+        {
+            var toEmails = ConfigurationHelper.ExtractEnumerableFromConfig(EmailConfigConstants.JobProcessingToConfigKey).ToArray();
+            var ccEmails = ConfigurationHelper.ExtractEnumerableFromConfig(EmailConfigConstants.JobProcessingCcConfigKey).ToArray();
+            jobsToNotify.ForEach(job =>
+            {
+                var model = PrepareJobProcessingNotificationModel(job);
+                emailNotificationsService.SendEmail(toEmails, ccEmails, model, EmailConfigConstants.JobProcessingBodyTemplateName, EmailConfigConstants.JobProcessingSubjectTemplateName);
+            });
+        }
+
         private FailedJobNotificationModel PrepareJobFailedNotificationModel(JobRequest jobRequest)
         {
             return new FailedJobNotificationModel
@@ -139,6 +178,14 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
             };
         }
 
+        private ProcessingJobNotificationModel PrepareJobProcessingNotificationModel(JobRequest jobRequest)
+        {
+            return new ProcessingJobNotificationModel
+            {
+                JobRequest = jobRequest,
+            };
+        }
+
         private void MarkJobExecutionItemsAsEmailSent(List<JobRequestExecution> jobs)
         {
             jobs.ForEach(job =>
@@ -153,6 +200,15 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
             jobRequests.ForEach(jobRequest =>
             {
                 jobRequest.FailureEmailSent = true;
+            });
+            jobRequestsRepository.UpdateItems(jobRequests);
+        }
+
+        private void MarkJobProcessingItemsAsEmailSent(List<JobRequest> jobRequests)
+        {
+            jobRequests.ForEach(jobRequest =>
+            {
+                jobRequest.ProcessingEmailSent = true;
             });
             jobRequestsRepository.UpdateItems(jobRequests);
         }

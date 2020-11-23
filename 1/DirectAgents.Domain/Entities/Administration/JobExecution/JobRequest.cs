@@ -75,6 +75,14 @@ namespace DirectAgents.Domain.Entities.Administration.JobExecution
         public bool FailureEmailSent { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether [processing email sent].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [processing email sent]; otherwise, <c>false</c>.
+        /// </value>
+        public bool ProcessingEmailSent { get; set; }
+
+        /// <summary>
         /// Gets or sets the parent job request that caused this request. <see cref="JobRequest"/>.
         /// </summary>
         /// <value>
