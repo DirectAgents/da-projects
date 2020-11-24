@@ -1,7 +1,6 @@
-﻿using CakeExtractor.SqlScriptsExecution.Core;
-using System;
+﻿using System;
 using System.Data;
-using System.Data.SqlClient;
+using CakeExtractor.SqlScriptsExecution.Core;
 
 namespace CakeExtracter.Common
 {
