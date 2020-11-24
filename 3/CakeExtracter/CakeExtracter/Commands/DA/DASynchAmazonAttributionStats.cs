@@ -120,7 +120,6 @@ namespace CakeExtracter.Commands.DA
         }
 
         private IEnumerable<CommandWithSchedule> GetUniqueBroadAccountCommands(IEnumerable<CommandWithSchedule> commandsWithSchedule)
-        private string[] GetTokens()
         {
             var accountCommands =
                 new List<Tuple<DASynchAmazonAttributionStats, CommandWithSchedule>>();
@@ -128,12 +127,6 @@ namespace CakeExtracter.Commands.DA
             {
                 var command = (DASynchAmazonAttributionStats)commandWithSchedule.Command;
                 accountCommands.Add(
-            return Platform.GetPlatformTokens(Platform.Code_AttributionAmazon);
-        }
-
-        private void SaveTokens(string[] tokens)
-        {
-            Platform.SavePlatformTokens(Platform.Code_AttributionAmazon, tokens);
                     new Tuple<DASynchAmazonAttributionStats, CommandWithSchedule>(command, commandWithSchedule));
             }
             var broadCommands = accountCommands.Select(x => new CommandWithSchedule
@@ -168,6 +161,16 @@ namespace CakeExtracter.Commands.DA
             command.StartDate = exception.StartDate;
             command.EndDate = exception.EndDate;
             command.AccountId = exception.AccountId;
+        }
+
+        private string[] GetTokens()
+        {
+            return Platform.GetPlatformTokens(Platform.Code_AttributionAmazon);
+        }
+
+        private void SaveTokens(string[] tokens)
+        {
+            Platform.SavePlatformTokens(Platform.Code_AttributionAmazon, tokens);
         }
     }
 }
