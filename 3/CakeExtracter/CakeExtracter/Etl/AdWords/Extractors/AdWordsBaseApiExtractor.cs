@@ -179,8 +179,17 @@ namespace CakeExtracter.Etl.AdWords.Extractors
         private void ProcessFailedStatsExtraction(Exception e)
         {
             Logger.Warn("Extraction error: {0}", e.Message);
-            var exception = new AdwordsFailedEtlException(beginDate, endDate, clientCustomerId, StatsType, e);
-            ProcessFailedExtraction?.Invoke(exception);
+            if (!IsAuthError(e))
+            {
+                var exception = new AdwordsFailedEtlException(beginDate, endDate, clientCustomerId, StatsType, e);
+                ProcessFailedExtraction?.Invoke(exception);
+            }
+        }
+
+        private bool IsAuthError(Exception e)
+        {
+            const string AuthErrorPattern = "AuthorizationError.";
+            return e.Message.Contains(AuthErrorPattern);
         }
     }
 }
