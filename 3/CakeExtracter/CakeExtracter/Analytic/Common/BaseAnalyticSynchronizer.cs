@@ -14,6 +14,8 @@ namespace CakeExtracter.Analytic.Common
 
         private readonly DateTime endDate;
 
+        private readonly int? accountId;
+
         private readonly string sourceConnectionName;
 
         private readonly string destinationConnectioName;
@@ -23,10 +25,12 @@ namespace CakeExtracter.Analytic.Common
         /// </summary>
         /// <param name="startDate">Start date to synch the analytic data.</param>
         /// <param name="endDate">End date to synch the analytic data.</param>
-        protected BaseAnalyticSynchronizer(DateTime startDate, DateTime endDate)
+        /// <param name="accountId">Account identifier to synch analytic date (null = all accounts).</param>
+        protected BaseAnalyticSynchronizer(DateTime startDate, DateTime endDate, int? accountId = null)
         {
             this.startDate = startDate;
             this.endDate = endDate;
+            this.accountId = accountId;
             sourceConnectionName = SynchronizerParamsProvider.GetMainDatabaseConnectionName;
             destinationConnectioName = SynchronizerParamsProvider.GetAnalyticDataConnectionName;
         }
@@ -52,7 +56,7 @@ namespace CakeExtracter.Analytic.Common
         private DataTable GetAnalyticData()
         {
             var scriptsExecutor = new SqlScriptsExecutor(sourceConnectionName);
-            var scriptParams = SynchronizerParamsProvider.GetCommonScriptParams(startDate, endDate);
+            var scriptParams = SynchronizerParamsProvider.GetCommonScriptParams(startDate, endDate, accountId);
             var scriptPath = SynchronizerParamsProvider.GetSelectAnalyticDataScriptPath(TargetAnalyticTable);
             return scriptsExecutor.ExecuteSelectScript(scriptPath, scriptParams);
         }
@@ -60,7 +64,9 @@ namespace CakeExtracter.Analytic.Common
         private void RemoveOldData()
         {
             var scriptsExecutor = new SqlScriptsExecutor(destinationConnectioName);
-            var sqlScript = SynchronizerParamsProvider.GetDeleteAnalyticDataScript(TargetAnalyticTable, startDate, endDate);
+            var sqlScript = SynchronizerParamsProvider
+                .GetDeleteAnalyticDataScript(TargetAnalyticTable, startDate, endDate, accountId);
+
             scriptsExecutor.ExecuteSqlCommand(sqlScript);
         }
 
