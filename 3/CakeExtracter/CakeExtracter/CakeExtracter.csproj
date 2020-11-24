@@ -358,6 +358,7 @@
     <Compile Include="Analytic\Bing\BingSearchConversionsSynchronizer.cs" />
     <Compile Include="Analytic\Common\BaseAnalyticSynchronizer.cs" />
     <Compile Include="Analytic\Common\SynchronizerParamsProvider.cs" />
+    <Compile Include="Analytic\Facebook\FacebookAdSetSynchronizer.cs" />
     <Compile Include="Bootstrappers\AutoMapperBootstrapper.cs" />
     <Compile Include="Bootstrappers\DependencyInjectionBootstrapper.cs" />
     <Compile Include="Bootstrappers\DependencyInjectionModules\DependencyInjectionModule.cs" />

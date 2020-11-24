@@ -45,9 +45,15 @@ namespace CakeExtracter.Analytic.Common
         /// </summary>
         /// <param name="startDate">The start date parameter to synch data.</param>
         /// <param name="endDate">The end date parameter to synch data.</param>
+        /// <param name="accountId">The account identifier to synch data (null = all accounts).</param>
         /// <returns>Common script params formatted as strings array.</returns>
-        public static string[] GetCommonScriptParams(DateTime startDate, DateTime endDate)
+        public static string[] GetCommonScriptParams(DateTime startDate, DateTime endDate, int? accountId = null)
         {
+            if (accountId != null)
+            {
+                return new[] { accountId.ToString(), startDate.ToString(DateFormat), endDate.ToString(DateFormat) };
+            }
+
             return new[] { startDate.ToString(DateFormat), endDate.ToString(DateFormat) };
         }
 
@@ -57,17 +63,24 @@ namespace CakeExtracter.Analytic.Common
         /// <param name="targetTable">The name of the target table.</param>
         /// <param name="startDate">The start date.</param>
         /// <param name="endDate">The end date.</param>
+        /// <param name="accountId">The account identifier (null = all accounts).</param>
         /// <returns>Sql command.</returns>
         public static string GetDeleteAnalyticDataScript(
             string targetTable,
             DateTime startDate,
-            DateTime endDate)
+            DateTime endDate,
+            int? accountId = null)
         {
             var deleteDataScript = string.Format(
                 DeleteAnalyticDataScriptTemplate,
                 targetTable,
                 startDate.ToString(DateFormat),
                 endDate.ToString(DateFormat));
+
+            if (accountId != null)
+            {
+                deleteDataScript += $"AND AccountId = {accountId}";
+            }
 
             return deleteDataScript;
         }

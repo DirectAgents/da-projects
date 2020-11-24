@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using CakeExtracter.Analytic.Facebook;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement;
@@ -325,8 +325,10 @@ namespace CakeExtracter.Commands
             {
                 var extractor = new FacebookAdSetSummaryExtractor(rangeToProcess, account, fbUtility);
                 var loader = new FacebookAdSetSummaryLoaderV2(account.Id, rangeToProcess);
+                var synchronizer = new FacebookAdSetSynchronizer(rangeToProcess.FromDate, rangeToProcess.ToDate, account.Id);
                 InitEtlEvents(extractor, loader);
                 CommandHelper.DoEtl(extractor, loader);
+                synchronizer.RunSynchronizer();
             });
         }
 
