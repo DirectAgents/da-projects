@@ -250,6 +250,9 @@
     <Content Include="SQL\Analytic\AdWordsDailySummary_SelectAnalyticData.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="SQL\Analytic\AmazonAsinSummary_SelectAnalyticData.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="SQL\Analytic\AppleDailySummary_SelectAnalyticData.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
