@@ -37,7 +37,8 @@ namespace CakeExtracter.Analytic.Common
         {
             var scriptName = string.Format(SelectAnalyticDataScriptNamePattern, targetTable);
             var baseScriptPath = ConfigurationManager.AppSettings[BaseScriptPathParam];
-            return PathToFileDirectoryHelper.GetAssemblyRelativePath(PathToFileDirectoryHelper.CombinePath(baseScriptPath, scriptName));
+            return PathToFileDirectoryHelper.GetAssemblyRelativePath(
+                PathToFileDirectoryHelper.CombinePath(baseScriptPath, scriptName));
         }
 
         /// <summary>
@@ -79,7 +80,7 @@ namespace CakeExtracter.Analytic.Common
 
             if (accountId != null)
             {
-                deleteDataScript += $"AND AccountId = {accountId}";
+                deleteDataScript += $" AND AccountId = {accountId}";
             }
 
             return deleteDataScript;

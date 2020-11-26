@@ -334,7 +334,7 @@ namespace CakeExtracter.Tests.JobTests.Amazon.RelaunchMechanism
         {
             commandMock.Setup(m => m.Clone()).Returns(() => CopyCommand(commandMock.Object));
             commandMock.Setup(m => m.GetAccounts()).Returns(testAccounts);
-            commandMock.Setup(m => m.SynchAsinAnalyticTables(It.IsAny<int>()));
+            commandMock.Setup(m => m.SynchAsinAnalyticTables(It.IsAny<DateRange>(), It.IsAny<int>()));
             commandMock.Setup(m => m.GetTokens()).Returns(new string[0]);
             commandMock.Setup(m => m.SaveTokens(It.IsAny<string[]>())).Verifiable();
             commandMock.Setup(m => m.CreateUtility(It.IsAny<ExtAccount>())).Returns(new AmazonUtility());
