@@ -4,6 +4,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 using Amazon;
+using CakeExtracter.Analytic.Amazon;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement;
@@ -159,7 +160,7 @@ namespace CakeExtracter.Commands
             Platform.SavePlatformTokens(Platform.Code_Amazon, tokens);
         }
 
-        public virtual void SynchAsinAnalyticTables(int accountId)
+        public virtual void SynchAsinAnalyticTables(DateRange dateRange, int accountId)
         {
             try
             {
@@ -169,7 +170,13 @@ namespace CakeExtracter.Commands
                     {
                         var amazonAmsSyncher = new AmazonAmsAnalyticSyncher();
                         amazonAmsSyncher.SyncAsinLevelForAccount(accountId);
-                    }, accountId, AmazonJobLevels.Creative, AmazonJobOperations.SyncToAnalyticTables);
+
+                        var synchronizer = new AmazonAsinSynchronizer(dateRange.FromDate, dateRange.ToDate, accountId);
+                        synchronizer.RunSynchronizer();
+                    },
+                    accountId,
+                    AmazonJobLevels.Creative,
+                    AmazonJobOperations.SyncToAnalyticTables);
             }
             catch (Exception ex)
             {
@@ -287,7 +294,7 @@ namespace CakeExtracter.Commands
                     InitEtlEvents<TDadSummary, TDadSummaryMetric, AmazonApiAdExtractor, BaseAmazonLevelLoader<TDadSummary, TDadSummaryMetric>>(
                         extractor, loader);
                     CommandHelper.DoEtl(extractor, loader);
-                    SynchAsinAnalyticTables(account.Id);
+                    SynchAsinAnalyticTables(dateRange, account.Id);
                 },
                 account.Id,
                 AmazonJobLevels.Creative,

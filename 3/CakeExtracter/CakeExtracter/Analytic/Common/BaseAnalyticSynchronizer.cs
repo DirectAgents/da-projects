@@ -18,7 +18,7 @@ namespace CakeExtracter.Analytic.Common
 
         private readonly string sourceConnectionName;
 
-        private readonly string destinationConnectioName;
+        private readonly string destinationConnectionName;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseAnalyticSynchronizer"/> class.
@@ -32,7 +32,7 @@ namespace CakeExtracter.Analytic.Common
             this.endDate = endDate;
             this.accountId = accountId;
             sourceConnectionName = SynchronizerParamsProvider.GetMainDatabaseConnectionName;
-            destinationConnectioName = SynchronizerParamsProvider.GetAnalyticDataConnectionName;
+            destinationConnectionName = SynchronizerParamsProvider.GetAnalyticDataConnectionName;
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace CakeExtracter.Analytic.Common
 
         private void RemoveOldData()
         {
-            var scriptsExecutor = new SqlScriptsExecutor(destinationConnectioName);
+            var scriptsExecutor = new SqlScriptsExecutor(destinationConnectionName);
             var sqlScript = SynchronizerParamsProvider
                 .GetDeleteAnalyticDataScript(TargetAnalyticTable, startDate, endDate, accountId);
 
@@ -72,7 +72,7 @@ namespace CakeExtracter.Analytic.Common
 
         private void SaveAnalyticData(DataTable analyticData)
         {
-            var scriptsExecutor = new SqlScriptsExecutor(destinationConnectioName);
+            var scriptsExecutor = new SqlScriptsExecutor(destinationConnectionName);
             scriptsExecutor.BulkSaveDataTable(analyticData, TargetAnalyticTable);
         }
     }
