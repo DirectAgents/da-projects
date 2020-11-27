@@ -430,6 +430,7 @@
     <Compile Include="CakeMarketingApi\Entities\Tag.cs" />
     <Compile Include="CakeMarketingApi\Entities\Vertical.cs" />
     <Compile Include="Commands\Core\FailedJobsNotifierCommand.cs" />
+    <Compile Include="Commands\Core\ProcessingJobsNotifierCommand.cs" />
     <Compile Include="Commands\DA\DAMonthlyMaintenance.cs" />
     <Compile Include="Commands\DA\DASyncAmazonDspStats.cs" />
     <Compile Include="Commands\DA\DASynchAdformStats.cs" />
@@ -461,6 +462,7 @@
     <Compile Include="Common\JobExecutionManagement\JobExecution\Constants\EmailConfigConstants.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Models\ErrorInJobNotificationModel.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Models\FailedJobNotificationModel.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Models\ProcessingJobNotificationModel.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Services\IJobExecutionNotificationService.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Services\JobExecutionNotificationService.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Repositories\IJobRequestsRepository.cs" />

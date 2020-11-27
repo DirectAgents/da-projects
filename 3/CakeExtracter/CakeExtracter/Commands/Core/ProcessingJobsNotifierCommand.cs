@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.Composition;
+﻿using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.Configuration;
+using System.Linq;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
 
@@ -16,7 +19,10 @@ namespace CakeExtracter.Commands.Core
         /// </summary>
         public const string CommandName = "ProcessingJobsNotifierCommand";
 
-
+        /// <summary>
+        /// Gets or sets a value indicating whether job is working for standart health check time or not.
+        /// </summary>
+        public bool IsStandartTime { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProcessingJobsNotifierCommand"/> class.
@@ -25,7 +31,7 @@ namespace CakeExtracter.Commands.Core
         {
             NoNeedToCreateRepeatRequests = true;
             IsCommand(CommandName, "Notifies about processing jobs.");
-            //HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
+            HasOption<bool>("s|standart=", "Is time of launch standart (default = true)", c => IsStandartTime = c);
         }
 
         /// <summary>
@@ -39,9 +45,20 @@ namespace CakeExtracter.Commands.Core
         {
             var jobExecutionNotificationService = DIKernel.Get<IJobExecutionNotificationService>();
 
-            // Notifies about jobs that are still processing.
-            jobExecutionNotificationService.NotifyAboutProcessingJobs();
+            Dictionary<string, string> filter = new Dictionary<string, string>();
+            filter = (ConfigurationManager.GetSection(IsStandartTime ? "RunningJobsNames/StandartTimeJobs" : "RunningJobsNames/NonStandartTimeJobs")
+                as System.Collections.Hashtable)
+             .Cast<System.Collections.DictionaryEntry>()
+             .ToDictionary(n => n.Key.ToString(), n => n.Value != null ? n.Value.ToString() : "");
+
+            jobExecutionNotificationService.NotifyAboutProcessingJobs(filter);
             return 0;
+        }
+
+        /// <summary>Resets command properties.</summary>
+        public override void ResetProperties()
+        {
+            IsStandartTime = true;
         }
     }
 }

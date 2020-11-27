@@ -24,7 +24,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
         /// Notifies the about processing jobs.
         /// Sends email if job is still processing.
         /// </summary>
-        /// <param name="filter">The jobs not to check.</param>
-        void NotifyAboutProcessingJobs(List<string> filter);
+        /// <param name="filter">The jobs to check.</param>
+        void NotifyAboutProcessingJobs(Dictionary<string, string> filter);
     }
 }

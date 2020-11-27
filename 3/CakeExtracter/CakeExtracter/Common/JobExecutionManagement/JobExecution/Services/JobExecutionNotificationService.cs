@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CakeExtracter.Commands.Core;
 using CakeExtracter.Common.Email;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Constants;
@@ -79,7 +80,8 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
             }
         }
 
-        public void NotifyAboutProcessingJobs(List<string> filter)
+        /// <inheritdoc />
+        public void NotifyAboutProcessingJobs(Dictionary<string, string> filter)
         {
             try
             {
@@ -87,7 +89,6 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
                 if (processingJobs?.Count > 0)
                 {
                     NotifyAboutProcessingJobs(processingJobs);
-                    MarkJobProcessingItemsAsEmailSent(processingJobs);
                     CommandExecutionContext.Current.AppendJobExecutionStateInHistory($"Sent {processingJobs.Count} processing jobs notifications.");
                 }
             }
@@ -114,14 +115,15 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
                     item.CommandName != FailedJobsNotifierCommand.CommandName);
         }
 
-        private List<JobRequest> GetProcessingJobsForNotifying(List<string> filter)
+        private List<JobRequestExecution> GetProcessingJobsForNotifying(Dictionary<string, string> filter)
         {
-            return jobRequestsRepository.GetItems(
-                item => item.ProcessingEmailSent == false &&
-                item.Status == JobRequestStatus.Processing &&
-                item.ParentJobRequestId == null && // Emails should be not sent for child(retries) requests.
-                item.CommandName != ProcessingJobsNotifierCommand.CommandName &&
-                !filter.Contains(item.CommandName));
+            List<string> jobNamesList = filter.Keys.ToList();
+            return jobRequestExecutionRepository.GetItemsWithIncludes(
+                item => item.JobRequest.Status == JobRequestStatus.Processing &&
+                item.StartTime >= DateTime.Today &&
+                jobNamesList.Contains(item.JobRequest.CommandName)
+                && item.JobRequest.CommandExecutionArguments.Contains(filter[item.JobRequest.CommandName]),
+                nameof(JobRequestExecution.JobRequest));
         }
 
         private void NotifyAboutErrorsInJobExecutionItems(List<JobRequestExecution> jobExecutionsToNotify)
@@ -135,6 +137,18 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
             });
         }
 
+        private void NotifyAboutProcessingJobs(List<JobRequestExecution> jobExecutionsToNotify)
+        {
+            var toEmails = ConfigurationHelper.ExtractEnumerableFromConfig(EmailConfigConstants.JobProcessingToConfigKey).ToArray();
+            var ccEmails = ConfigurationHelper.ExtractEnumerableFromConfig(EmailConfigConstants.JobProcessingCcConfigKey).ToArray();
+
+            jobExecutionsToNotify.ForEach(jobExecution =>
+            {
+                var model = PrepareErrorInJobNotificationModel(jobExecution);
+                emailNotificationsService.SendEmail(toEmails, ccEmails, model, EmailConfigConstants.JobProcessingBodyTemplateName, EmailConfigConstants.JobProcessingSubjectTemplateName);
+            });
+        }
+
         private void NotifyAboutFailedJobs(List<JobRequest> jobsToNotify)
         {
             var toEmails = ConfigurationHelper.ExtractEnumerableFromConfig(EmailConfigConstants.JobFailedToConfigKey).ToArray();
@@ -143,17 +157,6 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
             {
                 var model = PrepareJobFailedNotificationModel(job);
                 emailNotificationsService.SendEmail(toEmails, ccEmails, model, EmailConfigConstants.JobFailedBodyTemplateName, EmailConfigConstants.JobFailedSubjectTemplateName);
-            });
-        }
-
-        private void NotifyAboutProcessingJobs(List<JobRequest> jobsToNotify)
-        {
-            var toEmails = ConfigurationHelper.ExtractEnumerableFromConfig(EmailConfigConstants.JobProcessingToConfigKey).ToArray();
-            var ccEmails = ConfigurationHelper.ExtractEnumerableFromConfig(EmailConfigConstants.JobProcessingCcConfigKey).ToArray();
-            jobsToNotify.ForEach(job =>
-            {
-                var model = PrepareJobProcessingNotificationModel(job);
-                emailNotificationsService.SendEmail(toEmails, ccEmails, model, EmailConfigConstants.JobProcessingBodyTemplateName, EmailConfigConstants.JobProcessingSubjectTemplateName);
             });
         }
 
@@ -200,15 +203,6 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
             jobRequests.ForEach(jobRequest =>
             {
                 jobRequest.FailureEmailSent = true;
-            });
-            jobRequestsRepository.UpdateItems(jobRequests);
-        }
-
-        private void MarkJobProcessingItemsAsEmailSent(List<JobRequest> jobRequests)
-        {
-            jobRequests.ForEach(jobRequest =>
-            {
-                jobRequest.ProcessingEmailSent = true;
             });
             jobRequestsRepository.UpdateItems(jobRequests);
         }
