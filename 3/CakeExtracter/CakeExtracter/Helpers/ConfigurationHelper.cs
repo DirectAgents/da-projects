@@ -18,11 +18,14 @@ namespace CakeExtracter.Helpers
         /// Extracts the enumerable from configuration.
         /// </summary>
         /// <param name="configKey">The configuration key.</param>
+        /// <param name="removeEmptyEntries">Option for removing or leaving empty entries.</param>
         /// <returns>Configuration values collection.</returns>
-        public static List<string> ExtractEnumerableFromConfig(string configKey)
+        public static List<string> ExtractEnumerableFromConfig(string configKey, bool removeEmptyEntries = true)
         {
             var configValue = ConfigurationManager.AppSettings[configKey] ?? string.Empty;
-            var values = ExtractEnumerableFromConfigValue(configValue);
+            var values = removeEmptyEntries
+                        ? ExtractEnumerableFromConfigValue(configValue, StringSplitOptions.RemoveEmptyEntries)
+                        : ExtractEnumerableFromConfigValue(configValue, StringSplitOptions.None);
             return values.ToList();
         }
 
@@ -31,11 +34,12 @@ namespace CakeExtracter.Helpers
         /// </summary>
         /// <param name="configKeysName">Name of the configuration keys.</param>
         /// <param name="configValuesName">Name of the configuration values.</param>
+        /// <param name="removeEmptyEntries">Option for removing or leaving empty entries.</param>
         /// <returns>Dictionary configuration value.</returns>
-        public static Dictionary<string, string> ExtractDictionaryFromConfigValue(string configKeysName, string configValuesName)
+        public static Dictionary<string, string> ExtractDictionaryFromConfigValue(string configKeysName, string configValuesName, bool removeEmptyEntries = true)
         {
-            var keys = ExtractEnumerableFromConfig(configKeysName);
-            var values = ExtractEnumerableFromConfig(configValuesName);
+            var keys = ExtractEnumerableFromConfig(configKeysName, removeEmptyEntries);
+            var values = ExtractEnumerableFromConfig(configValuesName, removeEmptyEntries);
             var dictionary = new Dictionary<string, string>();
             for (var i = 0; i < keys.Count; i++)
             {
@@ -93,9 +97,9 @@ namespace CakeExtracter.Helpers
             return int.Parse(configurationValue);
         }
 
-        private static IEnumerable<string> ExtractEnumerableFromConfigValue(string configValue)
+        private static IEnumerable<string> ExtractEnumerableFromConfigValue(string configValue, StringSplitOptions option = StringSplitOptions.RemoveEmptyEntries)
         {
-            return configValue.Split(ConfigurationValuesSeparators, StringSplitOptions.RemoveEmptyEntries);
+            return configValue.Split(ConfigurationValuesSeparators, option);
         }
 
         private static string GetSeparatorOrEmptyString(char symbol)

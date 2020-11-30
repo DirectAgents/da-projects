@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Services;
+using CakeExtracter.Helpers;
 
 namespace CakeExtracter.Commands.Core
 {
@@ -17,7 +18,7 @@ namespace CakeExtracter.Commands.Core
         /// <summary>
         /// The command name.
         /// </summary>
-        public const string CommandName = "ProcessingJobsNotifierCommand";
+        private const string CommandName = "ProcessingJobsNotifierCommand";
 
         /// <summary>
         /// Gets or sets a value indicating whether job is working for standart health check time or not.
@@ -44,12 +45,9 @@ namespace CakeExtracter.Commands.Core
         public override int Execute(string[] remainingArguments)
         {
             var jobExecutionNotificationService = DIKernel.Get<IJobExecutionNotificationService>();
-
-            Dictionary<string, string> filter = new Dictionary<string, string>();
-            filter = (ConfigurationManager.GetSection(IsStandartTime ? "RunningJobsNames/StandartTimeJobs" : "RunningJobsNames/NonStandartTimeJobs")
-                as System.Collections.Hashtable)
-             .Cast<System.Collections.DictionaryEntry>()
-             .ToDictionary(n => n.Key.ToString(), n => n.Value != null ? n.Value.ToString() : "");
+            var filter = IsStandartTime
+                        ? GetStandartTimeJobs()
+                        : GetNonStandartTimeJobs();
 
             jobExecutionNotificationService.NotifyAboutProcessingJobs(filter);
             return 0;
@@ -59,6 +57,16 @@ namespace CakeExtracter.Commands.Core
         public override void ResetProperties()
         {
             IsStandartTime = true;
+        }
+
+        private Dictionary<string, string> GetStandartTimeJobs()
+        {
+            return ConfigurationHelper.ExtractDictionaryFromConfigValue("JobProcessing_StandartTimeJobs_Names", "JobProcessing_StandartTimeJobs_Parameters", false);
+        }
+
+        private Dictionary<string, string> GetNonStandartTimeJobs()
+        {
+            return ConfigurationHelper.ExtractDictionaryFromConfigValue("JobProcessing_NonStandartTimeJobs_Names", "JobProcessing_NonStandartTimeJobs_Parameters", false);
         }
     }
 }

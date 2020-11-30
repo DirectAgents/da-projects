@@ -117,12 +117,12 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
 
         private List<JobRequestExecution> GetProcessingJobsForNotifying(Dictionary<string, string> filter)
         {
-            List<string> jobNamesList = filter.Keys.ToList();
+            var jobNamesList = filter.Keys.ToList();
             return jobRequestExecutionRepository.GetItemsWithIncludes(
                 item => item.JobRequest.Status == JobRequestStatus.Processing &&
                 item.StartTime >= DateTime.Today &&
-                jobNamesList.Contains(item.JobRequest.CommandName)
-                && item.JobRequest.CommandExecutionArguments.Contains(filter[item.JobRequest.CommandName]),
+                jobNamesList.Contains(item.JobRequest.CommandName) &&
+                item.JobRequest.CommandExecutionArguments.Contains(filter[item.JobRequest.CommandName]),
                 nameof(JobRequestExecution.JobRequest));
         }
 

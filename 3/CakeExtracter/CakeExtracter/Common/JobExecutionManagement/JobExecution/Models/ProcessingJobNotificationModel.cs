@@ -3,7 +3,7 @@
 namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Models
 {
     /// <summary>
-    /// Notification model for the error in job execution.
+    /// Notification model for processing job.
     /// </summary>
     public class ProcessingJobNotificationModel
     {
