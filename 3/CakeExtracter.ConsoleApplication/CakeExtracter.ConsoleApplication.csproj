@@ -180,6 +180,8 @@
     <None Include="AppleCertificateMarvel.p12">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Email\JobProcessingBody.cshtml" />
+    <None Include="Email\JobProcessingSubject.cshtml" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\PublishProfiles\dagents_vm_staging.pubxml" />

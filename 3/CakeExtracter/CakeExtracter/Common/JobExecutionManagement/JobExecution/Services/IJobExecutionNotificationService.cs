@@ -1,4 +1,6 @@
-﻿namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
+﻿using System.Collections.Generic;
+
+namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
 {
     /// <summary>
     /// Job Execution Notification Service.
@@ -17,5 +19,12 @@
         /// Sends email if error occurred while processing job. Warning for business. Retries can fix.
         /// </summary>
         void NotifyAboutErrorsInJobExecution();
+
+        /// <summary>
+        /// Notifies the about processing jobs.
+        /// Sends email if job is still processing.
+        /// </summary>
+        /// <param name="filter">The jobs to check.</param>
+        void NotifyAboutProcessingJobs(Dictionary<string, string> filter);
     }
 }

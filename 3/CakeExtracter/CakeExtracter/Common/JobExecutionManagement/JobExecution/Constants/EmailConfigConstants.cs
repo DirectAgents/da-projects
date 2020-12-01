@@ -26,6 +26,17 @@
         public const string JobErrorOccurredCcConfigKey = "JEM_ErrorOccurred_CcEmails";
 
         /// <summary>
+        /// The job processing "to" configuration key.
+        /// </summary>
+        public const string JobProcessingToConfigKey = "JEM_JobProcessing_ToEmails";
+
+        /// <summary>
+        /// The job processing "cc" configuration key.
+        /// </summary>
+        public const string JobProcessingCcConfigKey = "JEM_JobProcessing_CcEmails";
+
+
+        /// <summary>
         /// The job failed body email template name.
         /// </summary>
         public const string JobFailedBodyTemplateName = "JobFailedBody";
@@ -44,5 +55,15 @@
         /// The job error occurred subject email template name.
         /// </summary>
         public const string JobErrorOccurredSubjectTemplateName = "JobErrorOccuredSubject";
+
+        /// <summary>
+        /// The job processing body email template name.
+        /// </summary>
+        public const string JobProcessingBodyTemplateName = "JobProcessingBody";
+
+        /// <summary>
+        /// The job processing subject email template name.
+        /// </summary>
+        public const string JobProcessingSubjectTemplateName = "JobProcessingSubject";
     }
 }
