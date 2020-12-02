@@ -77,6 +77,28 @@ namespace CakeExtractor.SqlScriptsExecution.Core
         }
 
         /// <summary>
+        /// Runs sql query and return a scalar result.
+        /// </summary>
+        /// <param name="commandText">Sql query.</param>
+        /// <typeparam  name="T">Expected type of a result.</typeparam>
+        /// <returns>Scalar result of the query.</returns>
+        public T ExecuteAsScalar<T>(string commandText)
+        {
+            T result;
+            using (var connection = new SqlConnection(sqlConnectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(commandText, connection))
+                {
+                    result = (T)command.ExecuteScalar();
+                }
+                connection.Close();
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Runs the data saving using bulk operation.
         /// </summary>
         /// <param name="data">The data to save.</param>

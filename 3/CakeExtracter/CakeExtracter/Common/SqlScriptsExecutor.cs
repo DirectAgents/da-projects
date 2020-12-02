@@ -69,6 +69,17 @@ namespace CakeExtracter.Common
             sqlCommandsInvoker.RunBulkSave(data, targetTable);
         }
 
+        /// <summary>
+        /// Executes the sql command and return a scalar result.
+        /// </summary>
+        /// <typeparam  name="T">Expected type of a result.</typeparam>
+        /// <param name="sqlCommand">The sql command.</param>
+        /// <returns>Scalar result of the query.</returns>
+        public T GetScalarResult<T>(string sqlCommand)
+        {
+            return sqlCommandsInvoker.ExecuteAsScalar<T>(sqlCommand);
+        }
+
         private string GetScriptContent(string scriptFullPath, string[] scriptParams)
         {
             if (!string.IsNullOrEmpty(scriptFullPath))
