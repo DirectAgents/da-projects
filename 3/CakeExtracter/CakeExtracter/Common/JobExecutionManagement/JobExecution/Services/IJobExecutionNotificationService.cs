@@ -26,5 +26,11 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
         /// </summary>
         /// <param name="filter">The jobs to check.</param>
         void NotifyAboutProcessingJobs(Dictionary<string, string> filter);
+
+        /// <summary>
+        /// Notifies about issues with analytic tables.
+        /// Sends email if analytic table was not updated.
+        /// </summary>
+        void NotifyAboutSynchAnalyticIssues();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
-
+using CakeExtracter.Helpers;
 using SeleniumDataBrowser.Helpers;
 
 namespace CakeExtracter.Analytic.Common
@@ -8,7 +9,7 @@ namespace CakeExtracter.Analytic.Common
     /// <summary>
     /// Provides formatted parameters for synchronizer.
     /// </summary>
-    internal static class SynchronizerParamsProvider
+    internal static class AnalyticParamsProvider
     {
         private const string SelectAnalyticDataScriptNamePattern = "{0}_SelectAnalyticData.sql";
 
@@ -16,7 +17,11 @@ namespace CakeExtracter.Analytic.Common
 
         private const string DeleteAnalyticDataScriptTemplate = "DELETE FROM {0} WHERE Date >= '{1}' AND Date <= '{2}'";
 
+        private const string SelectMaxAvailableDateTemplate = "SELECT MAX(Date) FROM {0}";
+
         private const string DateFormat = "yyyy-MM-dd";
+
+        private const string AnalyticTablesKey = "AnalyticTables";
 
         /// <summary>
         /// Gets the connection string to the AnalyticData database.
@@ -27,6 +32,11 @@ namespace CakeExtracter.Analytic.Common
         /// Gets the connection string to the main database.
         /// </summary>
         public static string GetMainDatabaseConnectionName => "ClientPortalProgContext";
+
+        /// <summary>
+        /// Gets IEnumerable collection of analytic tables.
+        /// </summary>
+        public static IEnumerable<string> GetAnalyticTables => ConfigurationHelper.ExtractEnumerableFromConfig(AnalyticTablesKey);
 
         /// <summary>
         /// Gets the sql script path to select analytic data depending on the target table.
@@ -84,6 +94,16 @@ namespace CakeExtracter.Analytic.Common
             }
 
             return deleteDataScript;
+        }
+
+        /// <summary>
+        /// Gets a script to select max available date in the table.
+        /// </summary>
+        /// <param name="table">Table to check.</param>
+        /// <returns>Sql script.</returns>
+        public static string SelectMaxAvailableDateScript(string table)
+        {
+            return string.Format(SelectMaxAvailableDateTemplate, table);
         }
     }
 }

@@ -35,7 +35,6 @@
         /// </summary>
         public const string JobProcessingCcConfigKey = "JEM_JobProcessing_CcEmails";
 
-
         /// <summary>
         /// The job failed body email template name.
         /// </summary>
@@ -65,5 +64,15 @@
         /// The job processing subject email template name.
         /// </summary>
         public const string JobProcessingSubjectTemplateName = "JobProcessingSubject";
+
+        /// <summary>
+        /// The analytic issue body email template name.
+        /// </summary>
+        public const string AnalyticIssueBodyTemplateName = "AnalyticIssueBody";
+
+        /// <summary>
+        /// The job processing subject email template name.
+        /// </summary>
+        public const string AnalyticIssueSubjectTemplateName = "AnalyticIssueSubject";
     }
 }

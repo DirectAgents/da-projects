@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.Analytic.Common;
 using CakeExtracter.Commands.Core;
 using CakeExtracter.Common.Email;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Constants;
@@ -98,6 +99,14 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
             }
         }
 
+        /// <inheritdoc />
+        public void NotifyAboutSynchAnalyticIssues()
+        {
+            var analyticHealthCheckService = new AnalyticHealthCheckService();
+            var notUpdatedTables = analyticHealthCheckService.GetNotUpdatedTables().ToList();
+            NotifyAboutAnalyticIssues(notUpdatedTables);
+        }
+
         private List<JobRequestExecution> GetExecutionItemsForErrorNotifying()
         {
             return jobRequestExecutionRepository.GetItemsWithIncludes(
@@ -157,6 +166,22 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
             {
                 var model = PrepareJobFailedNotificationModel(job);
                 emailNotificationsService.SendEmail(toEmails, ccEmails, model, EmailConfigConstants.JobFailedBodyTemplateName, EmailConfigConstants.JobFailedSubjectTemplateName);
+            });
+        }
+
+        private void NotifyAboutAnalyticIssues(List<string> tablesToNotify)
+        {
+            var toEmails = ConfigurationHelper.ExtractEnumerableFromConfig(EmailConfigConstants.JobErrorOccurredToConfigKey).ToArray();
+            var ccEmails = ConfigurationHelper.ExtractEnumerableFromConfig(EmailConfigConstants.JobErrorOccurredCcConfigKey).ToArray();
+
+            tablesToNotify.ForEach(table =>
+            {
+                emailNotificationsService.SendEmail(
+                    toEmails,
+                    ccEmails,
+                    table,
+                    EmailConfigConstants.AnalyticIssueBodyTemplateName,
+                    EmailConfigConstants.AnalyticIssueSubjectTemplateName);
             });
         }
 

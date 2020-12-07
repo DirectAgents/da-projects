@@ -357,8 +357,9 @@
     <Compile Include="Analytic\Bing\BingCallDailySummarySynchronizer.cs" />
     <Compile Include="Analytic\Bing\BingDailySummarySynchronizer.cs" />
     <Compile Include="Analytic\Bing\BingSearchConversionsSynchronizer.cs" />
+    <Compile Include="Analytic\Common\AnalyticHealthCheckService.cs" />
     <Compile Include="Analytic\Common\BaseAnalyticSynchronizer.cs" />
-    <Compile Include="Analytic\Common\SynchronizerParamsProvider.cs" />
+    <Compile Include="Analytic\Common\AnalyticParamsProvider.cs" />
     <Compile Include="Analytic\Facebook\FacebookAdSetSynchronizer.cs" />
     <Compile Include="Bootstrappers\AutoMapperBootstrapper.cs" />
     <Compile Include="Bootstrappers\DependencyInjectionBootstrapper.cs" />
@@ -431,7 +432,7 @@
     <Compile Include="CakeMarketingApi\Entities\Tag.cs" />
     <Compile Include="CakeMarketingApi\Entities\Vertical.cs" />
     <Compile Include="Commands\Core\FailedJobsNotifierCommand.cs" />
-    <Compile Include="Commands\Core\ProcessingJobsNotifierCommand.cs" />
+    <Compile Include="Commands\Core\HealthCheckNotifierCommand.cs" />
     <Compile Include="Commands\DA\DAMonthlyMaintenance.cs" />
     <Compile Include="Commands\DA\DASyncAmazonDspStats.cs" />
     <Compile Include="Commands\DA\DASynchAdformStats.cs" />

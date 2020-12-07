@@ -31,8 +31,8 @@ namespace CakeExtracter.Analytic.Common
             this.startDate = startDate;
             this.endDate = endDate;
             this.accountId = accountId;
-            sourceConnectionName = SynchronizerParamsProvider.GetMainDatabaseConnectionName;
-            destinationConnectionName = SynchronizerParamsProvider.GetAnalyticDataConnectionName;
+            sourceConnectionName = AnalyticParamsProvider.GetMainDatabaseConnectionName;
+            destinationConnectionName = AnalyticParamsProvider.GetAnalyticDataConnectionName;
         }
 
         /// <summary>
@@ -56,15 +56,15 @@ namespace CakeExtracter.Analytic.Common
         private DataTable GetAnalyticData()
         {
             var scriptsExecutor = new SqlScriptsExecutor(sourceConnectionName);
-            var scriptParams = SynchronizerParamsProvider.GetCommonScriptParams(startDate, endDate, accountId);
-            var scriptPath = SynchronizerParamsProvider.GetSelectAnalyticDataScriptPath(TargetAnalyticTable);
+            var scriptParams = AnalyticParamsProvider.GetCommonScriptParams(startDate, endDate, accountId);
+            var scriptPath = AnalyticParamsProvider.GetSelectAnalyticDataScriptPath(TargetAnalyticTable);
             return scriptsExecutor.ExecuteSelectScript(scriptPath, scriptParams);
         }
 
         private void RemoveOldData()
         {
             var scriptsExecutor = new SqlScriptsExecutor(destinationConnectionName);
-            var sqlScript = SynchronizerParamsProvider
+            var sqlScript = AnalyticParamsProvider
                 .GetDeleteAnalyticDataScript(TargetAnalyticTable, startDate, endDate, accountId);
 
             scriptsExecutor.ExecuteSqlCommand(sqlScript);
