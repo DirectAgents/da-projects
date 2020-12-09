@@ -101,6 +101,7 @@
     <Compile Include="Entities\CPProg\Adform\AdfBanner.cs" />
     <Compile Include="Entities\CPProg\Adform\AdfCampaign.cs" />
     <Compile Include="Entities\CPProg\Adform\AdfLineItem.cs" />
+    <Compile Include="Entities\CPProg\Adform\AdfTrackingPoint.cs" />
     <Compile Include="Entities\CPProg\Adform\Summaries\AdfBannerSummary.cs" />
     <Compile Include="Entities\CPProg\Adform\Summaries\AdfBaseSummary.cs" />
     <Compile Include="Entities\CPProg\Adform\Summaries\AdfCampaignSummary.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="Entities\CPProg\Adform\AdfBaseEntity.cs" />
     <Compile Include="Entities\CPProg\Adform\AdfMediaType.cs" />
     <Compile Include="Entities\CPProg\Adform\Summaries\AdfLineItemSummary.cs" />
+    <Compile Include="Entities\CPProg\Adform\Summaries\AdfTrackingPointSummary.cs" />
     <Compile Include="Entities\CPProg\AmazonAttribution\AttributionSummary.cs" />
     <Compile Include="Entities\CPProg\Facebook\FbCampaignReachMetric.cs" />
     <Compile Include="Entities\CPProg\Facebook\FbReachMetric.cs" />
@@ -181,6 +183,10 @@
     <Compile Include="MigrationsTD\202009281245179_AddAttributionSummaryEntity.cs" />
     <Compile Include="MigrationsTD\202009281245179_AddAttributionSummaryEntity.Designer.cs">
       <DependentUpon>202009281245179_AddAttributionSummaryEntity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\202012071532475_Mig_AdfTrackingPoint.cs" />
+    <Compile Include="MigrationsTD\202012071532475_Mig_AdfTrackingPoint.Designer.cs">
+      <DependentUpon>202012071532475_Mig_AdfTrackingPoint.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201909270822065_Mig_Affiliate_AccountManager.cs" />
     <Compile Include="Migrations\201909270822065_Mig_Affiliate_AccountManager.Designer.cs">
@@ -1255,6 +1261,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\202009281245179_AddAttributionSummaryEntity.resx">
       <DependentUpon>202009281245179_AddAttributionSummaryEntity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\202012071532475_Mig_AdfTrackingPoint.resx">
+      <DependentUpon>202012071532475_Mig_AdfTrackingPoint.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

@@ -16,6 +16,7 @@ namespace CakeExtracter.Etl.Adform
         private readonly bool includeCampaign;
         private readonly bool includeOrder;
         private readonly bool includeLineItem;
+        private readonly bool includeTrackingPoint;
         private readonly bool includeBanner;
 
         public AdformReportDataTransformer(
@@ -25,17 +26,21 @@ namespace CakeExtracter.Etl.Adform
             bool byCampaign = false,
             bool byLineItem = false,
             bool byBanner = false,
-            bool byOrder = false)
+            bool byOrder = false,
+            bool byTrackingPoint = false,
+            bool filterInteractionType = false)
         {
             this.reportData = reportData;
             rows = reportData.rows;
             columnLookup = reportData.CreateColumnLookup();
             includeBasicStats = !convStatsOnly;
-            includeConvStats = includeAdInteractionType = !basicStatsOnly;
+            includeConvStats = !basicStatsOnly;
+            includeAdInteractionType = filterInteractionType ? false : !basicStatsOnly;
             includeCampaign = byCampaign;
             includeOrder = byOrder;
             includeLineItem = byLineItem;
             includeBanner = byBanner;
+            includeTrackingPoint = byTrackingPoint;
         }
 
         public IEnumerable<AdformReportSummary> EnumerateAdformSummaries()
@@ -84,6 +89,11 @@ namespace CakeExtracter.Etl.Adform
             {
                 summary.LineItem = ReturnValueIfColumnExists(row, reportData.LineItemColumnId, Convert.ToString);
                 summary.LineItemId = ReturnValueIfColumnExists(row, reportData.LineItemIdColumnId, Convert.ToString);
+            }
+            if (includeTrackingPoint)
+            {
+                summary.TrackingPoint = ReturnValueIfColumnExists(row, reportData.TrackingPointColumnId, Convert.ToString);
+                summary.TrackingPointId = ReturnValueIfColumnExists(row, reportData.TrackingPointIdColumnId, Convert.ToString);
             }
             if (includeBanner)
             {

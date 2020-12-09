@@ -129,9 +129,11 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<AdfDailySummary>().ToTable("AdfDailySummary", tdSchema);
             modelBuilder.Entity<AdfCampaignSummary>().ToTable("AdfCampaignSummary", tdSchema);
             modelBuilder.Entity<AdfLineItemSummary>().ToTable("AdfLineItemSummary", tdSchema);
+            modelBuilder.Entity<AdfTrackingPointSummary>().ToTable("AdfTrackingPointSummary", tdSchema);
             modelBuilder.Entity<AdfBannerSummary>().ToTable("AdfBannerSummary", tdSchema);
             modelBuilder.Entity<AdfCampaign>().ToTable("AdfCampaign", tdSchema);
             modelBuilder.Entity<AdfLineItem>().ToTable("AdfLineItem", tdSchema);
+            modelBuilder.Entity<AdfTrackingPoint>().ToTable("AdfTrackingPoint", tdSchema);
             modelBuilder.Entity<AdfBanner>().ToTable("AdfBanner", tdSchema);
             modelBuilder.Entity<AdfMediaType>().ToTable("AdfMediaType", tdSchema);
 
@@ -406,9 +408,11 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<AdfDailySummary> AdfDailySummaries { get; set; }
         public DbSet<AdfCampaignSummary> AdfCampaignSummaries { get; set; }
         public DbSet<AdfLineItemSummary> AdfLineItemSummaries { get; set; }
+        public DbSet<AdfTrackingPointSummary> AdfTrackingPointSummaries { get; set; }
         public DbSet<AdfBannerSummary> AdfBannerSummaries { get; set; }
         public DbSet<AdfCampaign> AdfCampaigns { get; set; }
         public DbSet<AdfLineItem> AdfLineItems { get; set; }
+        public DbSet<AdfTrackingPoint> AdfTrackingPoints { get; set; }
         public DbSet<AdfBanner> AdfBanners { get; set; }
         public DbSet<AdfMediaType> AdfMediaTypes { get; set; }
 
@@ -574,6 +578,7 @@ namespace DirectAgents.Domain.Contexts
             SetupAdformBaseMetricModelValues<AdfDailySummary>(modelBuilder, "AccountId");
             SetupAdformBaseMetricModelValues<AdfCampaignSummary>(modelBuilder, "CampaignId");
             SetupAdformBaseMetricModelValues<AdfLineItemSummary>(modelBuilder, "LineItemId");
+            SetupAdformBaseMetricModelValues<AdfTrackingPointSummary>(modelBuilder, "TrackingPointId");
             SetupAdformBaseMetricModelValues<AdfBannerSummary>(modelBuilder, "BannerId");
         }
 

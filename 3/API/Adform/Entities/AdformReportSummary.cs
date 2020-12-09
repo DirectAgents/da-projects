@@ -58,6 +58,16 @@ namespace Adform.Entities
         public string LineItemId { get; set; }
 
         /// <summary>
+        /// Gets or sets the Tracking point.
+        /// </summary>
+        public string TrackingPoint { get; set; }
+
+        /// <summary>
+        /// Gets or sets the identifier of tracking point.
+        /// </summary>
+        public string TrackingPointId { get; set; }
+
+        /// <summary>
         /// Gets or sets the Banner.
         /// </summary>
         public string Banner { get; set; }

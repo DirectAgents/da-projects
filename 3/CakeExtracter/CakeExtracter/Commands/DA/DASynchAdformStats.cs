@@ -84,7 +84,7 @@ namespace CakeExtracter.Commands
                 "AdformIntervalBetweenRequestsInMinutes", IntervalBetweenUnsuccessfulAndNewRequestInMinutes);
             var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info("Adform ETL. DateRange {0}.", dateRange);
-            var statsType = new StatsTypeAgg(StatsType);
+            var statsType = new AdfStatsTypeAgg(StatsType);
             SetConfigurableVariables();
             AdformUtility.TokenSets = GetTokens();
             var accounts = GetAccounts();
@@ -123,7 +123,7 @@ namespace CakeExtracter.Commands
             trackingIdsOfAccounts = ConfigurationHelper.ExtractDictionaryFromConfigValue("Adform_AccountsWithSpecificTracking", "Adform_AccountsTrackingIds");
         }
 
-        private void DoETLs(ExtAccount account, DateRange dateRange, StatsTypeAgg statsType)
+        private void DoETLs(ExtAccount account, DateRange dateRange, AdfStatsTypeAgg statsType)
         {
             try
             {
@@ -149,7 +149,7 @@ namespace CakeExtracter.Commands
         private List<Action> GetEtlLevelActions(
             ExtAccount account,
             DateRange dateRange,
-            StatsTypeAgg statsType,
+            AdfStatsTypeAgg statsType,
             bool orderInsteadOfCampaign,
             AdformUtility adformUtility)
         {
@@ -165,6 +165,11 @@ namespace CakeExtracter.Commands
             if (statsType.Creative)
             {
                 etlLevelActions.Add(() => DoETL_Creative(dateRange, account, adformUtility));
+            }
+            if (statsType.TrackingPoint)
+            {
+                etlLevelActions.Add(() => DoETL_TrackingPoint(dateRange, account, orderInsteadOfCampaign, adformUtility));
+
             }
             return etlLevelActions;
         }
@@ -221,6 +226,15 @@ namespace CakeExtracter.Commands
             CommandHelper.DoEtl(extractor, loader);
         }
 
+        private void DoETL_TrackingPoint(DateRange dateRange, ExtAccount account, bool byOrder, AdformUtility adformUtility)
+        {
+            CommandExecutionContext.Current.SetJobExecutionStateInHistory("TrackingPoint level.", account.Id);
+            var extractor = new AdformTrackingPointSummaryExtractor(adformUtility, dateRange, account, byOrder);
+            var loader = CreateTrackingPointLoader(account.Id);
+            InitEtlEvents<AdfTrackingPointSummary, AdfTrackingPoint, AdformTrackingPointSummaryExtractor, AdfTrackingPointSummaryLoader>(extractor, loader);
+            CommandHelper.DoEtl(extractor, loader);
+        }
+
         private void DoETL_Creative(DateRange dateRange, ExtAccount account, AdformUtility adformUtility)
         {
             CommandExecutionContext.Current.SetJobExecutionStateInHistory("Banner level.", account.Id);
@@ -258,6 +272,15 @@ namespace CakeExtracter.Commands
             var campaignLoader = CreateCampaignLoader(accountId);
             var mediaTypeLoader = CreateMediaTypeLoader(accountId);
             return new AdfLineItemSummaryLoader(accountId, entityRepository, summaryRepository, campaignLoader, mediaTypeLoader);
+        }
+
+        private static AdfTrackingPointSummaryLoader CreateTrackingPointLoader(int accountId)
+        {
+            var entityRepository = new AdfTrackingPointDatabaseRepository();
+            var summaryRepository = new AdfTrackingPointSummaryDatabaseRepository();
+            var lineItemLoader = CreateLineItemLoader(accountId);
+            var mediaTypeLoader = CreateMediaTypeLoader(accountId);
+            return new AdfTrackingPointSummaryLoader(accountId, entityRepository, summaryRepository, lineItemLoader, mediaTypeLoader);
         }
 
         private static AdfBannerSummaryLoader CreateBannerLoader(int accountId)
