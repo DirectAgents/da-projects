@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DirectAgents.Domain.Entities.CPProg.Adform.Summaries
 {
@@ -18,5 +14,16 @@ namespace DirectAgents.Domain.Entities.CPProg.Adform.Summaries
         /// </summary>
         [ForeignKey("EntityId")]
         public virtual AdfTrackingPoint TrackingPoint { get; set; }
+
+        /// <summary>
+        /// Gets or sets the database ID of the related Line Item.
+        /// </summary>
+        [Key]
+        public int LineItemId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the related Line Item.
+        /// </summary>
+        public virtual AdfLineItem LineItem { get; set; }
     }
 }
