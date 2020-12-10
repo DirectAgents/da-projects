@@ -578,7 +578,7 @@ namespace DirectAgents.Domain.Contexts
             SetupAdformBaseMetricModelValues<AdfDailySummary>(modelBuilder, "AccountId");
             SetupAdformBaseMetricModelValues<AdfCampaignSummary>(modelBuilder, "CampaignId");
             SetupAdformBaseMetricModelValues<AdfLineItemSummary>(modelBuilder, "LineItemId");
-            SetupAdformBaseMetricModelValues<AdfTrackingPointSummary>(modelBuilder, "TrackingPointId");
+            SetupAdformTrackingPointMetricModelValues(modelBuilder);
             SetupAdformBaseMetricModelValues<AdfBannerSummary>(modelBuilder, "BannerId");
         }
 
@@ -596,6 +596,12 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<TBaseMetricValues>().Property(s => s.ImpressionSalesConvType1).HasPrecision(18, 6);
             modelBuilder.Entity<TBaseMetricValues>().Property(s => s.ImpressionSalesConvType2).HasPrecision(18, 6);
             modelBuilder.Entity<TBaseMetricValues>().Property(s => s.ImpressionSalesConvType3).HasPrecision(18, 6);
+        }
+
+        private void SetupAdformTrackingPointMetricModelValues(DbModelBuilder modelBuilder)
+        {
+            SetupAdformBaseMetricModelValues<AdfTrackingPointSummary>(modelBuilder, "TrackingPointId");
+            modelBuilder.Entity<AdfTrackingPointSummary>().HasKey(s => new { s.Date, s.EntityId, s.MediaTypeId, s.LineItemId, });
         }
 
         private void SetupYamDailyMetricModelValues<TDailyMetricValues>(DbModelBuilder modelBuilder, string entityColumnName)
