@@ -25,6 +25,14 @@ namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Adform.Models
         public SpecialPlatformLatestsSummary LineItemLatestsInfo { get; set; }
 
         /// <summary>
+        /// Gets or sets the TrackingPoint latests information.
+        /// </summary>
+        /// <value>
+        /// The TrackingPoint latests information.
+        /// </value>
+        public SpecialPlatformLatestsSummary TrackingPointLatestsInfo { get; set; }
+
+        /// <summary>
         /// Gets or sets the Banner latests information.
         /// </summary>
         /// <value>

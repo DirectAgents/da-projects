@@ -17,5 +17,7 @@
         MediaId,
         Media,
         AdInteractionType,
+        TrackingPoint,
+        TrackingPointId,
     }
 }

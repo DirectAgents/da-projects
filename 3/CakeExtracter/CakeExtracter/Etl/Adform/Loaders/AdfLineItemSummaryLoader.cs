@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Commands;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
+using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg.Adform;
 using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
 
@@ -50,6 +51,19 @@ namespace CakeExtracter.Etl.Adform.Loaders
                 result = MergeDependentEntitiesWithExisted(items);
             }
             return result;
+        }
+
+        /// <summary>
+        /// Finds existed LineItem in DB by its external ID.
+        /// </summary>
+        /// <param name="externalId">LineItem external ID for searching.</param>
+        /// <returns>LineItem from DB.</returns>
+        public AdfLineItem GetLineItemByExternalId(string externalId)
+        {
+            using (var db = new ClientPortalProgContext())
+            {
+                return db.AdfLineItems.FirstOrDefault(lineItem => lineItem.ExternalId == externalId);
+            }
         }
 
         /// <inheritdoc />

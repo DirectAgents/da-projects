@@ -36,6 +36,7 @@ namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Adform
             FillWithLineItemLatestsInfo(latestsInfo);
             FillWithCampaignLatestsInfo(latestsInfo);
             FillWithBannerLatestsInfo(latestsInfo);
+            FillWithTrackingPointLatestInfo(latestsInfo);
             return latestsInfo;
         }
 
@@ -62,6 +63,23 @@ namespace DirectAgents.Domain.SpecialPlatformsDataProviders.Adform
             {
                 accountLatestInfo.LineItemLatestsInfo =
                     latestsData.FirstOrDefault(latest => latest.AccountId == accountLatestInfo.Account.Id);
+            }
+        }
+
+        private void FillWithTrackingPointLatestInfo(List<AdformLatestsInfo> allAccountsLatestsInfo)
+        {
+            var latestData = context.AdfTrackingPointSummaries
+                .GroupBy(x => x.TrackingPoint.Id)
+                .Select(x => new SpecialPlatformLatestsSummary
+                {
+                    AccountId = x.Key,
+                    EarliestDate = x.Min(z => z.Date),
+                    LatestDate = x.Max(z => z.Date),
+                }).ToList();
+            foreach (var accountLatestInfo in allAccountsLatestsInfo)
+            {
+                accountLatestInfo.TrackingPointLatestsInfo =
+                    latestData.FirstOrDefault(latest => latest.AccountId == accountLatestInfo.Account.Id);
             }
         }
 

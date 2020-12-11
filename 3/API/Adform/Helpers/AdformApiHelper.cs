@@ -34,6 +34,8 @@ namespace Adform.Helpers
             { Dimension.OrderId, "orderID" },
             { Dimension.LineItem, "lineItem" },
             { Dimension.LineItemId, "lineItemID" },
+            { Dimension.TrackingPoint, "page" },
+            { Dimension.TrackingPointId, "pageID" },
             { Dimension.Banner, "banner" },
             { Dimension.BannerId, "bannerID" },
             { Dimension.MediaId, "mediaID" },

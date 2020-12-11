@@ -18,6 +18,8 @@ namespace Adform.Entities.ReportEntities
         public readonly string DateColumnId = AdformApiHelper.Dimensions[Dimension.Date];
         public readonly string LineItemColumnId = AdformApiHelper.Dimensions[Dimension.LineItem];
         public readonly string LineItemIdColumnId = AdformApiHelper.Dimensions[Dimension.LineItemId];
+        public readonly string TrackingPointColumnId = AdformApiHelper.Dimensions[Dimension.TrackingPoint];
+        public readonly string TrackingPointIdColumnId = AdformApiHelper.Dimensions[Dimension.TrackingPointId];
         public readonly string BannerColumnId = AdformApiHelper.Dimensions[Dimension.Banner];
         public readonly string BannerIdColumnId = AdformApiHelper.Dimensions[Dimension.BannerId];
         public readonly string MediaColumnId = AdformApiHelper.Dimensions[Dimension.Media];
