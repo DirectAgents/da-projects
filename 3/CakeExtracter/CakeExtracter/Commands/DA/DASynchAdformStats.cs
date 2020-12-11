@@ -76,8 +76,7 @@ namespace CakeExtracter.Commands
             HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
         }
 
-        //TODO: if synching all accounts, can we make one API call to get everything?
-
+        // TODO: if synching all accounts, can we make one API call to get everything?
         public override int Execute(string[] remainingArguments)
         {
             IntervalBetweenUnsuccessfulAndNewRequestInMinutes = ConfigurationHelper.GetIntConfigurationValue(
@@ -168,8 +167,7 @@ namespace CakeExtracter.Commands
             }
             if (statsType.TrackingPoint)
             {
-                etlLevelActions.Add(() => DoETL_TrackingPoint(dateRange, account, orderInsteadOfCampaign, adformUtility));
-
+                etlLevelActions.Add(() => DoETL_TrackingPoint(dateRange, account, adformUtility));
             }
             return etlLevelActions;
         }
@@ -226,10 +224,10 @@ namespace CakeExtracter.Commands
             CommandHelper.DoEtl(extractor, loader);
         }
 
-        private void DoETL_TrackingPoint(DateRange dateRange, ExtAccount account, bool byOrder, AdformUtility adformUtility)
+        private void DoETL_TrackingPoint(DateRange dateRange, ExtAccount account, AdformUtility adformUtility)
         {
             CommandExecutionContext.Current.SetJobExecutionStateInHistory("TrackingPoint level.", account.Id);
-            var extractor = new AdformTrackingPointSummaryExtractor(adformUtility, dateRange, account, byOrder);
+            var extractor = new AdformTrackingPointSummaryExtractor(adformUtility, dateRange, account);
             var loader = CreateTrackingPointLoader(account.Id);
             InitEtlEvents<AdfTrackingPointSummary, AdfTrackingPoint, AdformTrackingPointSummaryExtractor, AdfTrackingPointSummaryLoader>(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);

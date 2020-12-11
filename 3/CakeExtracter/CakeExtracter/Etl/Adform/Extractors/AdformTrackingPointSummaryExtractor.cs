@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
-using Adform.Utilities;
-using CakeExtracter.Common;
-using DirectAgents.Domain.Entities.CPProg;
+using Adform.Enums;
 using Adform.Entities;
 using Adform.Entities.ReportEntities;
-using DirectAgents.Domain.Entities.CPProg.Adform;
-using Adform.Enums;
 using Adform.Entities.ReportEntities.ReportParameters;
+using Adform.Utilities;
+using CakeExtracter.Common;
 using CakeExtracter.Etl.Adform.Exceptions;
-using CakeExtracter.Commands;
+using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
+using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.CPProg.Adform;
 
 namespace CakeExtracter.Etl.Adform.Extractors
 {
@@ -21,8 +20,6 @@ namespace CakeExtracter.Etl.Adform.Extractors
     /// </summary>
     public class AdformTrackingPointSummaryExtractor : AdformApiBaseExtractor<AdfTrackingPointSummary>
     {
-        private readonly bool byOrder;
-
         /// <inheritdoc cref="AdformApiBaseExtractor{T}"/>
         /// <summary>
         /// Initializes a new instance of the <see cref="AdformTrackingPointSummaryExtractor"/> class.
@@ -30,22 +27,21 @@ namespace CakeExtracter.Etl.Adform.Extractors
         /// <param name="adformUtility">API utility.</param>
         /// <param name="dateRange">Date range.</param>
         /// <param name="account">Account.</param>
-        /// <param name="byOrder">Flag indicates to extract order dimension instead of campaign dimension.</param>
-        public AdformTrackingPointSummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account, bool byOrder)
+        public AdformTrackingPointSummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account)
             : base(adformUtility, dateRange, account)
         {
-            this.byOrder = byOrder;
         }
 
         /// <inheritdoc/>
         protected override void Extract()
         {
-            Logger.Info(AccountId, $"Extracting TrackingPointSummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d}");
+            Logger.Info(
+                AccountId,
+                $"Extracting TrackingPointSummaries from Adform API for ({ClientId}) from {DateRange.FromDate:d} to {DateRange.ToDate:d}");
             try
             {
                 var data = ExtractData();
                 var sums = GroupSummaries(data);
-                var s = data.Where(x => x.TrackingPoint != null);
                 Add(sums);
             }
             catch (Exception e)
@@ -61,12 +57,12 @@ namespace CakeExtracter.Etl.Adform.Extractors
         private IEnumerable<AdformReportSummary> ExtractData()
         {
             var reportData = GetReportData();
-            return reportData.SelectMany(TransformReportData).ToList();
+            return reportData.SelectMany(TransformReportData);
         }
 
         private IEnumerable<AdformReportSummary> TransformReportData(ReportData reportData)
         {
-            var adFormTransformer = new AdformReportDataTransformer(reportData, byLineItem: true, byCampaign: !byOrder, byOrder: byOrder, byTrackingPoint: true, filterInteractionType: true);
+            var adFormTransformer = new AdformReportDataTransformer(reportData, byLineItem: true, byTrackingPoint: true);
             var afSums = adFormTransformer.EnumerateAdformSummaries();
             return afSums;
         }
@@ -80,9 +76,19 @@ namespace CakeExtracter.Etl.Adform.Extractors
 
         private IEnumerable<AdfTrackingPointSummary> EnumerateRows(IEnumerable<AdformReportSummary> afSums)
         {
-            var trackingPointGroups = afSums.GroupBy(x => new { x.LineItem, x.LineItemId, x.OrderId, x.TrackingPointId, x.TrackingPoint, x.Date, x.MediaId });
+            var unsupportedName = new[] { "n/a", "Unknown" };
+            var trackingPointGroups = afSums.GroupBy(
+                x => new { x.LineItem, x.LineItemId, x.TrackingPointId, x.TrackingPoint, x.Date, x.MediaId, });
+
             foreach (var trackingPointGroup in trackingPointGroups)
             {
+                if (unsupportedName.Any(x =>
+                        string.Equals(x, trackingPointGroup.Key.LineItem, StringComparison.InvariantCultureIgnoreCase)
+                        || string.Equals(x, trackingPointGroup.Key.TrackingPoint, StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    continue;
+                }
+
                 var sum = new AdfTrackingPointSummary
                 {
                     Date = trackingPointGroup.Key.Date,
@@ -90,15 +96,14 @@ namespace CakeExtracter.Etl.Adform.Extractors
                     {
                         ExternalId = trackingPointGroup.Key.MediaId,
                     },
+                    LineItem = new AdfLineItem
+                    {
+                        ExternalId = trackingPointGroup.Key.LineItemId,
+                    },
                     TrackingPoint = new AdfTrackingPoint
                     {
                         ExternalId = trackingPointGroup.Key.TrackingPointId,
                         Name = trackingPointGroup.Key.TrackingPoint,
-                        LineItem = new AdfLineItem
-                        {
-                            ExternalId = byOrder ? trackingPointGroup.FirstOrDefault()?.OrderId : trackingPointGroup.FirstOrDefault()?.LineItemId,
-                            Name = byOrder ? trackingPointGroup.FirstOrDefault()?.Order : trackingPointGroup.FirstOrDefault()?.LineItem,
-                        },
                     },
                 };
                 SetStats(sum, trackingPointGroup);
@@ -117,17 +122,12 @@ namespace CakeExtracter.Etl.Adform.Extractors
             var settings = GetBaseSettings();
             var dimensions = new List<Dimension>
             {
-                byOrder ? Dimension.Order : Dimension.Campaign,
-                byOrder ? Dimension.OrderId : Dimension.CampaignId,
-                Dimension.LineItem,
                 Dimension.LineItemId,
                 Dimension.TrackingPoint,
                 Dimension.TrackingPointId,
             };
             SetDimensionsForReportSettings(dimensions, settings);
-            var reportParams = AfUtility.CreateReportParams(settings);
-            reportParams.Dimensions = reportParams.Dimensions.Where(x => !x.Equals("adInteractionType")).ToArray();
-            return reportParams;
+            return AfUtility.CreateReportParams(settings);
         }
 
         private void ProcessFailedStatsExtraction(Exception e, DateTime fromDate, DateTime toDate)

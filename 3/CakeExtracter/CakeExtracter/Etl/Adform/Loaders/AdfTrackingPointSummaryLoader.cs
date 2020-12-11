@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CakeExtracter.Commands;
 using CakeExtracter.Common;
 using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.CPProg.Adform;
@@ -37,7 +36,6 @@ namespace CakeExtracter.Etl.Adform.Loaders
             this.lineItemLoader = lineItemLoader;
         }
 
-
         /// <summary>
         /// Merges (inserts or updates) dependent tracking points with existed in DB.
         /// </summary>
@@ -45,13 +43,7 @@ namespace CakeExtracter.Etl.Adform.Loaders
         /// <returns>True if successfully.</returns>
         public bool MergeDependentTrackingPoints(List<AdfTrackingPoint> items)
         {
-            var lineItems = items.Select(x => x.LineItem).ToList();
-            var result = lineItemLoader.MergeDependentLineItems(lineItems);
-            if (result)
-            {
-                result = MergeDependentEntitiesWithExisted(items);
-            }
-            return result;
+            return MergeDependentEntitiesWithExisted(items);
         }
 
         /// <inheritdoc />
@@ -66,7 +58,13 @@ namespace CakeExtracter.Etl.Adform.Loaders
             var result = MergeDependentTrackingPoints(entities);
             if (result)
             {
-                result = MergeSummariesWithExisted(items);
+                items.ForEach(x =>
+                {
+                    var lineItem = lineItemLoader.GetLineItemByExternalId(x.LineItem.ExternalId);
+                    x.LineItemId = lineItem?.Id ?? 0;
+                    x.LineItem = null;
+                });
+                result = MergeSummariesWithExisted(items.Where(x => x.LineItemId > 0));
             }
             return result;
         }
@@ -89,12 +87,11 @@ namespace CakeExtracter.Etl.Adform.Loaders
 
         /// <inheritdoc />
         /// <summary>
-        /// Sets DB identifier of parent Line item for Tracking Point.
+        /// Cannot be applied for Tracking Point since it doesn't have parent.
         /// </summary>
-        /// <param name="entity">Tracking point for which the parent Line item ID will be set.</param>
+        /// <param name="entity">Tracking point.</param>
         protected override void SetEntityParents(AdfTrackingPoint entity)
         {
-            entity.LineItemId = entity.LineItem.Id;
         }
 
         /// <inheritdoc />

@@ -9,15 +9,15 @@ namespace CakeExtracter.Etl.Adform.Repositories.Summaries
         private static readonly object RequestLocker = new object();
 
         /// <inheritdoc />
-        protected override object Locker { get; set; } = RequestLocker;
+        public override string EntityName => "Adform Tracking Point Summary";
 
         /// <inheritdoc />
-        public override string EntityName => "Adform Tracking Point Summary";
+        protected override object Locker { get; set; } = RequestLocker;
 
         /// <inheritdoc />
         public override object[] GetKeys(AdfTrackingPointSummary item)
         {
-            return new object[] { item.Date, item.EntityId, item.MediaTypeId };
+            return new object[] { item.Date, item.EntityId, item.MediaTypeId, item.LineItemId };
         }
     }
 }

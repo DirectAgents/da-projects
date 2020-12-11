@@ -27,15 +27,13 @@ namespace CakeExtracter.Etl.Adform
             bool byLineItem = false,
             bool byBanner = false,
             bool byOrder = false,
-            bool byTrackingPoint = false,
-            bool filterInteractionType = false)
+            bool byTrackingPoint = false)
         {
             this.reportData = reportData;
             rows = reportData.rows;
             columnLookup = reportData.CreateColumnLookup();
             includeBasicStats = !convStatsOnly;
-            includeConvStats = !basicStatsOnly;
-            includeAdInteractionType = filterInteractionType ? false : !basicStatsOnly;
+            includeConvStats = includeAdInteractionType = !basicStatsOnly;
             includeCampaign = byCampaign;
             includeOrder = byOrder;
             includeLineItem = byLineItem;
