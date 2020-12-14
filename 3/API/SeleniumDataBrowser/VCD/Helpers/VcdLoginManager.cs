@@ -56,7 +56,14 @@ namespace SeleniumDataBrowser.VCD.Helpers
         public static void RepeatPassword(
             AmazonLoginActionsWithPagesManager pageActions, AuthorizationModel authModel)
         {
-            pageActions.LoginWithPassword(authModel.Password);
+            if (pageActions.IsElementEmpty(AmazonLoginPageObjects.LoginEmailInput))
+            {
+                pageActions.LoginProcess(authModel.Login, authModel.Password);
+            }
+            else
+            {
+                pageActions.LoginWithPassword(authModel.Password);
+            }
         }
 
         /// <summary>
