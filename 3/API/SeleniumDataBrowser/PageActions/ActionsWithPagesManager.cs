@@ -148,24 +148,6 @@ namespace SeleniumDataBrowser.PageActions
         }
 
         /// <summary>
-        /// Checks if there's any text inside the element.
-        /// </summary>
-        /// <param name="byElement">Web-element.</param>
-        /// <returns>True / false</returns>
-        public bool IsElementEmpty(By byElement)
-        {
-            try
-            {
-                var element = Driver.FindElement(byElement);
-                return string.IsNullOrEmpty(element.GetAttribute("value"));
-            }
-            catch (NoSuchElementException)
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
         /// Enters the specified characters in the specified web-element.
         /// </summary>
         /// <param name="byElement">Web-element.</param>
@@ -296,6 +278,24 @@ namespace SeleniumDataBrowser.PageActions
             catch (Exception e)
             {
                 throw new Exception($"Could not wait the loader [{loaderElement}]: {e.Message}", e);
+            }
+        }
+
+        /// <summary>
+        /// Checks if there's any text inside the element.
+        /// </summary>
+        /// <param name="byElement">Web-element.</param>
+        /// <returns>True / false</returns>
+        protected bool IsElementEmpty(By byElement)
+        {
+            try
+            {
+                var element = Driver.FindElement(byElement);
+                return string.IsNullOrEmpty(element.GetAttribute("value"));
+            }
+            catch (NoSuchElementException)
+            {
+                return false;
             }
         }
 

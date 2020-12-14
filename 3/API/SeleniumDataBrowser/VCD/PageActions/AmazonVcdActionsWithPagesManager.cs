@@ -70,7 +70,7 @@ namespace SeleniumDataBrowser.VCD.PageActions
         }
 
         /// <summary>
-        /// Navigates to sales diagnostic page on ara amazon portal. Reset password if needed.
+        /// Navigates to sales diagnostic page on ara amazon portal. Reset password or login and password if needed.
         /// </summary>
         /// <param name="authorizationModel">The authorization model.</param>
         public void RefreshSalesDiagnosticPage(AuthorizationModel authorizationModel)
@@ -81,7 +81,14 @@ namespace SeleniumDataBrowser.VCD.PageActions
             {
                 return;
             }
-            VcdLoginManager.RepeatPassword(this, authorizationModel);
+            if (IsElementEmpty(AmazonLoginPageObjects.LoginEmailInput))
+            {
+                VcdLoginManager.RepeatLoginAndPassword(this, authorizationModel);
+            }
+            else
+            {
+                VcdLoginManager.RepeatPassword(this, authorizationModel);
+            }
             NavigateToSalesDiagnosticPage(AmazonVcdPageObjects.DetailViewDataContainer);
         }
 
