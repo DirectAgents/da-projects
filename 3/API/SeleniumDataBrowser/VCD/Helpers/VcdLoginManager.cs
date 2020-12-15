@@ -60,6 +60,17 @@ namespace SeleniumDataBrowser.VCD.Helpers
         }
 
         /// <summary>
+        /// Repeats login with email and password.
+        /// </summary>
+        /// <param name="pageActions">Manager of page actions.</param>
+        /// <param name="authModel">Authorization settings.</param>
+        public static void RepeatLoginAndPassword(
+            AmazonLoginActionsWithPagesManager pageActions, AuthorizationModel authModel)
+        {
+            pageActions.LoginProcess(authModel.Login, authModel.Password);
+        }
+
+        /// <summary>
         /// Login to the Amazon Advertiser Portal and saving cookies.
         /// </summary>
         public void LoginToAmazonPortal()
