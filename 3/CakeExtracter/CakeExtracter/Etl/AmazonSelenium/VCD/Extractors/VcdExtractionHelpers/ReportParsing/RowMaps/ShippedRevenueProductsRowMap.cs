@@ -20,6 +20,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
             Map(m => m.Brand).Name("brand");
             Map(m => m.ApparelSize).Name("apparelsize");
             Map(m => m.ApparelSizeWidth).Name("apparelsizewidth");
+            Map(m => m.GlanceViews).Name("gvcurrenttotal");
             Map(m => m.Binding).Name("binding");
             Map(m => m.Color).Name("color");
             Map(m => m.ModelStyleNumber).Name("modelstyle");

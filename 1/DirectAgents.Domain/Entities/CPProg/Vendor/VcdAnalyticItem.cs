@@ -36,6 +36,8 @@ namespace DirectAgents.Domain.Entities.CPProg.Vendor
 
         public string ModelStyleNumber { get; set; }
 
+        public string GlanceViews { get; set; }
+
         public DateTime ReleaseDate { get; set; }
 
         public string Name { get; set; }

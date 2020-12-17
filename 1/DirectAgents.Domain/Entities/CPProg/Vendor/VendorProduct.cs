@@ -105,6 +105,12 @@ namespace DirectAgents.Domain.Entities.CPProg.Vendor
             set;
         }
 
+        public string GlanceViews
+        {
+            get;
+            set;
+        }
+
         public DateTime ReleaseDate
         {
             get;

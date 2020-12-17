@@ -76,6 +76,12 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Models
             set;
         }
 
+        public string GlanceViews
+        {
+            get;
+            set;
+        }
+
         public DateTime ReleaseDate
         {
             get;

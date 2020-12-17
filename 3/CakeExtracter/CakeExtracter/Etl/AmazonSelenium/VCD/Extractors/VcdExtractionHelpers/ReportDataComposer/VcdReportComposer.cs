@@ -178,6 +178,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
                 Color = firstProduct.Color,
                 ModelStyleNumber = firstProduct.ModelStyleNumber,
                 ReleaseDate = firstProduct.ReleaseDate,
+                GlanceViews = firstProduct.GlanceViews,
             };
             item.SetMetrics(products);
             return item;

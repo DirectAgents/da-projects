@@ -2,7 +2,7 @@
 
 INSERT INTO td.VcdAnalytic (Date, BrandName, CategoryName, SubcategoryName,ReleaseDate, 
 							Asin, ParentProductAsin, Name,AccountId, Ean, Upc, ApparelSize, ApparelSizeWidth,
-							Binding, Color, ModelStyleNumber,
+							Binding, Color, ModelStyleNumber, GlanceViews,
 							 ShippedRevenue,ShippedUnits, OrderedUnits, ShippedCOGS, FreeReplacements, CustomerReturns, OrderedRevenue)
 select 
 	   summaryMetrics.Date                    as 'Date - PRODUCT',
@@ -21,6 +21,7 @@ select
 	   product.Binding,
 	   product.Color,
 	   product.ModelStyleNumber,
+	   product.GlanceViews,
 
 	   summaryMetrics.[52] as 'Shipped Revenue',
 	   summaryMetrics.[54] as 'Shipped Units',
