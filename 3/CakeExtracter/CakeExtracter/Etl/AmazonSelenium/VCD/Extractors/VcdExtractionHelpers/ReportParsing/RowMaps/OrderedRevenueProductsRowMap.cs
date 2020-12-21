@@ -15,6 +15,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
         public OrderedRevenueProductsRowMap()
         {
             Map(m => m.OrderedRevenue).Name("orderedrevenue").TypeConverter<DecimalAmountReportConverter>();
+            Map(m => m.GlanceViews).Name("gvcurrenttotal").TypeConverter<DecimalAmountReportConverter>();
         }
     }
 }

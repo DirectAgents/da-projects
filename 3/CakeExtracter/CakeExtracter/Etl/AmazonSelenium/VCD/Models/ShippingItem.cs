@@ -77,6 +77,12 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Models
             set;
         }
 
+        public decimal GlanceViews
+        {
+            get;
+            set;
+        }
+
         public void SetMetrics<T>(IEnumerable<T> items)
             where T : ShippingItem
         {
@@ -91,6 +97,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Models
             RepOos = items.Sum(p => p.RepOos);
             RepOosPercentOfTotal = items.Sum(p => p.RepOosPercentOfTotal);
             RepOosPriorPeriodPercentChange = items.Sum(p => p.RepOosPriorPeriodPercentChange);
+            GlanceViews = items.Sum(p => p.GlanceViews);
         }
     }
 }

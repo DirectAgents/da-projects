@@ -3,7 +3,7 @@
 INSERT INTO td.VcdAnalytic (Date, BrandName, CategoryName, SubcategoryName,ReleaseDate, 
 							Asin, ParentProductAsin, Name,AccountId, Ean, Upc, ApparelSize, ApparelSizeWidth,
 							Binding, Color, ModelStyleNumber,
-							 ShippedRevenue,ShippedUnits, OrderedUnits, ShippedCOGS, FreeReplacements, CustomerReturns, OrderedRevenue)
+							 ShippedRevenue,ShippedUnits, OrderedUnits, ShippedCOGS, FreeReplacements, CustomerReturns, OrderedRevenue, GlanceViews)
 select 
 	   summaryMetrics.Date                    as 'Date - PRODUCT',
 	   brand.Name                             as 'Brand',
@@ -28,7 +28,8 @@ select
 	   summaryMetrics.[55] as 'Shipped COGS',
 	   summaryMetrics.[56] as 'Free Replacements',
 	   summaryMetrics.[57] as 'Customer Returns',
-	   summaryMetrics.[58] as 'Ordered Revenue'
+	   summaryMetrics.[58] as 'Ordered Revenue',
+	   summaryMetrics.[77] as 'Glance Views'
 	   
 from 
 	 (
@@ -42,7 +43,7 @@ from
        avg(metrics.Value)
 	 for metrics.MetricTypeId
      in 
-	 ( [52], [54], [53], [55], [56], [57], [58]) 
+	 ( [52], [54], [53], [55], [56], [57], [58], [77]) 
 	 ) as summaryMetrics
 join td.VProduct product         on summaryMetrics.ProductId = product.Id
 join td.VSubcategory subcategory on product.SubcategoryId = subcategory.Id 

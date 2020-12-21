@@ -33,7 +33,8 @@ INSERT INTO td.VcdAnalytic
              lbb,
              repoos,
              repoospercentoftotal,
-             repoospriorperiodpercentchange)
+             repoospriorperiodpercentchange,
+			 glanceviews)
 SELECT summarymetrics.date AS 'Date - PRODUCT',
        brand.NAME          AS 'Brand',
        category.NAME       AS 'Category',
@@ -60,7 +61,8 @@ SELECT summarymetrics.date AS 'Date - PRODUCT',
        summaryMetrics.[vendorLostBuyBox] AS 'LBB',
        summaryMetrics.[vendorRepOos] AS 'Rep OOS',
        summaryMetrics.[vendorRepOosPercentOfTotal] AS 'Rep OOS - % Of Total',
-       summaryMetrics.[vendorRepOosPriorPeriodPercentChange] AS 'Rep OOS - Prior Period'
+       summaryMetrics.[vendorRepOosPriorPeriodPercentChange] AS 'Rep OOS - Prior Period',
+	   summaryMetrics.[gvcurrenttotal] as 'Glance Views'
 FROM   (SELECT productSummaryMetric.date,
                productSummaryMetric.productid,
                metricType.Name AS 'MetricTypeName',
@@ -83,7 +85,8 @@ FROM   (SELECT productSummaryMetric.date,
                      [vendorLostBuyBox],
                      [vendorRepOos],
                      [vendorRepOosPercentOfTotal],
-                     [vendorRepOosPriorPeriodPercentChange]
+                     [vendorRepOosPriorPeriodPercentChange],
+					 [gvcurrenttotal]
                  )
              ) AS summarymetrics
        JOIN td.VProduct product

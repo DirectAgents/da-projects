@@ -66,5 +66,7 @@ namespace DirectAgents.Domain.Entities.CPProg.Vendor
         public decimal? RepOosPercentOfTotal { get; set; }
 
         public decimal? RepOosPriorPeriodPercentChange { get; set; }
+
+        public decimal? GlanceViews { get; set; }
     }
 }
