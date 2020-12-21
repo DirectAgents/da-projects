@@ -19,6 +19,6 @@ namespace CakeExtracter.Analytic.Apple
         }
 
         /// <inheritdoc/>
-        protected override string TargetAnalyticTable => "AppleDailySummary";
+        public override string TargetAnalyticTable => "AppleDailySummary";
     }
 }

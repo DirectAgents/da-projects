@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
+using CakeExtracter.Analytic.Common;
 using CakeExtracter.Analytic.Facebook;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
@@ -325,10 +326,11 @@ namespace CakeExtracter.Commands
             {
                 var extractor = new FacebookAdSetSummaryExtractor(rangeToProcess, account, fbUtility);
                 var loader = new FacebookAdSetSummaryLoaderV2(account.Id, rangeToProcess);
-                var synchronizer = new FacebookAdSetSynchronizer(rangeToProcess.FromDate, rangeToProcess.ToDate, account.Id);
                 InitEtlEvents(extractor, loader);
                 CommandHelper.DoEtl(extractor, loader);
-                synchronizer.RunSynchronizer();
+
+                SynchronizeAnalyticData(new FacebookAdSetSynchronizer(rangeToProcess.FromDate, rangeToProcess.ToDate, account.Id), account.Id);
+                SynchronizeAnalyticData(new FacebookActionTypeSynchronizer(rangeToProcess.FromDate, rangeToProcess.ToDate, account.Id), account.Id);
             });
         }
 
@@ -466,6 +468,12 @@ namespace CakeExtracter.Commands
             command.EndDate = exception.EndDate;
             command.AccountId = exception.AccountId;
             command.StatsType = exception.StatsType;
+        }
+
+        private void SynchronizeAnalyticData(BaseAnalyticSynchronizer synchronizer, int accountId)
+        {
+            CommandExecutionContext.Current.SetJobExecutionStateInHistory($"Synch analytic table - {synchronizer.TargetAnalyticTable}", accountId);
+            synchronizer.RunSynchronizer();
         }
     }
 }

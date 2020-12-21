@@ -19,6 +19,6 @@ namespace CakeExtracter.Analytic.AdWords
         }
 
         /// <inheritdoc/>
-        protected override string TargetAnalyticTable => "AdWordsDailySummary";
+        public override string TargetAnalyticTable => "AdWordsDailySummary";
     }
 }
