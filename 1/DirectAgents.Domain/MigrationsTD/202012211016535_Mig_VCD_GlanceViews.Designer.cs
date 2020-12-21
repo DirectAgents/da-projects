@@ -13,7 +13,7 @@ namespace DirectAgents.Domain.MigrationsTD
         
         string IMigrationMetadata.Id
         {
-            get { return "202012161235402_Mig_VCD_GlanceViews"; }
+            get { return "202012211016535_Mig_VCD_GlanceViews"; }
         }
         
         string IMigrationMetadata.Source

@@ -36,8 +36,6 @@ namespace DirectAgents.Domain.Entities.CPProg.Vendor
 
         public string ModelStyleNumber { get; set; }
 
-        public string GlanceViews { get; set; }
-
         public DateTime ReleaseDate { get; set; }
 
         public string Name { get; set; }
@@ -68,5 +66,7 @@ namespace DirectAgents.Domain.Entities.CPProg.Vendor
         public decimal? RepOosPercentOfTotal { get; set; }
 
         public decimal? RepOosPriorPeriodPercentChange { get; set; }
+
+        public decimal? GlanceViews { get; set; }
     }
 }

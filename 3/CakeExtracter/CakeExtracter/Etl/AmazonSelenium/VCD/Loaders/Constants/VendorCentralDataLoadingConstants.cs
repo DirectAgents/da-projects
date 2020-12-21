@@ -26,6 +26,8 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.Constants
 
         public const string RepOosPriorPeriodPercentChangeMetricName = "vendorRepOosPriorPeriodPercentChange";
 
+        public const string GlanceViewsMetricName = "gvcurrenttotal";
+
         public const int VendorMetricsDaysInterval = 1;
 
         public static readonly List<string> VendorMetricTypeNames = new List<string>
@@ -41,6 +43,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.Constants
             RepOosMetricName,
             RepOosPercentOfTotalMetricName,
             RepOosPriorPeriodPercentChangeMetricName,
+            GlanceViewsMetricName,
         };
 
         public static readonly List<string> AllowedZeroValueMetricTypeNames = new List<string>

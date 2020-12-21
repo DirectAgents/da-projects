@@ -7,13 +7,11 @@ namespace DirectAgents.Domain.MigrationsTD
     {
         public override void Up()
         {
-            AddColumn("td.VcdAnalytic", "GlanceViews", c => c.String());
-            AddColumn("td.VProduct", "GlanceViews", c => c.String());
+            AddColumn("td.VcdAnalytic", "GlanceViews", c => c.Decimal(precision: 18, scale: 6));
         }
         
         public override void Down()
         {
-            DropColumn("td.VProduct", "GlanceViews");
             DropColumn("td.VcdAnalytic", "GlanceViews");
         }
     }

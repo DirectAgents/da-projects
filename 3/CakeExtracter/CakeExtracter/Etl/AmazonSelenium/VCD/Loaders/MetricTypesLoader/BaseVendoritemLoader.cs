@@ -95,6 +95,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
                 InitMetricValue(dbEntity.Id, date, reportEntity.RepOos, VendorCentralDataLoadingConstants.RepOosMetricName),
                 InitMetricValue(dbEntity.Id, date, reportEntity.RepOosPercentOfTotal, VendorCentralDataLoadingConstants.RepOosPercentOfTotalMetricName),
                 InitMetricValue(dbEntity.Id, date, reportEntity.RepOosPriorPeriodPercentChange, VendorCentralDataLoadingConstants.RepOosPriorPeriodPercentChangeMetricName),
+                InitMetricValue(dbEntity.Id, date, reportEntity.GlanceViews, VendorCentralDataLoadingConstants.GlanceViewsMetricName),
             };
             metricEntities.RemoveAll(item => item == null);
             return metricEntities;

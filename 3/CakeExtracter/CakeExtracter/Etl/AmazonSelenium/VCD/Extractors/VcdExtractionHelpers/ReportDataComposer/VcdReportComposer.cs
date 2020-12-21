@@ -88,6 +88,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
             if (correspondingOrderedRevenueProduct != null)
             {
                 product.OrderedRevenue = correspondingOrderedRevenueProduct.OrderedRevenue;
+                product.GlanceViews = correspondingOrderedRevenueProduct.GlanceViews;
             }
         }
 
