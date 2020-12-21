@@ -19,6 +19,6 @@ namespace CakeExtracter.Analytic.Bing
         }
 
         /// <inheritdoc/>
-        protected override string TargetAnalyticTable => "BingCallDailySummary";
+        public override string TargetAnalyticTable => "BingCallDailySummary";
     }
 }

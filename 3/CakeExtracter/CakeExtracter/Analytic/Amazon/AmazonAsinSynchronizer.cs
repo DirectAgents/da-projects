@@ -20,6 +20,6 @@ namespace CakeExtracter.Analytic.Amazon
         }
 
         /// <inheritdoc />
-        protected override string TargetAnalyticTable => "AmazonAsinSummary";
+        public override string TargetAnalyticTable => "AmazonAsinSummary";
     }
 }

@@ -38,7 +38,7 @@ namespace CakeExtracter.Analytic.Common
         /// <summary>
         /// Gets name of the target analytic table.
         /// </summary>
-        protected abstract string TargetAnalyticTable { get; }
+        public abstract string TargetAnalyticTable { get; }
 
         /// <summary>
         /// Runs the analytic data synchronization.

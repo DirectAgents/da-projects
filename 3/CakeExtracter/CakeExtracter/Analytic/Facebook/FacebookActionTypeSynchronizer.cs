@@ -4,22 +4,22 @@ using CakeExtracter.Analytic.Common;
 namespace CakeExtracter.Analytic.Facebook
 {
     /// <summary>
-    /// Synchronizer for Facebook AdSet Summary level.
+    /// Synchronizer for Facebook Action Type Summary level.
     /// </summary>
-    internal class FacebookAdSetSynchronizer : BaseAnalyticSynchronizer
+    internal class FacebookActionTypeSynchronizer : BaseAnalyticSynchronizer
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="FacebookAdSetSynchronizer"/> class.
+        /// Initializes a new instance of the <see cref="FacebookActionTypeSynchronizer"/> class.
         /// </summary>
         /// <param name="startDate">Start date to synch the analytic data.</param>
         /// <param name="endDate">End date to synch the analytic data.</param>
         /// <param name="accountId">Account identifier to synch the analytic data.</param>
-        public FacebookAdSetSynchronizer(DateTime startDate, DateTime endDate, int accountId)
+        public FacebookActionTypeSynchronizer(DateTime startDate, DateTime endDate, int? accountId = null)
             : base(startDate, endDate, accountId)
         {
         }
 
         /// <inheritdoc/>
-        public override string TargetAnalyticTable => "FacebookAdSetSummary";
+        public override string TargetAnalyticTable => "FacebookActionTypeSummary";
     }
 }
