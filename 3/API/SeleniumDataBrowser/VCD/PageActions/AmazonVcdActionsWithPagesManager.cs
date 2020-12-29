@@ -19,6 +19,9 @@ namespace SeleniumDataBrowser.VCD.PageActions
         private const string SalesDiagnosticPageUrl = "https://vendorcentral.amazon.com/analytics/dashboard/salesDiagnostic";
         private const string SwitchAccountPageUrl = "https://vendorcentral.amazon.com/account/choose";
         private const string SnapshotPageUrl = "https://vendorcentral.amazon.com/analytics/dashboard/snapshot";
+        private const string HomePageUrl = "https://vendorcentral.amazon.com";
+
+        private readonly string[] availableAccountsType = new string[] { "CA", "US" };
 
         /// <inheritdoc cref="AmazonLoginActionsWithPagesManager"/>
         /// <summary>
@@ -77,19 +80,7 @@ namespace SeleniumDataBrowser.VCD.PageActions
         {
             Logger.LogInfo("Sales diagnostic page refreshing");
             NavigateToSalesDiagnosticPage();
-            if (!VcdLoginManager.NeedRepeatPassword(this))
-            {
-                return;
-            }
-            if (IsElementEmpty(AmazonLoginPageObjects.LoginEmailInput))
-            {
-                VcdLoginManager.RepeatLoginAndPassword(this, authorizationModel);
-            }
-            else
-            {
-                VcdLoginManager.RepeatPassword(this, authorizationModel);
-            }
-            NavigateToSalesDiagnosticPage(AmazonVcdPageObjects.DetailViewDataContainer);
+            CheckAuthState(authorizationModel);
         }
 
         /// <summary>
@@ -97,7 +88,7 @@ namespace SeleniumDataBrowser.VCD.PageActions
         /// </summary>
         /// <param name="accountName">Name of the current account.</param>
         /// <returns>True if successfully select.</returns>
-        public bool SelectAccountOnPage(string accountName)
+        public bool SelectAccountOnPage(string accountName = null)
         {
             try
             {
@@ -116,21 +107,21 @@ namespace SeleniumDataBrowser.VCD.PageActions
         }
 
         /// <summary>
-        /// Navigates to sign in to Vendor Central page and clicks on the Sign In button.
+        /// Navigates to sign in to Vendor Central page.
         /// </summary>
-        /// <param name="signInPageUrl">URL to the Sign In page.</param>
-        public void NavigateToSignInPage(string signInPageUrl)
+        public void NavigateToSignInPage()
         {
-            NavigateToUrl(signInPageUrl, AmazonVcdPageObjects.SignInToVendorCentralButton);
-            WaitElementClickable(AmazonVcdPageObjects.SignInToVendorCentralButton);
-            ClickElement(AmazonVcdPageObjects.SignInToVendorCentralButton);
+            NavigateToUrl(HomePageUrl, AmazonVcdPageObjects.SignInToVendorCentralButton);
         }
 
-        private IWebElement GetAccountElementForClicking(string accountName)
+        private IWebElement GetAccountElementForClicking(string accountName = null)
         {
             var accountItems = GetChildrenElements(AmazonVcdPageObjects.AccountList, AmazonVcdPageObjects.AccountItem);
-            var accountItem = accountItems.FirstOrDefault(x => IsMatchAccountItemToName(x.Text, accountName));
-            return accountItem;
+
+            return string.IsNullOrWhiteSpace(accountName)
+                    ? accountItems.FirstOrDefault(x => availableAccountsType
+                        .Any(y => x.Text.StartsWith(y, StringComparison.InvariantCultureIgnoreCase)))
+                    : accountItems.FirstOrDefault(x => IsMatchAccountItemToName(x.Text, accountName));
         }
 
         private bool IsMatchAccountItemToName(string accountElementText, string accountName)
@@ -147,6 +138,23 @@ namespace SeleniumDataBrowser.VCD.PageActions
             {
                 WaitElementClickable(AmazonVcdPageObjects.SalesDiagnosticLink);
                 ClickElement(AmazonVcdPageObjects.SalesDiagnosticLink);
+            }
+        }
+
+        private void CheckAuthState(AuthorizationModel authorizationModel)
+        {
+            if (VcdLoginManager.NeedRepeatPassword(this))
+            {
+                if (IsElementEmpty(AmazonLoginPageObjects.LoginEmailInput))
+                {
+                    VcdLoginManager.RepeatLoginAndPassword(this, authorizationModel);
+                }
+                else
+                {
+                    VcdLoginManager.RepeatPassword(this, authorizationModel);
+                }
+
+                NavigateToSalesDiagnosticPage(AmazonVcdPageObjects.DetailViewDataContainer);
             }
         }
     }
