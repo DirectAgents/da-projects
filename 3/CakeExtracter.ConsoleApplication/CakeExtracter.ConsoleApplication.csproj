@@ -256,6 +256,9 @@
     <Content Include="SQL\AMS\SyncAsinAnalyticTable.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="SQL\Analytic\AdformLineItemSummary_SelectAnalyticData.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="SQL\Analytic\AdWordsSearchConveriosns_SelectAnalyticData.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -275,6 +278,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="SQL\Analytic\BingSearchConverions_SelectAnalyticData.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\Analytic\FacebookActionTypeSummary_SelectAnalyticData.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="SQL\Analytic\FacebookAdSetSummary_SelectAnalyticData.sql">

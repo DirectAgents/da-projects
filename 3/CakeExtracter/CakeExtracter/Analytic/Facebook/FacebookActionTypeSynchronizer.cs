@@ -14,7 +14,7 @@ namespace CakeExtracter.Analytic.Facebook
         /// <param name="startDate">Start date to synch the analytic data.</param>
         /// <param name="endDate">End date to synch the analytic data.</param>
         /// <param name="accountId">Account identifier to synch the analytic data.</param>
-        public FacebookActionTypeSynchronizer(DateTime startDate, DateTime endDate, int? accountId = null)
+        public FacebookActionTypeSynchronizer(DateTime startDate, DateTime endDate, int accountId)
             : base(startDate, endDate, accountId)
         {
         }
