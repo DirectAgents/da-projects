@@ -256,6 +256,9 @@
     <Content Include="SQL\AMS\SyncAsinAnalyticTable.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="SQL\Analytic\AdformTrackingPointSummary_SelectAnalyticData.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="SQL\Analytic\AdWordsSearchConveriosns_SelectAnalyticData.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
