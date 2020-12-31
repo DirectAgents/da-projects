@@ -19,6 +19,7 @@ using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.Adform;
 using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
+using CakeExtracter.Analytic.Adform;
 
 namespace CakeExtracter.Commands
 {
@@ -231,6 +232,7 @@ namespace CakeExtracter.Commands
             var loader = CreateTrackingPointLoader(account.Id);
             InitEtlEvents<AdfTrackingPointSummary, AdfTrackingPoint, AdformTrackingPointSummaryExtractor, AdfTrackingPointSummaryLoader>(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
+            SyncTrackingPointAnalyticData(dateRange, account.Id);
         }
 
         private void DoETL_Creative(DateRange dateRange, ExtAccount account, AdformUtility adformUtility)
@@ -383,6 +385,22 @@ namespace CakeExtracter.Commands
             setting.Item1.DaysAgoToStart = null;
             setting.Item3.Command = setting.Item1;
             return setting.Item3;
+        }
+
+        private void SyncTrackingPointAnalyticData(DateRange dateRange, int accountId)
+        {
+            var synchronizer = new AdformTrackingPointSummarySynchronizer(dateRange.FromDate, dateRange.ToDate, accountId);
+            try
+            {
+                CommandExecutionContext.Current.SetJobExecutionStateInHistory("Sync analytic table data");
+                Logger.Info("Sync analytic table data.");
+                synchronizer.RunSynchronizer();
+            }
+            catch (Exception ex)
+            {
+                var exception = new Exception("Error occured while sync Adform data to analytic table", ex);
+                Logger.Error(exception);
+            }
         }
     }
 }
