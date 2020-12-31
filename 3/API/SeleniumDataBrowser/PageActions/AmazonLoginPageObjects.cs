@@ -18,9 +18,19 @@ namespace SeleniumDataBrowser.PageActions
         public static By LoginPassInput = By.Id("ap_password");
 
         /// <summary>
+        /// Select device form to send OTP-code.
+        /// </summary>
+        public static By SelectDeviceForm = By.Id("auth-select-device-form");
+
+        /// <summary>
         /// Field for OTP-code.
         /// </summary>
         public static By CodeInput = By.Id("auth-mfa-otpcode");
+
+        /// <summary>
+        /// Field for OTP-code.
+        /// </summary>
+        public static By MfaSubmitButton = By.Id("auth-signin-button");
 
         /// <summary>
         /// Check box "Remember me".
