@@ -90,8 +90,13 @@ namespace SeleniumDataBrowser.VCD.Helpers
 
         private void LoginWithoutCookie()
         {
-            pageActionManager.NavigateToSignInPage(SignInPageUrl);
+            if (!pageActionManager.GetCurrentWindowUrl().StartsWith(SignInPageUrl, StringComparison.InvariantCultureIgnoreCase))
+            {
+                pageActionManager.NavigateToSignInPage();
+            }
+
             pageActionManager.LoginProcess(authorizationModel.Login, authorizationModel.Password);
+            pageActionManager.SelectAccountOnPage();
             var cookies = pageActionManager.GetAllCookies();
             SeleniumCookieHelper.SaveCookiesToFiles(cookies, authorizationModel.CookiesDir);
         }
@@ -118,6 +123,7 @@ namespace SeleniumDataBrowser.VCD.Helpers
                 logger.LogWarning("Login into the portal without using cookies. Please, enter an authorization code!");
                 LoginWithoutCookie();
             }
+
             pageActionManager.RefreshSalesDiagnosticPage(authorizationModel);
         }
     }

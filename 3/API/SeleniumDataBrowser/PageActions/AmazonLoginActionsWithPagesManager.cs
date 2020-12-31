@@ -121,13 +121,11 @@ namespace SeleniumDataBrowser.PageActions
 
         private void WaitSecurityCodeIfNecessary()
         {
-            if (!IsElementPresent(AmazonLoginPageObjects.CodeInput))
+            if (!IsElementPresent(AmazonLoginPageObjects.SelectDeviceForm)
+                && !IsElementPresent(AmazonLoginPageObjects.CodeInput))
             {
                 return;
             }
-            WaitElementClickable(AmazonLoginPageObjects.CodeInput);
-            ClickElement(AmazonLoginPageObjects.DontAskCodeCheckBox);
-            ClickElement(AmazonLoginPageObjects.CodeInput);
             WaitSecurityCode();
         }
 

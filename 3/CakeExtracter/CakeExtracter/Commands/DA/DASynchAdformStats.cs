@@ -4,6 +4,8 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 using Adform.Utilities;
+using CakeExtracter.Analytic.Adform;
+using CakeExtracter.Analytic.Common;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement;
@@ -19,7 +21,6 @@ using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.Adform;
 using DirectAgents.Domain.Entities.CPProg.Adform.Summaries;
-
 namespace CakeExtracter.Commands
 {
     [Export(typeof(ConsoleCommand))]
@@ -222,6 +223,7 @@ namespace CakeExtracter.Commands
             var loader = CreateLineItemLoader(account.Id);
             InitEtlEvents<AdfLineItemSummary, AdfLineItem, AdformAdSetSummaryExtractor, AdfLineItemSummaryLoader>(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
+            SyncLineItemAnalyticData(dateRange, account.Id);
         }
 
         private void DoETL_TrackingPoint(DateRange dateRange, ExtAccount account, AdformUtility adformUtility)
@@ -231,6 +233,7 @@ namespace CakeExtracter.Commands
             var loader = CreateTrackingPointLoader(account.Id);
             InitEtlEvents<AdfTrackingPointSummary, AdfTrackingPoint, AdformTrackingPointSummaryExtractor, AdfTrackingPointSummaryLoader>(extractor, loader);
             CommandHelper.DoEtl(extractor, loader);
+            SyncTrackingPointAnalyticData(dateRange, account.Id);
         }
 
         private void DoETL_Creative(DateRange dateRange, ExtAccount account, AdformUtility adformUtility)
@@ -383,6 +386,33 @@ namespace CakeExtracter.Commands
             setting.Item1.DaysAgoToStart = null;
             setting.Item3.Command = setting.Item1;
             return setting.Item3;
+        }
+
+        private void SyncAnalyticData(BaseAnalyticSynchronizer synchronizer, DateRange dateRange, int accountId)
+        {
+            try
+            {
+                CommandExecutionContext.Current.SetJobExecutionStateInHistory($"Sync {synchronizer.TargetAnalyticTable} analytic table data", accountId);
+                Logger.Info("Sync analytic table data.");
+                synchronizer.RunSynchronizer();
+            }
+            catch (Exception ex)
+            {
+                var exception = new Exception("Error occured while sync Adform data to analytic table", ex);
+                Logger.Error(exception);
+            }
+        }
+
+        private void SyncTrackingPointAnalyticData(DateRange dateRange, int accountId)
+        {
+            var synchronizer = new AdformTrackingPointSummarySynchronizer(dateRange.FromDate, dateRange.ToDate, accountId);
+            SyncAnalyticData(synchronizer, dateRange, accountId);
+        }
+
+        private void SyncLineItemAnalyticData(DateRange dateRange, int accountId)
+        {
+            var synchronizer = new AdformLineItemSummarySynchronizer(dateRange.FromDate, dateRange.ToDate, accountId);
+            SyncAnalyticData(synchronizer, dateRange, accountId);
         }
     }
 }

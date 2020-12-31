@@ -351,6 +351,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analytic\Adform\AdformLineItemSummarySynchronizer.cs" />
+    <Compile Include="Analytic\Adform\AdformTrackingPointSummarySynchronizer.cs" />
     <Compile Include="Analytic\AdWords\AdWordsDailySummarySynchronizer.cs" />
     <Compile Include="Analytic\AdWords\AdWordsSearchConveriosnsSynchronizer.cs" />
     <Compile Include="Analytic\Amazon\AmazonAsinSynchronizer.cs" />

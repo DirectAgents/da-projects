@@ -12,7 +12,7 @@ namespace SeleniumDataBrowser.VCD.PageActions
         /// <summary>
         /// "Sign In to Vendor Central" button.
         /// </summary>
-        public static By SignInToVendorCentralButton = By.Id("login-button-container");
+        public static By SignInToVendorCentralButton = By.Id("signInSubmit");
 
         /// <summary>
         /// Data container of Detail View on main page.

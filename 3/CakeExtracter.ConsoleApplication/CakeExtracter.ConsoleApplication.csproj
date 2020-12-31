@@ -229,7 +229,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\DirectAgents.Web\packages\Selenium.Chrome.WebDriver.85.0.0\driver\chromedriver.exe">
+    <Content Include="..\DirectAgents.Web\packages\Selenium.WebDriver.ChromeDriver.87.0.4280.8800\driver\win32\chromedriver.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Email\JobErrorOccuredBody.cshtml">
@@ -254,6 +254,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="SQL\AMS\SyncAsinAnalyticTable.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\Analytic\AdformTrackingPointSummary_SelectAnalyticData.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="SQL\Analytic\AdformLineItemSummary_SelectAnalyticData.sql">

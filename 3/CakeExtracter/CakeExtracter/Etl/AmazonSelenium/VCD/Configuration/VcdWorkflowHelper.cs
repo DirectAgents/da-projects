@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using CakeExtracter.Common;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Loaders;
-using CakeExtracter.Helpers;
-using CakeExtracter.Logging.TimeWatchers.Amazon;
-
 using DirectAgents.Domain.Entities.CPProg;
-
 using SeleniumDataBrowser.VCD;
 using SeleniumDataBrowser.VCD.Helpers.UserInfoExtracting;
 using SeleniumDataBrowser.VCD.Helpers.UserInfoExtracting.Models;
