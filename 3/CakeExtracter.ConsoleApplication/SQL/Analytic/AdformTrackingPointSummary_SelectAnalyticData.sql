@@ -28,7 +28,6 @@ SELECT
 	tps.ImpressionSalesConvType1			 AS [ImpressionSalesConvType1],
 	tps.ImpressionSalesConvType2			 AS [ImpressionSalesConvType2],
 	tps.ImpressionSalesConvType3			 AS [ImpressionSalesConvType3]
-
 FROM [td].[AdfTrackingPointSummary] tps
 INNER JOIN [td].[AdfTrackingPoint] tp ON tps.TrackingPointId = tp.Id
 LEFT JOIN [td].[AdfLineItem] li ON tps.LineItemId = li.Id
