@@ -388,12 +388,12 @@ namespace CakeExtracter.Commands
             return setting.Item3;
         }
 
-        private void SyncAnalyticData(BaseAnalyticSynchronizer synchronizer, DateRange dateRange, int accountId)
+        private void SyncAnalyticData(BaseAnalyticSynchronizer synchronizer, int accountId)
         {
             try
             {
                 CommandExecutionContext.Current.SetJobExecutionStateInHistory($"Sync {synchronizer.TargetAnalyticTable} analytic table data", accountId);
-                Logger.Info("Sync analytic table data.");
+                Logger.Info($"Sync analytic {synchronizer.TargetAnalyticTable} data.");
                 synchronizer.RunSynchronizer();
             }
             catch (Exception ex)
@@ -406,13 +406,13 @@ namespace CakeExtracter.Commands
         private void SyncTrackingPointAnalyticData(DateRange dateRange, int accountId)
         {
             var synchronizer = new AdformTrackingPointSummarySynchronizer(dateRange.FromDate, dateRange.ToDate, accountId);
-            SyncAnalyticData(synchronizer, dateRange, accountId);
+            SyncAnalyticData(synchronizer, accountId);
         }
 
         private void SyncLineItemAnalyticData(DateRange dateRange, int accountId)
         {
             var synchronizer = new AdformLineItemSummarySynchronizer(dateRange.FromDate, dateRange.ToDate, accountId);
-            SyncAnalyticData(synchronizer, dateRange, accountId);
+            SyncAnalyticData(synchronizer, accountId);
         }
     }
 }
