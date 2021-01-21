@@ -48,11 +48,11 @@ namespace CakeExtracter.Commands.Core
             if (IsStandardTime)
             {
                 filter = GetStandardTimeJobs();
-                jobExecutionNotificationService.NotifyAboutSynchAnalyticIssues();
             }
             else
             {
                 filter = GetNonStandardTimeJobs();
+                jobExecutionNotificationService.NotifyAboutSynchAnalyticIssues();
             }
 
             jobExecutionNotificationService.NotifyAboutProcessingJobs(filter);
