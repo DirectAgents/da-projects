@@ -1,4 +1,4 @@
-DECLARE @SynchDate DATE = (SELECT MAX([datetime]) FROM [dbo].[carhartt_ca_branded_sb_sov_brand_sv])
+DECLARE @SynchDate DATE = (SELECT MAX([date]) FROM [dbo].[carhartt_ca_branded_sb_sov_brand_sv])
 
 DELETE FROM [dbo].[carhartt_ca_branded_sb_sov_brand_sv]
 WHERE [date] >= @SynchDate;
@@ -15,11 +15,11 @@ LEFT JOIN [dbo].[carhartt_branded_searchTerms_20201020] st ON [sbh].[phrase] = [
 WHERE [sbh].[datetime] >= @SynchDate
 GROUP BY	[sbh].[phrase],
 			[sbh].[adtype],
-			DATE, [sbh].[datetime],
+			[sbh].[datetime],
 			[sbh].[brand]
 GO
 
-DECLARE @SynchDate DATE = (SELECT MAX([datetime]) FROM [dbo].[carhartt_ca_branded_sb_sov_search_term_sv])
+DECLARE @SynchDate DATE = (SELECT MAX([date]) FROM [dbo].[carhartt_ca_branded_sb_sov_search_term_sv])
 
 DELETE FROM [dbo].[carhartt_ca_branded_sb_sov_search_term_sv]
 WHERE [date] >= @SynchDate;
