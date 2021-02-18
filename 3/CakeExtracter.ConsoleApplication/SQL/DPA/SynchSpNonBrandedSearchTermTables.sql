@@ -59,10 +59,10 @@ AS
 )
 INSERT INTO [dbo].[carhartt_ca_non_branded_sp_sov_brand_sv]
 SELECT
-    CAST([datetime] AS DATE)    AS [date],
-    [phrase]                    AS [search_term],
-    [Brand]                     AS [brand],
-    SUM([wieghted_sv])          AS [wieghted_sv]
+    [phrase]						AS [search_term],
+    CAST([datetime] AS DATE)		AS [date],
+    COALESCE([brand], '')			AS [brand],
+    SUM([wieghted_sv])				AS [wieghted_sv]
 FROM sp_non_branded_with_wieghted_sv
 GROUP BY    CAST([datetime] AS DATE),
             [phrase],
@@ -84,14 +84,14 @@ AS
     FROM [dbo].[carhartt_ca_non_branded_sp_sov_20201020] sph
 	LEFT JOIN [dbo].[carhartt_non_branded_searchTerms_20201020] st ON [sph].[phrase] = [st].[phrase]
     WHERE [datetime] >= @SynchDate
-    GROUP BY    [datetime],
-                [phrase],
-                [search_volume]
+    GROUP BY    [sph].[datetime],
+                [sph].[phrase],
+                [st].[search_volume]
 )
 INSERT INTO [dbo].[carhartt_ca_non_branded_sp_sov_search_term_sv]
 SELECT
-    CAST([datetime] AS DATE)    AS [date],
-    [phrase]                    AS [search_term],
+    CAST([datetime] AS DATE)      AS [date],
+    [phrase]                      AS [search_term],
     SUM(search_volume)            AS [search_volume]
 FROM sp_term_sv
 GROUP BY    CAST([datetime] AS DATE),
