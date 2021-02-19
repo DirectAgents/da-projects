@@ -28,6 +28,28 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.Constants
 
         public const string GlanceViewsMetricName = "gvcurrenttotal";
 
+        public const string SalesRank = "subcategoryrank";
+
+        public const string AverageSalesPrice = "averagesellingpriceshippedunits";
+
+        public const string SellableOnHandUnits = "sellableonhandunits";
+
+        public const string NumberOfCustomerReviews = "numberofcustomerreviews";
+
+        public const string NumberOfCustomerReviewsLifeToDate = "numberofcustomerreviewslifetodate";
+
+        public const string AverageCustomerRating = "averagecustomerrating";
+
+        public const string FiveStars = "fivestars";
+
+        public const string FourStars = "fourstars";
+
+        public const string ThreeStars = "threestars";
+
+        public const string TwoStars = "twostars";
+
+        public const string OneStar = "onestar";
+
         public const int VendorMetricsDaysInterval = 1;
 
         public static readonly List<string> VendorMetricTypeNames = new List<string>
@@ -44,6 +66,17 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.Constants
             RepOosPercentOfTotalMetricName,
             RepOosPriorPeriodPercentChangeMetricName,
             GlanceViewsMetricName,
+            SalesRank,
+            AverageSalesPrice,
+            SellableOnHandUnits,
+            NumberOfCustomerReviews,
+            NumberOfCustomerReviewsLifeToDate,
+            AverageCustomerRating,
+            FiveStars,
+            FourStars,
+            ThreeStars,
+            TwoStars,
+            OneStar,
         };
 
         public static readonly List<string> AllowedZeroValueMetricTypeNames = new List<string>

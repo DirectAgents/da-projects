@@ -511,6 +511,17 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.RepOosPercentOfTotal).HasPrecision(18, 6);
             modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.RepOosPriorPeriodPercentChange).HasPrecision(18, 6);
             modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.GlanceViews).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.SalesRank).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.AverageSalesPrice).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.SellableOnHandUnits).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.NumberOfCustomerReviews).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.NumberOfCustomerReviewsLifeToDate).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.AverageCustomerRating).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.FiveStars).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.FourStars).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.ThreeStars).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.TwoStars).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.OneStar).HasPrecision(18, 6);
         }
 
         private void SetupDailyMetricModelValues<TDailyMetricValues>(DbModelBuilder modelBuilder, string entityColumnName)
