@@ -298,6 +298,30 @@
     <Content Include="SQL\DPA\EnrichTotalVolumes.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="SQL\DPA\SynchSbBrandedSearchTermTables.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\DPA\SynchSbBrandedTables.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\DPA\SynchSbNonBrandedSearchTermTables.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\DPA\SynchSbNonBrandedTables.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\DPA\SynchSpBrandedSearchTermTables.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\DPA\SynchSpBrandedTables.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\DPA\SynchSpNonBrandedSearchTermTables.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\DPA\SynchSpNonBrandedTables.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="SQL\VCD\CreateVcdAnalyticTable.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
