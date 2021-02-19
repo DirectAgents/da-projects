@@ -12,20 +12,21 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
         /// <summary>
         /// Composes separated data of reports to common data.
         /// </summary>
-        /// <param name="shippedRevenueProducts">Data of report Shipped Revenue.</param>
-        /// <param name="shippedCogsProducts">Data of report Shipped COGS.</param>
-        /// <param name="orderedRevenueProducts">Data of report Ordered Revenue.</param>
+        /// <param name="reports">Array of reports to compose.</param>
         /// <returns>Common VCD report data.</returns>
-        public VcdReportData ComposeReportData(
-            List<Product> shippedRevenueProducts,
-            List<Product> shippedCogsProducts,
-            List<Product> orderedRevenueProducts)
+        public VcdReportData ComposeReportData(params List<Product>[] reports)
         {
-            shippedRevenueProducts = ProcessDuplicatedProducts(shippedRevenueProducts);
-            shippedCogsProducts = ProcessDuplicatedProducts(shippedCogsProducts);
-            orderedRevenueProducts = ProcessDuplicatedProducts(orderedRevenueProducts);
-            var mergedProducts = MergeShippedRevenueAndShippedCogsProductsData(
-                shippedRevenueProducts, shippedCogsProducts, orderedRevenueProducts);
+            for (var i = 0; i < reports.Length; i++)
+            {
+                reports[i] = ProcessDuplicatedProducts(reports[i]);
+            }
+
+            var allProducts = reports.SelectMany(x => x).ToList();
+            var mergedProducts = allProducts
+                .GroupBy(x => x.Asin)
+                .Select(x => GetProduct(x.Key, x))
+                .ToList();
+
             return new VcdReportData
             {
                 Products = mergedProducts,
@@ -43,7 +44,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
             var duplicatedAsins = GetDuplicatedAsins(products);
             duplicatedAsins.ForEach(asin =>
             {
-                var productsWithDuplicatedAsin = products.Where(p => p.Asin == asin);
+                var productsWithDuplicatedAsin = products.Where(p => p.Asin == asin).ToList();
                 products = products.Except(productsWithDuplicatedAsin).ToList();
                 var summarizedProduct = GetProduct(asin, productsWithDuplicatedAsin);
                 products.Add(summarizedProduct);
@@ -163,6 +164,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
 
         private Product GetProduct(string asin, IEnumerable<Product> products)
         {
+            products = products.ToList();
             var firstProduct = products.FirstOrDefault();
             var item = new Product
             {
@@ -179,7 +181,6 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
                 Color = firstProduct.Color,
                 ModelStyleNumber = firstProduct.ModelStyleNumber,
                 ReleaseDate = firstProduct.ReleaseDate,
-                GlanceViews = firstProduct.GlanceViews,
             };
             item.SetMetrics(products);
             return item;

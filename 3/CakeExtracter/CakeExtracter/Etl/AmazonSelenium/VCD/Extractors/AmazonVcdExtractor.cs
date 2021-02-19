@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportDataComposer;
@@ -99,8 +98,15 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
             var shippedRevenueReportData = GetShippedRevenueReportData(reportDay);
             var shippedCogsReportData = GetShippingCogsReportData(reportDay);
             var orderedRevenueReportData = GetOrderedRevenueReportData(reportDay);
+            var inventoryHealthReportDate = GetInventoryHealthReportData(reportDay);
+            var customerReviewsReportDate = GetCustomerReviewsReportData(reportDay);
             var composedData = reportComposer.ComposeReportData(
-                shippedRevenueReportData, shippedCogsReportData, orderedRevenueReportData);
+                shippedRevenueReportData,
+                shippedCogsReportData,
+                orderedRevenueReportData,
+                inventoryHealthReportDate,
+                customerReviewsReportDate);
+
             composedData.Date = reportDay;
             return composedData;
         }
@@ -130,6 +136,24 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
                 reportDay,
                 () => vcdDataProvider.DownloadOrderedRevenueCsvReport(accountInfo, reportDay),
                 reportParser.ParseOrderedRevenueReportData);
+        }
+
+        private List<Product> GetInventoryHealthReportData(DateTime reportDay)
+        {
+            return GetReportData(
+                "Inventory Health",
+                reportDay,
+                () => vcdDataProvider.DownloadInventoryHealthCsvReport(accountInfo, reportDay),
+                reportParser.ParseInventoryHealthReportData);
+        }
+
+        private List<Product> GetCustomerReviewsReportData(DateTime reportDay)
+        {
+            return GetReportData(
+                "Customer Reviews",
+                reportDay,
+                () => vcdDataProvider.DownloadCustomerReviewsCsvReport(accountInfo, reportDay),
+                reportParser.ParseCustomerReviewsReportData);
         }
 
         private List<Product> GetReportData(

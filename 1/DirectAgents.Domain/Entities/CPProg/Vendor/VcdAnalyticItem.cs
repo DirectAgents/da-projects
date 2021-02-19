@@ -68,5 +68,27 @@ namespace DirectAgents.Domain.Entities.CPProg.Vendor
         public decimal? RepOosPriorPeriodPercentChange { get; set; }
 
         public decimal? GlanceViews { get; set; }
+
+        public decimal? SalesRank { get; set; }
+
+        public decimal? AverageSalesPrice { get; set; }
+
+        public decimal? SellableOnHandUnits { get; set; }
+
+        public decimal? NumberOfCustomerReviews { get; set; }
+
+        public decimal? NumberOfCustomerReviewsLifeToDate { get; set; }
+
+        public decimal? AverageCustomerRating { get; set; }
+
+        public decimal? FiveStars { get; set; }
+
+        public decimal? FourStars { get; set; }
+
+        public decimal? ThreeStars { get; set; }
+
+        public decimal? TwoStars { get; set; }
+
+        public decimal? OneStar { get; set; }
     }
 }

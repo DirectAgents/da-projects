@@ -96,6 +96,17 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
                 InitMetricValue(dbEntity.Id, date, reportEntity.RepOosPercentOfTotal, VendorCentralDataLoadingConstants.RepOosPercentOfTotalMetricName),
                 InitMetricValue(dbEntity.Id, date, reportEntity.RepOosPriorPeriodPercentChange, VendorCentralDataLoadingConstants.RepOosPriorPeriodPercentChangeMetricName),
                 InitMetricValue(dbEntity.Id, date, reportEntity.GlanceViews, VendorCentralDataLoadingConstants.GlanceViewsMetricName),
+                InitMetricValue(dbEntity.Id, date, reportEntity.SalesRank, VendorCentralDataLoadingConstants.SalesRank),
+                InitMetricValue(dbEntity.Id, date, reportEntity.AverageSalesPrice, VendorCentralDataLoadingConstants.AverageSalesPrice),
+                InitMetricValue(dbEntity.Id, date, reportEntity.SellableOnHandUnits, VendorCentralDataLoadingConstants.SellableOnHandUnits),
+                InitMetricValue(dbEntity.Id, date, reportEntity.NumberOfCustomerReviews, VendorCentralDataLoadingConstants.NumberOfCustomerReviews),
+                InitMetricValue(dbEntity.Id, date, reportEntity.NumberOfCustomerReviewsLifeToDate, VendorCentralDataLoadingConstants.NumberOfCustomerReviewsLifeToDate),
+                InitMetricValue(dbEntity.Id, date, reportEntity.AverageCustomerRating, VendorCentralDataLoadingConstants.AverageCustomerRating),
+                InitMetricValue(dbEntity.Id, date, reportEntity.FiveStars, VendorCentralDataLoadingConstants.FiveStars),
+                InitMetricValue(dbEntity.Id, date, reportEntity.FourStars, VendorCentralDataLoadingConstants.FourStars),
+                InitMetricValue(dbEntity.Id, date, reportEntity.ThreeStars, VendorCentralDataLoadingConstants.ThreeStars),
+                InitMetricValue(dbEntity.Id, date, reportEntity.TwoStars, VendorCentralDataLoadingConstants.TwoStars),
+                InitMetricValue(dbEntity.Id, date, reportEntity.OneStar, VendorCentralDataLoadingConstants.OneStar),
             };
             metricEntities.RemoveAll(item => item == null);
             return metricEntities;

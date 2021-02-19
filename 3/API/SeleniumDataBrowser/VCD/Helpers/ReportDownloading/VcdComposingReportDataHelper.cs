@@ -1,5 +1,8 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
+using System.IO;
 using System.Text;
+using Newtonsoft.Json;
 using SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants;
 
 namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
@@ -16,8 +19,17 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         /// <returns>Product rows dynamic array.</returns>
         public static dynamic GetReportProductsRows(dynamic reportData)
         {
-            var firstReportPart = GetFirstReportPart(reportData);
-            return firstReportPart[ResponseDataConstants.ReportRowsNode];
+            try
+            {
+                var firstReportPart = GetFirstReportPart(reportData);
+                return firstReportPart[ResponseDataConstants.ReportRowsNode];
+            }
+            catch (Exception e)
+            {
+                var reportContent = JsonConvert.SerializeObject(reportData, Formatting.Indented);
+                File.WriteAllText($"{DateTime.UtcNow:u}-Report-{e.Message}", reportContent);
+                throw;
+            }
         }
 
         /// <summary>
@@ -27,11 +39,20 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         /// <returns>Line with column names for report header.</returns>
         public static StringBuilder CreateHeaderLineWithColumnNames(dynamic reportData)
         {
-            var columnNamesData = GetColumnNamesData(reportData);
-            var columnLine = ComposeColumnLineFromDynamicData(columnNamesData);
-            RemoveFirstSymbolFromLine(columnLine);
-            RemoveLastSymbolFromLine(columnLine);
-            return columnLine;
+            try
+            {
+                var columnNamesData = GetColumnNamesData(reportData);
+                var columnLine = ComposeColumnLineFromDynamicData(columnNamesData);
+                RemoveFirstSymbolFromLine(columnLine);
+                RemoveLastSymbolFromLine(columnLine);
+                return columnLine;
+            }
+            catch (Exception e)
+            {
+                var reportContent = JsonConvert.SerializeObject(reportData, Formatting.Indented);
+                File.WriteAllText($"{DateTime.UtcNow:u}-Report-{e.Message}", reportContent);
+                throw;
+            }
         }
 
         /// <summary>
@@ -41,10 +62,19 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         /// <returns>Line with product information for one report line.</returns>
         public static StringBuilder CreateRowLineWithProductInfo(dynamic productData)
         {
-            var productValuesData = productData[ResponseDataConstants.RecordValuesNode];
-            var rowLine = ComposeRowLineFromDynamicData(productValuesData);
-            RemoveLastDelimiterFromLine(rowLine);
-            return rowLine;
+            try
+            {
+                var productValuesData = productData[ResponseDataConstants.RecordValuesNode];
+                var rowLine = ComposeRowLineFromDynamicData(productValuesData);
+                RemoveLastDelimiterFromLine(rowLine);
+                return rowLine;
+            }
+            catch (Exception e)
+            {
+                var reportContent = JsonConvert.SerializeObject(productData, Formatting.Indented);
+                File.WriteAllText($"{DateTime.UtcNow:u}-ProductInfo-{e.Message}", reportContent);
+                throw;
+            }
         }
 
         /// <summary>
@@ -54,9 +84,18 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         /// <returns>The total number of report rows.</returns>
         public static int GetTotalReportRowCount(dynamic reportData)
         {
-            var reportPart = GetFirstReportPart(reportData);
-            var rowCountDynamic = reportPart[ResponseDataConstants.RowCountNode];
-            return int.Parse(rowCountDynamic, NumberStyles.AllowThousands | NumberStyles.AllowLeadingSign);
+            try
+            {
+                var reportPart = GetFirstReportPart(reportData);
+                var rowCountDynamic = reportPart[ResponseDataConstants.RowCountNode];
+                return int.Parse(rowCountDynamic, NumberStyles.AllowThousands | NumberStyles.AllowLeadingSign);
+            }
+            catch (Exception e)
+            {
+                var reportContent = JsonConvert.SerializeObject(reportData, Formatting.Indented);
+                File.WriteAllText($"{DateTime.UtcNow:u}-Report-{e.Message}", reportContent);
+                throw;
+            }
         }
 
         private static StringBuilder ComposeColumnLineFromDynamicData(dynamic columnNamesData)

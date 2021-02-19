@@ -83,21 +83,99 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Models
             set;
         }
 
+        public int SalesRank
+        {
+            get;
+            set;
+        }
+
+        public decimal AverageSalesPrice
+        {
+            get;
+            set;
+        }
+
+        public int SellableOnHandUnits
+        {
+            get;
+            set;
+        }
+
+        public int NumberOfCustomerReviews
+        {
+            get;
+            set;
+        }
+
+        public int NumberOfCustomerReviewsLifeToDate
+        {
+            get;
+            set;
+        }
+
+        public decimal AverageCustomerRating
+        {
+            get;
+            set;
+        }
+
+        public int FiveStars
+        {
+            get;
+            set;
+        }
+
+        public int FourStars
+        {
+            get;
+            set;
+        }
+
+        public int ThreeStars
+        {
+            get;
+            set;
+        }
+
+        public int TwoStars
+        {
+            get;
+            set;
+        }
+
+        public int OneStar
+        {
+            get;
+            set;
+        }
+
         public void SetMetrics<T>(IEnumerable<T> items)
             where T : ShippingItem
         {
-            OrderedUnits = items.Sum(p => p.OrderedUnits);
-            ShippedUnits = items.Sum(p => p.ShippedUnits);
-            ShippedRevenue = items.Sum(p => p.ShippedRevenue);
-            CustomerReturns = items.Sum(p => p.CustomerReturns);
-            FreeReplacements = items.Sum(p => p.FreeReplacements);
-            ShippedCogs = items.Sum(p => p.ShippedCogs);
-            OrderedRevenue = items.Sum(p => p.OrderedRevenue);
-            LostBuyBox = items.Sum(p => p.LostBuyBox);
-            RepOos = items.Sum(p => p.RepOos);
-            RepOosPercentOfTotal = items.Sum(p => p.RepOosPercentOfTotal);
-            RepOosPriorPeriodPercentChange = items.Sum(p => p.RepOosPriorPeriodPercentChange);
-            GlanceViews = items.Sum(p => p.GlanceViews);
+            var shippingItems = items.ToList();
+            OrderedUnits = shippingItems.Sum(p => p.OrderedUnits);
+            ShippedUnits = shippingItems.Sum(p => p.ShippedUnits);
+            ShippedRevenue = shippingItems.Sum(p => p.ShippedRevenue);
+            CustomerReturns = shippingItems.Sum(p => p.CustomerReturns);
+            FreeReplacements = shippingItems.Sum(p => p.FreeReplacements);
+            ShippedCogs = shippingItems.Sum(p => p.ShippedCogs);
+            OrderedRevenue = shippingItems.Sum(p => p.OrderedRevenue);
+            LostBuyBox = shippingItems.Sum(p => p.LostBuyBox);
+            RepOos = shippingItems.Sum(p => p.RepOos);
+            RepOosPercentOfTotal = shippingItems.Sum(p => p.RepOosPercentOfTotal);
+            RepOosPriorPeriodPercentChange = shippingItems.Sum(p => p.RepOosPriorPeriodPercentChange);
+            GlanceViews = shippingItems.Sum(p => p.GlanceViews);
+            AverageSalesPrice = shippingItems.Sum(p => p.AverageSalesPrice);
+            SalesRank = shippingItems.Sum(p => p.SalesRank);
+            SellableOnHandUnits = shippingItems.Sum(p => p.SellableOnHandUnits);
+            NumberOfCustomerReviews = shippingItems.Sum(p => p.NumberOfCustomerReviews);
+            NumberOfCustomerReviewsLifeToDate = shippingItems.Sum(p => p.NumberOfCustomerReviewsLifeToDate);
+            AverageCustomerRating = shippingItems.Sum(p => p.AverageCustomerRating);
+            FiveStars = shippingItems.Sum(p => p.FiveStars);
+            FourStars = shippingItems.Sum(p => p.FourStars);
+            ThreeStars = shippingItems.Sum(p => p.ThreeStars);
+            TwoStars = shippingItems.Sum(p => p.TwoStars);
+            OneStar = shippingItems.Sum(p => p.OneStar);
         }
     }
 }

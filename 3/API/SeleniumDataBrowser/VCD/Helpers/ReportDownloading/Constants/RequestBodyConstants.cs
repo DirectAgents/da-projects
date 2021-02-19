@@ -10,8 +10,6 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
     /// </summary>
     internal class RequestBodyConstants
     {
-        public const string ReportId = "salesDiagnosticDetail";
-
         public const string RequestBodyFormat = "application/json";
 
         public const string ShippedRevenueReportLevel = "shippedRevenueLevel";
@@ -26,44 +24,115 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
 
         public const string OrderedRevenueColumnId = "orderedrevenue";
 
+        public const string HealthInventoryColumnId = "sellableonhandinventory";
+
+        public const string CustomerReviewsColumnId = "numberofcustomerreviews";
+
         /// <summary>
-        /// Returns a list of report parameters with values for request body.
+        /// Returns a list of sales diagnostic report parameters with values for request body.
         /// </summary>
-        /// <param name="startDate">Start date.</param>
-        /// <param name="endDate">End date.</param>
-        /// <param name="reportLevel">Level of report.</param>
+        /// <param name="reportDate">Report date.</param>
+        /// <param name="reportLevel">Report level.</param>
         /// <returns>List of report parameters.</returns>
-        public static List<ReportParameter> GetReportParameters(
-            string startDate, string endDate, string reportLevel)
+        public static List<ReportParameter> GetSalesDiagnosticParameters(
+            string reportDate,
+            string reportLevel)
         {
             var isFullSetOfMetrics = reportLevel == ShippedRevenueReportLevel;
+            var commonParams = GetCommonReportParameters(reportDate, reportDate, isFullSetOfMetrics);
             var isAllAsins = reportLevel == OrderedRevenueLevel;
+            commonParams.AddRange(
+                new List<ReportParameter>
+                {
+                    new ReportParameter
+                    {
+                        parameterId = "viewFilter",
+                        values = new List<Value> { new Value { val = reportLevel } },
+                    },
+                    new ReportParameter
+                    {
+                        parameterId = "productView",
+                        values = new List<Value> { new Value { val = isAllAsins ? "allAsins" : "kindleExcluded" } },
+                    },
+                    new ReportParameter
+                    {
+                        parameterId = "aggregationFilter",
+                        values = new List<Value> { new Value { val = "ASINLevel" } },
+                    },
+                    new ReportParameter
+                    {
+                        parameterId = "distributorView",
+                        values = new List<Value> { new Value { val = "manufacturer" } },
+                    },
+                });
+            return commonParams;
+        }
+
+        /// <summary>
+        /// Returns a list of inventory health report parameters with values for request body.
+        /// </summary>
+        /// <param name="reportDate">Report date.</param>
+        /// <returns>List of report parameters.</returns>
+        public static List<ReportParameter> GetInventoryHealthParameters(string reportDate)
+        {
+            var commonParams = GetCommonReportParameters(reportDate, reportDate, false);
+            commonParams.AddRange(
+                new List<ReportParameter>
+                {
+                    new ReportParameter
+                    {
+                        parameterId = "isFCAllowed",
+                        values = new List<Value> { new Value { val = false } },
+                    },
+                    new ReportParameter
+                    {
+                        parameterId = "aggregationFilter",
+                        values = new List<Value> { new Value { val = "ASINLevel" } },
+                    },
+                    new ReportParameter
+                    {
+                        parameterId = "distributorView",
+                        values = new List<Value> { new Value { val = "manufacturer" } },
+                    },
+                });
+            return commonParams;
+        }
+
+        /// <summary>
+        /// Returns a list of customer reviews report parameters with values for request body.
+        /// </summary>
+        /// <param name="reportDate">Report date.</param>
+        /// <returns>List of report parameters.</returns>
+        public static List<ReportParameter> GetCustomerReviewsParameters(string reportDate)
+        {
+            const int sentimentNtileValue = 5;
+            var commonParams = GetCommonReportParameters(reportDate, reportDate, false);
+            commonParams.AddRange(
+                new List<ReportParameter>
+                {
+                    new ReportParameter
+                    {
+                        parameterId = "sentimentASIN",
+                        values = new List<Value> { new Value { val = string.Empty } },
+                    },
+                    new ReportParameter
+                    {
+                        parameterId = "sentimentNtile",
+                        values = new List<Value> { new Value { val = sentimentNtileValue } },
+                    },
+                });
+            return commonParams;
+        }
+
+        private static List<ReportParameter> GetCommonReportParameters(
+            string startDate, string endDate, bool isFullSetOfMetrics)
+        {
             return new List<ReportParameter>
             {
                 new ReportParameter
                 {
-                    parameterId = "distributorView",
-                    values = new List<Value> { new Value { val = "manufacturer" } },
-                },
-                new ReportParameter
-                {
-                    parameterId = "viewFilter",
-                    values = new List<Value> { new Value { val = reportLevel } },
-                },
-                new ReportParameter
-                {
-                    parameterId = "productView",
-                    values = new List<Value> { new Value { val = isAllAsins ? "allAsins" : "kindleExcluded" } },
-                },
-                new ReportParameter
-                {
                     parameterId = "asin",
                     values = new List<Value> { new Value { val = "ALL" } },
-                },
-                new ReportParameter
-                {
-                    parameterId = "aggregationFilter",
-                    values = new List<Value> { new Value { val = "ASINLevel" } },
                 },
                 new ReportParameter
                 {
@@ -120,16 +189,6 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
                 {
                     parameterId = "brandId",
                     values = new List<Value> { new Value { val = "ALL" } },
-                },
-                new ReportParameter
-                {
-                    parameterId = "parentASINVisibility",
-                    values = new List<Value> { new Value { val = isFullSetOfMetrics } },
-                },
-                new ReportParameter
-                {
-                    parameterId = "eanVisibility",
-                    values = new List<Value> { new Value { val = isFullSetOfMetrics } },
                 },
                 new ReportParameter
                 {

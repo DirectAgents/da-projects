@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Amazon.Helpers;
-using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing.ParsingConverters;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing.RowMaps;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Models;
 using CsvHelper;
@@ -64,6 +63,32 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
         {
             var products = ParseProductsFromReport<OrderedRevenueProductsRowMap>(
                 reportCsvText, date, "orderedRev");
+            return products;
+        }
+
+        /// <summary>
+        /// Parses the inventory health report data.
+        /// </summary>
+        /// <param name="reportCsvText">The report CSV text.</param>
+        /// <param name="date">The date.</param>
+        /// <returns>Collection of products with filled ordered revenue data.</returns>
+        public List<Product> ParseInventoryHealthReportData(string reportCsvText, DateTime date)
+        {
+            var products = ParseProductsFromReport<InventoryHealthProductsRowMap>(
+                reportCsvText, date, "inventoryHealth");
+            return products;
+        }
+
+        /// <summary>
+        /// Parses the customer reviews report data.
+        /// </summary>
+        /// <param name="reportCsvText">The report CSV text.</param>
+        /// <param name="date">The date.</param>
+        /// <returns>Collection of products with filled ordered revenue data.</returns>
+        public List<Product> ParseCustomerReviewsReportData(string reportCsvText, DateTime date)
+        {
+            var products = ParseProductsFromReport<CustomerReviewsProductsRowMap>(
+                reportCsvText, date, "customerReviews");
             return products;
         }
 
