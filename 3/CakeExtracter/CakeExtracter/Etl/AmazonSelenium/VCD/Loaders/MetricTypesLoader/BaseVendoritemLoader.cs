@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.Constants;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Models;
@@ -15,6 +14,8 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
         where TDbEntity : BaseVendorEntity
         where TSummaryMetricEntity : SummaryMetric, new()
     {
+        private const int BatchSize = 10000;
+
         protected Dictionary<string, int> metricTypes;
 
         protected BaseVendorItemLoader(Dictionary<string, int> metricTypes)
@@ -24,27 +25,25 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
 
         public List<TDbEntity> EnsureVendorEntitiesInDataBase(List<TReportEntity> reportEntities, ExtAccount account)
         {
-            var itemsToBeAdded = new List<TDbEntity>();
-            var allItemsFromReport = new List<TDbEntity>();
             using (var dbContext = new ClientPortalProgContext())
             {
-                var accountRelatedVendorEntities =
-                    dbContext.Set<TDbEntity>().Where(e => e.AccountId == account.Id).ToList();
+                var accountRelatedVendorEntities = dbContext.Set<TDbEntity>().Where(e => e.AccountId == account.Id).ToList();
+                var reportDbEntities = new List<TDbEntity>();
+                var itemsToBeAdded = new List<TDbEntity>();
+
                 reportEntities.ForEach(reportEntity =>
                 {
-                    var correspondingDbEntity =
-                        accountRelatedVendorEntities.FirstOrDefault(GetEntityMappingPredicate(reportEntity, account));
+                    var correspondingDbEntity = accountRelatedVendorEntities.FirstOrDefault(GetEntityMappingPredicate(reportEntity, account));
                     if (correspondingDbEntity == null)
                     {
                         correspondingDbEntity = MapReportEntityToDbEntity(reportEntity, account);
                         itemsToBeAdded.Add(correspondingDbEntity);
                     }
-                    allItemsFromReport.Add(correspondingDbEntity);
+                    reportDbEntities.Add(correspondingDbEntity);
                 });
-                dbContext.Set<TDbEntity>().AddRange(itemsToBeAdded);
-                dbContext.SaveChanges();
-                var allItems = accountRelatedVendorEntities.Concat(itemsToBeAdded).ToList();
-                return allItems;
+
+                dbContext.BulkInsert(itemsToBeAdded, options => options.BatchSize = BatchSize);
+                return reportDbEntities;
             }
         }
 
@@ -56,24 +55,20 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
         {
             using (var dbContext = new ClientPortalProgContext())
             {
-                var accountRelatedVendorEntityIds = accountRelatedVendorEntities.Select(e => e.Id).ToList();
-                var allVendorSummariesDbSet = dbContext.Set<TSummaryMetricEntity>();
-                var existingAccountDailySummaries = allVendorSummariesDbSet.Where(csm => csm.Date == date).ToList()
-                    .Where(csm => accountRelatedVendorEntityIds.Contains(csm.EntityId)).ToList();
+                var accountRelatedVendorEntityIds = accountRelatedVendorEntities.Select(e => e.Id).ToArray();
+                var existingAccountDailySummaries = dbContext.Set<TSummaryMetricEntity>()
+                    .Where(sums => sums.Date == date && accountRelatedVendorEntityIds.Contains(sums.EntityId))
+                    .ToList();
                 var actualAccountDailySummaries =
-                    GetActualDailySummariesFromReportEntities(
-                        reportShippingEntities, accountRelatedVendorEntities, account, date);
-                MergeDailySummariesAndUpdateInDataBase(
-                    allVendorSummariesDbSet,
-                    dbContext,
-                    existingAccountDailySummaries,
-                    actualAccountDailySummaries,
-                    account);
+                    GetActualDailySummariesFromReportEntities(reportShippingEntities, accountRelatedVendorEntities, account, date);
+
+                dbContext.BulkDelete(existingAccountDailySummaries, options => options.BatchSize = BatchSize);
+                dbContext.BulkInsert(actualAccountDailySummaries, options => options.BatchSize = BatchSize);
+                Logger.Info(account.Id, "Amazon VCD, Inserted {0}, Deleted {1}", actualAccountDailySummaries.Count, existingAccountDailySummaries.Count);
             }
         }
 
-        protected virtual Func<TDbEntity, bool> GetEntityMappingPredicate(
-            TReportEntity reportEntity, ExtAccount extAccount)
+        protected virtual Func<TDbEntity, bool> GetEntityMappingPredicate(TReportEntity reportEntity, ExtAccount extAccount)
         {
             return dbEntity => dbEntity.Name == reportEntity.Name && dbEntity.AccountId == extAccount.Id;
         }
@@ -110,48 +105,6 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
             };
             metricEntities.RemoveAll(item => item == null);
             return metricEntities;
-        }
-
-        private void MergeDailySummariesAndUpdateInDataBase(
-            DbSet<TSummaryMetricEntity> allVendorSummariesDbSet,
-            DbContext dbContext,
-            List<TSummaryMetricEntity> existingAccountDailySummaries,
-            List<TSummaryMetricEntity> actualAccountDailySummaries,
-            ExtAccount account)
-        {
-            var dailySummariesToInsert = new List<TSummaryMetricEntity>();
-            var dailySummariesToLeaveUntouched = new List<TSummaryMetricEntity>();
-            actualAccountDailySummaries.ForEach(actualMetric =>
-            {
-                var alreadyExistingMetricValue = existingAccountDailySummaries.FirstOrDefault(mS =>
-                    mS.EntityId == actualMetric.EntityId && mS.MetricTypeId == actualMetric.MetricTypeId);
-                if (alreadyExistingMetricValue != null)
-                {
-                    if (alreadyExistingMetricValue.Value == actualMetric.Value)
-                    {
-                        dailySummariesToLeaveUntouched.Add(alreadyExistingMetricValue);
-                    }
-                    else
-                    {
-                        dailySummariesToInsert.Add(actualMetric);
-                    }
-                }
-                else
-                {
-                    dailySummariesToInsert.Add(actualMetric);
-                }
-            });
-            var dailySummariesToBeRemoved =
-                existingAccountDailySummaries.Except(dailySummariesToLeaveUntouched).ToList();
-            allVendorSummariesDbSet.RemoveRange(dailySummariesToBeRemoved);
-            dbContext.SaveChanges();
-            allVendorSummariesDbSet.AddRange(dailySummariesToInsert);
-            dbContext.SaveChanges();
-            Logger.Info(
-                account.Id,
-                "Amazon VCD, Inserted {0}, Deleted {1}",
-                dailySummariesToInsert.Count,
-                dailySummariesToBeRemoved.Count);
         }
 
         private List<TSummaryMetricEntity> GetActualDailySummariesFromReportEntities(
