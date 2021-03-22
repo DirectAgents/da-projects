@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DirectAgents.Domain.Entities.CPProg.Vendor.RepeatPurchaseBehavior
+﻿namespace DirectAgents.Domain.Entities.CPProg.Vendor.RepeatPurchaseBehavior
 {
     public class VendorRepeatPurchaseBehaviorMonthlyProduct : VendorRepeatPurchaseBehaviorProduct
     {

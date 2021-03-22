@@ -122,7 +122,8 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Loaders
         }
 
         private Func<T, bool> GetEntityMappingPredicate<T>(
-            NetPpmProduct reportEntity, ExtAccount extAccount) where T: VendorNetPpmProduct
+            NetPpmProduct reportEntity, ExtAccount extAccount)
+            where T: VendorNetPpmProduct
         {
             return dbEntity => dbEntity.Name == reportEntity.Name && dbEntity.AccountId == extAccount.Id;
         }

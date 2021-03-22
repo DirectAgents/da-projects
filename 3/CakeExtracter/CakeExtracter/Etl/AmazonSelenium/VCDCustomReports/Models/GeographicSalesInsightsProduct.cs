@@ -122,5 +122,23 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models
             get;
             set;
         }
+
+        public void SetMetrics(IEnumerable<GeographicSalesInsightsProduct> items)
+        {
+            var shippingItems = items.ToList();
+            ShippedRevenuePercentOfTotal = shippingItems.Sum(p => p.ShippedRevenuePercentOfTotal);
+            ShippedRevenuePriorPeriodPercentChange = shippingItems.Sum(p => p.ShippedRevenuePriorPeriodPercentChange);
+            ShippedRevenuePriorYearPercentChange = shippingItems.Sum(p => p.ShippedRevenuePriorYearPercentChange);
+            ShippedUnits = shippingItems.Sum(p => p.ShippedUnits);
+            ShippedUnitsPercentOfTotal = shippingItems.Sum(p => p.ShippedUnitsPercentOfTotal);
+            ShippedUnitsPriorPeriodPercentChange = shippingItems.Sum(p => p.ShippedUnitsPriorPeriodPercentChange);
+            ShippedUnitsPriorYearPercentChange = shippingItems.Sum(p => p.ShippedUnitsPriorYearPercentChange);
+            ShippedCogsPercentOfTotal = shippingItems.Sum(p => p.ShippedCogsPercentOfTotal);
+            ShippedCogsPriorPeriodPercentChange = shippingItems.Sum(p => p.ShippedCogsPriorPeriodPercentChange);
+            ShippedCogsPriorYearPercentChange = shippingItems.Sum(p => p.ShippedCogsPriorYearPercentChange);
+            AverageShippedPrice = shippingItems.Sum(p => p.AverageShippedPrice);
+            AverageShippedPricePriorPeriodPercentChange = shippingItems.Sum(p => p.AverageShippedPricePriorPeriodPercentChange);
+            AverageShippedPricePriorYearPercentChange = shippingItems.Sum(p => p.AverageShippedPricePriorYearPercentChange);
+        }
     }
 }
