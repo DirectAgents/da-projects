@@ -171,7 +171,7 @@ namespace SeleniumDataBrowser.VCD
             }
         }
 
-        protected static VcdReportDownloaderSettings GetReportDownloaderSettings()
+        private static VcdReportDownloaderSettings GetReportDownloaderSettings()
         {
             var reportSettings = new VcdReportDownloaderSettings
             {
@@ -184,7 +184,7 @@ namespace SeleniumDataBrowser.VCD
             return reportSettings;
         }
 
-        protected void LoginToPortal()
+        private void LoginToPortal()
         {
             try
             {

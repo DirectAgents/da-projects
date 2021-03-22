@@ -518,12 +518,14 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
                 {
                     parameterId = "periodStartDay",
 
+                    // Should be filled dynamically with report day date
                     values = new List<Value> { new Value { val = startDate } },
                 },
                 new ReportParameter
                 {
                     parameterId = "periodEndDay",
 
+                    // Should be filled dynamically with report day date
                     values = new List<Value> { new Value { val = endDate } },
                 },
                 new ReportParameter
@@ -550,7 +552,8 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
                 {
                     parameterId = "dataRefreshDate",
 
-                    values = new List<Value> { new Value { val = "0000690138837" } },
+                    // value for retrieving the latest data
+                    values = new List<Value> { new Value { val = TimeHelper.ConvertToUnixTimestamp(DateTime.Now).ToString() } },
                 },
                 new ReportParameter
                 {
