@@ -25,6 +25,7 @@ using DirectAgents.Domain.Entities.CPProg.Facebook.Daily;
 using DirectAgents.Domain.Entities.CPProg.Roku;
 using DirectAgents.Domain.Entities.CPProg.YAM;
 using DirectAgents.Domain.Entities.CPProg.YAM.Summaries;
+using DirectAgents.Domain.Entities.CPProg.Vendor.RepeatPurchaseBehavior;
 
 namespace DirectAgents.Domain.Contexts
 {
@@ -101,6 +102,12 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<VendorCategory>().ToTable("VCategory", tdSchema);
             modelBuilder.Entity<VendorSubcategory>().ToTable("VSubcategory", tdSchema);
             modelBuilder.Entity<VendorBrand>().ToTable("VBrand", tdSchema);
+            modelBuilder.Entity<VendorGeographicSalesInsightsProduct>().ToTable("VGeographicSalesInsightsProduct", tdSchema);
+            modelBuilder.Entity<VendorNetPpmWeeklyProduct>().ToTable("VNetPpmWeeklyProduct", tdSchema);
+            modelBuilder.Entity<VendorNetPpmMonthlyProduct>().ToTable("VNetPpmMonthlyProduct", tdSchema);
+            modelBuilder.Entity<VendorNetPpmYearlyProduct>().ToTable("VNetPpmYearlyProduct", tdSchema);
+            modelBuilder.Entity<VendorRepeatPurchaseBehaviorMonthlyProduct>().ToTable("VRepeatPurchaseBehaviorMonthlyProduct", tdSchema);
+            modelBuilder.Entity<VendorRepeatPurchaseBehaviorQuaterlyProduct>().ToTable("VRepeatPurchaseBehaviorQuaterlyProduct", tdSchema);
             modelBuilder.Entity<VendorParentProduct>().ToTable("VParentProduct", tdSchema);
             modelBuilder.Entity<VendorProductSummaryMetric>().ToTable("VProductSummaryMetric", tdSchema);
             modelBuilder.Entity<VendorCategorySummaryMetric>().ToTable("VCategorySummaryMetric", tdSchema);
@@ -383,6 +390,12 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<VendorSubcategory> VendorSubcategories { get; set; }
         public DbSet<VendorBrand> VendorBrands { get; set; }
         public DbSet<VendorParentProduct> VendorParentProducts { get; set; }
+        public DbSet<VendorGeographicSalesInsightsProduct> VendorGeographicSalesInsightsProducts { get; set; }
+        public DbSet<VendorNetPpmWeeklyProduct> VendorNetPpmWeeklyProducts { get; set; }
+        public DbSet<VendorNetPpmMonthlyProduct> VendorNetPpmMonthlyProducts { get; set; }
+        public DbSet<VendorNetPpmYearlyProduct> VendorNetPpmYearlyProducts { get; set; }
+        public DbSet<VendorRepeatPurchaseBehaviorMonthlyProduct> VendorRepeatPurchaseBehaviorMonthlyProducts { get; set; }
+        public DbSet<VendorRepeatPurchaseBehaviorQuaterlyProduct> VendorRepeatPurchaseBehaviorQuaterlyProducts { get; set; }
         public DbSet<VendorProductSummaryMetric> VendorProductSummaryMetrics { get; set; }
         public DbSet<VendorCategorySummaryMetric> VendorCategorySummaryMetrics { get; set; }
         public DbSet<VendorSubcategorySummaryMetric> VendorSubcategorySummaryMetrics { get; set; }

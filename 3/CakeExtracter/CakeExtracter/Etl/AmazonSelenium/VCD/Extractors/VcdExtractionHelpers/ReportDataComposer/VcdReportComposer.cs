@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Models;
+using CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models;
 
 namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportDataComposer
 {
@@ -37,6 +38,79 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
             };
         }
 
+        /// <summary>
+        /// Composes separated data of Net PPM reports to common data.
+        /// </summary>
+        /// <param name="reports">Array of reports to compose.</param>
+        /// <returns>Common VCD report data.</returns>
+        public NetPpmReportData ComposeNetPpmReportData(params List<NetPpmProduct>[] reports)
+        {
+            for (var i = 0; i < reports.Length; i++)
+            {
+                reports[i] = ProcessDuplicatedNetPpmProducts(reports[i]);
+            }
+
+            var allProducts = reports.SelectMany(x => x).ToList();
+            var mergedProducts = allProducts
+                .GroupBy(x => x.Asin)
+                .Select(x => GetNetPpmProduct(x.Key, x))
+                .ToList();
+
+            return new NetPpmReportData
+            {
+                Products = mergedProducts,
+            };
+        }
+
+        /// <summary>
+        /// Composes separated data of Repeat Purchase Behavior reports to common data.
+        /// </summary>
+        /// <param name="reports">Array of reports to compose.</param>
+        /// <returns>Common VCD report data.</returns>
+        public RepeatPurchaseBehaviorReportData ComposeRepeatPurchaseBehaviorReportData(
+            params List<RepeatPurchaseBehaviorProduct>[] reports)
+        {
+            for (var i = 0; i < reports.Length; i++)
+            {
+                reports[i] = ProcessDuplicatedRepeatPurchaseBehaviorProducts(reports[i]);
+            }
+
+            var allProducts = reports.SelectMany(x => x).ToList();
+            var mergedProducts = allProducts
+                .GroupBy(x => x.Asin)
+                .Select(x => GetRepeatPurchaseBehaviorProduct(x.Key, x))
+                .ToList();
+
+            return new RepeatPurchaseBehaviorReportData
+            {
+                Products = mergedProducts,
+            };
+        }
+
+        /// <summary>
+        /// Composes separated data of Geographic Sales Insights reports to common data.
+        /// </summary>
+        /// <param name="reports">Array of reports to compose.</param>
+        /// <returns>Common VCD report data.</returns>
+        public VcdGeographicSalesInsightsReportData ComposeGeographicSalesInsightsReportData(params List<GeographicSalesInsightsProduct>[] reports)
+        {
+            for (var i = 0; i < reports.Length; i++)
+            {
+                reports[i] = ProcessDuplicatedGeographicSalesInsightsProducts(reports[i]);
+            }
+
+            var allProducts = reports.SelectMany(x => x).ToList();
+            var mergedProducts = allProducts
+                .GroupBy(x => x.Asin)
+                .Select(x => GetGeographicSalesInsightsProduct(x.Key, x))
+                .ToList();
+
+            return new VcdGeographicSalesInsightsReportData
+            {
+                Products = mergedProducts,
+            };
+        }
+
         // Replace all duplicated products with one product for each duplication group.
         // Summ metrics values of all items in duplication group
         private List<Product> ProcessDuplicatedProducts(List<Product> products)
@@ -47,6 +121,51 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
                 var productsWithDuplicatedAsin = products.Where(p => p.Asin == asin).ToList();
                 products = products.Except(productsWithDuplicatedAsin).ToList();
                 var summarizedProduct = GetProduct(asin, productsWithDuplicatedAsin);
+                products.Add(summarizedProduct);
+            });
+            return products;
+        }
+
+        private List<NetPpmProduct> ProcessDuplicatedNetPpmProducts(List<NetPpmProduct> products)
+        {
+            var productGroupsByAsin = products.GroupBy(p => p.Asin);
+            var productsWithDuplicatedAsins = productGroupsByAsin.Where(g => g.Count() > 1);
+            var duplicatedAsins = productsWithDuplicatedAsins.Select(y => y.Key).ToList();
+            duplicatedAsins.ForEach(asin =>
+            {
+                var productsWithDuplicatedAsin = products.Where(p => p.Asin == asin).ToList();
+                products = products.Except(productsWithDuplicatedAsin).ToList();
+                var summarizedProduct = GetNetPpmProduct(asin, productsWithDuplicatedAsin);
+                products.Add(summarizedProduct);
+            });
+            return products;
+        }
+
+        private List<RepeatPurchaseBehaviorProduct> ProcessDuplicatedRepeatPurchaseBehaviorProducts(List<RepeatPurchaseBehaviorProduct> products)
+        {
+            var productGroupsByAsin = products.GroupBy(p => p.Asin);
+            var productsWithDuplicatedAsins = productGroupsByAsin.Where(g => g.Count() > 1);
+            var duplicatedAsins = productsWithDuplicatedAsins.Select(y => y.Key).ToList();
+            duplicatedAsins.ForEach(asin =>
+            {
+                var productsWithDuplicatedAsin = products.Where(p => p.Asin == asin).ToList();
+                products = products.Except(productsWithDuplicatedAsin).ToList();
+                var summarizedProduct = GetRepeatPurchaseBehaviorProduct(asin, productsWithDuplicatedAsin);
+                products.Add(summarizedProduct);
+            });
+            return products;
+        }
+
+        private List<GeographicSalesInsightsProduct> ProcessDuplicatedGeographicSalesInsightsProducts(List<GeographicSalesInsightsProduct> products)
+        {
+            var productGroupsByAsin = products.GroupBy(p => p.Asin);
+            var productsWithDuplicatedAsins = productGroupsByAsin.Where(g => g.Count() > 1);
+            var duplicatedAsins = productsWithDuplicatedAsins.Select(y => y.Key).ToList();
+            duplicatedAsins.ForEach(asin =>
+            {
+                var productsWithDuplicatedAsin = products.Where(p => p.Asin == asin).ToList();
+                products = products.Except(productsWithDuplicatedAsin).ToList();
+                var summarizedProduct = GetGeographicSalesInsightsProduct(asin, productsWithDuplicatedAsin);
                 products.Add(summarizedProduct);
             });
             return products;
@@ -181,6 +300,69 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
                 Color = firstProduct.Color,
                 ModelStyleNumber = firstProduct.ModelStyleNumber,
                 ReleaseDate = firstProduct.ReleaseDate,
+            };
+            item.SetMetrics(products);
+            return item;
+        }
+
+        private NetPpmProduct GetNetPpmProduct(string asin, IEnumerable<NetPpmProduct> products)
+        {
+            products = products.ToList();
+            var firstProduct = products.FirstOrDefault();
+            var item = new NetPpmProduct
+            {
+                Asin = asin,
+                Name = firstProduct.Name,
+                NetPpm = firstProduct.NetPpm,
+                NetPpmPriorYearPercentChange = firstProduct.NetPpmPriorYearPercentChange,
+                Subcategory = firstProduct.Subcategory,
+            };
+            item.SetMetrics(products);
+            return item;
+        }
+
+        private RepeatPurchaseBehaviorProduct GetRepeatPurchaseBehaviorProduct(string asin, IEnumerable<RepeatPurchaseBehaviorProduct> products)
+        {
+            products = products.ToList();
+            var firstProduct = products.FirstOrDefault();
+            var item = new RepeatPurchaseBehaviorProduct
+            {
+                Asin = asin,
+                Name = firstProduct.Name,
+                RepeatPurchaseRevenue = firstProduct.RepeatPurchaseRevenue,
+                RepeatPurchaseRevenuePriorPeriod = firstProduct.RepeatPurchaseRevenuePriorPeriod,
+                UniqueCustomers = firstProduct.UniqueCustomers,
+            };
+            item.SetMetrics(products);
+            return item;
+        }
+
+        private GeographicSalesInsightsProduct GetGeographicSalesInsightsProduct(string asin, IEnumerable<GeographicSalesInsightsProduct> products)
+        {
+            products = products.ToList();
+            var firstProduct = products.FirstOrDefault();
+            var item = new GeographicSalesInsightsProduct
+            {
+                Asin = asin,
+                Name = firstProduct.Name,
+                State = firstProduct.State,
+                Region = firstProduct.Region,
+                City = firstProduct.City,
+                Zip = firstProduct.Zip,
+                Author = firstProduct.Author,
+                Isbn13 = firstProduct.Isbn13,
+                AverageShippedPrice = firstProduct.AverageShippedPrice,
+                AverageShippedPricePriorPeriodPercentChange = firstProduct.AverageShippedPricePriorPeriodPercentChange,
+                AverageShippedPricePriorYearPercentChange = firstProduct.AverageShippedPricePriorYearPercentChange,
+                ShippedCogsPercentOfTotal = firstProduct.ShippedCogsPercentOfTotal,
+                ShippedCogsPriorPeriodPercentChange = firstProduct.ShippedCogsPriorPeriodPercentChange,
+                ShippedCogsPriorYearPercentChange = firstProduct.ShippedRevenuePriorYearPercentChange,
+                ShippedRevenuePercentOfTotal = firstProduct.ShippedRevenuePercentOfTotal,
+                ShippedRevenuePriorPeriodPercentChange = firstProduct.ShippedRevenuePriorPeriodPercentChange,
+                ShippedRevenuePriorYearPercentChange = firstProduct.ShippedRevenuePriorYearPercentChange,
+                ShippedUnitsPercentOfTotal = firstProduct.ShippedUnitsPercentOfTotal,
+                ShippedUnitsPriorPeriodPercentChange = firstProduct.ShippedUnitsPriorPeriodPercentChange,
+                ShippedUnitsPriorYearPercentChange = firstProduct.ShippedUnitsPriorYearPercentChange,
             };
             item.SetMetrics(products);
             return item;

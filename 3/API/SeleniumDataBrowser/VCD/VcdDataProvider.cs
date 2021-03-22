@@ -119,6 +119,24 @@ namespace SeleniumDataBrowser.VCD
             return reportDownloader.DownloadCustomerReviewsCsvReport(reportDay);
         }
 
+        public string DownloadGeographicSalesInsightsCsvReport(VcdAccountInfo accountInfo, DateTime reportDay)
+        {
+            var reportDownloader = new VcdReportDownloader(accountInfo, pagesManager, authorizationModel, LoggerWithAccountId ?? logger, reportDownloaderSettings);
+            return reportDownloader.DownloadGeographicSalesInsightsCsvReport(reportDay);
+        }
+
+        public string DownloadNetPpmCsvReport(VcdAccountInfo accountInfo, string period)
+        {
+            var reportDownloader = new VcdReportDownloader(accountInfo, pagesManager, authorizationModel, LoggerWithAccountId ?? logger, reportDownloaderSettings);
+            return reportDownloader.DownloadNetPpmCsvReport(period);
+        }
+
+        public string DownloadRepeatPurchaseBehaviorCsvReport(VcdAccountInfo accountInfo, string period)
+        {
+            var reportDownloader = new VcdReportDownloader(accountInfo, pagesManager, authorizationModel, LoggerWithAccountId ?? logger, reportDownloaderSettings);
+            return reportDownloader.DownloadRepeatPurchaseBehaviorCsvReport(period);
+        }
+
         /// <summary>
         /// Returns user info in JSON format.
         /// </summary>
@@ -153,7 +171,7 @@ namespace SeleniumDataBrowser.VCD
             }
         }
 
-        private static VcdReportDownloaderSettings GetReportDownloaderSettings()
+        protected static VcdReportDownloaderSettings GetReportDownloaderSettings()
         {
             var reportSettings = new VcdReportDownloaderSettings
             {
@@ -166,7 +184,7 @@ namespace SeleniumDataBrowser.VCD
             return reportSettings;
         }
 
-        private void LoginToPortal()
+        protected void LoginToPortal()
         {
             try
             {

@@ -114,6 +114,14 @@
     <Compile Include="Entities\CPProg\Facebook\FbCampaignReachMetric.cs" />
     <Compile Include="Entities\CPProg\Facebook\FbReachMetric.cs" />
     <Compile Include="Entities\CPProg\Roku\RokuSummary.cs" />
+    <Compile Include="Entities\CPProg\Vendor\NetPpm\VendorNetPpmMonthlyProduct.cs" />
+    <Compile Include="Entities\CPProg\Vendor\NetPpm\VendorNetPpmProduct.cs" />
+    <Compile Include="Entities\CPProg\Vendor\NetPpm\VendorNetPpmWeeklyProduct.cs" />
+    <Compile Include="Entities\CPProg\Vendor\NetPpm\VendorNetPpmYearlyProduct.cs" />
+    <Compile Include="Entities\CPProg\Vendor\RepeatPurchaseBehavior\VendorRepeatPurchaseBehaviorMonthlyProduct.cs" />
+    <Compile Include="Entities\CPProg\Vendor\RepeatPurchaseBehavior\VendorRepeatPurchaseBehaviorQuaterlyProduct.cs" />
+    <Compile Include="Entities\CPProg\Vendor\VendorGeographicSalesInsightsProduct.cs" />
+    <Compile Include="Entities\CPProg\Vendor\RepeatPurchaseBehavior\VendorRepeatPurchaseBehaviorProduct.cs" />
     <Compile Include="Entities\CPSearch\DailySummaryBase.cs" />
     <Compile Include="Entities\CPSearch\SearchVideoDailySummary.cs" />
     <Compile Include="MigrationsTD\201905311144009_Mig_ErrorEmailSentProperty.cs" />
@@ -203,6 +211,10 @@
     <Compile Include="MigrationsTD\202102191744577_AddNewVcdMetrics.cs" />
     <Compile Include="MigrationsTD\202102191744577_AddNewVcdMetrics.Designer.cs">
       <DependentUpon>202102191744577_AddNewVcdMetrics.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\202103221619581_Mig_VcdAddNetPpmGeoSIRepPB.cs" />
+    <Compile Include="MigrationsTD\202103221619581_Mig_VcdAddNetPpmGeoSIRepPB.Designer.cs">
+      <DependentUpon>202103221619581_Mig_VcdAddNetPpmGeoSIRepPB.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201909270822065_Mig_Affiliate_AccountManager.cs" />
     <Compile Include="Migrations\201909270822065_Mig_Affiliate_AccountManager.Designer.cs">
@@ -1293,6 +1305,9 @@
     <EmbeddedResource Include="MigrationsTD\202102191744577_AddNewVcdMetrics.resx">
       <DependentUpon>202102191744577_AddNewVcdMetrics.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\202103221619581_Mig_VcdAddNetPpmGeoSIRepPB.resx">
+      <DependentUpon>202103221619581_Mig_VcdAddNetPpmGeoSIRepPB.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
@@ -1325,6 +1340,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507152042017_Mig_Sales.resx">
       <DependentUpon>201507152042017_Mig_Sales.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507281756459_Mig_MoveTD.resx">
       <DependentUpon>201507281756459_Mig_MoveTD.cs</DependentUpon>
