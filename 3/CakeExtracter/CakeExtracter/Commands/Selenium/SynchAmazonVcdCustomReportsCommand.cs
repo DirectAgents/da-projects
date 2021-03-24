@@ -216,12 +216,12 @@ namespace CakeExtracter.Commands.Selenium
             Logger.Info(account.Key.Id, $"Amazon VCD, Net Ppm ETL for account {account.Key.Name} ({account.Key.Id}) started.");
             ConfigureDataProviderForCurrentAccount(account.Key, vcdDataProvider);
             var monthlyExtractor = GetRepeatPurchaseBehaviorExtractor(account, vcdDataProvider, "MONTHLY");
-            var quaterlyExtractor = GetRepeatPurchaseBehaviorExtractor(account, vcdDataProvider, "QUATERLY");
+            var quarterlyExtractor = GetRepeatPurchaseBehaviorExtractor(account, vcdDataProvider, "QUARTERLY");
             var monthlyLoader = new RepeatPurchaseBehaviorLoader(account.Key, "MONTHLY");
-            var quaterlyLoader = new RepeatPurchaseBehaviorLoader(account.Key, "QUATERLY");
+            var quarterlyLoader = new RepeatPurchaseBehaviorLoader(account.Key, "QUARTERLY");
 
             CommandHelper.DoEtl(monthlyExtractor, monthlyLoader);
-            CommandHelper.DoEtl(quaterlyExtractor, quaterlyLoader);
+            CommandHelper.DoEtl(quarterlyExtractor, quarterlyLoader);
             Logger.Info(account.Key.Id, $"Amazon VCD, Repeat Purchase Behavior ETL for account {account.Key.Name} ({account.Key.Id}) finished.");
         }
 

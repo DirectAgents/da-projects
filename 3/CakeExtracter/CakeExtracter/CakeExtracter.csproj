@@ -561,10 +561,10 @@
     <Compile Include="Etl\AmazonSelenium\PDA\Extractors\AmazonPdaExtractor.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\Models\AmazonPdaCampaignSummary.cs" />
     <Compile Include="Etl\AmazonSelenium\PDA\PdaDataProviderBuilder.cs" />
-    <Compile Include="Etl\AmazonSelenium\VCDCustomReports\Extractors\GeographicSalesInsightExtractor.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCDCustomReports\Extractors\GeographicSalesInsightsExtractor.cs" />
     <Compile Include="Etl\AmazonSelenium\VCDCustomReports\Extractors\NetPpmExtractor.cs" />
     <Compile Include="Etl\AmazonSelenium\VCDCustomReports\Extractors\RepeatPurchaseBehaviorExtractor.cs" />
-    <Compile Include="Etl\AmazonSelenium\VCDCustomReports\Extractors\VcdCustomReportsExtractionHelpers\ReportParsing\GeographicSalesInsightReportCsvParser.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCDCustomReports\Extractors\VcdCustomReportsExtractionHelpers\ReportParsing\GeographicSalesInsightsReportCsvParser.cs" />
     <Compile Include="Etl\AmazonSelenium\VCDCustomReports\Extractors\VcdCustomReportsExtractionHelpers\ReportParsing\NetPpmReportCsvParser.cs" />
     <Compile Include="Etl\AmazonSelenium\VCDCustomReports\Extractors\VcdCustomReportsExtractionHelpers\ReportParsing\RepeatPurchaseBehaviorReportCsvParser.cs" />
     <Compile Include="Etl\AmazonSelenium\VCDCustomReports\Extractors\VcdCustomReportsExtractionHelpers\ReportParsing\RowMaps\GeographicSalesInsightsProductsRowMap.cs" />

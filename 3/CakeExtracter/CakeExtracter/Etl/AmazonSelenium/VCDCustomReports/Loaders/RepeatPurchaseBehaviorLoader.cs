@@ -50,8 +50,8 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Loaders
                             case "MONTHLY":
                                 correspondingDbEntity = MapReportEntityToDbEntityMonthly(reportEntity, account, startDate, endDate) as T;
                                 break;
-                            case "QUATERLY":
-                                correspondingDbEntity = MapReportEntityToDbEntityQuaterly(reportEntity, account, startDate, endDate) as T;
+                            case "QUARTERLY":
+                                correspondingDbEntity = MapReportEntityToDbEntityQuarterly(reportEntity, account, startDate, endDate) as T;
                                 break;
                         }
                         itemsToBeAdded.Add(correspondingDbEntity);
@@ -92,8 +92,8 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Loaders
                                 case "MONTHLY":
                                     LoadRepeatPurchaseBehaviorData<VendorRepeatPurchaseBehaviorMonthlyProduct>(item);
                                     break;
-                                case "QUATERLY":
-                                    LoadRepeatPurchaseBehaviorData<VendorRepeatPurchaseBehaviorQuaterlyProduct>(item);
+                                case "QUARTERLY":
+                                    LoadRepeatPurchaseBehaviorData<VendorRepeatPurchaseBehaviorQuarterlyProduct>(item);
                                     break;
                             }
                         }
@@ -135,10 +135,10 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Loaders
             return vendorProduct;
         }
 
-        private VendorRepeatPurchaseBehaviorQuaterlyProduct MapReportEntityToDbEntityQuaterly(
+        private VendorRepeatPurchaseBehaviorQuarterlyProduct MapReportEntityToDbEntityQuarterly(
            RepeatPurchaseBehaviorProduct reportEntity, ExtAccount extAccount, DateTime startDate, DateTime endDate)
         {
-            var vendorProduct = new VendorRepeatPurchaseBehaviorQuaterlyProduct
+            var vendorProduct = new VendorRepeatPurchaseBehaviorQuarterlyProduct
             {
                 Asin = reportEntity.Asin,
                 AccountId = extAccount.Id,

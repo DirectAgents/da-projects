@@ -13,6 +13,6 @@
         netPPMMonthly,
         netPPMYearly,
         repeatPurchaseBehaviorMonthly,
-        repeatPurchaseBehaviorQuaterly,
+        repeatPurchaseBehaviorQuarterly,
     }
 }

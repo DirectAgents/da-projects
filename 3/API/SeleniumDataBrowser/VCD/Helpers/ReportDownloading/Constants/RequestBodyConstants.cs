@@ -47,7 +47,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
 
         public const string YearlyPeriod = "YEARLY";
 
-        public const string QuaterlyPeriod = "QUATERLY";
+        public const string QuarterlyPeriod = "QUARTERLY";
 
         /// <summary>
         /// Returns a list of sales diagnostic report parameters with values for request body.
@@ -269,7 +269,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
                     var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
                     periodEndDay = lastDayOfMonth.ToString("yyyyMMdd");
                     break;
-                case QuaterlyPeriod:
+                case QuarterlyPeriod:
                     lastPeriodDate = DateTime.Today.AddMonths(-4);
                     int quarterNumber = (lastPeriodDate.Month - 1) / 3 + 1;
                     DateTime firstDayOfQuarter = new DateTime(lastPeriodDate.Year, (quarterNumber - 1) * 3 + 1, 1);
@@ -318,7 +318,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
                 new ReportParameter
                 {
                     parameterId = "dataRefreshDate",
-                    values = new List<Value> { new Value { val = "0000690138837" } },
+                    values = new List<Value> { new Value { val = "0000376439145" } },
                 },
             };
         }
@@ -354,7 +354,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
                 new ReportParameter
                 {
                     parameterId = "dataRefreshDate",
-                    values = new List<Value> { new Value { val = "0000437775652" } },
+                    values = new List<Value> { new Value { val = "0001334221998" } },
                 },
 
                 new ReportParameter

@@ -79,8 +79,8 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Extractors
 
         private RepeatPurchaseBehaviorReportData ExtractRepeatPurchaseBehaviorData(string reportPeriod)
         {
-            var RepeatPurchaseBehaviorData = GetRepeatPurchaseBehaviorData(reportPeriod);
-            var composedData = reportComposer.ComposeRepeatPurchaseBehaviorReportData(RepeatPurchaseBehaviorData);
+            var repeatPurchaseBehaviorData = GetRepeatPurchaseBehaviorData(reportPeriod);
+            var composedData = reportComposer.ComposeRepeatPurchaseBehaviorReportData(repeatPurchaseBehaviorData);
             var dates = GetDatesByPeriod(reportPeriod);
             composedData.StartDate = dates.Item1;
             composedData.EndDate = dates.Item2;
@@ -101,7 +101,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Extractors
                     periodStartDay = new DateTime(lastPeriodDate.Year, lastPeriodDate.Month, 1);
                     periodEndDay = periodStartDay.AddMonths(1).AddDays(-1);
                     break;
-                case "QUATERLY":
+                case "QUARTERLY":
                     lastPeriodDate = DateTime.Today.AddMonths(-4);
                     int quarterNumber = (lastPeriodDate.Month - 1) / 3 + 1;
                     periodStartDay = new DateTime(lastPeriodDate.Year, (quarterNumber - 1) * 3 + 1, 1);
