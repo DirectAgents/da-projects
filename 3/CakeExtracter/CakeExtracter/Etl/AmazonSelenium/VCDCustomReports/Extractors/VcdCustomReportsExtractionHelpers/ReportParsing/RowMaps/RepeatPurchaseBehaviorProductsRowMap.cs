@@ -1,6 +1,6 @@
 ﻿using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing.ParsingConverters;
-using CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models;
-using CsvHelper.Configuration;
+using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing.RowMaps;
+using CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models.Products;
 
 namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Extractors.VcdCustomReportsExtractionHelpers.ReportParsing.RowMaps
 {
@@ -8,7 +8,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Extractors.VcdCustom
     /// <summary>
     /// Row map configuration for Repeat Purchase Behavior reports.
     /// </summary>
-    internal sealed class RepeatPurchaseBehaviorProductsRowMap : CsvClassMap<RepeatPurchaseBehaviorProduct>
+    internal sealed class RepeatPurchaseBehaviorProductsRowMap : BaseCustomReportRowMap<RepeatPurchaseBehaviorProduct>
     {
         /// <inheritdoc cref="BaseProductRowMap"/>
         /// <summary>
@@ -16,8 +16,6 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Extractors.VcdCustom
         /// </summary>
         public RepeatPurchaseBehaviorProductsRowMap()
         {
-            Map(m => m.Asin).Name("asin");
-            Map(m => m.Name).Name("producttitle");
             Map(m => m.UniqueCustomers).Name("uniquecustomers").TypeConverter<IntNumberReportConverter>();
             Map(m => m.RepeatPurchaseRevenue).Name("repeatpurchaserevenue").TypeConverter<DecimalPercentageReportConverter>();
             Map(m => m.RepeatPurchaseRevenuePriorPeriod).Name("repeatpurchaserevenuepriorperiod").TypeConverter<DecimalPercentageReportConverter>();

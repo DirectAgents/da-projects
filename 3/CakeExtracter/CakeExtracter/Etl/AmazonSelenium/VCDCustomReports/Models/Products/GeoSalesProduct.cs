@@ -1,12 +1,73 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using CakeExtracter.Etl.AmazonSelenium.VCD.Models;
+using CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models.Base;
+using CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models.Interface;
 
-namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models
+namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models.Products
 {
-    class GeographicSalesInsightsProduct : Product
+    public class GeoSalesProduct : VcdCustomProduct, ISumMetrics<GeoSalesProduct>
     {
-        public string ProductTitle
+        public string ParentAsin
+        {
+            get;
+            set;
+        }
+
+        public string Category
+        {
+            get;
+            set;
+        }
+
+        public string Subcategory
+        {
+            get;
+            set;
+        }
+
+        public string Ean
+        {
+            get;
+            set;
+        }
+
+        public string Upc
+        {
+            get;
+            set;
+        }
+
+        public string Brand
+        {
+            get;
+            set;
+        }
+
+        public string ApparelSize
+        {
+            get;
+            set;
+        }
+
+        public string ApparelSizeWidth
+        {
+            get;
+            set;
+        }
+
+        public string Binding
+        {
+            get;
+            set;
+        }
+
+        public string Color
+        {
+            get;
+            set;
+        }
+
+        public string ModelStyleNumber
         {
             get;
             set;
@@ -120,7 +181,145 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models
             set;
         }
 
-        public void SetMetrics(IEnumerable<GeographicSalesInsightsProduct> items)
+        public decimal ShippedRevenue
+        {
+            get;
+            set;
+        }
+
+        public int ShippedUnits
+        {
+            get;
+            set;
+        }
+
+        public int OrderedUnits
+        {
+            get;
+            set;
+        }
+
+        public decimal ShippedCogs
+        {
+            get;
+            set;
+        }
+
+        public int CustomerReturns
+        {
+            get;
+            set;
+        }
+
+        public int FreeReplacements
+        {
+            get;
+            set;
+        }
+
+        public decimal OrderedRevenue
+        {
+            get;
+            set;
+        }
+
+        public decimal LostBuyBox
+        {
+            get;
+            set;
+        }
+
+        public decimal RepOos
+        {
+            get;
+            set;
+        }
+
+        public decimal RepOosPercentOfTotal
+        {
+            get;
+            set;
+        }
+
+        public decimal RepOosPriorPeriodPercentChange
+        {
+            get;
+            set;
+        }
+
+        public decimal GlanceViews
+        {
+            get;
+            set;
+        }
+
+        public int SalesRank
+        {
+            get;
+            set;
+        }
+
+        public decimal AverageSalesPrice
+        {
+            get;
+            set;
+        }
+
+        public int SellableOnHandUnits
+        {
+            get;
+            set;
+        }
+
+        public int NumberOfCustomerReviews
+        {
+            get;
+            set;
+        }
+
+        public int NumberOfCustomerReviewsLifeToDate
+        {
+            get;
+            set;
+        }
+
+        public decimal AverageCustomerRating
+        {
+            get;
+            set;
+        }
+
+        public int FiveStars
+        {
+            get;
+            set;
+        }
+
+        public int FourStars
+        {
+            get;
+            set;
+        }
+
+        public int ThreeStars
+        {
+            get;
+            set;
+        }
+
+        public int TwoStars
+        {
+            get;
+            set;
+        }
+
+        public int OneStar
+        {
+            get;
+            set;
+        }
+
+        public void SetMetrics(IEnumerable<GeoSalesProduct> items)
         {
             var shippingItems = items.ToList();
             ShippedRevenuePercentOfTotal = shippingItems.Sum(p => p.ShippedRevenuePercentOfTotal);

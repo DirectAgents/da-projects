@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Models;
 using SeleniumDataBrowser.Helpers;
 using System.Threading;
+using SeleniumDataBrowser.VCD.Enums;
 
 namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
 {
@@ -11,6 +12,8 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
     /// </summary>
     internal class RequestBodyConstants
     {
+        private const string DateFormat = "yyyyMMdd";
+
         public const string RequestBodyFormat = "application/json";
 
         public const string ShippedRevenueReportLevel = "shippedRevenueLevel";
@@ -40,14 +43,6 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
         public const string NetPPMColumnId = "netppmpercentoftotal";
 
         public const string RepeatPurchaseBehaviorColumnId = "orders";
-
-        public const string WeeklyPeriod = "WEEKLY";
-
-        public const string MonthlyPeriod = "MONTHLY";
-
-        public const string YearlyPeriod = "YEARLY";
-
-        public const string QuarterlyPeriod = "QUARTERLY";
 
         /// <summary>
         /// Returns a list of sales diagnostic report parameters with values for request body.
@@ -154,134 +149,63 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
         {
             var commonParams = GetCommonReportParameters(reportDate, reportDate, false);
             commonParams.AddRange(
-                new List<ReportParameter> {
-                new ReportParameter
+                new List<ReportParameter>
                 {
-                    parameterId = "viewFilter",
-                    values = new List<Value> {new Value { val = "shippedRevenueLevel" } },
-                },
-                new ReportParameter
-                {
-                    parameterId = "country",
-                    values = new List<Value> { new Value { val = "US" } },
-                },
-                new ReportParameter
-                {
-                    parameterId = "state",
-                    values = new List<Value> { new Value { val= "ALL" } },
-                },
+                    new ReportParameter
+                    {
+                        parameterId = "viewFilter",
+                        values = new List<Value> {new Value { val = "shippedRevenueLevel" } },
+                    },
+                    new ReportParameter
+                    {
+                        parameterId = "country",
+                        values = new List<Value> { new Value { val = "US" } },
+                    },
+                    new ReportParameter
+                    {
+                        parameterId = "state",
+                        values = new List<Value> { new Value { val= "ALL" } },
+                    },
 
-                new ReportParameter
-                {
-                    parameterId = "city",
-                    values = new List<Value> { new Value { val = "ALL" } },
-                },
+                    new ReportParameter
+                    {
+                        parameterId = "city",
+                        values = new List<Value> { new Value { val = "ALL" } },
+                    },
 
-                new ReportParameter
-                {
-                    parameterId = "zip",
-                    values = new List<Value> { new Value { val = "ALL" } },
-                },
+                    new ReportParameter
+                    {
+                        parameterId = "zip",
+                        values = new List<Value> { new Value { val = "ALL" } },
+                    },
 
-                new ReportParameter
-                {
-                    parameterId = "aggregationFilter",
-                    values = new List<Value> { new Value { val = "ASINLevel" } },
-                },
+                    new ReportParameter
+                    {
+                        parameterId = "aggregationFilter",
+                        values = new List<Value> { new Value { val = "ASINLevel" } },
+                    },
 
-                new ReportParameter
-                {
-                    parameterId = "countryCode",
-                    values = new List<Value> { new Value { val = "US" } },
-                },
+                    new ReportParameter
+                    {
+                        parameterId = "countryCode",
+                        values = new List<Value> { new Value { val = "US" } },
+                    },
 
-                new ReportParameter
-                {
-                    parameterId = "parentASINVisibility",
-                    values = new List<Value> { new Value { val = false } },
-                },
-                new ReportParameter
-                {
-                    parameterId = "eanVisibility",
-                    values = new List<Value> { new Value { val = false } },
-                },
-            });
+                    new ReportParameter
+                    {
+                        parameterId = "parentASINVisibility",
+                        values = new List<Value> { new Value { val = false } },
+                    },
+                    new ReportParameter
+                    {
+                        parameterId = "eanVisibility",
+                        values = new List<Value> { new Value { val = false } },
+                    },
+                });
             return commonParams;
         }
 
-        /// <summary>
-        /// Returns a list of net ppm report parameters with values for request body.
-        /// </summary>
-        /// <param name="reportDate">Report date.</param>
-        /// <returns>List of report parameters.</returns>
-        public static List<ReportParameter> GetNetPpmParameters(string reportDate, string period)
-        {
-            string periodStartDay = "";
-            string periodEndDay = "";
-            DateTime lastPeriodDate;
-            var culture = Thread.CurrentThread.CurrentCulture;
-
-            switch (period)
-            {
-                case WeeklyPeriod:
-                    lastPeriodDate = DateTime.Today.AddDays(-7);
-                    var diff = lastPeriodDate.DayOfWeek - culture.DateTimeFormat.FirstDayOfWeek;
-                    if (diff < 0)
-                        diff += 7;
-                    periodStartDay = lastPeriodDate.AddDays(-diff).Date.ToString("yyyyMMdd");
-                    periodEndDay = lastPeriodDate.AddDays(-diff + 6).Date.ToString("yyyyMMdd");
-                    break;
-                case MonthlyPeriod:
-                    lastPeriodDate = DateTime.Today.AddMonths(-1);
-                    var firstDayOfMonth = new DateTime(lastPeriodDate.Year, lastPeriodDate.Month, 1);
-                    var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
-                    periodStartDay = firstDayOfMonth.ToString("yyyyMMdd");
-                    periodEndDay = lastDayOfMonth.ToString("yyyyMMdd");
-                    break;
-                case YearlyPeriod:
-                    lastPeriodDate = DateTime.Today.AddYears(-1);
-                    DateTime firstDayOfYear = new DateTime(lastPeriodDate.Year, 1, 1);
-                    DateTime lastDayOfYear = new DateTime(lastPeriodDate.Year, 12, 31);
-                    periodStartDay = firstDayOfYear.ToString("yyyyMMdd");
-                    periodEndDay = lastDayOfYear.ToString("yyyyMMdd");
-                    break;
-            }
-            var parameters = GetNetPpmReportParameters(period, periodStartDay, periodEndDay);
-            return parameters;
-        }
-
-        /// <summary>
-        /// Returns a list of repeat purchase behavior report parameters with values for request body.
-        /// </summary>
-        /// <param name="reportDate">Report date.</param>
-        /// <returns>List of report parameters.</returns>
-        public static List<ReportParameter> GetRepeatPurchaseBehaviorParameters(string reportDate, string period)
-        {
-            string periodEndDay = "";
-            DateTime lastPeriodDate;
-            var culture = Thread.CurrentThread.CurrentCulture;
-
-            switch (period)
-            {
-                case MonthlyPeriod:
-                    lastPeriodDate = DateTime.Today.AddMonths(-1);
-                    var firstDayOfMonth = new DateTime(lastPeriodDate.Year, lastPeriodDate.Month, 1);
-                    var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
-                    periodEndDay = lastDayOfMonth.ToString("yyyyMMdd");
-                    break;
-                case QuarterlyPeriod:
-                    lastPeriodDate = DateTime.Today.AddMonths(-4);
-                    int quarterNumber = (lastPeriodDate.Month - 1) / 3 + 1;
-                    DateTime firstDayOfQuarter = new DateTime(lastPeriodDate.Year, (quarterNumber - 1) * 3 + 1, 1);
-                    DateTime lastDayOfQuarter = firstDayOfQuarter.AddMonths(3).AddDays(-1);
-                    periodEndDay = lastDayOfQuarter.ToString("yyyyMMdd");
-                    break;
-            }
-            var parameters = GetRepeatPurchaseBehaviorReportParameters(period, periodEndDay);
-            return parameters;
-        }
-
-        private static List<ReportParameter> GetNetPpmReportParameters(string period, string periodStartDay, string periodEndDay)
+        public static List<ReportParameter> GetNetPpmReportParameters(PeriodType period, DateTime startDate, DateTime endDate)
         {
             return new List<ReportParameter>
             {
@@ -306,13 +230,13 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
                 new ReportParameter
                 {
                     parameterId = "periodStartDay",
-                    values = new List<Value> { new Value { val = periodStartDay } },
+                    values = new List<Value> { new Value { val = startDate.ToString(DateFormat) } },
                 },
 
                 new ReportParameter
                 {
                     parameterId = "periodEndDay",
-                    values = new List<Value> { new Value { val = periodEndDay } },
+                    values = new List<Value> { new Value { val = endDate.ToString(DateFormat) } },
                 },
 
                 new ReportParameter
@@ -323,7 +247,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
             };
         }
 
-        private static List<ReportParameter> GetRepeatPurchaseBehaviorReportParameters(string period, string periodEndDay)
+        public static List<ReportParameter> GetRepeatPurchaseBehaviorReportParameters(PeriodType period, DateTime endDate)
         {
             return new List<ReportParameter>
             {
@@ -348,7 +272,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
                 new ReportParameter
                 {
                     parameterId = "periodEndDay",
-                    values = new List<Value> { new Value { val = periodEndDay } },
+                    values = new List<Value> { new Value { val = endDate.ToString(DateFormat) } },
                 },
 
                 new ReportParameter
@@ -504,8 +428,36 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
             };
         }
 
+        /// <summary>
+        /// Gets part of request body - report parameter of pagination.
+        /// </summary>
+        /// <param name="reportId">String identifier of kind of report.</param>
+        /// <param name="pageIndex">Number of current page index.</param>
+        /// <param name="pageSizeValue">Number of page size.</param>
+        /// <returns>Report parameter of pagination.</returns>
+        public static ReportPaginationWithOrderParameter GetReportPaginationWithOrderParameter(
+            string reportId, int pageIndex, int pageSizeValue)
+        {
+            return new ReportPaginationWithOrderParameter
+            {
+                reportPagination = new ReportPagination
+                {
+                    pageIndex = pageIndex,
+                    pageSize = pageSizeValue,
+                },
+                reportOrders = new List<ReportOrder>
+                {
+                    new ReportOrder
+                    {
+                        columnId = reportId,
+                        ascending = false,
+                    },
+                },
+            };
+        }
+
         private static List<ReportParameter> GetCommonReportParameters(
-            string startDate, string endDate, bool isFullSetOfMetrics)
+           string startDate, string endDate, bool isFullSetOfMetrics)
         {
             return new List<ReportParameter>
             {
@@ -664,34 +616,6 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
                 {
                     parameterId = "releaseDateVisibility",
                     values = new List<Value> { new Value { val = isFullSetOfMetrics } },
-                },
-            };
-        }
-
-        /// <summary>
-        /// Gets part of request body - report parameter of pagination.
-        /// </summary>
-        /// <param name="reportId">String identifier of kind of report.</param>
-        /// <param name="pageIndex">Number of current page index.</param>
-        /// <param name="pageSizeValue">Number of page size.</param>
-        /// <returns>Report parameter of pagination.</returns>
-        public static ReportPaginationWithOrderParameter GetReportPaginationWithOrderParameter(
-            string reportId, int pageIndex, int pageSizeValue)
-        {
-            return new ReportPaginationWithOrderParameter
-            {
-                reportPagination = new ReportPagination
-                {
-                    pageIndex = pageIndex,
-                    pageSize = pageSizeValue,
-                },
-                reportOrders = new List<ReportOrder>
-                {
-                    new ReportOrder
-                    {
-                        columnId = reportId,
-                        ascending = false,
-                    },
                 },
             };
         }

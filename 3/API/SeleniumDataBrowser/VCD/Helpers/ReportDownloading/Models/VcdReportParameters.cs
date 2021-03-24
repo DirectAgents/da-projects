@@ -5,6 +5,10 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Models
 {
     public class VcdReportParameters : VcdBaseReportParameters
     {
-        public DateTime ReportDate { get; set; }
+        public DateTime ReportStartDate { get; set; }
+
+        public DateTime ReportEndDate { get; set; }
+
+        public PeriodType Period { get; set; }
     }
 }

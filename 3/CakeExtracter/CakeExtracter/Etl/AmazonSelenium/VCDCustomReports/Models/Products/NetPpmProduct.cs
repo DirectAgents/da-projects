@@ -1,26 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models.Base;
+using CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models.Interface;
 
-namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models
+namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models.Products
 {
-    public class NetPpmProduct
+    public class NetPpmProduct : VcdCustomProduct, ISumMetrics<NetPpmProduct>
     {
-        public string Asin
-        {
-            get;
-            set;
-        }
-
         public string Subcategory
-        {
-            get;
-            set;
-        }
-
-        public string Name
         {
             get;
             set;

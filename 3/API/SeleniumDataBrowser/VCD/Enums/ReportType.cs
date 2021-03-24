@@ -9,10 +9,7 @@
         inventoryHealth,
         customerReviews,
         geographicSalesInsights,
-        netPPMWeekly,
-        netPPMMonthly,
-        netPPMYearly,
-        repeatPurchaseBehaviorMonthly,
-        repeatPurchaseBehaviorQuarterly,
+        netPPM,
+        repeatPurchaseBehavior,
     }
 }

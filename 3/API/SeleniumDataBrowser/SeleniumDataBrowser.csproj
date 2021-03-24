@@ -97,10 +97,10 @@
     <Compile Include="PDA\PdaDataProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VCD\Configuration\VcdConfigurationManager.cs" />
+    <Compile Include="VCD\Enums\PeriodType.cs" />
     <Compile Include="VCD\Enums\ReportType.cs" />
     <Compile Include="VCD\Helpers\ReportDownloading\Models\VcdBaseReportParameters.cs" />
     <Compile Include="VCD\Helpers\ReportDownloading\Models\VcdReportParameters.cs" />
-    <Compile Include="VCD\Helpers\ReportDownloading\Models\VcdReportParametersWithPeriods.cs" />
     <Compile Include="VCD\VcdDataProvider.cs" />
     <Compile Include="VCD\Helpers\ReportDownloading\Configurations\VcdReportDownloaderSettings.cs" />
     <Compile Include="VCD\Helpers\ReportDownloading\Constants\ResponseDataConstants.cs" />

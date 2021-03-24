@@ -17,6 +17,7 @@ using SeleniumDataBrowser.VCD.Models;
 using CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Extractors;
 using CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Extractors.VcdCustomReportsExtractionHelpers;
 using CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Loaders;
+using SeleniumDataBrowser.VCD.Enums;
 
 namespace CakeExtracter.Commands.Selenium
 {
@@ -57,6 +58,10 @@ namespace CakeExtracter.Commands.Selenium
         /// </summary>
         public bool IsHidingBrowserWindow { get; set; }
 
+        public PeriodType RequestedPeriod { get; set; }
+
+        public string ReportType { get; set; }
+
         /// <inheritdoc cref="ConsoleCommand" />
         /// <summary>
         /// Initializes a new instance of the <see cref="SyncAmazonVcdCommand" /> class.
@@ -69,6 +74,9 @@ namespace CakeExtracter.Commands.Selenium
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
             HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default = {DefaultDaysAgo})", c => DaysAgoToStart = c);
             HasOption<bool>("h|hideWindow=", "Include hiding the browser window", c => IsHidingBrowserWindow = c);
+            HasOption<string>("t|periodType=", "", c => RequestedPeriod = Enum.TryParse<PeriodType>(c, true, out var result) ? result : PeriodType.DAILY);
+            HasOption<string>("r|reportType=", "", c => ReportType = c);
+            NoNeedToCreateRepeatRequests = true;
         }
 
         /// <inheritdoc />
@@ -166,14 +174,27 @@ namespace CakeExtracter.Commands.Selenium
         private void RunForAccounts(Dictionary<ExtAccount, VcdAccountInfo> accounts, VcdDataProvider vcdDataProvider)
         {
             var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
+            var reportType = new AmazonCustomReportType(ReportType);
             Logger.Info($"Amazon VCD ETL. DateRange {dateRange}.");
+
             foreach (var account in accounts)
             {
                 try
                 {
-                    DoGeographicSalesInsightsEtlForAccount(account, dateRange, vcdDataProvider);
-                    DoNetPpmEtlForAccount(account, vcdDataProvider);
-                    DoRepeatPurchaseBehaviorEtlForAccount(account, vcdDataProvider);
+                    if (reportType.GeoSales)
+                    {
+                        DoGeographicSalesInsightsEtlForAccount(account, dateRange, vcdDataProvider);
+                    }
+
+                    if (reportType.NetPpm)
+                    {
+                        DoNetPpmEtlForAccount(account, vcdDataProvider);
+                    }
+
+                    if (reportType.RepeatPurchase)
+                    {
+                        DoRepeatPurchaseBehaviorEtlForAccount(account, vcdDataProvider);
+                    }
                     AmazonTimeTracker.Instance.LogTrackingData(account.Key.Id);
                 }
                 catch (Exception ex)
@@ -198,16 +219,9 @@ namespace CakeExtracter.Commands.Selenium
         {
             Logger.Info(account.Key.Id, $"Amazon VCD, Net Ppm ETL for account {account.Key.Name} ({account.Key.Id}) started.");
             ConfigureDataProviderForCurrentAccount(account.Key, vcdDataProvider);
-            var weeklyExtractor = GetNetPpmExtractor(account, vcdDataProvider, "WEEKLY");
-            var monthlyExtractor = GetNetPpmExtractor(account, vcdDataProvider, "MONTHLY");
-            var yearlyExtractor = GetNetPpmExtractor(account, vcdDataProvider, "YEARLY");
-            var weeklyLoader = new NetPpmLoader(account.Key, "WEEKLY");
-            var monthlyLoader = new NetPpmLoader(account.Key, "MONTHLY");
-            var yearlyLoader = new NetPpmLoader(account.Key, "YEARLY");
-
-            CommandHelper.DoEtl(weeklyExtractor, weeklyLoader);
-            CommandHelper.DoEtl(monthlyExtractor, monthlyLoader);
-            CommandHelper.DoEtl(yearlyExtractor, yearlyLoader);
+            var extractor = GetNetPpmExtractor(account, vcdDataProvider, RequestedPeriod);
+            var loader = new NetPpmLoader(account.Key, "WEEKLY");
+            CommandHelper.DoEtl(extractor, loader);
             Logger.Info(account.Key.Id, $"Amazon VCD, Net PPM ETL for account {account.Key.Name} ({account.Key.Id}) finished.");
         }
 
@@ -238,27 +252,6 @@ namespace CakeExtracter.Commands.Selenium
         {
             var loggerWithAccountId = GetLoggerWithAccountId(account.Id);
             vcdDataProvider.LoggerWithAccountId = loggerWithAccountId;
-        }
-
-        private GeographicSalesInsightsExtractor GetDailyDataExtractor(KeyValuePair<ExtAccount, VcdAccountInfo> account, DateRange dateRange, VcdDataProvider vcdDataProvider)
-        {
-            var maxRetryAttemptsForExtractData = VcdCommandConfigurationManager.GetExtractDailyDataAttemptCount();
-            var extractor = new GeographicSalesInsightsExtractor(account.Key, account.Value, dateRange, vcdDataProvider, maxRetryAttemptsForExtractData);
-            return extractor;
-        }
-
-        private NetPpmExtractor GetNetPpmExtractor(KeyValuePair<ExtAccount, VcdAccountInfo> account, VcdDataProvider vcdDataProvider, string period)
-        {
-            var maxRetryAttemptsForExtractData = VcdCommandConfigurationManager.GetExtractDailyDataAttemptCount();
-            var extractor = new NetPpmExtractor(account.Key, account.Value, vcdDataProvider, maxRetryAttemptsForExtractData, period);
-            return extractor;
-        }
-
-        private RepeatPurchaseBehaviorExtractor GetRepeatPurchaseBehaviorExtractor(KeyValuePair<ExtAccount, VcdAccountInfo> account, VcdDataProvider vcdDataProvider, string period)
-        {
-            var maxRetryAttemptsForExtractData = VcdCommandConfigurationManager.GetExtractDailyDataAttemptCount();
-            var extractor = new RepeatPurchaseBehaviorExtractor(account.Key, account.Value, vcdDataProvider, maxRetryAttemptsForExtractData, period);
-            return extractor;
         }
 
         private void InitEtlEvents(GeographicSalesInsightsExtractor extractor, GeographicSalesInsightsLoader loader)

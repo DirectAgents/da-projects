@@ -34,7 +34,6 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         private readonly AuthorizationModel authorizationModel;
         private readonly VcdAccountInfo accountInfo;
         private readonly SeleniumLogger logger;
-        private readonly Dictionary<string, ReportType> reportTypesByNames;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VcdReportDownloader"/> class.
@@ -56,8 +55,6 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             this.authorizationModel = authorizationModel;
             this.logger = logger;
             this.reportDownloaderSettings = reportDownloaderSettings;
-
-            reportTypesByNames = GetNetPpmReportTypesDictionary();
         }
 
         /// <summary>
@@ -71,7 +68,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             var reportParameters = new VcdReportParameters()
             {
                 PageIndex = 0,
-                ReportDate = reportDay,
+                ReportStartDate = reportDay,
                 ReportLevel = RequestBodyConstants.ShippedRevenueReportLevel,
                 ReportId = RequestBodyConstants.ShippedRevenueColumnId,
                 ReportType = ReportType.salesDiagnostic,
@@ -90,7 +87,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             var reportParameters = new VcdReportParameters()
             {
                 PageIndex = 0,
-                ReportDate = reportDay,
+                ReportStartDate = reportDay,
                 ReportLevel = RequestBodyConstants.ShippedCogsLevel,
                 ReportId = RequestBodyConstants.ShippedCogsColumnId,
                 ReportType = ReportType.salesDiagnostic,
@@ -109,7 +106,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             var reportParameters = new VcdReportParameters()
             {
                 PageIndex = 0,
-                ReportDate = reportDay,
+                ReportStartDate = reportDay,
                 ReportLevel = RequestBodyConstants.OrderedRevenueLevel,
                 ReportId = RequestBodyConstants.OrderedRevenueColumnId,
                 ReportType = ReportType.salesDiagnostic,
@@ -128,7 +125,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             var reportParameters = new VcdReportParameters()
             {
                 PageIndex = 0,
-                ReportDate = reportDay,
+                ReportStartDate = reportDay,
                 ReportLevel = string.Empty,
                 ReportId = RequestBodyConstants.HealthInventoryColumnId,
                 ReportType = ReportType.inventoryHealth,
@@ -147,7 +144,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             var reportParameters = new VcdReportParameters()
             {
                 PageIndex = 0,
-                ReportDate = reportDay,
+                ReportStartDate = reportDay,
                 ReportLevel = string.Empty,
                 ReportId = RequestBodyConstants.CustomerReviewsColumnId,
                 ReportType = ReportType.customerReviews,
@@ -166,7 +163,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             var reportParameters = new VcdReportParameters()
             {
                 PageIndex = 0,
-                ReportDate = reportDay,
+                ReportStartDate = reportDay,
                 ReportLevel = string.Empty,
                 ReportId = RequestBodyConstants.GeographicSalesInsightColumnId,
                 ReportType = ReportType.geographicSalesInsights,
@@ -174,47 +171,24 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             return DownloadCsvReportFromBackendApi(reportParameters);
         }
 
-        /// <summary>
-        /// Downloads the CSV Net PPM report.
-        /// </summary>
-        /// <param name="period">Period for report.</param>
-        /// <returns>Text of report content.</returns>
-        public string DownloadNetPpmCsvReport(string period)
+        public string DownloadVcdCustomReport(
+            PeriodType period,
+            ReportType reportType,
+            DateTime startDate,
+            DateTime endDate)
         {
-            logger.LogInfo($"Amazon VCD, Attempt to download Net Ppm {period} report.");
-            ReportType reportType = ReportType.netPPMWeekly;
-            reportType = GetNetPpmReportTypesDictionary()[period];
-            var reportParameters = new VcdReportParametersWithPeriods()
+            logger.LogInfo($"Amazon VCD, Attempt to download {reportType} {period} report.");
+            var reportParameters = new VcdReportParameters
             {
                 PageIndex = 0,
                 ReportLevel = string.Empty,
-                ReportId = RequestBodyConstants.NetPPMColumnId,
+                ReportId = RequestBodyConstants.NetPPMColumnId, // TODO: Get from dictionary
                 ReportType = reportType,
                 Period = period,
+                ReportStartDate = startDate,
+                ReportEndDate = endDate,
             };
-            return DownloadNonDefaultPeriodCsvReportFromBackendApi(reportParameters);
-        }
-
-        /// <summary>
-        /// Downloads the CSV Repeat Purchase Behavior report.
-        /// </summary>
-        /// <param name="period">Period for report.</param>
-        /// <returns>Text of report content.</returns>
-        public string DownloadRepeatPurchaseBehaviorCsvReport(string period)
-        {
-            logger.LogInfo($"Amazon VCD, Attempt to download Repeat Purchase Behavior {period} report.");
-            ReportType reportType;
-            reportType = GetRepeatPurchaseBehaviorReportTypesDictionary()[period];
-
-            var reportParameters = new VcdReportParametersWithPeriods()
-            {
-                PageIndex = 0,
-                ReportLevel = string.Empty,
-                ReportId = RequestBodyConstants.RepeatPurchaseBehaviorColumnId,
-                ReportType = reportType,
-                Period = period,
-            };
-            return DownloadNonDefaultPeriodCsvReportFromBackendApi(reportParameters);
+            return DownloadCsvReportFromBackendApi(reportParameters);
         }
 
         private string DownloadCsvReportFromBackendApi(VcdReportParameters reportParameters)
@@ -223,33 +197,11 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             return CreateCsvReportContent(reportParameters, firstPartOfReportData);
         }
 
-        private string DownloadNonDefaultPeriodCsvReportFromBackendApi(VcdReportParametersWithPeriods reportParameters)
-        {
-            var firstPartOfReportData = TryProcessRequestWithPeriod(reportParameters);
-            var parameters = new VcdReportParametersWithPeriods
-            {
-                ReportType = reportParameters.ReportType,
-                RequestId = reportParameters.RequestId,
-                ReportId = reportParameters.ReportId,
-                ReportLevel = reportParameters.ReportLevel,
-                PageIndex = reportParameters.PageIndex,
-            };
-            return CreateNonDefaultPeriodCsvReportFromBackendApi(parameters, firstPartOfReportData);
-        }
-
         private string CreateCsvReportContent(VcdReportParameters reportParameters, dynamic firstPartOfReportData)
         {
             var csvReportContent = new StringBuilder();
             SetCsvReportHeader(csvReportContent, firstPartOfReportData);
             SetCsvReportRows(reportParameters, csvReportContent, firstPartOfReportData);
-            return csvReportContent.ToString();
-        }
-
-        private string CreateNonDefaultPeriodCsvReportFromBackendApi(VcdReportParametersWithPeriods reportParameters, dynamic firstPartOfReportData)
-        {
-            var csvReportContent = new StringBuilder();
-            SetCsvReportHeader(csvReportContent, firstPartOfReportData);
-            SetCsvReportRowsWithPeriod(reportParameters, csvReportContent, firstPartOfReportData);
             return csvReportContent.ToString();
         }
 
@@ -262,16 +214,6 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         private void SetCsvReportRows(VcdReportParameters reportParameters, StringBuilder csvReportContent, dynamic firstPartOfReportData)
         {
             var productsRows = GetReportRows(reportParameters, firstPartOfReportData);
-            foreach (var productRow in productsRows)
-            {
-                var newReportLine = VcdComposingReportDataHelper.CreateRowLineWithProductInfo(productRow);
-                csvReportContent.AppendLine(newReportLine.ToString());
-            }
-        }
-
-        private void SetCsvReportRowsWithPeriod(VcdReportParametersWithPeriods reportParameters, StringBuilder csvReportContent, dynamic firstPartOfReportData)
-        {
-            var productsRows = GetReportRowsWithPeriod(reportParameters, firstPartOfReportData);
             foreach (var productRow in productsRows)
             {
                 var newReportLine = VcdComposingReportDataHelper.CreateRowLineWithProductInfo(productRow);
@@ -295,33 +237,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
                 if (!nextPartOfProductsRows.Any())
                 {
                     logger.LogWarning($"GetReportRows: No records extracted from {downloadedRowCount} " +
-                                      $"to {totalReportRowCount} for {reportParameters.ReportDate.ToShortDateString()}");
-                    break;
-                }
-
-                allProductsRows.AddRange(nextPartOfProductsRows);
-                downloadedRowCount += nextPartOfProductsRows.Count;
-            }
-            return allProductsRows;
-        }
-
-        private IEnumerable<dynamic> GetReportRowsWithPeriod(VcdReportParametersWithPeriods reportParameters, dynamic firstPartOfReportData)
-        {
-            var firstPartOfProductsRows = VcdComposingReportDataHelper.GetReportProductsRows(firstPartOfReportData);
-            var allProductsRows = JsonArrayToList(firstPartOfProductsRows);
-            var totalReportRowCount = VcdComposingReportDataHelper.GetTotalReportRowCount(firstPartOfReportData);
-            var downloadedRowCount = firstPartOfProductsRows.Count;
-
-            reportParameters.PageIndex = 0;
-            while (downloadedRowCount < totalReportRowCount)
-            {
-                reportParameters.PageIndex++;
-                var nextPartOfProductsRows =
-                    GetNextPartOfProductRowsWithPeriod(reportParameters);
-                if (!nextPartOfProductsRows.Any())
-                {
-                    logger.LogWarning($"GetReportRows: No records extracted from {downloadedRowCount} " +
-                                      $"to {totalReportRowCount} for {reportParameters.Period} period");
+                                      $"to {totalReportRowCount} for {reportParameters.ReportStartDate.ToShortDateString()}");
                     break;
                 }
 
@@ -334,13 +250,6 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         private List<dynamic> GetNextPartOfProductRows(VcdReportParameters reportParameters)
         {
             var nextPartOfReportData = TryProcessRequest(reportParameters);
-            var nextPartOfProductsRows = VcdComposingReportDataHelper.GetReportProductsRows(nextPartOfReportData);
-            return JsonArrayToList(nextPartOfProductsRows);
-        }
-
-        private List<dynamic> GetNextPartOfProductRowsWithPeriod(VcdReportParametersWithPeriods reportParameters)
-        {
-            var nextPartOfReportData = TryProcessRequestWithPeriod(reportParameters);
             var nextPartOfProductsRows = VcdComposingReportDataHelper.GetReportProductsRows(nextPartOfReportData);
             return JsonArrayToList(nextPartOfProductsRows);
         }
@@ -360,7 +269,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
                         failed = true;
                         ProcessFailedResponse(exception.Result, reportParameters.PageIndex);
                         logger.LogWaiting(
-                            $"Report (part {reportParameters.PageIndex}) generating for {reportParameters.ReportDate.ToShortDateString()}, " +
+                            $"Report (part {reportParameters.PageIndex}) generating for {reportParameters.ReportStartDate.ToShortDateString()}, " +
                             $"{reportParameters.ReportType}, {reportParameters.ReportLevel}, {accountInfo.AccountName}. "
                             + "Waiting {0} ...",
                             timeSpan,
@@ -375,46 +284,9 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             return ProcessResponse(response, reportParameters.PageIndex);
         }
 
-        private dynamic TryProcessRequestWithPeriod(VcdReportParametersWithPeriods reportParameters)
-        {
-            var failed = false;
-            WaitBeforeReportGeneratingWithPeriods(reportParameters);
-            var response = Policy
-                .Handle<Exception>()
-                .OrResult<IRestResponse<dynamic>>(resp => !IsSuccessfulResponse(resp))
-                .WaitAndRetry(
-                    reportDownloaderSettings.ReportDownloadingAttemptCount,
-                    retryCount => GetTimeSpanForWaiting(),
-                    (exception, timeSpan, retryCount, context) =>
-                    {
-                        failed = true;
-                        ProcessFailedResponse(exception.Result, reportParameters.PageIndex);
-                        logger.LogWaiting(
-                            $"Report (part {reportParameters.PageIndex}) generating for {reportParameters.Period} period, " +
-                            $"{reportParameters.ReportType}, {reportParameters.ReportLevel}, {accountInfo.AccountName}. "
-                            + "Waiting {0} ...",
-                            timeSpan,
-                            retryCount);
-                    })
-                .Execute(() =>
-                {
-                    var resp = ProcessRequestWithPeriods(reportParameters);
-                    EqualizeDelay(IsSuccessfulResponse(resp), failed);
-                    return resp;
-                });
-            return ProcessResponse(response, reportParameters.PageIndex);
-        }
-
         private IRestResponse<dynamic> ProcessRequest(VcdReportParameters reportParameters)
         {
             var request = GenerateDownloadingReportRequest(reportParameters);
-            var response = RestRequestHelper.SendPostRequest<dynamic>(AmazonBaseUrl, request);
-            return response;
-        }
-
-        private IRestResponse<dynamic> ProcessRequestWithPeriods(VcdReportParametersWithPeriods reportParameters)
-        {
-            var request = GenerateDownloadingReportRequestWithPeriods(reportParameters);
             var response = RestRequestHelper.SendPostRequest<dynamic>(AmazonBaseUrl, request);
             return response;
         }
@@ -423,7 +295,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
         {
             var timeSpan = GetTimeSpanForWaiting();
             logger.LogWaiting(
-                $"Report (part {reportParameters.PageIndex}) generating for {reportParameters.ReportDate.ToShortDateString()}," +
+                $"Report (part {reportParameters.PageIndex}) generating for {reportParameters.ReportStartDate.ToShortDateString()}," +
                 $" {reportParameters.ReportType}, {reportParameters.ReportLevel}, {accountInfo.AccountName}. "
                 + "Waiting {0} ...",
                 timeSpan,
@@ -431,17 +303,6 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             Thread.Sleep(timeSpan);
         }
 
-        private void WaitBeforeReportGeneratingWithPeriods(VcdReportParametersWithPeriods reportParameters)
-        {
-            var timeSpan = GetTimeSpanForWaiting();
-            logger.LogWaiting(
-                $"Report (part {reportParameters.PageIndex}) generating for {reportParameters.Period} period," +
-                $" {reportParameters.ReportType}, {reportParameters.ReportLevel}, {accountInfo.AccountName}. "
-                + "Waiting {0} ...",
-                timeSpan,
-                null);
-            Thread.Sleep(timeSpan);
-        }
         private dynamic ProcessResponse(IRestResponse<dynamic> response, int pageIndex)
         {
             if (IsSuccessfulResponse(response))
@@ -503,35 +364,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
                 pageRequestData.Token,
                 accountInfo.VendorGroupId.ToString(),
                 accountInfo.McId.ToString());
-            var reportTypeForUrl = reportParameters.ReportType.ToString().Replace("Weekly", "").Replace("Monthly", "").Replace("Yearly", "").Replace("Quarterly", "");
-            var resourceUrl = string.Format(AmazonCsvDownloadReportUrl, reportTypeForUrl);
-            var request = RestRequestHelper.CreateRestRequest(resourceUrl, pageRequestData.Cookies, requestQueryParams);
-            request.AddParameter(RequestBodyConstants.RequestBodyFormat, requestBodyJson, ParameterType.RequestBody);
-            requestHeaders.ForEach(x => request.AddHeader(x.Key, x.Value));
-            return request;
-        }
-
-        private RestRequest GenerateDownloadingReportRequestWithPeriods(VcdReportParametersWithPeriods reportParameters)
-        {
-            reportParameters.RequestId = Guid.NewGuid().ToString();
-            var parameters = new VcdReportParameters
-            {
-                ReportType = reportParameters.ReportType,
-                RequestId = reportParameters.RequestId,
-                ReportId = reportParameters.ReportId,
-                ReportLevel = reportParameters.ReportLevel,
-                PageIndex = reportParameters.PageIndex,
-            };
-            var pageRequestData = GetPageDataForReportRequest();
-            reportParameters.RequestId = Guid.NewGuid().ToString();
-            var requestBodyObject = PrepareRequestBody(parameters);
-            var requestHeaders = GetHeadersDictionary(reportParameters.RequestId);
-            var requestBodyJson = JsonConvert.SerializeObject(requestBodyObject);
-            var requestQueryParams = RequestQueryConstants.GetRequestQueryParameters(
-                pageRequestData.Token,
-                accountInfo.VendorGroupId.ToString(),
-                accountInfo.McId.ToString());
-            var reportTypeForUrl = reportParameters.ReportType.ToString().Replace("Weekly", "").Replace("Monthly", "").Replace("Yearly", "").Replace("Quarterly", "");
+            var reportTypeForUrl = reportParameters.ReportType.ToString();
             var resourceUrl = string.Format(AmazonCsvDownloadReportUrl, reportTypeForUrl);
             var request = RestRequestHelper.CreateRestRequest(resourceUrl, pageRequestData.Cookies, requestQueryParams);
             request.AddParameter(RequestBodyConstants.RequestBodyFormat, requestBodyJson, ParameterType.RequestBody);
@@ -544,25 +377,6 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             var requestHeaders = RequestHeaderConstants.GetHeadersDictionary();
             requestHeaders[RequestHeaderConstants.RequestIdHeaderName] = requestId;
             return requestHeaders;
-        }
-
-        private Dictionary<string, ReportType> GetNetPpmReportTypesDictionary()
-        {
-            return new Dictionary<string, ReportType>
-            {
-                { "MONTHLY", ReportType.netPPMMonthly },
-                { "WEEKLY", ReportType.netPPMWeekly },
-                { "YEARLY", ReportType.netPPMYearly },
-            };
-        }
-
-        private Dictionary<string, ReportType> GetRepeatPurchaseBehaviorReportTypesDictionary()
-        {
-            return new Dictionary<string, ReportType>
-            {
-                { "MONTHLY", ReportType.repeatPurchaseBehaviorMonthly },
-                { "QUARTERLY", ReportType.repeatPurchaseBehaviorQuarterly },
-            };
         }
 
         private SalesDiagnosticDetail PrepareRequestBody(VcdReportParameters reportParameters)
@@ -580,7 +394,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
 
         private List<ReportParameter> GetReportParameters(VcdReportParameters reportParameters)
         {
-            var reportDay = GetReportParameterFilterDate(reportParameters.ReportDate);
+            var reportDay = GetReportParameterFilterDate(reportParameters.ReportStartDate);
             List<ReportParameter> reportParams = null;
             switch (reportParameters.ReportType)
             {
@@ -596,29 +410,17 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
                     reportParams =
                         RequestBodyConstants.GetCustomerReviewsParameters(reportDay);
                     break;
-                case ReportType.netPPMWeekly:
+                case ReportType.netPPM:
                     reportParams =
-                        RequestBodyConstants.GetNetPpmParameters(reportDay, "WEEKLY");
-                    break;
-                case ReportType.netPPMMonthly:
-                    reportParams =
-                        RequestBodyConstants.GetNetPpmParameters(reportDay, "MONTHLY");
-                    break;
-                case ReportType.netPPMYearly:
-                    reportParams =
-                        RequestBodyConstants.GetNetPpmParameters(reportDay, "YEARLY");
+                        RequestBodyConstants.GetNetPpmReportParameters(reportParameters.Period, reportParameters.ReportStartDate, reportParameters.ReportEndDate);
                     break;
                 case ReportType.geographicSalesInsights:
                     reportParams =
                         RequestBodyConstants.GetGeographicSalesInsightsParameters(reportDay);
                     break;
-                case ReportType.repeatPurchaseBehaviorMonthly:
+                case ReportType.repeatPurchaseBehavior:
                     reportParams =
-                        RequestBodyConstants.GetRepeatPurchaseBehaviorParameters(reportDay, "MONTHLY");
-                    break;
-                case ReportType.repeatPurchaseBehaviorQuarterly:
-                    reportParams =
-                        RequestBodyConstants.GetRepeatPurchaseBehaviorParameters(reportDay, "QUARTERLY");
+                        RequestBodyConstants.GetRepeatPurchaseBehaviorReportParameters(reportParameters.Period, reportParameters.ReportEndDate);
                     break;
             }
             return reportParams;

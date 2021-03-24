@@ -1,25 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models.Base;
+using CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models.Interface;
 
-namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models
+namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models.Products
 {
-    public class RepeatPurchaseBehaviorProduct
+    public class RepeatPurchaseBehaviorProduct : VcdCustomProduct, ISumMetrics<RepeatPurchaseBehaviorProduct>
     {
-        public string Asin
-        {
-            get;
-            set;
-        }
-
-        public string Name
-        {
-            get;
-            set;
-        }
-
         public int UniqueCustomers
         {
             get;

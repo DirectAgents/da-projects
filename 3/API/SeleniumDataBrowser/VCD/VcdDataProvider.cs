@@ -3,6 +3,7 @@
 using SeleniumDataBrowser.Helpers;
 using SeleniumDataBrowser.Models;
 using SeleniumDataBrowser.VCD.Configuration;
+using SeleniumDataBrowser.VCD.Enums;
 using SeleniumDataBrowser.VCD.Helpers;
 using SeleniumDataBrowser.VCD.Helpers.ReportDownloading;
 using SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Configurations;
@@ -119,22 +120,15 @@ namespace SeleniumDataBrowser.VCD
             return reportDownloader.DownloadCustomerReviewsCsvReport(reportDay);
         }
 
-        public string DownloadGeographicSalesInsightsCsvReport(VcdAccountInfo accountInfo, DateTime reportDay)
+        public string DownloadVcdCustomReport(
+            VcdAccountInfo accountInfo,
+            ReportType reportType,
+            PeriodType period,
+            DateTime startDate,
+            DateTime endDate)
         {
             var reportDownloader = new VcdReportDownloader(accountInfo, pagesManager, authorizationModel, LoggerWithAccountId ?? logger, reportDownloaderSettings);
-            return reportDownloader.DownloadGeographicSalesInsightsCsvReport(reportDay);
-        }
-
-        public string DownloadNetPpmCsvReport(VcdAccountInfo accountInfo, string period)
-        {
-            var reportDownloader = new VcdReportDownloader(accountInfo, pagesManager, authorizationModel, LoggerWithAccountId ?? logger, reportDownloaderSettings);
-            return reportDownloader.DownloadNetPpmCsvReport(period);
-        }
-
-        public string DownloadRepeatPurchaseBehaviorCsvReport(VcdAccountInfo accountInfo, string period)
-        {
-            var reportDownloader = new VcdReportDownloader(accountInfo, pagesManager, authorizationModel, LoggerWithAccountId ?? logger, reportDownloaderSettings);
-            return reportDownloader.DownloadRepeatPurchaseBehaviorCsvReport(period);
+            return reportDownloader.DownloadVcdCustomReport(period, reportType, startDate, endDate);
         }
 
         /// <summary>

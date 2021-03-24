@@ -1,6 +1,6 @@
 ﻿using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing.ParsingConverters;
-using CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models;
-using CsvHelper.Configuration;
+using CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportParsing.RowMaps;
+using CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models.Products;
 
 namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Extractors.VcdCustomReportsExtractionHelpers.ReportParsing.RowMaps
 {
@@ -8,7 +8,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Extractors.VcdCustom
     /// <summary>
     /// Row map configuration for Net PPM reports.
     /// </summary>
-    internal sealed class NetPpmProductsRowMap : CsvClassMap<NetPpmProduct>
+    internal sealed class NetPpmProductsRowMap : BaseCustomReportRowMap<NetPpmProduct>
     {
         /// <inheritdoc cref="BaseProductRowMap"/>
         /// <summary>
@@ -16,8 +16,6 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Extractors.VcdCustom
         /// </summary>
         public NetPpmProductsRowMap()
         {
-            Map(m => m.Asin).Name("asin");
-            Map(m => m.Name).Name("producttitle");
             Map(m => m.Subcategory).Name("subcategory");
             Map(m => m.NetPpm).Name("netppm").TypeConverter<DecimalPercentageReportConverter>();
             Map(m => m.NetPpmPriorYearPercentChange).Name("netppmprioryearpercentchange").TypeConverter<DecimalPercentageReportConverter>();
