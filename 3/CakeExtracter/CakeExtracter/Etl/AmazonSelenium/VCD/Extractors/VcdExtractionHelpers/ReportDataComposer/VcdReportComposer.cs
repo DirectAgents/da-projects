@@ -46,7 +46,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
             DateRange dateRange,
             ReportType reportType,
             PeriodType periodType)
-            where TProduct : VcdCustomProduct, ISumMetrics<VcdCustomProduct>
+            where TProduct : VcdCustomProduct, ISumMetrics<TProduct>
         {
             var mergedProducts = report.GroupBy(x => x.Asin).Select(GetVcdCustomProduct).ToList();
             return new VcdCustomReportData<TProduct>()
@@ -208,7 +208,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
         }
 
         private TProduct GetVcdCustomProduct<TProduct>(IEnumerable<TProduct> products)
-            where TProduct : VcdCustomProduct, ISumMetrics<VcdCustomProduct>
+            where TProduct : VcdCustomProduct, ISumMetrics<TProduct>
         {
             //TODO: Creating of a new product can be implemented via extension method in ISumMetrics interface.
 

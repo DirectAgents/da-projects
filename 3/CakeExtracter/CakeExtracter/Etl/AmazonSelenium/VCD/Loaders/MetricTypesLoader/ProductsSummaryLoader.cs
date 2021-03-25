@@ -43,7 +43,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
             {
                 Asin = reportEntity.Asin,
                 AccountId = extAccount.Id,
-                Name = reportEntity.Name,
+                //Name = reportEntity.Name,
                 ApparelSize = reportEntity.ApparelSize,
                 ApparelSizeWidth = reportEntity.ApparelSizeWidth,
                 Binding = reportEntity.Binding,

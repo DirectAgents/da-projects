@@ -2,6 +2,7 @@
 using System.ComponentModel.Composition;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
@@ -15,9 +16,13 @@ using SeleniumDataBrowser.Models;
 using SeleniumDataBrowser.VCD;
 using SeleniumDataBrowser.VCD.Models;
 using CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Extractors;
-using CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Extractors.VcdCustomReportsExtractionHelpers;
 using CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Loaders;
 using SeleniumDataBrowser.VCD.Enums;
+using CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models.Products;
+using CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Extractors.VcdCustomReportsExtractionHelpers.ReportParsing.RowMaps;
+using CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models;
+using CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models.Base;
+using CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models.Interface;
 
 namespace CakeExtracter.Commands.Selenium
 {
@@ -173,16 +178,14 @@ namespace CakeExtracter.Commands.Selenium
 
         private void RunForAccounts(Dictionary<ExtAccount, VcdAccountInfo> accounts, VcdDataProvider vcdDataProvider)
         {
-            var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             var reportType = new AmazonCustomReportType(ReportType);
-            Logger.Info($"Amazon VCD ETL. DateRange {dateRange}.");
-
             foreach (var account in accounts)
             {
                 try
                 {
                     if (reportType.GeoSales)
                     {
+                        var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
                         DoGeographicSalesInsightsEtlForAccount(account, dateRange, vcdDataProvider);
                     }
 
@@ -208,9 +211,14 @@ namespace CakeExtracter.Commands.Selenium
         {
             Logger.Info(account.Key.Id, $"Amazon VCD, GeographicSalesInsights ETL for account {account.Key.Name} ({account.Key.Id}) started.");
             ConfigureDataProviderForCurrentAccount(account.Key, vcdDataProvider);
-            var extractor = GetDailyDataExtractor(account, dateRange, vcdDataProvider);
+            var extractor = GetCustomReportExtractor<GeoSalesProduct>(
+                account,
+                dateRange,
+                RequestedPeriod,
+                SeleniumDataBrowser.VCD.Enums.ReportType.geographicSalesInsights,
+                vcdDataProvider);
             var loader = new GeographicSalesInsightsLoader(account.Key);
-            InitEtlEvents(extractor, loader);
+
             CommandHelper.DoEtl(extractor, loader);
             Logger.Info(account.Key.Id, $"Amazon VCD, ETL for account {account.Key.Name} ({account.Key.Id}) finished.");
         }
@@ -219,24 +227,53 @@ namespace CakeExtracter.Commands.Selenium
         {
             Logger.Info(account.Key.Id, $"Amazon VCD, Net Ppm ETL for account {account.Key.Name} ({account.Key.Id}) started.");
             ConfigureDataProviderForCurrentAccount(account.Key, vcdDataProvider);
-            var extractor = GetNetPpmExtractor(account, vcdDataProvider, RequestedPeriod);
-            var loader = new NetPpmLoader(account.Key, "WEEKLY");
+            var dateRange = GetNetPpmDateRange(RequestedPeriod);
+            var extractor = GetCustomReportExtractor<NetPpmProduct>(
+                account,
+                dateRange,
+                RequestedPeriod,
+                SeleniumDataBrowser.VCD.Enums.ReportType.netPPM,
+                vcdDataProvider);
+            var loader = new NetPpmLoader(account.Key, RequestedPeriod);
+
             CommandHelper.DoEtl(extractor, loader);
             Logger.Info(account.Key.Id, $"Amazon VCD, Net PPM ETL for account {account.Key.Name} ({account.Key.Id}) finished.");
         }
 
         private void DoRepeatPurchaseBehaviorEtlForAccount(KeyValuePair<ExtAccount, VcdAccountInfo> account, VcdDataProvider vcdDataProvider)
         {
-            Logger.Info(account.Key.Id, $"Amazon VCD, Net Ppm ETL for account {account.Key.Name} ({account.Key.Id}) started.");
-            ConfigureDataProviderForCurrentAccount(account.Key, vcdDataProvider);
-            var monthlyExtractor = GetRepeatPurchaseBehaviorExtractor(account, vcdDataProvider, "MONTHLY");
-            var quarterlyExtractor = GetRepeatPurchaseBehaviorExtractor(account, vcdDataProvider, "QUARTERLY");
-            var monthlyLoader = new RepeatPurchaseBehaviorLoader(account.Key, "MONTHLY");
-            var quarterlyLoader = new RepeatPurchaseBehaviorLoader(account.Key, "QUARTERLY");
+            Logger.Info(account.Key.Id, $"Amazon VCD, Repeat Purchase Behavior ETL for account {account.Key.Name} ({account.Key.Id}) started.");
+            var dateRanges = GetRepeatPurchaseBehaviorDateRanges();
+            foreach (var dateRange in dateRanges)
+            {
+                var extractor = GetCustomReportExtractor<RepeatPurchaseBehaviorProduct>(
+                    account,
+                    dateRange,
+                    RequestedPeriod,
+                    SeleniumDataBrowser.VCD.Enums.ReportType.repeatPurchaseBehavior,
+                    vcdDataProvider);
+                var loader = new RepeatPurchaseBehaviorLoader(account.Key, RequestedPeriod);
 
-            CommandHelper.DoEtl(monthlyExtractor, monthlyLoader);
-            CommandHelper.DoEtl(quarterlyExtractor, quarterlyLoader);
-            Logger.Info(account.Key.Id, $"Amazon VCD, Repeat Purchase Behavior ETL for account {account.Key.Name} ({account.Key.Id}) finished.");
+                CommandHelper.DoEtl(extractor, null);
+            }
+            Logger.Info(account.Key.Id, $"Amazon VCD, RepeatPurchaseBehavior ETL for account {account.Key.Name} ({account.Key.Id}) finished.");
+        }
+
+        private VcdCustomReportExtractor<TProduct, BaseCustomReportRowMap<TProduct>> GetCustomReportExtractor<TProduct>(
+            KeyValuePair<ExtAccount, VcdAccountInfo> account, DateRange dateRange, PeriodType period, ReportType reportType, VcdDataProvider vcdDataProvider)
+                where TProduct : VcdCustomProduct, ISumMetrics<TProduct>
+        {
+            var reportParameters = new VcdCustomReportExtractorParameters<TProduct>
+            {
+                Account = account.Key,
+                DataProvider = vcdDataProvider,
+                AccountInfo = account.Value,
+                Period = period,
+                DateRange = dateRange,
+                ReportType = reportType,
+            };
+            var extractor = new VcdCustomReportExtractor<TProduct, BaseCustomReportRowMap<TProduct>>(reportParameters);
+            return extractor;
         }
 
         private void SetInfoAboutAllAccountsInHistory(IEnumerable<ExtAccount> accounts)
@@ -252,14 +289,6 @@ namespace CakeExtracter.Commands.Selenium
         {
             var loggerWithAccountId = GetLoggerWithAccountId(account.Id);
             vcdDataProvider.LoggerWithAccountId = loggerWithAccountId;
-        }
-
-        private void InitEtlEvents(GeographicSalesInsightsExtractor extractor, GeographicSalesInsightsLoader loader)
-        {
-            extractor.ProcessEtlFailedWithoutInformation += exception =>
-                ScheduleNewCommandLaunch<SyncAmazonVcdCommand>(command => { });
-            loader.ProcessEtlFailedWithoutInformation += exception =>
-                ScheduleNewCommandLaunch<SyncAmazonVcdCommand>(command => { });
         }
 
         private SeleniumLogger GetLoggerWithoutAccountId()
@@ -297,6 +326,77 @@ namespace CakeExtracter.Commands.Selenium
             }
             var broadCommands = profileLevelCommands.Select(GetCommandWithCorrectDateRange).ToList();
             return broadCommands;
+        }
+
+        private DateRange GetNetPpmDateRange(PeriodType period)
+        {
+            var startDate = DateTime.Today;
+            var endDate = DateTime.Today;
+            var lastPeriodDate = DateTime.Today;
+            var culture = Thread.CurrentThread.CurrentCulture;
+            switch (period)
+            {
+                case PeriodType.WEEKLY:
+                    lastPeriodDate = DateTime.Today.AddDays(-7);
+                    var diff = lastPeriodDate.DayOfWeek - culture.DateTimeFormat.FirstDayOfWeek;
+                    if (diff < 0)
+                    {
+                        diff += 7;
+                    }
+                    startDate = lastPeriodDate.AddDays(-diff).Date;
+                    endDate = lastPeriodDate.AddDays(-diff + 6).Date;
+                    break;
+                case PeriodType.MONTHLY:
+                    lastPeriodDate = DateTime.Today.AddMonths(-1);
+                    startDate = new DateTime(lastPeriodDate.Year, lastPeriodDate.Month, 1);
+                    endDate = startDate.AddMonths(1).AddDays(-1);
+                    break;
+                case PeriodType.YEARLY:
+                    lastPeriodDate = DateTime.Today.AddYears(-1);
+                    startDate = new DateTime(lastPeriodDate.Year, 1, 1);
+                    endDate = new DateTime(lastPeriodDate.Year, 12, 31);
+                    break;
+            }
+            return new DateRange(startDate, endDate);
+        }
+
+        private List<DateRange> GetRepeatPurchaseBehaviorDateRanges()
+        {
+            return RequestedPeriod == PeriodType.MONTHLY ? GetRepeatPurchaseBehaviorMonthlyDateRanges()
+                                                : GetRepeatPurchaseBehaviorQuarterlyDateRanges();
+        }
+
+        private List<DateRange> GetRepeatPurchaseBehaviorMonthlyDateRanges()
+        {
+            DateTime currentDate = DateTime.Today;
+            var dateRanges = new List<DateRange>();
+
+            while (StartDate <= currentDate)
+            {
+                currentDate = currentDate.AddMonths(-1);
+                var startDate = new DateTime(currentDate.Year, currentDate.Month, 1);
+                var endDate = startDate.AddMonths(1).AddDays(-1).Date;
+                dateRanges.Add(new DateRange(startDate, endDate));
+                currentDate = startDate.AddDays(-1);
+            }
+            return dateRanges;
+        }
+
+        private List<DateRange> GetRepeatPurchaseBehaviorQuarterlyDateRanges()
+        {
+            DateTime currentDate = DateTime.Today;
+            var dateRanges = new List<DateRange>();
+
+            while (StartDate < currentDate)
+            {
+                currentDate = currentDate.AddMonths(-4);
+                var quarterNumber = (currentDate.Month - 1) / 3 + 1;
+                var startDate = new DateTime(currentDate.Year, (quarterNumber - 1) * 3 + 1, 1);
+                var endDate = startDate.AddMonths(3).AddDays(-1);
+                dateRanges.Add(new DateRange(startDate, endDate));
+                currentDate = startDate.AddDays(-1);
+            }
+            return dateRanges;
         }
 
         private CommandWithSchedule GetCommandWithCorrectDateRange(Tuple<SyncAmazonVcdCommand, DateRange, CommandWithSchedule> setting)

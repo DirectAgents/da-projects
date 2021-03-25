@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.Common;
 using CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models.Base;
 using CakeExtracter.Logging.TimeWatchers.Amazon;
 using DirectAgents.Domain.Contexts;
@@ -26,7 +27,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Loaders
 
         protected abstract void RemoveOldData(VcdCustomReportData<TProduct> item);
 
-        protected abstract TProductDbEntity MapReportEntity(TProduct reportProduct);
+        protected abstract TProductDbEntity MapReportEntity(TProduct reportProduct, DateRange dateRange);
 
         protected override int Load(List<VcdCustomReportData<TProduct>> items)
         {

@@ -22,11 +22,11 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
 
         public const string OrderedRevenueLevel = "orderedRevenueLevel";
 
-        public const string GeographicSalesInsightLevel = "geographicSalesInsightLevel";
+        //public const string GeographicSalesInsightLevel = "geographicSalesInsightLevel";
 
-        public const string NetPPMLevel = "netPPMLevel";
+        //public const string NetPPMLevel = "netPPMLevel";
 
-        public const string RepeatPurchaseBehaviorLevel = "repeatPurchaseBehaviorLevel";
+        //public const string RepeatPurchaseBehaviorLevel = "repeatPurchaseBehaviorLevel";
 
         public const string ShippedRevenueColumnId = "shippedrevenue";
 
@@ -40,9 +40,23 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
 
         public const string GeographicSalesInsightColumnId = "shippedrevenue";
 
-        public const string NetPPMColumnId = "netppmpercentoftotal";
+        //public const string NetPPMColumnId = "netppmpercentoftotal";
 
-        public const string RepeatPurchaseBehaviorColumnId = "orders";
+        //public const string RepeatPurchaseBehaviorColumnId = "orders";
+
+        public static readonly Dictionary<ReportType, string> CustomRequestBodyLevelsConstants = new Dictionary<ReportType, string>
+        {
+            { ReportType.geographicSalesInsights, "shippedRevenueLevel" },
+            { ReportType.netPPM, "netPPMLevel" },
+            { ReportType.repeatPurchaseBehavior, "repeatPurchaseBehaviorLevel" },
+        };
+
+        public static readonly Dictionary<ReportType, string> CustomRequestBodyColumnIdConstants = new Dictionary<ReportType, string>
+        {
+            { ReportType.geographicSalesInsights, "shippedrevenue" },
+            { ReportType.netPPM, "netppmpercentoftotal" },
+            { ReportType.repeatPurchaseBehavior, "orders" },
+        };
 
         /// <summary>
         /// Returns a list of sales diagnostic report parameters with values for request body.

@@ -21,7 +21,7 @@ using SeleniumDataBrowser.VCD.Models;
 namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Extractors
 {
     internal class VcdCustomReportExtractor<TProduct, TProductRowMap> : Extracter<VcdCustomReportData<TProduct>>
-        where TProduct : VcdCustomProduct, ISumMetrics<VcdCustomProduct>
+        where TProduct : VcdCustomProduct, ISumMetrics<TProduct>
         where TProductRowMap : BaseCustomReportRowMap<TProduct>
     {
         private readonly VcdDataProvider vcdDataProvider;

@@ -43,7 +43,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Extractors.VcdCustom
             Map(m => m.ShippedUnits).Name("shippedunits").TypeConverter<IntNumberReportConverter>();
             Map(m => m.ShippedUnitsPriorPeriodPercentChange).Name("shippedunitspriorperiodpercentchange").TypeConverter<DecimalPercentageReportConverter>();
             Map(m => m.ShippedUnitsPriorYearPercentChange).Name("shippedunitsprioryearpercentchange").TypeConverter<DecimalPercentageReportConverter>();
-            Map(m => m.ShippedUnitsPercentOfTotal).Name("shippedunitspercentoftotal").TypeConverter<DecimalPercentageReportConverter>()
+            Map(m => m.ShippedUnitsPercentOfTotal).Name("shippedunitspercentoftotal").TypeConverter<DecimalPercentageReportConverter>();
             Map(m => m.AverageShippedPrice).Name("averageshippedprice").TypeConverter<DecimalAmountReportConverter>();
             Map(m => m.AverageShippedPricePriorPeriodPercentChange).Name("averageshippedpricepriorperiodpercentchange").TypeConverter<DecimalPercentageReportConverter>();
             Map(m => m.AverageShippedPricePriorYearPercentChange).Name("averageshippedpriceprioryearpercentchange").TypeConverter<DecimalPercentageReportConverter>();

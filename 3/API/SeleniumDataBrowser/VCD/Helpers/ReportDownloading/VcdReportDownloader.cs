@@ -152,24 +152,24 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             return DownloadCsvReportFromBackendApi(reportParameters);
         }
 
-        /// <summary>
-        /// Downloads the CSV  Geographic Sales Insights report.
-        /// </summary>
-        /// <param name="reportDay">Day for report.</param>
-        /// <returns>Text of report content.</returns>
-        public string DownloadGeographicSalesInsightsCsvReport(DateTime reportDay)
-        {
-            logger.LogInfo("Amazon VCD, Attempt to download Geographic Sales Insights report.");
-            var reportParameters = new VcdReportParameters()
-            {
-                PageIndex = 0,
-                ReportStartDate = reportDay,
-                ReportLevel = string.Empty,
-                ReportId = RequestBodyConstants.GeographicSalesInsightColumnId,
-                ReportType = ReportType.geographicSalesInsights,
-            };
-            return DownloadCsvReportFromBackendApi(reportParameters);
-        }
+        ///// <summary>
+        ///// Downloads the CSV  Geographic Sales Insights report.
+        ///// </summary>
+        ///// <param name="reportDay">Day for report.</param>
+        ///// <returns>Text of report content.</returns>
+        //public string DownloadGeographicSalesInsightsCsvReport(DateTime reportDay)
+        //{
+        //    logger.LogInfo("Amazon VCD, Attempt to download Geographic Sales Insights report.");
+        //    var reportParameters = new VcdReportParameters()
+        //    {
+        //        PageIndex = 0,
+        //        ReportStartDate = reportDay,
+        //        ReportLevel = string.Empty,
+        //        ReportId = RequestBodyConstants.GeographicSalesInsightColumnId,
+        //        ReportType = ReportType.geographicSalesInsights,
+        //    };
+        //    return DownloadCsvReportFromBackendApi(reportParameters);
+        //}
 
         public string DownloadVcdCustomReport(
             PeriodType period,
@@ -181,8 +181,8 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             var reportParameters = new VcdReportParameters
             {
                 PageIndex = 0,
-                ReportLevel = string.Empty,
-                ReportId = RequestBodyConstants.NetPPMColumnId, // TODO: Get from dictionary
+                ReportLevel = RequestBodyConstants.CustomRequestBodyLevelsConstants[reportType],
+                ReportId = RequestBodyConstants.CustomRequestBodyColumnIdConstants[reportType],
                 ReportType = reportType,
                 Period = period,
                 ReportStartDate = startDate,
