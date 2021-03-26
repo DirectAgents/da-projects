@@ -22,12 +22,6 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
 
         public const string OrderedRevenueLevel = "orderedRevenueLevel";
 
-        //public const string GeographicSalesInsightLevel = "geographicSalesInsightLevel";
-
-        //public const string NetPPMLevel = "netPPMLevel";
-
-        //public const string RepeatPurchaseBehaviorLevel = "repeatPurchaseBehaviorLevel";
-
         public const string ShippedRevenueColumnId = "shippedrevenue";
 
         public const string ShippedCogsColumnId = "shippedcogs";
@@ -37,12 +31,6 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
         public const string HealthInventoryColumnId = "sellableonhandinventory";
 
         public const string CustomerReviewsColumnId = "numberofcustomerreviews";
-
-        public const string GeographicSalesInsightColumnId = "shippedrevenue";
-
-        //public const string NetPPMColumnId = "netppmpercentoftotal";
-
-        //public const string RepeatPurchaseBehaviorColumnId = "orders";
 
         public static readonly Dictionary<ReportType, string> CustomRequestBodyLevelsConstants = new Dictionary<ReportType, string>
         {
