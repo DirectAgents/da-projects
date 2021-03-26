@@ -8,5 +8,8 @@
         salesDiagnostic,
         inventoryHealth,
         customerReviews,
+        geographicSalesInsights,
+        netPPM,
+        repeatPurchaseBehavior,
     }
 }

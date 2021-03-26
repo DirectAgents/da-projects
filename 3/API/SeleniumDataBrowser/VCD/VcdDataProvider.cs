@@ -3,6 +3,7 @@
 using SeleniumDataBrowser.Helpers;
 using SeleniumDataBrowser.Models;
 using SeleniumDataBrowser.VCD.Configuration;
+using SeleniumDataBrowser.VCD.Enums;
 using SeleniumDataBrowser.VCD.Helpers;
 using SeleniumDataBrowser.VCD.Helpers.ReportDownloading;
 using SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Configurations;
@@ -117,6 +118,17 @@ namespace SeleniumDataBrowser.VCD
         {
             var reportDownloader = new VcdReportDownloader(accountInfo, pagesManager, authorizationModel, LoggerWithAccountId ?? logger, reportDownloaderSettings);
             return reportDownloader.DownloadCustomerReviewsCsvReport(reportDay);
+        }
+
+        public string DownloadVcdCustomReport(
+            VcdAccountInfo accountInfo,
+            ReportType reportType,
+            PeriodType period,
+            DateTime startDate,
+            DateTime endDate)
+        {
+            var reportDownloader = new VcdReportDownloader(accountInfo, pagesManager, authorizationModel, LoggerWithAccountId ?? logger, reportDownloaderSettings);
+            return reportDownloader.DownloadVcdCustomReport(period, reportType, startDate, endDate);
         }
 
         /// <summary>

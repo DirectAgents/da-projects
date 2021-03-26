@@ -1,6 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.Common;
 using CakeExtracter.Etl.AmazonSelenium.VCD.Models;
+using CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models.Base;
+using CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models.Interface;
+using SeleniumDataBrowser.VCD.Enums;
 
 namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.ReportDataComposer
 {
@@ -34,6 +38,23 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
                 Subcategories = GetSubcategoriesFromProducts(mergedProducts),
                 Brands = GetBrandsFromProducts(mergedProducts),
                 ParentProducts = GetParentProductsFromProducts(mergedProducts),
+            };
+        }
+
+        public VcdCustomReportData<TProduct> ComposeCustomReportData<TProduct>(
+            List<TProduct> report,
+            DateRange dateRange,
+            ReportType reportType,
+            PeriodType periodType)
+            where TProduct : VcdCustomProduct, ISumMetrics<TProduct>
+        {
+            var mergedProducts = report.GroupBy(x => x.Asin).Select(GetVcdCustomProduct).ToList();
+            return new VcdCustomReportData<TProduct>()
+            {
+                Products = mergedProducts,
+                PeriodType = periodType,
+                ReportDateRange = dateRange,
+                ReportType = reportType,
             };
         }
 
@@ -184,6 +205,17 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
             };
             item.SetMetrics(products);
             return item;
+        }
+
+        private TProduct GetVcdCustomProduct<TProduct>(IEnumerable<TProduct> products)
+            where TProduct : VcdCustomProduct, ISumMetrics<TProduct>
+        {
+            //TODO: Creating of a new product can be implemented via extension method in ISumMetrics interface.
+
+            products = products.ToList();
+            var firstProduct = products.First();
+            firstProduct.SetMetrics(products);
+            return firstProduct;
         }
 
         private string GetBrandName(Product product)

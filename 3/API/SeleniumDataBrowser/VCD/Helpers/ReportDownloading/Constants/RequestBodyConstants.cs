@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Models;
 using SeleniumDataBrowser.Helpers;
+using System.Threading;
+using SeleniumDataBrowser.VCD.Enums;
 
 namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
 {
@@ -10,6 +12,8 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
     /// </summary>
     internal class RequestBodyConstants
     {
+        private const string DateFormat = "yyyyMMdd";
+
         public const string RequestBodyFormat = "application/json";
 
         public const string ShippedRevenueReportLevel = "shippedRevenueLevel";
@@ -27,6 +31,20 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
         public const string HealthInventoryColumnId = "sellableonhandinventory";
 
         public const string CustomerReviewsColumnId = "numberofcustomerreviews";
+
+        public static readonly Dictionary<ReportType, string> CustomRequestBodyLevelsConstants = new Dictionary<ReportType, string>
+        {
+            { ReportType.geographicSalesInsights, "shippedRevenueLevel" },
+            { ReportType.netPPM, "netPPMLevel" },
+            { ReportType.repeatPurchaseBehavior, "repeatPurchaseBehaviorLevel" },
+        };
+
+        public static readonly Dictionary<ReportType, string> CustomRequestBodyColumnIdConstants = new Dictionary<ReportType, string>
+        {
+            { ReportType.geographicSalesInsights, "shippedrevenue" },
+            { ReportType.netPPM, "netppmpercentoftotal" },
+            { ReportType.repeatPurchaseBehavior, "orders" },
+        };
 
         /// <summary>
         /// Returns a list of sales diagnostic report parameters with values for request body.
@@ -124,8 +142,324 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
             return commonParams;
         }
 
+        /// <summary>
+        /// Returns a list of geographic sales insights report parameters with values for request body.
+        /// </summary>
+        /// <param name="reportDate">Report date.</param>
+        /// <returns>List of report parameters.</returns>
+        public static List<ReportParameter> GetGeographicSalesInsightsParameters(string reportDate)
+        {
+            var commonParams = GetCommonReportParameters(reportDate, reportDate, false);
+            commonParams.AddRange(
+                new List<ReportParameter>
+                {
+                    new ReportParameter
+                    {
+                        parameterId = "viewFilter",
+                        values = new List<Value> {new Value { val = "shippedRevenueLevel" } },
+                    },
+                    new ReportParameter
+                    {
+                        parameterId = "country",
+                        values = new List<Value> { new Value { val = "US" } },
+                    },
+                    new ReportParameter
+                    {
+                        parameterId = "state",
+                        values = new List<Value> { new Value { val= "ALL" } },
+                    },
+
+                    new ReportParameter
+                    {
+                        parameterId = "city",
+                        values = new List<Value> { new Value { val = "ALL" } },
+                    },
+
+                    new ReportParameter
+                    {
+                        parameterId = "zip",
+                        values = new List<Value> { new Value { val = "ALL" } },
+                    },
+
+                    new ReportParameter
+                    {
+                        parameterId = "aggregationFilter",
+                        values = new List<Value> { new Value { val = "ASINLevel" } },
+                    },
+
+                    new ReportParameter
+                    {
+                        parameterId = "countryCode",
+                        values = new List<Value> { new Value { val = "US" } },
+                    },
+
+                    new ReportParameter
+                    {
+                        parameterId = "parentASINVisibility",
+                        values = new List<Value> { new Value { val = false } },
+                    },
+                    new ReportParameter
+                    {
+                        parameterId = "eanVisibility",
+                        values = new List<Value> { new Value { val = false } },
+                    },
+                });
+            return commonParams;
+        }
+
+        public static List<ReportParameter> GetNetPpmReportParameters(PeriodType period, DateTime startDate, DateTime endDate)
+        {
+            return new List<ReportParameter>
+            {
+                new ReportParameter
+                {
+                    parameterId = "asin",
+                    values = new List<Value> { new Value { val = "ALL" } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "aggregationFilter",
+                    values = new List<Value> { new Value { val = "ASINLevel" } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "period",
+                    values = new List<Value> { new Value { val = period.ToString() } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "periodStartDay",
+                    values = new List<Value> { new Value { val = startDate.ToString(DateFormat) } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "periodEndDay",
+                    values = new List<Value> { new Value { val = endDate.ToString(DateFormat) } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "dataRefreshDate",
+                    values = new List<Value> { new Value { val = "0000376439145" } },
+                },
+            };
+        }
+
+        public static List<ReportParameter> GetRepeatPurchaseBehaviorReportParameters(PeriodType period, DateTime endDate)
+        {
+            return new List<ReportParameter>
+            {
+                new ReportParameter
+                {
+                    parameterId = "asin",
+                    values = new List<Value> { new Value { val = "ALL" } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "aggregationFilter",
+                    values = new List<Value> { new Value { val = "ASINLevel" } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "period",
+                    values = new List<Value> { new Value { val = period.ToString() } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "periodEndDay",
+                    values = new List<Value> { new Value { val = endDate.ToString(DateFormat) } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "dataRefreshDate",
+                    values = new List<Value> { new Value { val = "0001334221998" } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "categoryId",
+                    values = new List<Value> { new Value { val = "ALL" } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "subcategoryId",
+                    values = new List<Value> { new Value { val = "ALL" } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "brandId",
+                    values = new List<Value> { new Value { val = "ALL" } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "isbn13Visibility",
+                    values = new List<Value> { new Value { val = false } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "upcVisibility",
+                    values = new List<Value> { new Value { val = false } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "parentASINVisibility",
+                    values = new List<Value> { new Value { val = false } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "eanVisibility",
+                    values = new List<Value> { new Value { val = false } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "janVisibility",
+                    values = new List<Value> { new Value { val = false } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "brandVisibility",
+                    values = new List<Value> { new Value { val = false } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "brandCodeVisibility",
+                    values = new List<Value> { new Value { val = false } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "subcatVisibility",
+                    values = new List<Value> { new Value { val = false } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "catVisibility",
+                    values = new List<Value> { new Value { val = false } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "apparelSizeVisibility",
+                    values = new List<Value> { new Value { val = false } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "apparelSizeWidthVisibility",
+                    values = new List<Value> { new Value { val = false } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "authorVisibility",
+                    values = new List<Value> { new Value { val = false } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "bindingVisibility",
+                    values = new List<Value> { new Value { val = false } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "catalogNumberVisibility",
+                    values = new List<Value> { new Value { val = false } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "colorVisibility",
+                    values = new List<Value> { new Value { val = false } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "colorCountVisibility",
+                    values = new List<Value> { new Value { val = false } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "manufactureOnDemandVisibility",
+                    values = new List<Value> { new Value { val = false } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "listPriceVisibility",
+                    values = new List<Value> { new Value { val = false } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "modelStyleVisibility",
+                    values = new List<Value> { new Value { val = false } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "productGroupVisibility",
+                    values = new List<Value> { new Value { val = false } },
+                },
+
+                new ReportParameter
+                {
+                    parameterId = "releaseDateVisibility",
+                    values = new List<Value> { new Value { val = false } },
+                },
+
+            };
+        }
+
+        /// <summary>
+        /// Gets part of request body - report parameter of pagination.
+        /// </summary>
+        /// <param name="reportId">String identifier of kind of report.</param>
+        /// <param name="pageIndex">Number of current page index.</param>
+        /// <param name="pageSizeValue">Number of page size.</param>
+        /// <returns>Report parameter of pagination.</returns>
+        public static ReportPaginationWithOrderParameter GetReportPaginationWithOrderParameter(
+            string reportId, int pageIndex, int pageSizeValue)
+        {
+            return new ReportPaginationWithOrderParameter
+            {
+                reportPagination = new ReportPagination
+                {
+                    pageIndex = pageIndex,
+                    pageSize = pageSizeValue,
+                },
+                reportOrders = new List<ReportOrder>
+                {
+                    new ReportOrder
+                    {
+                        columnId = reportId,
+                        ascending = false,
+                    },
+                },
+            };
+        }
+
         private static List<ReportParameter> GetCommonReportParameters(
-            string startDate, string endDate, bool isFullSetOfMetrics)
+           string startDate, string endDate, bool isFullSetOfMetrics)
         {
             return new List<ReportParameter>
             {
@@ -284,34 +618,6 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
                 {
                     parameterId = "releaseDateVisibility",
                     values = new List<Value> { new Value { val = isFullSetOfMetrics } },
-                },
-            };
-        }
-
-        /// <summary>
-        /// Gets part of request body - report parameter of pagination.
-        /// </summary>
-        /// <param name="reportId">String identifier of kind of report.</param>
-        /// <param name="pageIndex">Number of current page index.</param>
-        /// <param name="pageSizeValue">Number of page size.</param>
-        /// <returns>Report parameter of pagination.</returns>
-        public static ReportPaginationWithOrderParameter GetReportPaginationWithOrderParameter(
-            string reportId, int pageIndex, int pageSizeValue)
-        {
-            return new ReportPaginationWithOrderParameter
-            {
-                reportPagination = new ReportPagination
-                {
-                    pageIndex = pageIndex,
-                    pageSize = pageSizeValue,
-                },
-                reportOrders = new List<ReportOrder>
-                {
-                    new ReportOrder
-                    {
-                        columnId = reportId,
-                        ascending = false,
-                    },
                 },
             };
         }
