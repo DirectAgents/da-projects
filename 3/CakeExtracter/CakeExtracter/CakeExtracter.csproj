@@ -570,6 +570,7 @@
     <Compile Include="Etl\AmazonSelenium\VCDCustomReports\Extractors\VcdCustomReportsExtractionHelpers\ReportParsing\VcdCustomReportParser.cs" />
     <Compile Include="Etl\AmazonSelenium\VCDCustomReports\Loaders\GeographicSalesInsightsLoader.cs" />
     <Compile Include="Etl\AmazonSelenium\VCDCustomReports\Loaders\NetPpmLoader.cs" />
+    <Compile Include="Etl\AmazonSelenium\VCDCustomReports\Loaders\RepeatPurchaseBehaviorLoader.cs" />
     <Compile Include="Etl\AmazonSelenium\VCDCustomReports\Loaders\VcdCustomReportLoader.cs" />
     <Compile Include="Etl\AmazonSelenium\VCDCustomReports\Models\Base\VcdCustomReportData.cs" />
     <Compile Include="Etl\AmazonSelenium\VCDCustomReports\Models\Interface\ISumMetrics.cs" />

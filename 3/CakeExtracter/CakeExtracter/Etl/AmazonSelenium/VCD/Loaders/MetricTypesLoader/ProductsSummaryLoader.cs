@@ -33,7 +33,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
         protected override Func<VendorProduct, bool> GetEntityMappingPredicate(
             Product reportEntity, ExtAccount extAccount)
         {
-            return db => db.Name == reportEntity.Name && db.AccountId == extAccount.Id && db.Asin == reportEntity.Asin;
+            return db => db.AccountId == extAccount.Id && db.Asin == reportEntity.Asin;
         }
 
         protected override VendorProduct MapReportEntityToDbEntity(
@@ -43,7 +43,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
             {
                 Asin = reportEntity.Asin,
                 AccountId = extAccount.Id,
-                //Name = reportEntity.Name,
+                Name = reportEntity.Name,
                 ApparelSize = reportEntity.ApparelSize,
                 ApparelSizeWidth = reportEntity.ApparelSizeWidth,
                 Binding = reportEntity.Binding,

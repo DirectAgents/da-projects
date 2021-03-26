@@ -3,6 +3,9 @@ using CsvHelper.Configuration;
 
 namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Extractors.VcdCustomReportsExtractionHelpers.ReportParsing.RowMaps
 {
+    /// <summary>
+    /// Base row map configuration for custom reports.
+    /// </summary>
     internal class BaseCustomReportRowMap<TProduct> : CsvClassMap<TProduct>
         where TProduct : VcdCustomProduct
     {

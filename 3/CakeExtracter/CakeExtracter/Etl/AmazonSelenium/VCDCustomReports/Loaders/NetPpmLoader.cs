@@ -13,18 +13,26 @@ using SeleniumDataBrowser.VCD.Enums;
 
 namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Loaders
 {
+    /// <summary>
+    /// Loader for Net PPM statistics.
+    /// </summary>
     class NetPpmLoader : VcdCustomReportLoader<NetPpmProduct, VendorNetPpmProduct>
     {
         private readonly PeriodType period;
 
-        private readonly Dictionary<PeriodType, Func<NetPpmProduct, DateRange, ExtAccount, VendorNetPpmProduct>> periodProductTypeDictionary
-            = new Dictionary<PeriodType, Func<NetPpmProduct, DateRange, ExtAccount, VendorNetPpmProduct>>
+        private readonly Dictionary<PeriodType, Func<VendorNetPpmProduct>> periodProductTypeDictionary
+            = new Dictionary<PeriodType, Func<VendorNetPpmProduct>>
         {
             { PeriodType.WEEKLY, CreateWeekly },
             { PeriodType.MONTHLY, CreateMonthly },
             { PeriodType.YEARLY, CreateYearly },
         };
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NetPpmLoader"/> class.
+        /// </summary>
+        /// <param name="extAccount"></param>
+        /// <param name="period"></param>
         public NetPpmLoader(ExtAccount extAccount, PeriodType period)
             : base(extAccount)
         {
@@ -33,7 +41,16 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Loaders
 
         protected override VendorNetPpmProduct MapReportEntity(NetPpmProduct reportProduct, DateRange dateRange)
         {
-            return periodProductTypeDictionary[period](reportProduct, dateRange, extAccount);
+            var reportEntity = periodProductTypeDictionary[period]();
+            reportEntity.AccountId = extAccount.Id;
+            reportEntity.Asin = reportProduct.Asin;
+            reportEntity.Subcategory = reportProduct.Subcategory;
+            reportEntity.Name = reportProduct.Name;
+            reportEntity.NetPpm = reportProduct.NetPpm;
+            reportEntity.NetPpmPriorYearPercentChange = reportProduct.NetPpmPriorYearPercentChange;
+            reportEntity.StartDate = dateRange.FromDate;
+            reportEntity.EndDate = dateRange.ToDate;
+            return reportEntity;
         }
 
         protected override void RemoveOldData(VcdCustomReportData<NetPpmProduct> item)
@@ -73,49 +90,29 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Loaders
                 $"The cleaning of NetPpm data for account ({accountId}) is over - from {item.ReportDateRange.FromDate} to {item.ReportDateRange.ToDate}.");
         }
 
-        private static VendorNetPpmWeeklyProduct CreateWeekly(NetPpmProduct product, DateRange dateRange, ExtAccount account)
+        protected override void BulkSaveData(VcdCustomReportData<NetPpmProduct> item)
         {
-            return new VendorNetPpmWeeklyProduct()
+            using (var dbContext = new ClientPortalProgContext())
             {
-                AccountId = account.Id,
-                Asin = product.Asin,
-                Subcategory = product.Subcategory,
-                Name = product.Name,
-                NetPpm = product.NetPpm,
-                NetPpmPriorYearPercentChange = product.NetPpmPriorYearPercentChange,
-                StartDate = dateRange.FromDate,
-                EndDate = dateRange.ToDate,
-            };
+                var dateRange = item.ReportDateRange;
+                var products = item.Products.Select(x => MapReportEntity(x, dateRange));
+                dbContext.BulkInsert(products);
+            }
         }
 
-        private static VendorNetPpmMonthlyProduct CreateMonthly(NetPpmProduct product, DateRange dateRange, ExtAccount account)
+        private static VendorNetPpmWeeklyProduct CreateWeekly()
         {
-            return new VendorNetPpmMonthlyProduct()
-            {
-                AccountId = account.Id,
-                Asin = product.Asin,
-                Subcategory = product.Subcategory,
-                Name = product.Name,
-                NetPpm = product.NetPpm,
-                NetPpmPriorYearPercentChange = product.NetPpmPriorYearPercentChange,
-                StartDate = dateRange.FromDate,
-                EndDate = dateRange.ToDate,
-            };
+            return new VendorNetPpmWeeklyProduct();
         }
 
-        private static VendorNetPpmYearlyProduct CreateYearly(NetPpmProduct product, DateRange dateRange, ExtAccount account)
+        private static VendorNetPpmMonthlyProduct CreateMonthly()
         {
-            return new VendorNetPpmYearlyProduct()
-            {
-                AccountId = account.Id,
-                Asin = product.Asin,
-                Subcategory = product.Subcategory,
-                Name = product.Name,
-                NetPpm = product.NetPpm,
-                NetPpmPriorYearPercentChange = product.NetPpmPriorYearPercentChange,
-                StartDate = dateRange.FromDate,
-                EndDate = dateRange.ToDate,
-            };
+            return new VendorNetPpmMonthlyProduct();
+        }
+
+        private static VendorNetPpmYearlyProduct CreateYearly()
+        {
+            return new VendorNetPpmYearlyProduct();
         }
     }
 }

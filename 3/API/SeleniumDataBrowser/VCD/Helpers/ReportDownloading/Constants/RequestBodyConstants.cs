@@ -238,7 +238,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
                 new ReportParameter
                 {
                     parameterId = "period",
-                    values = new List<Value> { new Value { val = period } },
+                    values = new List<Value> { new Value { val = period.ToString() } },
                 },
 
                 new ReportParameter
@@ -280,7 +280,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
                 new ReportParameter
                 {
                     parameterId = "period",
-                    values = new List<Value> { new Value { val = period } },
+                    values = new List<Value> { new Value { val = period.ToString() } },
                 },
 
                 new ReportParameter

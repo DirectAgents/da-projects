@@ -112,7 +112,7 @@ namespace DirectAgents.Domain.MigrationsTD
                 .Index(t => t.AccountId);
             
             CreateTable(
-                "td.VRepeatPurchaseBehaviorQuaterlyProduct",
+                "td.VRepeatPurchaseBehaviorQuarterlyProduct",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
@@ -133,19 +133,19 @@ namespace DirectAgents.Domain.MigrationsTD
         
         public override void Down()
         {
-            DropForeignKey("td.VRepeatPurchaseBehaviorQuaterlyProduct", "AccountId", "td.Account");
+            DropForeignKey("td.VRepeatPurchaseBehaviorQuarterlyProduct", "AccountId", "td.Account");
             DropForeignKey("td.VRepeatPurchaseBehaviorMonthlyProduct", "AccountId", "td.Account");
             DropForeignKey("td.VNetPpmYearlyProduct", "AccountId", "td.Account");
             DropForeignKey("td.VNetPpmWeeklyProduct", "AccountId", "td.Account");
             DropForeignKey("td.VNetPpmMonthlyProduct", "AccountId", "td.Account");
             DropForeignKey("td.VGeographicSalesInsightsProduct", "AccountId", "td.Account");
-            DropIndex("td.VRepeatPurchaseBehaviorQuaterlyProduct", new[] { "AccountId" });
+            DropIndex("td.VRepeatPurchaseBehaviorQuarterlyProduct", new[] { "AccountId" });
             DropIndex("td.VRepeatPurchaseBehaviorMonthlyProduct", new[] { "AccountId" });
             DropIndex("td.VNetPpmYearlyProduct", new[] { "AccountId" });
             DropIndex("td.VNetPpmWeeklyProduct", new[] { "AccountId" });
             DropIndex("td.VNetPpmMonthlyProduct", new[] { "AccountId" });
             DropIndex("td.VGeographicSalesInsightsProduct", new[] { "AccountId" });
-            DropTable("td.VRepeatPurchaseBehaviorQuaterlyProduct");
+            DropTable("td.VRepeatPurchaseBehaviorQuarterlyProduct");
             DropTable("td.VRepeatPurchaseBehaviorMonthlyProduct");
             DropTable("td.VNetPpmYearlyProduct");
             DropTable("td.VNetPpmWeeklyProduct");

@@ -1,7 +1,7 @@
-﻿using CakeExtracter.Common;
+﻿using System.Linq;
+using CakeExtracter.Common;
 using CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models.Base;
 using CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Models.Products;
-using System.Linq;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
@@ -9,8 +9,15 @@ using DirectAgents.Domain.Entities.CPProg.Vendor;
 
 namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Loaders
 {
+    /// <summary>
+    /// Loader for Geographic Sales Insights statistics.
+    /// </summary>
     public class GeographicSalesInsightsLoader : VcdCustomReportLoader<GeoSalesProduct, VendorGeographicSalesInsightsProduct>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GeographicSalesInsightsLoader"/> class.
+        /// </summary>
+        /// <param name="extAccount"></param>
         public GeographicSalesInsightsLoader(ExtAccount extAccount)
             : base(extAccount)
         {
@@ -63,6 +70,16 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Loaders
             Logger.Info(
                 accountId,
                 $"The cleaning of GeographicSalesInsights data for account ({accountId}) is over - from {item.ReportDateRange.FromDate} to {item.ReportDateRange.ToDate}.");
+        }
+
+        protected override void BulkSaveData(VcdCustomReportData<GeoSalesProduct> item)
+        {
+            using (var dbContext = new ClientPortalProgContext())
+            {
+                var dateRange = item.ReportDateRange;
+                var products = item.Products.Select(x => MapReportEntity(x, dateRange));
+                dbContext.BulkInsert(products);
+            }
         }
     }
 }

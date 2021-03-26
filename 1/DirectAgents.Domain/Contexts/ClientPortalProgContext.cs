@@ -107,7 +107,7 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<VendorNetPpmMonthlyProduct>().ToTable("VNetPpmMonthlyProduct", tdSchema);
             modelBuilder.Entity<VendorNetPpmYearlyProduct>().ToTable("VNetPpmYearlyProduct", tdSchema);
             modelBuilder.Entity<VendorRepeatPurchaseBehaviorMonthlyProduct>().ToTable("VRepeatPurchaseBehaviorMonthlyProduct", tdSchema);
-            modelBuilder.Entity<VendorRepeatPurchaseBehaviorQuarterlyProduct>().ToTable("VRepeatPurchaseBehaviorQuaterlyProduct", tdSchema);
+            modelBuilder.Entity<VendorRepeatPurchaseBehaviorQuarterlyProduct>().ToTable("VRepeatPurchaseBehaviorQuarterlyProduct", tdSchema);
             modelBuilder.Entity<VendorParentProduct>().ToTable("VParentProduct", tdSchema);
             modelBuilder.Entity<VendorProductSummaryMetric>().ToTable("VProductSummaryMetric", tdSchema);
             modelBuilder.Entity<VendorCategorySummaryMetric>().ToTable("VCategorySummaryMetric", tdSchema);
@@ -395,7 +395,7 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<VendorNetPpmMonthlyProduct> VendorNetPpmMonthlyProducts { get; set; }
         public DbSet<VendorNetPpmYearlyProduct> VendorNetPpmYearlyProducts { get; set; }
         public DbSet<VendorRepeatPurchaseBehaviorMonthlyProduct> VendorRepeatPurchaseBehaviorMonthlyProducts { get; set; }
-        public DbSet<VendorRepeatPurchaseBehaviorQuarterlyProduct> VendorRepeatPurchaseBehaviorQuaterlyProducts { get; set; }
+        public DbSet<VendorRepeatPurchaseBehaviorQuarterlyProduct> VendorRepeatPurchaseBehaviorQuarterlyProducts { get; set; }
         public DbSet<VendorProductSummaryMetric> VendorProductSummaryMetrics { get; set; }
         public DbSet<VendorCategorySummaryMetric> VendorCategorySummaryMetrics { get; set; }
         public DbSet<VendorSubcategorySummaryMetric> VendorSubcategorySummaryMetrics { get; set; }

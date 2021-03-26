@@ -10,6 +10,9 @@ using CsvHelper.Configuration;
 
 namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Extractors.VcdCustomReportsExtractionHelpers.ReportParsing
 {
+    /// <summary>
+    /// Parser for vcd custom reports.
+    /// </summary>
     internal class VcdCustomReportParser<TProduct>
         where TProduct : VcdCustomProduct
     {
