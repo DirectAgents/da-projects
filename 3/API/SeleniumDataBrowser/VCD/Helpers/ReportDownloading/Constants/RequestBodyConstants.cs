@@ -30,8 +30,6 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
 
         public const string HealthInventoryColumnId = "sellableonhandinventory";
 
-        public const string CustomerReviewsColumnId = "numberofcustomerreviews";
-
         public static readonly Dictionary<ReportType, string> CustomRequestBodyLevelsConstants = new Dictionary<ReportType, string>
         {
             { ReportType.geographicSalesInsights, "shippedRevenueLevel" },
@@ -111,32 +109,6 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading.Constants
                     {
                         parameterId = "distributorView",
                         values = new List<Value> { new Value { val = "manufacturer" } },
-                    },
-                });
-            return commonParams;
-        }
-
-        /// <summary>
-        /// Returns a list of customer reviews report parameters with values for request body.
-        /// </summary>
-        /// <param name="reportDate">Report date.</param>
-        /// <returns>List of report parameters.</returns>
-        public static List<ReportParameter> GetCustomerReviewsParameters(string reportDate)
-        {
-            const int sentimentNtileValue = 5;
-            var commonParams = GetCommonReportParameters(reportDate, reportDate, false);
-            commonParams.AddRange(
-                new List<ReportParameter>
-                {
-                    new ReportParameter
-                    {
-                        parameterId = "sentimentASIN",
-                        values = new List<Value> { new Value { val = string.Empty } },
-                    },
-                    new ReportParameter
-                    {
-                        parameterId = "sentimentNtile",
-                        values = new List<Value> { new Value { val = sentimentNtileValue } },
                     },
                 });
             return commonParams;

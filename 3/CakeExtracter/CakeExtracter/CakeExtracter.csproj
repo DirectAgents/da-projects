@@ -583,7 +583,6 @@
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\AmazonVcdExtractor.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\DecimalPercentageReportConverter.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\ParsingConverters\DecimalReportConverter.cs" />
-    <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\RowMaps\CustomerReviewsProductsRowMap.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Extractors\VcdExtractionHelpers\ReportParsing\RowMaps\InventoryHealthProductsRowMap.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Loaders\AmazonVcdLoader.cs" />
     <Compile Include="Etl\AmazonSelenium\VCD\Loaders\Constants\VendorCentralDataLoadingConstants.cs" />

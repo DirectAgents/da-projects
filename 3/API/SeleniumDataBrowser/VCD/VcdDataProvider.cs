@@ -108,18 +108,6 @@ namespace SeleniumDataBrowser.VCD
             return reportDownloader.DownloadInventiryHealthCsvReport(reportDay);
         }
 
-        /// <summary>
-        /// Downloads the CSV Customer Reviews report.
-        /// </summary>
-        /// <param name="accountInfo">Selected account for a report.</param>
-        /// <param name="reportDay">Day for report.</param>
-        /// <returns>Text of report content.</returns>
-        public string DownloadCustomerReviewsCsvReport(VcdAccountInfo accountInfo, DateTime reportDay)
-        {
-            var reportDownloader = new VcdReportDownloader(accountInfo, pagesManager, authorizationModel, LoggerWithAccountId ?? logger, reportDownloaderSettings);
-            return reportDownloader.DownloadCustomerReviewsCsvReport(reportDay);
-        }
-
         public string DownloadVcdCustomReport(
             VcdAccountInfo accountInfo,
             ReportType reportType,

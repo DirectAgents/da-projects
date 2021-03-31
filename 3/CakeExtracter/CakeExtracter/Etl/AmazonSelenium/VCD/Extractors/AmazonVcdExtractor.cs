@@ -99,13 +99,11 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
             var shippedCogsReportData = GetShippingCogsReportData(reportDay);
             var orderedRevenueReportData = GetOrderedRevenueReportData(reportDay);
             var inventoryHealthReportDate = GetInventoryHealthReportData(reportDay);
-            var customerReviewsReportDate = GetCustomerReviewsReportData(reportDay);
             var composedData = reportComposer.ComposeReportData(
                 shippedRevenueReportData,
                 shippedCogsReportData,
                 orderedRevenueReportData,
-                inventoryHealthReportDate,
-                customerReviewsReportDate);
+                inventoryHealthReportDate);
 
             composedData.Date = reportDay;
             return composedData;
@@ -145,15 +143,6 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors
                 reportDay,
                 () => vcdDataProvider.DownloadInventoryHealthCsvReport(accountInfo, reportDay),
                 reportParser.ParseInventoryHealthReportData);
-        }
-
-        private List<Product> GetCustomerReviewsReportData(DateTime reportDay)
-        {
-            return GetReportData(
-                "Customer Reviews",
-                reportDay,
-                () => vcdDataProvider.DownloadCustomerReviewsCsvReport(accountInfo, reportDay),
-                reportParser.ParseCustomerReviewsReportData);
         }
 
         private List<Product> GetReportData(
