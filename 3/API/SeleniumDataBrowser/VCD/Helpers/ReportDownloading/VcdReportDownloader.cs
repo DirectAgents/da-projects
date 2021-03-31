@@ -133,25 +133,6 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
             return DownloadCsvReportFromBackendApi(reportParameters);
         }
 
-        /// <summary>
-        /// Downloads the CSV Customer Reviews report.
-        /// </summary>
-        /// <param name="reportDay">Day for report.</param>
-        /// <returns>Text of report content.</returns>
-        public string DownloadCustomerReviewsCsvReport(DateTime reportDay)
-        {
-            logger.LogInfo("Amazon VCD, Attempt to download Inventory Health report.");
-            var reportParameters = new VcdReportParameters()
-            {
-                PageIndex = 0,
-                ReportStartDate = reportDay,
-                ReportLevel = string.Empty,
-                ReportId = RequestBodyConstants.CustomerReviewsColumnId,
-                ReportType = ReportType.customerReviews,
-            };
-            return DownloadCsvReportFromBackendApi(reportParameters);
-        }
-
         public string DownloadVcdCustomReport(
             PeriodType period,
             ReportType reportType,
@@ -386,10 +367,6 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
                 case ReportType.inventoryHealth:
                     reportParams =
                         RequestBodyConstants.GetInventoryHealthParameters(reportDay);
-                    break;
-                case ReportType.customerReviews:
-                    reportParams =
-                        RequestBodyConstants.GetCustomerReviewsParameters(reportDay);
                     break;
                 case ReportType.netPPM:
                     reportParams =
