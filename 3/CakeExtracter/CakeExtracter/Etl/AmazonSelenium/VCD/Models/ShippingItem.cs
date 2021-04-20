@@ -149,6 +149,18 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Models
             set;
         }
 
+        public int OpenPurchaseOrderQuantity
+        {
+            get;
+            set;
+        }
+
+        public decimal SellThroughRate
+        {
+            get;
+            set;
+        }
+
         public void SetMetrics<T>(IEnumerable<T> items)
             where T : ShippingItem
         {
@@ -176,6 +188,8 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Models
             ThreeStars = shippingItems.Sum(p => p.ThreeStars);
             TwoStars = shippingItems.Sum(p => p.TwoStars);
             OneStar = shippingItems.Sum(p => p.OneStar);
+            OpenPurchaseOrderQuantity = shippingItems.Sum(p => p.OpenPurchaseOrderQuantity);
+            SellThroughRate = shippingItems.Sum(p => p.SellThroughRate);
         }
     }
 }

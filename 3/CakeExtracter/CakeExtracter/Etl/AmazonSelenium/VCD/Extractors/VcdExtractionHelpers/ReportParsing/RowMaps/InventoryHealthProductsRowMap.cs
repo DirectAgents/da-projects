@@ -28,6 +28,8 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Extractors.VcdExtractionHelpers.R
             Map(m => m.Category).Name("category");
             Map(m => m.Subcategory).Name("subcategory");
             Map(m => m.SellableOnHandUnits).Name("sellableonhandunits").TypeConverter<IntNumberReportConverter>();
+            Map(m => m.SellThroughRate).Name("sellthroughrate").TypeConverter<DecimalPercentageReportConverter>();
+            Map(m => m.OpenPurchaseOrderQuantity).Name("openpurchaseorderquantity").TypeConverter<IntNumberReportConverter>();
         }
     }
 }

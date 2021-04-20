@@ -108,6 +108,9 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<VendorNetPpmYearlyProduct>().ToTable("VNetPpmYearlyProduct", tdSchema);
             modelBuilder.Entity<VendorRepeatPurchaseBehaviorMonthlyProduct>().ToTable("VRepeatPurchaseBehaviorMonthlyProduct", tdSchema);
             modelBuilder.Entity<VendorRepeatPurchaseBehaviorQuarterlyProduct>().ToTable("VRepeatPurchaseBehaviorQuarterlyProduct", tdSchema);
+            modelBuilder.Entity<VendorMarketBasketAnalysisProduct>().ToTable("VMarketBasketAnalysisProduct", tdSchema);
+            modelBuilder.Entity<VendorItemComparisonProduct>().ToTable("VItemComparisonProduct", tdSchema);
+            modelBuilder.Entity<VendorAlternativePurchaseProduct>().ToTable("VAlternativePurchaseProduct", tdSchema);
             modelBuilder.Entity<VendorParentProduct>().ToTable("VParentProduct", tdSchema);
             modelBuilder.Entity<VendorProductSummaryMetric>().ToTable("VProductSummaryMetric", tdSchema);
             modelBuilder.Entity<VendorCategorySummaryMetric>().ToTable("VCategorySummaryMetric", tdSchema);
@@ -396,6 +399,9 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<VendorNetPpmYearlyProduct> VendorNetPpmYearlyProducts { get; set; }
         public DbSet<VendorRepeatPurchaseBehaviorMonthlyProduct> VendorRepeatPurchaseBehaviorMonthlyProducts { get; set; }
         public DbSet<VendorRepeatPurchaseBehaviorQuarterlyProduct> VendorRepeatPurchaseBehaviorQuarterlyProducts { get; set; }
+        public DbSet<VendorMarketBasketAnalysisProduct> VendorMarketBasketAnalysisProductMetrics { get; set; }
+        public DbSet<VendorItemComparisonProduct> VendorItemComparisonProductMetrics { get; set; }
+        public DbSet<VendorAlternativePurchaseProduct> VendorAlternativePurchaseProductMetrics { get; set; }
         public DbSet<VendorProductSummaryMetric> VendorProductSummaryMetrics { get; set; }
         public DbSet<VendorCategorySummaryMetric> VendorCategorySummaryMetrics { get; set; }
         public DbSet<VendorSubcategorySummaryMetric> VendorSubcategorySummaryMetrics { get; set; }
@@ -535,6 +541,8 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.ThreeStars).HasPrecision(18, 6);
             modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.TwoStars).HasPrecision(18, 6);
             modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.OneStar).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.OpenPurchaseOrderQuantity).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.SellThroughRate).HasPrecision(18, 6);
         }
 
         private void SetupDailyMetricModelValues<TDailyMetricValues>(DbModelBuilder modelBuilder, string entityColumnName)

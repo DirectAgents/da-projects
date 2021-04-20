@@ -50,6 +50,10 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.Constants
 
         public const string OneStar = "onestar";
 
+        public const string SellThroughRate = "sellthroughrate";
+
+        public const string OpenPurchaseOrderQuantity = "openpurchaseorderquantity";
+
         public const int VendorMetricsDaysInterval = 1;
 
         public static readonly List<string> VendorMetricTypeNames = new List<string>
@@ -77,6 +81,8 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.Constants
             ThreeStars,
             TwoStars,
             OneStar,
+            OpenPurchaseOrderQuantity,
+            SellThroughRate,
         };
 
         public static readonly List<string> AllowedZeroValueMetricTypeNames = new List<string>

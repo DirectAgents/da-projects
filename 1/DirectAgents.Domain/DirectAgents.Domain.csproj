@@ -120,8 +120,11 @@
     <Compile Include="Entities\CPProg\Vendor\NetPpm\VendorNetPpmYearlyProduct.cs" />
     <Compile Include="Entities\CPProg\Vendor\RepeatPurchaseBehavior\VendorRepeatPurchaseBehaviorMonthlyProduct.cs" />
     <Compile Include="Entities\CPProg\Vendor\RepeatPurchaseBehavior\VendorRepeatPurchaseBehaviorQuaterlyProduct.cs" />
+    <Compile Include="Entities\CPProg\Vendor\VendorAlternativePurchaseProduct.cs" />
     <Compile Include="Entities\CPProg\Vendor\VendorGeographicSalesInsightsProduct.cs" />
     <Compile Include="Entities\CPProg\Vendor\RepeatPurchaseBehavior\VendorRepeatPurchaseBehaviorProduct.cs" />
+    <Compile Include="Entities\CPProg\Vendor\VendorItemComparisonProduct.cs" />
+    <Compile Include="Entities\CPProg\Vendor\VendorMarketBasketAnalysisProduct.cs" />
     <Compile Include="Entities\CPSearch\DailySummaryBase.cs" />
     <Compile Include="Entities\CPSearch\SearchVideoDailySummary.cs" />
     <Compile Include="MigrationsTD\201905311144009_Mig_ErrorEmailSentProperty.cs" />
@@ -219,6 +222,18 @@
     <Compile Include="MigrationsTD\202103261447345_Mig_FixQuarterlyTableName.cs" />
     <Compile Include="MigrationsTD\202103261447345_Mig_FixQuarterlyTableName.Designer.cs">
       <DependentUpon>202103261447345_Mig_FixQuarterlyTableName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\202104190744440_Mig_VcdInvHealthNewMetrics.cs" />
+    <Compile Include="MigrationsTD\202104190744440_Mig_VcdInvHealthNewMetrics.Designer.cs">
+      <DependentUpon>202104190744440_Mig_VcdInvHealthNewMetrics.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\202104191740487_Mig_VcdAddMarketBasketAnalysisReport.cs" />
+    <Compile Include="MigrationsTD\202104191740487_Mig_VcdAddMarketBasketAnalysisReport.Designer.cs">
+      <DependentUpon>202104191740487_Mig_VcdAddMarketBasketAnalysisReport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\202104191953287_Mig_VcdAddItemComparisonAndAlternativePurchaseReport.cs" />
+    <Compile Include="MigrationsTD\202104191953287_Mig_VcdAddItemComparisonAndAlternativePurchaseReport.Designer.cs">
+      <DependentUpon>202104191953287_Mig_VcdAddItemComparisonAndAlternativePurchaseReport.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201909270822065_Mig_Affiliate_AccountManager.cs" />
     <Compile Include="Migrations\201909270822065_Mig_Affiliate_AccountManager.Designer.cs">
@@ -1314,6 +1329,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\202103261447345_Mig_FixQuarterlyTableName.resx">
       <DependentUpon>202103261447345_Mig_FixQuarterlyTableName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\202104190744440_Mig_VcdInvHealthNewMetrics.resx">
+      <DependentUpon>202104190744440_Mig_VcdInvHealthNewMetrics.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\202104191740487_Mig_VcdAddMarketBasketAnalysisReport.resx">
+      <DependentUpon>202104191740487_Mig_VcdAddMarketBasketAnalysisReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\202104191953287_Mig_VcdAddItemComparisonAndAlternativePurchaseReport.resx">
+      <DependentUpon>202104191953287_Mig_VcdAddItemComparisonAndAlternativePurchaseReport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

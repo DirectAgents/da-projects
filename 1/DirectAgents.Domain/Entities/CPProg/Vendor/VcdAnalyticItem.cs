@@ -90,5 +90,9 @@ namespace DirectAgents.Domain.Entities.CPProg.Vendor
         public decimal? TwoStars { get; set; }
 
         public decimal? OneStar { get; set; }
+
+        public decimal? SellThroughRate { get; set; }
+
+        public decimal? OpenPurchaseOrderQuantity { get; set; }
     }
 }

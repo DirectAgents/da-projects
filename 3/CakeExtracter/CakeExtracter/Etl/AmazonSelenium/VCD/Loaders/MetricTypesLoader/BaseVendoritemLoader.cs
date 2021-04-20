@@ -94,6 +94,8 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCD.Loaders.MetricTypesLoader
                 InitMetricValue(dbEntity.Id, date, reportEntity.SalesRank, VendorCentralDataLoadingConstants.SalesRank),
                 InitMetricValue(dbEntity.Id, date, reportEntity.AverageSalesPrice, VendorCentralDataLoadingConstants.AverageSalesPrice),
                 InitMetricValue(dbEntity.Id, date, reportEntity.SellableOnHandUnits, VendorCentralDataLoadingConstants.SellableOnHandUnits),
+                InitMetricValue(dbEntity.Id, date, reportEntity.OpenPurchaseOrderQuantity, VendorCentralDataLoadingConstants.OpenPurchaseOrderQuantity),
+                InitMetricValue(dbEntity.Id, date, reportEntity.SellThroughRate, VendorCentralDataLoadingConstants.SellThroughRate),
                 InitMetricValue(dbEntity.Id, date, reportEntity.NumberOfCustomerReviews, VendorCentralDataLoadingConstants.NumberOfCustomerReviews),
                 InitMetricValue(dbEntity.Id, date, reportEntity.NumberOfCustomerReviewsLifeToDate, VendorCentralDataLoadingConstants.NumberOfCustomerReviewsLifeToDate),
                 InitMetricValue(dbEntity.Id, date, reportEntity.AverageCustomerRating, VendorCentralDataLoadingConstants.AverageCustomerRating),
