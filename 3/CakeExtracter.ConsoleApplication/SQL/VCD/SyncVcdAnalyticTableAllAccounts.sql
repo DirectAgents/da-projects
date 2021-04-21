@@ -36,7 +36,9 @@ INSERT INTO td.VcdAnalytic
     [FourStars],
     [ThreeStars],
     [TwoStars],
-    [OneStar]
+    [OneStar],
+	[SellThroughRate],
+	[OpenPurchaseOrderQuantity]
 )
 SELECT
     summarymetrics.[Date]       AS 'Date - PRODUCT',
@@ -73,7 +75,9 @@ SELECT
     summaryMetrics.[85]         AS '4 Stars',
     summaryMetrics.[86]         AS '3 Stars',
     summaryMetrics.[87]         AS '2 Stars',
-    summaryMetrics.[88]         AS '1 Star'
+    summaryMetrics.[88]         AS '1 Star',
+	summaryMetrics.[sellthroughrate]						AS 'Sell-Through Rate',
+	summaryMetrics.[openpurchaseorderquantity]				AS 'Open Purchase Order Quantity'
 FROM
 (
     SELECT
@@ -86,7 +90,7 @@ FROM
 PIVOT
 (
     AVG(metrics.Value)
-    FOR metrics.MetricTypeId IN ([52], [54], [53], [55], [56], [57], [58], [77], [78], [79], [80], [81], [82], [83], [84], [85], [86], [87], [88])
+    FOR metrics.MetricTypeId IN ([52], [54], [53], [55], [56], [57], [58], [77], [78], [79], [80], [81], [82], [83], [84], [85], [86], [87], [88], [89], [90])
 ) AS summaryMetrics
 INNER JOIN td.VProduct product ON summaryMetrics.ProductId = product.Id
 INNER JOIN td.VSubcategory subcategory ON product.SubcategoryId = subcategory.Id
