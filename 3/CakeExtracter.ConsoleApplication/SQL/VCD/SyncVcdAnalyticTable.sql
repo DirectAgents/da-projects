@@ -45,7 +45,9 @@ INSERT INTO td.VcdAnalytic
     [FourStars],
     [ThreeStars],
     [TwoStars],
-    [OneStar]
+    [OneStar],
+	[SellThroughRate],
+	[OpenPurchaseOrderQuantity]
 )
 SELECT
     summarymetrics.[Date]                                   AS 'Date - PRODUCT',
@@ -86,7 +88,9 @@ SELECT
     summaryMetrics.[fourstars]                              AS '4 Stars',
     summaryMetrics.[threestars]                             AS '3 Stars',
     summaryMetrics.[twostars]                               AS '2 Stars',
-    summaryMetrics.[onestar]                                AS '1 Star'
+    summaryMetrics.[onestar]                                AS '1 Star',
+	summaryMetrics.[sellthroughrate]						AS 'Sell-Through Rate',
+	summaryMetrics.[openpurchaseorderquantity]				AS 'Open Purchase Order Quantity'
 FROM
 (
     SELECT
@@ -125,7 +129,9 @@ PIVOT
         [fourstars],
         [threestars],
         [twostars],
-        [onestar]
+        [onestar],
+		[sellthroughrate],
+		[openpurchaseorderquantity]
     )
 ) AS summarymetrics
 INNER JOIN td.VProduct product ON summarymetrics.productid = product.id

@@ -198,6 +198,22 @@ namespace CakeExtracter.Commands.Selenium
                     {
                         DoRepeatPurchaseBehaviorEtlForAccount(account, dateRange, vcdDataProvider);
                     }
+
+                    if (reportType.MarketBasket)
+                    {
+                        DoMarketBasketAnalysisEtlForAccount(account, dateRange, vcdDataProvider);
+                    }
+
+                    if (reportType.ItemComparison)
+                    {
+                        DoItemComparisonEtlForAccount(account, dateRange, vcdDataProvider);
+                    }
+
+                    if (reportType.AlternativePurchase)
+                    {
+                        DoAlternativePurchaseEtlForAccount(account, dateRange, vcdDataProvider);
+                    }
+
                     AmazonTimeTracker.Instance.LogTrackingData(account.Key.Id);
                 }
                 catch (Exception ex)
@@ -252,6 +268,54 @@ namespace CakeExtracter.Commands.Selenium
 
             CommandHelper.DoEtl(extractor, loader);
             Logger.Info(account.Key.Id, $"Amazon VCD, RepeatPurchaseBehavior ETL for account {account.Key.Name} ({account.Key.Id}) finished.");
+        }
+
+        private void DoMarketBasketAnalysisEtlForAccount(KeyValuePair<ExtAccount, VcdAccountInfo> account, DateRange dateRange, VcdDataProvider vcdDataProvider)
+        {
+            Logger.Info(account.Key.Id, $"Amazon VCD, MarketBasketAnalysis ETL for account {account.Key.Name} ({account.Key.Id}) started.");
+            ConfigureDataProviderForCurrentAccount(account.Key, vcdDataProvider);
+            var extractor = GetCustomReportExtractor<MarketBasketAnalysisProduct, MarketBasketAnalysisRowMap>(
+                account,
+                dateRange,
+                RequestedPeriod,
+                SeleniumDataBrowser.VCD.Enums.ReportType.marketBasketAnalysis,
+                vcdDataProvider);
+            var loader = new MarketBasketAnalysisLoader(account.Key);
+
+            CommandHelper.DoEtl(extractor, loader);
+            Logger.Info(account.Key.Id, $"Amazon VCD, ETL for account {account.Key.Name} ({account.Key.Id}) finished.");
+        }
+
+        private void DoAlternativePurchaseEtlForAccount(KeyValuePair<ExtAccount, VcdAccountInfo> account, DateRange dateRange, VcdDataProvider vcdDataProvider)
+        {
+            Logger.Info(account.Key.Id, $"Amazon VCD, AlternativePurchase ETL for account {account.Key.Name} ({account.Key.Id}) started.");
+            ConfigureDataProviderForCurrentAccount(account.Key, vcdDataProvider);
+            var extractor = GetCustomReportExtractor<AlternativePurchaseProduct, AlternativePurchaseRowMap>(
+                account,
+                dateRange,
+                RequestedPeriod,
+                SeleniumDataBrowser.VCD.Enums.ReportType.alternativePurchase,
+                vcdDataProvider);
+            var loader = new AlternativePurchaseLoader(account.Key);
+
+            CommandHelper.DoEtl(extractor, loader);
+            Logger.Info(account.Key.Id, $"Amazon VCD, ETL for account {account.Key.Name} ({account.Key.Id}) finished.");
+        }
+
+        private void DoItemComparisonEtlForAccount(KeyValuePair<ExtAccount, VcdAccountInfo> account, DateRange dateRange, VcdDataProvider vcdDataProvider)
+        {
+            Logger.Info(account.Key.Id, $"Amazon VCD, ItemComparison ETL for account {account.Key.Name} ({account.Key.Id}) started.");
+            ConfigureDataProviderForCurrentAccount(account.Key, vcdDataProvider);
+            var extractor = GetCustomReportExtractor<ItemComparisonProduct, ItemComparisonRowMap>(
+                account,
+                dateRange,
+                RequestedPeriod,
+                SeleniumDataBrowser.VCD.Enums.ReportType.itemComparison,
+                vcdDataProvider);
+            var loader = new ItemComparisonLoader(account.Key);
+
+            CommandHelper.DoEtl(extractor, loader);
+            Logger.Info(account.Key.Id, $"Amazon VCD, ETL for account {account.Key.Name} ({account.Key.Id}) finished.");
         }
 
         private VcdCustomReportExtractor<TProduct, TRowMap> GetCustomReportExtractor<TProduct, TRowMap>(

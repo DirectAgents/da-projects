@@ -27,6 +27,7 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
     {
         private const string AmazonBaseUrl = "https://vendorcentral.amazon.com";
         private const string AmazonCsvDownloadReportUrl = "/analytics/data/dashboard/{0}/report/{0}Detail";
+        private const string AmazonCsvDownloadCustomReportUrl = "/analytics/data/dashboard/{0}/report/{1}";
 
         private static int delayEqualizer;
         private readonly VcdReportDownloaderSettings reportDownloaderSettings;
@@ -328,6 +329,11 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
                 accountInfo.McId.ToString());
             var reportTypeForUrl = reportParameters.ReportType.ToString();
             var resourceUrl = string.Format(AmazonCsvDownloadReportUrl, reportTypeForUrl);
+            if (reportParameters.ReportType.Equals(ReportType.alternativePurchase) ||
+                reportParameters.ReportType.Equals(ReportType.itemComparison))
+            {
+                resourceUrl = string.Format(AmazonCsvDownloadCustomReportUrl, ReportType.itemComparisonAndAlternativePurchase, reportTypeForUrl);
+            }
             var request = RestRequestHelper.CreateRestRequest(resourceUrl, pageRequestData.Cookies, requestQueryParams);
             request.AddParameter(RequestBodyConstants.RequestBodyFormat, requestBodyJson, ParameterType.RequestBody);
             requestHeaders.ForEach(x => request.AddHeader(x.Key, x.Value));
@@ -379,6 +385,18 @@ namespace SeleniumDataBrowser.VCD.Helpers.ReportDownloading
                 case ReportType.repeatPurchaseBehavior:
                     reportParams =
                         RequestBodyConstants.GetRepeatPurchaseBehaviorReportParameters(reportParameters.Period, reportParameters.ReportEndDate);
+                    break;
+                case ReportType.marketBasketAnalysis:
+                    reportParams =
+                        RequestBodyConstants.GetMarketBasketAnalysisReportParameters(reportParameters.Period, reportParameters.ReportEndDate);
+                    break;
+                case ReportType.alternativePurchase:
+                    reportParams =
+                        RequestBodyConstants.GetAlternativePurchaseReportParameters(reportParameters.Period, reportParameters.ReportEndDate);
+                    break;
+                case ReportType.itemComparison:
+                    reportParams =
+                        RequestBodyConstants.GetItemComparisonReportParameters(reportParameters.Period, reportParameters.ReportEndDate);
                     break;
             }
             return reportParams;

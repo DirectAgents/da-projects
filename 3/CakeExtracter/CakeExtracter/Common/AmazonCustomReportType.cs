@@ -6,6 +6,9 @@
         public const string GeoSalesArg = "GEOSALES";
         public const string NetPpmArg = "NETPPM";
         public const string RepeatPurchaseArg = "REPEATPURCHASE";
+        public const string MarketBasketArg = "MARKETBASKET";
+        public const string AltPurchaseArg = "ALTPURCHASE";
+        public const string ItemCompArg = "ITEMCOMP";
 
         public bool GeoSales { get; set; }
 
@@ -13,7 +16,13 @@
 
         public bool RepeatPurchase { get; set; }
 
-        public bool All => GeoSales && NetPpm && RepeatPurchase;
+        public bool MarketBasket { get; set; }
+
+        public bool AlternativePurchase { get; set; }
+
+        public bool ItemComparison { get; set; }
+
+        public bool All => GeoSales && NetPpm && RepeatPurchase && MarketBasket && AlternativePurchase && ItemComparison;
 
         public AmazonCustomReportType()
         {
@@ -38,6 +47,18 @@
             {
                 RepeatPurchase = true;
             }
+            else if (statsTypeUpper.StartsWith(MarketBasketArg))
+            {
+                MarketBasket = true;
+            }
+            else if (statsTypeUpper.StartsWith(AltPurchaseArg))
+            {
+                AlternativePurchase = true;
+            }
+            else if (statsTypeUpper.StartsWith(ItemCompArg))
+            {
+                ItemComparison = true;
+            }
         }
 
         public void SetAllTrue()
@@ -45,6 +66,9 @@
             GeoSales = true;
             NetPpm = true;
             RepeatPurchase = true;
+            MarketBasket = true;
+            AlternativePurchase = true;
+            ItemComparison = true;
         }
 
         public string GetStatsTypeString()
@@ -55,7 +79,13 @@
                     ? NetPpmArg
                     : RepeatPurchase
                         ? RepeatPurchaseArg
-                        : AllArg;
+                        : MarketBasket
+                            ? MarketBasketArg
+                            : AlternativePurchase
+                                ? AltPurchaseArg
+                                : ItemComparison
+                                    ? ItemCompArg
+                                    : AllArg;
         }
     }
 }

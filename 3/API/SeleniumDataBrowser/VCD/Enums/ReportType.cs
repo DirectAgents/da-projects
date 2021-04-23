@@ -11,5 +11,9 @@
         geographicSalesInsights,
         netPPM,
         repeatPurchaseBehavior,
+        marketBasketAnalysis,
+        alternativePurchase,
+        itemComparison,
+        itemComparisonAndAlternativePurchase,
     }
 }
