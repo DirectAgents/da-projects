@@ -140,7 +140,7 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Extractors
         {
             var dateRanges = new List<DateRange>();
 
-            var lastPeriodDate = DateTime.Today.AddDays(-7);
+            var lastPeriodDate = DateTime.Today.AddDays(-8);
             var culture = Thread.CurrentThread.CurrentCulture;
 
             var diff = lastPeriodDate.DayOfWeek - culture.DateTimeFormat.FirstDayOfWeek;
