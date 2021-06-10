@@ -33,6 +33,12 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Extractors
         private readonly ReportType reportType;
         private readonly DateRange dateRange;
 
+        private const int DaysInWeek = 7;
+        private const int WeeklyPeriodEndDifference = 6;
+        private const int QuarterlyPeriodEndDifference = 3;
+        private const int PreviousWeeklyPeriodDateDifference = 8;
+        private const int PreviousQuarterlyPeriodDateDifference = 4;
+
         private readonly Dictionary<PeriodType, Func<ReportType, DateRange, List<DateRange>>> dateRangesDictionary
            = new Dictionary<PeriodType, Func<ReportType, DateRange, List<DateRange>>>
        {
@@ -140,16 +146,16 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Extractors
         {
             var dateRanges = new List<DateRange>();
 
-            var lastPeriodDate = DateTime.Today.AddDays(-8);
+            var lastPeriodDate = DateTime.Today.AddDays(-PreviousWeeklyPeriodDateDifference);
             var culture = Thread.CurrentThread.CurrentCulture;
 
             var diff = lastPeriodDate.DayOfWeek - culture.DateTimeFormat.FirstDayOfWeek;
             if (diff < 0)
             {
-                diff += 7;
+                diff += DaysInWeek;
             }
             var startDate = lastPeriodDate.AddDays(-diff).Date;
-            var endDate = lastPeriodDate.AddDays(-diff + 6).Date;
+            var endDate = lastPeriodDate.AddDays(-diff + WeeklyPeriodEndDifference).Date;
 
             dateRanges.Add(new DateRange(startDate, endDate));
             return dateRanges;
@@ -189,10 +195,10 @@ namespace CakeExtracter.Etl.AmazonSelenium.VCDCustomReports.Extractors
             var currentDate = dateRange.ToDate;
             while (currentDate >= dateRange.FromDate)
             {
-                currentDate = currentDate.AddMonths(-4);
-                var quarterNumber = (currentDate.Month - 1) / 3 + 1;
-                var startDate = new DateTime(currentDate.Year, (quarterNumber - 1) * 3 + 1, 1);
-                var endDate = startDate.AddMonths(3).AddDays(-1);
+                currentDate = currentDate.AddMonths(-PreviousQuarterlyPeriodDateDifference);
+                var quarterNumber = (currentDate.Month - 1) / QuarterlyPeriodEndDifference + 1;
+                var startDate = new DateTime(currentDate.Year, (quarterNumber - 1) * QuarterlyPeriodEndDifference + 1, 1);
+                var endDate = startDate.AddMonths(QuarterlyPeriodEndDifference).AddDays(-1);
                 if (startDate >= dateRange.FromDate)
                 {
                     dateRanges.Add(new DateRange(startDate, endDate));
