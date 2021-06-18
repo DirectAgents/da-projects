@@ -1,8 +1,9 @@
 ﻿using System;
+using DirectAgents.Domain.Abstract;
 
 namespace DirectAgents.Domain.Entities.CPProg.Vendor
 {
-    public abstract class VendorRepeatPurchaseBehaviorProduct : BaseVendorEntity
+    public abstract class VendorRepeatPurchaseBehaviorProduct : BaseVendorEntity, IVendorProductTwoDates
     {
         public string Asin
         {

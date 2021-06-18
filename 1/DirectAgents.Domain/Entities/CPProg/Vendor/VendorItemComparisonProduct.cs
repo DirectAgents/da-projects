@@ -1,8 +1,9 @@
 ﻿using System;
+using DirectAgents.Domain.Abstract;
 
 namespace DirectAgents.Domain.Entities.CPProg.Vendor
 {
-    public class VendorItemComparisonProduct : BaseVendorEntity
+    public class VendorItemComparisonProduct : BaseVendorEntity, IVendorProductOneDate
     {
         public string Asin
         {

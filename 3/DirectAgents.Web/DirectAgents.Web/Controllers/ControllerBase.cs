@@ -18,7 +18,8 @@ namespace DirectAgents.Web.Controllers
         protected IABRepository abRepo;
         protected ISecurityRepository securityRepo;
         protected ISpecialPlatformRepository specialPlatformRepo;
-        
+        protected ICustomSpecialPlatformRepository customSpecialPlatformRepo;
+
         protected ClientPortal.Data.Contracts.IClientPortalRepository cpRepo;
 
         // TODO: Make SecurityRepo disposable and dispose here:
@@ -33,6 +34,7 @@ namespace DirectAgents.Web.Controllers
             abRepo?.Dispose();
             cpRepo?.Dispose();
             specialPlatformRepo?.Dispose();
+            customSpecialPlatformRepo?.Dispose();
             base.Dispose(disposing);
         }
 

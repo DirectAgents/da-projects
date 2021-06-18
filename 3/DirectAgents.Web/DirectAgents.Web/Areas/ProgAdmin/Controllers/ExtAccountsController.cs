@@ -19,12 +19,16 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
 {
     public class ExtAccountsController : Web.Controllers.ControllerBase
     {
-        public ExtAccountsController(ICPProgRepository cpProgRepository, ITDRepository tdRepository, 
-            ISpecialPlatformRepository specialPlatformRepository)
+        public ExtAccountsController(
+            ICPProgRepository cpProgRepository,
+            ITDRepository tdRepository,
+            ISpecialPlatformRepository specialPlatformRepository,
+            ICustomSpecialPlatformRepository customSpecialPlatformRepository)
         {
             this.cpProgRepo = cpProgRepository;
             this.tdRepo = tdRepository;
             this.specialPlatformRepo = specialPlatformRepository;
+            this.customSpecialPlatformRepo = customSpecialPlatformRepository;
         }
 
         public ActionResult Index(string platform, int? campId)
@@ -53,6 +57,13 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             var stats = specialPlatformRepo.GetSpecialPlatformStats(platform);
             var model = GetSpecialPlatformStatsGroupedByPlatform(stats);
             return View("IndexSpecialPlatformStats", model);
+        }
+
+        public ActionResult IndexCustomSpecialPlatformStats(string platform)
+        {
+            var stats = customSpecialPlatformRepo.GetSpecialPlatformStats();
+            var model = GetCustomSpecialPlatformStatsGroupedByPlatform(stats);
+            return View("IndexCustomSpecialPlatformStats", model);
         }
 
         // For each account, shows a "gauge" of what stats are loaded
@@ -194,6 +205,13 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             return platformGroups.Select(GetSpecialPlatformSummaries);
         }
 
+        private static IEnumerable<CustomSpecialPlatformSummariesVM> GetCustomSpecialPlatformStatsGroupedByPlatform(
+         IEnumerable<CustomSpecialPlatformLatestsSummary> stats)
+        {
+            var platformGroups = stats.GroupBy(s => s.Account.Platform);
+            return platformGroups.Select(GetCustomSpecialPlatformSummaries);
+        }
+
         private static SpecialPlatformSummariesVM GetSpecialPlatformSummaries(
             IGrouping<Platform, SpecialPlatformLatestsSummary> platformGroup)
         {
@@ -202,7 +220,19 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
                 Platform = platformGroup.Key,
                 SpecialPlatformSummaries = platformGroup
                     .OrderBy(x => x.Account.Disabled)
-                    .ThenBy(x => x.Account.Name)
+                    .ThenBy(x => x.Account.Name),
+            };
+        }
+
+        private static CustomSpecialPlatformSummariesVM GetCustomSpecialPlatformSummaries(
+            IGrouping<Platform, CustomSpecialPlatformLatestsSummary> platformGroup)
+        {
+            return new CustomSpecialPlatformSummariesVM
+            {
+                Platform = platformGroup.Key,
+                CustomSpecialPlatformSummaries = platformGroup
+                    .OrderBy(x => x.Account.Disabled)
+                    .ThenBy(x => x.Account.Name),
             };
         }
 

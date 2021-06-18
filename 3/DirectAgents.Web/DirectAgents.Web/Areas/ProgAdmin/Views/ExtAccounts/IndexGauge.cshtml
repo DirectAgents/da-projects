@@ -184,19 +184,21 @@
 @if (!Model.CampaignId.HasValue)
 {
     <text>
-        Filter: <br/>
+        Filter: <br />
         @Html.ActionLink("Adform", "IndexGauge", new { platform = Platform.Code_Adform }) |
         @Html.ActionLink("AdRoll", "IndexGauge", new { platform = Platform.Code_AdRoll }) |
         @Html.ActionLink("Amazon", "IndexGauge", new { platform = Platform.Code_Amazon }) |
         @Html.ActionLink("Criteo", "IndexGauge", new { platform = Platform.Code_Criteo }) |
         @Html.ActionLink("DBM", "IndexGauge", new { platform = Platform.Code_DBM }) |
         @Html.ActionLink("Facebook", "IndexGauge", new { platform = Platform.Code_FB }) |
-        @Html.ActionLink("YAM", "IndexGauge", new { platform = Platform.Code_YAM })
+        @Html.ActionLink("YAM", "IndexGauge", new { platform = Platform.Code_YAM }) |
         <br />
         @Html.ActionLink("Ara Amazon", "IndexSpecialPlatformStats", new { platform = Platform.Code_AraAmazon }) |
         @Html.ActionLink("Commission Junction", "IndexSpecialPlatformStats", new { platform = Platform.Code_CJ }) |
         @Html.ActionLink("DSP", "IndexSpecialPlatformStats", new { platform = Platform.Code_DspAmazon }) |
         @Html.ActionLink("Kochava", "IndexSpecialPlatformStats", new { platform = Platform.Code_Kochava })
+        @Html.ActionLink("Ara Amazon Custom", "IndexCustomSpecialPlatformStats", new { platform = Platform.Code_AraAmazonCustom })
+
         <br />
         @Html.ActionLink("(show all)", "IndexGauge")
     </text>
