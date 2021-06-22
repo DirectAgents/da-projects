@@ -15,7 +15,8 @@ namespace DirectAgents.Domain.Concrete
 
         private bool disposed;
 
-        public CustomSpecialPlatformRepository(ClientPortalProgContext context,
+        public CustomSpecialPlatformRepository(
+            ClientPortalProgContext context,
             VcdProvider provider)
         {
             this.context = context;
