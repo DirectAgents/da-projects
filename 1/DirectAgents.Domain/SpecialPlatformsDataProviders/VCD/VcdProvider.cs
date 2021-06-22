@@ -35,13 +35,13 @@ namespace DirectAgents.Domain.SpecialPlatformProviders.Implementation
             ClientPortalProgContext context)
         {
             return context.VcdAnalytic
-                            .GroupBy(x => x.AccountId)
-                            .Select(x => new SpecialPlatformLatestsSummary
-                            {
-                                AccountId = x.Key,
-                                EarliestDate = x.Min(z => z.Date),
-                                LatestDate = x.Max(z => z.Date),
-                            });
+                    .GroupBy(x => x.AccountId)
+                    .Select(x => new SpecialPlatformLatestsSummary
+                    {
+                        AccountId = x.Key,
+                        EarliestDate = x.Min(z => z.Date),
+                        LatestDate = x.Max(z => z.Date),
+                    });
         }
 
         private IEnumerable<CustomSpecialPlatformLatestsSummary> GetCustomSummariesGroupedByAccountId(
@@ -94,7 +94,7 @@ namespace DirectAgents.Domain.SpecialPlatformProviders.Implementation
 
         private IQueryable<SpecialPlatformLatestsSummary> GetOneDateSummariesGroupedByAccountId<T>(
             DbSet<T> products)
-            where T : BaseVendorEntity, IVendorProductOneDate
+            where T : BaseVendorEntity, IVendorProductDate
         {
             return products
                 .GroupBy(x => x.AccountId)
@@ -108,7 +108,7 @@ namespace DirectAgents.Domain.SpecialPlatformProviders.Implementation
 
         private IQueryable<SpecialPlatformLatestsSummary> GetTwoDatesSummariesGroupedByAccountId<T>(
             DbSet<T> products)
-            where T : BaseVendorEntity, IVendorProductTwoDates
+            where T : BaseVendorEntity, IVendorProductDateRange
         {
             return products
                 .GroupBy(x => x.AccountId)

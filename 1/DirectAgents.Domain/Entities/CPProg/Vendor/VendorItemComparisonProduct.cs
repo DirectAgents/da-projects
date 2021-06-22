@@ -3,7 +3,7 @@ using DirectAgents.Domain.Abstract;
 
 namespace DirectAgents.Domain.Entities.CPProg.Vendor
 {
-    public class VendorItemComparisonProduct : BaseVendorEntity, IVendorProductOneDate
+    public class VendorItemComparisonProduct : BaseVendorEntity, IVendorProductDate
     {
         public string Asin
         {

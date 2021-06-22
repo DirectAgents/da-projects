@@ -13,11 +13,18 @@ namespace DirectAgents.Domain.Concrete
 
         private ClientPortalProgContext context;
 
+        private bool disposed;
+
         public CustomSpecialPlatformRepository(ClientPortalProgContext context,
             VcdProvider provider)
         {
             this.context = context;
             this.Provider = provider;
+        }
+
+        ~CustomSpecialPlatformRepository()
+        {
+            Dispose(false);
         }
 
         public IEnumerable<CustomSpecialPlatformLatestsSummary> GetSpecialPlatformStats()
@@ -30,24 +37,22 @@ namespace DirectAgents.Domain.Concrete
             context.SaveChanges();
         }
 
-        private bool _disposed;
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!this._disposed)
+            if (!this.disposed)
             {
                 if (disposing)
                 {
                     context.Dispose();
                 }
             }
-            this._disposed = true;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            this.disposed = true;
         }
     }
 }

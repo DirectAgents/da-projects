@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DirectAgents.Domain.Abstract
 {
-    interface IVendorProductTwoDates
+    interface IVendorProductDateRange
     {
         DateTime StartDate
         {
