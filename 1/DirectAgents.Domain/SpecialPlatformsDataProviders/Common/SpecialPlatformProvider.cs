@@ -16,8 +16,9 @@ namespace DirectAgents.Domain.SpecialPlatformProviders.Contracts
         }
 
         public abstract IEnumerable<SpecialPlatformLatestsSummary> GetDatesRangeByAccounts(ClientPortalProgContext context);
-        
-        protected void AssignExtAccountForSummaries(List<SpecialPlatformLatestsSummary> summaries, ClientPortalProgContext context)
+
+        protected void AssignExtAccountForSummaries<T>(List<T> summaries, ClientPortalProgContext context)
+            where T : SpecialPlatformLatestsSummary
         {
             summaries.ForEach(summary => summary.Account = GetAccountById(context, summary.AccountId));
         }

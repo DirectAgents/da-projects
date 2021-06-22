@@ -98,6 +98,7 @@ namespace DirectAgents.Web.App_Start
             kernel.Bind<IABRepository>().To<ABRepository>();
             kernel.Bind<ISuperRepository>().To<SuperRepository>();
             kernel.Bind<ISpecialPlatformRepository>().To<SpecialPlatformRepository>();
+            kernel.Bind<ICustomSpecialPlatformRepository>().To<CustomSpecialPlatformRepository>();
 
             kernel.Bind<IYamWebPortalDataService>().To<YamWebPortalDataService>();
             kernel.Bind<IFacebookWebPortalDataService>().To<FacebookWebPortalDataService>();

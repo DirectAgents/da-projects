@@ -1,8 +1,9 @@
 ﻿using System;
+using DirectAgents.Domain.Abstract;
 
 namespace DirectAgents.Domain.Entities.CPProg.Vendor.NetPpm
 {
-    public abstract class VendorNetPpmProduct : BaseVendorEntity
+    public abstract class VendorNetPpmProduct : BaseVendorEntity, IVendorProductDateRange
     {
         public string Asin
         {

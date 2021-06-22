@@ -1,0 +1,175 @@
+﻿<h2>IndexCustomSpecialPlatformStats</h2>
+
+@model IEnumerable<DirectAgents.Web.Areas.ProgAdmin.Models.CustomSpecialPlatformSummariesVM>
+@{
+    ViewBag.Title = "Custom Special Platform Stats";
+
+    var today = DateTime.Today;
+    var yesterday = today.AddDays(-1);
+    var lastWeek = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek).AddDays(6);
+    var lastMonth = new DateTime(today.Year, today.Month, 1).AddDays(-1);
+    var lastQuarter = today.Month <= 3 ? new DateTime(today.Year, 1, 1).AddDays(-1)
+                      : today.Month <= 6 ? new DateTime(today.Year, 3, 31)
+                      : today.Month <= 9 ? new DateTime(today.Year, 6, 30)
+                      : new DateTime(today.Year, 9, 30);
+    var lastYear = new DateTime(today.Year, 1, 1).AddDays(-1);
+}
+
+<h2>Custom Special Platform Stats</h2>
+
+<table>
+<tr>
+    <th colspan="4" style="text-align:right">X = disabled</th>
+    <th colspan="2">NetPpmWeekly</th>
+    <th colspan="2">NetPpmMonthly</th>
+    <th colspan="2">NetPpmYearly</th>
+    <th colspan="2">RepeatPurchaseBehaviorMonthly</th>
+    <th colspan="2">RepeatPurchaseBehaviorQuarterly</th>
+    <th colspan="2">GeographicSalesInsights</th>
+    <th colspan="2">ItemComparison</th>
+    <th colspan="2">AlternatePurchaseBehavior</th>
+    <th colspan="2">MarketBasketAnalysis</th>
+</tr>
+<tr>
+    <th>Partner</th>
+    <th style="text-align:right">ID</th>
+    <th colspan="2">External&nbsp;Account&nbsp;&nbsp;&nbsp;</th>
+    <th>Earliest</th>
+    <th>Latest</th>
+    <th>Earliest</th>
+    <th>Latest</th>
+    <th>Earliest</th>
+    <th>Latest</th>
+    <th>Earliest</th>
+    <th>Latest</th>
+    <th>Earliest</th>
+    <th>Latest</th>
+    <th>Earliest</th>
+    <th>Latest</th>
+    <th>Earliest</th>
+    <th>Latest</th>
+    <th>Earliest</th>
+    <th>Latest</th>
+    <th>Earliest</th>
+    <th>Latest</th>
+</tr>
+@foreach (var summaries in Model)
+{
+    <tr style="font-weight: bold; background-color: aquamarine">
+        <td colspan="4">@summaries.Platform.Name.Replace(' ', '_')&nbsp;-&nbsp;Summary:</td>
+        <td style="text-align: right">@summaries.CustomSpecialPlatformSummaries.Min(summary => summary.EarliestDateNetPpmWeekly).ToShortDateString()</td>
+        <td style="text-align: right">@summaries.CustomSpecialPlatformSummaries.Max(summary => summary.LatestDateNetPpmWeekly).ToShortDateString()</td>
+        <td style="text-align: right">@summaries.CustomSpecialPlatformSummaries.Min(summary => summary.EarliestDateNetPpmMonthly).ToShortDateString()</td>
+        <td style="text-align: right">@summaries.CustomSpecialPlatformSummaries.Max(summary => summary.LatestDateNetPpmMonthly).ToShortDateString()</td>
+        <td style="text-align: right">@summaries.CustomSpecialPlatformSummaries.Min(summary => summary.EarliestDateNetPpmYearly).ToShortDateString()</td>
+        <td style="text-align: right">@summaries.CustomSpecialPlatformSummaries.Max(summary => summary.LatestDateNetPpmYearly).ToShortDateString()</td>
+        <td style="text-align: right">@summaries.CustomSpecialPlatformSummaries.Min(summary => summary.EarliestDateRepeatPurchaseMonthly).ToShortDateString()</td>
+        <td style="text-align: right">@summaries.CustomSpecialPlatformSummaries.Max(summary => summary.LatestDateRepeatPurchaseMonthly).ToShortDateString()</td>
+        <td style="text-align: right">@summaries.CustomSpecialPlatformSummaries.Min(summary => summary.EarliestDateRepeatPurchaseQuarterly).ToShortDateString()</td>
+        <td style="text-align: right">@summaries.CustomSpecialPlatformSummaries.Max(summary => summary.LatestDateRepeatPurchaseQuarterly).ToShortDateString()</td>
+        <td style="text-align: right">@summaries.CustomSpecialPlatformSummaries.Min(summary => summary.EarliestDateGeoSales).ToShortDateString()</td>
+        <td style="text-align: right">@summaries.CustomSpecialPlatformSummaries.Max(summary => summary.LatestDateGeoSales).ToShortDateString()</td>
+        <td style="text-align: right">@summaries.CustomSpecialPlatformSummaries.Min(summary => summary.EarliestDateItemComp).ToShortDateString()</td>
+        <td style="text-align: right">@summaries.CustomSpecialPlatformSummaries.Max(summary => summary.LatestDateItemComp).ToShortDateString()</td>
+        <td style="text-align: right">@summaries.CustomSpecialPlatformSummaries.Min(summary => summary.EarliestDateAltPurchase).ToShortDateString()</td>
+        <td style="text-align: right">@summaries.CustomSpecialPlatformSummaries.Max(summary => summary.LatestDateAltPurchase).ToShortDateString()</td>
+        <td style="text-align: right">@summaries.CustomSpecialPlatformSummaries.Min(summary => summary.EarliestDateMarketBasket).ToShortDateString()</td>
+        <td style="text-align: right">@summaries.CustomSpecialPlatformSummaries.Max(summary => summary.LatestDateMarketBasket).ToShortDateString()</td>
+    </tr>
+    if (summaries.CustomSpecialPlatformSummaries != null)
+    {
+        foreach (var summary in summaries.CustomSpecialPlatformSummaries)
+        {
+            <tr>
+                <td>@summary.Account.Platform.Name</td>
+                <td style="text-align: right">@summary.Account.Id</td>
+                <td>@summary.Account.Name</td>
+                <td style="text-align: center">@(summary.Account.Disabled ? "X" : "")</td>
+
+
+                <td style="text-align: right">@summary.EarliestDateNetPpmWeekly.ToShortDateString()</td>
+                @if (summary.LatestDateNetPpmWeekly != null && DateTime.Compare(summary.LatestDateNetPpmWeekly.Value.Date, lastWeek) >= 0)
+                {
+                    <td style="text-align: right; background-color: lightgreen">@summary.LatestDateNetPpmWeekly.ToShortDateString()</td>
+                }
+                else
+                {
+                    <td style="text-align: right">@summary.LatestDateNetPpmWeekly.ToShortDateString()</td>
+                }
+                <td style="text-align: right">@summary.EarliestDateNetPpmMonthly.ToShortDateString()</td>
+                @if (summary.LatestDateNetPpmMonthly != null && DateTime.Compare(summary.LatestDateNetPpmMonthly.Value.Date, lastMonth) >= 0)
+                {
+                    <td style="text-align: right; background-color: lightgreen">@summary.LatestDateNetPpmMonthly.ToShortDateString()</td>
+                }
+                else
+                {
+                    <td style="text-align: right">@summary.LatestDateNetPpmMonthly.ToShortDateString()</td>
+                }
+                <td style="text-align: right">@summary.EarliestDateNetPpmYearly.ToShortDateString()</td>
+                @if (summary.LatestDateNetPpmYearly != null && DateTime.Compare(summary.LatestDateNetPpmYearly.Value.Date, lastYear) >= 0)
+                {
+                    <td style="text-align: right; background-color: lightgreen">@summary.LatestDateNetPpmYearly.ToShortDateString()</td>
+                }
+                else
+                {
+                    <td style="text-align: right">@summary.LatestDateNetPpmYearly.ToShortDateString()</td>
+                }
+                <td style="text-align: right">@summary.EarliestDateRepeatPurchaseMonthly.ToShortDateString()</td>
+                @if (summary.LatestDateRepeatPurchaseMonthly != null && DateTime.Compare(summary.LatestDateRepeatPurchaseMonthly.Value.Date, lastMonth) >= 0)
+                {
+                    <td style="text-align: right; background-color: lightgreen">@summary.LatestDateRepeatPurchaseMonthly.ToShortDateString()</td>
+                }
+                else
+                {
+                    <td style="text-align: right">@summary.LatestDateRepeatPurchaseMonthly.ToShortDateString()</td>
+                }
+                <td style="text-align: right">@summary.EarliestDateRepeatPurchaseQuarterly.ToShortDateString()</td>
+                @if (summary.LatestDateRepeatPurchaseQuarterly != null && DateTime.Compare(summary.LatestDateRepeatPurchaseQuarterly.Value.Date, lastQuarter) >= 0)
+                {
+                    <td style="text-align: right; background-color: lightgreen">@summary.LatestDateRepeatPurchaseQuarterly.ToShortDateString()</td>
+                }
+                else
+                {
+                    <td style="text-align: right">@summary.LatestDateRepeatPurchaseQuarterly.ToShortDateString()</td>
+                }
+                <td style="text-align: right">@summary.EarliestDateGeoSales.ToShortDateString()</td>
+                @if (summary.LatestDateGeoSales != null && DateTime.Compare(summary.LatestDateGeoSales.Value.Date, yesterday) >= 0)
+                {
+                    <td style="text-align: right; background-color: lightgreen">@summary.LatestDateGeoSales.ToShortDateString()</td>
+                }
+                else
+                {
+                    <td style="text-align: right">@summary.LatestDateGeoSales.ToShortDateString()</td>
+                }
+                <td style="text-align: right">@summary.EarliestDateItemComp.ToShortDateString()</td>
+                @if (summary.LatestDateItemComp != null && DateTime.Compare(summary.LatestDateItemComp.Value.Date, yesterday) >= 0)
+                {
+                    <td style="text-align: right; background-color: lightgreen">@summary.LatestDateItemComp.ToShortDateString()</td>
+                }
+                else
+                {
+                    <td style="text-align: right">@summary.LatestDateItemComp.ToShortDateString()</td>
+                }
+                <td style="text-align: right">@summary.EarliestDateAltPurchase.ToShortDateString()</td>
+                @if (summary.LatestDateAltPurchase != null && DateTime.Compare(summary.LatestDateAltPurchase.Value.Date, yesterday) >= 0)
+                {
+                    <td style="text-align: right; background-color: lightgreen">@summary.LatestDateAltPurchase.ToShortDateString()</td>
+                }
+                else
+                {
+                    <td style="text-align: right">@summary.LatestDateAltPurchase.ToShortDateString()</td>
+                }
+                <td style="text-align: right">@summary.EarliestDateMarketBasket.ToShortDateString()</td>
+                @if (summary.LatestDateMarketBasket != null && DateTime.Compare(summary.LatestDateMarketBasket.Value.Date, yesterday) >= 0)
+                {
+                    <td style="text-align: right; background-color: lightgreen">@summary.LatestDateMarketBasket.ToShortDateString()</td>
+                }
+                else
+                {
+                    <td style="text-align: right">@summary.LatestDateMarketBasket.ToShortDateString()</td>
+                }
+            </tr>
+        }
+    }
+}
+</table>

@@ -95,9 +95,13 @@
     <Compile Include="Abstract\IClientRepository.cs" />
     <Compile Include="Abstract\ICPProgRepository.cs" />
     <Compile Include="Abstract\ICPSearchRepository.cs" />
+    <Compile Include="Abstract\ICustomSpecialPlatformRepository.cs" />
+    <Compile Include="Abstract\IVendorProductOneDate.cs" />
+    <Compile Include="Abstract\IVendorProductTwoDates.cs" />
     <Compile Include="Abstract\IDepartmentRepository.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Concrete\CustomSpecialPlatformRepository.cs" />
     <Compile Include="Entities\CPProg\Adform\AdfBanner.cs" />
     <Compile Include="Entities\CPProg\Adform\AdfCampaign.cs" />
     <Compile Include="Entities\CPProg\Adform\AdfLineItem.cs" />
@@ -320,6 +324,7 @@
     <Compile Include="SpecialPlatformsDataProviders\Facebook\Models\FacebookLatestsInfo.cs" />
     <Compile Include="SpecialPlatformsDataProviders\Kochava\KochavaProvider.cs" />
     <Compile Include="SpecialPlatformsDataProviders\Common\SpecialPlatformProvider.cs" />
+    <Compile Include="SpecialPlatformsDataProviders\Models\Custom\CustomSpecialPlatformLatestSummary.cs" />
     <Compile Include="SpecialPlatformsDataProviders\VCD\VcdProvider.cs" />
     <Compile Include="Concrete\SuperRepository.cs" />
     <Compile Include="Concrete\TDRepository.cs" />
