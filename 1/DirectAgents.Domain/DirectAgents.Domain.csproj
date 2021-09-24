@@ -96,8 +96,8 @@
     <Compile Include="Abstract\ICPProgRepository.cs" />
     <Compile Include="Abstract\ICPSearchRepository.cs" />
     <Compile Include="Abstract\ICustomSpecialPlatformRepository.cs" />
-    <Compile Include="Abstract\IVendorProductOneDate.cs" />
-    <Compile Include="Abstract\IVendorProductTwoDates.cs" />
+    <Compile Include="Abstract\IVendorProductDate.cs" />
+    <Compile Include="Abstract\IVendorProductDateRange.cs" />
     <Compile Include="Abstract\IDepartmentRepository.cs">
       <SubType>Code</SubType>
     </Compile>

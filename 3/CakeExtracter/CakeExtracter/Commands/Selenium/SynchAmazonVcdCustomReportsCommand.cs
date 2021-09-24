@@ -2,7 +2,6 @@
 using System.ComponentModel.Composition;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
@@ -63,6 +62,11 @@ namespace CakeExtracter.Commands.Selenium
         /// </summary>
         public bool IsHidingBrowserWindow { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to run all the etl launches at once (default = false).
+        /// </summary>
+        public bool IsPeriodLaunch { get; set; }
+
         public PeriodType RequestedPeriod { get; set; }
 
         public string ReportType { get; set; }
@@ -79,6 +83,7 @@ namespace CakeExtracter.Commands.Selenium
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
             HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default = {DefaultDaysAgo})", c => DaysAgoToStart = c);
             HasOption<bool>("h|hideWindow=", "Include hiding the browser window", c => IsHidingBrowserWindow = c);
+            HasOption<bool>("l|periodLaunch=", "Launch jobs of one period at once", c => IsPeriodLaunch = c);
             HasOption<string>("t|periodType=", "", c => RequestedPeriod = Enum.TryParse<PeriodType>(c, true, out var result) ? result : PeriodType.DAILY);
             HasOption<string>("r|reportType=", "", c => ReportType = c);
             NoNeedToCreateRepeatRequests = true;
@@ -173,10 +178,61 @@ namespace CakeExtracter.Commands.Selenium
             var vcdWorkflowHelper = new VcdWorkflowHelper(vcdDataProvider);
             var accounts = vcdWorkflowHelper.VcdAccountsInfo;
             SetInfoAboutAllAccountsInHistory(accounts.Keys.ToList());
-            RunForAccounts(accounts, vcdDataProvider);
+            if (IsPeriodLaunch)
+            {
+                RunForPeriod(accounts, vcdDataProvider);
+            }
+            else
+            {
+                RunForSeparateAccounts(accounts, vcdDataProvider);
+            }
         }
 
-        private void RunForAccounts(Dictionary<ExtAccount, VcdAccountInfo> accounts, VcdDataProvider vcdDataProvider)
+        private void RunForPeriod(Dictionary<ExtAccount, VcdAccountInfo> accounts, VcdDataProvider vcdDataProvider)
+        {
+            foreach(var account in accounts)
+            {
+                try
+                {
+                    var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
+                    if (RequestedPeriod == PeriodType.DAILY)
+                    {
+                        DoMarketBasketAnalysisEtlForAccount(account, dateRange, vcdDataProvider);
+                        DoAlternativePurchaseEtlForAccount(account, dateRange, vcdDataProvider);
+                        DoItemComparisonEtlForAccount(account, dateRange, vcdDataProvider);
+                    }
+
+                    if (RequestedPeriod == PeriodType.WEEKLY)
+                    {
+                        DoNetPpmEtlForAccount(account, dateRange, vcdDataProvider);
+                    }
+
+                    if (RequestedPeriod == PeriodType.MONTHLY)
+                    {
+                        DoRepeatPurchaseBehaviorEtlForAccount(account, dateRange, vcdDataProvider);
+                        DoNetPpmEtlForAccount(account, dateRange, vcdDataProvider);
+                    }
+
+                    if (RequestedPeriod == PeriodType.QUARTERLY)
+                    {
+                        DoRepeatPurchaseBehaviorEtlForAccount(account, dateRange, vcdDataProvider);
+                    }
+
+                    if (RequestedPeriod == PeriodType.YEARLY)
+                    {
+                        DoNetPpmEtlForAccount(account, dateRange, vcdDataProvider);
+                    }
+
+                    AmazonTimeTracker.Instance.LogTrackingData(account.Key.Id);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(account.Key.Id, ex);
+                }
+            }
+        }
+
+        private void RunForSeparateAccounts(Dictionary<ExtAccount, VcdAccountInfo> accounts, VcdDataProvider vcdDataProvider)
         {
             var reportType = new AmazonCustomReportType(ReportType);
             foreach (var account in accounts)
@@ -223,7 +279,10 @@ namespace CakeExtracter.Commands.Selenium
             }
         }
 
-        private void DoGeographicSalesInsightsEtlForAccount(KeyValuePair<ExtAccount, VcdAccountInfo> account, DateRange dateRange, VcdDataProvider vcdDataProvider)
+        private void DoGeographicSalesInsightsEtlForAccount(
+            KeyValuePair<ExtAccount, VcdAccountInfo> account,
+            DateRange dateRange,
+            VcdDataProvider vcdDataProvider)
         {
             Logger.Info(account.Key.Id, $"Amazon VCD, GeographicSalesInsights ETL for account {account.Key.Name} ({account.Key.Id}) started.");
             ConfigureDataProviderForCurrentAccount(account.Key, vcdDataProvider);
@@ -239,7 +298,10 @@ namespace CakeExtracter.Commands.Selenium
             Logger.Info(account.Key.Id, $"Amazon VCD, ETL for account {account.Key.Name} ({account.Key.Id}) finished.");
         }
 
-        private void DoNetPpmEtlForAccount(KeyValuePair<ExtAccount, VcdAccountInfo> account, DateRange dateRange, VcdDataProvider vcdDataProvider)
+        private void DoNetPpmEtlForAccount(
+            KeyValuePair<ExtAccount, VcdAccountInfo> account,
+            DateRange dateRange,
+            VcdDataProvider vcdDataProvider)
         {
             Logger.Info(account.Key.Id, $"Amazon VCD, Net Ppm ETL for account {account.Key.Name} ({account.Key.Id}) started.");
             ConfigureDataProviderForCurrentAccount(account.Key, vcdDataProvider);
@@ -255,7 +317,10 @@ namespace CakeExtracter.Commands.Selenium
             Logger.Info(account.Key.Id, $"Amazon VCD, Net PPM ETL for account {account.Key.Name} ({account.Key.Id}) finished.");
         }
 
-        private void DoRepeatPurchaseBehaviorEtlForAccount(KeyValuePair<ExtAccount, VcdAccountInfo> account, DateRange dateRange, VcdDataProvider vcdDataProvider)
+        private void DoRepeatPurchaseBehaviorEtlForAccount(
+            KeyValuePair<ExtAccount, VcdAccountInfo> account,
+            DateRange dateRange,
+            VcdDataProvider vcdDataProvider)
         {
             Logger.Info(account.Key.Id, $"Amazon VCD, Repeat Purchase Behavior ETL for account {account.Key.Name} ({account.Key.Id}) started.");
             var extractor = GetCustomReportExtractor<RepeatPurchaseBehaviorProduct, RepeatPurchaseBehaviorProductsRowMap>(
@@ -270,7 +335,10 @@ namespace CakeExtracter.Commands.Selenium
             Logger.Info(account.Key.Id, $"Amazon VCD, RepeatPurchaseBehavior ETL for account {account.Key.Name} ({account.Key.Id}) finished.");
         }
 
-        private void DoMarketBasketAnalysisEtlForAccount(KeyValuePair<ExtAccount, VcdAccountInfo> account, DateRange dateRange, VcdDataProvider vcdDataProvider)
+        private void DoMarketBasketAnalysisEtlForAccount(
+            KeyValuePair<ExtAccount, VcdAccountInfo> account,
+            DateRange dateRange,
+            VcdDataProvider vcdDataProvider)
         {
             Logger.Info(account.Key.Id, $"Amazon VCD, MarketBasketAnalysis ETL for account {account.Key.Name} ({account.Key.Id}) started.");
             ConfigureDataProviderForCurrentAccount(account.Key, vcdDataProvider);
@@ -286,7 +354,10 @@ namespace CakeExtracter.Commands.Selenium
             Logger.Info(account.Key.Id, $"Amazon VCD, ETL for account {account.Key.Name} ({account.Key.Id}) finished.");
         }
 
-        private void DoAlternativePurchaseEtlForAccount(KeyValuePair<ExtAccount, VcdAccountInfo> account, DateRange dateRange, VcdDataProvider vcdDataProvider)
+        private void DoAlternativePurchaseEtlForAccount(
+            KeyValuePair<ExtAccount, VcdAccountInfo> account,
+            DateRange dateRange,
+            VcdDataProvider vcdDataProvider)
         {
             Logger.Info(account.Key.Id, $"Amazon VCD, AlternativePurchase ETL for account {account.Key.Name} ({account.Key.Id}) started.");
             ConfigureDataProviderForCurrentAccount(account.Key, vcdDataProvider);
@@ -302,7 +373,10 @@ namespace CakeExtracter.Commands.Selenium
             Logger.Info(account.Key.Id, $"Amazon VCD, ETL for account {account.Key.Name} ({account.Key.Id}) finished.");
         }
 
-        private void DoItemComparisonEtlForAccount(KeyValuePair<ExtAccount, VcdAccountInfo> account, DateRange dateRange, VcdDataProvider vcdDataProvider)
+        private void DoItemComparisonEtlForAccount(
+            KeyValuePair<ExtAccount, VcdAccountInfo> account,
+            DateRange dateRange,
+            VcdDataProvider vcdDataProvider)
         {
             Logger.Info(account.Key.Id, $"Amazon VCD, ItemComparison ETL for account {account.Key.Name} ({account.Key.Id}) started.");
             ConfigureDataProviderForCurrentAccount(account.Key, vcdDataProvider);
