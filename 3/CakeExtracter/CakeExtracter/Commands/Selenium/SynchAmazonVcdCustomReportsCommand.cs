@@ -198,8 +198,6 @@ namespace CakeExtracter.Commands.Selenium
                     if (RequestedPeriod == PeriodType.DAILY)
                     {
                         DoMarketBasketAnalysisEtlForAccount(account, dateRange, vcdDataProvider);
-                        DoAlternativePurchaseEtlForAccount(account, dateRange, vcdDataProvider);
-                        DoItemComparisonEtlForAccount(account, dateRange, vcdDataProvider);
                     }
 
                     if (RequestedPeriod == PeriodType.WEEKLY)

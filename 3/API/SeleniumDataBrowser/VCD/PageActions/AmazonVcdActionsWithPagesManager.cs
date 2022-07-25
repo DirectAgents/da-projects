@@ -81,6 +81,7 @@ namespace SeleniumDataBrowser.VCD.PageActions
             Logger.LogInfo("Sales diagnostic page refreshing");
             NavigateToSalesDiagnosticPage();
             CheckAuthState(authorizationModel);
+            SelectAccountOnPage();
         }
 
         /// <summary>
@@ -153,8 +154,6 @@ namespace SeleniumDataBrowser.VCD.PageActions
                 {
                     VcdLoginManager.RepeatPassword(this, authorizationModel);
                 }
-
-                NavigateToSalesDiagnosticPage(AmazonVcdPageObjects.DetailViewDataContainer);
             }
         }
     }
